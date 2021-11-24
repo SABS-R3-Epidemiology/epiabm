@@ -23,11 +23,11 @@ jobs:
           python-version: 3.8
           architecture: x64
 
-      - name: install seirmo
+      - name: install pyEpiabm
         run: |
           python --version
           python -m pip install --upgrade pip setuptools wheel
-          python -m pip install .
+          python -m pip install pyEpiabm/.
           python -m pip install .[dev]
       - name: run style tests
         run: |

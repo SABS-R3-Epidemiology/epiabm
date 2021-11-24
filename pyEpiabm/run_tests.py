@@ -179,7 +179,7 @@ def get_all_documented_symbols():
     """
 
     doc_files = []
-    for root, dirs, files in os.walk(os.path.join('docs', 'source')):
+    for root, dirs, files in os.walk(os.path.join('pyEpiabm', 'docs', 'source')):
         for file in files:
             if file.endswith('.rst'):
                 doc_files.append(os.path.join(root, file))
