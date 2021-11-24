@@ -13,8 +13,8 @@ class TestPopulation(unittest.TestCase):
     def test__init__(self):
         self.assertEqual(self.population.cells, [])
 
-    def test_info(self):
-        self.assertEqual(self.population.info(),
+    def test_repr(self):
+        self.assertEqual(repr(self.population),
                          "Population, 0 cells.")
 
     def test_add_cells(self, n=4):

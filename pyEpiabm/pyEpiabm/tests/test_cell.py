@@ -14,8 +14,8 @@ class TestCell(unittest.TestCase):
         self.assertEqual(self.cell.microcells, [])
         self.assertEqual(self.cell.people, [])
 
-    def test_info(self):
-        self.assertEqual(self.cell.info(),
+    def test_repr(self):
+        self.assertEqual(repr(self.cell),
                          "Cell, 0 microcells, 0 people.")
 
     def test_add_microcells(self, n=4):

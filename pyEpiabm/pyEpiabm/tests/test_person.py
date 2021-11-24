@@ -18,8 +18,8 @@ class TestPerson(unittest.TestCase):
         self.assertEqual(self.person.infectiveness, 0)
         self.assertEqual(self.person.microcell, self.microcell)
 
-    def test_info(self):
-        self.assertEqual(self.person.info(), "Person.")
+    def test_repr(self):
+        self.assertEqual(repr(self.person), "Person.")
 
 
 if __name__ == '__main__':
