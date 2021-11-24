@@ -19,7 +19,7 @@ class TestPerson(unittest.TestCase):
         self.assertEqual(self.person.microcell, self.microcell)
 
     def test_repr(self):
-        self.assertEqual(repr(self.person), "Person.")
+        self.assertEqual(repr(self.person), "Person, Age = 0")
 
 
 if __name__ == '__main__':

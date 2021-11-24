@@ -16,7 +16,7 @@ class TestCell(unittest.TestCase):
 
     def test_repr(self):
         self.assertEqual(repr(self.cell),
-                         "Cell, 0 microcells, 0 people.")
+                         "Cell with 0 microcells and 0 people.")
 
     def test_add_microcells(self, n=4):
         cell = pe.Cell()

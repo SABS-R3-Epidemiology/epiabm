@@ -15,7 +15,7 @@ class TestPopulation(unittest.TestCase):
 
     def test_repr(self):
         self.assertEqual(repr(self.population),
-                         "Population, 0 cells.")
+                         "Population with 0 cells.")
 
     def test_add_cells(self, n=4):
         population = pe.Population()

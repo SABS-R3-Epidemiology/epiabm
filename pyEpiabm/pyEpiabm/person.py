@@ -24,4 +24,4 @@ class Person:
         :return: String representation of person
         :rtype: str
         """
-        return f"Person, Age={self.age}"
+        return f"Person, Age = {self.age}"
