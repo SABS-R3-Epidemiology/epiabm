@@ -31,7 +31,7 @@ jobs:
           python -m pip install coverage codecov
       - name: run coverage
         run: |
-          coverage run run_tests.py --unit
+          coverage run pyEpiabm/run_tests.py --unit
       - name: codecov
         if: success()
         env:
