@@ -1,5 +1,5 @@
-#ifndef _COVIDSIM_FACTORY_HPP
-#define _COVIDSIM_FACTORY_HPP
+#ifndef _EPIABM_POPULATION_FACTORY_HPP
+#define _EPIABM_POPULATION_FACTORY_HPP
 
 #include "dataclasses/population.hpp"
 #include "dataclasses/cell.hpp"
@@ -9,10 +9,10 @@
 
 #include <iostream>
 
-namespace seir
+namespace epiabm
 {
 
-    class Factory
+    class PopulationFactory
     {
     private:
     public:
@@ -30,6 +30,6 @@ namespace seir
     private:
     };
 
-} // namespace seir
+} // namespace epiabm
 
-#endif // _COVIDSIM_FACTORY_HPP
+#endif // _EPIABM_POPULATION_FACTORY_HPP

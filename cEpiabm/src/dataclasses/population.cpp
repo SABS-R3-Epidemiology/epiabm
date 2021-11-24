@@ -1,13 +1,13 @@
 #include "population.hpp"
 
-namespace seir
+namespace epiabm
 {
 
     Population::Population() :
         m_cells(0)
     {}
 
-    void Population::forEachCell(boost::function<bool(CellPtr)> callback)
+    void Population::forEachCell(std::function<bool(CellPtr)>& callback)
     {
         for (size_t i = 0; i < m_cells.size(); i++)
         {
@@ -15,4 +15,4 @@ namespace seir
         }
     }
 
-} // namespace seir
+} // namespace epiabm

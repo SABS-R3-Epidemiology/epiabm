@@ -6,4 +6,4 @@ targets = \
 	dataclasses/person.cpp \
 	dataclasses/place.cpp \
 	dataclasses/population.cpp \
-	factory.cpp
+	population_factory.cpp

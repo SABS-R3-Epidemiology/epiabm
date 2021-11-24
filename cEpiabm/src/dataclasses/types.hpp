@@ -3,7 +3,7 @@
 
 #include <memory>
 
-namespace seir
+namespace epiabm
 {
     class Population;
     typedef std::shared_ptr<Population> PopulationPtr;
@@ -36,7 +36,7 @@ namespace seir
         Dead
     };
 
-} // namespace seir
+} // namespace epiabm
 
 
 #endif // _COVIDSIM_DATASTRUCTURES_TYPES_HPP

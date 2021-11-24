@@ -11,9 +11,10 @@ CC = g++
 SRC_DIR := ../src
 OBJ_DIR = ./obj
 
-CFLAGS = -std=c++11 -fPIC -shared -Wall -Wextra -g -w
-PYTHONLIB = `python3.8-config --includes --libs`
-BOOSTLIBS = -lboost_python38 -lboost_numpy38
+CFLAGS = -std=c++17 -fPIC -shared -Wall -Wextra -w
+#PYTHONLIB = `python3.8-config --includes --libs`
+#PYBIND = `python3.8 -m pybind11 --includes`
+#BOOSTLIBS = -lboost_python38 -lboost_numpy38
 
 include $(SRC_DIR)/Makefile
 OBJECTS = $(targets:.cpp=.o)
@@ -21,8 +22,8 @@ OBJECTFILES = $(patsubst %.o, $(OBJ_DIR)/%.o, $(notdir $(OBJECTS)))
 
 #$(info $(OBJECTS))
 
-covidsim: $(SRC_DIR)/covidsim.cpp $(OBJECTS)
-	$(CC) $< -o $@.so $(OBJECTFILES) $(CFLAGS) $(PYTHONLIB) $(BOOSTLIBS)
+test: $(SRC_DIR)/test.cpp $(OBJECTS)
+	$(CC) $(SRC_DIR)/test.cpp -o test.exe $(OBJECTFILES) -std=c++17 -w
 
 $(OBJECTS): %.o: $(SRC_DIR)/%.cpp
-	$(CC) -c $(CFLAGS) $(PYTHONLIB) $(BOOSTLIBS) $< -o $(OBJ_DIR)/$(notdir $@)
+	$(CC) -c $(CFLAGS) $< -o $(OBJ_DIR)/$(notdir $@)

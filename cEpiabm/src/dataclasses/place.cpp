@@ -1,7 +1,7 @@
 
 #include "place.hpp"
 
-namespace seir
+namespace epiabm
 {
 
     Place::Place(MicrocellPtr microcell) :
@@ -9,7 +9,7 @@ namespace seir
         m_members()
     {}
 
-    void Place::forEachMember(boost::function<bool(PersonPtr)> callback)
+    void Place::forEachMember(std::function<bool(PersonPtr)>& callback)
     {
         auto it = m_members.begin();
         while (it != m_members.end())
@@ -23,4 +23,4 @@ namespace seir
         return false;
     }
 
-} // namespace seir
+} // namespace epiabm
