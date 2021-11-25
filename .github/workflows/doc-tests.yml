@@ -28,7 +28,7 @@ jobs:
           python --version
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install pyEpiabm/.
-          python -m pip install .[docs]
+          python -m pip install pyEpiabm/.[docs]
       - name: run doctest
         run: |
           python pyEpiabm/run_tests.py --doctest
