@@ -35,7 +35,7 @@ Add text on how to install and use module.
 Some documentation on the program's classes and methods can be found here: https://epiamb.readthedocs.io/en/latest/
 
 ### References
-List of ressources that can be useful for the project:
+List of resources that can be useful for the project:
 * Ferguson N, 2020. Impact  of  non-pharmaceutical  interventions (NPIs) to reduce COVID-19 mortality and healthcare demand (https://www.imperial.ac.uk/media/imperial-college/medicine/sph/ide/gida-fellowships/Imperial-College-COVID19-NPI-modelling-16-03-2020.pdf)
 * Gillespie D, 1977. Exact stochastic simulation of coupled chemical reactions (https://doi.org/10.1021/j100540a008)
 * Erban R, Chapman J and Maini P, 2007. A practical guide to stochastic simulations of reaction-diffusion processes (https://arxiv.org/abs/0704.1908)
