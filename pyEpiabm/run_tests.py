@@ -179,7 +179,8 @@ def get_all_documented_symbols():
     """
 
     doc_files = []
-    for root, dirs, files in os.walk(os.path.join('pyEpiabm', 'docs', 'source')):
+    for root, dirs, files in os.walk(os.path.join('pyEpiabm', 'docs',
+                                                  'source')):
         for file in files:
             if file.endswith('.rst'):
                 doc_files.append(os.path.join(root, file))
@@ -238,7 +239,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--unit',
         action='store_true',
-        help='Run all unit tests using the `python` interpreter.',
+        help='Run all unit tests using `python` interpreter.',
     )
     # Doctests
     parser.add_argument(
