@@ -232,7 +232,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Run unit tests for pyEpiabm.',
         epilog='To run individual unit tests, use e.g.'
-               ' $ pyEpiabm/tests/dummy_test.py',
+               ' $ pyEpiabm/pyEpiabm/tests/dummy_test.py',
     )
     # Unit tests
     parser.add_argument(
