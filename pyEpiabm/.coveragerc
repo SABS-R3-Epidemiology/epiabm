@@ -1,5 +1,0 @@
-[run]
-source = pyEpiabm
-omit =
-    pyEpiabm/tests/*
-    pyEpiabm/version_info.py
