@@ -1,6 +1,6 @@
 
 #
-# epiabm setuptools script
+# pyepiabm setuptools script
 #
 # This file is part of ePIABM
 # (https://github.com/SABS-R3-Epidemiology/epiabm.git) which is released
