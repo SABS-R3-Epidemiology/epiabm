@@ -31,4 +31,5 @@ jobs:
           python -m pip install pyEpiabm/.[docs]
       - name: run doctest
         run: |
-          python pyEpiabm/run_tests.py --doctest
+          cd pyEpiabm
+          python run_tests.py --doctest

@@ -3,9 +3,8 @@ from .microcell import Microcell
 
 class Cell:
     """Class representing a Cell (Subset of Population)
-    Collection of :class:`Microcell`s and :class:`Person`s
+    Collection of :class:`Microcell` s and :class:`Person` s
     """
-
     def __init__(self):
         """Constructor Method
         """
@@ -22,9 +21,9 @@ class Cell:
             f"and {len(self.people)} people."
 
     def add_microcells(self, n):
-        """Add n empty :class:`Microcell`s to Cell
+        """Add n empty :class:`Microcell` s to Cell
 
-        :param n: Number of empty :class:`Microcell`s to add
+        :param n: Number of empty :class:`Microcell` s to add
         :type n: int
         """
         for i in range(n):
