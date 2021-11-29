@@ -37,7 +37,7 @@ def get_readme():
 
 
 setup(
-    # Module name (lowercase)
+    # Package name
     name='pyEpiabm',
 
     # Version
