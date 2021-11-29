@@ -1,3 +1,3 @@
 # pyEpiabm
 
-This is the python backend for epiabm
+This is the python backend for epiabm.
