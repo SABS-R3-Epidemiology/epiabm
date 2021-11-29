@@ -6,7 +6,7 @@
 Welcome to pyEpiabm's documentation!
 ====================================
 
-This is a python backend for the EpiAbm package
+This is a python backend for the EpiAbm package.
 
 
 Contents
