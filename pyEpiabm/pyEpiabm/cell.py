@@ -14,7 +14,7 @@ class Cell:
     def __repr__(self):
         """String representation of Cell
 
-        :return: String representation of Cell
+        :return: String representation of Cell.
         :rtype: str
         """
         return f"Cell with {len(self.microcells)} microcells " + \
