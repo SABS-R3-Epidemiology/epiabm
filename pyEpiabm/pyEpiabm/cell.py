@@ -3,7 +3,7 @@ from .microcell import Microcell
 
 class Cell:
     """Class representing a Cell (Subset of Population)
-    Collection of :class:`Microcell` s and :class:`Person` s
+    Collection of :class:`Microcell` s and :class:`Person` s.
     """
     def __init__(self):
         """Constructor Method
