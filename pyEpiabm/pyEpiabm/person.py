@@ -1,14 +1,14 @@
 
 
 class Person:
-    """Class to represent each person in a population
+    """Class to represent each person in a population.
 
     :param microcell: An instance of an :class:`Microcell`.
     :type microcell: Microcell
     """
 
     def __init__(self, microcell):
-        """Constructor Method
+        """Constructor Method.
 
         :param microcell: Person's parent :class:`Microcell` instance.
         :type microcell: Microcell

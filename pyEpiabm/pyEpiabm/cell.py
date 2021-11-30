@@ -2,17 +2,17 @@ from .microcell import Microcell
 
 
 class Cell:
-    """Class representing a Cell (Subset of Population)
+    """Class representing a Cell (Subset of Population).
     Collection of :class:`Microcell` s and :class:`Person` s.
     """
     def __init__(self):
-        """Constructor Method
+        """Constructor Method.
         """
         self.microcells = []
         self.people = []
 
     def __repr__(self):
-        """String representation of Cell
+        """String representation of Cell.
 
         :return: String representation of Cell.
         :rtype: str
@@ -21,7 +21,7 @@ class Cell:
             f"and {len(self.people)} people."
 
     def add_microcells(self, n):
-        """Add n empty :class:`Microcell` s to Cell
+        """Add n empty :class:`Microcell` s to Cell.
 
         :param n: Number of empty :class:`Microcell` s to add
         :type n: int

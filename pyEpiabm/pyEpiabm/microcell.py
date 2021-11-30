@@ -2,14 +2,14 @@ from .person import Person
 
 
 class Microcell:
-    """Class representing a Microcell (Group of people and places)
+    """Class representing a Microcell (Group of people and places).
     Collection of :class:`Person` s
 
     :param cell: An instance of :class:`Cell`
     :type cell: Cell
     """
     def __init__(self, cell):
-        """Constructor Method
+        """Constructor Method.
 
         :param cell: Microcell's parent :class:`Cell` instance.
         :type cell: Cell
@@ -18,7 +18,7 @@ class Microcell:
         self.cell = cell
 
     def __repr__(self):
-        """String representation of Microcell
+        """String representation of Microcell.
 
         :return: String representation of Microcell
         :rtype: str
@@ -26,7 +26,7 @@ class Microcell:
         return f"Microcell with {len(self.people)} people"
 
     def add_people(self, n):
-        """Adds n default :class:`Person` to Microcell
+        """Adds n default :class:`Person` to Microcell.
 
         :param n: Number of default :class:`Person` s to add
         :type n: int
