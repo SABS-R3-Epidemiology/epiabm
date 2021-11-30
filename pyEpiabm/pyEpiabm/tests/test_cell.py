@@ -12,7 +12,7 @@ class TestCell(unittest.TestCase):
 
     def test__init__(self):
         self.assertEqual(self.cell.microcells, [])
-        self.assertEqual(self.cell.people, [])
+        self.assertEqual(self.cell.persons, [])
 
     def test_repr(self):
         self.assertEqual(repr(self.cell),

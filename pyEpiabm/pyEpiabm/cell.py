@@ -12,7 +12,7 @@ class Cell:
         """Constructor Method.
         """
         self.microcells = []
-        self.people = []
+        self.persons = []
 
     def __repr__(self):
         """String representation of Cell.
@@ -21,7 +21,7 @@ class Cell:
         :rtype: str
         """
         return f"Cell with {len(self.microcells)} microcells " + \
-            f"and {len(self.people)} people."
+            f"and {len(self.persons)} people."
 
     def add_microcells(self, n):
         """Add n empty :class:`Microcell` s to Cell.

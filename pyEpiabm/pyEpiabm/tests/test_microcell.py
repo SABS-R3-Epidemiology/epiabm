@@ -12,7 +12,7 @@ class TestMicrocell(unittest.TestCase):
         cls.microcell = pe.Microcell(cls.cell)
 
     def test__init__(self):
-        self.assertEqual(self.microcell.people, [])
+        self.assertEqual(self.microcell.persons, [])
         self.assertEqual(self.microcell.cell, self.cell)
 
     def test_repr(self):
@@ -22,9 +22,9 @@ class TestMicrocell(unittest.TestCase):
     def test_add_people(self, n=4):
         cell = pe.Cell()
         microcell = pe.Microcell(cell)
-        self.assertEqual(len(microcell.people), 0)
+        self.assertEqual(len(microcell.persons), 0)
         microcell.add_people(n)
-        self.assertEqual(len(microcell.people), n)
+        self.assertEqual(len(microcell.persons), n)
 
 
 if __name__ == '__main__':

@@ -17,7 +17,7 @@ class Microcell:
         :param cell: Microcell's parent :class:`Cell` instance.
         :type cell: Cell
         """
-        self.people = []
+        self.persons = []
         self.cell = cell
 
     def __repr__(self):
@@ -26,7 +26,7 @@ class Microcell:
         :return: String representation of Microcell
         :rtype: str
         """
-        return f"Microcell with {len(self.people)} people"
+        return f"Microcell with {len(self.persons)} people"
 
     def add_people(self, n):
         """Adds n default :class:`Person` to Microcell.
@@ -36,5 +36,5 @@ class Microcell:
         """
         for i in range(n):
             p = Person(self)
-            self.cell.people.append(p)
-            self.people.append(p)
+            self.cell.persons.append(p)
+            self.persons.append(p)
