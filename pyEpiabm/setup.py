@@ -9,7 +9,7 @@ from setuptools import setup, find_packages
 def get_version():
     """
     Get version number from the pyEpiabm module.
-    The easiest way would be to just ``import pyEpiabm ``, but note that this may
+    The easiest way would be to just `import pyEpiabm`, but note that this may
     fail if the dependencies have not been installed yet. Instead, we've put
     the version number in a simple version_info module, that we'll import here
     by temporarily adding the oxrse directory to the pythonpath using sys.path.
