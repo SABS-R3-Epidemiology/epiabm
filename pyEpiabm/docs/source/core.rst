@@ -4,7 +4,7 @@ Core
 
 .. currentmodule:: pyEpiabm
 
-Core provides a framework for the implementation of SEIR and Related Models.
+...
 
 Overview:
 
