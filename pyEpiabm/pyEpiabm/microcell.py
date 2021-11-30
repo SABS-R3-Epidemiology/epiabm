@@ -1,3 +1,6 @@
+#
+# Mirocell Class
+#
 from .person import Person
 
 
