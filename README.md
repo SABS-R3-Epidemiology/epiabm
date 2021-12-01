@@ -32,7 +32,8 @@ Add text on how to install and use module.
 
 
 ## Documentation 
-Some documentation on the program's classes and methods can be found here: https://epiamb.readthedocs.io/en/latest/
+Some documentation on the program's classes and methods can be found here: https://epiamb.readthedocs.io/en/latest/  
+The Wiki for this repo also contains more detail on the Ferguson model itself, and where our implementation might differ from that.
 
 ### References
 List of resources that can be useful for the project:
