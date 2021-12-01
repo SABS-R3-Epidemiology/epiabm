@@ -3,6 +3,7 @@
 #
 from .infection_status import InfectionStatus
 
+
 class Person:
     """Class to represent each person in a population.
 
@@ -11,7 +12,7 @@ class Person:
     """
 
     def __init__(self, microcell,
-                 age = 0, susceptibility = 0, infectiveness = 0):
+                 age=0, susceptibility=0, infectiveness=0):
         """Constructor Method.
 
         :param microcell: Person's parent :class:`Microcell` instance.
