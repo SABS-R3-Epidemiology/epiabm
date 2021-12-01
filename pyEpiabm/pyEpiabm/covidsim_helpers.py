@@ -1,6 +1,7 @@
 from .person import Person
 
-class Covidsim:
+
+class CovidsimHelpers:
     @staticmethod
     def calc_house_inf(infector: Person, timestep: int):
         """Calculate the infectiveness of a household
@@ -17,7 +18,7 @@ class Covidsim:
     @staticmethod
     def calc_house_susc(infector: Person, infectee: Person, timestep: int):
         """Calculate the susceptibility of a household
-        
+
         :param infector: Infector.
         :type infector: Person
         :param infectee: Infectee.
@@ -27,12 +28,12 @@ class Covidsim:
         :return: susceptibility
         :rtype: float
         """
-        return Covidsim.calc_person_susc(infector, infectee, timestep)
-        
+        return CovidsimHelpers.calc_person_susc(infector, infectee, timestep)
+
     @staticmethod
-    def calc_person_susc(infector:Person, infectee: Person, timestep: int):
+    def calc_person_susc(infector: Person, infectee: Person, timestep: int):
         """Calculate the susceptibility of a person
-        
+
         :param infector: Infector.
         :type infector: Person
         :param infectee: Infectee.

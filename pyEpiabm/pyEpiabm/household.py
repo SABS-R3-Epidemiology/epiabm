@@ -13,9 +13,9 @@ class Household:
 
         :param loc: Location of household.
         :type loc: Tuple[float, float]
-        :param susceptibility: Household's 
+        :param susceptibility: Household's
         """
-        self.people = []
+        self.persons = []
         self.location = loc
         self.susceptibility = susceptibility
         self.infectiveness = infectiveness
@@ -26,6 +26,6 @@ class Household:
         :return: String representation of the household
         :rtype: str
         """
-        return f"Household at "\
-            "({self.location[0]:.2f}, {self.location[1]:.2f}) "\
-            "with {len(self.people)} people."
+        return "Household at " \
+            + f"({self.location[0]:.2f}, {self.location[1]:.2f}) "\
+            + f"with {len(self.persons)} persons."
