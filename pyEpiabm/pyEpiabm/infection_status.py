@@ -1,3 +1,7 @@
+#
+# InfectionStatus Class
+#
+ 
 from enum import Enum
 
 
