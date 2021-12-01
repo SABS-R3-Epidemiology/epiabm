@@ -12,7 +12,7 @@ class AbstractSweep:
         self._population = population
 
     def __call__(self, time: float):
-        """Run sweep over population
+        """Run sweep over population.
 
         : param time: Current simulation time in days
         : type time: float"""
