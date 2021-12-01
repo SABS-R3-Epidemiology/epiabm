@@ -2,8 +2,7 @@ from enum import Enum
 
 
 class InfectionStatus(Enum):
-    """Enum representing a person's current infection status.
-    """
+    """Enum representing a person's current infection status."""
     Susceptible = 1
     Exposed = 2
     InfectASympt = 3
