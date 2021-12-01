@@ -8,7 +8,7 @@ from .population import Population
 class AbstractSweep:
     """Abstract class for Population Sweeps."""
     def bind_population(self, population: Population):
-        """Set the population which the sweep will act on
+        """Set the population which the sweep will act on.
 
         : param population: Population: :class:`Population` to bind
         : type population: Population"""
