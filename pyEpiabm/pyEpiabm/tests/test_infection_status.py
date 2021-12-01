@@ -2,13 +2,13 @@ import unittest
 import pyEpiabm as pe
 
 
-class TestCell(unittest.TestCase):
+class TestInfectionStatus(unittest.TestCase):
     """
     Test the 'InfectionStatus' enum.
     """
-    
+
     def test_construct(self):
-        statuses = [
+        statuses = [ # noqa
             pe.InfectionStatus.Susceptible,
             pe.InfectionStatus.Exposed,
             pe.InfectionStatus.InfectASympt,
@@ -19,8 +19,6 @@ class TestCell(unittest.TestCase):
             pe.InfectionStatus.InfectICURecov,
             pe.InfectionStatus.Recovered,
             pe.InfectionStatus.Dead]
-
-    
 
 
 if __name__ == '__main__':
