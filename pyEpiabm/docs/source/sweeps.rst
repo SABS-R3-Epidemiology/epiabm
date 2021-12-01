@@ -14,4 +14,4 @@ Sweeps
 ******
 
 .. autoclass:: AbstractSweep
-    : members:
+    :members:
