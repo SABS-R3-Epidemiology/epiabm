@@ -31,6 +31,10 @@ class TestHouseholdSweep(unittest.TestCase):
     @mock.patch('pyEpiabm.CovidsimHelpers.calc_house_susc')
     @mock.patch('pyEpiabm.CovidsimHelpers.calc_house_inf')
     def test__call__(self, mock_inf, mock_susc):
+        '''
+        Test whether the household sweep function correctly
+        adds persons to the queue.
+        '''
         mock_inf.return_value = 10
         mock_susc.return_value = 10
         subject = HouseholdSweep()

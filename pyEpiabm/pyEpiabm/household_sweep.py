@@ -1,3 +1,7 @@
+#
+# Infection due to contact within households
+#
+
 from .abstract_sweep import AbstractSweep
 from .population import Population
 from .covidsim_helpers import CovidsimHelpers
@@ -17,6 +21,11 @@ class HouseholdSweep(AbstractSweep):
     '''
 
     def __call__(self, time: float, population: Population):
+        '''
+        Given a population structure, loops over infected members
+        and considers whether they infected household members based
+        on individual, and spatial infectiousness and susceptibility.
+        '''
         timestep = int(time * Parameters.instance().time_steps_per_day)
 
         # Double loop over the whole population, checking infectiousness
