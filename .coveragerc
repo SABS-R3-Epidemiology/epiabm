@@ -1,0 +1,7 @@
+[run]
+source = pyEpiabm
+omit =
+    pyEpiabm/pyEpiabm/tests/*
+    pyEpiabm/pyEpiabm/version_info.py
+    pyEpiabm/run_tests.py
+    pyEpiabm/setup.py

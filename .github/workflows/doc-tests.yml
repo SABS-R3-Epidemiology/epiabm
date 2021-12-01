@@ -1,0 +1,35 @@
+name: Doctest
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+
+  build-and-test:
+    name: doctest
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+          architecture: x64
+
+      - name: install pyEpiabm
+        run: |
+          python --version
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install pyEpiabm/.
+          python -m pip install pyEpiabm/.[docs]
+      - name: run doctest
+        run: |
+          cd pyEpiabm
+          python run_tests.py --doctest
