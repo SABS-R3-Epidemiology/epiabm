@@ -1,10 +1,14 @@
+#
+# AbstractSweep Class
+#
+
 from .population import Population
 
 
 class AbstractSweep:
-    """Abstract class for Population Sweeps"""
+    """Abstract class for Population Sweeps."""
     def bind_population(self, population: Population):
-        """Set the population which the sweep will act on
+        """Set the population which the sweep will act on.
 
         : param population: Population: :class:`Population` to bind
         : type population: Population"""
@@ -12,7 +16,7 @@ class AbstractSweep:
         self._population = population
 
     def __call__(self, time: float):
-        """Run sweep over population
+        """Run sweep over population.
 
         : param time: Current simulation time in days
         : type time: float"""
