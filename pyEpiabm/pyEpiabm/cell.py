@@ -37,7 +37,7 @@ class Cell:
 
     def enqueue_person(self, person: Person):
         """Add person to queue for processing at end of iteration
-        
+
         :param person: Person to enqueue
         :type person: Person
         """

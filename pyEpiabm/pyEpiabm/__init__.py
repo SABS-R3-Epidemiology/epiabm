@@ -14,10 +14,11 @@ from .person import Person  # noqa
 from .population import Population  # noqa
 from .cell import Cell  # noqa
 from .microcell import Microcell  # noqa
-from .household import Household
-from .infection_status import InfectionStatus # noqa
-from .parameters import Parameters
+from .household import Household  # noqa
+from .infection_status import InfectionStatus  # noqa
+from .parameters import Parameters  # noqa
 
 # Sweeps
-from .abstract_sweep import AbstractSweep # noqa
-from .household_sweep import HouseholdSweep # noqa
+from .abstract_sweep import AbstractSweep  # noqa
+from .household_sweep import HouseholdSweep  # noqa
+from .covidsim_helpers import CovidsimHelpers  # noqa

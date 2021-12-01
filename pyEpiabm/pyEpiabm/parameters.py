@@ -13,7 +13,7 @@ class Parameters:
         def __init__(self):
             pass
 
-    _instance = None # Singleton instance
+    _instance = None  # Singleton instance
 
     @staticmethod
     def instance():

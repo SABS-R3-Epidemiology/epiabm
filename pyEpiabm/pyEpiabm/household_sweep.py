@@ -1,50 +1,47 @@
 from .abstract_sweep import AbstractSweep
 from .population import Population
-from .cell import Cell
-from .microcell import Microcell
-from .covidsim import Covidsim
+from .covidsim_helpers import CovidsimHelpers
 from .parameters import Parameters
-import numpy as np
 import random
 
 
 class HouseholdSweep(AbstractSweep):
     '''Class to run the intra-household infections
     as part of the sweep function. Takes an individual
-    person as input and tests a infection event against each 
+    person as input and tests a infection event against each
     susceptible member of their household. The resulting
-    exposed  
+    exposed person is added to an infection queue.
 
     : param infected: Person
-    : return 
+    : return
     '''
 
     def __call__(self, time: float, population: Population):
         timestep = int(time * Parameters.instance().time_steps_per_day)
 
-        # Double loop over the whole population, checking infectiousness status, and whether
-        # they are absent from their household. 
+        # Double loop over the whole population, checking infectiousness
+        # status, and whether they are absent from their household.
         for cell in population.cells:
             for infector in cell.persons:
                 if not infector.is_infectious():
                     continue
 
                 # Check to see whether a household member is susceptible.
-                for infectee in infector.household:
+                for infectee in infector.household.persons:
                     if not infectee.is_susceptible():
                         continue
 
-                    # Calculate "force of infection" parameter which will determine 
-                    # the likelihood of an infection event.
-                    infectiousness_param = Covidsim.calc_house_inf(
+                    # Calculate "force of infection" parameter which will
+                    # determine the likelihood of an infection event.
+                    infectiousness = CovidsimHelpers.calc_house_inf(
                         infector, timestep)
-                    susceptibility_param = Covidsim.calc_house_susc(
+                    susceptibility = CovidsimHelpers.calc_house_susc(
                         infector, infectee, timestep)
-                    force_of_infection = infectiousness_param * susceptibility_param
+                    force_of_infection = infectiousness * susceptibility
 
                     # Compare a uniform random number to the force of infection
                     # to see whether an infection event occurs in this timestep
                     # between the given persons.
-                    r = random.uniform
+                    r = random.uniform(0, 1)
                     if r < force_of_infection:
                         cell.enqueue_person(infectee)
