@@ -1,6 +1,7 @@
 #
 # Person Class
 #
+from .infection_status import InfectionStatus
 
 
 class Person:
@@ -10,16 +11,24 @@ class Person:
     :type microcell: Microcell
     """
 
-    def __init__(self, microcell):
+    def __init__(self, microcell,
+                 age=0, susceptibility=0, infectiveness=0):
         """Constructor Method.
 
         :param microcell: Person's parent :class:`Microcell` instance.
         :type microcell: Microcell
+        :param age: Person's age.
+        :type age: float
+        :param susceptibility: Person's susceptibility.
+        :type susceptibility: float
+        :param infectiveness: Person's infectiveness.
+        :type infectiveness: float
         """
-        self.age = 0
-        self.susceptibility = 0
-        self.infectiveness = 0
+        self.age = age
+        self.susceptibility = susceptibility
+        self.infectiveness = infectiveness
         self.microcell = microcell
+        self.infection_status = InfectionStatus.Susceptible
 
     def __repr__(self):
         """String Representation of Person.
