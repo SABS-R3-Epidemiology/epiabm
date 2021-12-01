@@ -1,6 +1,6 @@
-****
-Core
-****
+******
+Sweeps
+******
 
 .. currentmodule:: pyEpiabm
 
@@ -11,7 +11,7 @@ Overview:
 - :class:`AbstractSweep`
 
 Sweeps
-****
+******
 
 .. autoclass:: AbstractSweep
     : members:
