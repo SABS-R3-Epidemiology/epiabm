@@ -23,6 +23,28 @@ class Person:
         self.infectiveness = infectiveness
         self.microcell = microcell
         self.infection_status = InfectionStatus.Susceptible
+        self.household = None
+
+    def is_infectious(self):
+        """Query if the person is currently infectious
+        
+        :return: Whether person is currently infectious
+        :rtype: bool
+        """
+        return self.infection_status in [
+            InfectionStatus.InfectASympt,
+            InfectionStatus.InfectMild,
+            InfectionStatus.InfectGP,
+            InfectionStatus.InfectHosp,
+            InfectionStatus.InfectICU,
+            InfectionStatus.InfectICURecov]
+
+    def is_susceptible(self):
+        """Query if the person is currently susceptible
+        
+        :return: Whether person is currently suscptible
+        :rtype: bool"""
+        return self.infection_status == InfectionStatus.Susceptible
 
     def __repr__(self):
         """String Representation of Person.
