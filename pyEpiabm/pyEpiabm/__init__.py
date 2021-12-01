@@ -9,9 +9,15 @@ It contains functionality for setting up a population, and tracking the
 evolution of a virus across it, with various visualisation methods.
 """
 
+# Core
 from .person import Person  # noqa
 from .population import Population  # noqa
 from .cell import Cell  # noqa
 from .microcell import Microcell  # noqa
+from .household import Household
 from .infection_status import InfectionStatus # noqa
+from .parameters import Parameters
+
+# Sweeps
 from .abstract_sweep import AbstractSweep # noqa
+from .household_sweep import HouseholdSweep # noqa
