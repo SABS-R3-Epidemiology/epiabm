@@ -87,14 +87,17 @@ def doctest_rst_and_public_interface():
     # has been added to pyEpiabm and should be imported above and included in
     # this list.
     pyEpiabm_submodules = [
+        'pyEpiabm.abstract_sweep',
         'pyEpiabm.cell',
-        'pyEpiabm.factory',
+        'pyEpiabm.covidsim_helpers',
+        'pyEpiabm.household_sweep',
+        'pyEpiabm.household',
+        'pyEpiabm.infection_status',
         'pyEpiabm.microcell',
+        'pyEpiabm.parameters',
         'pyEpiabm.person',
         'pyEpiabm.population',
-        'pyEpiabm.infection_status',
-        'pyEpiabm.abstract_sweep',
-        'pyEpiabm.version_info'
+        'pyEpiabm.version_info',
     ]
 
     doc_symbols = get_all_documented_symbols()
@@ -134,13 +137,13 @@ def check_exposed_symbols(module, submodule_names, doc_symbols):
     if len(unexpected_modules) > 0:
         print('The following modules are unexpectedly exposed in the public '
               'interface of %s:' % module.__name__)
-        for m in sorted(unexpected_modules):
+        for m in unexpected_modules:
             print('  unexpected module: ' + m.__name__)
 
         print('For python modules such as numpy you may need to confine the '
               'import to the function scope. If you have created a new '
               'pyEpiabm submodule, you will need to make %s (doctest) aware '
-              'of this.'
+              'of this by editing pyEpiabm_submodules in run_tests.py.'
               % __file__)
         print('FAILED')
         sys.exit(1)
