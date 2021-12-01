@@ -2,7 +2,7 @@ from .population import Population
 
 
 class AbstractSweep:
-    """Abstract class for Population Sweeps"""
+    """Abstract class for Population Sweeps."""
     def bind_population(self, population: Population):
         """Set the population which the sweep will act on
 
