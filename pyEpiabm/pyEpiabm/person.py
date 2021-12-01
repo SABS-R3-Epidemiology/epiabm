@@ -17,6 +17,12 @@ class Person:
 
         :param microcell: Person's parent :class:`Microcell` instance.
         :type microcell: Microcell
+        :param age: Person's age.
+        :type age: float
+        :param susceptibility: Person's susceptibility.
+        :type susceptibility: float
+        :param infectiveness: Person's infectiveness.
+        :type infectiveness: float
         """
         self.age = age
         self.susceptibility = susceptibility
