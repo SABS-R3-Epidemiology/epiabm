@@ -13,7 +13,8 @@ class TestHouseholdSweep(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         ''' Initialises a population with one infected person. Sets up a
-        single household containing this person.'''
+        single household containing this person.
+        '''
         cls.pop = pe.Population()
         cls.house = pe.Household([1.0, 1.0])
         cls.pop.add_cells(1)
@@ -53,7 +54,7 @@ class TestHouseholdSweep(unittest.TestCase):
         new_person.household = self.house
         self.house.persons.append(new_person)
         self.pop.cells[0].persons.append(new_person)
-        
+
         test_queue.put(new_person)
         subject(time, self.pop)
         self.assertEqual(self.cell.person_queue.qsize(), 1)
