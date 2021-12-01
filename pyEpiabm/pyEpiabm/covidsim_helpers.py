@@ -1,7 +1,6 @@
 #
 # Helper functions based on Covidsim code.
 #
-
 from .person import Person
 
 
@@ -13,7 +12,7 @@ class CovidsimHelpers:
 
     @staticmethod
     def calc_house_inf(infector: Person, timestep: int):
-        """Calculate the infectiveness of a household
+        """Calculate the infectiveness of a household.
 
         :param infector: Infector.
         :type infector: Person
@@ -26,7 +25,7 @@ class CovidsimHelpers:
 
     @staticmethod
     def calc_house_susc(infector: Person, infectee: Person, timestep: int):
-        """Calculate the susceptibility of a household
+        """Calculate the susceptibility of a household.
 
         :param infector: Infector.
         :type infector: Person
@@ -41,7 +40,7 @@ class CovidsimHelpers:
 
     @staticmethod
     def calc_person_susc(infector: Person, infectee: Person, timestep: int):
-        """Calculate the susceptibility of a person
+        """Calculate the susceptibility of a person.
 
         :param infector: Infector.
         :type infector: Person

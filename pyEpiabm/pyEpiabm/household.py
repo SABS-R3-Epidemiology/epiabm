@@ -5,7 +5,11 @@ import typing
 
 
 class Household:
-    """Class representing a household.
+    """Class representing a household,
+    a group of people (family or otherwise) who live
+    together and share living spaces. This group will
+    have a combined susceptability and infectiousness
+    different to that of the individuals.
     """
     def __init__(self, loc: typing.Tuple[float, float],
                  susceptibility=0, infectiveness=0):

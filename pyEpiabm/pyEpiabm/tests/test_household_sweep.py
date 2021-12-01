@@ -6,8 +6,7 @@ from unittest import mock
 
 
 class TestHouseholdSweep(unittest.TestCase):
-    """
-    Test the 'HouseholdSweep' class.
+    """Test the 'HouseholdSweep' class.
     """
 
     @classmethod
@@ -49,9 +48,8 @@ class TestHouseholdSweep(unittest.TestCase):
         subject(time, self.pop)
         assert(self.cell.person_queue.empty())
 
-        # Add one susceptibles to the population, with very high infectiousness
-        # parameters, which will (almost) certainly add both to the infected
-        # queue.
+        # Add one susceptible to the population, with the mocked infectiousness
+        # ensuring they are added to the infected queue.
         self.person.infection_status = pe.InfectionStatus.InfectMild
         test_queue = Queue()
         new_person = pe.Person(self.microcell)
