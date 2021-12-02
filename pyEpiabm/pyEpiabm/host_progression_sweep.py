@@ -31,7 +31,7 @@ class HostProgressionSweep(AbstractSweep):
         else:
             raise TypeError('Infection status of a person must be InfectMild.')
 
-    def __call__(self, time: float):
+    def __call__(self, time: int):
         """Method that sweeps through all people in the population
         and updates their infection status if it is time and assigns
         them a next infection status and a new time of next status
@@ -44,7 +44,6 @@ class HostProgressionSweep(AbstractSweep):
             for person in cell.persons:
                 if person.time_of_status_change == time:
                     person.infection_status = person.next_infection_status
-                    person.next_infection_status =\
-                        self._update_next_infection_status(person)
+                    self._update_next_infection_status(person)
                     person.time_of_status_change =\
-                        time + self._update_time_to_status_change
+                        time + self._update_time_to_status_change()
