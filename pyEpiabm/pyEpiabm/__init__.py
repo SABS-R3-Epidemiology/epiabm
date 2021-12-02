@@ -15,7 +15,9 @@ from .population import Population  # noqa
 from .cell import Cell  # noqa
 from .microcell import Microcell  # noqa
 from .household import Household  # noqa
+from .place import Place  # noqa
 from .infection_status import InfectionStatus  # noqa
+from .place_type import PlaceType  # noqa
 from .parameters import Parameters  # noqa
 
 # Sweeps

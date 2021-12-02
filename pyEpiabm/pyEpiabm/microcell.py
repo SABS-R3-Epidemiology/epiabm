@@ -2,6 +2,9 @@
 # Mirocell Class
 #
 from .person import Person
+from .place_type import PlaceType
+from .place import Place
+import typing
 
 
 class Microcell:
@@ -18,6 +21,7 @@ class Microcell:
         :type cell: Cell
         """
         self.persons = []
+        self.places = []
         self.cell = cell
 
     def __repr__(self):
@@ -38,3 +42,15 @@ class Microcell:
             p = Person(self)
             self.cell.persons.append(p)
             self.persons.append(p)
+
+    def add_place(self, n, loc: typing.Tuple[float, float],
+                  place_type: PlaceType):
+        """Adds n default :class:`Place` to Microcell.
+
+        :param n: Number of default :class:`Place` s to add
+        :type n: int
+        """
+        for i in range(n):
+            p = Place(self, loc, place_type, self.cell, self)
+            self.cell.places.append(p)
+            self.places.append(p)

@@ -15,6 +15,7 @@ class Cell:
         """
         self.microcells = []
         self.persons = []
+        self.places = []
         self.person_queue = Queue()
 
     def __repr__(self):
