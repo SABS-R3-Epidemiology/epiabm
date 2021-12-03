@@ -1,5 +1,5 @@
-#ifndef _EPIABM_DATACLASSES_MICROCELL_HPP
-#define _EPIABM_DATACLASSES_MICROCELL_HPP
+#ifndef EPIABM_DATACLASSES_MICROCELL_HPP
+#define EPIABM_DATACLASSES_MICROCELL_HPP
 
 #include "person.hpp"
 #include "place.hpp"
@@ -12,11 +12,12 @@
 
 namespace epiabm
 {
-    
+    class Cell;
+
     class Microcell
     {
     private:
-        std::vector<Person*> m_people;
+        std::vector<size_t> m_people;
         std::vector<Place> m_places;
 
         size_t m_cellPos;
@@ -24,27 +25,27 @@ namespace epiabm
     public:
         Microcell(size_t cellPos);
         ~Microcell() = default;
+        Microcell(const Microcell&);
+        Microcell(Microcell&&);
 
         size_t cellPos() { return m_cellPos; }
 
-        void forEachPerson(std::function<bool(Person*)>& callback);
-        void forEachPlace(std::function<bool(Place*)>& callback);
+        void forEachPerson(Cell& cell, std::function<bool(Person*)> callback);
+        void forEachPlace(std::function<bool(Place*)> callback);
 
-        Person& getPerson(size_t i) { return *m_people[i]; }
+        Person& getPerson(Cell& cell, size_t i);
 
-        void print() { std::cout << "Microcell with " << m_people.size() << " people." << std::endl;}
+        void print() { std::cout << "Microcell with " << m_people.size() << " people." << std::endl; }
 
-        std::vector<Person*>& people() { return m_people; }
+        std::vector<size_t>& people() { return m_people; }
         std::vector<Place>& places() { return m_places; }
         
     private:
-        friend class Factory;
-        friend class Person;
-        friend class Cell;
+        friend class Place;
     };
 
     typedef std::shared_ptr<Microcell> MicrocellPtr;
 
 } // namespace epiabm
 
-#endif // _EPIABM_DATACLASSES_MICROCELL_HPP
+#endif // EPIABM_DATACLASSES_MICROCELL_HPP

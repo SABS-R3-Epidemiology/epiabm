@@ -1,5 +1,5 @@
-#ifndef _EPIABM_DATACLASSES_PERSON_HPP
-#define _EPIABM_DATACLASSES_PERSON_HPP
+#ifndef EPIABM_DATACLASSES_PERSON_HPP
+#define EPIABM_DATACLASSES_PERSON_HPP
 
 #include "infection_status.hpp"
 
@@ -18,7 +18,7 @@ namespace epiabm
 
     class Person
     {
-    public:
+    private:
         InfectionStatus m_status;
 
         PersonParams m_params;
@@ -35,21 +35,20 @@ namespace epiabm
         InfectionStatus status() const { return m_status; }
         PersonParams& params() { return m_params; }
 
-        void print() { std::cout << "A Person!" << std::endl; }
+        void print() { std::cout << "Person, cellPos: " << m_cellPos
+            << ", mcellPos: " << m_mcellPos  
+            << std::endl; }
 
         void setStatus(InfectionStatus status) { m_status = status; }
 
-        size_t microcellPos() { return m_mcellPos; }
         size_t cellPos() { return m_cellPos; }
+        size_t microcellPos() { return m_mcellPos; }
 
     private:
-        friend class Factory;
-        friend class Microcell;
-        friend class Cell;
     };
     
     typedef std::shared_ptr<Person> PersonPtr;
 
 } // namespace epiabm
 
-#endif // _EPIABM_DATACLASSES_PERSON_HPP
+#endif // EPIABM_DATACLASSES_PERSON_HPP

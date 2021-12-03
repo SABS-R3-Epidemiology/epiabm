@@ -4,7 +4,7 @@
 
 using namespace epiabm;
 
-TEST_CASE("person: test initialize person", "[Person]")
+TEST_CASE("dataclasses/person: test initialize person", "[Person]")
 {
     Person subject = Person(5, 10);
     REQUIRE(subject.cellPos() == 5);
@@ -13,7 +13,7 @@ TEST_CASE("person: test initialize person", "[Person]")
     REQUIRE(subject.status() == InfectionStatus::Susceptible);
 }
 
-TEST_CASE("person: test status", "[Person]")
+TEST_CASE("dataclasses/person: test status", "[Person]")
 {
     Person subject = Person(0,0);
     REQUIRE(subject.status() == InfectionStatus::Susceptible);

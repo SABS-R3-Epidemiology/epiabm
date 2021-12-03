@@ -68,7 +68,7 @@ namespace epiabm
         cell->people().push_back(
             Person(cell->people().size(), microcell->people().size()));
         microcell->people().push_back(
-            &cell->people()[cell->people().size()-1]);
+            cell->people().size()-1);
     }
 
     void PopulationFactory::addPeople(Cell* cell, Microcell* microcell, size_t n)

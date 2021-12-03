@@ -1,5 +1,5 @@
-#ifndef _EPIABM_DATACLASSES_PLACE_HPP
-#define _EPIABM_DATACLASSES_PLACE_HPP
+#ifndef EPIABM_DATACLASSES_PLACE_HPP
+#define EPIABM_DATACLASSES_PLACE_HPP
 
 #include "infection_status.hpp"
 #include "person.hpp"
@@ -10,11 +10,13 @@
 
 namespace epiabm
 {
+    class Cell;
+    class Microcell;
 
     class Place
     {
     private:
-        std::set<Person*> m_members;
+        std::set<size_t> m_members;
         size_t m_mcellPos;
 
         std::pair<double, double> m_location;
@@ -25,10 +27,10 @@ namespace epiabm
         size_t microcellPos() { return m_mcellPos; }
         std::pair<double, double> location() { return m_location; }
 
-        void forEachMember(std::function<bool(Person*)>& callback);
-        bool isMember(Person* person);
+        void forEachMember(Cell& cell, Microcell& microcell, std::function<bool(Person*)>& callback);
+        bool isMember(size_t person) { return m_members.find(person) != m_members.end(); }
 
-        void addMember(Person* person) { m_members.insert(person); }
+        void addMember(size_t person) { m_members.insert(person); }
 
     private:
         friend class Factory;
@@ -38,4 +40,4 @@ namespace epiabm
 
 } // namespace epiabm
 
-#endif // _EPIABM_DATACLASSES_PLACE_HPP
+#endif // EPIABM_DATACLASSES_PLACE_HPP

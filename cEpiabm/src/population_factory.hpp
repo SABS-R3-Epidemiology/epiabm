@@ -1,5 +1,5 @@
-#ifndef _EPIABM_POPULATION_FACTORY_HPP
-#define _EPIABM_POPULATION_FACTORY_HPP
+#ifndef EPIABM_POPULATION_FACTORY_HPP
+#define EPIABM_POPULATION_FACTORY_HPP
 
 #include "dataclasses/population.hpp"
 #include "dataclasses/cell.hpp"
@@ -18,7 +18,7 @@ namespace epiabm
     public:
         PopulationPtr makePopulation();
         PopulationPtr makePopulation(size_t n_cells, size_t n_microcells, size_t n_people);
-
+    
         void addCell(PopulationPtr population);
         void addMicrocell(Cell* cell);
         void addPerson(Cell* cell, Microcell* microcell);
@@ -34,4 +34,4 @@ namespace epiabm
 
 } // namespace epiabm
 
-#endif // _EPIABM_POPULATION_FACTORY_HPP
+#endif // EPIABM_POPULATION_FACTORY_HPP

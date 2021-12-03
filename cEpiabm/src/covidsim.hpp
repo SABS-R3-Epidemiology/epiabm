@@ -1,5 +1,5 @@
-#ifndef _EPIABM_COVIDSIM_HPP
-#define _EPIABM_COVIDSIM_HPP
+#ifndef EPIABM_COVIDSIM_HPP
+#define EPIABM_COVIDSIM_HPP
 
 #include "dataclasses/person.hpp"
 
@@ -27,4 +27,4 @@ namespace epiabm
 
 } // namespace epiabm
 
-#endif // _EPIABM_COVIDSIM_HPP
+#endif // EPIABM_COVIDSIM_HPP

@@ -1,5 +1,5 @@
-#ifndef _EPIABM_DATACLASSES_POPULATION_HPP
-#define _EPIABM_DATACLASSES_POPULATION_HPP
+#ifndef EPIABM_DATACLASSES_POPULATION_HPP
+#define EPIABM_DATACLASSES_POPULATION_HPP
 
 #include "cell.hpp"
 
@@ -20,7 +20,7 @@ namespace epiabm
         Population();
         ~Population() = default;
 
-        void forEachCell(std::function<bool(Cell*)>& callback);
+        void forEachCell(std::function<bool(Cell*)> callback);
         std::vector<Cell>& cells() { return m_cells; }
 
         void print()
@@ -29,11 +29,10 @@ namespace epiabm
         }
     
     private:
-        friend class Factory;
     };
 
     typedef std::shared_ptr<Population> PopulationPtr;
     
 } // namespace epiabm
 
-#endif // _EPIABM_DATACLASSES_POPULATION_HPP
+#endif // EPIABM_DATACLASSES_POPULATION_HPP
