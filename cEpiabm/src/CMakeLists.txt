@@ -19,7 +19,6 @@ set(
     dataclasses/microcell.hpp
     dataclasses/person.hpp
     dataclasses/place.hpp
-    dataclasses/infection_status.hpp
     population_factory.hpp
     covidsim.hpp
 )

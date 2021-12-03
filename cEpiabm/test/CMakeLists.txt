@@ -12,6 +12,9 @@ set(
     test_src
     test_population_factory.cpp
     dataclasses/test_person.cpp
+    dataclasses/test_microcell.cpp
+    dataclasses/test_cell.cpp
+    dataclasses/test_population.cpp
 )
 
 add_executable(unit_tests ${test_src})

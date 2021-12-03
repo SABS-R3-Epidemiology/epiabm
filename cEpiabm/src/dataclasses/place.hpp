@@ -1,7 +1,6 @@
 #ifndef EPIABM_DATACLASSES_PLACE_HPP
 #define EPIABM_DATACLASSES_PLACE_HPP
 
-#include "infection_status.hpp"
 #include "person.hpp"
 
 #include <vector>

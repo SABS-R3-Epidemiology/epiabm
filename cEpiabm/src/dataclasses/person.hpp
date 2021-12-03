@@ -1,8 +1,6 @@
 #ifndef EPIABM_DATACLASSES_PERSON_HPP
 #define EPIABM_DATACLASSES_PERSON_HPP
 
-#include "infection_status.hpp"
-
 #include <vector>
 #include <memory>
 #include <iostream>
@@ -14,6 +12,20 @@ namespace epiabm
     {
         unsigned char age = 0;
         float susceptibility = 0, infectiousness = 0;
+    };
+
+    enum class InfectionStatus
+    {
+        Susceptible,
+        Exposed,
+        InfectASympt,
+        InfectMild,
+        InfectGP,
+        InfectHosp,
+        InfectICU,
+        InfectICURecov,
+        Recovered,
+        Dead
     };
 
     class Person
