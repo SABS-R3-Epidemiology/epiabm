@@ -4,14 +4,13 @@
 namespace epiabm
 {
 
-    Microcell::Microcell(std::weak_ptr<Cell> cell, size_t listPos) :
-        m_listPos(listPos),
-        m_cell(cell),
-        m_people(0),
-        m_places(0)
+    Microcell::Microcell(size_t cellPos) :
+        m_people(),
+        m_places(),
+        m_cellPos(cellPos)
     {}
 
-    void Microcell::forEachPerson(std::function<bool(PersonPtr)>& callback)
+    void Microcell::forEachPerson(std::function<bool(Person*)>& callback)
     {
         for (size_t i = 0; i < m_people.size(); i++)
         {
@@ -19,22 +18,11 @@ namespace epiabm
         }
     }
 
-    void Microcell::forEachPersonPair(std::function<bool(PersonPtr, PersonPtr)>& callback)
-    {
-        for (size_t i = 0; i < m_people.size(); i++)
-        {
-            for (size_t j = i; j < m_people.size(); j++)
-            {
-                callback(m_people[i], m_people[j]);
-            }
-        }
-    }
-
-    void Microcell::forEachPlace(std::function<bool(PlacePtr)>& callback)
+    void Microcell::forEachPlace(std::function<bool(Place*)>& callback)
     {
         for (size_t i = 0; i < m_places.size(); i++)
         {
-            callback(m_places[i]);
+            callback(&m_places[i]);
         }
     }
 

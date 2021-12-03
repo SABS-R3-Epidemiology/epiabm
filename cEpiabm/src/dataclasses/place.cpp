@@ -4,12 +4,12 @@
 namespace epiabm
 {
 
-    Place::Place(MicrocellPtr microcell) :
-        m_microcell(microcell),
-        m_members()
+    Place::Place(size_t mcellPos) :
+        m_members(),
+        m_mcellPos(mcellPos)
     {}
 
-    void Place::forEachMember(std::function<bool(PersonPtr)>& callback)
+    void Place::forEachMember(std::function<bool(Person*)>& callback)
     {
         auto it = m_members.begin();
         while (it != m_members.end())
@@ -18,7 +18,7 @@ namespace epiabm
         }
     }
 
-    bool Place::isMember(PersonPtr person)
+    bool Place::isMember(Person*)
     {
         return false;
     }

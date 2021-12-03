@@ -17,13 +17,15 @@ namespace epiabm
     private:
     public:
         PopulationPtr makePopulation();
-        void addCell(PopulationPtr population);
-        void addMicrocell(CellPtr cell);
-        void addPerson(MicrocellPtr microcell);
+        PopulationPtr makePopulation(size_t n_cells, size_t n_microcells, size_t n_people);
 
-        void addCells(PopulationPtr population, int n);
-        void addMicrocells(CellPtr cell, int n);
-        void addPeople(MicrocellPtr microcell, int n);
+        void addCell(PopulationPtr population);
+        void addMicrocell(Cell* cell);
+        void addPerson(Cell* cell, Microcell* microcell);
+
+        void addCells(PopulationPtr population, size_t n);
+        void addMicrocells(Cell* cell, size_t n);
+        void addPeople(Cell* cell, Microcell* microcell, size_t n);
 
         void print() { std::cout << "Hello World!" << std::endl; }
         

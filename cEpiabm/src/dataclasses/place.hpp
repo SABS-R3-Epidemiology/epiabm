@@ -1,7 +1,8 @@
 #ifndef _EPIABM_DATACLASSES_PLACE_HPP
 #define _EPIABM_DATACLASSES_PLACE_HPP
 
-#include "types.hpp"
+#include "infection_status.hpp"
+#include "person.hpp"
 
 #include <vector>
 #include <set>
@@ -13,25 +14,27 @@ namespace epiabm
     class Place
     {
     private:
-        std::set<PersonPtr> m_members;
-        std::weak_ptr<Microcell> m_microcell;
+        std::set<Person*> m_members;
+        size_t m_mcellPos;
 
         std::pair<double, double> m_location;
 
     public:
-        Place(MicrocellPtr microcell);
+        Place(size_t mcellPos);
 
-        MicrocellPtr microcell() { return m_microcell.lock(); }
+        size_t microcellPos() { return m_mcellPos; }
         std::pair<double, double> location() { return m_location; }
 
-        void forEachMember(std::function<bool(PersonPtr)>& callback);
-        bool isMember(PersonPtr person);
+        void forEachMember(std::function<bool(Person*)>& callback);
+        bool isMember(Person* person);
 
-        void addMember(PersonPtr person) { m_members.insert(person); }
+        void addMember(Person* person) { m_members.insert(person); }
 
     private:
         friend class Factory;
     };
+
+    typedef std::shared_ptr<Place> PlacePtr;
 
 } // namespace epiabm
 

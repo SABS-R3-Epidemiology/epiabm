@@ -4,14 +4,14 @@ namespace epiabm
 {
 
     Population::Population() :
-        m_cells(0)
+        m_cells()
     {}
 
-    void Population::forEachCell(std::function<bool(CellPtr)>& callback)
+    void Population::forEachCell(std::function<bool(Cell*)>& callback)
     {
         for (size_t i = 0; i < m_cells.size(); i++)
         {
-            callback(m_cells[i]);
+            callback(&m_cells[i]);
         }
     }
 

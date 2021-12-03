@@ -3,11 +3,11 @@
 namespace epiabm
 {
 
-    Person::Person(std::weak_ptr<Microcell> microcell, size_t listPos) :
-            m_listPos(listPos),
-            m_microcell(microcell),
+    Person::Person(size_t cellPos, size_t mcellPos) :
+            m_status(InfectionStatus::Susceptible),
             m_params(PersonParams()),
-            m_status(InfectionStatus::Susceptible)
+            m_cellPos(cellPos),
+            m_mcellPos(mcellPos)
     {}
 
 } // namespace epiabm

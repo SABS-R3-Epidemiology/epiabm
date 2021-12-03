@@ -1,0 +1,22 @@
+
+find_package(Catch2 CONFIG REQUIRED)
+message(STATUS "Found Catch2 ${Catch2_VERSION}")
+
+add_library(catch_main STATIC catch_main.cpp)
+target_link_libraries(catch_main PUBLIC Catch2::Catch2WithMain)
+target_link_libraries(catch_main PRIVATE project_settings)
+
+add_definitions(-DEPIABM_TEST_DIR=\"${CMAKE_CURRENT_LIST_DIR}\")
+
+set(
+    test_src
+    test_population_factory.cpp
+    dataclasses/test_person.cpp
+)
+
+add_executable(unit_tests ${test_src})
+target_link_libraries(unit_tests PRIVATE epiabm_lib project_warnings project_settings catch_main)
+
+# automatically discover tests related to the "tests"
+include(Catch)
+catch_discover_tests(unit_tests)

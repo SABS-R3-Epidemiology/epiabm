@@ -1,9 +1,7 @@
 #ifndef _EPIABM_DATACLASSES_PERSON_HPP
 #define _EPIABM_DATACLASSES_PERSON_HPP
 
-#include "types.hpp"
-#include "cell.hpp"
-#include "microcell.hpp"
+#include "infection_status.hpp"
 
 #include <vector>
 #include <memory>
@@ -21,21 +19,18 @@ namespace epiabm
     class Person
     {
     public:
-        std::weak_ptr<Microcell> m_microcell;
         InfectionStatus m_status;
 
         PersonParams m_params;
 
-        size_t m_listPos;
+        size_t m_cellPos;
+        size_t m_mcellPos;
 
     public:
-        Person(std::weak_ptr<Microcell> microcell, size_t listPos);
+        Person(size_t cellPos, size_t mcellPos);
         ~Person() = default;
         Person(const Person&) = default;
         Person(Person&&) = default;
-
-        unsigned char age;
-        float susceptibility, infectiousness;
 
         InfectionStatus status() const { return m_status; }
         PersonParams& params() { return m_params; }
@@ -44,14 +39,17 @@ namespace epiabm
 
         void setStatus(InfectionStatus status) { m_status = status; }
 
-        MicrocellPtr microcell() { return m_microcell.lock(); }
-        CellPtr cell() { return m_microcell.lock()->cell(); }
+        size_t microcellPos() { return m_mcellPos; }
+        size_t cellPos() { return m_cellPos; }
 
     private:
         friend class Factory;
         friend class Microcell;
         friend class Cell;
     };
+    
+    typedef std::shared_ptr<Person> PersonPtr;
+
 } // namespace epiabm
 
 #endif // _EPIABM_DATACLASSES_PERSON_HPP

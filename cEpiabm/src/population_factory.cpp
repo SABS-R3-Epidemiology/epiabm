@@ -9,46 +9,75 @@ namespace epiabm
         return std::make_shared<Population>();
     }
 
-    void PopulationFactory::addCell(PopulationPtr population)
+    PopulationPtr PopulationFactory::makePopulation(
+        size_t n_cells,
+        size_t n_microcells,
+        size_t n_people)
     {
-        population->cells().push_back(std::make_shared<Cell>());
+        PopulationPtr population = makePopulation();
+        population->cells().reserve(n_cells);
+        addCells(population, n_cells);
+        for (size_t i = 0; i < n_cells; i++)
+        {
+            population->cells()[i].people().reserve(n_microcells * n_people);
+            population->cells()[i].microcells().reserve(n_microcells);
+            addMicrocells(&population->cells()[i], n_microcells);
+            for (size_t j = 0; j < n_microcells; j++)
+            {
+                population->cells()[i].microcells()[j].people().reserve(n_people);
+                addPeople(
+                    &population->cells()[i],
+                    &population->cells()[i].microcells()[j],
+                    n_people);
+            }
+        }
+        return population;
     }
 
-    void PopulationFactory::addCells(PopulationPtr population, int n)
+    void PopulationFactory::addCell(PopulationPtr population)
     {
-        for (int i = 0; i < n; i++)
+        population->cells().push_back(Cell());
+    }
+
+    void PopulationFactory::addCells(PopulationPtr population, size_t n)
+    {
+        //population->cells().reserve(population->cells().size() + n);
+        for (size_t i = 0; i < n; i++)
         {
             addCell(population);
         }
     }
 
-    void PopulationFactory::addMicrocell(CellPtr cell)
+    void PopulationFactory::addMicrocell(Cell* cell)
     {
-        cell->microcells().push_back(std::make_shared<Microcell>(
-            cell, cell->microcells().size()));
+        cell->microcells().push_back(
+            Microcell(cell->microcells().size()));
     }
 
-    void PopulationFactory::addMicrocells(CellPtr cell, int n)
+    void PopulationFactory::addMicrocells(Cell* cell, size_t n)
     {
-        for (int i = 0; i < n; i++)
+        //cell->microcells().reserve(cell->microcells().size() + n);
+        for (size_t i = 0; i < n; i++)
         {
             addMicrocell(cell);
         }
     }
 
-    void PopulationFactory::addPerson(MicrocellPtr microcell)
+    void PopulationFactory::addPerson(Cell* cell, Microcell* microcell)
     {
-        PersonPtr newPerson = std::make_shared<Person>(
-            microcell, microcell->cell()->people().size());
-        microcell->cell()->people().push_back(newPerson);
-        microcell->people().push_back(newPerson);
+        cell->people().push_back(
+            Person(cell->people().size(), microcell->people().size()));
+        microcell->people().push_back(
+            &cell->people()[cell->people().size()-1]);
     }
 
-    void PopulationFactory::addPeople(MicrocellPtr microcell, int n)
+    void PopulationFactory::addPeople(Cell* cell, Microcell* microcell, size_t n)
     {
-        for (int i = 0; i < n; i++)
+        //cell->people().reserve(cell->people().size() + n);
+        //microcell->people().reserve(microcell->people().size() + n);
+        for (size_t i = 0; i < n; i++)
         {
-            addPerson(microcell);
+            addPerson(cell, microcell);
         }
     }
 
