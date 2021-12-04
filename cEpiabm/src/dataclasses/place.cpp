@@ -1,31 +1,14 @@
 
 #include "place.hpp"
-#include "cell.hpp"
-#include "microcell.hpp"
 
 namespace epiabm
 {
 
     Place::Place(size_t mcellPos) :
-        m_members(),
+        MembersInterface(mcellPos),
         m_mcellPos(mcellPos)
     {}
 
-    void Place::forEachMember(Cell& cell, Microcell& microcell, std::function<bool(Person*)>& callback)
-    {
-        auto it = m_members.begin();
-        while (it != m_members.end())
-        {
-            if (!callback(&cell.people()[microcell.people()[*it]])) return;
-            it++;
-        }
-    }
-
-    bool Place::addMember(size_t person)
-    {
-        if (m_members.find(person) != m_members.end()) return false;
-        m_members.insert(person);
-        return true;
-    }
+    size_t Place::microcellPos() const { return m_mcellPos; }
 
 } // namespace epiabm

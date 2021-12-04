@@ -1,6 +1,9 @@
 
 #include "cell.hpp"
 
+#include <iostream>
+
+
 namespace epiabm
 {
 
@@ -46,6 +49,17 @@ namespace epiabm
         }
     }
 
+    Person& Cell::getPerson(size_t i) { return m_people[i]; }
+    Microcell& Cell::getMicrocell(size_t i) { return m_microcells[i]; }
+
+    void Cell::print()
+    {
+        std::cout << "Cell with " << m_microcells.size()
+            << " microcells and " << m_people.size()
+            << " people." << std::endl;
+    }
+
+
     void Cell::processQueue(std::function<void(size_t)> callback)
     {
         while (!m_personQueue.empty())
@@ -63,6 +77,9 @@ namespace epiabm
         m_peopleInQueue.insert(personIndex);
         return true;
     }
+
+    std::vector<Person>& Cell::people() { return m_people; }
+    std::vector<Microcell>& Cell::microcells() { return m_microcells; }
 
     void Cell::initializeInfectiousGrouping()
     {
@@ -102,5 +119,7 @@ namespace epiabm
         m_numInfectious--;
         return true;
     }
+
+    size_t Cell::numInfectious() const { return m_numInfectious; }
 
 } // namespace epiabm

@@ -1,12 +1,10 @@
 #ifndef EPIABM_DATACLASSES_HOUSEHOLD_HPP
 #define EPIABM_DATACLASSES_HOUSEHOLD_HPP
 
-#include "person.hpp"
+#include "membersInterface.hpp"
 
 #include <tuple>
-#include <vector>
-#include <set>
-#include <functional>
+#include <memory>
 
 namespace epiabm
 {
@@ -17,33 +15,26 @@ namespace epiabm
         std::pair<double, double> location = {0, 0};
     };
 
-    class Cell;
-    class Microcell;
-
-    class Household
+    class Household : public MembersInterface
     {
     private:
-        std::set<size_t> m_members; // Indices of people in Microcell::m_people vector
         HouseholdParams m_params;
 
         size_t m_mcellPos;
 
     public:
         Household(size_t mcellPos);
+        ~Household() {}
 
-        size_t microcellPos() const { return m_mcellPos; }
+        size_t microcellPos() const;
 
-        HouseholdParams& params() { return m_params; }
-
-        void forEachMember(Cell& cell, Microcell& microcell, std::function<bool(Person*)> callback);
-        bool isMember(size_t person) const { return m_members.find(person) != m_members.end(); }
-
-        bool addMember(size_t person); // Maybe should make this private
-
-        std::set<size_t>& members() { return m_members; }
-
+        HouseholdParams& params();
     private:
+
+    friend class PopulationFactory;
     };
+
+    typedef std::shared_ptr<Household> HouseholdPtr;
 
 } // namespace epiabm
 

@@ -26,6 +26,8 @@ namespace epiabm
         m_cellPos(std::move(other.m_cellPos))
     {}
 
+    size_t Microcell::cellPos() const { return m_cellPos; }
+
     void Microcell::forEachPerson(Cell& cell, std::function<bool(Person*)> callback)
     {
         for (size_t i = 0; i < m_people.size(); i++)
@@ -46,5 +48,16 @@ namespace epiabm
     {
         return cell.m_people[m_people[i]];
     }
+
+    void Microcell::print()
+    {
+        std::cout << "Microcell with " << m_people.size()
+            << " people." << std::endl;
+    }
+
+    std::vector<size_t>& Microcell::people() { return m_people; }
+    std::vector<Place>& Microcell::places() { return m_places; }
+    std::vector<Household>& Microcell::households() { return m_households; }
+
 
 } // namespace epiabm

@@ -1,11 +1,9 @@
 #ifndef EPIABM_DATACLASSES_PLACE_HPP
 #define EPIABM_DATACLASSES_PLACE_HPP
 
-#include "person.hpp"
+#include "membersInterface.hpp"
 
-#include <vector>
-#include <set>
-#include <functional>
+#include <memory>
 
 namespace epiabm
 {
@@ -13,26 +11,19 @@ namespace epiabm
     class Cell;
     class Microcell;
 
-    class Place
+    class Place : public MembersInterface
     {
     private:
-        std::set<size_t> m_members; // Location of people in Microcell::m_people vector
         size_t m_mcellPos;
 
     public:
         Place(size_t mcellPos);
+        ~Place() {}
 
-        size_t microcellPos() const { return m_mcellPos; }
-
-        void forEachMember(Cell& cell, Microcell& microcell, std::function<bool(Person*)>& callback);
-        bool isMember(size_t person) { return m_members.find(person) != m_members.end(); }
-
-        bool addMember(size_t person); // Maybe should make this private
-
-        std::set<size_t>& members() { return m_members; }
+        size_t microcellPos() const;
 
     private:
-        friend class Factory;
+        friend class PopulationFactory;
     };
 
     typedef std::shared_ptr<Place> PlacePtr;

@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <memory>
-#include <iostream>
 
 namespace epiabm
 {
@@ -46,20 +45,18 @@ namespace epiabm
         Person(const Person&) = default;
         Person(Person&&) = default;
 
-        InfectionStatus status() const { return m_status; }
-        PersonParams& params() { return m_params; }
+        InfectionStatus status() const;
+        PersonParams& params();
 
-        void print() { std::cout << "Person, cellPos: " << m_cellPos
-            << ", mcellPos: " << m_mcellPos  
-            << std::endl; }
+        void print();
 
-        void setStatus(InfectionStatus status) { m_status = status; }
+        void setStatus(InfectionStatus status);
 
-        size_t cellPos() const { return m_cellPos; }
-        size_t microcellPos() const { return m_mcellPos; }
+        size_t cellPos() const;
+        size_t microcellPos() const;
         
         bool setHousehold(size_t hh);
-        size_t household() { return m_household; }
+        size_t household();
 
     private:
     };

@@ -6,7 +6,6 @@
 #include <functional>
 #include <vector>
 #include <memory>
-#include <iostream>
 
 namespace epiabm
 {
@@ -21,12 +20,9 @@ namespace epiabm
         ~Population() = default;
 
         void forEachCell(std::function<bool(Cell*)> callback);
-        std::vector<Cell>& cells() { return m_cells; }
+        std::vector<Cell>& cells();
 
-        void print()
-        {
-            std::cout << "Population with " << m_cells.size() << " Cells!" << std::endl;
-        }
+        void print();
     
     private:
     };

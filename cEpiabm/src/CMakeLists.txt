@@ -7,6 +7,7 @@ set(
     dataclasses/cell.cpp
     dataclasses/microcell.cpp
     dataclasses/person.cpp
+    dataclasses/membersInterface.cpp
     dataclasses/place.cpp
     dataclasses/household.cpp
     population_factory.cpp
@@ -19,6 +20,7 @@ set(
     dataclasses/cell.hpp
     dataclasses/microcell.hpp
     dataclasses/person.hpp
+    dataclasses/membersInterface.hpp
     dataclasses/place.hpp
     dataclasses/household.hpp
     population_factory.hpp

@@ -78,10 +78,10 @@ inline void forEachMemberTest(size_t n_microcells, size_t n_households, size_t n
 
     Cell subject = makeSubject(n_microcells, n_households, n_people);
 
-    std::cout << "Num Microcells: " << subject.microcells().size() << std::endl;
+    //std::cout << "Num Microcells: " << subject.microcells().size() << std::endl;
     for (size_t mc = 0; mc < subject.microcells().size(); mc++)
     {
-        std::cout << "Num People: " << subject.microcells()[mc].people().size() << std::endl;
+        //std::cout << "Num People: " << subject.microcells()[mc].people().size() << std::endl;
         for (size_t p = 0; p < subject.microcells()[mc].people().size(); p++)
         {
             size_t hh = static_cast<size_t>(std::rand())%n_households;

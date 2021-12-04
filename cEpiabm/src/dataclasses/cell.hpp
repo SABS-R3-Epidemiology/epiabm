@@ -7,8 +7,8 @@
 #include <vector>
 #include <memory>
 #include <functional>
-#include <iostream>
 #include <queue>
+
 
 namespace epiabm
 {
@@ -37,21 +37,21 @@ namespace epiabm
         void forEachInfectious(std::function<bool(Person*)> callback);
         void forEachNonInfectious(std::function<bool(Person*)> callback);
 
-        Person& getPerson(size_t i) { return m_people[i]; }
-        Microcell& getMicrocell(size_t i) { return m_microcells[i]; }
+        Person& getPerson(size_t i);
+        Microcell& getMicrocell(size_t i);
 
-        void print() { std::cout << "Cell with " << m_microcells.size() << " microcells and " << m_people.size() << " people." << std::endl; }
-        
+        void print();
+
         void processQueue(std::function<void(size_t)> callback);
         bool enqueuePerson(size_t personIndex);
 
-        std::vector<Person>& people() { return m_people; }
-        std::vector<Microcell>& microcells() { return m_microcells; }
+        std::vector<Person>& people();
+        std::vector<Microcell>& microcells();
 
         void initializeInfectiousGrouping();
         bool markInfectious(size_t personIndex);
         bool markNonInfectious(size_t personIndex);
-        size_t numInfectious() const { return m_numInfectious; }
+        size_t numInfectious() const;
 
     private:
         friend class Microcell;
