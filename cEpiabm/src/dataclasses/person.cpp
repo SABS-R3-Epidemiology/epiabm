@@ -10,4 +10,11 @@ namespace epiabm
             m_mcellPos(mcellPos)
     {}
 
+    bool Person::setHousehold(size_t hh)
+    {
+        if (m_hasHousehold) return false;
+        m_household = hh; m_hasHousehold = true;
+        return true;
+    }
+
 } // namespace epiabm

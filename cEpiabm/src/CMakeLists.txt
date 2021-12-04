@@ -8,6 +8,7 @@ set(
     dataclasses/microcell.cpp
     dataclasses/person.cpp
     dataclasses/place.cpp
+    dataclasses/household.cpp
     population_factory.cpp
     covidsim.cpp
 )
@@ -19,6 +20,7 @@ set(
     dataclasses/microcell.hpp
     dataclasses/person.hpp
     dataclasses/place.hpp
+    dataclasses/household.hpp
     population_factory.hpp
     covidsim.hpp
 )

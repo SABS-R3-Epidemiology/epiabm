@@ -15,6 +15,7 @@ set(
     dataclasses/test_microcell.cpp
     dataclasses/test_cell.cpp
     dataclasses/test_population.cpp
+    dataclasses/test_household.cpp
 )
 
 add_executable(unit_tests ${test_src})

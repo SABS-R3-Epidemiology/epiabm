@@ -37,6 +37,8 @@ namespace epiabm
 
         size_t m_cellPos;
         size_t m_mcellPos;
+        size_t m_household = 0;
+        bool m_hasHousehold = false;
 
     public:
         Person(size_t cellPos, size_t mcellPos);
@@ -53,8 +55,11 @@ namespace epiabm
 
         void setStatus(InfectionStatus status) { m_status = status; }
 
-        size_t cellPos() { return m_cellPos; }
-        size_t microcellPos() { return m_mcellPos; }
+        size_t cellPos() const { return m_cellPos; }
+        size_t microcellPos() const { return m_mcellPos; }
+        
+        bool setHousehold(size_t hh);
+        size_t household() { return m_household; }
 
     private:
     };

@@ -3,6 +3,7 @@
 
 #include "person.hpp"
 #include "place.hpp"
+#include "household.hpp"
 
 #include <vector>
 #include <memory>
@@ -19,6 +20,7 @@ namespace epiabm
     private:
         std::vector<size_t> m_people;
         std::vector<Place> m_places;
+        std::vector<Household> m_households;
 
         size_t m_cellPos;
         
@@ -28,7 +30,7 @@ namespace epiabm
         Microcell(const Microcell&);
         Microcell(Microcell&&);
 
-        size_t cellPos() { return m_cellPos; }
+        size_t cellPos() const { return m_cellPos; }
 
         void forEachPerson(Cell& cell, std::function<bool(Person*)> callback);
         void forEachPlace(std::function<bool(Place*)> callback);
@@ -39,6 +41,7 @@ namespace epiabm
 
         std::vector<size_t>& people() { return m_people; }
         std::vector<Place>& places() { return m_places; }
+        std::vector<Household>& households() { return m_households; }
         
     private:
         friend class Place;
