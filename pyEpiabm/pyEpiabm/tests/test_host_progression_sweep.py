@@ -2,7 +2,6 @@ import unittest
 import pyEpiabm as pe
 
 
-
 class TestHostProgressionSweep(unittest.TestCase):
 
     @classmethod
@@ -27,7 +26,8 @@ class TestHostProgressionSweep(unittest.TestCase):
         test_sweep = pe.HostProgressionSweep()
         test_sweep.bind_population(self.test_population)
         test_sweep._update_next_infection_status(self.person2)
-        self.assertEqual(self.person2.next_infection_status, pe.InfectionStatus.Recovered)
+        self.assertEqual(self.person2.next_infection_status,
+                         pe.InfectionStatus.Recovered)
 
     def test_update_time(self):
         test_sweep = pe.HostProgressionSweep()
@@ -44,7 +44,8 @@ class TestHostProgressionSweep(unittest.TestCase):
         test_sweep.bind_population(self.test_population)
 
         # tests population bound successfully
-        self.assertEqual(test_sweep._population.cells[0].persons[1].infection_status, pe.InfectionStatus.Exposed)
+        self.assertEqual(test_sweep._population.cells[0].persons[1].
+                         infection_status, pe.InfectionStatus.Exposed)
 
         test_sweep(1)
         self.assertEqual(self.person2.infection_status,
@@ -59,4 +60,3 @@ class TestHostProgressionSweep(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
