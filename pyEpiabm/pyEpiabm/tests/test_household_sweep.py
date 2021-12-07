@@ -41,12 +41,12 @@ class TestHouseholdSweep(unittest.TestCase):
 
         # Assert a population with one infected will not change the queue
         subject(time, self.pop)
-        assert(self.cell.person_queue.empty())
+        self.assertTrue(self.cell.person_queue.empty())
 
         # Change person's status to recovered
         self.person.infection_status = pe.InfectionStatus.Recovered
         subject(time, self.pop)
-        assert(self.cell.person_queue.empty())
+        self.assertTrue(self.cell.person_queue.empty())
 
         # Add one susceptible to the population, with the mocked infectiousness
         # ensuring they are added to the infected queue.
@@ -67,7 +67,7 @@ class TestHouseholdSweep(unittest.TestCase):
         self.cell.persons.append(new_person)
         self.cell.person_queue = Queue()
         subject(time, self.pop)
-        assert(self.cell.person_queue.empty())
+        self.assertTrue(self.cell.person_queue.empty())
 
 
 if __name__ == '__main__':
