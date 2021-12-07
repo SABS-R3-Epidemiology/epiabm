@@ -1,6 +1,5 @@
 import random
 from .abstract_sweep import AbstractSweep
-from .population import Population
 from .infection_status import InfectionStatus
 
 
