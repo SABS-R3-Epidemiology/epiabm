@@ -21,8 +21,6 @@ namespace epiabm
 
         void forEachCell(std::function<bool(Cell*)> callback);
         std::vector<Cell>& cells();
-
-        void print();
     
     private:
     };

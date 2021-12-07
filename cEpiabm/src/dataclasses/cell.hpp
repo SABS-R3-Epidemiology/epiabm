@@ -40,8 +40,6 @@ namespace epiabm
         Person& getPerson(size_t i);
         Microcell& getMicrocell(size_t i);
 
-        void print();
-
         void processQueue(std::function<void(size_t)> callback);
         bool enqueuePerson(size_t personIndex);
 

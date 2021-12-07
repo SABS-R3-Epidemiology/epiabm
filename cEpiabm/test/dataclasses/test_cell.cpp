@@ -53,6 +53,24 @@ TEST_CASE("dataclasses/cell: test add microcells", "[Cell]")
     }
 }
 
+TEST_CASE("dataclasses/cell: test getMicrocell", "[Cell]")
+{
+    Cell subject = Cell();
+    REQUIRE(subject.microcells().empty());
+    REQUIRE(subject.people().empty());
+
+    for (size_t i = 0; i < 100; i++)
+    {
+        subject.microcells().push_back(Microcell(i));
+    }
+    REQUIRE(subject.microcells().size() == 100);
+
+    for (size_t i = 0; i < 100; i++)
+    {
+        REQUIRE(subject.getMicrocell(i).cellPos() == i);
+    }
+}
+
 TEST_CASE("dataclasses/cell: test add people", "[Cell]")
 {
     Cell subject = Cell();
@@ -68,6 +86,24 @@ TEST_CASE("dataclasses/cell: test add people", "[Cell]")
     for (size_t i = 0; i < 1000; i++)
     {
         REQUIRE(subject.people()[i].cellPos() == i);
+    }
+}
+
+TEST_CASE("dataclasses/cell: test getPerson", "[Cell]")
+{
+    Cell subject = Cell();
+    REQUIRE(subject.microcells().empty());
+    REQUIRE(subject.people().empty());
+
+    for (size_t i = 0; i < 1000; i++)
+    {
+        subject.people().push_back(Person(i, 0));
+    }
+    REQUIRE(subject.people().size() == 1000);
+
+    for (size_t i = 0; i < 1000; i++)
+    {
+        REQUIRE(subject.getPerson(i).cellPos() == i);
     }
 }
 

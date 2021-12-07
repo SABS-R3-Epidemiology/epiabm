@@ -19,9 +19,4 @@ namespace epiabm
 
     std::vector<Cell>& Population::cells() { return m_cells; }
 
-    void Population::print()
-    {
-        std::cout << "Population with " << m_cells.size() << " Cells!" << std::endl;
-    }
-
 } // namespace epiabm

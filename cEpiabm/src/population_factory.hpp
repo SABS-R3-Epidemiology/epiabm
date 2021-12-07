@@ -17,7 +17,10 @@ namespace epiabm
     private:
     public:
         PopulationPtr makePopulation();
-        PopulationPtr makePopulation(size_t n_cells, size_t n_microcells, size_t n_people);
+        PopulationPtr makePopulation(
+            size_t n_cells, 
+            size_t n_microcells,
+            size_t n_people);
     
         void addCell(PopulationPtr population);
         void addMicrocell(Cell* cell);
@@ -26,8 +29,6 @@ namespace epiabm
         void addCells(PopulationPtr population, size_t n);
         void addMicrocells(Cell* cell, size_t n);
         void addPeople(Cell* cell, Microcell* microcell, size_t n);
-
-        void print() { std::cout << "Hello World!" << std::endl; }
         
     private:
     };

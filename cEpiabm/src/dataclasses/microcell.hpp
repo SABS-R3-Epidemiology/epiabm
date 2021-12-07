@@ -37,8 +37,6 @@ namespace epiabm
 
         Person& getPerson(Cell& cell, size_t i);
 
-        void print();
-
         std::vector<size_t>& people();
         std::vector<Place>& places();
         std::vector<Household>& households();

@@ -19,14 +19,15 @@ namespace epiabm
 
     public:
         MembersInterface(size_t mcellPos);
-        virtual ~MembersInterface() {}
+        virtual ~MembersInterface() = default;
 
-        virtual void forEachMember(Cell &cell, Microcell &microcell, std::function<bool(Person *)> callback);
-        virtual bool isMember(size_t person) const { return m_members.find(person) != m_members.end(); }
+        virtual void forEachMember(Cell &cell, Microcell &microcell,
+            std::function<bool(Person *)> callback);
+        virtual bool isMember(size_t person) const;
 
         virtual bool addMember(size_t person); // Maybe should make this private
 
-        virtual std::set<size_t> &members() { return m_members; }
+        virtual std::set<size_t> &members();
 
     private:
         size_t m_mcellPos;

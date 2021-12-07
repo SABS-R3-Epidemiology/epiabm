@@ -48,8 +48,6 @@ namespace epiabm
         InfectionStatus status() const;
         PersonParams& params();
 
-        void print();
-
         void setStatus(InfectionStatus status);
 
         size_t cellPos() const;

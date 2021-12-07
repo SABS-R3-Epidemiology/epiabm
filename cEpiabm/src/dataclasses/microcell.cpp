@@ -49,12 +49,6 @@ namespace epiabm
         return cell.m_people[m_people[i]];
     }
 
-    void Microcell::print()
-    {
-        std::cout << "Microcell with " << m_people.size()
-            << " people." << std::endl;
-    }
-
     std::vector<size_t>& Microcell::people() { return m_people; }
     std::vector<Place>& Microcell::places() { return m_places; }
     std::vector<Household>& Microcell::households() { return m_households; }

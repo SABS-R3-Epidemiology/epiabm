@@ -49,6 +49,24 @@ TEST_CASE("dataclasses/household: test initialize household", "[Household]")
     REQUIRE_NOTHROW(subject.params());
 }
 
+TEST_CASE("dataclasses/household: test destructor", "[Household]")
+{
+    {
+        MembersInterface* mi = new Household(5);
+        Household* subject = dynamic_cast<Household*>(mi);
+        REQUIRE(subject->microcellPos() == 5);
+        REQUIRE_NOTHROW(subject->params());
+        delete mi;
+        mi = nullptr;
+        subject = nullptr;
+    }
+    {
+        MembersInterface* mi = new MembersInterface(5);
+        delete mi;
+        mi = nullptr;
+    }
+}
+
 TEST_CASE("dataclasses/household: test add member", "[Household]")
 {
     Household subject = Household(5);
@@ -61,6 +79,28 @@ TEST_CASE("dataclasses/household: test add member", "[Household]")
     for (int i = 0; i < 100000; i++)
     {
         size_t newMember = static_cast<size_t>(std::rand() % 100000);
+        REQUIRE(subject.addMember(newMember) == (members.find(newMember) == members.end()));
+        members.insert(newMember);
+    }
+
+    for (size_t i = 0; i < 1000000; i++)
+    {
+        REQUIRE(subject.isMember(i) == (members.find(i) != members.end()));
+    }
+}
+
+TEST_CASE("dataclasses/household: test add member already exists", "[Household]")
+{
+    Household subject = Household(5);
+    REQUIRE(subject.microcellPos() == 5);
+    REQUIRE_NOTHROW(subject.params());
+
+    REQUIRE(subject.members().empty());
+
+    std::set<size_t> members = std::set<size_t>();
+    for (int i = 0; i < 1000000; i++)
+    {
+        size_t newMember = static_cast<size_t>(std::rand() % 1000);
         REQUIRE(subject.addMember(newMember) == (members.find(newMember) == members.end()));
         members.insert(newMember);
     }

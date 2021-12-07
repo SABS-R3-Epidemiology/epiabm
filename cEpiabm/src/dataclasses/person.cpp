@@ -15,13 +15,6 @@ namespace epiabm
     InfectionStatus Person::status() const { return m_status; }
     PersonParams& Person::params() { return m_params; }
 
-    void Person::print()
-    {
-        std::cout << "Person, cellPos: " << m_cellPos
-            << ", mcellPos: " << m_mcellPos
-            << std::endl;
-    }
-
     void Person::setStatus(InfectionStatus status) { m_status = status; }
 
     size_t Person::cellPos() const { return m_cellPos; }

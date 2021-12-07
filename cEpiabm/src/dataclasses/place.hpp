@@ -18,7 +18,7 @@ namespace epiabm
 
     public:
         Place(size_t mcellPos);
-        ~Place() {}
+        ~Place() = default;
 
         size_t microcellPos() const;
 

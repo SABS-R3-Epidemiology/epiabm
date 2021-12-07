@@ -29,3 +29,13 @@ TEST_CASE("dataclasses/person: test status", "[Person]")
     test(InfectionStatus::InfectGP);
     test(InfectionStatus::Recovered);
 }
+
+TEST_CASE("dataclasses/person: test setHousehold", "[Person]")
+{
+    Person subject = Person(0,0);
+    size_t hh = static_cast<size_t>((std::rand() % 500) * 2);
+    REQUIRE(subject.setHousehold(hh));
+    REQUIRE(subject.setHousehold(
+        static_cast<size_t>((std::rand()%500) * 2 + 1)) == false);
+    REQUIRE(subject.household() == hh);
+}

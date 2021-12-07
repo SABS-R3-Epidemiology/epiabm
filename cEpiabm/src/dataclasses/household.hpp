@@ -24,7 +24,7 @@ namespace epiabm
 
     public:
         Household(size_t mcellPos);
-        ~Household() {}
+        ~Household() = default;
 
         size_t microcellPos() const;
 
