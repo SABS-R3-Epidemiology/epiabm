@@ -2,8 +2,6 @@
 # Place Class
 #
 from .person import Person
-from .cell import Cell
-from .microcell import Microcell
 import typing
 from .place_type import PlaceType
 
@@ -13,12 +11,12 @@ class Place:
     as cafes, restaurants and hotel where people may come
     into contact with others outside their household.'''
     def __init__(self, loc: typing.Tuple[float, float],
-                 place_type: PlaceType, cell: Cell, microcell: Microcell):
+                 place_type: PlaceType, cell, microcell):
         self._location = loc
         self.persons = []
         self.placetype = place_type
-        self.susceptibility = place_type.susceptibility
-        self.infectiveness = place_type.infectiveness
+        # self.susceptibility = place_type.susceptibility
+        # self.infectiveness = place_type.infectiveness
 
         self.cell = cell
         self.microcell = microcell

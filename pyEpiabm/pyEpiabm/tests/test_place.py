@@ -16,8 +16,6 @@ class TestPlace(unittest.TestCase):
         cls.person = cls.pop.cells[0].microcells[0].persons[0]
 
     def test_construct(self):
-        self.assertRaises(KeyError,  pe.Place, (1, 1), pe.PlaceType.Hotel,
-                          self.cell, pe.Microcell)
         self.place = pe.Place((1, 1), pe.PlaceType.Hotel, self.cell,
                               self.microcell)
         self.assertEqual(len(self.place.persons), 0)

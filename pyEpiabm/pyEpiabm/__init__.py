@@ -23,4 +23,5 @@ from .parameters import Parameters  # noqa
 # Sweeps
 from .abstract_sweep import AbstractSweep  # noqa
 from .household_sweep import HouseholdSweep  # noqa
+from .place_sweep import PlaceSweep  # noqa
 from .covidsim_helpers import CovidsimHelpers  # noqa

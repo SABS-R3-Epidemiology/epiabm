@@ -2,6 +2,7 @@
 # Helper functions based on Covidsim code.
 #
 from .person import Person
+from .place import Place
 
 
 class CovidsimHelpers:
@@ -9,7 +10,9 @@ class CovidsimHelpers:
     Class to create helper functions from Covidsim code to aid
     comparison to Covidsim.
     '''
-
+    # Most of the volume of covidsim code is adapting these susceptibility
+    # infectiousness parameters, especially for the place infections.
+    # May need to make this a more general class.
     @staticmethod
     def calc_house_inf(infector: Person, timestep: int):
         """Calculate the infectiveness of a household.
@@ -21,7 +24,7 @@ class CovidsimHelpers:
         :return: infectiveness
         :rtype: float
         """
-        return 1
+        return 1.0
 
     @staticmethod
     def calc_house_susc(infector: Person, infectee: Person, timestep: int):
@@ -49,6 +52,42 @@ class CovidsimHelpers:
         :param timestep: Current simulation timestep
         :type timestep: int
         :return: susceptibility
+        :rtype: float
+        """
+        return 1
+
+    @staticmethod
+    def calc_place_susc(place: Place, infector: Person, infectee: Person,
+                        timestep: int):
+        """Calculate the susceptibility of a person.
+
+        :param infector: Infector.
+        :type infector: Person
+        :param infectee: Infectee.
+        :type infectee: Person
+        :param place: Place
+        :type place: Place
+        :param timestep: Current simulation timestep
+        :type timestep: int
+        :return: susceptibility
+        :rtype: float
+        """
+        return 1
+
+    @staticmethod
+    def calc_place_inf(place: Place, infector: Person, infectee: Person,
+                       timestep: int):
+        """Calculate the susceptibility of a person.
+
+        :param infector: Infector.
+        :type infector: Person
+        :param infectee: Infectee.
+        :type infectee: Person
+        :param place: Place
+        :type place: Place
+        :param timestep: Current simulation timestep
+        :type timestep: int
+        :return: infectiousness
         :rtype: float
         """
         return 1
