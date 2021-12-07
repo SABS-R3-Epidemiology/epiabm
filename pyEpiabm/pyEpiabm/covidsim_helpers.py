@@ -21,7 +21,7 @@ class CovidsimHelpers:
         :return: infectiveness
         :rtype: float
         """
-        return 1
+        return 1.0
 
     @staticmethod
     def calc_house_susc(infector: Person, infectee: Person, timestep: int):
@@ -51,4 +51,4 @@ class CovidsimHelpers:
         :return: susceptibility
         :rtype: float
         """
-        return 1
+        return 1.0
