@@ -22,11 +22,20 @@ jobs:
         with:
           submodules: true
 
+      - name: cache vcpkg installed packages
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: |
+            vcpkg/
+            build_dir/vcpkg_installed/
+          key: ${{ runner.os }}-${{ env.CXX }}-${{ hashFiles('vcpkg.json', 'vcpkg/CHANGELOG.md') }}
+
       - name: make build directory
         run: mkdir build_dir
       
       - name: cmake configure
-        run: cmake ../cEpiabm/. -DCMAKE_BUILD_TYPE=Debug
+        run: cmake ../cEpiabm/. -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Debug
         working-directory: build_dir
 
       - name: cmake build
