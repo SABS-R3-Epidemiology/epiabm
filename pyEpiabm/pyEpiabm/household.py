@@ -17,7 +17,11 @@ class Household:
 
         :param loc: Location of household.
         :type loc: Tuple[float, float]
-        :param susceptibility: Household's
+        :param susceptibility: Household's base susceptibility
+            to infection events.
+        :type susceptibility: float
+        :param infectiveness: Household's base infectiveness.
+        :type infectiveness: float
         """
         self.persons = []
         self.location = loc
