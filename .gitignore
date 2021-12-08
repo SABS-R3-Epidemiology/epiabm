@@ -50,6 +50,8 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+build/
+build_dir/
 MANIFEST
 
 # PyInstaller
