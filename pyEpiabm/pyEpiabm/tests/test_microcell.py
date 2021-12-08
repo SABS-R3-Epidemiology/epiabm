@@ -3,8 +3,7 @@ import pyEpiabm as pe
 
 
 class TestMicrocell(unittest.TestCase):
-    """
-    Test the 'Microcell' class.
+    """Test the 'Microcell' class.
     """
     @classmethod
     def setUpClass(cls) -> None:

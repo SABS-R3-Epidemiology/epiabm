@@ -3,8 +3,7 @@ import pyEpiabm as pe
 
 
 class TestInfectionStatus(unittest.TestCase):
-    """
-    Test the 'InfectionStatus' enum.
+    """Test the 'InfectionStatus' enum.
     """
 
     def test_construct(self):
