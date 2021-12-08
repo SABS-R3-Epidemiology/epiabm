@@ -1,9 +1,11 @@
 {
-    "name": "epiabm-module",
-    "version-string": "0.0.1",
-    "homepage": "https://github.com/SABS-R3-Epidemiology/epiabm",
-    "description": "Module for running Epidemiological Agent Based Models.",
-    "dependencies": [
-      "catch2"
-    ]
-  }
+  "name": "epiabm-module",
+  "version-string": "0.0.1",
+  "homepage": "https://github.com/SABS-R3-Epidemiology/epiabm",
+  "description": "Module for running Epidemiological Agent Based Models.",
+  "dependencies": [
+    {
+      "name": "catch2"
+    }
+  ]
+}
