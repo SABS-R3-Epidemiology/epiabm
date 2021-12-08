@@ -41,8 +41,8 @@ class Household:
     def add_person(self, person):
         """Add a person to this household.
 
-        :param person: Person to be added.
-        :type person: Person class
+        :param person: Person to be added
+        :type person: Person
         """
         self.persons.append(person)
         person.household = self
