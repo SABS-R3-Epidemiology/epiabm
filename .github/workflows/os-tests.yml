@@ -1,0 +1,35 @@
+name: Unit tests (OS versions)
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+          architecture: x64
+
+      - name: install pyEpiabm
+        run: |
+          python --version
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install pyEpiabm/.
+      - name: run unit tests
+        run: |
+          python pyEpiabm/run_tests.py --unit
