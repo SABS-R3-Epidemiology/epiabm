@@ -11,7 +11,7 @@ class Household:
     have a combined susceptability and infectiousness
     different to that of the individuals.
     """
-    def __init__(self, loc: typing.Tuple[float, float],
+    def __init__(self, loc: typing.Tuple[float, float] = (1.0, 1.0),
                  susceptibility=0, infectiveness=0):
         """Constructor Method.
 
@@ -37,3 +37,12 @@ class Household:
         return "Household at " \
             + f"({self.location[0]:.2f}, {self.location[1]:.2f}) "\
             + f"with {len(self.persons)} persons."
+
+    def add_person(self, person):
+        """Add a person to this household.
+
+        :param person: Person to be added.
+        :type person: Person class
+        """
+        self.persons.append(person)
+        person.household = self
