@@ -9,9 +9,9 @@ class Person:
 
     :param microcell: An instance of an :class:`Microcell`.
     :type microcell: Microcell
-    
+
     Class attributes.
-    
+
     :param infection_status: Person's current infection status.
     :type infection_status: InfectionStatus
     :param next_infection_status: Person's next infection staus after
