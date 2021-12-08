@@ -1,4 +1,4 @@
-name: Unit tests (cpp versions)
+name: CPP Coverage Report
 
 on:
   push:
