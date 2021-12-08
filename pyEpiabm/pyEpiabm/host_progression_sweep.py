@@ -11,7 +11,7 @@ class HostProgressionSweep(AbstractSweep):
     def _update_time_to_status_change(self):
         """Method that assigns time until next infection status update,
          given as a random integer between 1 and 10.
-        
+
         :return: Time until next infection status update
         :rtype: int
         """
