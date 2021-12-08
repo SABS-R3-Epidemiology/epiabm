@@ -3,7 +3,7 @@ find_package(Catch2 CONFIG REQUIRED)
 message(STATUS "Found Catch2 ${Catch2_VERSION}")
 
 add_library(catch_main STATIC catch_main.cpp)
-target_link_libraries(catch_main PUBLIC Catch2::Catch2)
+target_link_libraries(catch_main PRIVATE Catch2::Catch2)
 target_link_libraries(catch_main PUBLIC Catch2::Catch2WithMain)
 target_link_libraries(catch_main PRIVATE project_settings)
 
