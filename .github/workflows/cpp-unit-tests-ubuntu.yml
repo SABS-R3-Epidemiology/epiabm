@@ -24,11 +24,16 @@ jobs:
 
       - name: make build directory
         run: mkdir build_dir
+      
+      - name: cmake configure
+        run: cmake ../cEpiabm/. -DCMAKE_BUILD_TYPE=Debug
+        working-directory: build_dir
 
-      - name: run unit tests with coverage
-        run: |
-          cmake ../cEpiabm/. -DCMAKE_BUILD_TYPE=Debug
-          cmake --build . --parallel 2 --target unit_tests
-          ctest -j2 --output-on-failure
+      - name: cmake build
+        run: cmake --build . --parallel 2 --target unit_tests
+        working-directory: build_dir
+
+      - name: run unit tests
+        run: ctest -j2 --output-on-failure
         working-directory: build_dir
       
