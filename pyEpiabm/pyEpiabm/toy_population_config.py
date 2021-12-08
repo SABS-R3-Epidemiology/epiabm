@@ -26,7 +26,8 @@ class ToyPopulation:
         : param if_households: decides whether to put people into households.
         : type if_households: bool
         """
-
+        if not (type(if_households) == bool):
+            raise TypeError('Include household input needs to be boolean')
         self.pop_size = pop_size
         self.population = Population()
         self.population.add_cells(cell_number)
