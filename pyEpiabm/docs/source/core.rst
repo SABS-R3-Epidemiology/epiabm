@@ -12,6 +12,7 @@ Overview:
 - :class:`Microcell`
 - :class:`Person`
 - :class:`Population`
+- :class:`InfectionStatus`
 
 Core
 ****
@@ -27,3 +28,7 @@ Core
 
 .. autoclass:: Population
     :members:
+
+.. autoclass:: InfectionStatus
+    :members:
+    
