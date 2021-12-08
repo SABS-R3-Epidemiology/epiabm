@@ -7,9 +7,9 @@ class TestHostProgressionSweep(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls) -> None:
-        '''Sets up a population we can use throughout the test.
+        """Sets up a population we can use throughout the test.
         2 people are located in one microcell.
-        '''
+        """
         cls.test_population = pe.Population()
         cls.test_population.add_cells(1)
         cls.test_population.cells[0].add_microcells(1)
@@ -18,14 +18,14 @@ class TestHostProgressionSweep(unittest.TestCase):
         cls.person2 = cls.test_population.cells[0].microcells[0].persons[1]
 
     def test_construct(self):
-        '''Test that the host progression sweep initialises.'''
+        """Test that the host progression sweep initialises."""
         pe.HostProgressionSweep()
 
     def test_update_status(self):
-        '''Tests the update status function on the test population. Person 2
+        """Tests the update status function on the test population. Person 2
         is set to infected and we check that their status changes to Recovered
         on the next time step.
-        '''
+        """
         self.person2.infection_status = pe.InfectionStatus.InfectMild
         test_sweep = pe.HostProgressionSweep()
         test_sweep.bind_population(self.test_population)
@@ -37,19 +37,19 @@ class TestHostProgressionSweep(unittest.TestCase):
                           self.person2)
 
     def test_update_time(self):
-        '''Test the update time function on the test population. This generates
+        """Test the update time function on the test population. This generates
         a random integer (uniformly) between 1 and 10.
-        '''
+        """
         test_sweep = pe.HostProgressionSweep()
         time = test_sweep._update_time_to_status_change()
         self.assertIsInstance(time, int)
         self.assertTrue(1 <= time <= 10)
 
     def test_call(self):
-        '''Test the main function of the Host Progression Sweep.
+        """Test the main function of the Host Progression Sweep.
         Person 2 is set to exposed and becoming infectious in one time step.
         Checks the populations updates as expected.
-        '''
+        """
         self.person2.infection_status = pe.InfectionStatus.Exposed
         self.person2.time_of_status_change = 1
         self.person2.next_infection_status = pe.InfectionStatus.InfectMild
