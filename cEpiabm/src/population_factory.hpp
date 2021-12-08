@@ -18,9 +18,9 @@ namespace epiabm
     public:
         PopulationPtr makePopulation();
         PopulationPtr makePopulation(
-            size_t n_cells, 
-            size_t n_microcells,
-            size_t n_people);
+            size_t n_cells, // n cells in population
+            size_t n_microcells, // n microcels per cell
+            size_t n_people); // n people per microcell
     
         void addCell(PopulationPtr population);
         void addMicrocell(Cell* cell);

@@ -12,6 +12,10 @@ namespace epiabm
     class Cell;
     class Microcell;
 
+    /**
+     * @brief Manages Sets of People (Members) part of a Place / Household
+     * 
+     */
     class MembersInterface
     {
     protected:

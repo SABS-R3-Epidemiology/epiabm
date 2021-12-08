@@ -22,7 +22,7 @@ namespace epiabm
         std::vector<Place> m_places;
         std::vector<Household> m_households;
 
-        size_t m_cellPos;
+        size_t m_cellPos; // index of this microcell in parent cell's m_microcells
 
     public:
         Microcell(size_t cellPos);

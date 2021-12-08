@@ -35,6 +35,15 @@ if (ENABLE_TESTING)
     add_subdirectory(test)
 endif ()
 
+option(MAKE_DOCS "Enable doxygen/sphinx commands" OFF)
+if (EXISTS ${CMAKE_SOURCE_DIR}/venv/bin/sphinx-build)
+    set(MAKE_DOCS ON)
+endif()
+if (MAKE_DOCS)
+    set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+    add_subdirectory(docs)
+endif ()
+
 
 
 add_library(epiabm::epiabm_module ALIAS epiabm_lib)
