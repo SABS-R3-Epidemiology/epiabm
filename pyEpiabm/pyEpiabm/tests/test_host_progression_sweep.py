@@ -28,6 +28,10 @@ class TestHostProgressionSweep(unittest.TestCase):
         test_sweep._update_next_infection_status(self.person2)
         self.assertEqual(self.person2.next_infection_status,
                          pe.InfectionStatus.Recovered)
+        self.person2.infection_status = pe.InfectionStatus.Recovered
+        test_sweep.bind_population(self.test_population)
+        self.assertRaises(TypeError, test_sweep._update_next_infection_status,
+                          self.person2)
 
     def test_update_time(self):
         test_sweep = pe.HostProgressionSweep()
