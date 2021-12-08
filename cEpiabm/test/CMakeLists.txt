@@ -31,9 +31,9 @@ target_link_libraries(unit_tests PUBLIC catch_main)
 # automatically discover tests related to the "tests"
 #include(Catch)
 enable_testing()
-include(CTest)
+#include(CTest)
 include(../cmake/Catch.cmake)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/../cmake)
-#catch_discover_tests(unit_tests)
-add_test(unit_tests, unit_tests)
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/../cmake)
+catch_discover_tests(unit_tests)
+#add_test(unit_tests, unit_tests)
 

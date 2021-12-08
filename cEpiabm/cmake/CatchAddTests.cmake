@@ -36,12 +36,17 @@ if(NOT EXISTS "${TEST_EXECUTABLE}")
   )
 endif()
 execute_process(
-  COMMAND ${TEST_EXECUTOR} "${TEST_EXECUTABLE}" ${spec} --list-tests --verbosity quiet
+  COMMAND ${TEST_EXECUTOR} "${TEST_EXECUTABLE}" ${spec} --list-test-names-only
   OUTPUT_VARIABLE output
   RESULT_VARIABLE result
   WORKING_DIRECTORY "${TEST_WORKING_DIR}"
 )
-if(NOT ${result} EQUAL 0)
+# Catch --list-test-names-only reports the number of tests, so 0 is... surprising
+if(${result} EQUAL 0)
+  message(WARNING
+    "Test executable '${TEST_EXECUTABLE}' contains no tests!\n"
+  )
+elseif(${result} LESS 0)
   message(FATAL_ERROR
     "Error running test executable '${TEST_EXECUTABLE}':\n"
     "  Result: ${result}\n"
@@ -58,7 +63,11 @@ execute_process(
   RESULT_VARIABLE reporters_result
   WORKING_DIRECTORY "${TEST_WORKING_DIR}"
 )
-if(NOT ${reporters_result} EQUAL 0)
+if(${reporters_result} EQUAL 0)
+  message(WARNING
+    "Test executable '${TEST_EXECUTABLE}' contains no reporters!\n"
+  )
+elseif(${reporters_result} LESS 0)
   message(FATAL_ERROR
     "Error running test executable '${TEST_EXECUTABLE}':\n"
     "  Result: ${reporters_result}\n"
