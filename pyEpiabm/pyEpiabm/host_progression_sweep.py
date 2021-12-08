@@ -1,5 +1,4 @@
 import random
-from typing import Type
 from .abstract_sweep import AbstractSweep
 from .infection_status import InfectionStatus
 

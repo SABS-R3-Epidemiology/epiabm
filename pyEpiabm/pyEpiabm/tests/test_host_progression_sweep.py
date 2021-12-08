@@ -56,9 +56,12 @@ class TestHostProgressionSweep(unittest.TestCase):
         test_sweep = pe.HostProgressionSweep()
         test_sweep.bind_population(self.test_population)
 
-        # tests population bound successfully
+        # Tests population bound successfully.
         self.assertEqual(test_sweep._population.cells[0].persons[1].
                          infection_status, pe.InfectionStatus.Exposed)
+
+        # Test that the call fails for non-int time.
+        self.assertRaises(TypeError, test_sweep, 0.5)
 
         test_sweep(1)
         self.assertEqual(self.person2.infection_status,
