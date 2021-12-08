@@ -2,7 +2,6 @@
 
 cmake_minimum_required(VERSION 3.15)
 message(STATUS "Using CMake version ${CMAKE_VERSION}")
-include(cmake/AutodetectVcpkgToolchainFile.cmake)
 
 project(cEpiabm LANGUAGES CXX VERSION 0.0.2)
 

@@ -26,7 +26,7 @@ jobs:
         run: mkdir build_dir
       
       - name: cmake configure
-        run: cmake ../cEpiabm/. -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Debug
+        run: cmake ../cEpiabm/. -DCMAKE_BUILD_TYPE=Debug
         working-directory: build_dir
 
       - name: cmake build
