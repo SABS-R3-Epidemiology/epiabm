@@ -10,15 +10,15 @@ class Person:
     :param microcell: An instance of an :class:`Microcell`.
     :type microcell: Microcell
 
-    Class attributes
+    Class attributes.
     :param infection_status: Person's current infection status.
     :type infection_status: InfectionStatus
-    :param next_infection_status:
-     Person's next infection staus after current one.
+    :param next_infection_status: Person's next infection staus after
+        current one.
     :type next_infection_status: InfectionStatus
-    :param time_of_status_change:
-     Time when person's infection status is updated.
-    :type time_of_status_change: float
+    :param time_of_status_change: Time when person's infection status
+        is updated.
+    :type time_of_status_change: int
     """
 
     def __init__(self, microcell,
