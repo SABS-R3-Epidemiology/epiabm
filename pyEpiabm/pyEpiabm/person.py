@@ -41,6 +41,8 @@ class Person:
         self.microcell = microcell
         self.infection_status = InfectionStatus.Susceptible
         self.household = None
+        self.next_infection_status = None
+        self.time_of_status_change = None
 
     def is_infectious(self):
         """Query if the person is currently infectious.
@@ -63,8 +65,6 @@ class Person:
         :rtype: bool
         """
         return self.infection_status == InfectionStatus.Susceptible
-        self.next_infection_status = None
-        self.time_of_status_change = None
 
     def __repr__(self):
         """String Representation of Person.
