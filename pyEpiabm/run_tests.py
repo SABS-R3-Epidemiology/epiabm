@@ -98,7 +98,7 @@ def doctest_rst_and_public_interface():
         'pyEpiabm.parameters',
         'pyEpiabm.person',
         'pyEpiabm.population',
-        'pyEpiabm.toy_population_config.py',
+        'pyEpiabm.toy_population_config',
         'pyEpiabm.version_info'
     ]
 
