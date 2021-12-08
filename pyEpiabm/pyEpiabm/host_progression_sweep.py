@@ -28,7 +28,9 @@ class HostProgressionSweep(AbstractSweep):
         if person.infection_status == InfectionStatus.InfectMild:
             person.next_infection_status = InfectionStatus.Recovered
         else:
-            raise TypeError('Infection status of a person must be InfectMild.')
+            raise TypeError('update_next_infection_status should only' +
+                            'be applied to individuals with mild' +
+                            'infection status')
 
     def __call__(self, time: int):
         """Method that sweeps through all people in the population

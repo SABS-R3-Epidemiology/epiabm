@@ -15,7 +15,7 @@ class Person:
     :type infection_status: InfectionStatus
     :param next_infection_status:
      Person's next infection staus after current one.
-    :type nex_infection_status: InfectionStatus
+    :type next_infection_status: InfectionStatus
     :param time_of_status_change:
      Time when person's infection status is updated.
     :type time_of_status_change: float
