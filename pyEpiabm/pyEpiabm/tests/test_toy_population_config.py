@@ -14,6 +14,9 @@ class TestTopPopConfig(unittest.TestCase):
         cls.household_number = 10
 
     def test_init(self):
+        """Tests for when the population is implemented by default with
+        no households.
+        """
         # Population is initialised with no households
         self.toy_pop = pe.ToyPopulation(self.pop_size, self.cell_number,
                                         self.microcell_per_cell,
@@ -38,11 +41,15 @@ class TestTopPopConfig(unittest.TestCase):
         self.assertEqual(count_non_trivial_households, 0)
 
     def test_if_households(self):
+        """Tests when households are implemented.
+        """
         if_households = 1.0
-        self.assertRaises(TypeError, ToyPopulation, self.pop_size, self.cell_number,
-                                        self.microcell_per_cell,
-                                        self.household_number,
-                                        if_households)
+        # Tests that if_households only takes boolean input.
+        self.assertRaises(TypeError, ToyPopulation, self.pop_size,
+                          self.cell_number, self.microcell_per_cell,
+                          self.household_number,
+                          if_households)
+        # Initialises population with households.
         if_households = True
         self.toy_pop = pe.ToyPopulation(self.pop_size, self.cell_number,
                                         self.microcell_per_cell,
@@ -50,14 +57,20 @@ class TestTopPopConfig(unittest.TestCase):
                                         if_households)
         total_people = 0
         households = []
+        num_empty_households = 0
         for cell in self.toy_pop.population.cells:
             for microcell in cell.microcells:
                 for person in microcell.persons:
                     if person.household not in households:
                         households.append(person.household)
+                    if len(person.household.persons) == 0:
+                        num_empty_households += 1
                     total_people = total_people + len(person.household.persons)
-        print(len(households))
-
+        # Some households may be empty so won't be included. Tests that at most
+        # 10% of the total implemented are empty.
+        total_households = self.cell_number*self.microcell_per_cell*self.household_number  # noqa
+        self.assertTrue(0.9*total_households < len(households) <= total_households)  # noqa
+        self.assertTrue(num_empty_households < total_households)
 
 
 if __name__ == '__main__':
