@@ -17,6 +17,8 @@ Contents
 .. toctree::
 
     core
+    properties
+    routines
     sweeps
 
 
