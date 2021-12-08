@@ -14,6 +14,10 @@ class Cell:
         self.microcells = []
         self.persons = []
 
+    def untested_method(self, x):
+        y = x + 1
+        return y
+    
     def __repr__(self):
         """String representation of Cell.
 
