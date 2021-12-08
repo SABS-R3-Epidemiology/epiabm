@@ -3,8 +3,7 @@ import pyEpiabm as pe
 
 
 class TestParameters(unittest.TestCase):
-    """
-    Test the 'Parameters' class.
+    """Test the 'Parameters' class.
     """
     def test_instance(self):
         pe.Parameters.instance()

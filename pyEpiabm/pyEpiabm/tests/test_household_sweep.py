@@ -11,9 +11,9 @@ class TestHouseholdSweep(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        ''' Initialises a population with one infected person. Sets up a
+        """Initialises a population with one infected person. Sets up a
         single household containing this person.
-        '''
+        """
         cls.pop = pe.Population()
         cls.house = pe.Household([1.0, 1.0])
         cls.pop.add_cells(1)
@@ -30,10 +30,9 @@ class TestHouseholdSweep(unittest.TestCase):
     @mock.patch('pyEpiabm.CovidsimHelpers.calc_house_susc')
     @mock.patch('pyEpiabm.CovidsimHelpers.calc_house_inf')
     def test__call__(self, mock_inf, mock_susc):
-        '''
-        Test whether the household sweep function correctly
+        """Test whether the household sweep function correctly
         adds persons to the queue.
-        '''
+        """
         mock_inf.return_value = 10
         mock_susc.return_value = 10
         subject = HouseholdSweep()

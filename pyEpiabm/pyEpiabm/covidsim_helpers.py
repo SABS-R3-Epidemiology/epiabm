@@ -5,10 +5,9 @@ from .person import Person
 
 
 class CovidsimHelpers:
-    '''
-    Class to create helper functions from Covidsim code to aid
+    """Class to create helper functions from Covidsim code to aid
     comparison to Covidsim.
-    '''
+    """
 
     @staticmethod
     def calc_house_inf(infector: Person, timestep: int):

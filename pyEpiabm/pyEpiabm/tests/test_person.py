@@ -3,8 +3,7 @@ import pyEpiabm as pe
 
 
 class TestPerson(unittest.TestCase):
-    """
-    Test the 'Person' class.
+    """Test the 'Person' class.
     """
     @classmethod
     def setUpClass(cls) -> None:

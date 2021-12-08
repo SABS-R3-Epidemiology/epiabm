@@ -10,16 +10,15 @@ import random
 
 
 class HouseholdSweep(AbstractSweep):
-    '''Class to run the intra-household infections
+    """Class to run the intra-household infections
     as part of the sweep function. Takes an individual
     person as input and tests a infection event against each
     susceptible member of their household. The resulting
     exposed person is added to an infection queue.
-    '''
+    """
 
     def __call__(self, time: int, population: Population):
-        '''
-        Given a population structure, loops over infected members
+        """Given a population structure, loops over infected members
         and considers whether they infected household members based
         on individual, and spatial infectiousness and susceptibility.
 
@@ -27,7 +26,7 @@ class HouseholdSweep(AbstractSweep):
         : type time: int
         : param population: Object that contains the population
         : type population: Population
-        '''
+        """
         timestep = int(time * Parameters.instance().time_steps_per_day)
 
         # Double loop over the whole population, checking infectiousness

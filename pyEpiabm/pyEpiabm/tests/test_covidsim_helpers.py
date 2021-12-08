@@ -3,8 +3,7 @@ import pyEpiabm as pe
 
 
 class TestCovidsimHelpers(unittest.TestCase):
-    """
-    Test the 'CovidsimHelpers' class.
+    """Test the 'CovidsimHelpers' class.
     """
 
     @classmethod
