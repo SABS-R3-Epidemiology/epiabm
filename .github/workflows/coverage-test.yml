@@ -38,3 +38,48 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
           codecov
+
+  build-and-test:
+  runs-on: ubuntu-20.04
+  env:
+    CC: gcc-10
+    CXX: g++-10
+
+  steps:
+    - name: checkout repo & submodules
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+
+     - name: cache vcpkg installed packages
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: |
+            vcpkg/
+            build_dir/vcpkg_installed/
+          key: ${{ runner.os }}-${{ env.CXX }}-${{ hashFiles('vcpkg.json', 'vcpkg/CHANGELOG.md') }}
+
+      - name: install tools
+        run: sudo apt install lcov libcurl4-openssl-dev
+
+      - name: make build directory
+        run: mkdir build_dir
+        if: steps.cache.outputs.cache-hit != 'true'
+
+    - name: run unit tests with coverage
+      run: |
+        cmake ../cEpiabm/. -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON
+        cmake --build . --parallel 2 --target unit_tests
+        ctest -j2 --output-on-failure
+      working-directory: build_dir
+    
+    - name: upload coverage results
+      run: |
+        lcov --directory . --capture --output-file coverage.info
+        lcov --remove coverage.info '/usr/*' '*/test/*' --output-file coverage.info
+        lcov --list coverage.info
+        bash <(curl https://codecov.io/bash) -f coverage.info
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      working-directory: build_dir
