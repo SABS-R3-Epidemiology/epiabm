@@ -23,6 +23,7 @@ from .infection_status import InfectionStatus  # noqa
 
 # Routines
 from .covidsim_helpers import CovidsimHelpers  # noqa
+from .toy_population_config import ToyPopulation  # noqa
 
 # Sweeps
 from .abstract_sweep import AbstractSweep  # noqa
