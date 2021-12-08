@@ -90,14 +90,15 @@ def doctest_rst_and_public_interface():
         'pyEpiabm.abstract_sweep',
         'pyEpiabm.cell',
         'pyEpiabm.covidsim_helpers',
-        'pyEpiabm.household_sweep',
+        'pyEpiabm.host_progression_sweep',
         'pyEpiabm.household',
+        'pyEpiabm.household_sweep',
         'pyEpiabm.infection_status',
         'pyEpiabm.microcell',
         'pyEpiabm.parameters',
         'pyEpiabm.person',
         'pyEpiabm.population',
-        'pyEpiabm.version_info',
+        'pyEpiabm.version_info'
     ]
 
     doc_symbols = get_all_documented_symbols()

@@ -9,13 +9,19 @@ Sweep provides the basic class framework to build methods which sweep over the p
 Overview:
 
 - :class:`AbstractSweep`
+- :class:`HostProgressionSweep`
 - :class:`HouseholdSweep`
+
 
 Sweeps
 ******
 
 .. autoclass:: AbstractSweep
     :members:
+    
+.. autoclass:: HostProgressionSweep
+    :members:
 
 .. autoclass:: HouseholdSweep
     :members:
+    

@@ -17,8 +17,9 @@ from .microcell import Microcell  # noqa
 from .household import Household  # noqa
 from .infection_status import InfectionStatus  # noqa
 from .parameters import Parameters  # noqa
+from .covidsim_helpers import CovidsimHelpers  # noqa
 
 # Sweeps
 from .abstract_sweep import AbstractSweep  # noqa
+from .host_progression_sweep import HostProgressionSweep  # noqa
 from .household_sweep import HouseholdSweep  # noqa
-from .covidsim_helpers import CovidsimHelpers  # noqa
