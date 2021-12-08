@@ -87,13 +87,13 @@ def doctest_rst_and_public_interface():
     # has been added to pyEpiabm and should be imported above and included in
     # this list.
     pyEpiabm_submodules = [
+        'pyEpiabm.abstract_sweep',
         'pyEpiabm.cell',
-        'pyEpiabm.factory',
+        'pyEpiabm.host_progression_sweep',
+        'pyEpiabm.infection_status',
         'pyEpiabm.microcell',
         'pyEpiabm.person',
         'pyEpiabm.population',
-        'pyEpiabm.infection_status',
-        'pyEpiabm.abstract_sweep',
         'pyEpiabm.version_info'
     ]
 

@@ -15,3 +15,4 @@ from .cell import Cell  # noqa
 from .microcell import Microcell  # noqa
 from .infection_status import InfectionStatus # noqa
 from .abstract_sweep import AbstractSweep # noqa
+from .host_progression_sweep import HostProgressionSweep  # noqa
