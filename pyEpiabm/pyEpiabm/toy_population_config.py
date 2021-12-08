@@ -32,6 +32,7 @@ class ToyPopulation:
         self.population.add_cells(cell_number)
         self.total_number_microcells = cell_number*microcell_per_cell
         self.if_households = if_households
+        self.household_number = household_number
 
         p = [1/self.total_number_microcells]*self.total_number_microcells
         cell_split = np.random.multinomial(pop_size, p, size=1)[0]
@@ -60,9 +61,11 @@ class ToyPopulation:
                 people_number = len(microcell.persons)
                 household_split = np.random.multinomial(people_number, q,
                                                         size=1)[0]
+                person_index = 0
                 for j in range(self.household_number):
                     people_in_household = household_split[j]
                     new_household = Household()
                     for k in range(people_in_household):
-                        person = microcell.persons[k]
+                        person = microcell.persons[person_index]
                         new_household.add_person(person)
+                        person_index += 1
