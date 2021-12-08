@@ -44,20 +44,25 @@ class ToyPopulation:
                 i += 1
 
         if self.if_households:
-            q = [1/household_number]*household_number
-            for cell in self.population.cells:
-                for microcell in cell.microcells:
-                    people_number = len(microcell.persons)
-                    household_split = np.random.multinomial(people_number, q,
-                                                            size=1)[0]
-                    for j in range(household_number):
-                        people_in_household = household_split[j]
-                        new_household = Household()
-                        for k in range(people_in_household):
-                            person = microcell.persons[k]
-                            new_household.add_person(person)
+            self.add_households()
         else:
             for cells in self.population.cells:
                 for person in cells.persons:
                     new_household = Household()
                     new_household.add_person(person)
+
+    def add_households(self):
+        """Method that groups people in microcell into households together.
+        """
+        q = [1/self.household_number]*self.household_number
+        for cell in self.population.cells:
+            for microcell in cell.microcells:
+                people_number = len(microcell.persons)
+                household_split = np.random.multinomial(people_number, q,
+                                                        size=1)[0]
+                for j in range(self.household_number):
+                    people_in_household = household_split[j]
+                    new_household = Household()
+                    for k in range(people_in_household):
+                        person = microcell.persons[k]
+                        new_household.add_person(person)
