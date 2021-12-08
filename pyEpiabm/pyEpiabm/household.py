@@ -42,7 +42,7 @@ class Household:
         """Add a person to this household.
 
         :param person: Person to be added.
-        :type person: Person class
+        :type person: Person
         """
         self.persons.append(person)
         person.household = self
