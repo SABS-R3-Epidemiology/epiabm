@@ -15,8 +15,12 @@ from .population import Population  # noqa
 from .cell import Cell  # noqa
 from .microcell import Microcell  # noqa
 from .household import Household  # noqa
-from .infection_status import InfectionStatus  # noqa
 from .parameters import Parameters  # noqa
+
+# Properties
+from .infection_status import InfectionStatus  # noqa
+
+# Routines
 from .covidsim_helpers import CovidsimHelpers  # noqa
 
 # Sweeps
