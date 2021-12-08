@@ -35,3 +35,22 @@ if (ENABLE_TESTING)
     enable_testing()
     add_subdirectory(test)
 endif ()
+
+
+
+add_library(epiabm::epiabm_module ALIAS epiabm_lib)
+add_library(epiabm::project_warnings ALIAS project_warnings)
+add_library(epiabm::project_settings ALIAS project_settings)
+include(GNUInstallDirs)
+install(TARGETS epiabm_lib project_warnings project_settings EXPORT epiabm)
+
+install(EXPORT epiabm
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/epiabm
+        NAMESPACE epiabm::
+        FILE epiabm-runtime.cmake
+        COMPONENT epiabm-runtime
+)
+
+install(FILES cmake/epiabm-config.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/epiabm
+)
