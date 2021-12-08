@@ -11,6 +11,7 @@ evolution of a virus across it, with various visualisation methods.
 
 from .person import Person  # noqa
 from .population import Population  # noqa
+from .toy_population_config import ToyPopulation  # noqa
 from .cell import Cell  # noqa
 from .microcell import Microcell  # noqa
 from .infection_status import InfectionStatus # noqa
