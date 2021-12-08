@@ -5,7 +5,8 @@
 
 class Parameters:
     """Class for global parameters.
-    Singleton Pattern.
+
+    Following a singleton Pattern.
     """
     class __Parameters:
         """Singleton Parameters Object
@@ -17,8 +18,8 @@ class Parameters:
 
     @staticmethod
     def instance():
-        """New method
-        Creates singleton instance if it doesn't exist
+        """Creates singleton instance of __Parameters under
+        _instance if one doesn't already exist.
         """
         if not Parameters._instance:
             Parameters._instance = Parameters.__Parameters()

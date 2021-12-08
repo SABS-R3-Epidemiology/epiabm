@@ -8,9 +8,6 @@ class TestParameters(unittest.TestCase):
     def test_instance(self):
         pe.Parameters.instance()
 
-    def test_setattr(self):
-        pe.Parameters.instance().abc = 1
-
     def test_getattr(self):
         pe.Parameters.instance().aaa = 1
         self.assertEqual(pe.Parameters.instance().aaa, 1)
