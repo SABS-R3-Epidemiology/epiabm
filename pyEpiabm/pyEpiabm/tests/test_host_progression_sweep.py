@@ -3,8 +3,8 @@ import pyEpiabm as pe
 
 
 class TestHostProgressionSweep(unittest.TestCase):
-    '''Test the Host Progression Sweep function.
-    '''
+    """Test the Host Progression Sweep function.
+    """
     @classmethod
     def setUpClass(cls) -> None:
         '''Sets up a population we can use throughout the test.

@@ -4,9 +4,9 @@ from .infection_status import InfectionStatus
 
 
 class HostProgressionSweep(AbstractSweep):
-    '''Class for sweeping through population and updating host infection status
+    """Class for sweeping through population and updating host infection status
     and time to next infection status change.
-    '''
+    """
 
     def _update_time_to_status_change(self):
         """Method that assigns time until next infection status update,
