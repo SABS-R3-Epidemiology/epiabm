@@ -70,7 +70,8 @@ class TestTopPopConfig(unittest.TestCase):
         # 10% of the total implemented are empty.
         total_households = self.cell_number*self.microcell_per_cell*self.household_number  # noqa
         self.assertTrue(0.9*total_households < len(households) <= total_households)  # noqa
-        self.assertTrue(num_empty_households < total_households)
+        # Second check that at most 10% of households are empty.
+        self.assertTrue(num_empty_households < 0.1*total_households)
 
 
 if __name__ == '__main__':
