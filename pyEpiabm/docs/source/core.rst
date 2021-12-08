@@ -9,10 +9,12 @@ Core provides the basic class framework to build a population
 Overview:
 
 - :class:`Cell`
+- :class:`Household`
 - :class:`Microcell`
+- :class:`Parameters`
 - :class:`Person`
 - :class:`Population`
-- :class:`InfectionStatus`
+
 
 Core
 ****
@@ -20,7 +22,13 @@ Core
 .. autoclass:: Cell
     :members:
 
+.. autoclass:: Household
+    :members:
+
 .. autoclass:: Microcell
+    :members:
+
+.. autoclass:: Parameters
     :members:
 
 .. autoclass:: Person
@@ -29,6 +37,4 @@ Core
 .. autoclass:: Population
     :members:
 
-.. autoclass:: InfectionStatus
-    :members:
     
