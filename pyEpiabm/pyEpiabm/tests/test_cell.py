@@ -3,8 +3,7 @@ import pyEpiabm as pe
 
 
 class TestCell(unittest.TestCase):
-    """
-    Test the 'Cell' class.
+    """Test the 'Cell' class.
     """
     @classmethod
     def setUpClass(cls) -> None:
