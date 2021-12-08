@@ -31,6 +31,9 @@ jobs:
             build_dir/vcpkg_installed/
           key: ${{ runner.os }}-${{ env.CXX }}-${{ hashFiles('vcpkg.json', 'vcpkg/CHANGELOG.md') }}
 
+      - name: install tools
+        run: sudo apt install lcov
+
       - name: make build directory
         run: mkdir build_dir
 
