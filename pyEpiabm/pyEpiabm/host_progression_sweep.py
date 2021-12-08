@@ -1,12 +1,13 @@
 import random
+from typing import Type
 from .abstract_sweep import AbstractSweep
 from .infection_status import InfectionStatus
 
 
 class HostProgressionSweep(AbstractSweep):
-    '''Class for sweeping through population and updating host infection status
+    """Class for sweeping through population and updating host infection status
     and time to next infection status change.
-    '''
+    """
 
     def _update_time_to_status_change(self):
         """Method that assigns time until next infection status update,
@@ -39,8 +40,10 @@ class HostProgressionSweep(AbstractSweep):
         change.
 
         : param time: Current simulation time in days
-        : type time: float
+        : type time: int
         """
+        if not (type(time) == int):
+            raise TypeError('Time needs to be type int')
         for cell in self._population.cells:
             for person in cell.persons:
                 if person.time_of_status_change == time:
