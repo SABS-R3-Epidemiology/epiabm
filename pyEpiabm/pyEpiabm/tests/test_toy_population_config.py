@@ -66,10 +66,12 @@ class TestTopPopConfig(unittest.TestCase):
                     if len(person.household.persons) == 0:
                         num_empty_households += 1
                     total_people += len(person.household.persons)
-        # Some households may be empty so won't be included. Tests that at most
-        # 10% of the total implemented are empty.
-        total_households = self.cell_number*self.microcell_per_cell*self.household_number  # noqa
-        self.assertTrue(0.9*total_households < len(households) <= total_households)  # noqa
+        # Some households may be empty so won't be included. 
+        # Tests that max 10% of the total implemented are empty.
+        total_households = self.cell_number * self.microcell_per_cell \
+            * self.household_number
+        self.assertTrue(0.9 * total_households < len(households)
+                        <= total_households) 
         self.assertTrue(num_empty_households < total_households)
 
 
