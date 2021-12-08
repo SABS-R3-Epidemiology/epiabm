@@ -4,8 +4,8 @@
 
 
 class Parameters:
-    """Class for global parameters
-    Singleton Pattern
+    """Class for global parameters.
+    Singleton Pattern.
     """
     class __Parameters:
         """Singleton Parameters Object

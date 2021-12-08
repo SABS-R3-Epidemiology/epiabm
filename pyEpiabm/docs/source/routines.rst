@@ -4,7 +4,7 @@ Routines
 
 .. currentmodule:: pyEpiabm
 
-Routines provides various methods to act upon a population
+Routines provides various methods to act upon a population.
 
 Overview:
 

@@ -61,7 +61,7 @@ class Person:
     def is_susceptible(self):
         """Query if the person is currently susceptible.
 
-        :return: Whether person is currently suscptible
+        :return: Whether person is currently susceptible
         :rtype: bool
         """
         return self.infection_status == InfectionStatus.Susceptible

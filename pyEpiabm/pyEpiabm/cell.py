@@ -36,7 +36,7 @@ class Cell:
             self.microcells.append(Microcell(self))
 
     def enqueue_person(self, person: Person):
-        """Add person to queue for processing at end of iteration
+        """Add person to queue for processing at end of iteration.
 
         :param person: Person to enqueue
         :type person: Person

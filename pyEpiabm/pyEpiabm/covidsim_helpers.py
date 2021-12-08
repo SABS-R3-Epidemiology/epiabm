@@ -13,7 +13,7 @@ class CovidsimHelpers:
     def calc_house_inf(infector: Person, timestep: int):
         """Calculate the infectiveness of a household.
 
-        :param infector: Infector.
+        :param infector: Infector
         :type infector: Person
         :param timestep: Current simulation timestep
         :type timestep: int
