@@ -92,6 +92,8 @@ def doctest_rst_and_public_interface():
         'pyEpiabm.microcell',
         'pyEpiabm.person',
         'pyEpiabm.population',
+        'pyEpiabm.infection_status',
+        'pyEpiabm.abstract_sweep',
         'pyEpiabm.version_info'
     ]
 

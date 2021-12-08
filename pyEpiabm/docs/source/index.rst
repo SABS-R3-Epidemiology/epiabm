@@ -17,6 +17,7 @@ Contents
 .. toctree::
 
     core
+    sweeps
 
 
 Search

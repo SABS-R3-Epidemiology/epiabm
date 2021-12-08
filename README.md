@@ -17,7 +17,7 @@ Once an individual becomes exposed, their progression through the various stages
 ![SEIR model conceptualisation](./images/covidsim_schema.png)
 
 ## pyEpiabm
-Python is more readable and user-friendly, but is not able to cope with large population sizes. However, it is instructive to consider a toy model in order to better understand the underlying code. Additionally, toy models may be quicker for model comparison and parameter inference, though care should obviously be taken whe scaling up to a full population. We provide a variety of workflows to show the utility of code.
+Python is more readable and user-friendly, but is not able to cope with large population sizes. However, it is instructive to consider a toy model in order to better understand the underlying code. Additionally, toy models may be quicker for model comparison and parameter inference, though care should obviously be taken when scaling up to a full population. We provide a variety of workflows to show the utility of code.
 
 
 ## cppEpiabm
@@ -32,7 +32,8 @@ Add text on how to install and use module.
 
 
 ## Documentation 
-Some documentation on the program's classes and methods can be found here: https://epiamb.readthedocs.io/en/latest/
+Some documentation on the program's classes and methods can be found here: https://epiamb.readthedocs.io/en/latest/  
+The Wiki for this repo also contains more detail on the Ferguson model itself, and where our implementation might differ from that.
 
 ### References
 List of resources that can be useful for the project:
