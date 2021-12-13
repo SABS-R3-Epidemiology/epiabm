@@ -27,3 +27,6 @@ from .covidsim_helpers import CovidsimHelpers  # noqa
 from .abstract_sweep import AbstractSweep  # noqa
 from .host_progression_sweep import HostProgressionSweep  # noqa
 from .household_sweep import HouseholdSweep  # noqa
+
+# Data collection
+from .compartment_counter import CompartmentCounter # noqa
