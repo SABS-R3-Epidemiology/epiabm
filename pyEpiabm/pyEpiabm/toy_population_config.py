@@ -34,7 +34,7 @@ class ToyPopulation:
         new_pop = Population()
 
         # Checks parameter type and stores as class objects
-        if not (type(if_households) == bool):
+        if not isinstance(if_households, bool):
             raise TypeError('Include household input needs to be boolean')
         self.pop_size = population_size
         self.total_number_microcells = cell_number*microcell_per_cell
