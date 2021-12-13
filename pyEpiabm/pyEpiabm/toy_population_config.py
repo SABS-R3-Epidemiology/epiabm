@@ -20,8 +20,8 @@ class ToyPopulationFactory:
         :param cell_number: Number of cell objects the population will be
             split in to
         :type cell_number: int
-        :param microcell_per_cell: Number of microcell objects per cell
-        :type microcell_per_cell: int
+        :param microcell_number: Number of microcell objects per cell
+        :type microcell_number: int
         :param household_number: Number of households per microcell
         :type household_number: int
         :param if_households: Decides whether to group people into households
