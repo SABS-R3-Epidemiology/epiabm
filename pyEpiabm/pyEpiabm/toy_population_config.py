@@ -3,7 +3,7 @@ from .population import Population
 from .household import Household
 
 
-class ToyPopulation:
+class ToyPopulationFactory:
     """ Class that creates a toy population for use and returns in the simple
     python model.
     """
@@ -36,14 +36,11 @@ class ToyPopulation:
         # Checks parameter type and stores as class objects
         if not isinstance(if_households, bool):
             raise TypeError('Include household input needs to be boolean')
-        self.pop_size = population_size
-        self.total_number_microcells = cell_number*microcell_per_cell
-        self.if_households = if_households
-        self.household_number = household_number
+        total_number_microcells = cell_number*microcell_per_cell
 
         new_pop.add_cells(cell_number)
         # Sets up a probability array for the multinomial
-        p = [1/self.total_number_microcells]*self.total_number_microcells
+        p = [1/total_number_microcells]*total_number_microcells
         # Distributes multinomially people into microcells
         cell_split = np.random.multinomial(population_size, p, size=1)[0]
         i = 0
@@ -58,24 +55,24 @@ class ToyPopulation:
         # housholds per cell, or trivially (each person gets their own
         # household).
         if if_households:
-            self.add_households(new_pop)
+            self.add_households(new_pop, household_number)
         else:
             self.no_households(new_pop)
 
         return new_pop
 
-    def add_households(self, population: Population):
+    def add_households(self, population: Population, household_number: int):
         """Method that groups people in microcell into households together.
         """
         # Initialises another multinomial distribution
-        q = [1/self.household_number]*self.household_number
+        q = [1/household_number]*household_number
         for cell in population.cells:
             for microcell in cell.microcells:
                 people_number = len(microcell.persons)
                 household_split = np.random.multinomial(people_number, q,
                                                         size=1)[0]
                 person_index = 0
-                for j in range(self.household_number):
+                for j in range(household_number):
                     people_in_household = household_split[j]
                     new_household = Household()
                     for _ in range(people_in_household):

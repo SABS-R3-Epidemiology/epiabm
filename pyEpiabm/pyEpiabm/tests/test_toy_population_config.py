@@ -2,7 +2,7 @@ import unittest
 import pyEpiabm as pe
 from parameterized import parameterized
 import random
-from pyEpiabm.toy_population_config import ToyPopulation
+from pyEpiabm.toy_population_config import ToyPopulationFactory
 
 numReps = 1
 
@@ -21,9 +21,9 @@ class TestPopConfig(unittest.TestCase):
         no households.
         """
         # Population is initialised with no households
-        test_pop = pe.ToyPopulation().make_pop(pop_size, cell_number,
-                                               microcell_per_cell,
-                                               household_number)
+        test_pop = pe.ToyPopulationFactory().make_pop(pop_size, cell_number,
+                                                      microcell_per_cell,
+                                                      household_number)
 
         total_people = 0
         count_non_empty_cells = 0
@@ -37,7 +37,7 @@ class TestPopConfig(unittest.TestCase):
             if len(cell.persons) > 0:
                 count_non_empty_cells += 1
         # test there are at least one non-empty cell.
-        self.assertTrue(count_non_empty_cells > 1)
+        self.assertTrue(count_non_empty_cells >= 1)
 
         # test that everyone in the population has been assigned a microcell.
         self.assertEqual(total_people, pop_size)
@@ -59,16 +59,16 @@ class TestPopConfig(unittest.TestCase):
         """
         if_households = 1.0
         # Tests that if_households only takes boolean input.
-        self.assertRaises(TypeError, ToyPopulation().make_pop, pop_size,
+        self.assertRaises(TypeError, ToyPopulationFactory().make_pop, pop_size,
                           cell_number, microcell_per_cell,
                           household_number,
                           if_households)
         # Initialises population with households.
         if_households = True
-        toy_pop = pe.ToyPopulation().make_pop(pop_size, cell_number,
-                                              microcell_per_cell,
-                                              household_number,
-                                              if_households)
+        toy_pop = pe.ToyPopulationFactory().make_pop(pop_size, cell_number,
+                                                     microcell_per_cell,
+                                                     household_number,
+                                                     if_households)
         total_people = 0
         households = []
         num_empty_households = 0
