@@ -8,7 +8,7 @@ class ToyPopulationFactory:
     python model.
     """
     def make_pop(self, population_size: int, cell_number: int,
-                 microcell_per_cell: int, household_number: int,
+                 microcell_number: int, household_number: int,
                  if_households: bool = False):
         """Method that initializes a population class with a given population size,
         number of cells and number of microcells. A multinomial distribution is
@@ -36,7 +36,7 @@ class ToyPopulationFactory:
         # Checks parameter type and stores as class objects
         if not isinstance(if_households, bool):
             raise TypeError('Include household input needs to be boolean')
-        total_number_microcells = cell_number*microcell_per_cell
+        total_number_microcells = cell_number*microcell_number
 
         new_pop.add_cells(cell_number)
         # Sets up a probability array for the multinomial
@@ -45,7 +45,7 @@ class ToyPopulationFactory:
         cell_split = np.random.multinomial(population_size, p, size=1)[0]
         i = 0
         for cell in new_pop.cells:
-            cell.add_microcells(microcell_per_cell)
+            cell.add_microcells(microcell_number)
             for microcell in cell.microcells:
                 people_in_microcell = cell_split[i]
                 microcell.add_people(people_in_microcell)

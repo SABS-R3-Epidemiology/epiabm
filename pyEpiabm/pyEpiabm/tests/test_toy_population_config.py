@@ -4,7 +4,7 @@ from parameterized import parameterized
 import random
 from pyEpiabm.toy_population_config import ToyPopulationFactory
 
-numReps = 1
+numReps = 2
 
 
 class TestPopConfig(unittest.TestCase):
@@ -15,14 +15,14 @@ class TestPopConfig(unittest.TestCase):
                             random.randint(1, 10),
                             random.randint(1, 10))
                           for _ in range(numReps)])
-    def test_make_pop(self, pop_size, cell_number, microcell_per_cell,
+    def test_make_pop(self, pop_size, cell_number, microcell_number,
                       household_number):
         """Tests for when the population is implemented by default with
         no households.
         """
         # Population is initialised with no households
         test_pop = pe.ToyPopulationFactory().make_pop(pop_size, cell_number,
-                                                      microcell_per_cell,
+                                                      microcell_number,
                                                       household_number)
 
         total_people = 0
@@ -53,20 +53,20 @@ class TestPopConfig(unittest.TestCase):
                             random.randint(1, 10) * numReps,
                             random.randint(1, 10) * numReps)
                           for _ in range(numReps)])
-    def test_if_households(self, pop_size, cell_number, microcell_per_cell,
+    def test_if_households(self, pop_size, cell_number, microcell_number,
                            household_number):
         """Tests when households are implemented.
         """
         if_households = 1.0
         # Tests that if_households only takes boolean input.
         self.assertRaises(TypeError, ToyPopulationFactory().make_pop, pop_size,
-                          cell_number, microcell_per_cell,
+                          cell_number, microcell_number,
                           household_number,
                           if_households)
         # Initialises population with households.
         if_households = True
         toy_pop = pe.ToyPopulationFactory().make_pop(pop_size, cell_number,
-                                                     microcell_per_cell,
+                                                     microcell_number,
                                                      household_number,
                                                      if_households)
         total_people = 0
@@ -81,7 +81,7 @@ class TestPopConfig(unittest.TestCase):
                         num_empty_households += 1
                     total_people += len(person.household.persons)
         # Some households may be empty so won't be included.
-        total_households = cell_number * microcell_per_cell \
+        total_households = cell_number * microcell_number \
             * household_number
         self.assertTrue(len(households) <= total_households)
         self.assertTrue(num_empty_households < total_households)
