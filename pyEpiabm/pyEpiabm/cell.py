@@ -3,7 +3,9 @@
 #
 from .microcell import Microcell
 from .person import Person
+from .infection_status import InfectionStatus
 from queue import Queue
+import random
 
 
 class Cell:
@@ -42,3 +44,18 @@ class Cell:
         :type person: Person
         """
         self.person_queue.put(person)
+
+    def queue_sweep(self, time):
+        """Function to run through the queue of exposed people
+        """
+        while not self.person_queue.empty():
+            person = self.person_queue.get()
+            # CovidSim has another random event to determined whether a person
+            # who has been in contact with an infected becomes infected
+            # themselves.
+            r = random.uniform(0, 1)
+            infection_event = person.susceptibility
+            if r < infection_event:
+                person.infection_status = InfectionStatus.InfectMild
+                person.time_of_status_change = time
+        # Clear the queue for the next timestep.
