@@ -23,6 +23,9 @@ class TestCell(unittest.TestCase):
         cell.add_microcells(n)
         self.assertEqual(len(cell.microcells), n)
 
+    def test_setup(self):
+        cell = pe.Cell()
+        cell._setup()
 
 if __name__ == '__main__':
     unittest.main()
