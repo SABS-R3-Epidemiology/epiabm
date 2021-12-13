@@ -1,3 +1,5 @@
+import sys
+sys.path.append('../pyEpiabm')
 import pyEpiabm as pe
 from pyEpiabm.parameters import Parameters
 from pyEpiabm.simulation import Simulation

@@ -20,16 +20,21 @@ class Simulation:
         """
         self.pop_params = pop_params
         self.sim_params = sim_params
-        self.file_params = file_params
         self.population = ToyPopulationFactory().make_pop(
             pop_params["population_size"], pop_params["cell_number"],
             pop_params["microcell_number"], pop_params["household_number"],
             pop_params["if_households"])
-        self.filename = os.path.join(os.path.dirname(__file__),
+
+        filename = os.path.join(os.getcwd(),
                                      file_params["output_dir"],
                                      file_params["output_file"])
-        with open(self.filename, 'w'):
-            pass
+        self.outfile = open(filename, 'w')
+    
+    def __del__(self):
+        """Destructor Method
+        """
+        if self.outfile:
+            self.outfile.close()
 
     def run_sweeps(self):
         """Iteration step of the simulation. For each timestep the required
@@ -62,8 +67,8 @@ class Simulation:
                     count_infectious += 1
                 else:
                     count_recovered += 1
-        with open(self.filename, "a") as w:
-            w.write("{},{},{}\n".format(time, "susceptible",
-                                        count_susceptible))
-            w.write("{},{},{}\n".format(time, "infectious", count_infectious))
-            w.write("{},{},{}\n".format(time, "recovered", count_recovered))
+        
+        self.outfile.write("{},{},{}\n".format(time, "susceptible",
+                                    count_susceptible))
+        self.outfile.write("{},{},{}\n".format(time, "infectious", count_infectious))
+        self.outfile.write("{},{},{}\n".format(time, "recovered", count_recovered))
