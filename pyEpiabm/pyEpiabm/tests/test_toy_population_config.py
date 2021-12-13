@@ -35,8 +35,10 @@ class TestTopPopConfig(unittest.TestCase):
                 count_non_empty_cells += 1
         # test there are at least one non-empty cell
         self.assertTrue(count_non_empty_cells > 1)
+
         # test that everyone in the population has been assigned a microcell
         self.assertEqual(total_people, self.pop_size)
+
         # test that each household is trivial (contains one person)
         self.assertEqual(count_non_trivial_households, 0)
 
@@ -70,8 +72,7 @@ class TestTopPopConfig(unittest.TestCase):
         # Tests that max 10% of the total implemented are empty.
         total_households = self.cell_number * self.microcell_per_cell \
             * self.household_number
-        self.assertTrue(0.9 * total_households < len(households)
-                        <= total_households)
+        self.assertTrue(len(households) <= total_households)
         self.assertTrue(num_empty_households < total_households)
 
 
