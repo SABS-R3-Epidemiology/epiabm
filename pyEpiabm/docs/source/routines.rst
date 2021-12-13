@@ -9,7 +9,7 @@ Routines provides various methods to act upon or create a population.
 Overview:
 
 - :class:`CovidsimHelpers`
-- :class:`ToyPopulation`
+- :class:`ToyPopulationFactory`
 
 
 Routines
@@ -18,6 +18,6 @@ Routines
 .. autoclass:: CovidsimHelpers
     :members:
     
-.. autoclass:: ToyPopulation
+.. autoclass:: ToyPopulationFactory
     :members:
     

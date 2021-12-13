@@ -15,20 +15,20 @@ class ToyPopulationFactory:
         used to distribute the number of people into the different microcells.
         There is also an option to distribute people into households.
 
-        : param pop_size: Total number of people in population.
-        : type pop_size: int
-        : param cell_number: Number of cell objects the population will be
-          split in to.
-        : type cell_number: int
-        : param microcell_per_cell: Number of microcell objects per cell.
-        : type microcell_per_cell: int
-        : param household_number: Number of households per microcell.
-        : type household_number: int
-        : param if_households: decides whether to put people into households.
-        : type if_households: bool
+        :param pop_size: Total number of people in population.
+        :type pop_size: int
+        :param cell_number: Number of cell objects the population will be
+            split in to.
+        :type cell_number: int
+        :param microcell_per_cell: Number of microcell objects per cell.
+        :type microcell_per_cell: int
+        :param household_number: Number of households per microcell.
+        :type household_number: int
+        :param if_households: decides whether to put people into households.
+        :type if_households: bool
 
-        : return new_pop: Population
-        : rtype new_pop: `Population` class object
+        :return new_pop: Population
+        :rtype new_pop: `Population` class object
         """
         # Initialise a population class
         new_pop = Population()
