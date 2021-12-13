@@ -24,7 +24,8 @@ class ToyPopulationFactory:
         :type microcell_per_cell: int
         :param household_number: Number of households per microcell
         :type household_number: int
-        :param if_households: decides whether to put people into households
+        :param if_households: Decides whether to group people into households
+            (If false, all individuals will be allocated separate households)
         :type if_households: bool
 
         :return: Population object with individuals distributed into households
