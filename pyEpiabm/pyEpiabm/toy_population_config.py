@@ -40,7 +40,7 @@ class ToyPopulationFactory:
 
         new_pop.add_cells(cell_number)
         # Sets up a probability array for the multinomial
-        p = [1/total_number_microcells]*total_number_microcells
+        p = [1 / total_number_microcells] * total_number_microcells
         # Distributes multinomially people into microcells
         cell_split = np.random.multinomial(population_size, p, size=1)[0]
         i = 0
@@ -71,7 +71,7 @@ class ToyPopulationFactory:
         :type household_number: int
         """
         # Initialises another multinomial distribution
-        q = [1/household_number]*household_number
+        q = [1 / household_number] * household_number
         for cell in population.cells:
             for microcell in cell.microcells:
                 people_number = len(microcell.persons)

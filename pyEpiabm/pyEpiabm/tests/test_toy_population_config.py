@@ -30,7 +30,7 @@ class TestPopConfig(unittest.TestCase):
         count_non_trivial_households = 0
         for cell in test_pop.cells:
             for microcell in cell.microcells:
-                total_people = total_people + len(microcell.persons)
+                total_people += len(microcell.persons)
                 for person in microcell.persons:
                     if len(person.household.persons) > 1:
                         count_non_trivial_households += 1
