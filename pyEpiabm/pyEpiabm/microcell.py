@@ -56,9 +56,9 @@ class Microcell:
         """Notify Microcell that a person's status has changed.
 
         :param old_status: Person's old infection status.
-        :type old_status: :enum-class:`InfectionStatus`
+        :type old_status: :class:`InfectionStatus`
         :param new_status: Person's new infection status.
-        :type new_status: :enum-class:`InfectionStatus`
+        :type new_status: :class:`InfectionStatus`
         """
         self.compartment_counter.report(old_status, new_status)
         self.cell.notify_person_status_change(old_status, new_status)

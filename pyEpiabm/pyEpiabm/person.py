@@ -79,7 +79,7 @@ class Person:
         """Update Person's Infection Status.
 
         :param new_status: Person's new status.
-        :type new_status: :enum-class:`InfectionStatus`
+        :type new_status: :class:`InfectionStatus`
         """
         self.microcell.notify_person_status_change(
             self.infection_status, new_status)

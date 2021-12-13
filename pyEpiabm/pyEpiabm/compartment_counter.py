@@ -38,9 +38,9 @@ class CompartmentCounter:
         Update internal compartments state.
 
         :param old_status: Person's previous infection state.
-        :type old_status: :enum-class:`InfectionStatus`
+        :type old_status: :class:`InfectionStatus`
         :param new_status: Person's new infection state.
-        :type new_status: :enum-class:`InfectionStatus`
+        :type new_status: :class:`InfectionStatus`
         """
         self._compartments[old_status] -= 1
         self._compartments[new_status] += 1
