@@ -16,6 +16,7 @@ from .cell import Cell  # noqa
 from .microcell import Microcell  # noqa
 from .household import Household  # noqa
 from .parameters import Parameters  # noqa
+from .compartment_counter import CompartmentCounter  # noqa
 
 # Properties
 from .infection_status import InfectionStatus  # noqa
