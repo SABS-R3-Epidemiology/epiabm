@@ -36,7 +36,7 @@ class Household:
         """
         return "Household at " \
             + f"({self.location[0]:.2f}, {self.location[1]:.2f}) "\
-            + f"with {len(self.persons)} persons."
+            + f"with {len(self.persons)} people."
 
     def add_person(self, person):
         """Add a person to this household.
