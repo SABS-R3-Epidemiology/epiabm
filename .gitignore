@@ -3,12 +3,37 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
 *.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
 
 # Distribution / packaging
 .Python
-build/
 develop-eggs/
 dist/
 downloads/
@@ -25,6 +50,8 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+build/
+build_dir/
 MANIFEST
 
 # PyInstaller
@@ -76,6 +103,7 @@ target/
 
 # VS Code
 *.vscode
+*.editorconfig
 
 # Jupyter Notebook
 .ipynb_checkpoints

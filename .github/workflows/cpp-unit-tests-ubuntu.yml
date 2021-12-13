@@ -1,0 +1,39 @@
+name: Unit tests (cpp versions)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+
+  build-and-test:
+    runs-on: ubuntu-20.04
+    env:
+      CC: gcc-9
+      CXX: g++-9
+
+    steps:
+      - name: checkout repo & submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: make build directory
+        run: mkdir build_dir
+      
+      - name: cmake configure
+        run: cmake ../cEpiabm/. -DCMAKE_BUILD_TYPE=Debug
+        working-directory: build_dir
+
+      - name: cmake build
+        run: cmake --build . --parallel 2 --target unit_tests
+        working-directory: build_dir
+
+      - name: run unit tests
+        run: ctest -j2 --output-on-failure
+        working-directory: build_dir
+      
