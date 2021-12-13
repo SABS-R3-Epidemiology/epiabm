@@ -14,14 +14,14 @@ class Microcell:
     def __init__(self, cell):
         """Constructor Method.
 
-        :param cell: Microcell's parent :class:`Cell` instance.
+        :param cell: Microcell's parent :class:`Cell` instance
         :type cell: Cell
         """
         self.persons = []
         self.cell = cell
 
     def __repr__(self):
-        """String representation of Microcell.
+        """Returns a string representation of Microcell.
 
         :return: String representation of Microcell
         :rtype: str

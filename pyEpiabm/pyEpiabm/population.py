@@ -16,8 +16,8 @@ class Population:
     def __repr__(self):
         """String Representation of Population.
 
-        :rtype: str
         :return: String representation of the Population
+        :rtype: str
         """
         return "Population with {} cells.".format(len(self.cells))
 

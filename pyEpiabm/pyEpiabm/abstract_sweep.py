@@ -11,8 +11,8 @@ class AbstractSweep:
     def bind_population(self, population: Population):
         """Set the population which the sweep will act on.
 
-        : param population: Population: :class:`Population` to bind
-        : type population: Population
+        :param population: Population: :class:`Population` to bind
+        :type population: Population
         """
         # Possibly add check to see if self._population has already been set
         self._population = population
@@ -20,7 +20,7 @@ class AbstractSweep:
     def __call__(self, time: float):
         """Run sweep over population.
 
-        : param time: Current simulation time in days
-        : type time: float
+        :param time: Current simulation time in days
+        :type time: float
         """
         raise NotImplementedError

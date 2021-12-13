@@ -10,7 +10,7 @@ class ToyPopulationFactory:
     def make_pop(self, population_size: int, cell_number: int,
                  microcell_number: int, household_number: int,
                  if_households: bool = False):
-        """Method that initializes a population class with a given population size,
+        """Method that initializes a population object with a given population size,
         number of cells and number of microcells. A multinomial distribution is
         used to distribute the number of people into the different microcells.
         There is also an option to distribute people into households.
@@ -27,8 +27,8 @@ class ToyPopulationFactory:
         :param if_households: decides whether to put people into households
         :type if_households: bool
 
-        :return new_pop: Population
-        :rtype new_pop: `Population` class object
+        :return: Population object with individuals distributed into households
+        :rtype: Population
         """
         # Initialise a population class
         new_pop = Population()

@@ -24,8 +24,8 @@ class HostProgressionSweep(AbstractSweep):
         """Method that assigns next infection status based on
         current infection status.
 
-        : param Person: Person class with infection status attributes
-        : type Person: Person
+        :param Person: Person class with infection status attributes
+        :type Person: Person
         """
         # More infection statuses will be incorporated in future.
         if person.infection_status == InfectionStatus.InfectMild:
@@ -41,8 +41,8 @@ class HostProgressionSweep(AbstractSweep):
         them a next infection status and a new time of next status
         change.
 
-        : param time: Current simulation time in days
-        : type time: int
+        :param time: Current simulation time in days
+        :type time: int
         """
         if not (type(time) == int):
             raise TypeError('Time needs to be type int')
