@@ -39,13 +39,14 @@ class TestCompartmentCounter(unittest.TestCase):
             old = random.choice(list(pe.InfectionStatus))
             if statuses[old] == 0:
                 continue
-            
+
             new = random.choice(list(pe.InfectionStatus))
             subject.report(old, new)
             statuses[old] -= 1
             statuses[new] += 1
 
             self.assertDictEqual(subject.retrieve(), statuses)
+
 
 if __name__ == '__main__':
     unittest.main()

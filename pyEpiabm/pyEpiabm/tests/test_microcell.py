@@ -29,7 +29,7 @@ class TestMicrocell(unittest.TestCase):
         cell = pe.Cell()
         cell.add_microcells(5)
         cell._setup()
-    
+
     def test_report(self):
         cell = pe.Cell()
         mcell = pe.Microcell(cell)
@@ -38,6 +38,7 @@ class TestMicrocell(unittest.TestCase):
         mcell.notify_person_status_change(
             pe.InfectionStatus.Susceptible,
             pe.InfectionStatus.Recovered)
+
 
 if __name__ == '__main__':
     unittest.main()
