@@ -31,3 +31,6 @@ from .household_sweep import HouseholdSweep  # noqa
 
 # Example Simulations
 from .simulation import Simulation  # noqa
+
+# Data collection
+from .compartment_counter import CompartmentCounter # noqa

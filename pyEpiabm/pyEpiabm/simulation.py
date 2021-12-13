@@ -1,9 +1,9 @@
 from .host_progression_sweep import HostProgressionSweep
 from .household_sweep import HouseholdSweep
 from .toy_population_config import ToyPopulationFactory
+from .csv_writer import CsvWriter
 import os
 import typing
-
 
 class Simulation:
     """Class to run a full simulation.
@@ -28,13 +28,9 @@ class Simulation:
         filename = os.path.join(os.getcwd(),
                                      file_params["output_dir"],
                                      file_params["output_file"])
-        self.outfile = open(filename, 'w')
-    
-    def __del__(self):
-        """Destructor Method
-        """
-        if self.outfile:
-            self.outfile.close()
+        self.writer = CsvWriter(
+            filename,
+            ["time", "Susceptible", "Infected", "Recovered"])
 
     def run_sweeps(self):
         """Iteration step of the simulation. For each timestep the required
@@ -56,17 +52,9 @@ class Simulation:
             t += 1
 
     def write_to_file(self, time):
-        count_susceptible = 0
-        count_infectious = 0
-        count_recovered = 0
+        counts = {s: 0 for s in list(InfectionStatus)}
         for cell in self.population.cells:
-            for person in cell.persons:
-                if person.is_susceptible():
-                    count_susceptible += 1
-                elif person.is_infectious():
-                    count_infectious += 1
-                else:
-                    count_recovered += 1
+            
         
         self.outfile.write("{},{},{}\n".format(time, "susceptible",
                                     count_susceptible))

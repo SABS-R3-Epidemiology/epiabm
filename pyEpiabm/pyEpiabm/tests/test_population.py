@@ -22,6 +22,11 @@ class TestPopulation(unittest.TestCase):
         population.add_cells(n)
         self.assertEqual(len(population.cells), n)
 
+    def test_setup(self):
+        population = pe.Population()
+        population.add_cells(5)
+        population.setup()
+
 
 if __name__ == '__main__':
     unittest.main()
