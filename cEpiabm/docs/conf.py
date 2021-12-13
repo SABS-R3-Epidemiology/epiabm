@@ -86,4 +86,4 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 # Breathe Configuration
-breathe_default_project = 'Epiabm'
+breathe_default_project = 'cEpiabm'

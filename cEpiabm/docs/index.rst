@@ -6,9 +6,16 @@
 Welcome to C++ Epiabm's documentation!
 ======================================
 
+This is the C++ Backend for the EpiAbm Package.
+
+
+Contents
+========
+
+.. module:: cEpiabm
+
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   core
 
 
 
@@ -19,10 +26,3 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-
-Docs
-====
-
-.. doxygenclass:: epiabm::PopulationFactory
-   :members:
-   :undoc-members:
