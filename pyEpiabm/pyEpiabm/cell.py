@@ -47,7 +47,6 @@ class Cell:
         """
         self.person_queue.put(person)
 
-<<<<<<< HEAD
     def queue_sweep(self, time):
         """Function to run through the queue of exposed people
         """
@@ -57,12 +56,13 @@ class Cell:
             # who has been in contact with an infected becomes infected
             # themselves.
             r = random.uniform(0, 1)
-            infection_event = person.susceptibility
+            infection_event = person.susceptibility # Are we sure?
             if r < infection_event:
-                person.infection_status = InfectionStatus.InfectMild
+                #person.infection_status = InfectionStatus.InfectMild
+                person.update_status(InfectionStatus.InfectMild)
                 person.time_of_status_change = time
         # Clear the queue for the next timestep.
-=======
+
     def _setup(self) -> None:
         """Setup method. Should be called once Population has been setup.
         Called by population (DOESN'T NEED TO BE CALLED MANUALLY)
@@ -83,4 +83,3 @@ class Cell:
         :type new_status: :class:`InfectionStatus`
         """
         self.compartment_counter.report(old_status, new_status)
->>>>>>> py-compartment-datacollecting

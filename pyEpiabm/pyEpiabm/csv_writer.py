@@ -20,4 +20,4 @@ class CsvWriter:
             self.f.close()
     
     def write(self, row: typing.List):
-        self.writer.write(row)
+        self.writer.writerow(row)
