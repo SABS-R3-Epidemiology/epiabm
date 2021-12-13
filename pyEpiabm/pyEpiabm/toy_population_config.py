@@ -15,16 +15,16 @@ class ToyPopulationFactory:
         used to distribute the number of people into the different microcells.
         There is also an option to distribute people into households.
 
-        :param pop_size: Total number of people in population.
+        :param pop_size: Total number of people in population
         :type pop_size: int
         :param cell_number: Number of cell objects the population will be
-            split in to.
+            split in to
         :type cell_number: int
-        :param microcell_per_cell: Number of microcell objects per cell.
+        :param microcell_per_cell: Number of microcell objects per cell
         :type microcell_per_cell: int
-        :param household_number: Number of households per microcell.
+        :param household_number: Number of households per microcell
         :type household_number: int
-        :param if_households: decides whether to put people into households.
+        :param if_households: decides whether to put people into households
         :type if_households: bool
 
         :return new_pop: Population
@@ -62,7 +62,13 @@ class ToyPopulationFactory:
         return new_pop
 
     def add_households(self, population: Population, household_number: int):
-        """Method that groups people in microcell into households together.
+        """Method that groups people in a microcell into households together.
+
+        :param population: Population containing all person objects to be
+            considered for grouping
+        :type population: Population
+        :param household_number: Number of households to form
+        :type household_number: int
         """
         # Initialises another multinomial distribution
         q = [1/household_number]*household_number
@@ -84,6 +90,10 @@ class ToyPopulationFactory:
         """Method assigns each person to their own individual household.
         This means that household sweep will run trivially instead of
         throwing an error.
+
+        :param population: Population containing all person objects to be
+            considered for grouping
+        :type population: Population
         """
         for cells in population.cells:
             for person in cells.persons:
