@@ -18,7 +18,7 @@ class TestPerson(unittest.TestCase):
         self.assertEqual(self.person.microcell, self.microcell)
 
     def test_repr(self):
-        self.assertEqual(repr(self.person), "Person, Age = 0")
+        self.assertEqual(repr(self.person), "Person, Age = 0.")
 
     def test_is_infectious(self):
         self.assertFalse(self.person.is_infectious())

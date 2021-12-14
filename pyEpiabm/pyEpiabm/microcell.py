@@ -45,7 +45,7 @@ class Microcell:
 
     def _setup(self) -> None:
         """Setup method. Should be called once Population has been setup.
-        Called by population (DOESN'T NEED TO BE CALLED MANUALLY)
+        Called by population (doesn't need to be called manually).
         """
         self.compartment_counter.initialize(len(self.persons))
 
@@ -55,10 +55,10 @@ class Microcell:
             new_status: InfectionStatus) -> None:
         """Notify Microcell that a person's status has changed.
 
-        :param old_status: Person's old infection status.
-        :type old_status: :class:`InfectionStatus`
-        :param new_status: Person's new infection status.
-        :type new_status: :class:`InfectionStatus`
+        :param old_status: Person's old infection status
+        :type old_status: InfectionStatus
+        :param new_status: Person's new infection status
+        :type new_status: InfectionStatus
         """
         self.compartment_counter.report(old_status, new_status)
         self.cell.notify_person_status_change(old_status, new_status)

@@ -72,14 +72,14 @@ class Person:
         :return: String representation of person
         :rtype: str
         """
-        return f"Person, Age = {self.age}"
+        return f"Person, Age = {self.age}."
 
     def update_status(self,
                       new_status: InfectionStatus) -> None:
         """Update Person's Infection Status.
 
-        :param new_status: Person's new status.
-        :type new_status: :class:`InfectionStatus`
+        :param new_status: Person's new status
+        :type new_status: InfectionStatus
         """
         self.microcell.notify_person_status_change(
             self.infection_status, new_status)
