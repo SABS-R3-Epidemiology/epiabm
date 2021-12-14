@@ -43,7 +43,8 @@ class Simulation:
 
         t = self.sim_params["simulation_start_time"]
         while t < self.sim_params["simulation_end_time"]:
-            for sweep in self.sweeps: sweep(t)
+            for sweep in self.sweeps: 
+                sweep(t)
             self.write_to_file(t)
             t += 1
 

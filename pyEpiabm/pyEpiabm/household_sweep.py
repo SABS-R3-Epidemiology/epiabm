@@ -23,8 +23,6 @@ class HouseholdSweep(AbstractSweep):
 
         : param time: Simulation time, in days
         : type time: int
-        : param population: Object that contains the population
-        : type population: Population
         """
         timestep = int(time * Parameters.instance().time_steps_per_day)
 
