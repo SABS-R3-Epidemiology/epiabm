@@ -6,7 +6,7 @@ from .person import Person
 
 class Microcell:
     """Class representing a Microcell (Group of people and places).
-    Collection of :class:`Person` s
+    Collection of :class:`Person` s.
 
     :param cell: An instance of :class:`Cell`
     :type cell: Cell
@@ -26,7 +26,7 @@ class Microcell:
         :return: String representation of Microcell
         :rtype: str
         """
-        return f"Microcell with {len(self.persons)} people"
+        return f"Microcell with {len(self.persons)} people."
 
     def add_people(self, n):
         """Adds n default :class:`Person` to Microcell.

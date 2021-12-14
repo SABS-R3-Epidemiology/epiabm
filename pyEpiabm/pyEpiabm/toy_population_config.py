@@ -1,3 +1,6 @@
+#
+# Factory for creation of a toy population
+#
 import numpy as np
 from .population import Population
 from .household import Household
@@ -11,7 +14,7 @@ class ToyPopulationFactory:
                  microcell_number: int, household_number: int,
                  if_households: bool = False):
         """Initialize a population object with a given population size,
-        number of cells and number of microcells. A multinomial distribution is
+        number of cells and microcells. A uniform multinomial distribution is
         used to distribute the number of people into the different microcells.
         There is also an option to distribute people into households.
 

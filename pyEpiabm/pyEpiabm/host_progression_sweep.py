@@ -1,3 +1,6 @@
+#
+# Progression of infection within individuals
+#
 import random
 from .abstract_sweep import AbstractSweep
 from .infection_status import InfectionStatus
@@ -31,8 +34,8 @@ class HostProgressionSweep(AbstractSweep):
         if person.infection_status == InfectionStatus.InfectMild:
             person.next_infection_status = InfectionStatus.Recovered
         else:
-            raise TypeError('update_next_infection_status should only' +
-                            'be applied to individuals with mild' +
+            raise TypeError('update_next_infection_status should only ' +
+                            'be applied to individuals with mild ' +
                             'infection status')
 
     def __call__(self, time: int):

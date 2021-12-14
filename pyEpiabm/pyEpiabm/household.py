@@ -29,7 +29,7 @@ class Household:
         self.infectiveness = infectiveness
 
     def __repr__(self):
-        """String representation.
+        """Returns a string representation of Household.
 
         :return: String representation of the household
         :rtype: str

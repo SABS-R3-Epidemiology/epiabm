@@ -1,7 +1,6 @@
 #
 # Infection due to contact within households
 #
-
 from .abstract_sweep import AbstractSweep
 from .population import Population
 from .covidsim_helpers import CovidsimHelpers
