@@ -8,7 +8,7 @@ from ._compartment_counter import _CompartmentCounter
 
 class Microcell:
     """Class representing a Microcell (Group of people and places).
-    Collection of :class:`Person` s
+    Collection of :class:`Person` s.
 
     :param cell: An instance of :class:`Cell`
     :type cell: Cell
@@ -16,7 +16,7 @@ class Microcell:
     def __init__(self, cell):
         """Constructor Method.
 
-        :param cell: Microcell's parent :class:`Cell` instance.
+        :param cell: Microcell's parent :class:`Cell` instance
         :type cell: Cell
         """
         self.persons = []
@@ -25,12 +25,12 @@ class Microcell:
             f"Microcell {hash(self)}")
 
     def __repr__(self):
-        """String representation of Microcell.
+        """Returns a string representation of Microcell.
 
         :return: String representation of Microcell
         :rtype: str
         """
-        return f"Microcell with {len(self.persons)} people"
+        return f"Microcell with {len(self.persons)} people."
 
     def add_people(self, n):
         """Adds n default :class:`Person` to Microcell.
