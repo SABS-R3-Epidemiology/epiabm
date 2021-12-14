@@ -18,7 +18,7 @@ class TestQueueSweep(unittest.TestCase):
         cls.person2 = cls.test_population.cells[0].microcells[0].persons[1]
 
     def test_bind(self):
-        self.test_sweep = HouseholdSweep()
+        self.test_sweep = pe.QueueSweep()
         self.test_sweep.bind_population(self.pop)
         self.assertEqual(self.test_sweep._population.cells[0]
                          .persons[0].infection_status,

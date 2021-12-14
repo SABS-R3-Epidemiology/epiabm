@@ -1,9 +1,10 @@
 import csv
 import typing
 
+
 class CsvWriter:
     def __init__(self, filename: str, fieldnames: typing.List):
-        try:    
+        try:
             self.f = open(filename, 'w')
             self.writer = csv.writer(
                 self.f, delimiter=',')
@@ -18,6 +19,6 @@ class CsvWriter:
     def __del__(self):
         if self.f:
             self.f.close()
-    
+
     def write(self, row: typing.List):
         self.writer.writerow(row)

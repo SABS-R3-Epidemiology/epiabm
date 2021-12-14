@@ -53,10 +53,11 @@ class Microcell:
         :param n: Number of default :class:`Place` s to add
         :type n: int
         """
-        for i in range(n):
+        for _ in range(n):
             p = Place(loc, place_type, self.cell, self)
             self.cell.places.append(p)
             self.places.append(p)
+
     def _setup(self) -> None:
         """Setup method. Should be called once Population has been setup.
         Called by population (DOESN'T NEED TO BE CALLED MANUALLY)

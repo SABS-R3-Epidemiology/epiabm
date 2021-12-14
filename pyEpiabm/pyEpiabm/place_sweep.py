@@ -43,9 +43,9 @@ class PlaceSweep(AbstractSweep):
                         # Calculate "force of infection" parameter which will
                         # determine the likelihood of an infection event.
                         infectiousness = CovidsimHelpers.calc_place_inf(place,
-                            infector, infectee, timestep)  # noqa
+                            infector, infectee, timestep)
                         susceptibility = CovidsimHelpers.calc_place_susc(place,
-                            infector, infectee, timestep)  # noqa
+                            infector, infectee, timestep)
                         force_of_infection = infectiousness * susceptibility
 
                         # Compare a uniform random number to the force of
