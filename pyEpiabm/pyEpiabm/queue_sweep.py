@@ -20,4 +20,4 @@ class QueueSweep(AbstractSweep):
                 # Update the infection status
                 person.update_status(InfectionStatus.Exposed)
                 person.next_infection_status = InfectionStatus.InfectMild
-                person.time_of_status_change = time  # + random int
+                person.time_of_status_change = time

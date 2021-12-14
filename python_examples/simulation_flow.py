@@ -1,6 +1,10 @@
 import sys
-sys.path.append('../pyEpiabm')
+import os
 import pyEpiabm as pe
+import pandas as pd
+import matplotlib.pyplot as plt
+
+#sys.path.append('../pyEpiabm')
 
 pop_params = {"population_size": 100, "cell_number": 1,
               "microcell_number": 1, "household_number": 1,
@@ -15,18 +19,10 @@ pe.Parameters.instance().time_steps_per_day = 1
 
 population = pe.ToyPopulationFactory().make_pop(**pop_params)
 
-person1 = population.cells[0].persons[0]
-person2 = population.cells[0].persons[1]
+#person1 = population.cells[0].persons[0]
+#person2 = population.cells[0].persons[1]
 population.cells[0].persons[0].update_status(pe.InfectionStatus.InfectMild)
 population.cells[0].persons[0].time_of_status_change = 10
-
-# check everyone in one household - yes
-# force of infection = 1 - yes
-# everyone enqueued - yep, at each time step
-
-
-print(person2.infection_status)
-print(len(person1.household.persons))
 
 sim = pe.Simulation()
 sim.configure(
@@ -36,3 +32,11 @@ sim.configure(
     file_params)
 
 sim.run_sweeps()
+del(sim.writer)
+del(sim)
+filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
+                        "output.csv")
+print(filename)
+df = pd.read_csv(filename)
+df.plot(x="time", y=["InfectionStatus.InfectMild", "InfectionStatus.Recovered"])
+plt.show()
