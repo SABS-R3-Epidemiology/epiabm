@@ -17,7 +17,7 @@ Once an individual becomes exposed, their progression through the various stages
 ![SEIR model conceptualisation](./images/covidsim_schema.png)
 
 ## pyEpiabm
-Python is more readable and user-friendly, but is not able to cope with large population sizes. However, it is instructive to consider a toy model in order to better understand the underlying code. Additionally, toy models may be quicker for model comparison and parameter inference, though care should obviously be taken whe scaling up to a full population. We provide a variety of workflows to show the utility of code.
+Python is more readable and user-friendly, but is not able to cope with large population sizes. However, it is instructive to consider a toy model in order to better understand the underlying code. Additionally, toy models may be quicker for model comparison and parameter inference, though care should obviously be taken when scaling up to a full population. We provide a variety of workflows to show the utility of code.
 
 
 ## cppEpiabm
@@ -28,8 +28,20 @@ This code may be superficially less readable, but the parallels with the python 
 
 Add text on how to install and use module. 
 
-&nbsp;
+### Installation of cppEpiabm
 
+Cmake is used for installation of the cppEpiabm software. The following procedure will compile the code and run all unit tests:
+```
+mkdir build_dir
+cd build_dir
+cmake ../cEpiabm/. -DCMAKE_BUILD_TYPE=Debug
+cmake --build . --parallel 2 --target unit_tests
+ctest -j2 --output-on-failure
+```
+Note that cmake must be installed on your system. The following command can be used on ubuntu systems:
+```
+sudo apt-get install cmake cmake-data
+```
 
 ## Documentation 
 Some documentation on the program's classes and methods can be found here: https://epiamb.readthedocs.io/en/latest/  

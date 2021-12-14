@@ -1,6 +1,8 @@
 #
 # Runs all unit tests included in pyEpiabm.
-# Run from epiabm directory as `coverage run pyEpiabm/run_tests.py --unit`
+# Run from epiabm directory with coverage using:
+#   `coverage run pyEpiabm/run_tests.py --unit`
+# Doc tests can also be ran from pyEpiabm with `python3 run_tests.py --doctest`
 #
 
 from __future__ import absolute_import, division
@@ -90,14 +92,16 @@ def doctest_rst_and_public_interface():
         'pyEpiabm.abstract_sweep',
         'pyEpiabm.cell',
         'pyEpiabm.covidsim_helpers',
-        'pyEpiabm.household_sweep',
+        'pyEpiabm.host_progression_sweep',
         'pyEpiabm.household',
+        'pyEpiabm.household_sweep',
         'pyEpiabm.infection_status',
         'pyEpiabm.microcell',
         'pyEpiabm.parameters',
         'pyEpiabm.person',
         'pyEpiabm.population',
-        'pyEpiabm.version_info',
+        'pyEpiabm.toy_population_config',
+        'pyEpiabm.version_info'
     ]
 
     doc_symbols = get_all_documented_symbols()

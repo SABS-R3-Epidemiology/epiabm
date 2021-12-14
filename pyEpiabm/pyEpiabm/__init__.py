@@ -20,8 +20,23 @@ from .infection_status import InfectionStatus  # noqa
 from .place_type import PlaceType  # noqa
 from .parameters import Parameters  # noqa
 
+# Properties
+from .infection_status import InfectionStatus  # noqa
+
+# Routines
+from .covidsim_helpers import CovidsimHelpers  # noqa
+from .toy_population_config import ToyPopulationFactory  # noqa
+
 # Sweeps
 from .abstract_sweep import AbstractSweep  # noqa
+from .host_progression_sweep import HostProgressionSweep  # noqa
 from .household_sweep import HouseholdSweep  # noqa
 from .place_sweep import PlaceSweep  # noqa
 from .covidsim_helpers import CovidsimHelpers  # noqa
+from .queue_sweep import QueueSweep  # noqa
+
+# Example Simulations
+from .simulation import Simulation  # noqa
+
+# Data collection
+from .compartment_counter import CompartmentCounter # noqa

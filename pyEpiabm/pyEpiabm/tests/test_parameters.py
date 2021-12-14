@@ -3,14 +3,10 @@ import pyEpiabm as pe
 
 
 class TestParameters(unittest.TestCase):
-    """
-    Test the 'Parameters' class.
+    """Test the 'Parameters' class.
     """
     def test_instance(self):
         pe.Parameters.instance()
-
-    def test_setattr(self):
-        pe.Parameters.instance().abc = 1
 
     def test_getattr(self):
         pe.Parameters.instance().aaa = 1

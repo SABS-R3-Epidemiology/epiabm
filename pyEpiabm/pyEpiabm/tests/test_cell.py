@@ -3,8 +3,7 @@ import pyEpiabm as pe
 
 
 class TestCell(unittest.TestCase):
-    """
-    Test the 'Cell' class.
+    """Test the 'Cell' class.
     """
     @classmethod
     def setUpClass(cls) -> None:
@@ -23,6 +22,10 @@ class TestCell(unittest.TestCase):
         self.assertEqual(len(cell.microcells), 0)
         cell.add_microcells(n)
         self.assertEqual(len(cell.microcells), n)
+
+    def test_setup(self):
+        cell = pe.Cell()
+        cell._setup()
 
 
 if __name__ == '__main__':

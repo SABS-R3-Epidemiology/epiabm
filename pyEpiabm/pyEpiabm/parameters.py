@@ -4,11 +4,12 @@
 
 
 class Parameters:
-    """Class for global parameters
-    Singleton Pattern
+    """Class for global parameters.
+
+    Following a singleton Pattern.
     """
     class __Parameters:
-        """Singleton Parameters Object
+        """Singleton Parameters Object.
         """
         def __init__(self):
             pass
@@ -17,8 +18,11 @@ class Parameters:
 
     @staticmethod
     def instance():
-        """New method
-        Creates singleton instance if it doesn't exist
+        """Creates singleton instance of __Parameters under
+        _instance if one doesn't already exist.
+
+        :return: An instance of the __Parameters class
+        :rtype: __Parameters
         """
         if not Parameters._instance:
             Parameters._instance = Parameters.__Parameters()

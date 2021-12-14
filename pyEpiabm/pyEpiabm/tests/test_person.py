@@ -3,8 +3,7 @@ import pyEpiabm as pe
 
 
 class TestPerson(unittest.TestCase):
-    """
-    Test the 'Person' class.
+    """Test the 'Person' class.
     """
     @classmethod
     def setUpClass(cls) -> None:
@@ -31,6 +30,12 @@ class TestPerson(unittest.TestCase):
         self.assertTrue(self.person.is_susceptible())
         self.person.infection_status = pe.InfectionStatus.InfectMild
         self.assertFalse(self.person.is_susceptible())
+
+    def test_update_status(self):
+        self.person.update_status(pe.InfectionStatus.InfectMild)
+        self.assertEqual(
+            self.person.infection_status,
+            pe.InfectionStatus.InfectMild)
 
 
 if __name__ == '__main__':

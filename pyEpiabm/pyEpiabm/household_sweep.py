@@ -3,33 +3,34 @@
 #
 
 from .abstract_sweep import AbstractSweep
-from .population import Population
 from .covidsim_helpers import CovidsimHelpers
 from .parameters import Parameters
 import random
 
 
 class HouseholdSweep(AbstractSweep):
-    '''Class to run the intra-household infections
+    """Class to run the intra-household infections
     as part of the sweep function. Takes an individual
     person as input and tests a infection event against each
     susceptible member of their household. The resulting
     exposed person is added to an infection queue.
-    '''
+    """
 
-    def __call__(self, time: float, population: Population):
-        '''
-        Given a population structure, loops over infected members
+    def __call__(self, time: int):
+        """Given a population structure, loops over infected members
         and considers whether they infected household members based
         on individual, and spatial infectiousness and susceptibility.
 
-        : param infected: Person
-        '''
+        :param time: Simulation time, in days
+        :type time: int
+        :param population: Object that contains the population
+        :type population: Population
+        """
         timestep = int(time * Parameters.instance().time_steps_per_day)
 
         # Double loop over the whole population, checking infectiousness
         # status, and whether they are absent from their household.
-        for cell in population.cells:
+        for cell in self._population.cells:
             for infector in cell.persons:
                 if not infector.is_infectious():
                     continue

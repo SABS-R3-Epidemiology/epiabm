@@ -3,8 +3,7 @@ import pyEpiabm as pe
 
 
 class TestAbstractSweep(unittest.TestCase):
-    """
-    Test the 'AbstractSweep' class.
+    """Test the 'AbstractSweep' class.
     """
 
     def test_construct(self):
