@@ -31,6 +31,12 @@ class TestPerson(unittest.TestCase):
         self.person.infection_status = pe.InfectionStatus.InfectMild
         self.assertFalse(self.person.is_susceptible())
 
+    def test_update_status(self):
+        self.person.update_status(pe.InfectionStatus.InfectMild)
+        self.assertEqual(
+            self.person.infection_status,
+            pe.InfectionStatus.InfectMild)
+
 
 if __name__ == '__main__':
     unittest.main()

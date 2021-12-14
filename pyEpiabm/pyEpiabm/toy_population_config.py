@@ -59,7 +59,7 @@ class ToyPopulationFactory:
             self.add_households(new_pop, household_number)
         else:
             self.no_households(new_pop)
-
+        new_pop.setup()
         return new_pop
 
     def add_households(self, population: Population, household_number: int):

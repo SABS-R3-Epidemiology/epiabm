@@ -25,6 +25,20 @@ class TestMicrocell(unittest.TestCase):
         microcell.add_people(n)
         self.assertEqual(len(microcell.persons), n)
 
+    def test_setup(self):
+        cell = pe.Cell()
+        cell.add_microcells(5)
+        cell._setup()
+
+    def test_report(self):
+        cell = pe.Cell()
+        mcell = pe.Microcell(cell)
+        mcell.add_people(5)
+        cell._setup()
+        mcell.notify_person_status_change(
+            pe.InfectionStatus.Susceptible,
+            pe.InfectionStatus.Recovered)
+
 
 if __name__ == '__main__':
     unittest.main()

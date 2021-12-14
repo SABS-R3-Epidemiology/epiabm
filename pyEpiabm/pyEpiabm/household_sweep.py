@@ -3,7 +3,6 @@
 #
 
 from .abstract_sweep import AbstractSweep
-from .population import Population
 from .covidsim_helpers import CovidsimHelpers
 from .parameters import Parameters
 import random
@@ -17,7 +16,7 @@ class HouseholdSweep(AbstractSweep):
     exposed person is added to an infection queue.
     """
 
-    def __call__(self, time: int, population: Population):
+    def __call__(self, time: int):
         """Given a population structure, loops over infected members
         and considers whether they infected household members based
         on individual, and spatial infectiousness and susceptibility.
@@ -31,7 +30,7 @@ class HouseholdSweep(AbstractSweep):
 
         # Double loop over the whole population, checking infectiousness
         # status, and whether they are absent from their household.
-        for cell in population.cells:
+        for cell in self._population.cells:
             for infector in cell.persons:
                 if not infector.is_infectious():
                     continue

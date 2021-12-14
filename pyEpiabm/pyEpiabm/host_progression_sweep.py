@@ -49,7 +49,10 @@ class HostProgressionSweep(AbstractSweep):
         for cell in self._population.cells:
             for person in cell.persons:
                 if person.time_of_status_change == time:
-                    person.infection_status = person.next_infection_status
                     self._update_next_infection_status(person)
-                    person.time_of_status_change =\
-                        time + self._update_time_to_status_change()
+                    person.update_status(person.next_infection_status)
+                    #person.infection_status = person.next_infection_status
+                    if not person.infection_status == \
+                            InfectionStatus.Recovered:
+                        person.time_of_status_change =\
+                            time + self._update_time_to_status_change()

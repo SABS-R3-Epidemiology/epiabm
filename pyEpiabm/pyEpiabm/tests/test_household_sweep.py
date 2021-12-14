@@ -25,7 +25,15 @@ class TestHouseholdSweep(unittest.TestCase):
         cls.person.infection_status = pe.InfectionStatus.InfectMild
         cls.person.household = cls.house
         cls.house.persons = [cls.person]
+        cls.time = 1
         pe.Parameters.instance().time_steps_per_day = 1
+
+    def test_bind(self):
+        self.test_sweep = HouseholdSweep()
+        self.test_sweep.bind_population(self.pop)
+        self.assertEqual(self.test_sweep._population.cells[0]
+                         .persons[0].infection_status,
+                         pe.InfectionStatus.InfectMild)
 
     @mock.patch('pyEpiabm.CovidsimHelpers.calc_house_susc')
     @mock.patch('pyEpiabm.CovidsimHelpers.calc_house_inf')
@@ -35,16 +43,17 @@ class TestHouseholdSweep(unittest.TestCase):
         """
         mock_inf.return_value = 10
         mock_susc.return_value = 10
-        subject = HouseholdSweep()
-        time = 1
 
         # Assert a population with one infected will not change the queue
-        subject(time, self.pop)
+        self.test_sweep = HouseholdSweep()
+        self.test_sweep.bind_population(self.pop)
+        self.test_sweep(self.time)
         self.assertTrue(self.cell.person_queue.empty())
 
         # Change person's status to recovered
         self.person.infection_status = pe.InfectionStatus.Recovered
-        subject(time, self.pop)
+        self.test_sweep.bind_population(self.pop)
+        self.test_sweep(self.time)
         self.assertTrue(self.cell.person_queue.empty())
 
         # Add one susceptible to the population, with the mocked infectiousness
@@ -57,7 +66,8 @@ class TestHouseholdSweep(unittest.TestCase):
         self.pop.cells[0].persons.append(new_person)
 
         test_queue.put(new_person)
-        subject(time, self.pop)
+        self.test_sweep.bind_population(self.pop)
+        self.test_sweep(self.time)
         self.assertEqual(self.cell.person_queue.qsize(), 1)
 
         # Change the additional person to recovered, and assert the queue
@@ -65,7 +75,8 @@ class TestHouseholdSweep(unittest.TestCase):
         new_person.infection_status = pe.InfectionStatus.Recovered
         self.cell.persons.append(new_person)
         self.cell.person_queue = Queue()
-        subject(time, self.pop)
+        self.test_sweep.bind_population(self.pop)
+        self.test_sweep(self.time)
         self.assertTrue(self.cell.person_queue.empty())
 
 
