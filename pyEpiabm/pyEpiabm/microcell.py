@@ -22,7 +22,7 @@ class Microcell:
         self.persons = []
         self.cell = cell
         self.compartment_counter = _CompartmentCounter(
-            f"Microcell {hash(self)}")
+            f"Microcell {id(self)}")
 
     def __repr__(self):
         """Returns a string representation of Microcell.

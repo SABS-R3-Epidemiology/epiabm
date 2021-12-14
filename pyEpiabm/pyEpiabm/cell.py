@@ -18,7 +18,7 @@ class Cell:
         self.microcells = []
         self.persons = []
         self.person_queue = Queue()
-        self.compartment_counter = _CompartmentCounter(f"Cell {hash(self)}")
+        self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
 
     def __repr__(self):
         """Returns a string representation of the Cell.
