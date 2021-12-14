@@ -54,5 +54,5 @@ class Simulation:
             for k in data:
                 data[k] += cell.compartment_counter.retrieve()[k]
         data["time"] = time
-        
+
         self.writer.write(data)
