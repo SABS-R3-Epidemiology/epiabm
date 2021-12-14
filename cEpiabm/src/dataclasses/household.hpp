@@ -11,7 +11,7 @@ namespace epiabm
 
     struct HouseholdParams
     {
-        double susceptibliity = 0, infectiveness = 0;
+        double susceptibility = 0, infectiveness = 0;
         std::pair<double, double> location = {0, 0};
     };
 
