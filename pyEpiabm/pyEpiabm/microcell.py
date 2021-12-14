@@ -2,6 +2,8 @@
 # Mirocell Class
 #
 from .person import Person
+from .infection_status import InfectionStatus
+from ._compartment_counter import _CompartmentCounter
 
 
 class Microcell:
@@ -19,6 +21,8 @@ class Microcell:
         """
         self.persons = []
         self.cell = cell
+        self.compartment_counter = _CompartmentCounter(
+            f"Microcell {id(self)}")
 
     def __repr__(self):
         """Returns a string representation of Microcell.
@@ -38,3 +42,23 @@ class Microcell:
             p = Person(self)
             self.cell.persons.append(p)
             self.persons.append(p)
+
+    def _setup(self) -> None:
+        """Setup method. Should be called once Population has been setup.
+        Called by population (doesn't need to be called manually).
+        """
+        self.compartment_counter.initialize(len(self.persons))
+
+    def notify_person_status_change(
+            self,
+            old_status: InfectionStatus,
+            new_status: InfectionStatus) -> None:
+        """Notify Microcell that a person's status has changed.
+
+        :param old_status: Person's old infection status
+        :type old_status: InfectionStatus
+        :param new_status: Person's new infection status
+        :type new_status: InfectionStatus
+        """
+        self.compartment_counter.report(old_status, new_status)
+        self.cell.notify_person_status_change(old_status, new_status)

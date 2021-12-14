@@ -28,3 +28,6 @@ from .toy_population_config import ToyPopulationFactory  # noqa
 from .abstract_sweep import AbstractSweep  # noqa
 from .host_progression_sweep import HostProgressionSweep  # noqa
 from .household_sweep import HouseholdSweep  # noqa
+
+# Data collection
+from ._compartment_counter import _CompartmentCounter # noqa

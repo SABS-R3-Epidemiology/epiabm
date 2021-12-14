@@ -29,3 +29,9 @@ class Population:
         """
         for i in range(n):
             self.cells.append(Cell())
+
+    def setup(self) -> None:
+        """Setup method. Should be called once Population has been setup.
+        """
+        for cell in self.cells:
+            cell._setup()

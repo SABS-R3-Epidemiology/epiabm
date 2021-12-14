@@ -91,6 +91,7 @@ def doctest_rst_and_public_interface():
     pyEpiabm_submodules = [
         'pyEpiabm.abstract_sweep',
         'pyEpiabm.cell',
+        'pyEpiabm.compartment_counter',
         'pyEpiabm.covidsim_helpers',
         'pyEpiabm.host_progression_sweep',
         'pyEpiabm.household',

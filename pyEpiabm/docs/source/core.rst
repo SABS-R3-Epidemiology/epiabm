@@ -14,6 +14,7 @@ Overview:
 - :class:`Parameters`
 - :class:`Person`
 - :class:`Population`
+- :class:`_CompartmentCounter`
 
 
 Core
@@ -37,4 +38,5 @@ Core
 .. autoclass:: Population
     :members:
 
-    
+.. autoclass:: _CompartmentCounter
+    :members:
