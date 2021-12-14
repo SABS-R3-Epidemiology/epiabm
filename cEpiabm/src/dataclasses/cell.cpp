@@ -64,16 +64,6 @@ namespace epiabm
             callback(m_personQueue.front());
             m_personQueue.pop();
         }
-<<<<<<< HEAD
-        m_peopleInQueue.clear();
-    }
-
-    bool Cell::enqueuePerson(size_t personIndex)
-    {
-        if (m_peopleInQueue.find(personIndex) != m_peopleInQueue.end()) return false;
-        m_personQueue.push(personIndex);
-        m_peopleInQueue.insert(personIndex);
-=======
         m_peopleInQueue.clear(); // Remove person from the set of people currently in queue
     }
 
@@ -89,21 +79,17 @@ namespace epiabm
         if (m_peopleInQueue.find(personIndex) != m_peopleInQueue.end()) return false; // if person already queued
         m_personQueue.push(personIndex); // add to queue
         m_peopleInQueue.insert(personIndex); // insert into queued set
->>>>>>> main
         return true;
     }
 
     std::vector<Person>& Cell::people() { return m_people; }
     std::vector<Microcell>& Cell::microcells() { return m_microcells; }
 
-<<<<<<< HEAD
-=======
     /**
      * @brief Initialize framework for fast looping through infectious / susceptible
      * Cell can maintain a vector of people where all the infectious are at the start.
      * This is to allow quick looping through only infectious people without looping through all people and checking their status.
      */
->>>>>>> main
     void Cell::initializeInfectiousGrouping()
     {
         m_peopleSorted = std::vector<size_t>(m_people.size());
@@ -115,8 +101,6 @@ namespace epiabm
         }
     }
 
-<<<<<<< HEAD
-=======
     /**
      * @brief Mark Person as Infectious for Fast Looping through Infectious People
      * Mark a person as infectious. Used for fast looping through infectious or non-infectious people without looping through all people and checking their statuses.
@@ -125,7 +109,6 @@ namespace epiabm
      * @return true Successfully changed person's state to infectious.
      * @return false Person was already infectious.
      */
->>>>>>> main
     bool Cell::markInfectious(size_t newInfected)
     {
         if (m_peopleSortedInv[newInfected] < m_numInfectious) return false; // Person already in infected section
@@ -140,8 +123,6 @@ namespace epiabm
         return true;
     }
 
-<<<<<<< HEAD
-=======
     /**
      * @brief Mark Person as Non-Infectious for Fast Looping through Infectious People
      * Mark a person as non-infectious. Used for fast looping through infectious or non-infectious people without looping through all people and checking their statuses.
@@ -150,7 +131,6 @@ namespace epiabm
      * @return true Successfully changed person's state to non-infectious.
      * @return false Person was already marked as non-infectious.
      */
->>>>>>> main
     bool Cell::markNonInfectious(size_t oldInfected)
     {
         if (m_peopleSortedInv[oldInfected] >= m_numInfectious) return false; // Person already in non-infected
@@ -165,8 +145,6 @@ namespace epiabm
         return true;
     }
 
-<<<<<<< HEAD
-=======
     /**
      * @brief Get Number of Infectious
      * Get number of currently infectious people.
@@ -174,7 +152,6 @@ namespace epiabm
      * Cell::initializeInfectiousGroupings() must have been called once before this can be used.
      * @return size_t Number of infectious
      */
->>>>>>> main
     size_t Cell::numInfectious() const { return m_numInfectious; }
 
 } // namespace epiabm
