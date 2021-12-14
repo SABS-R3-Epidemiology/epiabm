@@ -4,7 +4,7 @@
 from .microcell import Microcell
 from .person import Person
 from .infection_status import InfectionStatus
-from .compartment_counter import CompartmentCounter
+from ._compartment_counter import _CompartmentCounter
 from queue import Queue
 
 
@@ -18,7 +18,7 @@ class Cell:
         self.microcells = []
         self.persons = []
         self.person_queue = Queue()
-        self.compartment_counter = CompartmentCounter(f"Cell {hash(self)}")
+        self.compartment_counter = _CompartmentCounter(f"Cell {hash(self)}")
 
     def __repr__(self):
         """String representation of Cell.

@@ -3,7 +3,7 @@
 #
 from .person import Person
 from .infection_status import InfectionStatus
-from .compartment_counter import CompartmentCounter
+from ._compartment_counter import _CompartmentCounter
 
 
 class Microcell:
@@ -21,7 +21,7 @@ class Microcell:
         """
         self.persons = []
         self.cell = cell
-        self.compartment_counter = CompartmentCounter(
+        self.compartment_counter = _CompartmentCounter(
             f"Microcell {hash(self)}")
 
     def __repr__(self):

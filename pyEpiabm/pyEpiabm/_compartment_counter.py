@@ -2,7 +2,7 @@ import typing
 from .infection_status import InfectionStatus
 
 
-class CompartmentCounter:
+class _CompartmentCounter:
     """Class Component which maintains count of people in each compartment
     """
 

@@ -16,7 +16,6 @@ from .cell import Cell  # noqa
 from .microcell import Microcell  # noqa
 from .household import Household  # noqa
 from .parameters import Parameters  # noqa
-from .compartment_counter import CompartmentCounter  # noqa
 
 # Properties
 from .infection_status import InfectionStatus  # noqa
@@ -30,4 +29,4 @@ from .host_progression_sweep import HostProgressionSweep  # noqa
 from .household_sweep import HouseholdSweep  # noqa
 
 # Data collection
-from .compartment_counter import CompartmentCounter # noqa
+from ._compartment_counter import _CompartmentCounter # noqa
