@@ -1,6 +1,4 @@
-from .host_progression_sweep import HostProgressionSweep
-from .household_sweep import HouseholdSweep
-from .toy_population_config import ToyPopulationFactory
+from .abstract_sweep import AbstractSweep
 from .infection_status import InfectionStatus
 from .csv_dict_writer import CsvDictWriter
 from .population import Population
@@ -11,7 +9,10 @@ import typing
 class Simulation:
     """Class to run a full simulation.
     """
-    def configure(self, population: Population, sim_params: typing.Dict,
+    def configure(self,
+                  population: Population,
+                  sweeps: typing.List[AbstractSweep],
+                  sim_params: typing.Dict,
                   file_params: typing.Dict):
         """Initialise a population structure for use in the simulation.
 
@@ -23,6 +24,10 @@ class Simulation:
         """
         self.sim_params = sim_params
         self.population = population
+        self.sweeps = sweeps
+        for s in sweeps:
+            assert isinstance(s, AbstractSweep)
+            s.bind_population(self.population)
 
         filename = os.path.join(os.getcwd(),
                                 file_params["output_dir"],
@@ -38,15 +43,7 @@ class Simulation:
 
         t = self.sim_params["simulation_start_time"]
         while t < self.sim_params["simulation_end_time"]:
-            householdsweep = HouseholdSweep()
-            householdsweep.bind_population(self.population)
-            householdsweep(t)
-            # PlaceSweep(t, self.population)
-            for cell in self.population.cells:
-                cell.queue_sweep(t)
-            hostprog = HostProgressionSweep()
-            hostprog.bind_population(self.population)
-            hostprog(t)
+            for sweep in self.sweeps: sweep(t)
             self.write_to_file(t)
             t += 1
 
