@@ -18,9 +18,15 @@ class Simulation:
 
         :param pop_params: dictionary of parameter specific to the population.
         :type pop_params: dict
+        :param sweeps: list of abstract sweeps used in the simulation. Queue
+            sweep and host progression sweep must appear at the
+        :type seeeps: list
         :param sim_params: dictionay of parameters specific to the simulation
             used.
         :type sim_params: dict
+        :param file_params: dictionay of parameters specific to the output
+            file.
+        :type file_params: dict
         """
         self.sim_params = sim_params
         self.population = population
@@ -43,7 +49,7 @@ class Simulation:
 
         t = self.sim_params["simulation_start_time"]
         while t < self.sim_params["simulation_end_time"]:
-            for sweep in self.sweeps: 
+            for sweep in self.sweeps:
                 sweep(t)
             self.write_to_file(t)
             t += 1
