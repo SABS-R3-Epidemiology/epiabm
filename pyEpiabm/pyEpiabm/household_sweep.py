@@ -21,10 +21,8 @@ class HouseholdSweep(AbstractSweep):
         and considers whether they infected household members based
         on individual, and spatial infectiousness and susceptibility.
 
-        :param time: Simulation time, in days
-        :type time: int
-        :param population: Object that contains the population
-        :type population: Population
+        : param time: Simulation time, in days
+        : type time: int
         """
         timestep = int(time * Parameters.instance().time_steps_per_day)
 
