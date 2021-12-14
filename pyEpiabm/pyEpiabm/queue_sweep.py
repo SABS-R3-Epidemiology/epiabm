@@ -1,6 +1,5 @@
 from .abstract_sweep import AbstractSweep
 from .infection_status import InfectionStatus
-import random
 
 
 class QueueSweep(AbstractSweep):
@@ -18,13 +17,7 @@ class QueueSweep(AbstractSweep):
                 person = cell.person_queue.get()
                 # Get takes person from the queue and removes them, so clears
                 # the queue for the next timestep.
-
-                # CovidSim has another random event to determined whether a
-                # person who has been in contact with an infected becomes
-                # infected themselves.
-                r = random.uniform(0, 1)
-                infection_event = person.susceptibility  # Are we sure?
-                if r < infection_event:
-                    # Update the infection status
-                    person.update_status(InfectionStatus.InfectMild)
-                    person.time_of_status_change = time
+                # Update the infection status
+                person.update_status(InfectionStatus.Exposed)
+                person.next_infection_status = InfectionStatus.InfectMild
+                person.time_of_status_change = time  # + random int
