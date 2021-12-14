@@ -22,6 +22,10 @@ population.cells[0].persons[0].update_status(pe.InfectionStatus.InfectMild)
 population.cells[0].persons[0].time_of_status_change = 10
 
 sim = pe.Simulation()
-sim.configure(population, sim_params, file_params)
+sim.configure(
+    population,
+    [pe.HouseholdSweep(), pe.HostProgressionSweep()],
+    sim_params,
+    file_params)
 
 sim.run_sweeps()
