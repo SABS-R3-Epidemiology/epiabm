@@ -56,9 +56,9 @@ class Cell:
             # who has been in contact with an infected becomes infected
             # themselves.
             r = random.uniform(0, 1)
-            infection_event = person.susceptibility # Are we sure?
+            infection_event = person.susceptibility  # Are we sure?
             if r < infection_event:
-                #person.infection_status = InfectionStatus.InfectMild
+                # person.infection_status = InfectionStatus.InfectMild
                 person.update_status(InfectionStatus.InfectMild)
                 person.time_of_status_change = time
         # Clear the queue for the next timestep.

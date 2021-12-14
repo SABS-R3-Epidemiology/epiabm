@@ -7,6 +7,7 @@ from .population import Population
 import os
 import typing
 
+
 class Simulation:
     """Class to run a full simulation.
     """
@@ -24,8 +25,8 @@ class Simulation:
         self.population = population
 
         filename = os.path.join(os.getcwd(),
-                                     file_params["output_dir"],
-                                     file_params["output_file"])
+                                file_params["output_dir"],
+                                file_params["output_file"])
         self.writer = CsvDictWriter(
             filename,
             ["time"] + [s for s in InfectionStatus])
