@@ -11,7 +11,7 @@ class TestHousehold(unittest.TestCase):
     def test___repr__(self):
         subject = pe.Household((1, 1))
         self.assertIsInstance(repr(subject), str)
-        test_string = "Household at (1.00, 1.00) with 0 persons."
+        test_string = "Household at (1.00, 1.00) with 0 people."
         self.assertEqual(repr(subject), test_string)
 
 

@@ -18,9 +18,9 @@ class Cell:
         self.person_queue = Queue()
 
     def __repr__(self):
-        """String representation of Cell.
+        """Returns a string representation of the Cell.
 
-        :return: String representation of Cell.
+        :return: String representation of the Cell
         :rtype: str
         """
         return f"Cell with {len(self.microcells)} microcells " + \
