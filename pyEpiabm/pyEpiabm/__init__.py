@@ -28,6 +28,7 @@ from .toy_population_config import ToyPopulationFactory  # noqa
 from .abstract_sweep import AbstractSweep  # noqa
 from .host_progression_sweep import HostProgressionSweep  # noqa
 from .household_sweep import HouseholdSweep  # noqa
+from .queue_sweep import QueueSweep  # noqa
 
 # Example Simulations
 from .simulation import Simulation  # noqa
