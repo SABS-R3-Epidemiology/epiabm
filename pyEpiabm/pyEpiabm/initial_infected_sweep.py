@@ -8,17 +8,17 @@ class InitialInfectedSweep(AbstractSweep):
     of simulation and setting an initial number of infecetd people.
     """
 
-    def __call__(self, pop_params: dict):
+    def __call__(self, sim_params: dict):
         """Method that randomly chooses a number of people
         in the population and changes their infection status to InfectedMild
         and sets their time of next status change.
 
-        :param pop_params: Dictionary of population parameters
+        :param pop_params: Dictionary of simulation parameters
         :type pop_params: dict
         """
-
-        if pop_params["population_size"] < \
-                pop_params["initial_infected_number"]:
+        pop_size = self._population.total_people()
+        if pop_size < \
+                sim_params["initial_infected_number"]:
             raise AssertionError('Initial number of infecetd people needs to be \
                                             less than the total population')
 
@@ -29,12 +29,12 @@ class InitialInfectedSweep(AbstractSweep):
             num_susceptible = num_susceptible + \
                                 cell.compartment_counter.retrieve()[status]
 
-        if num_susceptible < pop_params["initial_infected_number"]:
+        if num_susceptible < sim_params["initial_infected_number"]:
             raise AssertionError('There are not enough susceptible people in the \
                                         population to infect')
 
         num_people = 0
-        while num_people < (pop_params["initial_infected_number"]):
+        while num_people < (sim_params["initial_infected_number"]):
             # Choose randomly which cell the person is in.
             cell_no = random.randint(0, len(self._population.cells)-1)
             cell = self._population.cells[cell_no]
