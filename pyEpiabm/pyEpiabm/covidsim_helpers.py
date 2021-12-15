@@ -90,4 +90,4 @@ class CovidsimHelpers:
         :return: infectiousness
         :rtype: float
         """
-        return .5
+        return 0.5

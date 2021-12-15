@@ -34,14 +34,16 @@ class PlaceSweep(AbstractSweep):
                 for infector in place.persons:
                     if not infector.is_infectious():
                         continue
-
                     # Check to see whether a place member is susceptible.
+
                     for infectee in place.persons:
                         if not infectee.is_susceptible():
                             continue
 
                         # Calculate "force of infection" parameter which will
-                        # determine the likelihood of an infection event.
+                        # determine the likelihood of an infection event between
+                        # the infector and infectee given that they meet in this
+                        # place.
                         infectiousness = c.calc_place_inf(place, infector,
                                                           infectee, timestep)
                         susceptibility = c.calc_place_susc(place, infector,

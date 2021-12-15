@@ -19,7 +19,7 @@ pe.Parameters.instance().time_steps_per_day = 1
 
 population = pe.ToyPopulationFactory().make_pop(**pop_params)
 cell = population.cells[0]
-# Intitialises 5 people as infectious randomly across 10 households
+# Intitialises 5 people as infectious randomly across the households
 for _ in range(5):
     i = random.randint(0, pop_params["population_size"]-1)
     cell.persons[i].update_status(pe.InfectionStatus.InfectMild)

@@ -1,5 +1,6 @@
 from .abstract_sweep import AbstractSweep
 import random
+import numpy as np
 
 
 class UpdatePlaceSweep(AbstractSweep):
@@ -21,7 +22,12 @@ class UpdatePlaceSweep(AbstractSweep):
                 # Possibly want to later differentiate between
                 # the fixed population of a place ie staff, and
                 # the variable population.
-                new_capacity = random.randint(1, place.max_capacity)
+
+                # Ensure that 
+                max_capacity = np.minimum(place.max_capacity,
+                                          len(place.microcell.persons))
+                # what if there aren't enough in microcell
+                new_capacity = random.randint(1, max_capacity)
                 for _ in range(new_capacity):
                     i = random.randint(1, len(place.microcell.persons))
                     place.add_person(place.microcell.persons[i-1])
