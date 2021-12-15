@@ -3,7 +3,7 @@
 #
 
 from .abstract_sweep import AbstractSweep
-from .covidsim_helpers import CovidsimHelpers
+from .covidsim_helpers import CovidsimHelpers as c
 from .parameters import Parameters
 import random
 
@@ -42,10 +42,10 @@ class PlaceSweep(AbstractSweep):
 
                         # Calculate "force of infection" parameter which will
                         # determine the likelihood of an infection event.
-                        infectiousness = CovidsimHelpers.calc_place_inf(place,
-                            infector, infectee, timestep)
-                        susceptibility = CovidsimHelpers.calc_place_susc(place,
-                            infector, infectee, timestep)
+                        infectiousness = c.calc_place_inf(place, infector,
+                                                          infectee, timestep)
+                        susceptibility = c.calc_place_susc(place, infector,
+                                                           infectee, timestep)
                         force_of_infection = infectiousness * susceptibility
 
                         # Compare a uniform random number to the force of
