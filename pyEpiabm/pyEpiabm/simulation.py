@@ -35,7 +35,7 @@ class Simulation:
         """
         self.sim_params = sim_params
         self.population = population
-        self.inital_sweeps = initial_sweeps
+        self.initial_sweeps = initial_sweeps
         self.sweeps = sweeps
         self.pop_params = pop_params
         # Initial sweeps configure the population by changing the type,
@@ -66,6 +66,10 @@ class Simulation:
             sweep(self.pop_params)
             
         t = self.sim_params["simulation_start_time"]
+        for sweep in self.inital_sweeps:
+            sweep(self.pop_params)
+        self.write_to_file(t)
+
         while t < self.sim_params["simulation_end_time"]:
             for sweep in self.sweeps:
                 sweep(t)

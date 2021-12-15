@@ -22,6 +22,17 @@ class InitialInfectedSweep(AbstractSweep):
             raise AssertionError('Initial number of infecetd people needs to be \
                                             less than the total population')
 
+        # Checks whether there are enough susceptible people to infect.
+        status = pe.InfectionStatus.Susceptible
+        num_susceptible = 0
+        for cell in self._population.cells:
+            num_susceptible = num_susceptible + \
+                                cell.compartment_counter.retrieve()[status]
+
+        if num_susceptible < pop_params["initial_infected_number"]:
+            raise AssertionError('There are not enough susceptible people in the \
+                                        population to infect')
+
         num_people = 0
         while num_people < (pop_params["initial_infected_number"]):
             # Choose randomly which cell the person is in.

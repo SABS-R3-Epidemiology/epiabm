@@ -33,6 +33,13 @@ class TestInitialInfectedSweep(unittest.TestCase):
         num_infectious = self.cell.compartment_counter.retrieve()[status]
         self.assertEqual(num_infectious, 1)
 
+        # Test that trying to infect a population with out enough
+        # susceptible people raises an error.
+        self.person1.update_status(pe.InfectionStatus.Recovered)
+        self.person2.update_status(pe.InfectionStatus.Recovered)
+        params = {"population_size": 2, "initial_infected_number": 1}
+        self.assertRaises(AssertionError, test_sweep, params)
+
 
 if __name__ == '__main__':
     unittest.main()
