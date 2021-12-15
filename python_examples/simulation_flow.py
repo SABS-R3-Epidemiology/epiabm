@@ -26,14 +26,13 @@ for _ in range(5):
     cell.persons[i].time_of_status_change = random.randint(1, 10)
 
 # initialise a place everyone's in
-cell.microcells[0].add_place(1, (1.0, 1.0), PlaceType.Hotel,
-                             max_capacity=50)
+cell.microcells[0].add_place(1, (1.0, 1.0), PlaceType.Hotel)
 
 sim = pe.Simulation()
 sim.configure(
     population,
     [pe.UpdatePlaceSweep(), pe.HouseholdSweep(), pe.PlaceSweep(),
-     pe.QueueSweep(), pe.HostProgressionSweep()],
+     pe.InitialInfectedSweep(), pe.HostProgressionSweep()],
     sim_params,
     file_params)
 sim.run_sweeps()

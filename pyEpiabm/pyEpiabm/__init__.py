@@ -35,6 +35,7 @@ from .place_sweep import PlaceSweep  # noqa
 from .covidsim_helpers import CovidsimHelpers  # noqa
 from .queue_sweep import QueueSweep  # noqa
 from .update_place_sweep import UpdatePlaceSweep  # noqa
+from .initial_infected_sweep import InitialInfectedSweep  # noqa
 
 # Example Simulations
 from .simulation import Simulation  # noqa
