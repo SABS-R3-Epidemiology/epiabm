@@ -11,13 +11,14 @@ class Simulation:
     """
     def configure(self,
                   population: Population,
-                  pop_params: typing.Dict,
                   initial_sweeps: typing.List[AbstractSweep],
                   sweeps: typing.List[AbstractSweep],
                   sim_params: typing.Dict,
                   file_params: typing.Dict):
         """Initialise a population structure for use in the simulation.
 
+        :param population: population structure for the model.
+        :type population: Population
         :param pop_params: dictionary of parameter specific to the population.
         :type pop_params: dict
         :param initial_sweeps: list of abstract sweep used to initialise the
@@ -37,19 +38,15 @@ class Simulation:
         self.population = population
         self.initial_sweeps = initial_sweeps
         self.sweeps = sweeps
-        self.pop_params = pop_params
         # Initial sweeps configure the population by changing the type,
         # infection status, infectiveness or susceptibility of people
         # or places. Only implemented once.
-        for s in initial_sweeps:
+        for s in initial_sweeps + sweeps:
             assert isinstance(s, AbstractSweep)
             s.bind_population(self.population)
 
         # General sweeps run through the population on every timestep, and
         # include host progression and spatial infections.
-        for s in sweeps:
-            assert isinstance(s, AbstractSweep)
-            s.bind_population(self.population)
 
         filename = os.path.join(os.getcwd(),
                                 file_params["output_dir"],
@@ -62,12 +59,10 @@ class Simulation:
         """Iteration step of the simulation. For each timestep the required
         spatial sweeps are run, which enqueues people who have been in contact
         """
-        for sweep in self.sweeps:
-            sweep(self.pop_params)
-            
+     
         t = self.sim_params["simulation_start_time"]
-        for sweep in self.inital_sweeps:
-            sweep(self.pop_params)
+        for sweep in self.initial_sweeps:
+            sweep(self.sim_params)
         self.write_to_file(t)
 
         while t < self.sim_params["simulation_end_time"]:

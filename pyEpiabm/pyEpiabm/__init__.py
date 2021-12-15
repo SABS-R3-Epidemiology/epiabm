@@ -17,11 +17,11 @@ from .microcell import Microcell  # noqa
 from .household import Household  # noqa
 from .place import Place  # noqa
 from .infection_status import InfectionStatus  # noqa
-from .place_type import PlaceType  # noqa
 from .parameters import Parameters  # noqa
 
 # Properties
 from .infection_status import InfectionStatus  # noqa
+from .place_type import PlaceType  # noqa
 
 # Routines
 from .covidsim_helpers import CovidsimHelpers  # noqa
@@ -32,7 +32,6 @@ from .abstract_sweep import AbstractSweep  # noqa
 from .host_progression_sweep import HostProgressionSweep  # noqa
 from .household_sweep import HouseholdSweep  # noqa
 from .place_sweep import PlaceSweep  # noqa
-from .covidsim_helpers import CovidsimHelpers  # noqa
 from .queue_sweep import QueueSweep  # noqa
 from .update_place_sweep import UpdatePlaceSweep  # noqa
 from .initial_infected_sweep import InitialInfectedSweep  # noqa
