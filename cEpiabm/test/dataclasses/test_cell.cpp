@@ -273,7 +273,12 @@ TEST_CASE("dataclasses/cell: test infectious grouping", "[Cell]")
     for (int rep = 0; rep < 100; rep++)
     {
         Cell subject = makeSubject(10, 100);
-        subject.initializeInfectiousGrouping();
+        REQUIRE_NOTHROW(subject.initializeInfectiousGrouping());
+        REQUIRE_NOTHROW(subject.numDead());
+        REQUIRE_NOTHROW(subject.numRecovered());
+        REQUIRE_NOTHROW(subject.numInfectious());
+        REQUIRE_NOTHROW(subject.numExposed());
+        REQUIRE_NOTHROW(subject.numSusceptible());
         std::set<size_t> infectious;
 
         auto verifyInfectious = [&]()

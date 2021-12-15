@@ -8,6 +8,7 @@
 #include <memory>
 #include <functional>
 #include <queue>
+#include <set>
 
 
 namespace epiabm
@@ -25,11 +26,21 @@ namespace epiabm
         std::queue<size_t> m_personQueue;
         std::set<size_t> m_peopleInQueue;
 
+
+        /*
         // Vector maintained with all infectious people at the front.
         // For fast looping through infectious / non-infectious subsets of people without looping through all people and checking their statuses.
         std::vector<size_t> m_peopleSorted; // Vector of people indices with 1st n_infectious as infectious, rest as non-infectious.
         std::vector<size_t> m_peopleSortedInv; // Vector to map between person's index in m_people and m_peopleSorted.
         size_t m_numInfectious; // Number of infected. Used in the sorted vectors of people.
+        */
+
+       // Subsets of people for fast looping through these groups
+       std::set<size_t> m_infectiousPeople;
+       std::set<size_t> m_susceptiblePeople;
+       std::set<size_t> m_exposedPeople;
+       std::set<size_t> m_recoveredPeople;
+       std::set<size_t> m_deadPeople;
 
     public:
         Cell();
@@ -41,6 +52,7 @@ namespace epiabm
         void forEachPerson(std::function<bool(Person*)> callback);
         void forEachInfectious(std::function<bool(Person*)> callback);
         void forEachNonInfectious(std::function<bool(Person*)> callback);
+        void forEachExposed(std::function<bool(Person*)> callback);
 
         Person& getPerson(size_t i);
         Microcell& getMicrocell(size_t i);
@@ -54,7 +66,14 @@ namespace epiabm
         void initializeInfectiousGrouping();
         bool markInfectious(size_t personIndex);
         bool markNonInfectious(size_t personIndex);
+        bool markExposed(size_t personIndex);
+        bool markRecovered(size_t personIndex);
+        bool markDead(size_t personIndex);
+        size_t numSusceptible() const;
         size_t numInfectious() const;
+        size_t numExposed() const;
+        size_t numRecovered() const;
+        size_t numDead() const;
 
     private:
         friend class Microcell;

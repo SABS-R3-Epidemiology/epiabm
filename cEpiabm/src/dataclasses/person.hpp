@@ -12,6 +12,8 @@ namespace epiabm
     {
         unsigned char age = 0;
         float susceptibility = 0, infectiousness = 0;
+        
+        unsigned short next_status_time = 0;
     };
 
     enum class InfectionStatus

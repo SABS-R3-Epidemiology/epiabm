@@ -25,9 +25,12 @@ namespace epiabm
                 Cell* cell);
 
             void cellPersonQueueCallback(
-                const unsigned short timestep,
+                unsigned short timestep,
                 Cell* cell,
                 size_t personIndex);
+
+        private:
+            unsigned short latent_time(Person* person);
 
     }; // class NewInfectionSweep
     

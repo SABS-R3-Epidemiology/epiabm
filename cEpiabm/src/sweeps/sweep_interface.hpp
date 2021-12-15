@@ -16,11 +16,12 @@ namespace epiabm
         PopulationPtr m_population;
 
     public:
+        SweepInterface(){};
         virtual ~SweepInterface() = default;
 
         void bind_population(PopulationPtr population);
         
-        virtual void operator()(const unsigned short timestep) = 0;
+        virtual void operator()(const unsigned short /*timestep*/){};
 
 
     }; // class SweepInterface

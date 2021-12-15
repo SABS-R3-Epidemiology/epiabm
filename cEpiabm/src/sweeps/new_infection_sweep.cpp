@@ -24,9 +24,17 @@ namespace epiabm
         return true;
     }
 
-    void NewInfectionSweep::cellPersonQueueCallback(const unsigned short /*timestep*/, Cell* cell, size_t personIndex)
+    void NewInfectionSweep::cellPersonQueueCallback(unsigned short timestep, Cell* cell, size_t personIndex)
     {
-        cell->getPerson(personIndex).updateStatus(InfectionStatus::Exposed);
+        Person* person = &cell->getPerson(personIndex);
+        person->updateStatus(InfectionStatus::Exposed);
+        person->params().next_status_time = static_cast<unsigned short>(timestep + latent_time(person));
+        cell->markExposed(personIndex);
+    }
+
+    unsigned short NewInfectionSweep::latent_time(Person* /*person*/)
+    {
+        return static_cast<unsigned short>(std::rand() % 10 + 1);
     }
 
 
