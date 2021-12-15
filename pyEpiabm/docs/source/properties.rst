@@ -18,6 +18,6 @@ Properties
 .. autoclass:: InfectionStatus
     :members:
     
-. autoclass:: PlaceType
+.. autoclass:: PlaceType
     :members:
     
