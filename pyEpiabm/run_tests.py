@@ -104,13 +104,14 @@ def doctest_rst_and_public_interface():
         'pyEpiabm.place_sweep',
         'pyEpiabm.update_place_sweep',
         'pyEpiabm.queue_sweep',
-        'pyEpiabm.csv_dict_writer'
-        'pyEpiabm.csv_writer'
+        'pyEpiabm._csv_dict_writer'
+        'pyEpiabm._csv_writer'
         'pyEpiabm.infection_status',
         'pyEpiabm.place_type',
         'pyEpiabm.toy_population_config',
         'pyEpiabm.simulation',
-        'pyEpiabm.version_info'
+        'pyEpiabm.version_info',
+        'pyEpiabm.initial_infected_sweep'
     ]
 
     doc_symbols = get_all_documented_symbols()
