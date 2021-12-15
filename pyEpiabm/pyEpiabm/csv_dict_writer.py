@@ -26,6 +26,7 @@ class CsvDictWriter:
 
     def __del__(self):
         """Closes the file when the simulation is finished.
+        Required for file data to be further used.
         """
         if self.f:
             self.f.close()

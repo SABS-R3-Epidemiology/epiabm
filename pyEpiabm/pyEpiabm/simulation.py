@@ -35,11 +35,16 @@ class Simulation:
         self.sim_params = sim_params
         self.population = population
         self.sweeps = sweeps
+        # Initial sweeps configure the population by changing the type,
+        # infection status, infectiveness or susceptibility of people
+        # or places. Only implemented once.
         for s in initial_sweeps:
             assert isinstance(s, AbstractSweep)
             s.bind_population(self.population)
             s()
 
+        # General sweeps run through the population on every timestep, and
+        # include host progression and spatial infections.
         for s in sweeps:
             assert isinstance(s, AbstractSweep)
             s.bind_population(self.population)
