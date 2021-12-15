@@ -3,7 +3,7 @@ from .infection_status import InfectionStatus
 
 
 class CompartmentCounter:
-    """Class Component which maintains count of people in each compartment
+    """Class Component which maintains count of people in each compartment.
     """
 
     def __init__(self, identifier: str):
@@ -19,7 +19,7 @@ class CompartmentCounter:
 
     @property
     def identifier(self):
-        """Get identifier
+        """Get identifier.
         """
         return self._identifier
 
