@@ -9,18 +9,19 @@ import random
 
 
 class PlaceSweep(AbstractSweep):
-    """Class to run the inter-household infections
+    """Class to run the place infections
     as part of the sweep function. Takes an individual
     person as input and tests a infection event against each
-    susceptible member of the population. The resulting
+    susceptible member of the place. The resulting
     exposed person is added to an infection queue.
     """
 
     def __call__(self, time: float):
         """
-        Given a population structure, loops over infected members
-        and considers whether they infected household members based
-        on individual, and spatial infectiousness and susceptibility.
+        Given a population structure with places, loops over infected
+        members of the place and considers whether they infected other
+        people present, based on individual and place infectiousness
+        and susceptibility.
 
         :param time: current simulation time.
         :type time: int

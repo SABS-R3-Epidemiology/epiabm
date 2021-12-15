@@ -1,7 +1,5 @@
 import unittest
 import pyEpiabm as pe
-from queue import Queue
-from unittest import mock
 
 
 class TestUpdatePlaceSweep(unittest.TestCase):
@@ -21,29 +19,32 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         cls.pop.cells[0].microcells[0].add_people(1)
         cls.person = cls.pop.cells[0].microcells[0].persons[0]
         cls.person.infection_status = pe.InfectionStatus.InfectMild
-        cls.microcell.add_place(1, (1, 1), pe.PlaceType.Hotel, 100)
+        cls.microcell.add_place(1, (1, 1), pe.PlaceType.Hotel)
         cls.place = cls.cell.places[0]
         pe.Parameters.instance().time_steps_per_day = 1
         cls.time = 1
 
     def test_bind(self):
-        self.test_sweep = pe.UpdatePlaceSweep()
-        self.test_sweep.bind_population(self.pop)
-        self.assertEqual(self.place.place_type, pe.PlaceType.Hotel)
-
-    @mock.patch("pyEpiabm.CovidsimHelpers.calc_place_susc")
-    @mock.patch("pyEpiabm.CovidsimHelpers.calc_place_inf")
-    def test__call__(self, mock_inf, mock_susc):
+        """Tests that the update place sweep correctly binds
+        the given population.
         """
-        Test whether the household sweep function correctly
-        adds persons to the queue.
-        """
-        mock_inf.return_value = 10
-        mock_susc.return_value = 10
-        self.assertTrue(self.place.persons.empty
+        test_sweep = pe.UpdatePlaceSweep()
+        test_sweep.bind_population(self.pop)
+        self.assertEqual(test_sweep._population.cells[0].
+                         places[0].place_type, pe.PlaceType.Hotel)
 
-        cls.place.add_person(cls.person)
-        self.test_sweep(self.time)
+    def test__call__(self):
+        """Test whether the update place sweep function takes an
+        initially empty place and correctly adds a person to
+         the place.
+        """
+        test_sweep = pe.UpdatePlaceSweep()
+        test_sweep.bind_population(self.pop)
+        self.assertFalse(self.place.persons)
+
+        self.place.add_person(self.person)
+        test_sweep(self.time)
+        self.assertTrue(self.place.persons)
 
 
 if __name__ == "__main__":

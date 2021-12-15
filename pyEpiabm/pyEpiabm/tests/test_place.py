@@ -16,12 +16,15 @@ class TestPlace(unittest.TestCase):
         cls.person = cls.pop.cells[0].microcells[0].persons[0]
 
     def test_construct(self):
+        """Tests constructor method.
+        """
         self.place = pe.Place((1, 1), pe.PlaceType.Hotel, self.cell,
                               self.microcell)
         self.assertEqual(len(self.place.persons), 0)
 
     def test_change_persons(self):
-        """Tests the add and remove persons functions"""
+        """Tests the add and remove persons functions.
+        """
         self.place = pe.Place((1, 1), pe.PlaceType.Hotel, self.cell,
                               self.microcell)
         self.place.add_person(self.person)

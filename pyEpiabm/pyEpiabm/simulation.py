@@ -19,7 +19,8 @@ class Simulation:
 
         :param pop_params: dictionary of parameter specific to the population.
         :type pop_params: dict
-        :param initial_sweeps: list of abstract sweep used to initialise the simulation.
+        :param initial_sweeps: list of abstract sweep used to initialise the
+            simulation.
         :type initial_sweeps: list
         :param sweeps: list of abstract sweeps used in the simulation. Queue
             sweep and host progression sweep must appear at the
