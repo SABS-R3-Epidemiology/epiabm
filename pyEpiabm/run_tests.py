@@ -99,7 +99,7 @@ def doctest_rst_and_public_interface():
         'pyEpiabm.household',
         'pyEpiabm.household_sweep',
         'pyEpiabm.infection_status',
-        'pyEpiabm.initial_infected_sweep'
+        'pyEpiabm.initial_infected_sweep',
         'pyEpiabm.microcell',
         'pyEpiabm.parameters',
         'pyEpiabm.person',
