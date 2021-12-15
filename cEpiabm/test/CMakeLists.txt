@@ -15,13 +15,15 @@ add_definitions(-DEPIABM_TEST_DIR=\"${CMAKE_CURRENT_LIST_DIR}\")
 
 set(
     test_src
-    test_population_factory.cpp
     dataclasses/test_person.cpp
     dataclasses/test_microcell.cpp
     dataclasses/test_cell.cpp
     dataclasses/test_population.cpp
     dataclasses/test_household.cpp
     dataclasses/test_place.cpp
+    test_population_factory.cpp
+    test_output_file_handler.cpp
+    test_log_file.cpp
 )
 
 add_executable(unit_tests ${test_src})
