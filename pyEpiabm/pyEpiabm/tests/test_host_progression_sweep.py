@@ -66,8 +66,6 @@ class TestHostProgressionSweep(unittest.TestCase):
         test_sweep(1)
         self.assertEqual(self.person2.infection_status,
                          pe.InfectionStatus.InfectMild)
-        self.assertEqual(self.person2.next_infection_status,
-                         pe.InfectionStatus.Recovered)
         self.assertEqual(self.person1.infection_status,
                          pe.InfectionStatus.Susceptible)
         self.assertIsInstance(self.person2.time_of_status_change, int)
