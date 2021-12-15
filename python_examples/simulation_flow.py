@@ -15,7 +15,7 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 60}
 file_params = {"output_file": "output.csv",
                "output_dir": "python_examples/simulation_outputs"}
 
-pe.Parameters.instance().time_steps_per_day = 1
+pe.Parameters.instance().time_steps_per_day = 1.0
 
 population = pe.ToyPopulationFactory().make_pop(**pop_params)
 cell = population.cells[0]
@@ -31,8 +31,10 @@ cell.microcells[0].add_place(1, (1.0, 1.0), PlaceType.Hotel)
 sim = pe.Simulation()
 sim.configure(
     population,
+    pop_params,
+    [pe.InitialInfectedSweep()],
     [pe.UpdatePlaceSweep(), pe.HouseholdSweep(), pe.PlaceSweep(),
-     pe.InitialInfectedSweep(), pe.HostProgressionSweep()],
+     pe.QueueSweep(), pe.HostProgressionSweep()],
     sim_params,
     file_params)
 sim.run_sweeps()

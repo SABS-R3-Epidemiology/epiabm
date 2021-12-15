@@ -11,6 +11,7 @@ class Simulation:
     """
     def configure(self,
                   population: Population,
+                  pop_params: typing.Dict,
                   initial_sweeps: typing.List[AbstractSweep],
                   sweeps: typing.List[AbstractSweep],
                   sim_params: typing.Dict,
@@ -34,14 +35,15 @@ class Simulation:
         """
         self.sim_params = sim_params
         self.population = population
+        self.inital_sweeps = initial_sweeps
         self.sweeps = sweeps
+        self.pop_params = pop_params
         # Initial sweeps configure the population by changing the type,
         # infection status, infectiveness or susceptibility of people
         # or places. Only implemented once.
         for s in initial_sweeps:
             assert isinstance(s, AbstractSweep)
             s.bind_population(self.population)
-            s()
 
         # General sweeps run through the population on every timestep, and
         # include host progression and spatial infections.
@@ -60,7 +62,9 @@ class Simulation:
         """Iteration step of the simulation. For each timestep the required
         spatial sweeps are run, which enqueues people who have been in contact
         """
-
+        for sweep in self.sweeps:
+            sweep(self.pop_params)
+            
         t = self.sim_params["simulation_start_time"]
         while t < self.sim_params["simulation_end_time"]:
             for sweep in self.sweeps:
