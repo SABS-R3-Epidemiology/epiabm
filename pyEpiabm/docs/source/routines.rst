@@ -10,6 +10,7 @@ Overview:
 
 - :class:`CovidsimHelpers`
 - :class:`ToyPopulationFactory`
+- :class:`Simulation`
 
 
 Routines
@@ -19,5 +20,8 @@ Routines
     :members:
     
 .. autoclass:: ToyPopulationFactory
+    :members:
+
+.. autoclass:: Simulation
     :members:
     
