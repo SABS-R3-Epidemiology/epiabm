@@ -1,5 +1,5 @@
 #
-# Helper functions based on Covidsim code.
+# Helper functions based on Covidsim code
 #
 from .person import Person
 from .place import Place

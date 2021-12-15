@@ -1,3 +1,6 @@
+#
+# Progression of infection within individuals
+#
 import random
 from .abstract_sweep import AbstractSweep
 from .infection_status import InfectionStatus
@@ -9,7 +12,7 @@ class HostProgressionSweep(AbstractSweep):
     """
 
     def _update_time_to_status_change(self):
-        """Method that assigns time until next infection status update,
+        """Assigns time until next infection status update,
          given as a random integer between 1 and 10.
 
         :return: Time until next infection status update
@@ -21,7 +24,7 @@ class HostProgressionSweep(AbstractSweep):
         return new_time
 
     def _update_next_infection_status(self, person):
-        """Method that assigns next infection status based on
+        """Assigns next infection status based on
         current infection status.
 
         :param Person: Person class with infection status attributes
@@ -38,10 +41,9 @@ class HostProgressionSweep(AbstractSweep):
                             'infection status, or exposed')
 
     def __call__(self, time: int):
-        """Method that sweeps through all people in the population
-        and updates their infection status if it is time and assigns
-        them a next infection status and a new time of next status
-        change.
+        """Sweeps through all people in the population and updates
+        their infection status if it is time and assigns them their
+        next infection status and a new time of next status change.
 
         :param time: Current simulation time in days
         :type time: int

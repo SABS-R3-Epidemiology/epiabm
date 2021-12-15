@@ -15,12 +15,12 @@ class Household:
                  susceptibility=0, infectiveness=0):
         """Constructor Method.
 
-        :param loc: Location of household.
+        :param loc: Location of household
         :type loc: Tuple[float, float]
         :param susceptibility: Household's base susceptibility
             to infection events.
         :type susceptibility: float
-        :param infectiveness: Household's base infectiveness.
+        :param infectiveness: Household's base infectiveness
         :type infectiveness: float
         """
         self.persons = []
@@ -29,7 +29,7 @@ class Household:
         self.infectiveness = infectiveness
 
     def __repr__(self):
-        """String representation.
+        """Returns a string representation of Household.
 
         :return: String representation of the household
         :rtype: str
@@ -39,7 +39,7 @@ class Household:
             + f"with {len(self.persons)} people."
 
     def add_person(self, person):
-        """Add a person to this household.
+        """Adds a person to this household.
 
         :param person: Person to be added
         :type person: Person

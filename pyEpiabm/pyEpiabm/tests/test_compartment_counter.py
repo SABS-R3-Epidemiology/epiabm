@@ -6,17 +6,17 @@ import random
 
 
 class TestCompartmentCounter(unittest.TestCase):
-    """Test the CompartmentCounter class
+    """Test the _CompartmentCounter class
     """
 
     def test_construct(self):
-        subject = pe.CompartmentCounter("Cell 1")
+        subject = pe._CompartmentCounter("Cell 1")
         self.assertEqual(subject.identifier, "Cell 1")
         for k in subject.retrieve():
             self.assertEqual(subject.retrieve()[k], 0)
 
     def test_reportRetrieve(self):
-        subject = pe.CompartmentCounter("")
+        subject = pe._CompartmentCounter("")
         subject.initialize(1000)
         statuses = {s: 0 for s in pe.InfectionStatus}
         statuses[pe.InfectionStatus.Susceptible] = 1000
@@ -29,7 +29,7 @@ class TestCompartmentCounter(unittest.TestCase):
         self.assertDictEqual(subject.retrieve(), statuses)
 
     def test_reportRetrieveLarge(self):
-        subject = pe.CompartmentCounter("")
+        subject = pe._CompartmentCounter("")
         subject.initialize(1000000)
         statuses = {s: 0 for s in pe.InfectionStatus}
         statuses[pe.InfectionStatus.Susceptible] = 1000000

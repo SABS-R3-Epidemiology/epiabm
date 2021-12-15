@@ -41,4 +41,4 @@ from .initial_infected_sweep import InitialInfectedSweep  # noqa
 from .simulation import Simulation  # noqa
 
 # Data collection
-from .compartment_counter import CompartmentCounter # noqa
+from ._compartment_counter import _CompartmentCounter # noqa

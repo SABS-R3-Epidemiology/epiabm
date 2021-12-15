@@ -1,3 +1,6 @@
+#
+# Factory for creation of a toy population
+#
 import numpy as np
 from .population import Population
 from .household import Household
@@ -10,8 +13,8 @@ class ToyPopulationFactory:
     def make_pop(self, population_size: int, cell_number: int,
                  microcell_number: int, household_number: int,
                  if_households: bool = False):
-        """Method that initializes a population object with a given population size,
-        number of cells and number of microcells. A multinomial distribution is
+        """Initialize a population object with a given population size,
+        number of cells and microcells. A uniform multinomial distribution is
         used to distribute the number of people into the different microcells.
         There is also an option to distribute people into households.
 
@@ -64,7 +67,7 @@ class ToyPopulationFactory:
         return new_pop
 
     def add_households(self, population: Population, household_number: int):
-        """Method that groups people in a microcell into households together.
+        """Groups people in a microcell into households together.
 
         :param population: Population containing all person objects to be
             considered for grouping.
@@ -89,7 +92,7 @@ class ToyPopulationFactory:
                         person_index += 1
 
     def no_households(self, population: Population):
-        """Method assigns each person to their own individual household.
+        """Assigns each person to their own individual household.
         This means that household sweep will run trivially instead of
         throwing an error.
 

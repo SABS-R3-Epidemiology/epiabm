@@ -4,7 +4,7 @@
 from .microcell import Microcell
 from .person import Person
 from .infection_status import InfectionStatus
-from .compartment_counter import CompartmentCounter
+from ._compartment_counter import _CompartmentCounter
 from queue import Queue
 
 
@@ -19,7 +19,7 @@ class Cell:
         self.persons = []
         self.places = []
         self.person_queue = Queue()
-        self.compartment_counter = CompartmentCounter(f"Cell {hash(self)}")
+        self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
 
     def __repr__(self):
         """Returns a string representation of the Cell.
@@ -49,7 +49,7 @@ class Cell:
 
     def _setup(self) -> None:
         """Setup method. Should be called once Population has been setup.
-        Called by population (DOESN'T NEED TO BE CALLED MANUALLY)
+        Called by population (doesn't need to be called manually).
         """
         self.compartment_counter.initialize(len(self.persons))
         for mcell in self.microcells:
@@ -61,9 +61,9 @@ class Cell:
             new_status: InfectionStatus) -> None:
         """Notify Cell that a person's status has changed.
 
-        :param old_status: Person's old infection status.
-        :type old_status: :class:`InfectionStatus`
-        :param new_status: Person's new infection status.
-        :type new_status: :class:`InfectionStatus`
+        :param old_status: Person's old infection status
+        :type old_status: InfectionStatus
+        :param new_status: Person's new infection status
+        :type new_status: InfectionStatus
         """
         self.compartment_counter.report(old_status, new_status)

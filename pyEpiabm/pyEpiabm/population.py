@@ -6,7 +6,7 @@ from .cell import Cell
 
 class Population:
     """Class representing a Population.
-    Collection of :class:`Cell` s
+    Collection of :class:`Cell` s.
     """
     def __init__(self):
         """Constructor Method.
@@ -14,7 +14,7 @@ class Population:
         self.cells = []
 
     def __repr__(self):
-        """String Representation of Population.
+        """Returns a string representation of a Population.
 
         :return: String representation of the Population
         :rtype: str
@@ -24,7 +24,7 @@ class Population:
     def add_cells(self, n):
         """Adds n default :class:`Cell` s to the population.
 
-        :param n: number of empty :class:`Cell` s to add
+        :param n: Number of empty :class:`Cell` s to add
         :type n: int
         """
         for i in range(n):

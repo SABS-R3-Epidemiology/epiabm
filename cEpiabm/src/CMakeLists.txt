@@ -11,6 +11,8 @@ set(
     dataclasses/place.cpp
     dataclasses/household.cpp
     population_factory.cpp
+    output_folder_handler.cpp
+    logfile.cpp
     covidsim.cpp
 )
 
@@ -24,6 +26,8 @@ set(
     dataclasses/place.hpp
     dataclasses/household.hpp
     population_factory.hpp
+    output_folder_handler.hpp
+    logfile.hpp
     covidsim.hpp
 )
 

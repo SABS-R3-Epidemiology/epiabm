@@ -5,12 +5,12 @@ from .person import Person
 from .place import Place
 import typing
 from .infection_status import InfectionStatus
-from .compartment_counter import CompartmentCounter
+from ._compartment_counter import _CompartmentCounter
 
 
 class Microcell:
     """Class representing a Microcell (Group of people and places).
-    Collection of :class:`Person` s
+    Collection of :class:`Person` s.
 
     :param cell: An instance of :class:`Cell`
     :type cell: Cell
@@ -24,8 +24,8 @@ class Microcell:
         self.persons = []
         self.places = []
         self.cell = cell
-        self.compartment_counter = CompartmentCounter(
-            f"Microcell {hash(self)}")
+        self.compartment_counter = _CompartmentCounter(
+            f"Microcell {id(self)}")
 
     def __repr__(self):
         """Returns a string representation of Microcell.
@@ -33,7 +33,7 @@ class Microcell:
         :return: String representation of Microcell
         :rtype: str
         """
-        return f"Microcell with {len(self.persons)} people"
+        return f"Microcell with {len(self.persons)} people."
 
     def add_people(self, n):
         """Adds n default :class:`Person` to Microcell.
@@ -60,7 +60,7 @@ class Microcell:
 
     def _setup(self) -> None:
         """Setup method. Should be called once Population has been setup.
-        Called by population (DOESN'T NEED TO BE CALLED MANUALLY)
+        Called by population (doesn't need to be called manually).
         """
         self.compartment_counter.initialize(len(self.persons))
 
@@ -70,10 +70,10 @@ class Microcell:
             new_status: InfectionStatus) -> None:
         """Notify Microcell that a person's status has changed.
 
-        :param old_status: Person's old infection status.
-        :type old_status: :class:`InfectionStatus`
-        :param new_status: Person's new infection status.
-        :type new_status: :class:`InfectionStatus`
+        :param old_status: Person's old infection status
+        :type old_status: InfectionStatus
+        :param new_status: Person's new infection status
+        :type new_status: InfectionStatus
         """
         self.compartment_counter.report(old_status, new_status)
         self.cell.notify_person_status_change(old_status, new_status)
