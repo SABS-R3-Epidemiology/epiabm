@@ -59,7 +59,7 @@ class Simulation:
         """Iteration step of the simulation. For each timestep the required
         spatial sweeps are run, which enqueues people who have been in contact
         """
-     
+
         t = self.sim_params["simulation_start_time"]
         for sweep in self.initial_sweeps:
             sweep(self.sim_params)

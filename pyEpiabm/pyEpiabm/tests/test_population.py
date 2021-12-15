@@ -27,6 +27,9 @@ class TestPopulation(unittest.TestCase):
         population.add_cells(5)
         population.setup()
 
+    def test_total_people(self):
+        self.assertEqual(self.population.total_people(), 0)
+
 
 if __name__ == '__main__':
     unittest.main()

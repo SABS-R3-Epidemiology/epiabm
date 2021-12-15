@@ -15,7 +15,6 @@ population = pe.ToyPopulationFactory().make_pop(**pop_params)
 cell = population.cells[0]
 
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
-              "population_size": 100,
               "initial_infected_number": 5}
 
 file_params = {"output_file": "output.csv",
