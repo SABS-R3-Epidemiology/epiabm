@@ -22,12 +22,17 @@ class InitialInfectedSweep(AbstractSweep):
             raise AssertionError('Initial number of infecetd people needs to be \
                                             less than the total population')
 
-        for _ in range(pop_params["initial_infected_number"]):
+        num_people = 0
+        while num_people < (pop_params["initial_infected_number"]):
             # Choose randomly which cell the person is in.
             cell_no = random.randint(0, len(self._population.cells)-1)
             cell = self._population.cells[cell_no]
 
             # Randomly asigns infective to any person in that cell.
             i = random.randint(0, len(cell.persons)-1)
-            cell.persons[i].update_status(pe.InfectionStatus.InfectMild)
-            cell.persons[i].update_time_to_status_change()
+            # Checks person has not already been assigned.
+            if cell.persons[i].infection_status == \
+                    pe.InfectionStatus.Susceptible:
+                cell.persons[i].update_status(pe.InfectionStatus.InfectMild)
+                cell.persons[i].update_time_to_status_change()
+                num_people += 1
