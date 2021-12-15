@@ -9,22 +9,22 @@ import random
 
 
 class PlaceSweep(AbstractSweep):
-    '''Class to run the inter-household infections
+    """Class to run the inter-household infections
     as part of the sweep function. Takes an individual
     person as input and tests a infection event against each
     susceptible member of the population. The resulting
     exposed person is added to an infection queue.
-    '''
+    """
 
     def __call__(self, time: float):
-        '''
+        """
         Given a population structure, loops over infected members
         and considers whether they infected household members based
         on individual, and spatial infectiousness and susceptibility.
 
         :param time: current simulation time.
         :type time: int
-        '''
+        """
         timestep = int(time * Parameters.instance().time_steps_per_day)
 
         # Double loop over the whole population, checking infectiousness
@@ -41,9 +41,9 @@ class PlaceSweep(AbstractSweep):
                             continue
 
                         # Calculate "force of infection" parameter which will
-                        # determine the likelihood of an infection event between
-                        # the infector and infectee given that they meet in this
-                        # place.
+                        # determine the likelihood of an infection event
+                        # between the infector and infectee given that they
+                        # meet in this place.
                         infectiousness = c.calc_place_inf(place, infector,
                                                           infectee, timestep)
                         susceptibility = c.calc_place_susc(place, infector,

@@ -11,6 +11,7 @@ class Simulation:
     """
     def configure(self,
                   population: Population,
+                  initial_sweeps: typing.List[AbstractSweep],
                   sweeps: typing.List[AbstractSweep],
                   sim_params: typing.Dict,
                   file_params: typing.Dict):
@@ -18,9 +19,11 @@ class Simulation:
 
         :param pop_params: dictionary of parameter specific to the population.
         :type pop_params: dict
+        :param initial_sweeps: list of abstract sweep used to initialise the simulation.
+        :type initial_sweeps: list
         :param sweeps: list of abstract sweeps used in the simulation. Queue
             sweep and host progression sweep must appear at the
-        :type seeeps: list
+        :type sweeps: list
         :param sim_params: dictionay of parameters specific to the simulation
             used.
         :type sim_params: dict
@@ -31,6 +34,11 @@ class Simulation:
         self.sim_params = sim_params
         self.population = population
         self.sweeps = sweeps
+        for s in initial_sweeps:
+            assert isinstance(s, AbstractSweep)
+            s.bind_population(self.population)
+            s()
+
         for s in sweeps:
             assert isinstance(s, AbstractSweep)
             s.bind_population(self.population)

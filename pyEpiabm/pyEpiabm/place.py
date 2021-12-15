@@ -15,7 +15,7 @@ class Place:
                  max_capactity=50):
         self._location = loc
         self.persons = []
-        self.placetype = place_type
+        self.place_type = place_type
         self.max_capacity = max_capactity
         # self.susceptibility = place_type.susceptibility
         # self.infectiveness = place_type.infectiveness

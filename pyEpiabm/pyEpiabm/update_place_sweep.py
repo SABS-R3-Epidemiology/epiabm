@@ -23,7 +23,8 @@ class UpdatePlaceSweep(AbstractSweep):
                 # the fixed population of a place ie staff, and
                 # the variable population.
 
-                # Ensure that 
+                # Ensure that we don't put more people than live in
+                # the microcell.
                 max_capacity = np.minimum(place.max_capacity,
                                           len(place.microcell.persons))
                 # what if there aren't enough in microcell
