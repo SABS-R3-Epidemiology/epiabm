@@ -2,6 +2,7 @@
 # Person Class
 #
 from .infection_status import InfectionStatus
+import random
 
 
 class Person:
@@ -84,3 +85,15 @@ class Person:
         self.microcell.notify_person_status_change(
             self.infection_status, new_status)
         self.infection_status = new_status
+
+    def update_time_to_status_change(self) -> None:
+        """Method that assigns time until next infection status update,
+         given as a random integer between 1 and 10.
+
+        :return: Time until next infection status update
+        :rtype: int
+        """
+        # This is left as a random integer for now but will be made more
+        # complex later.
+        new_time = random.randint(1, 10)
+        self.time_of_status_change = new_time
