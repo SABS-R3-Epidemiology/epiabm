@@ -16,6 +16,14 @@ namespace epiabm
             timestep, std::placeholders::_1));
     }
 
+    /**
+     * @brief Callback for each cell
+     * For each cell, process each person in the queue
+     * @param timestep 
+     * @param cell 
+     * @return true 
+     * @return false 
+     */
     bool NewInfectionSweep::cellCallback(const unsigned short timestep, Cell* cell)
     {
         cell->processQueue(std::bind(
@@ -24,6 +32,14 @@ namespace epiabm
         return true;
     }
 
+    /**
+     * @brief Callback for each person in a cell's queue
+     * Process the people queued to be infected.
+     * Change status to Exposed, set the next transition time and mark the person as Exposed in the cell for fast looping through subsets of people.
+     * @param timestep 
+     * @param cell 
+     * @param personIndex 
+     */
     void NewInfectionSweep::cellPersonQueueCallback(unsigned short timestep, Cell* cell, size_t personIndex)
     {
         Person* person = &cell->getPerson(personIndex);

@@ -16,6 +16,14 @@ namespace epiabm
             std::bind(&HouseholdSweep::cellCallback, this, timestep, std::placeholders::_1));
     }
 
+    /**
+     * @brief Cell callback
+     * Process each infectious person in the cell.
+     * @param timestep
+     * @param cell
+     * @return true
+     * @return false
+     */
     bool HouseholdSweep::cellCallback(const unsigned short timestep, Cell* cell)
     {
         cell->forEachInfectious(std::bind(
@@ -24,6 +32,15 @@ namespace epiabm
         return true;
     }
 
+    /**
+     * @brief Infectious person callback
+     * Process each Infectious person by finding their household and attempting to transmit to each houshold member.
+     * @param timestep
+     * @param cell
+     * @param infector
+     * @return true
+     * @return false
+     */
     bool HouseholdSweep::cellInfectiousCallback(
         const unsigned short timestep,
         Cell* cell,
@@ -40,6 +57,17 @@ namespace epiabm
         return true;
     }
 
+    /**
+     * @brief Attempt to spread infection between household members
+     *
+     * @param timestep
+     * @param cell
+     * @param household
+     * @param infector
+     * @param infectee
+     * @return true
+     * @return false
+    */
     bool HouseholdSweep::infectAttempt(
         const unsigned short timestep,
         Cell* cell, HouseholdPtr /*household*/,
@@ -52,7 +80,7 @@ namespace epiabm
         double susceptibility = Covidsim::CalcHouseSusc(infector, infectee, timestep);
         double foi = infectiousness * susceptibility;
 
-        if (static_cast<double>(std::rand()%1000000)/static_cast<double>(1000000) < foi)
+        if (static_cast<double>(std::rand() % 1000000) / static_cast<double>(1000000) < foi)
         {
             // Infection attempt is successful
             cell->enqueuePerson(infectee->cellPos());

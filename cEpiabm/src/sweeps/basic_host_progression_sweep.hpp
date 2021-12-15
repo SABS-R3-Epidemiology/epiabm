@@ -12,7 +12,9 @@ namespace epiabm
 
     /**
      * @brief Replication of Covid-sim's host progression sweep without Severity
-     * 
+     * Checks Person's time to next state.
+     * If the time is past, choose next state and update person.
+     * Also decides duration to remain in next state.
      */
     class BasicHostProgressionSweep : public SweepInterface
     {
@@ -21,6 +23,11 @@ namespace epiabm
         BasicHostProgressionSweep();
         ~BasicHostProgressionSweep() = default;
 
+        /**
+         * @brief Perform Host Progression Sweep
+         * 
+         * @param timestep 
+         */
         void operator()(const unsigned short timestep) override;
 
     private:
@@ -28,11 +35,13 @@ namespace epiabm
             const unsigned short timestep,
             Cell* cell);
 
+        /* For each Exposed Person */
         bool cellExposedCallback(
             const unsigned short timestep,
             Cell* cell,
             Person* person);
 
+        /* For each Infectious Person */
         bool cellInfectiousCallback(
             const unsigned short timestep,
             Cell* cell,

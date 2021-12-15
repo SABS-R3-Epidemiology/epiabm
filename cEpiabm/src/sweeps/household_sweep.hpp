@@ -9,7 +9,11 @@
 namespace epiabm
 {
 
-
+    /**
+     * @brief Spread Infection within Households
+     * Process each infected person and try to infect all susceptibles in their household.
+     * People to be newly infected get queued in their cell's people queue.
+     */
     class HouseholdSweep : public SweepInterface
     {
     private:
@@ -17,6 +21,11 @@ namespace epiabm
         HouseholdSweep();
         ~HouseholdSweep() = default;
 
+        /**
+         * @brief Perform Household Sweep
+         * 
+         * @param timestep 
+         */
         void operator()(const unsigned short timestep) override;
 
     private:
