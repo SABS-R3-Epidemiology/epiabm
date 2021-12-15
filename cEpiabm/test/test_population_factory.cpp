@@ -90,7 +90,7 @@ TEST_CASE("population_factory: test add person", "[PopulationFactory]")
     factory.addCell(population);
     factory.addMicrocells(&population->cells()[0], 5);
 
-    factory.addPerson(&population->cells()[0], &population->cells()[0].microcells()[0]);
+    factory.addPerson(&population->cells()[0], 0);
     REQUIRE(population->cells()[0].people().size() == 1);
     for (size_t i = 0; i < 5; i++)
         REQUIRE(population->cells()[0].microcells()[i].people().size() == ((i == 0) ? 1 : 0));
@@ -99,7 +99,7 @@ TEST_CASE("population_factory: test add person", "[PopulationFactory]")
     {
         for (size_t j = 0; j <= i; j++)
         {
-            factory.addPerson(&population->cells()[0], &population->cells()[0].microcells()[i]);
+            factory.addPerson(&population->cells()[0], i);
         }
     }
     REQUIRE(population->cells()[0].people().size() == 15);
@@ -116,14 +116,14 @@ TEST_CASE("population_factory: test add people", "[PopulationFactory]")
     factory.addCell(population);
     factory.addMicrocells(&population->cells()[0], 5);
 
-    factory.addPeople(&population->cells()[0], &population->cells()[0].microcells()[0], 1);
+    factory.addPeople(&population->cells()[0], 0, 1);
     REQUIRE(population->cells()[0].people().size() == 1);
     for (size_t i = 0; i < 5; i++)
         REQUIRE(population->cells()[0].microcells()[i].people().size() == ((i == 0) ? 1 : 0));
 
     for (size_t i = 1; i < 5; i++)
     {
-        factory.addPeople(&population->cells()[0], &population->cells()[0].microcells()[i], i + 1);
+        factory.addPeople(&population->cells()[0], i, i + 1);
     }
     REQUIRE(population->cells()[0].people().size() == 15);
     for (size_t i = 0; i < 5; i++)

@@ -20,7 +20,7 @@ namespace epiabm
     private:
         HouseholdParams m_params;
 
-        size_t m_mcellPos;
+        size_t m_mcellPos; // Position within Microcell::m_households vector
 
     public:
         Household(size_t mcellPos);

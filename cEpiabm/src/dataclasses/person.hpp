@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <optional>
 
 namespace epiabm
 {
@@ -34,13 +35,14 @@ namespace epiabm
 
         PersonParams m_params;
 
-        size_t m_cellPos;
-        size_t m_mcellPos;
-        size_t m_household = 0;
-        bool m_hasHousehold = false;
+        size_t m_cellPos; // Position of person within Cell::m_people;
+        size_t m_mcellPos; // Position of person within Microcell::m_people;
+        size_t m_household = 0; // Household's index within Microcell::m_household;
+        size_t m_microcell; // Microcell's index within Cell::m_microcells;
+        bool m_hasHousehold = false; // flag for whether the household has been set;
 
     public:
-        Person(size_t cellPos, size_t mcellPos);
+        Person(size_t microcell, size_t cellPos, size_t mcellPos);
         ~Person() = default;
         Person(const Person&) = default;
         Person(Person&&) = default;
@@ -48,13 +50,14 @@ namespace epiabm
         InfectionStatus status() const;
         PersonParams& params();
 
-        void setStatus(InfectionStatus status);
+        void updateStatus(InfectionStatus status);
 
         size_t cellPos() const;
         size_t microcellPos() const;
+        size_t microcell() const;
         
         bool setHousehold(size_t hh);
-        size_t household();
+        std::optional<size_t> household();
 
     private:
     };

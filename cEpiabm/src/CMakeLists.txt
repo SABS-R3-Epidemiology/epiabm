@@ -14,6 +14,9 @@ set(
     output_folder_handler.cpp
     logfile.cpp
     covidsim.cpp
+    sweeps/sweep_interface.cpp
+    sweeps/household_sweep.cpp
+    sweeps/new_infection_sweep.cpp
 )
 
 set(
@@ -29,6 +32,9 @@ set(
     output_folder_handler.hpp
     logfile.hpp
     covidsim.hpp
+    sweeps/sweep_interface.hpp
+    sweeps/household_sweep.hpp
+    sweeps/new_infection_sweep.hpp
 )
 
 add_library(epiabm_lib STATIC ${epiabm_src} ${epiabm_hdr})

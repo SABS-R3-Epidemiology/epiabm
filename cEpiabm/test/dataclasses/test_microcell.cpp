@@ -23,7 +23,7 @@ TEST_CASE("dataclasses/microcell: test forEachPerson", "[Microcell]")
     std::set<Person*> peopleSet;
     for (size_t i = 0; i < 100; i++)
     {
-        cell.people().push_back(Person(0, i));
+        cell.people().push_back(Person(0, 0, i));
     }
     for (size_t i = 0; i < 100; i++)
     {
@@ -49,7 +49,7 @@ TEST_CASE("dataclasses/microcell: test forEachPerson early stop", "[Microcell]")
     std::set<Person *> peopleSet;
     for (size_t i = 0; i < 100; i++)
     {
-        cell.people().push_back(Person(0, i));
+        cell.people().push_back(Person(0, 0, i));
     }
     for (size_t i = 0; i < 100; i++)
     {
@@ -77,11 +77,11 @@ TEST_CASE("dataclasses/microcell: test forEachPlace", "[Microcell]")
     std::set<Place*> places = std::set<Place*>();
     for (size_t i = 0; i < 100; i++)
     {
-        subject.places().push_back(Place(i));
+        subject.places().push_back(std::make_shared<Place>(i));
     }
     for (size_t i = 0; i < 100; i++) 
     {
-        places.insert(&subject.places()[i]);
+        places.insert(subject.places()[i].get());
     }
     REQUIRE(subject.places().size() == 100);
 
@@ -102,12 +102,12 @@ TEST_CASE("dataclasses/microcell: test forEachPlace early stop", "[Microcell]")
     std::set<Place*> places = std::set<Place*>();
     for (size_t i = 0; i < 100; i++)
     {
-        subject.places().push_back(Place(i));
+        subject.places().push_back(std::make_shared<Place>(i));
     }
     for (size_t i = 0; i < 100; i++) 
     {
-        places.insert(&subject.places()[i]);
-        REQUIRE(subject.places()[i].microcellPos() == i);
+        places.insert(subject.places()[i].get());
+        REQUIRE(subject.places()[i]->microcellPos() == i);
     }
     REQUIRE(subject.places().size() == 100);
 
@@ -130,7 +130,7 @@ TEST_CASE("dataclasses/microcell: test getPerson", "[Microcell]")
     cell.microcells().push_back(Microcell(0));
     for (size_t i = 0; i < 100; i++)
     {
-        cell.people().push_back(Person(0, i));
+        cell.people().push_back(Person(0, 0, i));
     }
     for (size_t i = 0; i < 100; i++)
     {

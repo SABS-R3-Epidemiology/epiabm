@@ -18,10 +18,10 @@ namespace epiabm
     private:
         std::vector<Person> m_people;
         std::vector<Microcell> m_microcells;
-        size_t m_numInfectious;
 
         // Variables used to allow people to be queued for processing later.
         // Jointly store a set of queued people to prevent double queueing same person.
+        // Indexes stored are position of person in cell's m_people vector
         std::queue<size_t> m_personQueue;
         std::set<size_t> m_peopleInQueue;
 
@@ -29,6 +29,7 @@ namespace epiabm
         // For fast looping through infectious / non-infectious subsets of people without looping through all people and checking their statuses.
         std::vector<size_t> m_peopleSorted; // Vector of people indices with 1st n_infectious as infectious, rest as non-infectious.
         std::vector<size_t> m_peopleSortedInv; // Vector to map between person's index in m_people and m_peopleSorted.
+        size_t m_numInfectious; // Number of infected. Used in the sorted vectors of people.
 
     public:
         Cell();

@@ -10,11 +10,11 @@ namespace epiabm
     Cell::Cell() :
         m_people(),
         m_microcells(),
-        m_numInfectious(0),
         m_personQueue(),
         m_peopleInQueue(),
         m_peopleSorted(),
-        m_peopleSortedInv()
+        m_peopleSortedInv(),
+        m_numInfectious(0)
     {}
 
     void Cell::forEachMicrocell(std::function<bool(Microcell*)> callback)

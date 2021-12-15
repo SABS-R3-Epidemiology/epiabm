@@ -40,7 +40,7 @@ namespace epiabm
     {
         for (size_t i = 0; i < m_places.size(); i++)
         {
-            if (!callback(&m_places[i])) return;
+            if (!callback(m_places[i].get())) return;
         }
     }
 
@@ -50,8 +50,8 @@ namespace epiabm
     }
 
     std::vector<size_t>& Microcell::people() { return m_people; }
-    std::vector<Place>& Microcell::places() { return m_places; }
-    std::vector<Household>& Microcell::households() { return m_households; }
+    std::vector<PlacePtr>& Microcell::places() { return m_places; }
+    std::vector<HouseholdPtr>& Microcell::households() { return m_households; }
 
 
 } // namespace epiabm
