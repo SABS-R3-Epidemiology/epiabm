@@ -3,7 +3,6 @@
 #
 
 from .abstract_sweep import AbstractSweep
-from .population import Population
 from .covidsim_helpers import CovidsimHelpers
 from .parameters import Parameters
 import random
@@ -17,19 +16,20 @@ class PlaceSweep(AbstractSweep):
     exposed person is added to an infection queue.
     '''
 
-    def __call__(self, time: float, population: Population):
+    def __call__(self, time: float):
         '''
         Given a population structure, loops over infected members
         and considers whether they infected household members based
         on individual, and spatial infectiousness and susceptibility.
 
-        : param infected: Person
+        :param time: current simulation time.
+        :type time: int
         '''
         timestep = int(time * Parameters.instance().time_steps_per_day)
 
         # Double loop over the whole population, checking infectiousness
         # status, and whether they are absent from their household.
-        for cell in population.cells:
+        for cell in self._population.cells:
             for place in cell.places:
                 for infector in place.persons:
                     if not infector.is_infectious():

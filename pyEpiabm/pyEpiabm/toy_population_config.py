@@ -36,7 +36,7 @@ class ToyPopulationFactory:
 
         # Checks parameter type and stores as class objects
         if not isinstance(if_households, bool):
-            raise TypeError('Include household input needs to be boolean')
+            raise TypeError("Include household input needs to be boolean")
         total_number_microcells = cell_number*microcell_number
 
         new_pop.add_cells(cell_number)

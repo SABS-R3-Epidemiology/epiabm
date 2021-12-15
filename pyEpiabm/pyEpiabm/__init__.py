@@ -34,6 +34,7 @@ from .household_sweep import HouseholdSweep  # noqa
 from .place_sweep import PlaceSweep  # noqa
 from .covidsim_helpers import CovidsimHelpers  # noqa
 from .queue_sweep import QueueSweep  # noqa
+from .update_place_sweep import UpdatePlaceSweep  # noqa
 
 # Example Simulations
 from .simulation import Simulation  # noqa

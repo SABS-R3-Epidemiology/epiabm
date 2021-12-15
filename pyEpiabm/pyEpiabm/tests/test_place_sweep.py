@@ -26,8 +26,8 @@ class TestPlaceSweep(unittest.TestCase):
         cls.place.add_person(cls.person)
         pe.Parameters.instance().time_steps_per_day = 1
 
-    @mock.patch('pyEpiabm.CovidsimHelpers.calc_house_susc')
-    @mock.patch('pyEpiabm.CovidsimHelpers.calc_house_inf')
+    @mock.patch('pyEpiabm.CovidsimHelpers.calc_place_susc')
+    @mock.patch('pyEpiabm.CovidsimHelpers.calc_place_inf')
     def test__call__(self, mock_inf, mock_susc):
         '''
         Test whether the household sweep function correctly
@@ -36,15 +36,17 @@ class TestPlaceSweep(unittest.TestCase):
         mock_inf.return_value = 10
         mock_susc.return_value = 10
         subject = pe.PlaceSweep()
+        subject.bind_population(self.pop)
         time = 1
 
         # Assert a population with one infected will not change the queue
-        subject(time, self.pop)
+        subject(time)
         assert(self.cell.person_queue.empty())
 
         # Change person's status to recovered
         self.person.infection_status = pe.InfectionStatus.Recovered
-        subject(time, self.pop)
+        subject.bind_population(self.pop)
+        subject(time)
         assert(self.cell.person_queue.empty())
 
         # Add one susceptible to the population, with the mocked infectiousness
@@ -56,7 +58,8 @@ class TestPlaceSweep(unittest.TestCase):
         self.pop.cells[0].persons.append(new_person)
 
         test_queue.put(new_person)
-        subject(time, self.pop)
+        subject.bind_population(self.pop)
+        subject(time)
         self.assertEqual(self.cell.person_queue.qsize(), 1)
 
         # Change the additional person to recovered, and assert the queue
@@ -64,7 +67,8 @@ class TestPlaceSweep(unittest.TestCase):
         new_person.infection_status = pe.InfectionStatus.Recovered
         self.cell.persons.append(new_person)
         self.cell.person_queue = Queue()
-        subject(time, self.pop)
+        subject.bind_population(self.pop)
+        subject(time)
         assert(self.cell.person_queue.empty())
 
 

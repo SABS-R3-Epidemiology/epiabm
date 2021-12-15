@@ -3,8 +3,8 @@ import pyEpiabm as pe
 
 
 class TestPlace(unittest.TestCase):
-    '''Test the place class.
-    '''
+    """Test the place class.
+    """
     @classmethod
     def setUpClass(cls) -> None:
         cls.pop = pe.Population()
@@ -21,7 +21,7 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(len(self.place.persons), 0)
 
     def test_change_persons(self):
-        '''Tests the add and remove persons functions'''
+        """Tests the add and remove persons functions"""
         self.place = pe.Place((1, 1), pe.PlaceType.Hotel, self.cell,
                               self.microcell)
         self.place.add_person(self.person)
@@ -31,6 +31,13 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(len(self.place.persons), 0)
         self.assertRaises(KeyError, self.place.remove_person, self.person)
 
+        self.place.add_person(self.person)
+        self.place.add_person(pe.Person(self.microcell))
+        self.assertEqual(len(self.place.persons), 2)
+        self.place.empty_place()
+        print(self.place.persons)
+        self.assertEqual(len(self.place.persons), 0)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
