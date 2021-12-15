@@ -37,6 +37,12 @@ class TestPerson(unittest.TestCase):
             self.person.infection_status,
             pe.InfectionStatus.InfectMild)
 
+    def test_update_time(self):
+        self.assertIsNone(self.person.time_of_status_change)
+        self.person.update_time_to_status_change()
+        self.assertTrue(1 <= self.person.time_of_status_change
+                        <= 10)
+
 
 if __name__ == '__main__':
     unittest.main()
