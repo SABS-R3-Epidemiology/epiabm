@@ -18,7 +18,7 @@ class TestPerson(unittest.TestCase):
         self.assertEqual(self.person.microcell, self.microcell)
 
     def test_repr(self):
-        self.assertEqual(repr(self.person), "Person, Age = 0")
+        self.assertEqual(repr(self.person), "Person, Age = 0.")
 
     def test_is_infectious(self):
         self.assertFalse(self.person.is_infectious())
@@ -30,6 +30,12 @@ class TestPerson(unittest.TestCase):
         self.assertTrue(self.person.is_susceptible())
         self.person.infection_status = pe.InfectionStatus.InfectMild
         self.assertFalse(self.person.is_susceptible())
+
+    def test_update_status(self):
+        self.person.update_status(pe.InfectionStatus.InfectMild)
+        self.assertEqual(
+            self.person.infection_status,
+            pe.InfectionStatus.InfectMild)
 
 
 if __name__ == '__main__':

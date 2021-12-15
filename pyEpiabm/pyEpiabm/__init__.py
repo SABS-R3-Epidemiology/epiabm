@@ -22,8 +22,12 @@ from .infection_status import InfectionStatus  # noqa
 
 # Routines
 from .covidsim_helpers import CovidsimHelpers  # noqa
+from .toy_population_config import ToyPopulationFactory  # noqa
 
 # Sweeps
 from .abstract_sweep import AbstractSweep  # noqa
 from .host_progression_sweep import HostProgressionSweep  # noqa
 from .household_sweep import HouseholdSweep  # noqa
+
+# Data collection
+from ._compartment_counter import _CompartmentCounter # noqa
