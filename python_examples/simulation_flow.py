@@ -10,24 +10,24 @@ pop_params = {"population_size": 100, "cell_number": 1,
               "initial_infected_number": 5,
               "if_households": True}
 
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 60}
-
-file_params = {"output_file": "output.csv",
-               "output_dir": "python_examples/simulation_outputs"}
-
 pe.Parameters.instance().time_steps_per_day = 1
 
 population = pe.ToyPopulationFactory().make_pop(**pop_params)
 cell = population.cells[0]
 
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
+              "population_size": 100,
+              "initial_infected_number": 5}
 
-# initialise a place everyone's in
+file_params = {"output_file": "output.csv",
+               "output_dir": "python_examples/simulation_outputs"}
+
+# initialise a place everyone's in.
 cell.microcells[0].add_place(1, (1.0, 1.0), PlaceType.Hotel)
 
 sim = pe.Simulation()
 sim.configure(
     population,
-    pop_params,
     [pe.InitialInfectedSweep()],
     [pe.UpdatePlaceSweep(), pe.HouseholdSweep(), pe.PlaceSweep(),
      pe.QueueSweep(), pe.HostProgressionSweep()],
