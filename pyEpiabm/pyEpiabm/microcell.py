@@ -2,11 +2,13 @@
 # Mirocell Class
 #
 from .person import Person
+from .infection_status import InfectionStatus
+from ._compartment_counter import _CompartmentCounter
 
 
 class Microcell:
     """Class representing a Microcell (Group of people and places).
-    Collection of :class:`Person` s
+    Collection of :class:`Person` s.
 
     :param cell: An instance of :class:`Cell`
     :type cell: Cell
@@ -14,19 +16,21 @@ class Microcell:
     def __init__(self, cell):
         """Constructor Method.
 
-        :param cell: Microcell's parent :class:`Cell` instance.
+        :param cell: Microcell's parent :class:`Cell` instance
         :type cell: Cell
         """
         self.persons = []
         self.cell = cell
+        self.compartment_counter = _CompartmentCounter(
+            f"Microcell {id(self)}")
 
     def __repr__(self):
-        """String representation of Microcell.
+        """Returns a string representation of Microcell.
 
         :return: String representation of Microcell
         :rtype: str
         """
-        return f"Microcell with {len(self.persons)} people"
+        return f"Microcell with {len(self.persons)} people."
 
     def add_people(self, n):
         """Adds n default :class:`Person` to Microcell.
@@ -38,3 +42,23 @@ class Microcell:
             p = Person(self)
             self.cell.persons.append(p)
             self.persons.append(p)
+
+    def _setup(self) -> None:
+        """Setup method. Should be called once Population has been setup.
+        Called by population (doesn't need to be called manually).
+        """
+        self.compartment_counter.initialize(len(self.persons))
+
+    def notify_person_status_change(
+            self,
+            old_status: InfectionStatus,
+            new_status: InfectionStatus) -> None:
+        """Notify Microcell that a person's status has changed.
+
+        :param old_status: Person's old infection status
+        :type old_status: InfectionStatus
+        :param new_status: Person's new infection status
+        :type new_status: InfectionStatus
+        """
+        self.compartment_counter.report(old_status, new_status)
+        self.cell.notify_person_status_change(old_status, new_status)

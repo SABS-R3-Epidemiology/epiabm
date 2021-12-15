@@ -90,7 +90,7 @@ namespace epiabm
         void lock();
 
         /**
-         * Unlock teh logfile for multithreaded logging
+         * Unlock the logfile for multithreaded logging
          */
         void unlock();
 
