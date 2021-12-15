@@ -11,6 +11,10 @@ Overview:
 - :class:`AbstractSweep`
 - :class:`HostProgressionSweep`
 - :class:`HouseholdSweep`
+- :class:`InitialInfectedSweep`
+- :class:`PlaceSweep`
+- :class:`UpdatePlaceSweep`
+- :class:`QueueSweep`
 
 
 Sweeps
@@ -24,4 +28,20 @@ Sweeps
 
 .. autoclass:: HouseholdSweep
     :members:
+
+.. autoclass:: InitialInfectedSweep
+    :members:
+
+.. autoclass:: PlaceSweep
+    :members:
+
+.. autoclass:: UpdatePlaceSweep
+    :members:
+    
+
+.. autoclass:: QueueSweep
+    :members:
+    
+    
+    
     
