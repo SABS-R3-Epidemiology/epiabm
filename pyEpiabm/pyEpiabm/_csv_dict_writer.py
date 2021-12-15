@@ -2,7 +2,7 @@ import csv
 import typing
 
 
-class CsvWriter:
+class _CsvDictWriter:
     def __init__(self, filename: str, fieldnames: typing.List):
         """Initialises a file to store output in, and which categories
         to be record.
@@ -14,9 +14,9 @@ class CsvWriter:
         """
         try:
             self.f = open(filename, 'w')
-            self.writer = csv.writer(
-                self.f, delimiter=',')
-            self.writer.writerow(fieldnames)
+            self.writer = csv.DictWriter(
+                self.f, fieldnames=fieldnames, delimiter=',')
+            self.writer.writeheader()
         except FileNotFoundError as e:
             self.f = None
             self.writer = None
@@ -31,9 +31,9 @@ class CsvWriter:
         if self.f:
             self.f.close()
 
-    def write(self, row: typing.List):
+    def write(self, row: typing.Dict):
         """Writes data to file.
 
-        :param row: list of data to be saved.
-        :type row: list"""
+        :param row: dictionary of data to be saved.
+        :type row: dict"""
         self.writer.writerow(row)

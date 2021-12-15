@@ -1,6 +1,6 @@
 from .abstract_sweep import AbstractSweep
 from .infection_status import InfectionStatus
-from .csv_dict_writer import CsvDictWriter
+from ._csv_dict_writer import _CsvDictWriter
 from .population import Population
 import os
 import typing
@@ -55,7 +55,7 @@ class Simulation:
         filename = os.path.join(os.getcwd(),
                                 file_params["output_dir"],
                                 file_params["output_file"])
-        self.writer = CsvDictWriter(
+        self.writer = _CsvDictWriter(
             filename,
             ["time"] + [s for s in InfectionStatus])
 
