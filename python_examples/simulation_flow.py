@@ -1,13 +1,13 @@
 import os
 import pyEpiabm as pe
 import pandas as pd
-import random
 import matplotlib.pyplot as plt
 from pyEpiabm.place_type import PlaceType
 
 
 pop_params = {"population_size": 100, "cell_number": 1,
               "microcell_number": 1, "household_number": 20,
+              "initial_infected_number": 5,
               "if_households": True}
 
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 60}
@@ -19,11 +19,7 @@ pe.Parameters.instance().time_steps_per_day = 1
 
 population = pe.ToyPopulationFactory().make_pop(**pop_params)
 cell = population.cells[0]
-# Intitialises 5 people as infectious randomly across the households
-for _ in range(5):
-    i = random.randint(0, pop_params["population_size"]-1)
-    cell.persons[i].update_status(pe.InfectionStatus.InfectMild)
-    cell.persons[i].time_of_status_change = random.randint(1, 10)
+
 
 # initialise a place everyone's in
 cell.microcells[0].add_place(1, (1.0, 1.0), PlaceType.Hotel)
@@ -31,8 +27,10 @@ cell.microcells[0].add_place(1, (1.0, 1.0), PlaceType.Hotel)
 sim = pe.Simulation()
 sim.configure(
     population,
+    pop_params,
+    [pe.InitialInfectedSweep()],
     [pe.UpdatePlaceSweep(), pe.HouseholdSweep(), pe.PlaceSweep(),
-     pe.InitialInfectedSweep(), pe.HostProgressionSweep()],
+     pe.QueueSweep(), pe.HostProgressionSweep()],
     sim_params,
     file_params)
 sim.run_sweeps()
