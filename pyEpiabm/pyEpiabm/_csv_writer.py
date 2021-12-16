@@ -35,5 +35,6 @@ class _CsvWriter:
         """Writes data to file.
 
         :param row: list of data to be saved.
-        :type row: list"""
+        :type row: list
+        """
         self.writer.writerow(row)
