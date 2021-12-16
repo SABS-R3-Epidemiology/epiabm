@@ -18,26 +18,32 @@ void run()
 {
     using namespace epiabm;
 
-    std::srand(100);
+    std::srand(100); // random seed
 
+    // Setup Logfile
     LogFile::Instance()->configure(2, std::filesystem::path("output/log.log"));
 
+    // Make Population and Link Households
     PopulationPtr population = PopulationFactory().makePopulation(10, 10, 1000);
     HouseholdLinker().linkHouseholds(population, 5, 100);
     population->initialize();
 
+    // Randomly Seed Population with Infections
     {
         RandomSeedSweep randomizer = RandomSeedSweep(200);
         randomizer.bind_population(population);
         randomizer(0);
     }
 
+    // Create Simulation
     BasicSimulation simulation = BasicSimulation(population);
 
+    // Add Sweeps
     simulation.addSweep(std::make_shared<HouseholdSweep>());
     simulation.addSweep(std::make_shared<NewInfectionSweep>());
     simulation.addSweep(std::make_shared<BasicHostProgressionSweep>());
 
+    // Set which reporters to use
     simulation.addTimestepReporter(
         std::make_shared<CellCompartmentReporter>("output/results_pertimestep"));
     simulation.addTimestepReporter(
@@ -45,7 +51,7 @@ void run()
     simulation.addTimestepReporter(
         std::make_shared<PopulationCompartmentReporter>("output/population_results.csv"));
 
-    simulation.simulate(100);
+    simulation.simulate(100); // Run Simulation for 100 steps
 }
 
 
