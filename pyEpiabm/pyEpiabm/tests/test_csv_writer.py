@@ -27,6 +27,8 @@ class TestCsvWriter(unittest.TestCase):  # should it be Test_CsvWriter?
         # Test to add a row
         mo().write.assert_has_calls([call('1,2,3\r\n'), call('a,b,c\r\n')])
 
+# Should we test __del__ or is it implicitly used somewhere above?
+
 
 if __name__ == '__main__':
     unittest.main()
