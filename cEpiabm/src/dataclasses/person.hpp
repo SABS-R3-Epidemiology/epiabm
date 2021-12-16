@@ -1,12 +1,15 @@
 #ifndef EPIABM_DATACLASSES_PERSON_HPP
 #define EPIABM_DATACLASSES_PERSON_HPP
 
+#include "infection_status.hpp"
+
 #include <vector>
 #include <memory>
 #include <optional>
 
 namespace epiabm
 {
+    class Cell;
 
     struct PersonParams
     {
@@ -14,20 +17,6 @@ namespace epiabm
         float susceptibility = 0, infectiousness = 0;
         
         unsigned short next_status_time = 0;
-    };
-
-    enum class InfectionStatus
-    {
-        Susceptible,
-        Exposed,
-        InfectASympt,
-        InfectMild,
-        InfectGP,
-        InfectHosp,
-        InfectICU,
-        InfectICURecov,
-        Recovered,
-        Dead
     };
 
     class Person
@@ -52,7 +41,7 @@ namespace epiabm
         InfectionStatus status() const;
         PersonParams& params();
 
-        void updateStatus(InfectionStatus status);
+        void updateStatus(Cell* cell, const InfectionStatus status, const unsigned short timestep);
 
         size_t cellPos() const;
         size_t microcellPos() const;

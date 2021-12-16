@@ -7,7 +7,8 @@
 namespace epiabm
 {
 
-    Cell::Cell() :
+    Cell::Cell(size_t index) :
+        m_index(index),
         m_people(),
         m_microcells(),
         m_personQueue(),
@@ -19,10 +20,13 @@ namespace epiabm
         m_susceptiblePeople(),
         m_exposedPeople(),
         m_recoveredPeople(),
-        m_deadPeople()
+        m_deadPeople(),
+        m_compartmentCounter()
     {}
 
-        void Cell::forEachMicrocell(std::function<bool(Microcell*)> callback)
+    size_t Cell::index() const { return m_index; }
+
+    void Cell::forEachMicrocell(std::function<bool(Microcell*)> callback)
     {
         for (size_t i = 0; i < m_microcells.size(); i++)
         {
@@ -237,7 +241,7 @@ namespace epiabm
     {
         return m_exposedPeople.size();
     }
-    
+
     size_t Cell::numRecovered() const
     {
         return m_recoveredPeople.size();
@@ -246,6 +250,27 @@ namespace epiabm
     size_t Cell::numDead() const
     {
         return m_deadPeople.size();
+    }
+
+    void Cell::initialize()
+    {
+        initializeInfectiousGrouping();
+        m_compartmentCounter.initialize(m_people);
+        for (auto& mc : m_microcells)
+        {
+            mc.initialize(this);
+        }
+    }
+
+    unsigned int Cell::compartmentCount(InfectionStatus status)
+    {
+        return m_compartmentCounter(status);
+    }
+
+    void Cell::personStatusChange(Person* person, InfectionStatus newStatus, unsigned short timestep)
+    {
+        m_compartmentCounter.notify(person->status(), newStatus);
+        m_microcells[person->microcell()].personStatusChange(person, newStatus, timestep);
     }
 
 } // namespace epiabm

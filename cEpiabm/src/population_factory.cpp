@@ -36,7 +36,7 @@ namespace epiabm
 
     void PopulationFactory::addCell(PopulationPtr population)
     {
-        population->cells().push_back(Cell());
+        population->cells().push_back(Cell(population->cells().size()));
     }
 
     void PopulationFactory::addCells(PopulationPtr population, size_t n)

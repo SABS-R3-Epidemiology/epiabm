@@ -4,6 +4,7 @@
 #include "person.hpp"
 #include "place.hpp"
 #include "household.hpp"
+#include "compartment_counter.hpp"
 
 #include <vector>
 #include <memory>
@@ -24,6 +25,8 @@ namespace epiabm
 
         size_t m_cellPos;
 
+        CompartmentCounter m_compartmentCounter;
+
     public:
         Microcell(size_t cellPos);
         ~Microcell() = default;
@@ -40,6 +43,13 @@ namespace epiabm
         std::vector<size_t>& people();
         std::vector<PlacePtr>& places();
         std::vector<HouseholdPtr>& households();
+
+        void initialize(Cell* cell);
+
+        unsigned int compartmentCount(InfectionStatus status);
+
+        void personStatusChange(Person* person, InfectionStatus newStatus, unsigned short timestep);
+
 
     private:
         friend class Place;

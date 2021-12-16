@@ -23,7 +23,7 @@ namespace epiabm
     {
         for (size_t i = 0; i < m_cells.size(); i++)
         {
-            m_cells[i].initializeInfectiousGrouping();
+            m_cells[i].initialize();
         }
     }
 

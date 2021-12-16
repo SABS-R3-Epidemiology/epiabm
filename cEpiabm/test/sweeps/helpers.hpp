@@ -44,7 +44,7 @@ inline void random_seed(PopulationPtr population, int percentage, InfectionStatu
                 if (std::rand() % 100 < percentage)
                 {
                     Person* person = &cell->getPerson(p);
-                    person->updateStatus(status);
+                    person->updateStatus(cell, status, 0);
                     person->params().next_status_time = nextTime;
                 }
             }

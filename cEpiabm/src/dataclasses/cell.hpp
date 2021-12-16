@@ -3,6 +3,7 @@
 
 #include "microcell.hpp"
 #include "person.hpp"
+#include "compartment_counter.hpp"
 
 #include <vector>
 #include <memory>
@@ -13,10 +14,12 @@
 
 namespace epiabm
 {
-    
+
     class Cell
     {
     private:
+        size_t m_index;
+
         std::vector<Person> m_people;
         std::vector<Microcell> m_microcells;
 
@@ -35,18 +38,22 @@ namespace epiabm
         size_t m_numInfectious; // Number of infected. Used in the sorted vectors of people.
         */
 
-       // Subsets of people for fast looping through these groups
-       std::set<size_t> m_infectiousPeople;
-       std::set<size_t> m_susceptiblePeople;
-       std::set<size_t> m_exposedPeople;
-       std::set<size_t> m_recoveredPeople;
-       std::set<size_t> m_deadPeople;
+        // Subsets of people for fast looping through these groups
+        std::set<size_t> m_infectiousPeople;
+        std::set<size_t> m_susceptiblePeople;
+        std::set<size_t> m_exposedPeople;
+        std::set<size_t> m_recoveredPeople;
+        std::set<size_t> m_deadPeople;
+
+        CompartmentCounter m_compartmentCounter;
 
     public:
-        Cell();
+        Cell(size_t index);
         ~Cell() = default;
         Cell(const Cell&) = default;
         Cell(Cell&&) = default;
+
+        size_t index() const;
 
         void forEachMicrocell(std::function<bool(Microcell*)> callback);
         void forEachPerson(std::function<bool(Person*)> callback);
@@ -75,11 +82,17 @@ namespace epiabm
         size_t numRecovered() const;
         size_t numDead() const;
 
+        void initialize();
+
+        unsigned int compartmentCount(InfectionStatus status);
+
+        void personStatusChange(Person* person, InfectionStatus newStatus, unsigned short timestep);
+
     private:
         friend class Microcell;
         friend class Place;
     };
-    
+
     typedef std::shared_ptr<Cell> CellPtr;
 
 } // namespace epiabm

@@ -1,6 +1,6 @@
 
-#include "microcell.hpp"
 #include "cell.hpp"
+#include "microcell.hpp"
 
 namespace epiabm
 {
@@ -9,7 +9,8 @@ namespace epiabm
         m_people(),
         m_places(),
         m_households(),
-        m_cellPos(cellPos)
+        m_cellPos(cellPos),
+        m_compartmentCounter()
     {}
 
     Microcell::Microcell(const Microcell& other) :
@@ -53,5 +54,14 @@ namespace epiabm
     std::vector<PlacePtr>& Microcell::places() { return m_places; }
     std::vector<HouseholdPtr>& Microcell::households() { return m_households; }
 
+    void Microcell::initialize(Cell* cell)
+    {
+        m_compartmentCounter.initialize(cell, m_people);
+    }
+
+    void Microcell::personStatusChange(Person* person, InfectionStatus newStatus, unsigned short /*timestep*/)
+    {
+        m_compartmentCounter.notify(person->status(), newStatus);
+    }
 
 } // namespace epiabm

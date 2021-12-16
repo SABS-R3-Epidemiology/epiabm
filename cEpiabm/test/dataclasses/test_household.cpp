@@ -12,7 +12,7 @@ using namespace epiabm;
 
 inline Cell makeSubject(size_t n_microcells, size_t n_households, size_t n_people)
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     subject.microcells().reserve(n_households);
     subject.people().reserve(n_microcells * n_people);
     for (size_t i = 0; i < n_microcells; i++)

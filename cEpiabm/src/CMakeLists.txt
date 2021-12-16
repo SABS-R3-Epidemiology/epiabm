@@ -4,6 +4,7 @@
 set(
     epiabm_src
     dataclasses/population.cpp
+    dataclasses/compartment_counter.cpp
     dataclasses/cell.cpp
     dataclasses/microcell.cpp
     dataclasses/person.cpp
@@ -11,6 +12,7 @@ set(
     dataclasses/place.cpp
     dataclasses/household.cpp
     population_factory.cpp
+    household_linker.cpp
     output_folder_handler.cpp
     logfile.cpp
     covidsim.cpp
@@ -18,18 +20,27 @@ set(
     sweeps/household_sweep.cpp
     sweeps/new_infection_sweep.cpp
     sweeps/basic_host_progression_sweep.cpp
+    sweeps/random_seed_sweep.cpp
+    reporters/timestep_reporter_interface.cpp
+    reporters/cell_compartment_reporter.cpp
+    reporters/percell_compartment_reporter.cpp
+    reporters/population_compartment_reporter.cpp
+    simulations/basic_simulation.cpp
 )
 
 set(
     epiabm_hdr
     dataclasses/population.hpp
+    dataclasses/compartment_counter.hpp
     dataclasses/cell.hpp
     dataclasses/microcell.hpp
+    dataclasses/infection_status.hpp
     dataclasses/person.hpp
     dataclasses/membersInterface.hpp
     dataclasses/place.hpp
     dataclasses/household.hpp
     population_factory.hpp
+    household_linker.hpp
     output_folder_handler.hpp
     logfile.hpp
     covidsim.hpp
@@ -37,6 +48,12 @@ set(
     sweeps/household_sweep.hpp
     sweeps/new_infection_sweep.hpp
     sweeps/basic_host_progression_sweep.hpp
+    sweeps/random_seed_sweep.hpp
+    reporters/timestep_reporter_interface.hpp
+    reporters/cell_compartment_reporter.hpp
+    reporters/percell_compartment_reporter.hpp
+    reporters/population_compartment_reporter.hpp
+    simulations/basic_simulation.hpp
 )
 
 add_library(epiabm_lib STATIC ${epiabm_src} ${epiabm_hdr})

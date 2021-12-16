@@ -43,7 +43,7 @@ namespace epiabm
     void NewInfectionSweep::cellPersonQueueCallback(unsigned short timestep, Cell* cell, size_t personIndex)
     {
         Person* person = &cell->getPerson(personIndex);
-        person->updateStatus(InfectionStatus::Exposed);
+        person->updateStatus(cell, InfectionStatus::Exposed, timestep);
         person->params().next_status_time = static_cast<unsigned short>(timestep + latent_time(person));
         cell->markExposed(personIndex);
     }

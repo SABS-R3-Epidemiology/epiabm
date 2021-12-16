@@ -17,7 +17,7 @@ TEST_CASE("dataclasses/microcell: test initialize microcell", "[Microcell]")
 
 TEST_CASE("dataclasses/microcell: test forEachPerson", "[Microcell]")
 {
-    Cell cell = Cell();
+    Cell cell = Cell(0);
     cell.microcells().push_back(Microcell(0));
     
     std::set<Person*> peopleSet;
@@ -44,7 +44,7 @@ TEST_CASE("dataclasses/microcell: test forEachPerson", "[Microcell]")
 
 TEST_CASE("dataclasses/microcell: test forEachPerson early stop", "[Microcell]")
 {
-    Cell cell = Cell();
+    Cell cell = Cell(0);
     cell.microcells().push_back(Microcell(0));
     std::set<Person *> peopleSet;
     for (size_t i = 0; i < 100; i++)
@@ -126,7 +126,7 @@ TEST_CASE("dataclasses/microcell: test forEachPlace early stop", "[Microcell]")
 
 TEST_CASE("dataclasses/microcell: test getPerson", "[Microcell]")
 {
-    Cell cell = Cell();
+    Cell cell = Cell(0);
     cell.microcells().push_back(Microcell(0));
     for (size_t i = 0; i < 100; i++)
     {

@@ -1,4 +1,5 @@
 #include "person.hpp"
+#include "cell.hpp"
 
 #include <iostream>
 
@@ -16,7 +17,11 @@ namespace epiabm
     InfectionStatus Person::status() const { return m_status; }
     PersonParams& Person::params() { return m_params; }
 
-    void Person::updateStatus(InfectionStatus status) { m_status = status; }
+    void Person::updateStatus(Cell* cell, const InfectionStatus status, const unsigned short timestep)
+    {
+        cell->personStatusChange(this, status, timestep);
+        m_status = status;
+    }
 
     size_t Person::cellPos() const { return m_cellPos; }
     size_t Person::microcellPos() const { return m_mcellPos; }

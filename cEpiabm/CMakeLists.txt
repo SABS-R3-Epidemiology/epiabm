@@ -35,6 +35,9 @@ if (ENABLE_TESTING)
     add_subdirectory(test)
 endif ()
 
+if (ENABLE_EXAMPLES)
+    add_subdirectory(examples)
+endif()
 
 
 add_library(epiabm::epiabm_module ALIAS epiabm_lib)

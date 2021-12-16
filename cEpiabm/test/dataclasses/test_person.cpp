@@ -1,4 +1,5 @@
 #include "dataclasses/person.hpp"
+#include "dataclasses/cell.hpp"
 
 #include "../catch/catch.hpp"
 
@@ -16,12 +17,16 @@ TEST_CASE("dataclasses/person: test initialize person", "[Person]")
 
 TEST_CASE("dataclasses/person: test status", "[Person]")
 {
-    Person subject = Person(0,0,0);
+    Cell cell = Cell(0);
+    cell.microcells().push_back(Microcell(0));
+    cell.microcells()[0].people().push_back(0);
+    cell.people().push_back(Person(0,0,0));
+    Person& subject = cell.people()[0];
     REQUIRE(subject.status() == InfectionStatus::Susceptible);
     
     auto test = [&](InfectionStatus status)
     {
-        subject.updateStatus(status);
+        subject.updateStatus(&cell, status, 0);
         REQUIRE(subject.status() == status);
     };
     test(InfectionStatus::Susceptible);

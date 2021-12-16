@@ -53,7 +53,7 @@ namespace epiabm
     {
         if (timestep < person->params().next_status_time) return true;
         InfectionStatus next = first_infectious_status(person);
-        person->updateStatus(next);
+        person->updateStatus(cell, next, timestep);
         person->params().next_status_time = time_to_next_status(person, next);
         cell->markInfectious(person->cellPos());
         return true;
@@ -78,7 +78,7 @@ namespace epiabm
     {
         if (timestep < person->params().next_status_time) return true;
         InfectionStatus next = next_status(person);
-        person->updateStatus(next);
+        person->updateStatus(cell, next, timestep);
 
         if (next == InfectionStatus::Recovered)
         {
@@ -95,7 +95,7 @@ namespace epiabm
      */
     inline unsigned short BasicHostProgressionSweep::time_to_next_status(Person* /*person*/, InfectionStatus /*status*/)
     {
-        return static_cast<unsigned short>(std::rand() % 10 + 1);
+        return static_cast<unsigned short>(std::rand() % 14 + 14);
     }
 
     /**

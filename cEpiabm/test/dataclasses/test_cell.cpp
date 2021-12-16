@@ -9,7 +9,8 @@ using namespace epiabm;
 
 inline Cell makeSubject(size_t n_microcells, size_t n_people)
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
+    REQUIRE(subject.index() == 0);
     for (size_t i = 0; i < n_microcells; i++)
     {
         subject.microcells().push_back(Microcell(i));
@@ -30,14 +31,14 @@ inline Cell makeSubject(size_t n_microcells, size_t n_people)
 
 TEST_CASE("dataclasses/cell: test initialize cell", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     REQUIRE(subject.microcells().empty());
     REQUIRE(subject.people().empty());
 }
 
 TEST_CASE("dataclasses/cell: test add microcells", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     REQUIRE(subject.microcells().empty());
     REQUIRE(subject.people().empty());
 
@@ -55,7 +56,7 @@ TEST_CASE("dataclasses/cell: test add microcells", "[Cell]")
 
 TEST_CASE("dataclasses/cell: test getMicrocell", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     REQUIRE(subject.microcells().empty());
     REQUIRE(subject.people().empty());
 
@@ -73,7 +74,7 @@ TEST_CASE("dataclasses/cell: test getMicrocell", "[Cell]")
 
 TEST_CASE("dataclasses/cell: test add people", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     REQUIRE(subject.microcells().empty());
     REQUIRE(subject.people().empty());
 
@@ -91,7 +92,7 @@ TEST_CASE("dataclasses/cell: test add people", "[Cell]")
 
 TEST_CASE("dataclasses/cell: test getPerson", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     REQUIRE(subject.microcells().empty());
     REQUIRE(subject.people().empty());
 
@@ -128,7 +129,7 @@ TEST_CASE("dataclasses/cell: test add people microcells", "[Cell]")
 
 TEST_CASE("dataclasses/cell: test forEachMicrocell", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     std::set<Microcell *> microcells;
     for (size_t i = 0; i < 100; i++)
     {
@@ -154,7 +155,7 @@ TEST_CASE("dataclasses/cell: test forEachMicrocell", "[Cell]")
 
 TEST_CASE("dataclasses/cell: test forEachMicrocell early stop", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     std::set<Microcell *> microcells;
     for (size_t i = 0; i < 100; i++)
     {
@@ -182,7 +183,7 @@ TEST_CASE("dataclasses/cell: test forEachMicrocell early stop", "[Cell]")
 
 TEST_CASE("dataclasses/cell: test forEachPerson", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     std::set<Person*> people;
     subject.people().reserve(1000);
     for (size_t i = 0; i < 1000; i++)
@@ -206,7 +207,7 @@ TEST_CASE("dataclasses/cell: test forEachPerson", "[Cell]")
 
 TEST_CASE("dataclasses/cell: test forEachPerson early stop", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     std::set<Person*> people;
     subject.people().reserve(1000);
     for (size_t i = 0; i < 1000; i++)
