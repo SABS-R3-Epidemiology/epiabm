@@ -42,25 +42,21 @@ class TestSimulation(unittest.TestCase):
     @patch('pyEpiabm.InitialInfectedSweep.__call__')
     @patch('pyEpiabm.Simulation.write_to_file')
     def test_run_sweeps(self, patch_write, patch_initial, patch_sweep):
-        file_params = MagicMock()
-        file_params.return_value = 'test_file'
         time_sweep = self.sim_params["simulation_start_time"] + 1
         time_write = self.sim_params["simulation_end_time"] - 1
         test_sim = pe.Simulation()
         test_sim.configure(self.test_population, self.initial_sweeps,
-                           self.sweeps, self.sim_params, file_params)
+                           self.sweeps, self.sim_params, self.file_params)
         test_sim.run_sweeps()
         patch_initial.assert_called_with(self.sim_params)
         patch_sweep.assert_called_with(time_sweep)
         patch_write.assert_called_with(time_write)
 
     def test_write_to_file(self):
-        file_params = MagicMock()
-        file_params.return_value = 'test_file'
         time = 1
         test_sim = pe.Simulation()
         test_sim.configure(self.test_population, self.initial_sweeps,
-                           self.sweeps, self.sim_params, file_params)
+                           self.sweeps, self.sim_params, self.file_params)
         data = {s: 0 for s in list(pe.InfectionStatus)}
         data["time"] = time
         with patch.object(test_sim.writer, 'write') as mock:
