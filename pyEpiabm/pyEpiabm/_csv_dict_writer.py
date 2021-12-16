@@ -7,9 +7,9 @@ class _CsvDictWriter:
         """Initialises a file to store output in, and which categories
         to be record.
 
-        :param filename: output file name
+        :param filename: Output file name
         :type filename: string
-        :param fieldnames: list of categories to be saved
+        :param fieldnames: List of categories to be saved
         :type fieldnames: list
         """
         try:
@@ -34,6 +34,6 @@ class _CsvDictWriter:
     def write(self, row: typing.Dict):
         """Writes data to file.
 
-        :param row: dictionary of data to be saved
+        :param row: Dictionary of data to be saved
         :type row: dict"""
         self.writer.writerow(row)
