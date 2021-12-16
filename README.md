@@ -21,7 +21,7 @@ Once an individual becomes exposed, their progression through the various stages
 A more complete overview of our implementation of the Ferguson model is given in [the Wiki](https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Overview-of-the-Ferguson-Model) for this repository.
 
 ## pyEpiabm
-The pyEpiabm backend is written in python, chosen for its readability and unser-friendliness. It is not able to cope with large population sizes, but can configure a toy population to explore the functionality of the model and better understand the underlying code. Additionally, toy models may be quicker for model comparison and parameter inference, though care should obviously be taken when scaling up to a full population. We provide a variety of workflows to show the utility of code.
+The pyEpiabm backend is written in python, chosen for its readability and user-friendliness. It is not able to cope with large population sizes, but can configure a toy population to explore the functionality of the model and better understand the underlying code. Additionally, toy models may be quicker for model comparison and parameter inference, though care should obviously be taken when scaling up to a full population. We provide a variety of workflows to show the utility of code.
 
 
 ## cEpiabm
@@ -44,7 +44,7 @@ sudo apt-get install cmake cmake-data
 ```
 
 ## Documentation 
-Dcumentation on the python backend (pyEpiabm) is stored on [Read The Docs](https://epiabm.readthedocs.io/en/latest/).  
+Documentation on the python backend (pyEpiabm) is stored on [Read The Docs](https://epiabm.readthedocs.io/en/latest/).  
 The Wiki for this repo also contains more detail on the Ferguson model itself, and where our implementation might differ from that.
 
 ## References
