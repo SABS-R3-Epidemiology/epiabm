@@ -1,4 +1,4 @@
-name: Unit tests (pEpiabm)
+name: Unit tests (pyEpiabm)
 
 on:
   push:
