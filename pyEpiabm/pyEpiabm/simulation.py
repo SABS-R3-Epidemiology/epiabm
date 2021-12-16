@@ -55,6 +55,7 @@ class Simulation:
         filename = os.path.join(os.getcwd(),
                                 file_params["output_dir"],
                                 file_params["output_file"])
+
         self.writer = _CsvDictWriter(
             filename,
             ["time"] + [s for s in InfectionStatus])

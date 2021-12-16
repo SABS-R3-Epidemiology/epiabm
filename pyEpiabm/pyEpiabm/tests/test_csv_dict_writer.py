@@ -27,7 +27,8 @@ class TestCsvDictWriter(unittest.TestCase):
             new_content = {'Cat1': 'a', 'Cat3': 'c', 'Cat2': 'b'}
             m = pe._CsvDictWriter('mock_filename', mock_categories)
             m.write(new_content)
-        mo().write.assert_has_calls([call('Cat1,Cat2,Cat3\r\n'), call('a,b,c\r\n')])
+        mo().write.assert_has_calls([call('Cat1,Cat2,Cat3\r\n'),
+                                    call('a,b,c\r\n')])
 
     def test_del(self):
         """Test the __del__ method of the _CsvDictWriter class.
