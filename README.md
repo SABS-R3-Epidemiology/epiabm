@@ -44,7 +44,7 @@ sudo apt-get install cmake cmake-data
 ```
 
 ## Documentation 
-Some documentation on the program's classes and methods can be found here: https://epiamb.readthedocs.io/en/latest/  
+Dcumentation on the python backend (pyEpiabm) is stored on [Read The Docs](https://epiabm.readthedocs.io/en/latest/).  
 The Wiki for this repo also contains more detail on the Ferguson model itself, and where our implementation might differ from that.
 
 ### References
