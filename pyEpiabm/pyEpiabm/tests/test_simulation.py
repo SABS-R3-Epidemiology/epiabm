@@ -1,6 +1,7 @@
 import unittest
 import pyEpiabm as pe
 from unittest.mock import MagicMock, patch
+import os
 
 
 class TestSimulation(unittest.TestCase):
@@ -51,6 +52,7 @@ class TestSimulation(unittest.TestCase):
         patch_initial.assert_called_with(self.sim_params)
         patch_sweep.assert_called_with(time_sweep)
         patch_write.assert_called_with(time_write)
+        os.remove('pyEpiabm/pyEpiabm/tests/test_simulation.csv')
 
     def test_write_to_file(self):
         time = 1
@@ -62,6 +64,7 @@ class TestSimulation(unittest.TestCase):
         with patch.object(test_sim.writer, 'write') as mock:
             test_sim.write_to_file(time)
             mock.assert_called_with(data)
+        os.remove('pyEpiabm/pyEpiabm/tests/test_simulation.csv')
 
 
 if __name__ == '__main__':

@@ -1,1 +1,0 @@
-time,InfectionStatus.Susceptible,InfectionStatus.Exposed,InfectionStatus.InfectASympt,InfectionStatus.InfectMild,InfectionStatus.InfectGP,InfectionStatus.InfectHosp,InfectionStatus.InfectICU,InfectionStatus.InfectICURecov,InfectionStatus.Recovered,InfectionStatus.Dead

@@ -22,5 +22,6 @@ class TestCsvWriter(unittest.TestCase):  # should it be Test_CsvWriter?
         #print(content.__dict__)
         #self.assertEqual(content, '1, 2, 3')
 
+
 if __name__ == '__main__':
     unittest.main()
