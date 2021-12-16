@@ -18,6 +18,9 @@ class TestPlace(unittest.TestCase):
     def test_construct(self):
         """Tests constructor method.
         """
+        new_cell = pe.Cell()
+        self.assertRaises(KeyError, pe.Place, (1, 1), pe.PlaceType.Hotel,
+                          new_cell, self.microcell)
         test_place = pe.Place((1, 1), pe.PlaceType.Hotel, self.cell,
                               self.microcell)
         self.assertEqual(len(test_place.persons), 0)
