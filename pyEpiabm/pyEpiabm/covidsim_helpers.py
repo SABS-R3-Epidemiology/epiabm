@@ -21,6 +21,7 @@ class CovidsimHelpers:
         :type infector: Person
         :param timestep: Current simulation timestep
         :type timestep: int
+
         :return: Infectiveness parameter of household
         :rtype: float
         """
@@ -36,6 +37,7 @@ class CovidsimHelpers:
         :type infectee: Person
         :param timestep: Current simulation timestep
         :type timestep: int
+
         :return: Susceptibility parameter of household
         :rtype: float
         """
@@ -51,6 +53,7 @@ class CovidsimHelpers:
         :type infectee: Person
         :param timestep: Current simulation timestep
         :type timestep: int
+
         :return: Susceptibility parameter of person
         :rtype: float
         """
@@ -61,14 +64,15 @@ class CovidsimHelpers:
                         timestep: int):
         """Calculate the susceptibility of a person.
 
-        :param infector: Infector.
+        :param infector: Infector
         :type infector: Person
-        :param infectee: Infectee.
+        :param infectee: Infectee
         :type infectee: Person
         :param place: Place
         :type place: Place
         :param timestep: Current simulation timestep
         :type timestep: int
+
         :return: susceptibility
         :rtype: float
         """
@@ -79,14 +83,15 @@ class CovidsimHelpers:
                        timestep: int):
         """Calculate the susceptibility of a person.
 
-        :param infector: Infector.
-        :type infector: Person
-        :param infectee: Infectee.
-        :type infectee: Person
         :param place: Place
         :type place: Place
+        :param infector: Infector
+        :type infector: Person
+        :param infectee: Infectee
+        :type infectee: Person
         :param timestep: Current simulation timestep
         :type timestep: int
+
         :return: infectiousness
         :rtype: float
         """

@@ -3,7 +3,7 @@ import pyEpiabm as pe
 
 
 class TestQueueSweep(unittest.TestCase):
-    """Test the Host Progression Sweep function.
+    """Test the 'QueueSweep' class.
     """
     @classmethod
     def setUpClass(cls) -> None:
@@ -21,6 +21,8 @@ class TestQueueSweep(unittest.TestCase):
         cls.time = 1
 
     def test_bind(self):
+        """Test population binds correctly.
+        """
         self.test_sweep = pe.QueueSweep()
         self.test_sweep.bind_population(self.test_population)
         self.assertEqual(self.test_sweep._population.cells[0]
@@ -30,7 +32,7 @@ class TestQueueSweep(unittest.TestCase):
     def test_call(self):
         """Test the main function of the Queue Sweep.
         Person 2 is enqueued.
-        Checks the populations updates as expected.
+        Checks the population updates as expected.
         """
         self.cell.enqueue_person(self.person2)
         test_sweep = pe.QueueSweep()

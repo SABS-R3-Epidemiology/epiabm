@@ -3,12 +3,12 @@ import pyEpiabm as pe
 
 
 class TestUpdatePlaceSweep(unittest.TestCase):
-    """Test the "UpdatePlaceSweep" class.
+    """Test the 'UpdatePlaceSweep' class.
     """
 
     @classmethod
     def setUpClass(cls) -> None:
-        """ Initialises a population with one infected person. Sets up a
+        """Initialises a population with one infected person. Sets up a
         single household containing this person.
         """
         cls.pop = pe.Population()
@@ -36,7 +36,7 @@ class TestUpdatePlaceSweep(unittest.TestCase):
     def test__call__(self):
         """Test whether the update place sweep function takes an
         initially empty place and correctly adds a person to
-         the place.
+        the place.
         """
         test_sweep = pe.UpdatePlaceSweep()
         test_sweep.bind_population(self.pop)

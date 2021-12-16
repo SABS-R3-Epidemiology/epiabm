@@ -5,14 +5,14 @@ from unittest import mock
 
 
 class TestPlaceSweep(unittest.TestCase):
-    """Test the 'PlaceSweep' class.
+    """Test the "PlaceSweep" class.
     """
 
     @classmethod
     def setUpClass(cls) -> None:
-        ''' Initialises a population with one infected person. Sets up a
+        """Initialises a population with one infected person. Sets up a
         single household containing this person.
-        '''
+        """
         cls.pop = pe.Population()
         cls.pop.add_cells(1)
         cls.cell = cls.pop.cells[0]
@@ -26,13 +26,12 @@ class TestPlaceSweep(unittest.TestCase):
         cls.place.add_person(cls.person)
         pe.Parameters.instance().time_steps_per_day = 1
 
-    @mock.patch('pyEpiabm.CovidsimHelpers.calc_place_susc')
-    @mock.patch('pyEpiabm.CovidsimHelpers.calc_place_inf')
+    @mock.patch("pyEpiabm.CovidsimHelpers.calc_place_susc")
+    @mock.patch("pyEpiabm.CovidsimHelpers.calc_place_inf")
     def test__call__(self, mock_inf, mock_susc):
-        '''
-        Test whether the household sweep function correctly
+        """Test whether the household sweep function correctly
         adds persons to the queue.
-        '''
+        """
         mock_inf.return_value = 10
         mock_susc.return_value = 10
         subject = pe.PlaceSweep()
@@ -43,7 +42,7 @@ class TestPlaceSweep(unittest.TestCase):
         subject(time)
         assert(self.cell.person_queue.empty())
 
-        # Change person's status to recovered
+        # Change person"s status to recovered
         self.person.infection_status = pe.InfectionStatus.Recovered
         subject.bind_population(self.pop)
         subject(time)

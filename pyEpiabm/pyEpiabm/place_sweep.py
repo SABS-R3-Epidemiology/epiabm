@@ -23,7 +23,7 @@ class PlaceSweep(AbstractSweep):
         people present, based on individual and place infectiousness
         and susceptibility.
 
-        :param time: current simulation time.
+        :param time: Current simulation time
         :type time: int
         """
         timestep = int(time * Parameters.instance().time_steps_per_day)

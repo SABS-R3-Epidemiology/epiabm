@@ -1,3 +1,6 @@
+#
+# Initialises infected members of the population
+#
 from .abstract_sweep import AbstractSweep
 import random
 import pyEpiabm as pe
@@ -13,8 +16,8 @@ class InitialInfectedSweep(AbstractSweep):
         in the population and changes their infection status to InfectedMild
         and sets their time of next status change.
 
-        :param pop_params: Dictionary of simulation parameters
-        :type pop_params: dict
+        :param sim_params: Dictionary of simulation parameters
+        :type sim_params: dict
         """
         pop_size = self._population.total_people()
         if pop_size < \

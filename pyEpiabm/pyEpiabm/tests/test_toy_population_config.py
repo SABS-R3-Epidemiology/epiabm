@@ -8,7 +8,7 @@ numReps = 2
 
 
 class TestPopConfig(unittest.TestCase):
-    """Test the Toy Population class.
+    """Test the 'ToyPopConfig' class.
     """
     @parameterized.expand([(random.randint(1000, 10000),
                             random.randint(1, 10),
@@ -18,7 +18,7 @@ class TestPopConfig(unittest.TestCase):
     def test_make_pop(self, pop_size, cell_number, microcell_number,
                       household_number):
         """Tests for when the population is implemented by default with
-        no households.
+        no households. Parameters are assigned at random.
         """
         # Population is initialised with no households
         test_pop = pe.ToyPopulationFactory().make_pop(pop_size, cell_number,

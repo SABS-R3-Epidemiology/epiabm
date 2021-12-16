@@ -4,15 +4,16 @@ from pyEpiabm import CovidsimHelpers as c
 
 
 class TestCovidsimHelpers(unittest.TestCase):
-    '''Test the CovidHelpers class, which contains the
+    """Test the 'CovidsimHelpers' class, which contains the
     infectiousness and susceptibility calculations that
     determine whether infection events occur. Each function
     should return a number greater than 0.
-    '''
+    """
     @classmethod
     def setUpClass(cls) -> None:
-        '''Intialise a population with one infector and one
-        infectee, both in the same place and household,'''
+        """Intialise a population with one infector and one
+        infectee, both in the same place and household.
+        """
         cls.cell = pe.Cell()
         cls.microcell = pe.Microcell(cls.cell)
         cls.infector = pe.Person(cls.microcell)

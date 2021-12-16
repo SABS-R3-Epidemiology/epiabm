@@ -3,7 +3,7 @@ import pyEpiabm as pe
 
 
 class TestInitialInfectedSweep(unittest.TestCase):
-    """Test the Host Progression Sweep function.
+    """Test the 'InitialInfectedSweep' class.
     """
     @classmethod
     def setUpClass(cls) -> None:

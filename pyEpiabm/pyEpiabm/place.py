@@ -17,7 +17,7 @@ class Place:
 
         :param loc: (x,y) coordinates of the place.
         :type loc: tuple
-        :param place_type: categorises the place.
+        :param place_type: Categorises the place.
         :type place_type: 'PlaceType' enum
         :param cell: An instance of :class:`Cell`
         :type cell: Cell
@@ -39,7 +39,7 @@ class Place:
     def set_max_cap(self, max_capacity: int):
         """Sets the maximum capacity of a place.
 
-        :param max_capacity: maximum number of people
+        :param max_capacity: Maximum number of people
             allowed inplace.
         :type max_capacity: int
         """
@@ -48,7 +48,7 @@ class Place:
     def set_infectiveness(self, infectiveness: float):
         """Sets a baseline infectiveness for the place.
 
-        :param infectiveness: baseline infectiveness.
+        :param infectiveness: Baseline infectiveness.
         :type infectiveness: float
         """
         self.infectiveness = infectiveness
@@ -56,7 +56,7 @@ class Place:
     def set_susceptibility(self, susceptibility: float):
         """Sets a baseline susceptibility for the place.
 
-        :param susceptibility: baseline susceptibility.
+        :param susceptibility: Baseline susceptibility.
         :type susceptibility: float
         """
         self.susceptibility = susceptibility
@@ -64,7 +64,7 @@ class Place:
     def add_person(self, person: Person):
         """Add people into the place.
 
-        :param person: person to add.
+        :param person: Person to add.
         :type person: Person
         """
         self.persons.append(person)

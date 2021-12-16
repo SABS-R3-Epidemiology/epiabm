@@ -1,3 +1,6 @@
+#
+# Sweeps for enqueued persons to update infection status
+#
 from .abstract_sweep import AbstractSweep
 from .infection_status import InfectionStatus
 
