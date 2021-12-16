@@ -22,7 +22,7 @@ class InitialInfectedSweep(AbstractSweep):
         pop_size = self._population.total_people()
         if pop_size < \
                 sim_params["initial_infected_number"]:
-            raise AssertionError('Initial number of infecetd people needs to be \
+            raise AssertionError('Initial number of infected people needs to be \
                                             less than the total population')
 
         # Checks whether there are enough susceptible people to infect.

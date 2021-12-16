@@ -1,6 +1,6 @@
 import unittest
 import pyEpiabm as pe
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 
 class TestSimulation(unittest.TestCase):
@@ -12,8 +12,8 @@ class TestSimulation(unittest.TestCase):
         cls.test_population = cls.pop_factory.make_pop(0, 1, 1, 1)
         pe.Parameters.instance().time_steps_per_day = 1
         cls.sim_params = {"simulation_start_time": 0,
-                          "simulation_end_time": 1,
-                          "initial_infected_number": 5}
+                          "simulation_end_time": 2,
+                          "initial_infected_number": 0}
 
         cls.file_params = {"output_file": "output.csv",
                            "output_dir": "python_examples/simulation_outputs"}
@@ -36,18 +36,19 @@ class TestSimulation(unittest.TestCase):
         self.assertIsInstance(test_sim.population, pe.Population)
         self.assertIsInstance(test_sim.writer, pe._CsvDictWriter)
 
-    def test_run_sweeps(self):
-        initial_sweep = MagicMock()
-        sweep = MagicMock()
-        initial_sweep.return_value = 0
-        sweep.return_value = 0
-        time = self.sim_params["simulation_end_time"] - 1
+    @patch('pyEpiabm.PlaceSweep.__call__')
+    @patch('pyEpiabm.InitialInfectedSweep.__call__')
+    @patch('pyEpiabm.Simulation.write_to_file')
+    def test_run_sweeps(self, patch_write, patch_initial, patch_sweep):
+        time_sweep = self.sim_params["simulation_start_time"] + 1
+        time_write = self.sim_params["simulation_end_time"] - 1
         test_sim = pe.Simulation()
-        test_sim.configure(self.test_population, initial_sweep,
-                           sweep, self.sim_params, self.file_params)
-        with patch.object(test_sim, 'write_to_file') as mock:
-            test_sim.run_sweeps()
-            mock.assert_called_with(time)
+        test_sim.configure(self.test_population, self.initial_sweeps,
+                           self.sweeps, self.sim_params, self.file_params)
+        test_sim.run_sweeps()
+        patch_initial.assert_called_with(self.sim_params)
+        patch_sweep.assert_called_with(time_sweep)
+        patch_write.assert_called_with(time_write)
 
     def test_write_to_file(self):
         time = 1
