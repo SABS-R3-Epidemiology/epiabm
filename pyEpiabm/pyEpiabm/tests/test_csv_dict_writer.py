@@ -18,6 +18,16 @@ class TestCsvDictWriter(unittest.TestCase):
         mo.assert_called_once_with('mock_filename', 'w')
         mo().write.assert_called_once_with('Cat1,Cat2,Cat3\r\n')
 
+    def test_file_not_found(self):
+        mock_content = ['1', '2', '3']
+        with self.assertRaises(FileNotFoundError):
+            test_writer = pe._CsvDictWriter('mocked_folder/test_file',
+                                            mock_content)
+            self.assertIsNone(test_writer.f)
+            self.assertIsNone(test_writer.writer)
+        self.assertRaises(FileNotFoundError, pe._CsvDictWriter,
+                          'mocked_folder/test_file', mock_content)
+
     def test_write(self):
         """Test the write method of the _CsvDictWriter class.
         """
