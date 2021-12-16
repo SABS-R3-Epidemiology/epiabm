@@ -1,4 +1,4 @@
-name: Unit tests (cpp versions)
+name: Unit tests (cEpiabm)
 
 on:
   push:
