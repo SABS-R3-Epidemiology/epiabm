@@ -70,8 +70,7 @@ class CovidsimHelpers:
         :type place: Place
         :param timestep: Current simulation timestep
         :type timestep: int
-
-        :return: susceptibility
+        :return: Susceptibility parameter of place
         :rtype: float
         """
         return .2
