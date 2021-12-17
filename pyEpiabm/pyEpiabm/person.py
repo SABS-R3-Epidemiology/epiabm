@@ -1,8 +1,8 @@
 #
 # Person Class
 #
-from .infection_status import InfectionStatus
 import random
+from .infection_status import InfectionStatus
 
 
 class Person:
