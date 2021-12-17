@@ -1,5 +1,4 @@
 import random
-import numpy as np
 from pyEpiabm.infection_status import InfectionStatus
 from .abstract_sweep import AbstractSweep
 
@@ -41,7 +40,7 @@ class InitialInfectedSweep(AbstractSweep):
             cell_weights = [len(cell.persons) for cell
                             in self._population.cells]
 
-            cell_no = np.random.choices(cell_indices, weights=cell_weights,
+            cell_no = random.choices(cell_indices, weights=cell_weights,
                                         k=1)[0]
             cell = self._population.cells[cell_no]
 

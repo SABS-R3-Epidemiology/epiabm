@@ -18,9 +18,9 @@ class TestPlace(unittest.TestCase):
     def test_construct(self):
         """Tests constructor method.
         """
-        test_place = pe.Place((1, 1), pe.PlaceType.Hotel, self.cell,
+        test_place = pe.Place((1.0, 1.0), pe.PlaceType.Hotel, self.cell,
                               self.microcell)
-        self.assertEqual(test_place._location, test_place.loc)
+        self.assertEqual(test_place._location, (1.0, 1.0))
         self.assertEqual(test_place.persons, [])
         self.assertEqual(test_place.place_type, pe.PlaceType.Hotel)
         self.assertEqual(test_place.max_capacity, 50)
