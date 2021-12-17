@@ -5,7 +5,7 @@ import typing
 class _CsvWriter:
     def __init__(self, filename: str, fieldnames: typing.List):
         """Initialises a file to store output in, and which categories
-        to be record.
+        to record.
 
         :param filename: Output file name
         :type filename: string
