@@ -41,7 +41,7 @@ class InitialInfectedSweep(AbstractSweep):
                             in self._population.cells]
 
             cell_no = random.choices(cell_indices, weights=cell_weights,
-                                        k=1)[0]
+                                     k=1)[0]
             cell = self._population.cells[cell_no]
 
             # Randomly asigns infective to any person in that cell.
