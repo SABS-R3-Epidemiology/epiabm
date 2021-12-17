@@ -35,13 +35,9 @@ Sweeps
 .. autoclass:: PlaceSweep
     :members:
 
-.. autoclass:: UpdatePlaceSweep
-    :members:
-    
-
 .. autoclass:: QueueSweep
     :members:
-    
-    
-    
+
+.. autoclass:: UpdatePlaceSweep
+    :members:
     
