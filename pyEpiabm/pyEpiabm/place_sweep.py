@@ -1,7 +1,6 @@
 #
 # Infection due to contact in social spaces outside of households
 #
-
 import random
 from .abstract_sweep import AbstractSweep
 from .covidsim_helpers import CovidsimHelpers as c
