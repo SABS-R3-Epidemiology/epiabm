@@ -20,7 +20,7 @@ class Simulation:
                   file_params: typing.Dict):
         """Initialise a population structure for use in the simulation.
 
-        :param population: Population structure for the model.
+        :param population: Population structure for the model
         :type population: Population
         :param pop_params: Dictionary of parameter specific to the population
         :type pop_params: dict
