@@ -40,7 +40,7 @@ class Place:
         """Sets the maximum capacity of a place.
 
         :param max_capacity: Maximum number of people
-            allowed inplace.
+            allowed inplace
         :type max_capacity: int
         """
         self.max_capacity = max_capacity
