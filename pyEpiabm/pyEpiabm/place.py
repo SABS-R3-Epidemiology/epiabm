@@ -1,8 +1,8 @@
 #
 # Place Class
 #
-from .person import Person
 import typing
+from .person import Person
 from .place_type import PlaceType
 
 
