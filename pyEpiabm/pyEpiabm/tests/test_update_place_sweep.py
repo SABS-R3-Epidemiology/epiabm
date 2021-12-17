@@ -45,6 +45,9 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         self.place.add_person(self.person)
         test_sweep(self.time)
         self.assertTrue(self.place.persons)
+        self.place.add_person(self.person)
+        test_sweep(self.time)
+        self.assertEqual(len(self.place.persons), 1)
 
 
 if __name__ == "__main__":

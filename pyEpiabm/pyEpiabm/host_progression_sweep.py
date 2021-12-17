@@ -45,7 +45,7 @@ class HostProgressionSweep(AbstractSweep):
         their infection status if it is time and assigns them their
         next infection status and a new time of next status change.
 
-        :param time: Current simulation time in days
+        :param time: Current simulation time
         :type time: int
         """
         if not (type(time) == int):

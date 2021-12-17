@@ -19,7 +19,7 @@ class AbstractSweep:
     def __call__(self, time: float):
         """Run sweep over population.
 
-        :param time: Current simulation time in days
+        :param time: Current simulation time
         :type time: float
         """
         raise NotImplementedError

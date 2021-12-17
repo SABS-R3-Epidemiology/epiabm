@@ -3,7 +3,7 @@ import pyEpiabm as pe
 
 
 class TestPlace(unittest.TestCase):
-    """Test the place class.
+    """Test the 'Place' class.
     """
     @classmethod
     def setUpClass(cls) -> None:
@@ -18,6 +18,12 @@ class TestPlace(unittest.TestCase):
     def test_construct(self):
         """Tests constructor method.
         """
+        self.assertEqual(self.place._location, self.loc)
+        self.assertEqual(self.place.persons, [])
+        self.assertEqual(self.place.place_type, self.place_type)
+        self.assertEqual(self.place.max_capacity, 50)
+        self.assertEqual(self.place.susceptibility, 0)
+        self.assertEqual(self.place.infectiveness, 0)
         new_cell = pe.Cell()
         self.assertRaises(KeyError, pe.Place, (1, 1), pe.PlaceType.Hotel,
                           new_cell, self.microcell)
@@ -26,7 +32,7 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(len(test_place.persons), 0)
 
     def test_change_persons(self):
-        """Tests the add and remove persons functions.
+        """Tests the add and remove person functions.
         """
         test_place = pe.Place((1, 1), pe.PlaceType.Hotel, self.cell,
                               self.microcell)

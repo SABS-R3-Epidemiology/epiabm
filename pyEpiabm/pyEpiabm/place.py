@@ -56,7 +56,7 @@ class Place:
     def set_susceptibility(self, susceptibility: float):
         """Sets a baseline susceptibility for the place.
 
-        :param susceptibility: Baseline susceptibility.
+        :param susceptibility: Baseline susceptibility
         :type susceptibility: float
         """
         self.susceptibility = susceptibility
@@ -64,7 +64,7 @@ class Place:
     def add_person(self, person: Person):
         """Add people into the place.
 
-        :param person: Person to add.
+        :param person: Person to add
         :type person: Person
         """
         self.persons.append(person)
@@ -72,7 +72,7 @@ class Place:
     def remove_person(self, person: Person):
         """Remove people from place.
 
-        :param person: Person to remove from place.
+        :param person: Person to remove from place
         :type person: Person
         """
         if person not in self.persons:

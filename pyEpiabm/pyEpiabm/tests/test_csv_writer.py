@@ -4,11 +4,11 @@ from unittest.mock import patch, mock_open, call, MagicMock
 
 
 class TestCsvWriter(unittest.TestCase):
-    """Test the three methods of the '_CsvWriter' class.
+    """Test the methods of the '_CsvWriter' class.
     """
 
     def test_init(self):
-        """Test the __init__ method of the _CsvWriter class.
+        """Test the constructor method of the _CsvWriter class.
         """
         mo = mock_open()
         with patch('pyEpiabm._csv_writer.open', mo):
@@ -40,7 +40,7 @@ class TestCsvWriter(unittest.TestCase):
         mo().write.assert_has_calls([call('1,2,3\r\n'), call('a,b,c\r\n')])
 
     def test_del(self):
-        """Test the __del__ method of the _CsvWriter class.
+        """Test the destructor method of the _CsvWriter class.
         """
         fake_file = MagicMock()
         with patch("builtins.open", return_value=fake_file, create=True):
