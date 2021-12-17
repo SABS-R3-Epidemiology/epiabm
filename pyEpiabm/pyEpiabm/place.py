@@ -48,7 +48,7 @@ class Place:
     def set_infectiveness(self, infectiveness: float):
         """Sets a baseline infectiveness for the place.
 
-        :param infectiveness: Baseline infectiveness.
+        :param infectiveness: Baseline infectiveness
         :type infectiveness: float
         """
         self.infectiveness = infectiveness
