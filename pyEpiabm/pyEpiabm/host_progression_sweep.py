@@ -36,8 +36,8 @@ class HostProgressionSweep(AbstractSweep):
         elif person.infection_status == InfectionStatus.Exposed:
             person.next_infection_status = InfectionStatus.InfectMild
         else:
-            raise TypeError('update_next_infection_status should only' +
-                            'be applied to individuals with mild' +
+            raise TypeError('update_next_infection_status should only ' +
+                            'be applied to individuals with mild ' +
                             'infection status, or exposed')
 
     def __call__(self, time: int):

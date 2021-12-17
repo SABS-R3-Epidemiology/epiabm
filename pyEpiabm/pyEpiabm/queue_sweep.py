@@ -1,3 +1,6 @@
+#
+# Sweeps for enqueued persons to update infection status
+#
 from .abstract_sweep import AbstractSweep
 from .infection_status import InfectionStatus
 
@@ -10,7 +13,7 @@ class QueueSweep(AbstractSweep):
     : type time: int
     """
     def __call__(self, time):
-        """Function to run through the queue of exposed people
+        """Function to run through the queue of exposed people.
         """
         for cell in self._population.cells:
             while not cell.person_queue.empty():

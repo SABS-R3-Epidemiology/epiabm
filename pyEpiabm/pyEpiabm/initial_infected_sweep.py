@@ -11,16 +11,16 @@ class InitialInfectedSweep(AbstractSweep):
 
     def __call__(self, sim_params: dict):
         """Method that randomly chooses a number of people
-        in the population and changes their infection status to InfectedMild
+        in the population, changes their infection status to InfectedMild
         and sets their time of next status change.
 
-        :param pop_params: Dictionary of simulation parameters
-        :type pop_params: dict
+        :param sim_params: Dictionary of simulation parameters
+        :type sim_params: dict
         """
         pop_size = self._population.total_people()
         if pop_size < \
                 sim_params["initial_infected_number"]:
-            raise AssertionError('Initial number of infecetd people needs to be \
+            raise AssertionError('Initial number of infected people needs to be \
                                             less than the total population')
 
         # Checks whether there are enough susceptible people to infect.

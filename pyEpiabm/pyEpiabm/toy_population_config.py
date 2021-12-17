@@ -7,7 +7,7 @@ from .household import Household
 
 
 class ToyPopulationFactory:
-    """ Class that creates a toy population for use and returns in the simple
+    """ Class that creates a toy population for use in the simple
     python model.
     """
     def make_pop(self, population_size: int, cell_number: int,
@@ -18,21 +18,21 @@ class ToyPopulationFactory:
         used to distribute the number of people into the different microcells.
         There is also an option to distribute people into households.
 
-        :param pop_size: Total number of people in population.
+        :param pop_size: Total number of people in population
         :type pop_size: int
         :param cell_number: Number of cell objects the population will be
-            split in to.
+            split into
         :type cell_number: int
-        :param microcell_number: Number of microcell objects per cell.
+        :param microcell_number: Number of microcell objects per cell
         :type microcell_number: int
-        :param household_number: Number of households per microcell.
+        :param household_number: Number of households per microcell
         :type household_number: int
         :param if_households: Decides whether to group people into households
-            (If false, all individuals will be allocated separate households).
+            (If false, all individuals will be allocated separate households)
         :type if_households: bool
 
         :return: Population object with individuals distributed into
-            households.
+            households
         :rtype: Population
         """
         # Initialise a population class
@@ -41,7 +41,7 @@ class ToyPopulationFactory:
         # Checks parameter type and stores as class objects
         if not isinstance(if_households, bool):
             raise TypeError("Include household input needs to be boolean")
-        total_number_microcells = cell_number*microcell_number
+        total_number_microcells = cell_number * microcell_number
 
         new_pop.add_cells(cell_number)
         # Sets up a probability array for the multinomial
@@ -70,9 +70,9 @@ class ToyPopulationFactory:
         """Groups people in a microcell into households together.
 
         :param population: Population containing all person objects to be
-            considered for grouping.
+            considered for grouping
         :type population: Population
-        :param household_number: Number of households to form.
+        :param household_number: Number of households to form
         :type household_number: int
         """
         # Initialises another multinomial distribution
@@ -100,6 +100,7 @@ class ToyPopulationFactory:
             considered for grouping
         :type population: Population
         """
+        # Will probably delete this and replace with assertion error.
         for cells in population.cells:
             for person in cells.persons:
                 new_household = Household()

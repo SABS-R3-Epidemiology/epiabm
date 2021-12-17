@@ -1,6 +1,9 @@
-from .abstract_sweep import AbstractSweep
+#
+# Sweep to update people present in a place
+#
 import random
 import numpy as np
+from .abstract_sweep import AbstractSweep
 
 
 class UpdatePlaceSweep(AbstractSweep):
@@ -11,7 +14,7 @@ class UpdatePlaceSweep(AbstractSweep):
         """Given a population structure, updates the people
         present in each place at a specific timepoint.
 
-        :param time: current simulation time.
+        :param time: Current simulation time
         :type time: int
         """
         # Double loop over the whole population, clearing places
@@ -21,13 +24,14 @@ class UpdatePlaceSweep(AbstractSweep):
                 place.empty_place()
                 # Possibly want to later differentiate between
                 # the fixed population of a place ie staff, and
-                # the variable population.
+                # the variable population ie customers.
 
-                # Ensure that we don't put more people than live in
-                # the microcell.
+                # Ensure that the number of people put in the place
+                # is at most its capacity or the total number of
+                # people in the microcell.
                 max_capacity = np.minimum(place.max_capacity,
                                           len(place.microcell.persons))
-                # what if there aren't enough in microcell
+
                 new_capacity = random.randint(1, max_capacity)
                 for _ in range(new_capacity):
                     i = random.randint(1, len(place.microcell.persons))

@@ -13,8 +13,8 @@ Overview:
 - :class:`HouseholdSweep`
 - :class:`InitialInfectedSweep`
 - :class:`PlaceSweep`
-- :class:`UpdatePlaceSweep`
 - :class:`QueueSweep`
+- :class:`UpdatePlaceSweep`
 
 
 Sweeps
@@ -35,13 +35,9 @@ Sweeps
 .. autoclass:: PlaceSweep
     :members:
 
-.. autoclass:: UpdatePlaceSweep
-    :members:
-    
-
 .. autoclass:: QueueSweep
     :members:
-    
-    
-    
+
+.. autoclass:: UpdatePlaceSweep
+    :members:
     

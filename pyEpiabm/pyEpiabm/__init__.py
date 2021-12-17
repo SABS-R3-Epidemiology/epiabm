@@ -40,6 +40,6 @@ from .initial_infected_sweep import InitialInfectedSweep  # noqa
 from .simulation import Simulation  # noqa
 
 # Data collection
-from ._compartment_counter import _CompartmentCounter # noqa
-from ._csv_dict_writer import _CsvDictWriter # noqa
-from ._csv_writer import _CsvWriter # noqa
+from ._compartment_counter import _CompartmentCounter  # noqa
+from ._csv_dict_writer import _CsvDictWriter  # noqa
+from ._csv_writer import _CsvWriter  # noqa

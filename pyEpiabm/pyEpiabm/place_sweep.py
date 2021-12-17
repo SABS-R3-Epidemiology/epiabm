@@ -1,11 +1,10 @@
 #
 # Infection due to contact in social spaces outside of households
 #
-
+import random
 from .abstract_sweep import AbstractSweep
 from .covidsim_helpers import CovidsimHelpers as c
 from .parameters import Parameters
-import random
 
 
 class PlaceSweep(AbstractSweep):
@@ -23,7 +22,7 @@ class PlaceSweep(AbstractSweep):
         people present, based on individual and place infectiousness
         and susceptibility.
 
-        :param time: current simulation time.
+        :param time: Current simulation time
         :type time: int
         """
         timestep = int(time * Parameters.instance().time_steps_per_day)
