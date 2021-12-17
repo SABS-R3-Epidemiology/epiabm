@@ -46,7 +46,7 @@ class Microcell:
             self.cell.persons.append(p)
             self.persons.append(p)
 
-    def add_place(self, n, loc: typing.Tuple[float, float],
+    def add_place(self, n: int, loc: typing.Tuple[float, float],
                   place_type):
         """Adds n default :class:`Place` to Microcell.
 
