@@ -1,9 +1,9 @@
 #
 # Mirocell Class
 #
+import typing
 from .person import Person
 from .place import Place
-import typing
 from .infection_status import InfectionStatus
 from ._compartment_counter import _CompartmentCounter
 
