@@ -8,7 +8,7 @@ from .place_type import PlaceType
 
 class Place:
     """Creates a place class which represents spaces such
-    as cafes, restaurants and hotel where people may come
+    as cafes, restaurants and hotels where people may come
     into contact with others outside their household.
     """
     def __init__(self, loc: typing.Tuple[float, float],
