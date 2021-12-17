@@ -1,12 +1,12 @@
 #
 # Simulates a complete pandemic
 #
+import os
+import typing
 from .abstract_sweep import AbstractSweep
 from .infection_status import InfectionStatus
 from ._csv_dict_writer import _CsvDictWriter
 from .population import Population
-import os
-import typing
 
 
 class Simulation:
