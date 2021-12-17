@@ -1,9 +1,9 @@
 #
 # Sweep to update people present in a place
 #
-from .abstract_sweep import AbstractSweep
 import random
 import numpy as np
+from .abstract_sweep import AbstractSweep
 
 
 class UpdatePlaceSweep(AbstractSweep):
