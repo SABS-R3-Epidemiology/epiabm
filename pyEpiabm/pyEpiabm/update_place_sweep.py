@@ -32,7 +32,7 @@ class UpdatePlaceSweep(AbstractSweep):
                 max_capacity = np.minimum(place.max_capacity,
                                           len(place.microcell.persons))
 
-                new_capacity = random.randint(0, max_capacity)
+                new_capacity = random.randint(1, max_capacity)
                 count = 0
                 while count < new_capacity:
                     i = random.randint(1, len(place.microcell.persons))
