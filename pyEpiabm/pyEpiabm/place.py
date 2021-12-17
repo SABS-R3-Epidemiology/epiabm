@@ -15,9 +15,9 @@ class Place:
                  place_type: PlaceType, cell, microcell):
         """Constructor method.
 
-        :param loc: (x,y) coordinates of the place.
+        :param loc: (x,y) coordinates of the place
         :type loc: tuple
-        :param place_type: Categorises the place.
+        :param place_type: Categorises the place
         :type place_type: 'PlaceType' enum
         :param cell: An instance of :class:`Cell`
         :type cell: Cell
