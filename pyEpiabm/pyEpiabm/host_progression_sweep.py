@@ -55,7 +55,7 @@ class HostProgressionSweep(AbstractSweep):
                 if person.time_of_status_change == time:
                     self._update_next_infection_status(person)
                     person.update_status(person.next_infection_status)
-                    if not person.infection_status == \
+                    if person.infection_status != \
                             InfectionStatus.Recovered:
                         person.time_of_status_change =\
                             time + self._update_time_to_status_change()

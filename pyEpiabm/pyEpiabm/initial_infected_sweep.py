@@ -1,6 +1,7 @@
-from .abstract_sweep import AbstractSweep
 import random
-import pyEpiabm as pe
+import numpy as np
+from pyEpiabm.infection_status import InfectionStatus
+from .abstract_sweep import AbstractSweep
 
 
 class InitialInfectedSweep(AbstractSweep):
@@ -23,7 +24,7 @@ class InitialInfectedSweep(AbstractSweep):
                                             less than the total population')
 
         # Checks whether there are enough susceptible people to infect.
-        status = pe.InfectionStatus.Susceptible
+        status = InfectionStatus.Susceptible
         num_susceptible = 0
         for cell in self._population.cells:
             num_susceptible = num_susceptible + \
@@ -35,15 +36,20 @@ class InitialInfectedSweep(AbstractSweep):
 
         num_people = 0
         while num_people < (sim_params["initial_infected_number"]):
-            # Choose randomly which cell the person is in.
-            cell_no = random.randint(0, len(self._population.cells)-1)
+            # Choose which cell the person is in, weighted by population size.
+            cell_indices = [i for i in range(len(self._population.cells))]
+            cell_weights = [len(cell.persons) for cell
+                            in self._population.cells]
+
+            cell_no = np.random.choices(cell_indices, weights=cell_weights,
+                                        k=1)[0]
             cell = self._population.cells[cell_no]
 
             # Randomly asigns infective to any person in that cell.
             i = random.randint(0, len(cell.persons)-1)
             # Checks person has not already been assigned.
             if cell.persons[i].infection_status == \
-                    pe.InfectionStatus.Susceptible:
-                cell.persons[i].update_status(pe.InfectionStatus.InfectMild)
+                    InfectionStatus.Susceptible:
+                cell.persons[i].update_status(InfectionStatus.InfectMild)
                 cell.persons[i].update_time_to_status_change()
                 num_people += 1

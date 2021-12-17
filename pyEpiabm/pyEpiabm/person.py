@@ -1,8 +1,8 @@
 #
 # Person Class
 #
-from .infection_status import InfectionStatus
 import random
+from .infection_status import InfectionStatus
 
 
 class Person:
@@ -89,9 +89,6 @@ class Person:
     def update_time_to_status_change(self) -> None:
         """Method that assigns time until next infection status update,
          given as a random integer between 1 and 10.
-
-        :return: Time until next infection status update
-        :rtype: int
         """
         # This is left as a random integer for now but will be made more
         # complex later.
