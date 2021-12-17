@@ -72,7 +72,7 @@ class CovidsimHelpers:
         :return: Susceptibility parameter of place
         :rtype: float
         """
-        return .2
+        return 0.2
 
     @staticmethod
     def calc_place_inf(place: Place, infector: Person, infectee: Person,
