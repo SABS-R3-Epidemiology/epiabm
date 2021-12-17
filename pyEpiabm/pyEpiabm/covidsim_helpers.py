@@ -21,7 +21,6 @@ class CovidsimHelpers:
         :type infector: Person
         :param timestep: Current simulation timestep
         :type timestep: int
-
         :return: Infectiveness parameter of household
         :rtype: float
         """
