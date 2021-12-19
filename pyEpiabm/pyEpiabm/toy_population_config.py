@@ -28,7 +28,8 @@ class ToyPopulationFactory:
         :type microcell_number: int
         :param household_number: Number of households per microcell
         :type household_number: int
-        :param place_number
+        :param place_number: Number of places per microcell
+        :type place_number: int
 
         :return: Population object with individuals distributed into
             households
