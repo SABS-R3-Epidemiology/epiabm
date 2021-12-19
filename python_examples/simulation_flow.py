@@ -7,7 +7,7 @@ from pyEpiabm.place_type import PlaceType
 
 pop_params = {"population_size": 100, "cell_number": 1,
               "microcell_number": 1, "household_number": 20,
-              "if_households": True}
+              "place_number": 2}
 
 pe.Parameters.instance().time_steps_per_day = 1
 
