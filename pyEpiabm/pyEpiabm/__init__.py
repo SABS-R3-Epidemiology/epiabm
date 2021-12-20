@@ -31,10 +31,10 @@ from .toy_population_config import ToyPopulationFactory  # noqa
 from .abstract_sweep import AbstractSweep  # noqa
 from .host_progression_sweep import HostProgressionSweep  # noqa
 from .household_sweep import HouseholdSweep  # noqa
+from .initial_infected_sweep import InitialInfectedSweep  # noqa
 from .place_sweep import PlaceSweep  # noqa
 from .queue_sweep import QueueSweep  # noqa
 from .update_place_sweep import UpdatePlaceSweep  # noqa
-from .initial_infected_sweep import InitialInfectedSweep  # noqa
 
 # Example Simulations
 from .simulation import Simulation  # noqa
