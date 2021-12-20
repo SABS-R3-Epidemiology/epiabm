@@ -8,7 +8,7 @@ class _CsvWriter:
         to record.
 
         :param filename: Output file name
-        :type filename: string
+        :type filename: str
         :param fieldnames: List of categories to be saved
         :type fieldnames: list
         """
