@@ -74,7 +74,7 @@ class TestPlaceSweep(unittest.TestCase):
         event certain NOT to happen.
         """
         mock_inf.return_value = 0
-        mock_susc.return_value = 0
+        mock_susc.return_value = 10
         subject = pe.PlaceSweep()
         subject.bind_population(self.pop)
         time = 1
@@ -94,7 +94,7 @@ class TestPlaceSweep(unittest.TestCase):
 
         # Change the additional person to recovered, and assert the queue
         # is empty.
-        mock_inf.return_value = .999999
+        mock_inf.return_value = .9
         new_person.infection_status = pe.InfectionStatus.Recovered
         self.cell.person_queue = Queue()
         subject.bind_population(self.pop)
