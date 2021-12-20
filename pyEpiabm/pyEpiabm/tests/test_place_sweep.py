@@ -94,8 +94,8 @@ class TestPlaceSweep(unittest.TestCase):
 
         # Change the additional person to recovered, and assert the queue
         # is empty.
+        mock_inf.return_value = .999999
         new_person.infection_status = pe.InfectionStatus.Recovered
-        self.cell.persons.append(new_person)
         self.cell.person_queue = Queue()
         subject.bind_population(self.pop)
         subject(time)

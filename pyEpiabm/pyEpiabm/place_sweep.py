@@ -36,7 +36,6 @@ class PlaceSweep(AbstractSweep):
                     continue
                 for place in cell.places:
                     infectiousness = c.calc_place_inf(place, timestep)
-
                     # High infectiousness (>= 1) means all susceptible
                     # occupants become infected.
                     if infectiousness >= 1:
@@ -72,8 +71,9 @@ class PlaceSweep(AbstractSweep):
                             susceptibility = c.calc_place_susc(place, infector,
                                                                infectee,
                                                                timestep)
-                            force_of_infection = infectiousness *\
-                                susceptibility
+
+                            force_of_infection = (infectiousness *
+                                                  susceptibility)
 
                             # Compare a uniform random number to the force of
                             # infection to see whether an infection event
