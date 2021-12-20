@@ -38,7 +38,7 @@ class PlaceSweep(AbstractSweep):
                     infectiousness = c.calc_place_inf(place, timestep)
                     # High infectiousness (>= 1) means all susceptible
                     # occupants become infected.
-                    if infectiousness >= 1:
+                    if infectiousness > 1:
                         for infectee in place.persons:
                             if not infectee.is_susceptible():
                                 continue
@@ -55,14 +55,14 @@ class PlaceSweep(AbstractSweep):
 
                         # Pick that number of potential infectees from place
                         # members.
-                        potential_infectees = random.choices(place.persons,
-                                                             k=num_infectees)
+                        potential_infectees = random.sample(place.persons,
+                                                            num_infectees)
 
                         # Check to see whether a place member is susceptible.
                         for infectee in potential_infectees:
+
                             if not infectee.is_susceptible():
                                 continue
-
                             # Calculate "force of infection" parameter which
                             # determines the likelihood of an infection event
                             # between the infector and infectee given that they
@@ -80,5 +80,6 @@ class PlaceSweep(AbstractSweep):
                             # occurs in this timestep between the given
                             # persons.
                             r = random.uniform(0, 1)
+
                             if r < force_of_infection:
                                 cell.enqueue_person(infectee)
