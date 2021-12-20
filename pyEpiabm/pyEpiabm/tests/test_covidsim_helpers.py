@@ -48,8 +48,7 @@ class TestCovidsimHelpers(unittest.TestCase):
         self.assertIsInstance(result, float)
 
     def test_calc_place_inf(self):
-        result = c.calc_place_inf(self.place, self.infector,
-                                  self.infectee, self.timestep)
+        result = c.calc_place_inf(self.place, self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
