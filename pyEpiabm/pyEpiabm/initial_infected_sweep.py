@@ -19,7 +19,7 @@ class InitialInfectedSweep(AbstractSweep):
         pop_size = self._population.total_people()
         if pop_size < \
                 sim_params["initial_infected_number"]:
-            raise AssertionError('Initial number of infected people needs to be \
+            raise ValueError('Initial number of infected people needs to be \
                                             less than the total population')
 
         # Checks whether there are enough susceptible people to infect.
@@ -30,7 +30,7 @@ class InitialInfectedSweep(AbstractSweep):
                                 cell.compartment_counter.retrieve()[status]
 
         if num_susceptible < sim_params["initial_infected_number"]:
-            raise AssertionError('There are not enough susceptible people in the \
+            raise ValueError('There are not enough susceptible people in the \
                                         population to infect')
 
         num_people = 0

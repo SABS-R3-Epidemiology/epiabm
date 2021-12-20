@@ -16,7 +16,7 @@ class Place:
         """Constructor method.
 
         :param loc: (x,y) coordinates of the place
-        :type loc: tuple
+        :type loc: Tuple[float, float]
         :param place_type: Categorises the place
         :type place_type: 'PlaceType' enum
         :param cell: An instance of :class:`Cell`
