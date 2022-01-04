@@ -1,3 +1,6 @@
+#
+# Seed infected individuals in population
+#
 import random
 from pyEpiabm.infection_status import InfectionStatus
 from .abstract_sweep import AbstractSweep
