@@ -24,11 +24,11 @@ namespace epiabm
     
         void addCell(PopulationPtr population);
         void addMicrocell(Cell* cell);
-        void addPerson(Cell* cell, Microcell* microcell);
+        void addPerson(Cell* cell, size_t microcell_index);
 
         void addCells(PopulationPtr population, size_t n);
         void addMicrocells(Cell* cell, size_t n);
-        void addPeople(Cell* cell, Microcell* microcell, size_t n);
+        void addPeople(Cell* cell, size_t microcell_index, size_t n);
         
     private:
     };

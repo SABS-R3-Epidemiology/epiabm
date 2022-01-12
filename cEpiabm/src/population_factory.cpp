@@ -27,7 +27,7 @@ namespace epiabm
                 population->cells()[i].microcells()[j].people().reserve(n_people);
                 addPeople(
                     &population->cells()[i],
-                    &population->cells()[i].microcells()[j],
+                    j,
                     n_people);
             }
         }
@@ -63,21 +63,21 @@ namespace epiabm
         }
     }
 
-    void PopulationFactory::addPerson(Cell* cell, Microcell* microcell)
+    void PopulationFactory::addPerson(Cell* cell, size_t microcell_index)
     {
         cell->people().push_back(
-            Person(cell->people().size(), microcell->people().size()));
-        microcell->people().push_back(
+            Person(microcell_index, cell->people().size(), cell->getMicrocell(microcell_index).people().size()));
+        cell->getMicrocell(microcell_index).people().push_back(
             cell->people().size()-1);
     }
 
-    void PopulationFactory::addPeople(Cell* cell, Microcell* microcell, size_t n)
+    void PopulationFactory::addPeople(Cell* cell, size_t microcell_index, size_t n)
     {
         //cell->people().reserve(cell->people().size() + n);
         //microcell->people().reserve(microcell->people().size() + n);
         for (size_t i = 0; i < n; i++)
         {
-            addPerson(cell, microcell);
+            addPerson(cell, microcell_index);
         }
     }
 

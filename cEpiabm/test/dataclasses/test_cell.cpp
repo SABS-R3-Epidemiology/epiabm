@@ -17,7 +17,7 @@ inline Cell makeSubject(size_t n_microcells, size_t n_people)
 
     for (size_t i = 0; i < n_people * n_microcells; i++)
     {
-        subject.people().push_back(Person(i, i / 10));
+        subject.people().push_back(Person(i%10, i, i / 10));
         subject.microcells()[i % 10].people().push_back(i);
     }
 
@@ -79,7 +79,7 @@ TEST_CASE("dataclasses/cell: test add people", "[Cell]")
 
     for (size_t i = 0; i < 1000; i++)
     {
-        subject.people().push_back(Person(i, 0));
+        subject.people().push_back(Person(0, i, 0));
     }
     REQUIRE(subject.people().size() == 1000);
 
@@ -97,7 +97,7 @@ TEST_CASE("dataclasses/cell: test getPerson", "[Cell]")
 
     for (size_t i = 0; i < 1000; i++)
     {
-        subject.people().push_back(Person(i, 0));
+        subject.people().push_back(Person(0, i, 0));
     }
     REQUIRE(subject.people().size() == 1000);
 
@@ -187,7 +187,7 @@ TEST_CASE("dataclasses/cell: test forEachPerson", "[Cell]")
     subject.people().reserve(1000);
     for (size_t i = 0; i < 1000; i++)
     {
-        subject.people().push_back(Person(i, 0));
+        subject.people().push_back(Person(0, i, 0));
         people.insert(&subject.people()[i]);
     }
     REQUIRE(subject.people().size() == 1000);
@@ -211,7 +211,7 @@ TEST_CASE("dataclasses/cell: test forEachPerson early stop", "[Cell]")
     subject.people().reserve(1000);
     for (size_t i = 0; i < 1000; i++)
     {
-        subject.people().push_back(Person(i, 0));
+        subject.people().push_back(Person(0, i, 0));
         people.insert(&subject.people()[i]);
     }
     REQUIRE(subject.people().size() == 1000);
@@ -273,7 +273,12 @@ TEST_CASE("dataclasses/cell: test infectious grouping", "[Cell]")
     for (int rep = 0; rep < 100; rep++)
     {
         Cell subject = makeSubject(10, 100);
-        subject.initializeInfectiousGrouping();
+        REQUIRE_NOTHROW(subject.initializeInfectiousGrouping());
+        REQUIRE_NOTHROW(subject.numDead());
+        REQUIRE_NOTHROW(subject.numRecovered());
+        REQUIRE_NOTHROW(subject.numInfectious());
+        REQUIRE_NOTHROW(subject.numExposed());
+        REQUIRE_NOTHROW(subject.numSusceptible());
         std::set<size_t> infectious;
 
         auto verifyInfectious = [&]()

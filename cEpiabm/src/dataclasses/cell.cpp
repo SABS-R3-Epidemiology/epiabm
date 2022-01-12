@@ -10,14 +10,19 @@ namespace epiabm
     Cell::Cell() :
         m_people(),
         m_microcells(),
-        m_numInfectious(0),
         m_personQueue(),
         m_peopleInQueue(),
-        m_peopleSorted(),
-        m_peopleSortedInv()
+        //m_peopleSorted(),
+        //m_peopleSortedInv(),
+        //m_numInfectious(0)
+        m_infectiousPeople(),
+        m_susceptiblePeople(),
+        m_exposedPeople(),
+        m_recoveredPeople(),
+        m_deadPeople()
     {}
 
-    void Cell::forEachMicrocell(std::function<bool(Microcell*)> callback)
+        void Cell::forEachMicrocell(std::function<bool(Microcell*)> callback)
     {
         for (size_t i = 0; i < m_microcells.size(); i++)
         {
@@ -35,18 +40,31 @@ namespace epiabm
 
     void Cell::forEachInfectious(std::function<bool(Person*)> callback)
     {
-        for (size_t i = 0; i < m_numInfectious; i++)
+        /*for (size_t i = 0; i < m_numInfectious; i++)
         {
             if (!callback(&m_people[m_peopleSorted[i]])) return;
-        }
+        }*/
+        std::set<size_t> set = m_infectiousPeople;
+        for (auto it = set.begin(); it != set.end(); ++it)
+            if (!callback(&m_people[*it])) return;
     }
 
     void Cell::forEachNonInfectious(std::function<bool(Person*)> callback)
     {
-        for (size_t i = m_numInfectious; i < m_people.size(); i++)
+        /*for (size_t i = m_numInfectious; i < m_people.size(); i++)
         {
             if (!callback(&m_people[m_peopleSorted[i]])) return;
-        }
+        }*/
+        std::set<size_t> set = m_susceptiblePeople;
+        for (auto it = set.begin(); it != set.end(); ++it)
+            if (!callback(&m_people[*it])) return;
+    }
+
+    void Cell::forEachExposed(std::function<bool(Person*)> callback)
+    {
+        std::set<size_t> set = m_exposedPeople;
+        for (auto it = set.begin(); it != set.end(); ++it)
+            if (!callback(&m_people[*it])) return;
     }
 
     Person& Cell::getPerson(size_t i) { return m_people[i]; }
@@ -55,7 +73,7 @@ namespace epiabm
     /**
      * @brief Apply Callback to each person in Queue
      * Also Clears the queue
-     * @param callback 
+     * @param callback
      */
     void Cell::processQueue(std::function<void(size_t)> callback)
     {
@@ -70,7 +88,7 @@ namespace epiabm
     /**
      * @brief Add person to queue
      * Same person cannot be queued twice.
-     * @param personIndex 
+     * @param personIndex
      * @return true Person successfully queued.
      * @return false Person reject because already in queue.
      */
@@ -92,12 +110,25 @@ namespace epiabm
      */
     void Cell::initializeInfectiousGrouping()
     {
-        m_peopleSorted = std::vector<size_t>(m_people.size());
+        /*m_peopleSorted = std::vector<size_t>(m_people.size());
         m_peopleSortedInv = std::vector<size_t>(m_people.size());
         for (size_t i = 0; i < m_people.size(); i++)
         {
             m_peopleSortedInv[i] = i;
             m_peopleSorted[i] = i;
+        }*/
+        m_susceptiblePeople.clear();
+        m_exposedPeople.clear();
+        m_infectiousPeople.clear();
+        m_recoveredPeople.clear();
+        m_deadPeople.clear();
+        for (size_t i = 0; i < m_people.size(); i++)
+        {
+            if (m_people[i].status() == InfectionStatus::Susceptible) m_susceptiblePeople.insert(i);
+            else if (m_people[i].status() == InfectionStatus::Exposed) m_exposedPeople.insert(i);
+            else if (m_people[i].status() == InfectionStatus::Recovered) m_recoveredPeople.insert(i);
+            else if (m_people[i].status() == InfectionStatus::Dead) m_deadPeople.insert(i);
+            else m_infectiousPeople.insert(i);
         }
     }
 
@@ -111,7 +142,7 @@ namespace epiabm
      */
     bool Cell::markInfectious(size_t newInfected)
     {
-        if (m_peopleSortedInv[newInfected] < m_numInfectious) return false; // Person already in infected section
+        /*if (m_peopleSortedInv[newInfected] < m_numInfectious) return false; // Person already in infected section
         size_t swapTarget = m_peopleSorted[m_numInfectious]; // Index of swap target in m_people
 
         std::swap(m_peopleSorted[m_peopleSortedInv[newInfected]],
@@ -120,6 +151,11 @@ namespace epiabm
         m_peopleSortedInv[newInfected] = m_numInfectious; // New location of newly infected is m_numInfected;
 
         m_numInfectious++; // Increment number of infected
+        return true;*/
+        if (m_infectiousPeople.find(newInfected) != m_infectiousPeople.end()) return false;
+        m_susceptiblePeople.erase(newInfected);
+        m_infectiousPeople.insert(newInfected);
+        m_exposedPeople.erase(newInfected);
         return true;
     }
 
@@ -133,7 +169,7 @@ namespace epiabm
      */
     bool Cell::markNonInfectious(size_t oldInfected)
     {
-        if (m_peopleSortedInv[oldInfected] >= m_numInfectious) return false; // Person already in non-infected
+        /*if (m_peopleSortedInv[oldInfected] >= m_numInfectious) return false; // Person already in non-infected
         size_t swapTarget = m_peopleSorted[m_numInfectious - 1]; // Index of swap target (last infectious person)
 
         std::swap(m_peopleSorted[m_peopleSortedInv[oldInfected]],
@@ -142,7 +178,46 @@ namespace epiabm
         m_peopleSortedInv[oldInfected] = m_numInfectious - 1;
 
         m_numInfectious--;
+        return true;*/
+        if (m_susceptiblePeople.find(oldInfected) != m_susceptiblePeople.end()) return false;
+        m_susceptiblePeople.insert(oldInfected);
+        m_infectiousPeople.erase(oldInfected);
+        m_exposedPeople.erase(oldInfected);
         return true;
+    }
+
+    bool Cell::markExposed(size_t newInfected)
+    {
+        if (m_exposedPeople.find(newInfected) != m_exposedPeople.end()) return false;
+        m_susceptiblePeople.erase(newInfected);
+        m_infectiousPeople.erase(newInfected);
+        m_exposedPeople.insert(newInfected);
+        return true;
+    }
+
+    bool Cell::markDead(size_t person)
+    {
+        if (m_deadPeople.find(person) != m_deadPeople.end()) return false;
+        m_deadPeople.insert(person);
+        m_infectiousPeople.erase(person);
+        m_exposedPeople.erase(person);
+        m_susceptiblePeople.erase(person);
+        return true;
+    }
+
+    bool Cell::markRecovered(size_t person)
+    {
+        if (m_recoveredPeople.find(person) != m_recoveredPeople.end()) return false;
+        m_recoveredPeople.insert(person);
+        m_infectiousPeople.erase(person);
+        m_exposedPeople.erase(person);
+        m_susceptiblePeople.erase(person);
+        return true;
+    }
+
+    size_t Cell::numSusceptible() const
+    {
+        return m_susceptiblePeople.size();
     }
 
     /**
@@ -152,6 +227,25 @@ namespace epiabm
      * Cell::initializeInfectiousGroupings() must have been called once before this can be used.
      * @return size_t Number of infectious
      */
-    size_t Cell::numInfectious() const { return m_numInfectious; }
+    size_t Cell::numInfectious() const
+    {
+        //return m_numInfectious;
+        return m_infectiousPeople.size();
+    }
+
+    size_t Cell::numExposed() const
+    {
+        return m_exposedPeople.size();
+    }
+    
+    size_t Cell::numRecovered() const
+    {
+        return m_recoveredPeople.size();
+    }
+
+    size_t Cell::numDead() const
+    {
+        return m_deadPeople.size();
+    }
 
 } // namespace epiabm

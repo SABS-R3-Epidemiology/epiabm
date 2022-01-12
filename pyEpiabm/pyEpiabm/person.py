@@ -104,3 +104,15 @@ class Person:
             raise AttributeError("Place and person are not in the same\
                                  microcell")
         self.places.append(place)
+
+    def remove_place(self, place):
+        """Method to remove person for each associated place, to be
+        used when updating places.
+
+        :param place: Place person should be removed from
+        :type place: Place
+        """
+        if place not in self.places:
+            raise KeyError("Person not found in this place")
+        else:
+            self.places.remove(place)
