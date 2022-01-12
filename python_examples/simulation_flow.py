@@ -3,22 +3,28 @@ import pyEpiabm as pe
 import pandas as pd
 import matplotlib.pyplot as plt
 
-
+# Pop_params are ued to configure the population structure being used in this
+# simulation.
 pop_params = {"population_size": 100, "cell_number": 1,
               "microcell_number": 1, "household_number": 20,
               "place_number": 2}
 
 pe.Parameters.instance().time_steps_per_day = 1
 
+# Create a population base don the parameters given.
 population = pe.ToyPopulationFactory().make_pop(**pop_params)
 cell = population.cells[0]
 
+# sim_ and file_params give details for the running of the simulations and
+# where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
               "initial_infected_number": 5}
 
 file_params = {"output_file": "output.csv",
                "output_dir": "python_examples/simulation_outputs"}
 
+# Create a simulation object, configure it with the parameters given, then
+# run the simulation.
 sim = pe.Simulation()
 sim.configure(
     population,
@@ -28,12 +34,14 @@ sim.configure(
     sim_params,
     file_params)
 sim.run_sweeps()
+
+# Need to close the writer object at the end of each simulation.
 del(sim.writer)
 del(sim)
 
+# Creation of a plot of results
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
                         "output.csv")
-print(filename)
 df = pd.read_csv(filename)
 df.plot(x="time", y=["InfectionStatus.Susceptible",
                      "InfectionStatus.InfectMild",

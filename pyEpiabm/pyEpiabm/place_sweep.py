@@ -10,8 +10,8 @@ from .parameters import Parameters
 
 class PlaceSweep(AbstractSweep):
     """Class to run the place infections
-    as part of the sweep function. Takes an individual
-    person as input and tests a infection event against each
+    as part of the sweep function. Runs through infectious
+    people within a cell and tests a infection event against each
     susceptible member of the place. The resulting
     exposed person is added to an infection queue.
     """
