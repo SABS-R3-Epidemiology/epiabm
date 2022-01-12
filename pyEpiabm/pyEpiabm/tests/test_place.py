@@ -38,6 +38,7 @@ class TestPlace(unittest.TestCase):
         test_place = pe.Place((1, 1), pe.PlaceType.Hotel, self.cell,
                               self.microcell)
         test_place.add_person(self.person)
+        self.assertEqual(len(self.person.places), 1)
         self.assertEqual(len(test_place.persons), 1)
 
         test_place.remove_person(self.person)
