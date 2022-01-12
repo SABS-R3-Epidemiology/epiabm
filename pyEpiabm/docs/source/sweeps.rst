@@ -16,28 +16,31 @@ Overview:
 - :class:`QueueSweep`
 - :class:`UpdatePlaceSweep`
 
-
-Sweeps
-******
-
 .. autoclass:: AbstractSweep
     :members:
+    :special-members: __call__
     
 .. autoclass:: HostProgressionSweep
     :members:
+    :special-members: __call__
 
 .. autoclass:: HouseholdSweep
     :members:
+    :special-members: __call__
 
 .. autoclass:: InitialInfectedSweep
     :members:
+    :special-members: __call__
 
 .. autoclass:: PlaceSweep
     :members:
+    :special-members: __call__
 
 .. autoclass:: QueueSweep
     :members:
+    :special-members: __call__
 
 .. autoclass:: UpdatePlaceSweep
     :members:
+    :special-members: __call__
     

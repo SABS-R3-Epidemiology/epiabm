@@ -18,10 +18,6 @@ Overview:
 - :class:`Population`
 
 
-
-Core
-****
-
 .. autoclass:: Cell
     :members:
 

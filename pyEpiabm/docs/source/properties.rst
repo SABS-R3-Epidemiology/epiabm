@@ -11,10 +11,6 @@ Overview:
 - :class:`InfectionStatus`
 - :class:`PlaceType`
 
-
-Properties
-**********
-
 .. autoclass:: InfectionStatus
     :members:
     
