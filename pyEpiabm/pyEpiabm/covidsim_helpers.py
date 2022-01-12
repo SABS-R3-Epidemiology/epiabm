@@ -59,7 +59,7 @@ class CovidsimHelpers:
     @staticmethod
     def calc_place_susc(place: Place, infector: Person, infectee: Person,
                         timestep: int):
-        """Calculate the susceptibility of a person.
+        """Calculate the susceptibility of a place.
 
         :param infector: Infector
         :type infector: Person
