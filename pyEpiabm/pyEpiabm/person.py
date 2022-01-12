@@ -42,6 +42,7 @@ class Person:
         self.microcell = microcell
         self.infection_status = InfectionStatus.Susceptible
         self.household = None
+        self.places = []
         self.next_infection_status = None
         self.time_of_status_change = None
 
@@ -94,3 +95,12 @@ class Person:
         # complex later.
         new_time = random.randint(1, 10)
         self.time_of_status_change = new_time
+
+    def add_place(self, place):
+        """Method adds a place to the place list if the person visits
+        or is associated with this place.
+        """
+        if place.microcell != self.microcell:
+            raise AttributeError("Place and person are not in the same\
+                                 microcell")
+        self.places.append(place)

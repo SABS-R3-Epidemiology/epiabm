@@ -8,12 +8,12 @@ from .abstract_sweep import AbstractSweep
 
 class InitialInfectedSweep(AbstractSweep):
     """Class for sweeping through population at start
-    of simulation and setting an initial number of infecetd people.
+    of simulation and setting an initial number of infected people.
     """
 
     def __call__(self, sim_params: dict):
         """Method that randomly chooses a user-supplied number of people
-        in the population, changes their infection status to InfectedMild
+        in the population, changes their infection status to InfectMild
         and sets their time of next status change.
 
         :param sim_params: Dictionary of simulation parameters

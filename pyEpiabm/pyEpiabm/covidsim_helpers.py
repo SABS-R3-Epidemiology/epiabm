@@ -76,7 +76,7 @@ class CovidsimHelpers:
 
     @staticmethod
     def calc_place_inf(place: Place, timestep: int):
-        """Calculate the susceptibility of a place.
+        """Calculate the infectiousness of a place.
         Not dependent on the people in it.
 
         :param place: Place
