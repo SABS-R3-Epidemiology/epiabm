@@ -24,7 +24,7 @@ class Simulation:
         :type population: Population
         :param pop_params: Dictionary of parameter specific to the population
         :type pop_params: dict
-        :param initial_sweeps: List of abstract sweeps used to initialise the
+        :param initial_sweeps: List of sweeps used to initialise the
             simulation
         :type initial_sweeps: list
         :param sweeps: List of sweeps used in the simulation. Queue
@@ -32,7 +32,7 @@ class Simulation:
             list
         :type sweeps: list
         :param sim_params: Dictionary of parameters specific to the simulation
-            used
+            used and used as input for call method of initial sweeps
         :type sim_params: dict
         :param file_params: Dictionary of parameters specific to the output
             file
@@ -46,7 +46,6 @@ class Simulation:
         # infection status, infectiveness or susceptibility of people
         # or places. Only runs on the first timestep.
         for s in initial_sweeps + sweeps:
-            assert isinstance(s, AbstractSweep)
             s.bind_population(self.population)
 
         # General sweeps run through the population on every timestep, and
@@ -64,7 +63,10 @@ class Simulation:
         """Iteration step of the simulation. First the initialisation sweeps
         configure the population on the first timestep. Then at each
         subsequent timestep the sweeps run, updating the population. At each
-        timepoint, a count of each infection status is written to file.
+        timepoint, a count of each infection status is written to file. Note
+        that the elements of intial sweeps take the sim_params dict as an
+        argument for their call method but the elements of sweeps take time
+        as an argument for their call method.
         """
 
         # Initialise on the time step before starting.
