@@ -37,9 +37,11 @@ class InitialInfectedSweep(AbstractSweep):
                                         population to infect')
 
         all_persons = [person for cell in self._population.cells
-                              for person in cell.persons
-                              if person.infection_status == InfectionStatus.Susceptible]
-        persons_to_infect = random.sample(all_persons, sim_params["initial_infected_number"])
+                       for person in cell.persons
+                       if person.infection_status ==
+                       InfectionStatus.Susceptible]
+        persons_to_infect = random.sample(all_persons,\
+            sim_params["initial_infected_number"])
         for person in persons_to_infect:
             person.update_status(InfectionStatus.InfectMild)
             person.update_time_to_status_change()
