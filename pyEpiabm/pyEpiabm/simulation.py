@@ -28,7 +28,7 @@ class Simulation:
             simulation
         :type initial_sweeps: list
         :param sweeps: List of sweeps used in the simulation. Queue
-            sweep and host progression sweep must appear at the end of the
+            sweep and host progression sweep should appear at the end of the
             list
         :type sweeps: list
         :param sim_params: Dictionary of parameters specific to the simulation
