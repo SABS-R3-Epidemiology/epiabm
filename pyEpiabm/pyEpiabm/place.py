@@ -62,7 +62,7 @@ class Place:
         self.susceptibility = susceptibility
 
     def add_person(self, person: Person):
-        """Add people into the place.
+        """Add a person into the place.
 
         :param person: Person to add
         :type person: Person
