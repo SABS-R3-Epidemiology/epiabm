@@ -1,7 +1,10 @@
 #
 # Core subpackage of the pyEpiabm module.
-# Provides the basic class framework to build a population.
 #
+
+""" pyEpiabm.core provides the basic class framework to build a population.
+
+"""
 
 from ._compartment_counter import _CompartmentCounter
 from .cell import Cell

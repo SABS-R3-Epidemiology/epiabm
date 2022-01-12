@@ -1,7 +1,10 @@
 #
 # Routine subpackage of the pyEpiabm module.
-# Provides methods which sweep over the population.
 #
+
+""" pyEpiabm.sweep provides methods which sweep over the population.
+
+"""
 
 from .abstract_sweep import AbstractSweep
 from .host_progression_sweep import HostProgressionSweep
