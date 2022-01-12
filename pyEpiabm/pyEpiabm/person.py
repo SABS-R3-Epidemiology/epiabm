@@ -1,6 +1,7 @@
 #
 # Person Class
 #
+import random
 from .infection_status import InfectionStatus
 
 
@@ -41,6 +42,7 @@ class Person:
         self.microcell = microcell
         self.infection_status = InfectionStatus.Susceptible
         self.household = None
+        self.places = []
         self.next_infection_status = None
         self.time_of_status_change = None
 
@@ -84,3 +86,33 @@ class Person:
         self.microcell.notify_person_status_change(
             self.infection_status, new_status)
         self.infection_status = new_status
+
+    def update_time_to_status_change(self) -> None:
+        """Method that assigns time until next infection status update,
+         given as a random integer between 1 and 10.
+        """
+        # This is left as a random integer for now but will be made more
+        # complex later.
+        new_time = random.randint(1, 10)
+        self.time_of_status_change = new_time
+
+    def add_place(self, place):
+        """Method adds a place to the place list if the person visits
+        or is associated with this place.
+        """
+        if place.cell != self.microcell.cell:
+            raise AttributeError("Place and person are not in the same\
+                                 cell")
+        self.places.append(place)
+
+    def remove_place(self, place):
+        """Method to remove person for each associated place, to be
+        used when updating places.
+
+        :param place: Place person should be removed from
+        :type place: Place
+        """
+        if place not in self.places:
+            raise KeyError("Person not found in this place")
+        else:
+            self.places.remove(place)

@@ -37,6 +37,28 @@ class TestPerson(unittest.TestCase):
             self.person.infection_status,
             pe.InfectionStatus.InfectMild)
 
+    def test_update_time(self):
+        self.assertIsNone(self.person.time_of_status_change)
+        self.person.update_time_to_status_change()
+        self.assertTrue(1 <= self.person.time_of_status_change
+                        <= 10)
+
+    def test_configure_place(self):
+        # Tests both the add and remove functions
+        self.assertEqual(len(self.person.places), 0)
+        test_place = pe.Place((1.0, 1.0), pe.PlaceType.Hotel, self.cell,
+                              self.microcell)
+        self.person.add_place(test_place)
+        self.assertTrue(len(self.person.places) > 0)
+        test_cell = pe.Cell
+        test_place_2 = pe.Place((1.0, 1.0), pe.PlaceType.Hotel, test_cell,
+                                pe.Microcell(test_cell))
+        self.assertRaises(AttributeError, self.person.add_place, test_place_2)
+
+        self.person.remove_place(test_place)
+        self.assertEqual(len(self.person.places), 0)
+        self.assertRaises(KeyError, self.person.remove_place, test_place_2)
+
 
 if __name__ == '__main__':
     unittest.main()

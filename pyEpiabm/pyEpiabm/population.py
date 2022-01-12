@@ -35,3 +35,13 @@ class Population:
         """
         for cell in self.cells:
             cell._setup()
+
+    def total_people(self):
+        """Returns the total number of people in the population.
+        Will obviously match the configuration parameter, but useful
+        in various sweeps to have this attached.
+        """
+        count = 0
+        for cell in self.cells:
+            count += len(cell.persons)
+        return count

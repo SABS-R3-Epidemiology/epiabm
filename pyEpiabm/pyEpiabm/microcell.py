@@ -1,7 +1,9 @@
 #
 # Mirocell Class
 #
+import typing
 from .person import Person
+from .place import Place
 from .infection_status import InfectionStatus
 from ._compartment_counter import _CompartmentCounter
 
@@ -20,6 +22,7 @@ class Microcell:
         :type cell: Cell
         """
         self.persons = []
+        self.places = []
         self.cell = cell
         self.compartment_counter = _CompartmentCounter(
             f"Microcell {id(self)}")
@@ -42,6 +45,18 @@ class Microcell:
             p = Person(self)
             self.cell.persons.append(p)
             self.persons.append(p)
+
+    def add_place(self, n: int, loc: typing.Tuple[float, float],
+                  place_type):
+        """Adds n default :class:`Place` to Microcell.
+
+        :param n: Number of default :class:`Place` s to add
+        :type n: int
+        """
+        for _ in range(n):
+            p = Place(loc, place_type, self.cell, self)
+            self.cell.places.append(p)
+            self.places.append(p)
 
     def _setup(self) -> None:
         """Setup method. Should be called once Population has been setup.

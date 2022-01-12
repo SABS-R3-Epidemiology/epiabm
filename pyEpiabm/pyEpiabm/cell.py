@@ -17,6 +17,7 @@ class Cell:
         """
         self.microcells = []
         self.persons = []
+        self.places = []
         self.person_queue = Queue()
         self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
 

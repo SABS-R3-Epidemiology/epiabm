@@ -33,17 +33,19 @@ class HostProgressionSweep(AbstractSweep):
         # More infection statuses will be incorporated in future.
         if person.infection_status == InfectionStatus.InfectMild:
             person.next_infection_status = InfectionStatus.Recovered
+        elif person.infection_status == InfectionStatus.Exposed:
+            person.next_infection_status = InfectionStatus.InfectMild
         else:
             raise TypeError('update_next_infection_status should only ' +
                             'be applied to individuals with mild ' +
-                            'infection status')
+                            'infection status, or exposed')
 
     def __call__(self, time: int):
         """Sweeps through all people in the population and updates
         their infection status if it is time and assigns them their
         next infection status and a new time of next status change.
 
-        :param time: Current simulation time in days
+        :param time: Current simulation time
         :type time: int
         """
         if not (type(time) == int):
@@ -51,7 +53,9 @@ class HostProgressionSweep(AbstractSweep):
         for cell in self._population.cells:
             for person in cell.persons:
                 if person.time_of_status_change == time:
-                    person.infection_status = person.next_infection_status
                     self._update_next_infection_status(person)
-                    person.time_of_status_change =\
-                        time + self._update_time_to_status_change()
+                    person.update_status(person.next_infection_status)
+                    if person.infection_status != \
+                            InfectionStatus.Recovered:
+                        person.time_of_status_change =\
+                            time + self._update_time_to_status_change()

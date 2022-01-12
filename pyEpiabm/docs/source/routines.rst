@@ -10,14 +10,14 @@ Overview:
 
 - :class:`CovidsimHelpers`
 - :class:`ToyPopulationFactory`
-
-
-Routines
-********
+- :class:`Simulation`
 
 .. autoclass:: CovidsimHelpers
     :members:
     
 .. autoclass:: ToyPopulationFactory
+    :members:
+
+.. autoclass:: Simulation
     :members:
     

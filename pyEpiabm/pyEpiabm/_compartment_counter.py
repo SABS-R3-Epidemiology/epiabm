@@ -22,7 +22,7 @@ class _CompartmentCounter:
 
     @property
     def identifier(self):
-        """Get identifier
+        """Get identifier.
         """
         return self._identifier
 

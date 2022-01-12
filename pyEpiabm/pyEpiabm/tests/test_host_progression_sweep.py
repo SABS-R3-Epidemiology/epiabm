@@ -3,7 +3,7 @@ import pyEpiabm as pe
 
 
 class TestHostProgressionSweep(unittest.TestCase):
-    """Test the Host Progression Sweep function.
+    """Test the 'HostProgressionSweep' class.
     """
     @classmethod
     def setUpClass(cls) -> None:
@@ -18,7 +18,8 @@ class TestHostProgressionSweep(unittest.TestCase):
         cls.person2 = cls.test_population.cells[0].microcells[0].persons[1]
 
     def test_construct(self):
-        """Test that the host progression sweep initialises."""
+        """Test that the host progression sweep initialises correctly.
+        """
         pe.HostProgressionSweep()
 
     def test_update_status(self):
@@ -66,13 +67,11 @@ class TestHostProgressionSweep(unittest.TestCase):
         test_sweep(1)
         self.assertEqual(self.person2.infection_status,
                          pe.InfectionStatus.InfectMild)
-        self.assertEqual(self.person2.next_infection_status,
-                         pe.InfectionStatus.Recovered)
         self.assertEqual(self.person1.infection_status,
                          pe.InfectionStatus.Susceptible)
         self.assertIsInstance(self.person2.time_of_status_change, int)
         self.assertTrue(2 <= self.person2.time_of_status_change <= 11)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
