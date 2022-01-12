@@ -68,6 +68,7 @@ class Place:
         :type person: Person
         """
         self.persons.append(person)
+        person.add_place(self)
 
     def remove_person(self, person: Person):
         """Remove a person from place.
@@ -78,6 +79,7 @@ class Place:
         if person not in self.persons:
             raise KeyError("Person not found in this place")
         else:
+            person.remove_place(self)
             self.persons.remove(person)
 
     def empty_place(self):
@@ -86,4 +88,5 @@ class Place:
         all occupants each timestep.
         """
         while len(self.persons) > 0:
+            self.persons[0].remove_place(self)
             self.remove_person(self.persons[0])
