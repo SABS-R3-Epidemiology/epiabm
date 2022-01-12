@@ -11,13 +11,11 @@ Overview:
 - :class:`_CsvDictWriter`
 - :class:`_CsvWriter`
 
-
-Routines
-********
-
 .. autoclass:: _CsvDictWriter
     :members:
+    :special-members: __init__, __del__
     
 .. autoclass:: _CsvWriter
     :members:
+    :special-members: __init__, __del__
     
