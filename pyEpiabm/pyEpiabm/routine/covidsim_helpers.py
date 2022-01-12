@@ -1,6 +1,7 @@
 #
 # Helper functions based on Covidsim code
 #
+
 from pyEpiabm.core import Person, Place
 
 

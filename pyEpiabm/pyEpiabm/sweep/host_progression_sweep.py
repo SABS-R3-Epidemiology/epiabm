@@ -1,6 +1,7 @@
 #
 # Progression of infection within individuals
 #
+
 import random
 
 from pyEpiabm.property import InfectionStatus

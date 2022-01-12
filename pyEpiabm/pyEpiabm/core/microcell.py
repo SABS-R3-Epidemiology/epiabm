@@ -1,6 +1,7 @@
 #
 # Mirocell Class
 #
+
 import typing
 
 from pyEpiabm.core import Person, Place, _CompartmentCounter

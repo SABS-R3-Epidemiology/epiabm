@@ -1,6 +1,7 @@
 #
 # Place type Class
 #
+
 from enum import Enum
 
 

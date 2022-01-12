@@ -1,6 +1,7 @@
 #
 # Write data in a dict to a csv file
 #
+
 import csv
 import typing
 

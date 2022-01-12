@@ -1,6 +1,7 @@
 #
 # Write data in a list to a csv file
 #
+
 import csv
 import typing
 

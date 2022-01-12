@@ -1,6 +1,7 @@
 #
 # Cell Class
 #
+
 from queue import Queue
 
 from pyEpiabm.core import Microcell, Person, _CompartmentCounter

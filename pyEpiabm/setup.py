@@ -1,6 +1,5 @@
-
 #
-# pyepiabm setuptools script
+# pyEpiabm setuptools script
 #
 
 from setuptools import setup, find_packages

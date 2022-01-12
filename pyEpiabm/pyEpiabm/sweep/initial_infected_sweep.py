@@ -1,6 +1,7 @@
 #
 # Seed infected individuals in population
 #
+
 import random
 
 from pyEpiabm.property import InfectionStatus

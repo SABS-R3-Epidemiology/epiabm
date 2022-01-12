@@ -1,6 +1,7 @@
 #
 # Household Class
 #
+
 import typing
 
 

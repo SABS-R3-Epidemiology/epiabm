@@ -1,6 +1,7 @@
 #
 # Simulates a complete pandemic
 #
+
 import os
 import typing
 

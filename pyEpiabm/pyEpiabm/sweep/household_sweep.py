@@ -1,6 +1,7 @@
 #
 # Infection due to contact within households
 #
+
 import random
 
 from pyEpiabm.core import Parameters

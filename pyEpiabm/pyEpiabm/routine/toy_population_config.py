@@ -1,6 +1,7 @@
 #
 # Factory for creation of a toy population
 #
+
 import numpy as np
 
 from pyEpiabm.core import Household, Population

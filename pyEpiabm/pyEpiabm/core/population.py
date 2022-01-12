@@ -1,6 +1,7 @@
 #
 # Population Class
 #
+
 from pyEpiabm.core import Cell
 
 

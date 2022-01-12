@@ -1,6 +1,7 @@
 #
 # Infection due to contact in social spaces outside of households
 #
+
 import random
 import numpy as np
 

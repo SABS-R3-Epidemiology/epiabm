@@ -1,6 +1,7 @@
 #
 # Place Class
 #
+
 import typing
 
 from pyEpiabm.core import Person

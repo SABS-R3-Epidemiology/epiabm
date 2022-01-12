@@ -1,6 +1,7 @@
 #
 # Sweep to update people present in a place
 #
+
 import random
 import numpy as np
 

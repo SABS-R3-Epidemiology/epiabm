@@ -1,7 +1,12 @@
+#
+# Example simulation script with data output and visualisation
+#
+
 import os
-import pyEpiabm as pe
 import pandas as pd
 import matplotlib.pyplot as plt
+
+import pyEpiabm as pe
 
 # Pop_params are ued to configure the population structure being used in this
 # simulation.
