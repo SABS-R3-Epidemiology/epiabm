@@ -33,6 +33,7 @@ class Place:
 
         self.cell = cell
         self.microcell = microcell
+        # Assert the microcell and cell prescribes are related.
         if not (self.microcell.cell == self.cell):
             raise KeyError("Microcell is not contained in cell")
 

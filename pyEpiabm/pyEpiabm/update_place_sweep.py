@@ -28,15 +28,15 @@ class UpdatePlaceSweep(AbstractSweep):
 
                 # Ensure that the number of people put in the place
                 # is at most its capacity or the total number of
-                # people in the microcell.
+                # people in the cell.
                 max_capacity = np.minimum(place.max_capacity,
-                                          len(place.microcell.persons))
+                                          len(place.cell.persons))
 
                 new_capacity = random.randint(1, max_capacity)
                 count = 0
                 while count < new_capacity:
-                    i = random.randint(1, len(place.microcell.persons))
+                    i = random.randint(1, len(place.cell.persons))
                     # Checks person is not already in the place.
-                    if place.microcell.persons[i-1] not in place.persons:
-                        place.add_person(place.microcell.persons[i-1])
+                    if place.cell.persons[i-1] not in place.persons:
+                        place.add_person(place.cell.persons[i-1])
                         count += 1

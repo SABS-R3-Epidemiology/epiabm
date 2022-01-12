@@ -100,9 +100,9 @@ class Person:
         """Method adds a place to the place list if the person visits
         or is associated with this place.
         """
-        if place.microcell != self.microcell:
+        if place.cell != self.microcell.cell:
             raise AttributeError("Place and person are not in the same\
-                                 microcell")
+                                 cell")
         self.places.append(place)
 
     def remove_place(self, place):

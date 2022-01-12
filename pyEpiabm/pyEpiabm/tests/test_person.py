@@ -50,8 +50,9 @@ class TestPerson(unittest.TestCase):
                               self.microcell)
         self.person.add_place(test_place)
         self.assertTrue(len(self.person.places) > 0)
-        test_place_2 = pe.Place((1.0, 1.0), pe.PlaceType.Hotel, self.cell,
-                                pe.Microcell(self.cell))
+        test_cell = pe.Cell
+        test_place_2 = pe.Place((1.0, 1.0), pe.PlaceType.Hotel, test_cell,
+                                pe.Microcell(test_cell))
         self.assertRaises(AttributeError, self.person.add_place, test_place_2)
 
         self.person.remove_place(test_place)
