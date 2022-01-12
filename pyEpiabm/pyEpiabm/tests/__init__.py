@@ -1,4 +1,3 @@
-
 #
 # Test module for pyEpiabm
 #
