@@ -27,7 +27,7 @@ class Simulation:
         :param initial_sweeps: List of abstract sweeps used to initialise the
             simulation
         :type initial_sweeps: list
-        :param sweeps: List of abstract sweeps used in the simulation. Queue
+        :param sweeps: List of sweeps used in the simulation. Queue
             sweep and host progression sweep must appear at the end of the
             list
         :type sweeps: list
