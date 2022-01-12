@@ -31,12 +31,6 @@ class TestSimulation(unittest.TestCase):
                                     self.file_params["output_file"])
             test_sim = pe.Simulation()
 
-            # Test assertion raised when sweep lists don't contain sweeps.
-            initial_sweeps = [0.5]
-            self.assertRaises(AssertionError, test_sim.configure,
-                              self.test_population, initial_sweeps,
-                              self.sweeps, self.sim_params, self.file_params)
-
             # Test configure binds parameters as expected.
             test_sim.configure(self.test_population, self.initial_sweeps,
                                self.sweeps, self.sim_params, self.file_params)
