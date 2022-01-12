@@ -9,9 +9,9 @@ class CovidsimHelpers:
     """Class to create helper functions from Covidsim code to aid
     comparison to Covidsim.
 
-    # Most of the volume of covidsim code is adapting these susceptibility
-    # infectiousness parameters, especially for the place infections.
-    # May need to make this a more general class.
+    Most of the volume of covidsim code is adapting these susceptibility
+    infectiousness parameters, especially for the place infections.
+    This may be extended to a more general class.
     """
     @staticmethod
     def calc_house_inf(infector: Person, timestep: int):
