@@ -24,7 +24,8 @@ class TestInitialInfectedSweep(unittest.TestCase):
         # Test asking for more infected people than the population number
         # raises an error.
         params = {"initial_infected_number": 4}
-        self.assertRaises(AssertionError, test_sweep, params)
+        with self.assertRaises(ValueError):
+            test_sweep(params)
 
         # Test that call assigns correct number of infectious people.
         params = {"initial_infected_number": 1}
@@ -38,7 +39,8 @@ class TestInitialInfectedSweep(unittest.TestCase):
         self.person1.update_status(pe.InfectionStatus.Recovered)
         self.person2.update_status(pe.InfectionStatus.Recovered)
         params = {"initial_infected_number": 1}
-        self.assertRaises(AssertionError, test_sweep, params)
+        with self.assertRaises(ValueError):
+            test_sweep(params)
 
 
 if __name__ == '__main__':
