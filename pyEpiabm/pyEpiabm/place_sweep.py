@@ -34,7 +34,7 @@ class PlaceSweep(AbstractSweep):
             for infector in cell.persons:
                 if not infector.is_infectious():
                     continue
-                for place in cell.places:
+                for place in infector.places:
                     infectiousness = c.calc_place_inf(place, timestep)
                     # High infectiousness (>= 1) means all susceptible
                     # occupants become infected.
