@@ -4,11 +4,11 @@ from unittest.mock import patch, mock_open, call, MagicMock
 
 
 class TestCsvDictWriter(unittest.TestCase):
-    """Test the three methods of the '_CsvDictWriter' class.
+    """Test the methods of the '_CsvDictWriter' class.
     """
 
     def test_init(self):
-        """Test the __init__ method of the _CsvDictWriter class.
+        """Test the destructor method of the _CsvDictWriter class.
         """
         mo = mock_open()
         with patch('pyEpiabm._csv_dict_writer.open', mo):
@@ -17,6 +17,16 @@ class TestCsvDictWriter(unittest.TestCase):
             del(m)
         mo.assert_called_once_with('mock_filename', 'w')
         mo().write.assert_called_once_with('Cat1,Cat2,Cat3\r\n')
+
+    def test_file_not_found(self):
+        mock_content = ['1', '2', '3']
+        with self.assertRaises(FileNotFoundError):
+            test_writer = pe._CsvDictWriter('mocked_folder/test_file',
+                                            mock_content)
+            self.assertIsNone(test_writer.f)
+            self.assertIsNone(test_writer.writer)
+        self.assertRaises(FileNotFoundError, pe._CsvDictWriter,
+                          'mocked_folder/test_file', mock_content)
 
     def test_write(self):
         """Test the write method of the _CsvDictWriter class.
@@ -27,10 +37,11 @@ class TestCsvDictWriter(unittest.TestCase):
             new_content = {'Cat1': 'a', 'Cat3': 'c', 'Cat2': 'b'}
             m = pe._CsvDictWriter('mock_filename', mock_categories)
             m.write(new_content)
-        mo().write.assert_has_calls([call('Cat1,Cat2,Cat3\r\n'), call('a,b,c\r\n')])
+        mo().write.assert_has_calls([call('Cat1,Cat2,Cat3\r\n'),
+                                    call('a,b,c\r\n')])
 
     def test_del(self):
-        """Test the __del__ method of the _CsvDictWriter class.
+        """Test the destructor method of the _CsvDictWriter class.
         """
         fake_file = MagicMock()
         with patch("builtins.open", return_value=fake_file, create=True):

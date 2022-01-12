@@ -41,8 +41,8 @@ class TestHouseholdSweep(unittest.TestCase):
         """Test whether the household sweep function correctly
         adds persons to the queue.
         """
-        mock_inf.return_value = 10
-        mock_susc.return_value = 10
+        mock_inf.return_value = 10.0
+        mock_susc.return_value = 10.0
 
         # Assert a population with one infected will not change the queue
         self.test_sweep = HouseholdSweep()

@@ -13,6 +13,7 @@ class TestMicrocell(unittest.TestCase):
     def test__init__(self):
         self.assertEqual(self.microcell.persons, [])
         self.assertEqual(self.microcell.cell, self.cell)
+        self.assertEqual(self.microcell.places, [])
 
     def test_repr(self):
         self.assertEqual(repr(self.microcell),

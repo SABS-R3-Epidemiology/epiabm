@@ -1,8 +1,8 @@
 #
 # Person Class
 #
-from .infection_status import InfectionStatus
 import random
+from .infection_status import InfectionStatus
 
 
 class Person:
@@ -42,6 +42,7 @@ class Person:
         self.microcell = microcell
         self.infection_status = InfectionStatus.Susceptible
         self.household = None
+        self.places = []
         self.next_infection_status = None
         self.time_of_status_change = None
 
@@ -89,11 +90,17 @@ class Person:
     def update_time_to_status_change(self) -> None:
         """Method that assigns time until next infection status update,
          given as a random integer between 1 and 10.
-
-        :return: Time until next infection status update
-        :rtype: int
         """
         # This is left as a random integer for now but will be made more
         # complex later.
         new_time = random.randint(1, 10)
         self.time_of_status_change = new_time
+
+    def add_place(self, place):
+        """Method adds a place to the place list if the person visits
+        or is associated with this place.
+        """
+        if place.microcell != self.microcell:
+            raise AttributeError("Place and person are not in the same\
+                                 microcell")
+        self.places.append(place)

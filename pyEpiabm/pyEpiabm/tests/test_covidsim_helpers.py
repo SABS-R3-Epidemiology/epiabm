@@ -27,31 +27,30 @@ class TestCovidsimHelpers(unittest.TestCase):
     def test_calc_house_inf(self):
         result = c.calc_house_inf(self.infector, self.timestep)
         self.assertTrue(result > 0)
-        self.assertIsInstance(result, (float, int))
+        self.assertIsInstance(result, float)
 
     def test_calc_house_susc(self):
         result = c.calc_house_susc(self.infector, self.infectee,
                                    self.timestep)
         self.assertTrue(result > 0)
-        self.assertIsInstance(result, (float, int))
+        self.assertIsInstance(result, float)
 
     def test_calc_person_susc(self):
         result = c.calc_person_susc(self.infector, self.infectee,
                                     self.timestep)
         self.assertTrue(result > 0)
-        self.assertIsInstance(result, (float, int))
+        self.assertIsInstance(result, float)
 
     def test_calc_place_susc(self):
         result = c.calc_place_susc(self.place, self.infector,
                                    self.infectee, self.timestep)
         self.assertTrue(result > 0)
-        self.assertIsInstance(result, (float, int))
+        self.assertIsInstance(result, float)
 
     def test_calc_place_inf(self):
-        result = c.calc_place_inf(self.place, self.infector,
-                                  self.infectee, self.timestep)
+        result = c.calc_place_inf(self.place, self.timestep)
         self.assertTrue(result > 0)
-        self.assertIsInstance(result, (float, int))
+        self.assertIsInstance(result, float)
 
 
 if __name__ == '__main__':

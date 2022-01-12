@@ -1,23 +1,23 @@
 #
 # Place Class
 #
-from .person import Person
 import typing
+from .person import Person
 from .place_type import PlaceType
 
 
 class Place:
     """Creates a place class which represents spaces such
-    as cafes, restaurants and hotel where people may come
+    as cafes, restaurants and hotels where people may come
     into contact with others outside their household.
     """
     def __init__(self, loc: typing.Tuple[float, float],
                  place_type: PlaceType, cell, microcell):
         """Constructor method.
 
-        :param loc: (x,y) coordinates of the place.
-        :type loc: tuple
-        :param place_type: Categorises the place.
+        :param loc: (x,y) coordinates of the place
+        :type loc: Tuple[float, float]
+        :param place_type: Categorises the place
         :type place_type: 'PlaceType' enum
         :param cell: An instance of :class:`Cell`
         :type cell: Cell
@@ -40,7 +40,7 @@ class Place:
         """Sets the maximum capacity of a place.
 
         :param max_capacity: Maximum number of people
-            allowed inplace.
+            allowed in place
         :type max_capacity: int
         """
         self.max_capacity = max_capacity
@@ -48,7 +48,7 @@ class Place:
     def set_infectiveness(self, infectiveness: float):
         """Sets a baseline infectiveness for the place.
 
-        :param infectiveness: Baseline infectiveness.
+        :param infectiveness: Baseline infectiveness
         :type infectiveness: float
         """
         self.infectiveness = infectiveness
@@ -56,23 +56,23 @@ class Place:
     def set_susceptibility(self, susceptibility: float):
         """Sets a baseline susceptibility for the place.
 
-        :param susceptibility: Baseline susceptibility.
+        :param susceptibility: Baseline susceptibility
         :type susceptibility: float
         """
         self.susceptibility = susceptibility
 
     def add_person(self, person: Person):
-        """Add people into the place.
+        """Add a person into the place.
 
-        :param person: Person to add.
+        :param person: Person to add
         :type person: Person
         """
         self.persons.append(person)
 
     def remove_person(self, person: Person):
-        """Remove people from place.
+        """Remove a person from place.
 
-        :param person: Person to remove from place.
+        :param person: Person to remove from place
         :type person: Person
         """
         if person not in self.persons:

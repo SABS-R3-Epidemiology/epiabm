@@ -1,9 +1,9 @@
 #
 # Sweep to update people present in a place
 #
-from .abstract_sweep import AbstractSweep
 import random
 import numpy as np
+from .abstract_sweep import AbstractSweep
 
 
 class UpdatePlaceSweep(AbstractSweep):
@@ -33,6 +33,10 @@ class UpdatePlaceSweep(AbstractSweep):
                                           len(place.microcell.persons))
 
                 new_capacity = random.randint(1, max_capacity)
-                for _ in range(new_capacity):
+                count = 0
+                while count < new_capacity:
                     i = random.randint(1, len(place.microcell.persons))
-                    place.add_person(place.microcell.persons[i-1])
+                    # Checks person is not already in the place.
+                    if place.microcell.persons[i-1] not in place.persons:
+                        place.add_person(place.microcell.persons[i-1])
+                        count += 1

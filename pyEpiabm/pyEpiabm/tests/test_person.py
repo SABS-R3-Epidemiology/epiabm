@@ -43,6 +43,13 @@ class TestPerson(unittest.TestCase):
         self.assertTrue(1 <= self.person.time_of_status_change
                         <= 10)
 
+    def test_add_place(self):
+        self.assertEqual(len(self.person.places), 0)
+        test_place = pe.Place((1.0, 1.0), pe.PlaceType.Hotel, self.cell,
+                              self.microcell)
+        self.person.add_place(test_place)
+        self.assertTrue(len(self.person.places) > 0)
+
 
 if __name__ == '__main__':
     unittest.main()

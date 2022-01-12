@@ -1,12 +1,12 @@
 #
 # Simulates a complete pandemic
 #
+import os
+import typing
 from .abstract_sweep import AbstractSweep
 from .infection_status import InfectionStatus
 from ._csv_dict_writer import _CsvDictWriter
 from .population import Population
-import os
-import typing
 
 
 class Simulation:
@@ -20,15 +20,15 @@ class Simulation:
                   file_params: typing.Dict):
         """Initialise a population structure for use in the simulation.
 
-        :param population: Population structure for the model.
+        :param population: Population structure for the model
         :type population: Population
         :param pop_params: Dictionary of parameter specific to the population
         :type pop_params: dict
-        :param initial_sweeps: List of abstract sweep used to initialise the
+        :param initial_sweeps: List of abstract sweeps used to initialise the
             simulation
         :type initial_sweeps: list
-        :param sweeps: List of abstract sweeps used in the simulation. Queue
-            sweep and host progression sweep must appear at the end of the
+        :param sweeps: List of sweeps used in the simulation. Queue
+            sweep and host progression sweep should appear at the end of the
             list
         :type sweeps: list
         :param sim_params: Dictionary of parameters specific to the simulation
@@ -44,7 +44,7 @@ class Simulation:
         self.sweeps = sweeps
         # Initial sweeps configure the population by changing the type,
         # infection status, infectiveness or susceptibility of people
-        # or places. Only implemented once.
+        # or places. Only runs on the first timestep.
         for s in initial_sweeps + sweeps:
             assert isinstance(s, AbstractSweep)
             s.bind_population(self.population)
@@ -55,20 +55,16 @@ class Simulation:
         filename = os.path.join(os.getcwd(),
                                 file_params["output_dir"],
                                 file_params["output_file"])
+
         self.writer = _CsvDictWriter(
             filename,
             ["time"] + [s for s in InfectionStatus])
 
     def run_sweeps(self):
         """Iteration step of the simulation. First the initialisation sweeps
-        configure people and plarces within the population. Then at each
-        timestep the update sweeps run first, updating the population. Then
-        the required spatial infections sweeps are run, which enqueue
-        people who have been in an infection event. Queue sweep runs next,
-        updating the enqueued people to infected. Finally, host progression
-        sweep runs through individuals and updates their infection status
-        at pre-determined timepoints. At each timepoint, a count of each
-        infection status is written to file.
+        configure the population on the first timestep. Then at each
+        subsequent timestep the sweeps run, updating the population. At each
+        timepoint, a count of each infection status is written to file.
         """
 
         # Initialise on the time step before starting.

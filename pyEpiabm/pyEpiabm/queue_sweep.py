@@ -9,11 +9,11 @@ class QueueSweep(AbstractSweep):
     """Class to sweep through the enqueued persons
     in each cell and update their infection status.
 
-    : param time: Simulation time, in days
-    : type time: int
+    :param time: Simulation time
+    :type time: int
     """
     def __call__(self, time):
-        """Function to run through the queue of exposed people
+        """Function to run through the queue of exposed people.
         """
         for cell in self._population.cells:
             while not cell.person_queue.empty():
