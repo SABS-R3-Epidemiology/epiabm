@@ -19,8 +19,8 @@ namespace epiabm
     {
     private:
         std::vector<size_t> m_people;
-        std::vector<Place> m_places;
-        std::vector<Household> m_households;
+        std::vector<PlacePtr> m_places;
+        std::vector<HouseholdPtr> m_households;
 
         size_t m_cellPos;
 
@@ -38,8 +38,8 @@ namespace epiabm
         Person& getPerson(Cell& cell, size_t i);
 
         std::vector<size_t>& people();
-        std::vector<Place>& places();
-        std::vector<Household>& households();
+        std::vector<PlacePtr>& places();
+        std::vector<HouseholdPtr>& households();
 
     private:
         friend class Place;

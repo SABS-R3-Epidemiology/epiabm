@@ -6,21 +6,22 @@ using namespace epiabm;
 
 TEST_CASE("dataclasses/person: test initialize person", "[Person]")
 {
-    Person subject = Person(5, 10);
+    Person subject = Person(0,5, 10);
     REQUIRE(subject.cellPos() == 5);
     REQUIRE(subject.microcellPos() == 10);
+    REQUIRE(subject.microcell() == 0);
     REQUIRE_NOTHROW(subject.params());
     REQUIRE(subject.status() == InfectionStatus::Susceptible);
 }
 
 TEST_CASE("dataclasses/person: test status", "[Person]")
 {
-    Person subject = Person(0,0);
+    Person subject = Person(0,0,0);
     REQUIRE(subject.status() == InfectionStatus::Susceptible);
     
     auto test = [&](InfectionStatus status)
     {
-        subject.setStatus(status);
+        subject.updateStatus(status);
         REQUIRE(subject.status() == status);
     };
     test(InfectionStatus::Susceptible);
@@ -32,7 +33,7 @@ TEST_CASE("dataclasses/person: test status", "[Person]")
 
 TEST_CASE("dataclasses/person: test setHousehold", "[Person]")
 {
-    Person subject = Person(0,0);
+    Person subject = Person(0,0,0);
     size_t hh = static_cast<size_t>((std::rand() % 500) * 2);
     REQUIRE(subject.setHousehold(hh));
     REQUIRE(subject.setHousehold(

@@ -19,4 +19,12 @@ namespace epiabm
 
     std::vector<Cell>& Population::cells() { return m_cells; }
 
+    void Population::initialize()
+    {
+        for (size_t i = 0; i < m_cells.size(); i++)
+        {
+            m_cells[i].initializeInfectiousGrouping();
+        }
+    }
+
 } // namespace epiabm
