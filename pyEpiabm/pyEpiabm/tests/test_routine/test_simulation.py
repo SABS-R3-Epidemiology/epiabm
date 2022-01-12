@@ -1,7 +1,7 @@
+import os
 import unittest
 import pyEpiabm as pe
 from unittest.mock import patch, mock_open
-import os
 
 
 class TestSimulation(unittest.TestCase):

@@ -1,7 +1,7 @@
+import random
 import unittest
 import pyEpiabm as pe
 from parameterized import parameterized
-import random
 
 
 numReps = 1

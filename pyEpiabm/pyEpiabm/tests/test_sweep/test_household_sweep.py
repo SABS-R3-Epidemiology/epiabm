@@ -1,8 +1,9 @@
 import unittest
-import pyEpiabm as pe
-from queue import Queue
-from pyEpiabm.household_sweep import HouseholdSweep
 from unittest import mock
+from queue import Queue
+
+import pyEpiabm as pe
+from pyEpiabm.sweep import HouseholdSweep
 
 
 class TestHouseholdSweep(unittest.TestCase):

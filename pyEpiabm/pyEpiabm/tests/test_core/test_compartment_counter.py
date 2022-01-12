@@ -1,6 +1,5 @@
-
-import pyEpiabm as pe
 import unittest
+import pyEpiabm as pe
 
 import random
 

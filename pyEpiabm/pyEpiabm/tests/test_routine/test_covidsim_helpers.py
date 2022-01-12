@@ -1,6 +1,6 @@
 import unittest
 import pyEpiabm as pe
-from pyEpiabm import CovidsimHelpers as c
+from pyEpiabm.routine import CovidsimHelpers as ch
 
 
 class TestCovidsimHelpers(unittest.TestCase):
@@ -25,30 +25,30 @@ class TestCovidsimHelpers(unittest.TestCase):
         cls.timestep = 1
 
     def test_calc_house_inf(self):
-        result = c.calc_house_inf(self.infector, self.timestep)
+        result = ch.calc_house_inf(self.infector, self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
     def test_calc_house_susc(self):
-        result = c.calc_house_susc(self.infector, self.infectee,
-                                   self.timestep)
-        self.assertTrue(result > 0)
-        self.assertIsInstance(result, float)
-
-    def test_calc_person_susc(self):
-        result = c.calc_person_susc(self.infector, self.infectee,
+        result = ch.calc_house_susc(self.infector, self.infectee,
                                     self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
+    def test_calc_person_susc(self):
+        result = ch.calc_person_susc(self.infector, self.infectee,
+                                     self.timestep)
+        self.assertTrue(result > 0)
+        self.assertIsInstance(result, float)
+
     def test_calc_place_susc(self):
-        result = c.calc_place_susc(self.place, self.infector,
-                                   self.infectee, self.timestep)
+        result = ch.calc_place_susc(self.place, self.infector,
+                                    self.infectee, self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
     def test_calc_place_inf(self):
-        result = c.calc_place_inf(self.place, self.timestep)
+        result = ch.calc_place_inf(self.place, self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
