@@ -21,7 +21,13 @@ namespace epiabm
 
         void forEachCell(std::function<bool(Cell*)> callback);
         std::vector<Cell>& cells();
-    
+
+        /**
+         * @brief Pre-simulation start initialization
+         * Called by simulation class post initialization to setup any helper structures
+         */
+        void initialize();
+
     private:
     };
 

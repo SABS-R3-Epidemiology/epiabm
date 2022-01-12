@@ -30,7 +30,7 @@ namespace epiabm
         virtual std::set<size_t> &members();
 
     private:
-        size_t m_mcellPos;
+        size_t m_mcellPos; // Position within Microcell's m_households or m_places vectors
     };
 
     typedef std::shared_ptr<MembersInterface> MembersInterfacePtr;
