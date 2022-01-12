@@ -8,7 +8,7 @@ from .abstract_sweep import AbstractSweep
 
 class InitialInfectedSweep(AbstractSweep):
     """Class for sweeping through population at start
-    of simulation and setting an initial number of infecetd people.
+    of simulation and setting an initial number of infected people.
     """
 
     def __call__(self, sim_params: dict):
