@@ -70,7 +70,7 @@ class Place:
         self.persons.append(person)
 
     def remove_person(self, person: Person):
-        """Remove people from place.
+        """Remove a person from place.
 
         :param person: Person to remove from place
         :type person: Person
