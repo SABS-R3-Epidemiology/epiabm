@@ -3,7 +3,6 @@ from unittest import mock
 from queue import Queue
 
 import pyEpiabm as pe
-from pyEpiabm.sweep import HouseholdSweep
 
 
 class TestHouseholdSweep(unittest.TestCase):
@@ -30,7 +29,7 @@ class TestHouseholdSweep(unittest.TestCase):
         pe.Parameters.instance().time_steps_per_day = 1
 
     def test_bind(self):
-        self.test_sweep = HouseholdSweep()
+        self.test_sweep = pe.sweep.HouseholdSweep()
         self.test_sweep.bind_population(self.pop)
         self.assertEqual(self.test_sweep._population.cells[0]
                          .persons[0].infection_status,
@@ -46,7 +45,7 @@ class TestHouseholdSweep(unittest.TestCase):
         mock_susc.return_value = 10.0
 
         # Assert a population with one infected will not change the queue
-        self.test_sweep = HouseholdSweep()
+        self.test_sweep = pe.sweep.HouseholdSweep()
         self.test_sweep.bind_population(self.pop)
         self.test_sweep(self.time)
         self.assertTrue(self.cell.person_queue.empty())

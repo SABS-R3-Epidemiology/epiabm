@@ -11,7 +11,7 @@ class TestCsvDictWriter(unittest.TestCase):
         """Test the destructor method of the _CsvDictWriter class.
         """
         mo = mock_open()
-        with patch('pyEpiabm._csv_dict_writer.open', mo):
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             mock_categories = ['Cat1', 'Cat2', 'Cat3']
             m = pe._CsvDictWriter('mock_filename', mock_categories)
             del(m)
@@ -32,7 +32,7 @@ class TestCsvDictWriter(unittest.TestCase):
         """Test the write method of the _CsvDictWriter class.
         """
         mo = mock_open()
-        with patch('pyEpiabm._csv_dict_writer.open', mo):
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             mock_categories = ['Cat1', 'Cat2', 'Cat3']
             new_content = {'Cat1': 'a', 'Cat3': 'c', 'Cat2': 'b'}
             m = pe._CsvDictWriter('mock_filename', mock_categories)

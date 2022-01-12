@@ -24,7 +24,7 @@ class TestSimulation(unittest.TestCase):
 
     def test_configure(self):
         mo = mock_open()
-        with patch('pyEpiabm._csv_dict_writer.open', mo):
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
 
             filename = os.path.join(os.getcwd(),
                                     self.file_params["output_dir"],
@@ -40,12 +40,12 @@ class TestSimulation(unittest.TestCase):
             del(test_sim.writer)
         mo.assert_called_with(filename, 'w')
 
-    @patch('pyEpiabm.PlaceSweep.__call__')
-    @patch('pyEpiabm.InitialInfectedSweep.__call__')
-    @patch('pyEpiabm.Simulation.write_to_file')
+    @patch('pyEpiabm.core.PlaceSweep.__call__')
+    @patch('pyEpiabm.sweep.InitialInfectedSweep.__call__')
+    @patch('pyEpiabm.routine.Simulation.write_to_file')
     def test_run_sweeps(self, patch_write, patch_initial, patch_sweep):
         mo = mock_open()
-        with patch('pyEpiabm._csv_dict_writer.open', mo):
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
 
             time_sweep = self.sim_params["simulation_start_time"] + 1
             time_write = self.sim_params["simulation_end_time"] - 1
@@ -59,7 +59,7 @@ class TestSimulation(unittest.TestCase):
 
     def test_write_to_file(self):
         mo = mock_open()
-        with patch('pyEpiabm._csv_dict_writer.open', mo):
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             time = 1
             test_sim = pe.Simulation()
             test_sim.configure(self.test_population, self.initial_sweeps,

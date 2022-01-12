@@ -11,7 +11,7 @@ class TestCsvWriter(unittest.TestCase):
         """Test the constructor method of the _CsvWriter class.
         """
         mo = mock_open()
-        with patch('pyEpiabm._csv_writer.open', mo):
+        with patch('pyEpiabm.output._csv_writer.open', mo):
             mock_content = ['1', '2', '3']
             m = pe._CsvWriter('mock_filename', mock_content)
             del(m)
@@ -32,7 +32,7 @@ class TestCsvWriter(unittest.TestCase):
         """Test the write method of the _CsvWriter class.
         """
         mo = mock_open()
-        with patch('pyEpiabm._csv_writer.open', mo):
+        with patch('pyEpiabm..output._csv_writer.open', mo):
             mock_content = ['1', '2', '3']
             new_content = ['a', 'b', 'c']
             m = pe._CsvWriter('mock_filename', mock_content)
