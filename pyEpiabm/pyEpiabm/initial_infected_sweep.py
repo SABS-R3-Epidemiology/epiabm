@@ -12,7 +12,7 @@ class InitialInfectedSweep(AbstractSweep):
     """
 
     def __call__(self, sim_params: dict):
-        """Method that randomly chooses a number of people
+        """Method that randomly chooses a user-supplied number of people
         in the population, changes their infection status to InfectedMild
         and sets their time of next status change.
 
