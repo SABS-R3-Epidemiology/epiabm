@@ -88,5 +88,4 @@ class Place:
         all occupants each timestep.
         """
         while len(self.persons) > 0:
-            self.persons[0].remove_place(self)
             self.remove_person(self.persons[0])
