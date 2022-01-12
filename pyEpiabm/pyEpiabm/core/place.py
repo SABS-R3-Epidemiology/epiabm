@@ -2,8 +2,9 @@
 # Place Class
 #
 import typing
-from .person import Person
-from .place_type import PlaceType
+
+from pyEpiabm.core import Person
+from pyEpiabm.property import PlaceType
 
 
 class Place:

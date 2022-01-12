@@ -1,7 +1,7 @@
 #
 # AbstractSweep Class
 #
-from .population import Population
+from pyEpiabm.core import Population
 
 
 class AbstractSweep:

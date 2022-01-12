@@ -2,8 +2,9 @@
 # Progression of infection within individuals
 #
 import random
-from .abstract_sweep import AbstractSweep
-from .infection_status import InfectionStatus
+
+from pyEpiabm.property import InfectionStatus
+from pyEpiabm.sweep import AbstractSweep
 
 
 class HostProgressionSweep(AbstractSweep):

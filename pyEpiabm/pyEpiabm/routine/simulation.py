@@ -3,10 +3,11 @@
 #
 import os
 import typing
-from .abstract_sweep import AbstractSweep
-from .infection_status import InfectionStatus
-from ._csv_dict_writer import _CsvDictWriter
-from .population import Population
+
+from pyEpiabm.core import Population
+from pyEpiabm.output import _CsvDictWriter
+from pyEpiabm.property import InfectionStatus
+from pyEpiabm.sweep import AbstractSweep
 
 
 class Simulation:

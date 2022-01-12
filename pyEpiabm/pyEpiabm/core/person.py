@@ -2,7 +2,8 @@
 # Person Class
 #
 import random
-from .infection_status import InfectionStatus
+
+from pyEpiabm.property import InfectionStatus
 
 
 class Person:

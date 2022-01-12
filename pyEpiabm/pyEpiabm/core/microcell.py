@@ -2,10 +2,9 @@
 # Mirocell Class
 #
 import typing
-from .person import Person
-from .place import Place
-from .infection_status import InfectionStatus
-from ._compartment_counter import _CompartmentCounter
+
+from pyEpiabm.core import Person, Place, _CompartmentCounter
+from pyEpiabm.property import InfectionStatus
 
 
 class Microcell:

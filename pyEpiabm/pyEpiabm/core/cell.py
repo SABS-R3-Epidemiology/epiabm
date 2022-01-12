@@ -1,11 +1,10 @@
 #
 # Cell Class
 #
-from .microcell import Microcell
-from .person import Person
-from .infection_status import InfectionStatus
-from ._compartment_counter import _CompartmentCounter
 from queue import Queue
+
+from pyEpiabm.core import Microcell, Person, _CompartmentCounter
+from pyEpiabm.property import InfectionStatus
 
 
 class Cell:

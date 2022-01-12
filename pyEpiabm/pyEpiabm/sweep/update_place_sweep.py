@@ -3,7 +3,8 @@
 #
 import random
 import numpy as np
-from .abstract_sweep import AbstractSweep
+
+from pyEpiabm.sweep import AbstractSweep
 
 
 class UpdatePlaceSweep(AbstractSweep):

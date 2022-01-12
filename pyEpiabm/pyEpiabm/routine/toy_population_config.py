@@ -2,9 +2,9 @@
 # Factory for creation of a toy population
 #
 import numpy as np
-from .place_type import PlaceType
-from .population import Population
-from .household import Household
+
+from pyEpiabm.core import Household, Population
+from pyEpiabm.property import PlaceType
 
 
 class ToyPopulationFactory:

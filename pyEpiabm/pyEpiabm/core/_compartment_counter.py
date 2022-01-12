@@ -2,7 +2,8 @@
 # Maintains a count of people in InfectionStatus compartments
 #
 import typing
-from .infection_status import InfectionStatus
+
+from pyEpiabm.property import InfectionStatus
 
 
 class _CompartmentCounter:

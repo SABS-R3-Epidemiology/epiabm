@@ -1,8 +1,8 @@
 #
 # Sweeps for enqueued persons to update infection status
 #
-from .abstract_sweep import AbstractSweep
-from .infection_status import InfectionStatus
+from pyEpiabm.property import InfectionStatus
+from pyEpiabm.sweep import AbstractSweep
 
 
 class QueueSweep(AbstractSweep):
