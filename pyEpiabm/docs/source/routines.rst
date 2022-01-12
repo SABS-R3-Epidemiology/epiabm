@@ -12,10 +12,6 @@ Overview:
 - :class:`ToyPopulationFactory`
 - :class:`Simulation`
 
-
-Routines
-********
-
 .. autoclass:: CovidsimHelpers
     :members:
     
