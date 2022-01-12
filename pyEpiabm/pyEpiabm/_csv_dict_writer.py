@@ -24,7 +24,7 @@ class _CsvDictWriter:
             self.f = None
             self.writer = None
             # TODO: Log file not found error
-            print(f"FileNotFoundError: {str(e)}.")
+            # print(f"FileNotFoundError: {str(e)}.")
             raise e
 
     def __del__(self):
