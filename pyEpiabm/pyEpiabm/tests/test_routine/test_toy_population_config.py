@@ -3,6 +3,8 @@ import unittest
 import pyEpiabm as pe
 from parameterized import parameterized
 
+from pyEpiabm.routine import ToyPopulationFactory
+
 
 numReps = 1
 
@@ -19,8 +21,8 @@ class TestPopConfig(unittest.TestCase):
         no households. Parameters are assigned at random.
         """
         # Population is initialised with no households
-        test_pop = pe.ToyPopulationFactory().make_pop(pop_size, cell_number,
-                                                      microcell_number)
+        test_pop = ToyPopulationFactory().make_pop(pop_size, cell_number,
+                                                   microcell_number)
 
         total_people = 0
         count_non_empty_cells = 0
@@ -36,7 +38,7 @@ class TestPopConfig(unittest.TestCase):
         self.assertEqual(total_people, pop_size)
 
         # test a population class object is returned.
-        self.assertIsInstance(test_pop, pe.Population)
+        self.assertIsInstance(test_pop, pe.core.Population)
 
     @parameterized.expand([(random.randint(1000, 10000) * numReps,
                             random.randint(1, 10) * numReps,
@@ -49,9 +51,9 @@ class TestPopConfig(unittest.TestCase):
         """
 
         # Initialises population with households.
-        toy_pop = pe.ToyPopulationFactory().make_pop(pop_size, cell_number,
-                                                     microcell_number,
-                                                     household_number)
+        toy_pop = ToyPopulationFactory().make_pop(pop_size, cell_number,
+                                                  microcell_number,
+                                                  household_number)
         total_people = 0
         households = []
         num_empty_households = 0
@@ -80,9 +82,9 @@ class TestPopConfig(unittest.TestCase):
         """
 
         # Initialises population with places.
-        toy_pop = pe.ToyPopulationFactory().make_pop(pop_size, cell_number,
-                                                     microcell_number,
-                                                     place_number=place_number)
+        toy_pop = ToyPopulationFactory().make_pop(pop_size, cell_number,
+                                                  microcell_number,
+                                                  place_number=place_number)
 
         places = []
         for cell in toy_pop.cells:

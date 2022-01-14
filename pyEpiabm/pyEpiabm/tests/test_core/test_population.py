@@ -7,7 +7,7 @@ class TestPopulation(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls) -> None:
-        cls.population = pe.Population()
+        cls.population = pe.core.Population()
 
     def test__init__(self):
         self.assertEqual(self.population.cells, [])
@@ -17,13 +17,13 @@ class TestPopulation(unittest.TestCase):
                          "Population with 0 cells.")
 
     def test_add_cells(self, n=4):
-        population = pe.Population()
+        population = pe.core.Population()
         self.assertEqual(len(population.cells), 0)
         population.add_cells(n)
         self.assertEqual(len(population.cells), n)
 
     def test_setup(self):
-        population = pe.Population()
+        population = pe.core.Population()
         population.add_cells(5)
         population.setup()
 

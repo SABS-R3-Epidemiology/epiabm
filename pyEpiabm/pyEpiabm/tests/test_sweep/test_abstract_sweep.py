@@ -7,15 +7,15 @@ class TestAbstractSweep(unittest.TestCase):
     """
 
     def test_construct(self):
-        pe.AbstractSweep()
+        pe.sweep.AbstractSweep()
 
     def test_bind_population(self):
-        subject = pe.AbstractSweep()
-        population = pe.Population()
+        subject = pe.sweep.AbstractSweep()
+        population = pe.core.Population()
         subject.bind_population(population)
 
     def test___call__(self):
-        subject = pe.AbstractSweep()
+        subject = pe.sweep.AbstractSweep()
         self.assertRaises(NotImplementedError, subject.__call__, 1)
 
 

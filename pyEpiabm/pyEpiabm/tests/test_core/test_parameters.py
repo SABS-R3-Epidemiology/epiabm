@@ -6,15 +6,15 @@ class TestParameters(unittest.TestCase):
     """Test the 'Parameters' class.
     """
     def test_instance(self):
-        pe.Parameters.instance()
+        pe.core.Parameters.instance()
 
     def test_getattr(self):
-        pe.Parameters.instance().aaa = 1
-        self.assertEqual(pe.Parameters.instance().aaa, 1)
+        pe.core.Parameters.instance().aaa = 1
+        self.assertEqual(pe.core.Parameters.instance().aaa, 1)
 
     def test_getattr_fails(self):
         with self.assertRaises(AttributeError):
-            pe.Parameters.instance().bbb
+            pe.core.Parameters.instance().bbb
 
 
 if __name__ == '__main__':

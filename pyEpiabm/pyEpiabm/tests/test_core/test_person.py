@@ -7,9 +7,9 @@ class TestPerson(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls) -> None:
-        cls.cell = pe.Cell()
-        cls.microcell = pe.Microcell(cls.cell)
-        cls.person = pe.Person(cls.microcell)
+        cls.cell = pe.core.Cell()
+        cls.microcell = pe.core.Microcell(cls.cell)
+        cls.person = pe.core.Person(cls.microcell)
 
     def test__init__(self):
         self.assertEqual(self.person.age, 0)
@@ -22,20 +22,20 @@ class TestPerson(unittest.TestCase):
 
     def test_is_infectious(self):
         self.assertFalse(self.person.is_infectious())
-        self.person.infection_status = pe.InfectionStatus.InfectMild
+        self.person.infection_status = pe.property.InfectionStatus.InfectMild
         self.assertTrue(self.person.is_infectious())
 
     def test_is_susceptible(self):
-        self.person.infection_status = pe.InfectionStatus.Susceptible
+        self.person.infection_status = pe.property.InfectionStatus.Susceptible
         self.assertTrue(self.person.is_susceptible())
-        self.person.infection_status = pe.InfectionStatus.InfectMild
+        self.person.infection_status = pe.property.InfectionStatus.InfectMild
         self.assertFalse(self.person.is_susceptible())
 
     def test_update_status(self):
-        self.person.update_status(pe.InfectionStatus.InfectMild)
+        self.person.update_status(pe.property.InfectionStatus.InfectMild)
         self.assertEqual(
             self.person.infection_status,
-            pe.InfectionStatus.InfectMild)
+            pe.property.InfectionStatus.InfectMild)
 
     def test_update_time(self):
         self.assertIsNone(self.person.time_of_status_change)
@@ -46,13 +46,13 @@ class TestPerson(unittest.TestCase):
     def test_configure_place(self):
         # Tests both the add and remove functions
         self.assertEqual(len(self.person.places), 0)
-        test_place = pe.Place((1.0, 1.0), pe.PlaceType.Hotel, self.cell,
-                              self.microcell)
+        test_place = pe.core.Place((1.0, 1.0), pe.property.PlaceType.Hotel,
+                                   self.cell, self.microcell)
         self.person.add_place(test_place)
         self.assertTrue(len(self.person.places) > 0)
-        test_cell = pe.Cell
-        test_place_2 = pe.Place((1.0, 1.0), pe.PlaceType.Hotel, test_cell,
-                                pe.Microcell(test_cell))
+        test_cell = pe.core.Cell
+        test_place_2 = pe.core.Place((1.0, 1.0), pe.property.PlaceType.Hotel,
+                                     test_cell, pe.core.Microcell(test_cell))
         self.assertRaises(AttributeError, self.person.add_place, test_place_2)
 
         self.person.remove_place(test_place)

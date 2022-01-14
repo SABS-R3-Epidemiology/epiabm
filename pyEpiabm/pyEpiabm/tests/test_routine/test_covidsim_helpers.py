@@ -14,12 +14,12 @@ class TestCovidsimHelpers(unittest.TestCase):
         """Intialise a population with one infector and one
         infectee, both in the same place and household.
         """
-        cls.cell = pe.Cell()
-        cls.microcell = pe.Microcell(cls.cell)
-        cls.infector = pe.Person(cls.microcell)
-        cls.infectee = pe.Person(cls.microcell)
-        cls.place = pe.Place((1, 1), pe.PlaceType.Hotel, cls.cell,
-                             cls.microcell)
+        cls.cell = pe.core.Cell()
+        cls.microcell = pe.core.Microcell(cls.cell)
+        cls.infector = pe.core.Person(cls.microcell)
+        cls.infectee = pe.core.Person(cls.microcell)
+        cls.place = pe.core.Place((1, 1), pe.property.PlaceType.Hotel,
+                                  cls.cell, cls.microcell)
         cls.place.add_person(cls.infector)
         cls.place.add_person(cls.infectee)
         cls.timestep = 1

@@ -8,10 +8,10 @@ class TestPLaceType(unittest.TestCase):
 
     def test_construct(self):
         statuses = [ # noqa
-            pe.PlaceType.Hotel,
-            pe.PlaceType.CareHome,
-            pe.PlaceType.Resturant,
-            pe.PlaceType.OutdoorSpace]
+           pe.property.PlaceType.Hotel,
+           pe.property.PlaceType.CareHome,
+           pe.property.PlaceType.Restaurant,
+           pe.property.PlaceType.OutdoorSpace]
 
 
 if __name__ == '__main__':

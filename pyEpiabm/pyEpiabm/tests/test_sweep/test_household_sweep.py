@@ -14,29 +14,29 @@ class TestHouseholdSweep(unittest.TestCase):
         """Initialises a population with one infected person. Sets up a
         single household containing this person.
         """
-        cls.pop = pe.Population()
-        cls.house = pe.Household([1.0, 1.0])
+        cls.pop = pe.core.Population()
+        cls.house = pe.core.Household([1.0, 1.0])
         cls.pop.add_cells(1)
         cls.cell = cls.pop.cells[0]
         cls.pop.cells[0].add_microcells(1)
         cls.microcell = cls.cell.microcells[0]
         cls.pop.cells[0].microcells[0].add_people(1)
         cls.person = cls.pop.cells[0].microcells[0].persons[0]
-        cls.person.infection_status = pe.InfectionStatus.InfectMild
+        cls.person.infection_status = pe.property.InfectionStatus.InfectMild
         cls.person.household = cls.house
         cls.house.persons = [cls.person]
         cls.time = 1
-        pe.Parameters.instance().time_steps_per_day = 1
+        pe.core.Parameters.instance().time_steps_per_day = 1
 
     def test_bind(self):
         self.test_sweep = pe.sweep.HouseholdSweep()
         self.test_sweep.bind_population(self.pop)
         self.assertEqual(self.test_sweep._population.cells[0]
                          .persons[0].infection_status,
-                         pe.InfectionStatus.InfectMild)
+                         pe.property.InfectionStatus.InfectMild)
 
-    @mock.patch('pyEpiabm.CovidsimHelpers.calc_house_susc')
-    @mock.patch('pyEpiabm.CovidsimHelpers.calc_house_inf')
+    @mock.patch('pyEpiabm.routine.CovidsimHelpers.calc_house_susc')
+    @mock.patch('pyEpiabm.routine.CovidsimHelpers.calc_house_inf')
     def test__call__(self, mock_inf, mock_susc):
         """Test whether the household sweep function correctly
         adds persons to the queue.
@@ -51,16 +51,16 @@ class TestHouseholdSweep(unittest.TestCase):
         self.assertTrue(self.cell.person_queue.empty())
 
         # Change person's status to recovered
-        self.person.infection_status = pe.InfectionStatus.Recovered
+        self.person.infection_status = pe.property.InfectionStatus.Recovered
         self.test_sweep.bind_population(self.pop)
         self.test_sweep(self.time)
         self.assertTrue(self.cell.person_queue.empty())
 
         # Add one susceptible to the population, with the mocked infectiousness
         # ensuring they are added to the infected queue.
-        self.person.infection_status = pe.InfectionStatus.InfectMild
+        self.person.infection_status = pe.property.InfectionStatus.InfectMild
         test_queue = Queue()
-        new_person = pe.Person(self.microcell)
+        new_person = pe.core.Person(self.microcell)
         new_person.household = self.house
         self.house.persons.append(new_person)
         self.pop.cells[0].persons.append(new_person)
@@ -72,7 +72,7 @@ class TestHouseholdSweep(unittest.TestCase):
 
         # Change the additional person to recovered, and assert the queue
         # is empty.
-        new_person.infection_status = pe.InfectionStatus.Recovered
+        new_person.infection_status = pe.property.InfectionStatus.Recovered
         self.cell.persons.append(new_person)
         self.cell.person_queue = Queue()
         self.test_sweep.bind_population(self.pop)
