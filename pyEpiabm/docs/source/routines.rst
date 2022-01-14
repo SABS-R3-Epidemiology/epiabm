@@ -2,7 +2,7 @@
 Routines
 ********
 
-.. currentmodule:: pyEpiabm
+.. currentmodule:: pyEpiabm.routine
 
 Routines provides various methods to act upon or create a population.
 

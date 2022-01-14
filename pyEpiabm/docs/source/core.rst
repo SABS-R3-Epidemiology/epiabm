@@ -2,7 +2,7 @@
 Core
 ****
 
-.. currentmodule:: pyEpiabm
+.. currentmodule:: pyEpiabm.core
 
 Core provides the basic class framework to build a population
 

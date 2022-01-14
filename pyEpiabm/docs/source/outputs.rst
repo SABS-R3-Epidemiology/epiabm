@@ -2,7 +2,7 @@
 Outputs
 ********
 
-.. currentmodule:: pyEpiabm
+.. currentmodule:: pyEpiabm.output
 
 Outputs provides various methods to record the outputs of any simulation or methods.
 
