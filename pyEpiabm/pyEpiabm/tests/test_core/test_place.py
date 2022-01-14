@@ -50,7 +50,6 @@ class TestPlace(unittest.TestCase):
         test_place.add_person(pe.core.Person(self.microcell))
         self.assertEqual(len(test_place.persons), 2)
         test_place.empty_place()
-        print(test_place.persons)
         self.assertEqual(len(test_place.persons), 0)
 
     def test_set_susc(self):
