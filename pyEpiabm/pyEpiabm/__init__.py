@@ -11,8 +11,8 @@ evolution of a virus across it, with various visualisation methods.
 
 # from pyEpiabm.property.infection_status import InfectionStatus
 
-# from . import core
-# from . import output
+from . import core
+from . import output
 from . import property
-# from . import routine
-# from . import sweep
+from . import routine
+from . import sweep

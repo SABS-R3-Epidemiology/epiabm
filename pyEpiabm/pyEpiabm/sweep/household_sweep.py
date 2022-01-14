@@ -6,7 +6,8 @@ import random
 
 from pyEpiabm.core import Parameters
 from pyEpiabm.routine import CovidsimHelpers
-from pyEpiabm.sweep import AbstractSweep
+
+from .abstract_sweep import AbstractSweep
 
 
 class HouseholdSweep(AbstractSweep):

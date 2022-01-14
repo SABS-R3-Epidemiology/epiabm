@@ -4,8 +4,11 @@
 
 import typing
 
-from pyEpiabm.core import Person, Place, _CompartmentCounter
 from pyEpiabm.property import InfectionStatus
+
+from .person import Person
+from .place import Place
+from ._compartment_counter import _CompartmentCounter
 
 
 class Microcell:

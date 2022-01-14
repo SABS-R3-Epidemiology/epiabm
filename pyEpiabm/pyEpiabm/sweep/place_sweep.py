@@ -7,7 +7,8 @@ import numpy as np
 
 from pyEpiabm.core import Parameters
 from pyEpiabm.routine import CovidsimHelpers as ch
-from pyEpiabm.sweep import AbstractSweep
+
+from .abstract_sweep import AbstractSweep
 
 
 class PlaceSweep(AbstractSweep):

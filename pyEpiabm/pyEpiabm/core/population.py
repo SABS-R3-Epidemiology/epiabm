@@ -2,7 +2,7 @@
 # Population Class
 #
 
-from pyEpiabm.core import Cell
+from .cell import Cell
 
 
 class Population:

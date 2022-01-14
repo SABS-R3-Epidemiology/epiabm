@@ -3,7 +3,8 @@
 #
 
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.sweep import AbstractSweep
+
+from .abstract_sweep import AbstractSweep
 
 
 class QueueSweep(AbstractSweep):
