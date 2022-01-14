@@ -1,5 +1,6 @@
 import unittest
-import pyEpiabm as pe
+
+from pyEpiabm.property import InfectionStatus
 
 
 class TestInfectionStatus(unittest.TestCase):
@@ -8,16 +9,16 @@ class TestInfectionStatus(unittest.TestCase):
 
     def test_construct(self):
         statuses = [ # noqa
-            pe.InfectionStatus.Susceptible,
-            pe.InfectionStatus.Exposed,
-            pe.InfectionStatus.InfectASympt,
-            pe.InfectionStatus.InfectMild,
-            pe.InfectionStatus.InfectGP,
-            pe.InfectionStatus.InfectHosp,
-            pe.InfectionStatus.InfectICU,
-            pe.InfectionStatus.InfectICURecov,
-            pe.InfectionStatus.Recovered,
-            pe.InfectionStatus.Dead]
+            InfectionStatus.Susceptible,
+            InfectionStatus.Exposed,
+            InfectionStatus.InfectASympt,
+            InfectionStatus.InfectMild,
+            InfectionStatus.InfectGP,
+            InfectionStatus.InfectHosp,
+            InfectionStatus.InfectICU,
+            InfectionStatus.InfectICURecov,
+            InfectionStatus.Recovered,
+            InfectionStatus.Dead]
 
 
 if __name__ == '__main__':
