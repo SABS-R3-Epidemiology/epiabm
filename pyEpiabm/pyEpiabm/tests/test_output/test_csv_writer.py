@@ -1,6 +1,7 @@
 import unittest
-import pyEpiabm as pe
 from unittest.mock import patch, mock_open, call, MagicMock
+
+import pyEpiabm as pe
 
 
 class TestCsvWriter(unittest.TestCase):

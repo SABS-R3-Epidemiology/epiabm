@@ -1,7 +1,7 @@
 import unittest
-import pyEpiabm as pe
-
 import random
+
+import pyEpiabm as pe
 
 
 class TestCompartmentCounter(unittest.TestCase):

@@ -1,8 +1,8 @@
 import random
 import unittest
-import pyEpiabm as pe
 from parameterized import parameterized
 
+import pyEpiabm as pe
 from pyEpiabm.routine import ToyPopulationFactory
 
 

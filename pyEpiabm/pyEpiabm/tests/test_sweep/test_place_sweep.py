@@ -1,7 +1,8 @@
 import unittest
-import pyEpiabm as pe
-from queue import Queue
 from unittest import mock
+from queue import Queue
+
+import pyEpiabm as pe
 
 
 class TestPlaceSweep(unittest.TestCase):
