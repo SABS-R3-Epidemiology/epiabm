@@ -9,7 +9,6 @@ It contains functionality for setting up a population, and tracking the
 evolution of a virus across it, with various visualisation methods.
 """
 
-# from pyEpiabm.property.infection_status import InfectionStatus
 
 from . import core
 from . import output
