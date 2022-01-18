@@ -3,7 +3,7 @@
 #
 
 """ pyEpiabm.output provides various methods to record the outputs of any
-simulation or methods.
+simulation.
 
 """
 
