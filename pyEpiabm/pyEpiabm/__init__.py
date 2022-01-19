@@ -15,3 +15,14 @@ from . import output
 from . import property
 from . import routine
 from . import sweep
+
+# Expose modules in core within pyEpiabm namespace
+
+from .core._compartment_counter import _CompartmentCounter
+from .core.cell import Cell
+from .core.household import Household
+from .core.microcell import Microcell
+from .core.parameters import Parameters
+from .core.person import Person
+from .core.place import Place
+from .core.population import Population
