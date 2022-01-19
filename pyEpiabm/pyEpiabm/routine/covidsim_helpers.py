@@ -15,13 +15,13 @@ class CovidsimHelpers:
     """
     @staticmethod
     def calc_house_inf(infector: Person, timestep: int):
-        """Calculate the infectiveness of a household.
+        """Calculate the infectiousness of a household.
 
         :param infector: Infector
         :type infector: Person
         :param timestep: Current simulation timestep
         :type timestep: int
-        :return: Infectiveness parameter of household
+        :return: infectiousness parameter of household
         :rtype: float
         """
         return 0.1

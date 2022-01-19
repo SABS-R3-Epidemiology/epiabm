@@ -26,7 +26,7 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(test_place.place_type, pe.property.PlaceType.Hotel)
         self.assertEqual(test_place.max_capacity, 50)
         self.assertEqual(test_place.susceptibility, 0)
-        self.assertEqual(test_place.infectiveness, 0)
+        self.assertEqual(test_place.infectiousness, 0)
         new_cell = pe.Cell()
         self.assertRaises(KeyError, pe.Place, (1, 1),
                           pe.property.PlaceType.Hotel, new_cell,
@@ -63,9 +63,9 @@ class TestPlace(unittest.TestCase):
     def test_set_inf(self):
         test_place = pe.Place((1, 1), pe.property.PlaceType.Hotel,
                               self.cell, self.microcell)
-        self.assertEqual(test_place.infectiveness, 0)
-        test_place.set_infectiveness(10)
-        self.assertEqual(test_place.infectiveness, 10)
+        self.assertEqual(test_place.infectiousness, 0)
+        test_place.set_infectiousness(10)
+        self.assertEqual(test_place.infectiousness, 10)
 
     def test_set_max_cap(self):
         test_place = pe.Place((1, 1), pe.property.PlaceType.Hotel,

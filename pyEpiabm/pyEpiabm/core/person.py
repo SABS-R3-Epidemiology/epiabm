@@ -26,7 +26,7 @@ class Person:
     """
 
     def __init__(self, microcell,
-                 age=0, susceptibility=0, infectiveness=0):
+                 age=0, susceptibility=0, infectiousness=0):
         """Constructor Method.
 
         :param microcell: Person's parent :class:`Microcell` instance
@@ -35,12 +35,12 @@ class Person:
         :type age: float
         :param susceptibility: Person's susceptibility
         :type susceptibility: float
-        :param infectiveness: Person's infectiveness
-        :type infectiveness: float
+        :param infectiousness: Person's infectiousness
+        :type infectiousness: float
         """
         self.age = age
         self.susceptibility = susceptibility
-        self.infectiveness = infectiveness
+        self.infectiousness = infectiousness
         self.microcell = microcell
         self.infection_status = InfectionStatus.Susceptible
         self.household = None
