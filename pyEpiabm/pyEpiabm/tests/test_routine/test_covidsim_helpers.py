@@ -20,7 +20,7 @@ class TestCovidsimHelpers(unittest.TestCase):
         cls.infector = pe.Person(cls.microcell)
         cls.infectee = pe.Person(cls.microcell)
         cls.place = pe.Place((1, 1), pe.property.PlaceType.Hotel,
-                                  cls.cell, cls.microcell)
+                             cls.cell, cls.microcell)
         cls.place.add_person(cls.infector)
         cls.place.add_person(cls.infectee)
         cls.timestep = 1
