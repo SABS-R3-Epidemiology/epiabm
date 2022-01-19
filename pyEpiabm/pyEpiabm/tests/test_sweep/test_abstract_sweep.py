@@ -12,7 +12,7 @@ class TestAbstractSweep(unittest.TestCase):
 
     def test_bind_population(self):
         subject = pe.sweep.AbstractSweep()
-        population = pe.core.Population()
+        population = pe.Population()
         subject.bind_population(population)
 
     def test___call__(self):

@@ -11,7 +11,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         """Sets up a population we can use throughout the test.
         2 people are located in one microcell.
         """
-        cls.test_population = pe.core.Population()
+        cls.test_population = pe.Population()
         cls.test_population.add_cells(1)
         cls.test_population.cells[0].add_microcells(1)
         cls.test_population.cells[0].microcells[0].add_people(2)

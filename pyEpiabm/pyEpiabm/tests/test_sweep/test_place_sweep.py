@@ -23,7 +23,7 @@ class TestPlaceSweep(unittest.TestCase):
         cls.person1.update_status(pe.property.InfectionStatus.InfectMild)
         cls.place.add_person(cls.person1)
         cls.new_person = cls.pop.cells[0].microcells[0].persons[1]
-        pe.core.Parameters.instance().time_steps_per_day = 1
+        pe.Parameters.instance().time_steps_per_day = 1
         cls.test_sweep = pe.sweep.PlaceSweep()
         cls.test_sweep.bind_population(cls.pop)
 

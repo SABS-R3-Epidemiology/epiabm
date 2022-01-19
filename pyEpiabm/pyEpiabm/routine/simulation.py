@@ -5,7 +5,7 @@
 import os
 import typing
 
-from pyEpiabm.core import Population
+from pyEpiabm import Population
 from pyEpiabm.output import _CsvDictWriter
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import AbstractSweep

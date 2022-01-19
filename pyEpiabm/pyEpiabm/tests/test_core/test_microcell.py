@@ -8,8 +8,8 @@ class TestMicrocell(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls) -> None:
-        cls.cell = pe.core.Cell()
-        cls.microcell = pe.core.Microcell(cls.cell)
+        cls.cell = pe.Cell()
+        cls.microcell = pe.Microcell(cls.cell)
 
     def test__init__(self):
         self.assertEqual(self.microcell.persons, [])
@@ -21,25 +21,25 @@ class TestMicrocell(unittest.TestCase):
                          "Microcell with 0 people.")
 
     def test_add_people(self, n=4):
-        microcell = pe.core.Microcell(self.cell)
+        microcell = pe.Microcell(self.cell)
         self.assertEqual(len(microcell.persons), 0)
         microcell.add_people(n)
         self.assertEqual(len(microcell.persons), n)
 
     def test_add_place(self, n=3):
-        microcell = pe.core.Microcell(self.cell)
+        microcell = pe.Microcell(self.cell)
         self.assertEqual(len(microcell.places), 0)
         microcell.add_place(n, (1.0, 1.0), pe.property.PlaceType.Hotel)
         self.assertEqual(len(microcell.places), n)
 
     def test_setup(self):
-        cell = pe.core.Cell()
+        cell = pe.Cell()
         cell.add_microcells(5)
         cell._setup()
 
     def test_report(self):
-        cell = pe.core.Cell()
-        mcell = pe.core.Microcell(cell)
+        cell = pe.Cell()
+        mcell = pe.Microcell(cell)
         mcell.add_people(5)
         cell._setup()
         mcell.notify_person_status_change(

@@ -14,8 +14,8 @@ class TestHouseholdSweep(unittest.TestCase):
         """Initialises a population with one infected person. Sets up a
         single household containing this person.
         """
-        cls.pop = pe.core.Population()
-        cls.house = pe.core.Household([1.0, 1.0])
+        cls.pop = pe.Population()
+        cls.house = pe.Household([1.0, 1.0])
         cls.pop.add_cells(1)
         cls.cell = cls.pop.cells[0]
         cls.pop.cells[0].add_microcells(1)
@@ -26,7 +26,7 @@ class TestHouseholdSweep(unittest.TestCase):
         cls.person.household = cls.house
         cls.house.persons = [cls.person]
         cls.time = 1
-        pe.core.Parameters.instance().time_steps_per_day = 1
+        pe.Parameters.instance().time_steps_per_day = 1
 
     def test_bind(self):
         self.test_sweep = pe.sweep.HouseholdSweep()
@@ -60,7 +60,7 @@ class TestHouseholdSweep(unittest.TestCase):
         # ensuring they are added to the infected queue.
         self.person.infection_status = pe.property.InfectionStatus.InfectMild
         test_queue = Queue()
-        new_person = pe.core.Person(self.microcell)
+        new_person = pe.Person(self.microcell)
         new_person.household = self.house
         self.house.persons.append(new_person)
         self.pop.cells[0].persons.append(new_person)

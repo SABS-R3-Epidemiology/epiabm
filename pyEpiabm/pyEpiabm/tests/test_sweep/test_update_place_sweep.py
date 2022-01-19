@@ -12,7 +12,7 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         """Initialises a population with one infected person. Sets up a
         single household containing this person.
         """
-        cls.pop = pe.core.Population()
+        cls.pop = pe.Population()
         cls.pop.add_cells(1)
         cls.cell = cls.pop.cells[0]
         cls.pop.cells[0].add_microcells(1)
@@ -22,7 +22,7 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         cls.person.infection_status = pe.property.InfectionStatus.InfectMild
         cls.microcell.add_place(1, (1, 1), pe.property.PlaceType.Hotel)
         cls.place = cls.cell.places[0]
-        pe.core.Parameters.instance().time_steps_per_day = 1
+        pe.Parameters.instance().time_steps_per_day = 1
         cls.time = 1
 
     def test_bind(self):

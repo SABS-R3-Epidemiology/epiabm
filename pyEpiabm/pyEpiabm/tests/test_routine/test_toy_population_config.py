@@ -38,7 +38,7 @@ class TestPopConfig(unittest.TestCase):
         self.assertEqual(total_people, pop_size)
 
         # test a population class object is returned.
-        self.assertIsInstance(test_pop, pe.core.Population)
+        self.assertIsInstance(test_pop, pe.Population)
 
     @parameterized.expand([(random.randint(1000, 10000) * numReps,
                             random.randint(1, 10) * numReps,

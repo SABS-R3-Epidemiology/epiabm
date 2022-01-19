@@ -12,7 +12,7 @@ class TestSimulation(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.pop_factory = pe.routine.ToyPopulationFactory()
         cls.test_population = cls.pop_factory.make_pop(0, 1, 1, 1)
-        pe.core.Parameters.instance().time_steps_per_day = 1
+        pe.Parameters.instance().time_steps_per_day = 1
         cls.sim_params = {"simulation_start_time": 0,
                           "simulation_end_time": 2,
                           "initial_infected_number": 0}
@@ -37,7 +37,7 @@ class TestSimulation(unittest.TestCase):
                                self.sweeps, self.sim_params, self.file_params)
             self.assertEqual(len(test_sim.initial_sweeps), 1)
             self.assertEqual(len(test_sim.sweeps), 1)
-            self.assertIsInstance(test_sim.population, pe.core.Population)
+            self.assertIsInstance(test_sim.population, pe.Population)
             del(test_sim.writer)
         mo.assert_called_with(filename, 'w')
 

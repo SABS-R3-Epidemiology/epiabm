@@ -8,7 +8,7 @@ class TestPlace(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls) -> None:
-        cls.pop = pe.core.Population()
+        cls.pop = pe.Population()
         cls.pop.add_cells(1)
         cls.cell = cls.pop.cells[0]
         cls.pop.cells[0].add_microcells(1)
@@ -19,7 +19,7 @@ class TestPlace(unittest.TestCase):
     def test_construct(self):
         """Tests constructor method.
         """
-        test_place = pe.core.Place((1.0, 1.0), pe.property.PlaceType.Hotel,
+        test_place = pe.Place((1.0, 1.0), pe.property.PlaceType.Hotel,
                                    self.cell, self.microcell)
         self.assertEqual(test_place._location, (1.0, 1.0))
         self.assertEqual(test_place.persons, [])
@@ -27,8 +27,8 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(test_place.max_capacity, 50)
         self.assertEqual(test_place.susceptibility, 0)
         self.assertEqual(test_place.infectiveness, 0)
-        new_cell = pe.core.Cell()
-        self.assertRaises(KeyError, pe.core.Place, (1, 1),
+        new_cell = pe.Cell()
+        self.assertRaises(KeyError, pe.Place, (1, 1),
                           pe.property.PlaceType.Hotel, new_cell,
                           self.microcell)
 
@@ -37,7 +37,7 @@ class TestPlace(unittest.TestCase):
     def test_change_persons(self):
         """Tests the add and remove person functions.
         """
-        test_place = pe.core.Place((1, 1), pe.property.PlaceType.Hotel,
+        test_place = pe.Place((1, 1), pe.property.PlaceType.Hotel,
                                    self.cell, self.microcell)
         test_place.add_person(self.person)
         self.assertEqual(len(self.person.places), 1)
@@ -48,27 +48,27 @@ class TestPlace(unittest.TestCase):
         self.assertRaises(KeyError, test_place.remove_person, self.person)
 
         test_place.add_person(self.person)
-        test_place.add_person(pe.core.Person(self.microcell))
+        test_place.add_person(pe.Person(self.microcell))
         self.assertEqual(len(test_place.persons), 2)
         test_place.empty_place()
         self.assertEqual(len(test_place.persons), 0)
 
     def test_set_susc(self):
-        test_place = pe.core.Place((1, 1), pe.property.PlaceType.Hotel,
+        test_place = pe.Place((1, 1), pe.property.PlaceType.Hotel,
                                    self.cell, self.microcell)
         self.assertEqual(test_place.susceptibility, 0)
         test_place.set_susceptibility(10)
         self.assertEqual(test_place.susceptibility, 10)
 
     def test_set_inf(self):
-        test_place = pe.core.Place((1, 1), pe.property.PlaceType.Hotel,
+        test_place = pe.Place((1, 1), pe.property.PlaceType.Hotel,
                                    self.cell, self.microcell)
         self.assertEqual(test_place.infectiveness, 0)
         test_place.set_infectiveness(10)
         self.assertEqual(test_place.infectiveness, 10)
 
     def test_set_max_cap(self):
-        test_place = pe.core.Place((1, 1), pe.property.PlaceType.Hotel,
+        test_place = pe.Place((1, 1), pe.property.PlaceType.Hotel,
                                    self.cell, self.microcell)
         self.assertEqual(test_place.max_capacity, 50)
         test_place.set_max_cap(10)
