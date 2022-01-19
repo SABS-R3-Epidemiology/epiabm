@@ -7,7 +7,7 @@ create a population.
 
 """
 
-from .house_forces import HouseholdForces
+from .household_forces import HouseholdForces
 from .place_forces import PlaceForces
 from .simulation import Simulation
 from .toy_population_config import ToyPopulationFactory

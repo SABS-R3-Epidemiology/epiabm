@@ -27,16 +27,16 @@ class TestPlaceSweep(unittest.TestCase):
         cls.test_sweep = pe.sweep.PlaceSweep()
         cls.test_sweep.bind_population(cls.pop)
 
-    @mock.patch("pyEpiabm.routine.CovidsimHelpers.calc_place_susc")
-    @mock.patch("pyEpiabm.routine.CovidsimHelpers.calc_place_inf")
-    def test__call__(self, mock_inf, mock_susc):
+    @mock.patch("pyEpiabm.routine.PlaceForces.place_inf_force")
+    @mock.patch("pyEpiabm.routine.PlaceForces.place_inf")
+    def test__call__(self, mock_inf, mock_force):
         """Test whether the place sweep function correctly
         adds persons to the queue, with each infection
         event certain to happen.
         """
         # First test when all persons will be queued.
-        mock_inf.return_value = 10
-        mock_susc.return_value = 10
+        mock_inf.return_value = 10.0
+        mock_force.return_value = 100.0
         time = 1
 
         # Assert a population with one infected will not change the queue

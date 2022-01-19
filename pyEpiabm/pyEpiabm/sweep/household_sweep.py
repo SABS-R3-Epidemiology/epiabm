@@ -42,7 +42,7 @@ class HouseholdSweep(AbstractSweep):
 
                     # Calculate "force of infection" parameter which will
                     # determine the likelihood of an infection event.
-                    force_of_infection = HouseholdForces.house_inf_force(
+                    force_of_infection = HouseholdForces.household_inf_force(
                         infector, infectee, timestep)
 
                     # Compare a uniform random number to the force of infection
