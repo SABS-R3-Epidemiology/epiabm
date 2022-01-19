@@ -1,44 +1,28 @@
-
 #
 # Root of the pyEpiabm module.
 # Provides access to all shared functionality (classes, simulation, etc.).
 #
-"""pyepiabm is the python backend for epiabm - an Epidemiological
+
+"""pyEpiabm is the python backend for epiabm - an Epidemiological
 Agent Based Modelling software package.
 It contains functionality for setting up a population, and tracking the
 evolution of a virus across it, with various visualisation methods.
 """
 
-# Core
-from .person import Person
-from .population import Population
-from .cell import Cell
-from .microcell import Microcell
-from .household import Household
-from .place import Place
-from .parameters import Parameters
 
-# Properties
-from .infection_status import InfectionStatus
-from .place_type import PlaceType
+from . import core
+from . import output
+from . import property
+from . import routine
+from . import sweep
 
-# Routines
-from .covidsim_helpers import CovidsimHelpers
-from .toy_population_config import ToyPopulationFactory
+# Expose modules in core within pyEpiabm namespace
 
-# Sweeps
-from .abstract_sweep import AbstractSweep
-from .host_progression_sweep import HostProgressionSweep
-from .household_sweep import HouseholdSweep
-from .initial_infected_sweep import InitialInfectedSweep
-from .place_sweep import PlaceSweep
-from .queue_sweep import QueueSweep
-from .update_place_sweep import UpdatePlaceSweep
-
-# Example Simulations
-from .simulation import Simulation
-
-# Data collection
-from ._compartment_counter import _CompartmentCounter
-from ._csv_dict_writer import _CsvDictWriter
-from ._csv_writer import _CsvWriter
+from .core._compartment_counter import _CompartmentCounter
+from .core.cell import Cell
+from .core.household import Household
+from .core.microcell import Microcell
+from .core.parameters import Parameters
+from .core.person import Person
+from .core.place import Place
+from .core.population import Population

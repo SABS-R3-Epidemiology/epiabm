@@ -2,7 +2,7 @@
 Sweeps
 ******
 
-.. currentmodule:: pyEpiabm
+.. currentmodule:: pyEpiabm.sweep
 
 Sweep provides the basic class framework to build methods which sweep over the population.
 

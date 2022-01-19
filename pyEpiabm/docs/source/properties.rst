@@ -2,7 +2,7 @@
 Properties
 **********
 
-.. currentmodule:: pyEpiabm
+.. currentmodule:: pyEpiabm.property
 
 Properties provides various methods to get information from the population.
 

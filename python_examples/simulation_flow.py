@@ -1,7 +1,12 @@
+#
+# Example simulation script with data output and visualisation
+#
+
 import os
-import pyEpiabm as pe
 import pandas as pd
 import matplotlib.pyplot as plt
+
+import pyEpiabm as pe
 
 # Pop_params are ued to configure the population structure being used in this
 # simulation.
@@ -12,7 +17,7 @@ pop_params = {"population_size": 100, "cell_number": 1,
 pe.Parameters.instance().time_steps_per_day = 1
 
 # Create a population base don the parameters given.
-population = pe.ToyPopulationFactory().make_pop(**pop_params)
+population = pe.routine.ToyPopulationFactory().make_pop(**pop_params)
 cell = population.cells[0]
 
 # sim_ and file_params give details for the running of the simulations and
@@ -25,12 +30,13 @@ file_params = {"output_file": "output.csv",
 
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.
-sim = pe.Simulation()
+sim = pe.routine.Simulation()
 sim.configure(
     population,
-    [pe.InitialInfectedSweep()],
-    [pe.UpdatePlaceSweep(), pe.HouseholdSweep(), pe.PlaceSweep(),
-     pe.QueueSweep(), pe.HostProgressionSweep()],
+    [pe.sweep.InitialInfectedSweep()],
+    [pe.sweep.UpdatePlaceSweep(), pe.sweep.HouseholdSweep(),
+     pe.sweep.PlaceSweep(), pe.sweep.QueueSweep(),
+     pe.sweep.HostProgressionSweep()],
     sim_params,
     file_params)
 sim.run_sweeps()
