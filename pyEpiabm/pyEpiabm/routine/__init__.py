@@ -7,6 +7,7 @@ create a population.
 
 """
 
-from .covidsim_helpers import CovidsimHelpers
+from .house_forces import HouseholdForces
+from .place_forces import PlaceForces
 from .simulation import Simulation
 from .toy_population_config import ToyPopulationFactory

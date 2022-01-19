@@ -5,7 +5,7 @@
 import random
 
 from pyEpiabm.core import Parameters
-from pyEpiabm.routine import CovidsimHelpers
+from pyEpiabm.routine import HouseholdForces
 
 from .abstract_sweep import AbstractSweep
 
@@ -42,11 +42,8 @@ class HouseholdSweep(AbstractSweep):
 
                     # Calculate "force of infection" parameter which will
                     # determine the likelihood of an infection event.
-                    infectiousness = CovidsimHelpers.calc_house_inf(
-                        infector, timestep)
-                    susceptibility = CovidsimHelpers.calc_house_susc(
+                    force_of_infection = HouseholdForces.house_inf_force(
                         infector, infectee, timestep)
-                    force_of_infection = infectiousness * susceptibility
 
                     # Compare a uniform random number to the force of infection
                     # to see whether an infection event occurs in this timestep
