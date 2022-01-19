@@ -94,6 +94,13 @@ def doctest_rst_and_public_interface():
         'pyEpiabm.property',
         'pyEpiabm.routine',
         'pyEpiabm.sweep',
+        'pyEpiabm.Cell',
+        'pyEpiabm.Household',
+        'pyEpiabm.Microcell',
+        'pyEpiabm.Parameters',
+        'pyEpiabm.Person',
+        'pyEpiabm.Place',
+        'pyEpiabm.Population',
     ]
 
     doc_symbols = get_all_documented_symbols()

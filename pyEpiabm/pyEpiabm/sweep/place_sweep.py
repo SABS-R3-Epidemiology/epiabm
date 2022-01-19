@@ -5,7 +5,7 @@
 import random
 import numpy as np
 
-from pyEpiabm import Parameters
+from pyEpiabm.core import Parameters
 from pyEpiabm.routine import CovidsimHelpers as ch
 
 from .abstract_sweep import AbstractSweep
