@@ -39,7 +39,7 @@ class HouseholdForces:
 
     @staticmethod
     def household_inf_force(infector: Person, infectee: Person, timestep: int):
-        """Calculate the force of infector parameter of a household,
+        """Calculate the force of infection parameter of a household,
         for a particular infector and infectee.
 
         :param infector: Infector
