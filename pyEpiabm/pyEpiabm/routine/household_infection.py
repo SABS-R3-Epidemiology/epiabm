@@ -38,7 +38,7 @@ class HouseholdInfection:
         return 0.1
 
     @staticmethod
-    def household_inf_force(infector: Person, infectee: Person, timestep: int):
+    def household_foi(infector: Person, infectee: Person, timestep: int):
         """Calculate the force of infection parameter of a household,
         for a particular infector and infectee.
 
