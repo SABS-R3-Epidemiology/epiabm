@@ -27,8 +27,8 @@ class TestPlaceSweep(unittest.TestCase):
         cls.test_sweep = pe.sweep.PlaceSweep()
         cls.test_sweep.bind_population(cls.pop)
 
-    @mock.patch("pyEpiabm.routine.PlaceForces.place_inf_force")
-    @mock.patch("pyEpiabm.routine.PlaceForces.place_inf")
+    @mock.patch("pyEpiabm.routine.PlaceInfection.place_foi")
+    @mock.patch("pyEpiabm.routine.PlaceInfection.place_inf")
     def test__call__(self, mock_inf, mock_force):
         """Test whether the place sweep function correctly
         adds persons to the queue, with each infection

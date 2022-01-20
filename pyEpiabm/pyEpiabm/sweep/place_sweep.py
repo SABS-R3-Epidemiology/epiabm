@@ -6,7 +6,7 @@ import random
 import numpy as np
 
 from pyEpiabm.core import Parameters
-from pyEpiabm.routine import PlaceForces
+from pyEpiabm.routine import PlaceInfection
 
 from .abstract_sweep import AbstractSweep
 
@@ -38,7 +38,7 @@ class PlaceSweep(AbstractSweep):
                 if not infector.is_infectious():
                     continue
                 for place in infector.places:
-                    infectiousness = PlaceForces.place_inf(place, timestep)
+                    infectiousness = PlaceInfection.place_inf(place, timestep)
                     # High infectiousness (>= 1) means all susceptible
                     # occupants become infected.
                     if infectiousness > 1:
@@ -71,9 +71,9 @@ class PlaceSweep(AbstractSweep):
                             # between the infector and infectee given that they
                             # meet in this place.
 
-                            force_of_infection = PlaceForces.\
-                                place_inf_force(place, infector, infectee,
-                                                timestep)
+                            force_of_infection = PlaceInfection.\
+                                place_foi(place, infector, infectee,
+                                          timestep)
 
                             # Compare a uniform random number to the force of
                             # infection to see whether an infection event

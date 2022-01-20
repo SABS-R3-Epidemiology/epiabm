@@ -1,11 +1,11 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.routine import HouseholdForces
+from pyEpiabm.routine import HouseholdInfection
 
 
-class TestHouseholdForces(unittest.TestCase):
-    """Test the 'HouseholdForces' class, which contains the
+class TestHouseholdInfection(unittest.TestCase):
+    """Test the 'HouseholdInfection' class, which contains the
     infectiousness and susceptibility calculations that
     determine whether infection events occur within households.
     Each function should return a number greater than 0.
@@ -22,20 +22,21 @@ class TestHouseholdForces(unittest.TestCase):
         cls.timestep = 1
 
     def test_house_inf(self):
-        result = HouseholdForces.household_inf(self.infector, self.timestep)
+        result = HouseholdInfection.household_inf(self.infector, self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
     def test_house_susc(self):
-        result = HouseholdForces.household_susc(self.infector, self.infectee,
-                                                self.timestep)
+        result = HouseholdInfection.household_susc(self.infector,
+                                                   self.infectee,
+                                                   self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
     def test_house_inf_force(self):
-        result = HouseholdForces.household_inf_force(self.infector,
-                                                     self.infectee,
-                                                     self.timestep)
+        result = HouseholdInfection.household_foi(self.infector,
+                                                  self.infectee,
+                                                  self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 

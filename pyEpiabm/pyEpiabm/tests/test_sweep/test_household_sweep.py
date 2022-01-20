@@ -35,7 +35,7 @@ class TestHouseholdSweep(unittest.TestCase):
                          .persons[0].infection_status,
                          pe.property.InfectionStatus.InfectMild)
 
-    @mock.patch('pyEpiabm.routine.HouseholdForces.household_inf_force')
+    @mock.patch('pyEpiabm.routine.HouseholdInfection.household_foi')
     def test__call__(self, mock_force):
         """Test whether the household sweep function correctly
         adds persons to the queue.

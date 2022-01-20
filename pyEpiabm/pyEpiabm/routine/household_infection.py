@@ -5,7 +5,7 @@
 from pyEpiabm.core import Person
 
 
-class HouseholdForces:
+class HouseholdInfection:
     """Class to calculate the infectiousness and susceptibility
     parameters for the force of infection parameter, within households.
     """
@@ -38,7 +38,7 @@ class HouseholdForces:
         return 0.1
 
     @staticmethod
-    def household_inf_force(infector: Person, infectee: Person, timestep: int):
+    def household_foi(infector: Person, infectee: Person, timestep: int):
         """Calculate the force of infector parameter of a household,
         for a particular infector and infectee.
 
@@ -51,7 +51,7 @@ class HouseholdForces:
         :return: Force of infection parameter of household
         :rtype: float
         """
-        infectiousness = HouseholdForces.household_inf(infector, timestep)
-        susceptibility = HouseholdForces.household_susc(infector, infectee,
-                                                        timestep)
+        infectiousness = HouseholdInfection.household_inf(infector, timestep)
+        susceptibility = HouseholdInfection.household_susc(infector, infectee,
+                                                           timestep)
         return (infectiousness * susceptibility)

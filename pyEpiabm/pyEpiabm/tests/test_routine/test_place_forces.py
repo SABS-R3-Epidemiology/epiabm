@@ -1,11 +1,11 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.routine import PlaceForces
+from pyEpiabm.routine import PlaceInfection
 
 
-class TestPlaceForces(unittest.TestCase):
-    """Test the 'PlaceForces' class, which contains the
+class TestPlaceInfection(unittest.TestCase):
+    """Test the 'PlaceInfection' class, which contains the
     infectiousness and susceptibility calculations that
     determine whether infection events occur within places.
     Each function should return a number greater than 0.
@@ -26,19 +26,19 @@ class TestPlaceForces(unittest.TestCase):
         cls.timestep = 1
 
     def test_calc_place_susc(self):
-        result = PlaceForces.place_susc(self.place, self.infector,
-                                        self.infectee, self.timestep)
+        result = PlaceInfection.place_susc(self.place, self.infector,
+                                           self.infectee, self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
     def test_calc_place_inf(self):
-        result = PlaceForces.place_inf(self.place, self.timestep)
+        result = PlaceInfection.place_inf(self.place, self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
-    def test_calc_place_inf_force(self):
-        result = PlaceForces.place_inf_force(self.place, self.infector,
-                                             self.infectee, self.timestep)
+    def test_calc_place_foi(self):
+        result = PlaceInfection.place_foi(self.place, self.infector,
+                                          self.infectee, self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 

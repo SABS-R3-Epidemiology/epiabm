@@ -5,7 +5,7 @@
 from pyEpiabm.core import Person, Place
 
 
-class PlaceForces:
+class PlaceInfection:
     """Class to calculate the infectiousness and susceptibility
     parameters for the force of infection parameter, within places.
     """
@@ -43,8 +43,8 @@ class PlaceForces:
         return 0.5
 
     @staticmethod
-    def place_inf_force(place: Place, infector: Person, infectee: Person,
-                        timestep: int):
+    def place_foi(place: Place, infector: Person, infectee: Person,
+                  timestep: int):
         """Calculate the force of infection of a place, for a particular
         infector and infectee.
 
@@ -59,7 +59,7 @@ class PlaceForces:
         :return: Force of infection parameter of place
         :rtype: float
         """
-        infectiousness = PlaceForces.place_inf(place, timestep)
-        susceptibility = PlaceForces.place_susc(place, infector, infectee,
-                                                timestep)
+        infectiousness = PlaceInfection.place_inf(place, timestep)
+        susceptibility = PlaceInfection.place_susc(place, infector, infectee,
+                                                   timestep)
         return (infectiousness * susceptibility)
