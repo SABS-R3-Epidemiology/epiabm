@@ -35,14 +35,12 @@ class TestHouseholdSweep(unittest.TestCase):
                          .persons[0].infection_status,
                          pe.property.InfectionStatus.InfectMild)
 
-    @mock.patch('pyEpiabm.routine.CovidsimHelpers.calc_house_susc')
-    @mock.patch('pyEpiabm.routine.CovidsimHelpers.calc_house_inf')
-    def test__call__(self, mock_inf, mock_susc):
+    @mock.patch('pyEpiabm.routine.HouseholdInfection.household_foi')
+    def test__call__(self, mock_force):
         """Test whether the household sweep function correctly
         adds persons to the queue.
         """
-        mock_inf.return_value = 10.0
-        mock_susc.return_value = 10.0
+        mock_force.return_value = 100.0
 
         # Assert a population with one infected will not change the queue
         self.test_sweep = pe.sweep.HouseholdSweep()
