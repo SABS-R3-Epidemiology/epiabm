@@ -11,7 +11,7 @@ class HouseholdInfection:
     """
     @staticmethod
     def household_inf(infector: Person, timestep: int):
-        """Calculate the infectiveness of a household.
+        """Calculate the infectiousness of a household.
 
         :param infector: Infector
         :type infector: Person
