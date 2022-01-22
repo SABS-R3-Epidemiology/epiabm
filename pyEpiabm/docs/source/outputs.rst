@@ -8,8 +8,14 @@ Outputs provides various methods to record the outputs of any simulation or meth
 
 Overview:
 
+- :class:`AbstractReporter`
 - :class:`_CsvDictWriter`
 - :class:`_CsvWriter`
+
+.. autoclass::AbstractReporter
+    :members:
+    :special-members: __init__, __call__
+    
 
 .. autoclass:: _CsvDictWriter
     :members:
