@@ -2,6 +2,7 @@
 # Simulates a complete pandemic
 #
 
+import random
 import os
 import typing
 
@@ -44,6 +45,12 @@ class Simulation:
         self.population = population
         self.initial_sweeps = initial_sweeps
         self.sweeps = sweeps
+
+        # If random seed is specified in parameters, set this in numpy
+        if self.sim_params["random_seed"]:
+            print("Random seed set")
+            random.seed(self.sim_params["random_seed"])
+
         # Initial sweeps configure the population by changing the type,
         # infection status, infectiveness or susceptibility of people
         # or places. Only runs on the first timestep.

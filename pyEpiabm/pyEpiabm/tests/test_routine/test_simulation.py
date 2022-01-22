@@ -72,6 +72,8 @@ class TestSimulation(unittest.TestCase):
                 test_sim.write_to_file(time)
                 mock.assert_called_with(data)
 
+# add test to run two simulations and compare results with seed set
+
 
 if __name__ == '__main__':
     unittest.main()
