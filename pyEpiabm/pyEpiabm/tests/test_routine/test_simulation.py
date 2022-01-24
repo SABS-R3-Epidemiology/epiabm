@@ -17,7 +17,8 @@ class TestSimulation(unittest.TestCase):
         pe.Parameters.instance().time_steps_per_day = 1
         cls.sim_params = {"simulation_start_time": 0,
                           "simulation_end_time": 2,
-                          "initial_infected_number": 0}
+                          "initial_infected_number": 0,
+                          "simulation_seed": 42}
 
         cls.file_params = {"output_file": "test_file.csv",
                            "output_dir": "pyEpiabm/pyEpiabm/tests"}
@@ -73,8 +74,6 @@ class TestSimulation(unittest.TestCase):
             with patch.object(test_sim.writer, 'write') as mock:
                 test_sim.write_to_file(time)
                 mock.assert_called_with(data)
-
-# add test to run two simulations and compare results with seed set
 
 
 if __name__ == '__main__':

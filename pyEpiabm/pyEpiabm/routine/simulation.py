@@ -48,10 +48,9 @@ class Simulation:
         self.sweeps = sweeps
 
         # If random seed is specified in parameters, set this in numpy
-        if "random_seed" in self.sim_params:
-            print("Random seed set")
-            random.seed(self.sim_params["random_seed"])
-            np.random.seed(self.sim_params["random_seed"])
+        if "simulation_seed" in self.sim_params:
+            random.seed(self.sim_params["simulation_seed"])
+            np.random.seed(self.sim_params["simulation_seed"])
 
         # Initial sweeps configure the population by changing the type,
         # infection status, infectiveness or susceptibility of people
