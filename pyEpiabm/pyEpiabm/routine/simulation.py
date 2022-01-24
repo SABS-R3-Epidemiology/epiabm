@@ -5,6 +5,7 @@
 import random
 import os
 import typing
+import numpy as np
 
 from pyEpiabm.core import Population
 from pyEpiabm.output import _CsvDictWriter
@@ -47,9 +48,10 @@ class Simulation:
         self.sweeps = sweeps
 
         # If random seed is specified in parameters, set this in numpy
-        if self.sim_params["random_seed"]:
+        if "random_seed" in self.sim_params:
             print("Random seed set")
             random.seed(self.sim_params["random_seed"])
+            np.random.seed(self.sim_params["random_seed"])
 
         # Initial sweeps configure the population by changing the type,
         # infection status, infectiveness or susceptibility of people

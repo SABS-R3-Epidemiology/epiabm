@@ -3,7 +3,6 @@
 #
 
 import os
-import random  # testseed
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -13,20 +12,18 @@ import pyEpiabm as pe
 # simulation.
 pop_params = {"population_size": 100, "cell_number": 1,
               "microcell_number": 1, "household_number": 20,
-              "place_number": 2}
+              "place_number": 2, "population_seed": 42}
 
 pe.Parameters.instance().time_steps_per_day = 1
 
-# Create a population base don the parameters given.
-random.seed(42)  # testseed - for cnosistent pop generation as simulation seed doesn't cover this part
-population = pe.routine.ToyPopulationFactory().make_pop(**pop_params)
-print(population)  # add verbose print options for debugging? (i.e. to check if random seed is working here)
+# Create a population based on the parameters given.
+population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
 cell = population.cells[0]
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
-              "initial_infected_number": 5, "random_seed": 42}
+              "initial_infected_number": 5, "simulation_seed": 42}
 
 file_params = {"output_file": "output.csv",
                "output_dir": "python_examples/simulation_outputs"}
