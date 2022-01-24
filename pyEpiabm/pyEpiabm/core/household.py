@@ -13,7 +13,7 @@ class Household:
     different to that of the individuals.
     """
     def __init__(self, loc: typing.Tuple[float, float] = (1.0, 1.0),
-                 susceptibility=0, infectiveness=0):
+                 susceptibility=0, infectiousness=0):
         """Constructor Method.
 
         :param loc: Location of household
@@ -21,13 +21,13 @@ class Household:
         :param susceptibility: Household's base susceptibility
             to infection events
         :type susceptibility: float
-        :param infectiveness: Household's base infectiveness
-        :type infectiveness: float
+        :param infectiousness: Household's base infectiousness
+        :type infectiousness: float
         """
         self.persons = []
         self.location = loc
         self.susceptibility = susceptibility
-        self.infectiveness = infectiveness
+        self.infectiousness = infectiousness
 
     def __repr__(self):
         """Returns a string representation of Household.

@@ -32,7 +32,7 @@ class Place:
         self.place_type = place_type
         self.max_capacity = 50
         self.susceptibility = 0
-        self.infectiveness = 0
+        self.infectiousness = 0
 
         self.cell = cell
         self.microcell = microcell
@@ -49,13 +49,13 @@ class Place:
         """
         self.max_capacity = max_capacity
 
-    def set_infectiveness(self, infectiveness: float):
-        """Sets a baseline infectiveness for the place.
+    def set_infectiousness(self, infectiousness: float):
+        """Sets a baseline infectiousness for the place.
 
-        :param infectiveness: Baseline infectiveness
-        :type infectiveness: float
+        :param infectiousness: Baseline infectiousness
+        :type infectiousness: float
         """
-        self.infectiveness = infectiveness
+        self.infectiousness = infectiousness
 
     def set_susceptibility(self, susceptibility: float):
         """Sets a baseline susceptibility for the place.
