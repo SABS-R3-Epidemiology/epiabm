@@ -17,8 +17,7 @@ class TestSimulation(unittest.TestCase):
         pe.Parameters.instance().time_steps_per_day = 1
         cls.sim_params = {"simulation_start_time": 0,
                           "simulation_end_time": 2,
-                          "initial_infected_number": 0,
-                          "simulation_seed": 42}
+                          "initial_infected_number": 0}
 
         cls.file_params = {"output_file": "test_file.csv",
                            "output_dir": "pyEpiabm/pyEpiabm/tests"}
@@ -74,6 +73,52 @@ class TestSimulation(unittest.TestCase):
             with patch.object(test_sim.writer, 'write') as mock:
                 test_sim.write_to_file(time)
                 mock.assert_called_with(data)
+
+    @patch('pyEpiabm.output._CsvDictWriter.write')
+    def test_random_seed(self, mock_write):
+        pop_params = {"population_size": 100, "cell_number": 1,
+                      "microcell_number": 1, "household_number": 20}
+        sim_pop = self.pop_factory.make_pop(pop_params)
+        pe.Parameters.instance().time_steps_per_day = 1
+        sim_params = {"simulation_start_time": 0,
+                      "simulation_end_time": 1,
+                      "initial_infected_number": 5,
+                      "simulation_seed": 42}
+
+        # Care has been taken in setting the end time of the simulation
+        # to ensure that partial infection is achieved across the population,
+        # so that different seeds will result in a unique final state
+
+        initial_sweeps = [pe.sweep.InitialInfectedSweep()]
+        sim_sweeps = [pe.sweep.HouseholdSweep(), pe.sweep.QueueSweep(),
+                      pe.sweep.HostProgressionSweep(),
+                      pe.sweep.UpdatePlaceSweep(), pe.sweep.PlaceSweep()]
+
+        mo = mock_open()
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            seed_sim = pe.routine.Simulation()
+            seed_sim.configure(sim_pop, initial_sweeps, sim_sweeps, sim_params,
+                               self.file_params)
+            seed_sim.run_sweeps()
+        seed_output = mock_write.call_args
+
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            comp_sim = pe.routine.Simulation()
+            comp_sim.configure(sim_pop, initial_sweeps, sim_sweeps, sim_params,
+                               self.file_params)
+            comp_sim.run_sweeps()
+        comp_output = mock_write.call_args
+
+        sim_params["simulation_seed"] = 43  # Change seed of population
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            diff_sim = pe.routine.Simulation()
+            diff_sim.configure(sim_pop, initial_sweeps, sim_sweeps, sim_params,
+                               self.file_params)
+            diff_sim.run_sweeps()
+        diff_output = mock_write.call_args
+
+        self.assertEqual(seed_output, comp_output)
+        self.assertNotEqual(seed_output, diff_output)
 
 
 if __name__ == '__main__':
