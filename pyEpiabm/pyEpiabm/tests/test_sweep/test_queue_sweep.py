@@ -12,7 +12,9 @@ class TestQueueSweep(unittest.TestCase):
         2 people are located in one microcell.
         """
         cls.pop_factory = pe.routine.ToyPopulationFactory()
-        cls.test_population = cls.pop_factory.make_pop(2, 1, 1, 1, True)
+        cls.pop_params = {"population_size": 2, "cell_number": 1,
+                          "microcell_number": 1, "household_number": 1}
+        cls.test_population = cls.pop_factory.make_pop(cls.pop_params)
 
         cls.cell = cls.test_population.cells[0]
         cls.person1 = cls.test_population.cells[0].microcells[0].persons[0]

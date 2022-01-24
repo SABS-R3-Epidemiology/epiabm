@@ -11,7 +11,9 @@ class TestSimulation(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.pop_factory = pe.routine.ToyPopulationFactory()
-        cls.test_population = cls.pop_factory.make_pop(0, 1, 1, 1)
+        cls.pop_params = {"population_size": 0, "cell_number": 1,
+                          "microcell_number": 1, "household_number": 1}
+        cls.test_population = cls.pop_factory.make_pop(cls.pop_params)
         pe.Parameters.instance().time_steps_per_day = 1
         cls.sim_params = {"simulation_start_time": 0,
                           "simulation_end_time": 2,

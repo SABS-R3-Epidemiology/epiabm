@@ -21,8 +21,9 @@ class TestPopConfig(unittest.TestCase):
         no households. Parameters are assigned at random.
         """
         # Population is initialised with no households
-        test_pop = ToyPopulationFactory().make_pop(pop_size, cell_number,
-                                                   microcell_number)
+        pop_params = {"population_size": pop_size, "cell_number": cell_number,
+                      "microcell_number": microcell_number}
+        test_pop = ToyPopulationFactory().make_pop(pop_params)
 
         total_people = 0
         count_non_empty_cells = 0
@@ -51,9 +52,10 @@ class TestPopConfig(unittest.TestCase):
         """
 
         # Initialises population with households.
-        toy_pop = ToyPopulationFactory().make_pop(pop_size, cell_number,
-                                                  microcell_number,
-                                                  household_number)
+        pop_params = {"population_size": pop_size, "cell_number": cell_number,
+                      "microcell_number": microcell_number,
+                      "household_number": household_number}
+        toy_pop = ToyPopulationFactory().make_pop(pop_params)
         total_people = 0
         households = []
         num_empty_households = 0
@@ -82,9 +84,10 @@ class TestPopConfig(unittest.TestCase):
         """
 
         # Initialises population with places.
-        toy_pop = ToyPopulationFactory().make_pop(pop_size, cell_number,
-                                                  microcell_number,
-                                                  place_number=place_number)
+        pop_params = {"population_size": pop_size, "cell_number": cell_number,
+                      "microcell_number": microcell_number,
+                      "place_number": place_number}
+        toy_pop = ToyPopulationFactory().make_pop(pop_params)
 
         places = []
         for cell in toy_pop.cells:
