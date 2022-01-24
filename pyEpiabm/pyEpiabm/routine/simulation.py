@@ -53,7 +53,7 @@ class Simulation:
             np.random.seed(self.sim_params["simulation_seed"])
 
         # Initial sweeps configure the population by changing the type,
-        # infection status, infectiveness or susceptibility of people
+        # infection status, infectiousness or susceptibility of people
         # or places. Only runs on the first timestep.
         for s in initial_sweeps + sweeps:
             s.bind_population(self.population)
