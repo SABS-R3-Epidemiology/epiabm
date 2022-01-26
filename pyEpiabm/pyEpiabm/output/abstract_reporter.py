@@ -36,12 +36,13 @@ class AbstractReporter:
         else:
             os.makedirs(folder)
 
-    def __call__(self, population: Population, time: float):
-        """Save data from Population at given time in .csv files in target folder.
+    def write(self):
+        """Write data to .csv files in target folder.
+        """
+        raise NotImplementedError
 
-        :param population: Population: :class:`Population` to output
-        :type population: Population
-        :param time: Current simulation time
-        :type time: float
+    def __del__(self):
+        """Closes the file when the simulation is finished.
+        Required for file data to be further used.
         """
         raise NotImplementedError

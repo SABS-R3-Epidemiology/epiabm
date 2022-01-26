@@ -5,8 +5,10 @@
 import csv
 import typing
 
+from pyEpiabm.output.abstract_reporter import AbstractReporter
 
-class _CsvWriter:
+
+class _CsvWriter(AbstractReporter):
     def __init__(self, filename: str, fieldnames: typing.List):
         """Initialises a file to store output in, and which categories
         to record.
@@ -16,6 +18,7 @@ class _CsvWriter:
         :param fieldnames: List of categories to be saved
         :type fieldnames: list
         """
+        super().__init__()
         try:
             self.f = open(filename, 'w')
             self.writer = csv.writer(
