@@ -31,7 +31,7 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
               "initial_infected_number": 5}
 
 file_params = {"output_file": "output.csv",
-               "output_dir": "python_examples/spatial_outputs"}
+               "output_dir": "python_examples/spatial_example/spatial_outputs"}
 
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.
