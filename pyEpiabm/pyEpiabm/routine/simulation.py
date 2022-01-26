@@ -35,6 +35,8 @@ class Simulation:
             * `output_file`: String for the name of the output .csv file
             * `output_dir`: String for the location of the output file,
                  as a relative path
+            * `spatial_output`: Boolean to determine whether a spatial output
+                should be used
 
         :param population: Population structure for the model
         :type population: Population
@@ -54,12 +56,12 @@ class Simulation:
             file
         :type file_params: dict
 
-
         """
         self.sim_params = sim_params
         self.population = population
         self.initial_sweeps = initial_sweeps
         self.sweeps = sweeps
+        self.spatial_output = file_params["spatial_output"]
 
         # If random seed is specified in parameters, set this in numpy
         if "simulation_seed" in self.sim_params:
@@ -80,9 +82,13 @@ class Simulation:
 
         filename = os.path.join(folder, file_params["output_file"])
 
+        output_titles = ["time"] + [s for s in InfectionStatus]
+        if self.spatial_output:
+            output_titles += ["cell"]
+
         self.writer = _CsvDictWriter(
             folder, filename,
-            ["time"] + [s for s in InfectionStatus])
+            output_titles)
 
     def run_sweeps(self):
         """Iteration step of the simulation. First the initialisation sweeps
@@ -120,6 +126,8 @@ class Simulation:
             for k in data:
                 data[k] += cell.compartment_counter.retrieve()[k]
         data["time"] = time
+        if self.spatial_output:
+            data["cell"] = hash(cell)
 
         self.writer.write(data)
 
