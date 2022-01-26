@@ -2,7 +2,9 @@
 # Factory for creation of a toy population
 #
 
+import typing
 import numpy as np
+import random
 
 from pyEpiabm.core import Household, Population
 from pyEpiabm.property import PlaceType
@@ -12,35 +14,46 @@ class ToyPopulationFactory:
     """ Class that creates a toy population for use in the simple
     python model.
     """
-    def make_pop(self, population_size: int, cell_number: int,
-                 microcell_number: int, household_number: int = 0,
-                 place_number: int = 0):
+    def make_pop(self, pop_params: typing.Dict):
         """Initialize a population object with a given population size,
         number of cells and microcells. A uniform multinomial distribution is
         used to distribute the number of people into the different microcells.
         There is also an option to distribute people into households or places.
 
-        :param pop_size: Total number of people in population
-        :type pop_size: int
-        :param cell_number: Number of cell objects the population will be
-            split into
-        :type cell_number: int
-        :param microcell_number: Number of microcell objects per cell
-        :type microcell_number: int
-        :param household_number: Number of households per microcell
-        :type household_number: int
-        :param place_number: Number of places per microcell
-        :type place_number: int
+        file_params contains (with optional args as (*)):
+            * `population_size`: Number of people in population
+            * `cell_number`: Number of cells in population
+            * `microcell_number`: Number of microcells in each cell
+            * `household_number`: Number of households in each microcell (*)
+            * `place_number`: Number of places in each microcell (*)
+            * `population_seed`: Random seed for reproducible populations (*)
 
+        :param file_params: Dictionary of parameters for generating a
+            population
+        :type file_params: dict
         :return: Population object with individuals distributed into
             households
         :rtype: Population
         """
+        # Unpack variables from input dictionary
+        population_size = pop_params["population_size"]
+        cell_number = pop_params["cell_number"]
+        microcell_number = pop_params["microcell_number"]
+
+        household_number = pop_params["household_number"] \
+            if "household_number" in pop_params else 0
+        place_number = pop_params["place_number"] \
+            if "place_number" in pop_params else 0
+
+        # If random seed is specified in parameters, set this in numpy
+        if "population_seed" in pop_params:
+            np.random.seed(pop_params["population_seed"])
+            random.seed(pop_params["population_seed"])
+
         # Initialise a population class
         new_pop = Population()
 
         # Checks parameter type and stores as class objects.
-
         total_number_microcells = cell_number * microcell_number
 
         new_pop.add_cells(cell_number)
