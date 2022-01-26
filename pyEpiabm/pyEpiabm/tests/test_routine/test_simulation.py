@@ -21,8 +21,9 @@ class TestSimulation(unittest.TestCase):
                           "simulation_end_time": 2,
                           "initial_infected_number": 0}
 
+        cls.mock_output_dir = "pyEpiabm/pyEpiabm/tests/test_output/mock"
         cls.file_params = {"output_file": "test_file.csv",
-                           "output_dir": "pyEpiabm/pyEpiabm/tests"}
+                           "output_dir": cls.mock_output_dir}
 
         cls.initial_sweeps = [pe.sweep.InitialInfectedSweep()]
         cls.sweeps = [pe.sweep.PlaceSweep()]

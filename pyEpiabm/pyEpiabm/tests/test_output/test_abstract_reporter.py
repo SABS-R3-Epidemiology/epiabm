@@ -36,12 +36,11 @@ class TestAbstractReporter(unittest.TestCase):
 
     @mock.patch("os.path.exists")
     @mock.patch("os.makedirs")
-    def test___call__(self, mock_makedirs, mock_pathexists):
-        population = pe.Population
+    def test_write(self, mock_makedirs, mock_pathexists):
         mock.MagicMock(return_value=False)
         subject = pe.output.AbstractReporter("test_folder", False)
         self.assertRaises(NotImplementedError,
-                          subject.__call__, population, 1)
+                          subject.write)
 
 
 if __name__ == '__main__':

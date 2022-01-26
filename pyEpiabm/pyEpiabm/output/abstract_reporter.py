@@ -38,9 +38,3 @@ class AbstractReporter:
         """Write data to .csv files in target folder.
         """
         raise NotImplementedError
-
-    def __del__(self):
-        """Closes the file when the simulation is finished.
-        Required for file data to be further used.
-        """
-        raise NotImplementedError
