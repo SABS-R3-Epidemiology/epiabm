@@ -20,11 +20,47 @@ Once an individual becomes exposed, their progression through the various stages
 
 A more complete overview of our implementation of the Ferguson model is given in [the Wiki](https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Overview-of-the-Ferguson-Model) for this repository.
 
-## pyEpiabm
+# pyEpiabm
+
 The pyEpiabm backend is written in python, chosen for its readability and user-friendliness. It is not able to cope with large population sizes, but can configure a toy population to explore the functionality of the model and better understand the underlying code. Additionally, toy models may be quicker for model comparison and parameter inference, though care should obviously be taken when scaling up to a full population. We provide a variety of workflows to show the utility of code.
 
+## Running a simulation
 
-## cEpiabm
+A complete workflow for running a simulation is provded in `python_examples/simulation_flow.py`. There are a number of steps to this process:
+
+### Set Random Seed _(Optional)_
+This allows the random seed to be set for all random modules used in the simulation, to enable reproducible simulations. The recommended approach here is to set one seed at the start of the script (before configuring the population or the simulation objects), so that both are generated according to this seed. It is also possible to set a separate seed for one or other object, by passing `population_seed` or `simulation_seed` into their respective parameter dictionaries, however care should be exercised to ensure the two objects are configured sequentially. For example, generating a second population after setting the simulation seed would be done according to `simulation_seed` not `population_seed`. Setting the seed is not currently compatible with multi-threaded execution.
+
+### Configure Population
+Create a population based on the parameters given, from the following list:
+* `population_size`: Number of people in population
+* `cell_number`: Number of cells in population
+* `microcell_number`: Number of microcells in each cell
+* `household_number`: Number of households in each microcell _(Optional)_
+* `place_number`: Number of places in each microcell _(Optional)_
+* `population_seed`: Random seed for reproducible populations - see above _(Optional)_
+
+### Configure Simulation
+Configure a simulation with a number of parameters. These are split into two categories:
+
+*`sim_params`* _(For running the simulation)_
+* `simulation_start_time`: The initial time at the start of the simulation
+* `simulation_end_time`: The final time at which to stop the simulation
+* `initial_infected_number`: The initial number of infected individuals in the population
+* `simulation_seed`:  Random seed for reproducible simulations - see above _(Optional)_
+
+*`file_params`* _(For controlling output location)_
+* `output_file`: String for the name of the output .csv file
+* `output_dir`: String for the location of the output file, as a relative path
+
+Two lists of sweeps must also be passed to this function - the first will be executed once at the start of the simulation (i.e. to determine the initial infections in the population), while the second list will be ran at every timestep (i.e. to propagate the infection through the population).
+
+## Documentation 
+
+Documentation on the python backend (pyEpiabm) is stored on [Read The Docs](https://epiabm.readthedocs.io/en/latest/).  
+The Wiki for this repo also contains more detail on the Ferguson model itself, and where our implementation might differ from that.
+
+# cEpiabm
 We also provide an efficient and scalable backend in C++, which can run simulations for populations comparable to the UK in a reasonable timeframe. This code may be harder for new users to understand, but the parallels with the python code should be sufficiently informative for those who wish to look deeper into the code.
 
 ## Set up
@@ -43,11 +79,10 @@ Note that cmake must be installed on your system. The following command can be u
 sudo apt-get install cmake cmake-data
 ```
 
-## Documentation 
-Documentation on the python backend (pyEpiabm) is stored on [Read The Docs](https://epiabm.readthedocs.io/en/latest/).  
-The Wiki for this repo also contains more detail on the Ferguson model itself, and where our implementation might differ from that.
 
-## References
+
+# References
+
 List of resources that can be useful for the project:
 * Ferguson N, 2020. Impact  of  non-pharmaceutical  interventions (NPIs) to reduce COVID-19 mortality and healthcare demand (https://www.imperial.ac.uk/media/imperial-college/medicine/sph/ide/gida-fellowships/Imperial-College-COVID19-NPI-modelling-16-03-2020.pdf)
 * Gillespie D, 1977. Exact stochastic simulation of coupled chemical reactions (https://doi.org/10.1021/j100540a008)

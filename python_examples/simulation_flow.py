@@ -8,16 +8,21 @@ import matplotlib.pyplot as plt
 
 import pyEpiabm as pe
 
-# Pop_params are ued to configure the population structure being used in this
+# Method to set the seed at the start of the simulation, for reproducibility
+
+pe.routine.Simulation.set_random_seed(seed=42)
+
+# Pop_params are used to configure the population structure being used in this
 # simulation.
+
 pop_params = {"population_size": 100, "cell_number": 1,
               "microcell_number": 1, "household_number": 20,
               "place_number": 2}
 
 pe.Parameters.instance().time_steps_per_day = 1
 
-# Create a population base don the parameters given.
-population = pe.routine.ToyPopulationFactory().make_pop(**pop_params)
+# Create a population based on the parameters given.
+population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
 cell = population.cells[0]
 
 # sim_ and file_params give details for the running of the simulations and
