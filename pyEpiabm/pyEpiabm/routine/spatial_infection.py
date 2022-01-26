@@ -33,7 +33,7 @@ class SpatialInfection:
         """Calculate the susceptibility of a one cell
         towards its neighbouring cells.
 
-        :param susc_cell: cell receiving infections
+        :param susc_cell: Cell receiving infections
         :type susc_cell: Cell
         :param infectee: Infectee
         :type infectee: Person
