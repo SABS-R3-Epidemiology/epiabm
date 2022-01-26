@@ -75,7 +75,7 @@ class Cell:
         """Returns the total number of infectious people in each
         cell.
 
-        :return: total infectors in cell
+        :return: Total infectors in cell
         :rtype: int
         """
         cell_data = self.compartment_counter.retrieve()
