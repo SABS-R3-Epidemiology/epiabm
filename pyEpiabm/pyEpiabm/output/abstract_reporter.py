@@ -4,14 +4,12 @@
 
 import os
 
-from pyEpiabm.core.population import Population
-
 
 class AbstractReporter:
     """Abstract class for Data Reporters.
     """
 
-    def __init__(self, folder: str, clear_folder: bool):
+    def __init__(self, folder: str, clear_folder: bool = True):
         """Constructor method for reporter. Makes a new folder
         in specified location if one does not already exist.
         Also clears contents of an existing folder if

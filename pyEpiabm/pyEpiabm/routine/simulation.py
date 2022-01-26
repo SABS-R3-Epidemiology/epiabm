@@ -75,12 +75,13 @@ class Simulation:
         # General sweeps run through the population on every timestep, and
         # include host progression and spatial infections.
 
-        filename = os.path.join(os.getcwd(),
-                                file_params["output_dir"],
-                                file_params["output_file"])
+        folder = os.path.join(os.getcwd(),
+                              file_params["output_dir"])
+
+        filename = os.path.join(folder, file_params["output_file"])
 
         self.writer = _CsvDictWriter(
-            filename,
+            folder, filename,
             ["time"] + [s for s in InfectionStatus])
 
     def run_sweeps(self):
