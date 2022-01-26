@@ -15,7 +15,10 @@ class TestPlaceSweep(unittest.TestCase):
         single place containing (initially) only one of these people.
         """
         cls.pop_factory = pe.routine.ToyPopulationFactory()
-        cls.pop = cls.pop_factory.make_pop(2, 1, 1, 1, place_number=1)
+        cls.pop_params = {"population_size": 2, "cell_number": 1,
+                          "microcell_number": 1, "household_number": 1,
+                          "place_number": 1}
+        cls.pop = cls.pop_factory.make_pop(cls.pop_params)
         cls.cell = cls.pop.cells[0]
         cls.microcell = cls.cell.microcells[0]
         cls.place = cls.cell.places[0]
