@@ -24,6 +24,18 @@ class Simulation:
                   file_params: typing.Dict):
         """Initialise a population structure for use in the simulation.
 
+        sim_params Contains:
+            * `simulation_start_time`: The initial time for the simulation
+            * `simulation_end_time`: The final time to stop the simulation
+            * `initial_infected_number`: The initial number of infected
+                individuals in the population
+            * `simulation_seed`:  Random seed for reproducible simulations
+
+        file_params Contains:
+            * `output_file`: String for the name of the output .csv file
+            * `output_dir`: String for the location of the output file,
+                 as a relative path
+
         :param population: Population structure for the model
         :type population: Population
         :param pop_params: Dictionary of parameter specific to the population
@@ -41,6 +53,8 @@ class Simulation:
         :param file_params: Dictionary of parameters specific to the output
             file
         :type file_params: dict
+
+
         """
         self.sim_params = sim_params
         self.population = population

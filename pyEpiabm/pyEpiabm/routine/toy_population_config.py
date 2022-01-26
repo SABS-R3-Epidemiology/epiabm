@@ -20,10 +20,17 @@ class ToyPopulationFactory:
         used to distribute the number of people into the different microcells.
         There is also an option to distribute people into households or places.
 
+        file_params contains (with optional args as (*)):
+            * `population_size`: Number of people in population
+            * `cell_number`: Number of cells in population
+            * `microcell_number`: Number of microcells in each cell
+            * `household_number`: Number of households in each microcell (*)
+            * `place_number`: Number of places in each microcell (*)
+            * `population_seed`: Random seed for reproducible populations (*)
+
         :param file_params: Dictionary of parameters for generating a
             population
         :type file_params: dict
-
         :return: Population object with individuals distributed into
             households
         :rtype: Population
