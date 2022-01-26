@@ -14,7 +14,7 @@ class SpatialInfection:
         """Calculate the infectiveness of one cell
         towards its neighbouring cells.
 
-        :param inf_cell: cell doing infecting
+        :param inf_cell: Cell doing infecting
         :type inf_cell: Cell
         :param timestep: Current simulation timestep
         :type timestep: int
