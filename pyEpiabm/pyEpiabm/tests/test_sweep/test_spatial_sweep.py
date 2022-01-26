@@ -16,19 +16,14 @@ class TestSpatialSweep(unittest.TestCase):
         one of these people.
         """
         cls.pop = pe.Population()
-        cls.pop.add_cells(2)
+        cls.pop.add_cells(1)
         cls.cell_inf = cls.pop.cells[0]
-        cls.cell_susc = cls.pop.cells[1]
 
         cls.cell_inf.add_microcells(1)
         cls.microcell_inf = cls.cell_inf.microcells[0]
-        cls.cell_susc.add_microcells(1)
-        cls.microcell_susc = cls.cell_susc.microcells[0]
 
         cls.microcell_inf.add_people(1)
         cls.infector = cls.microcell_inf.persons[0]
-        cls.microcell_susc.add_people(1)
-        cls.infectee = cls.microcell_susc.persons[0]
         pe.Parameters.instance().time_steps_per_day = 1
 
     @mock.patch("numpy.random.poisson")
@@ -39,14 +34,25 @@ class TestSpatialSweep(unittest.TestCase):
         adds persons to the queue, with each infection
         event certain to happen.
         """
-        # First test when all persons will be queued.
         mock_poisson.return_value = 1
         mock_inf.return_value = 10.0
         mock_force.return_value = 100.0
         time = 1
 
         test_sweep = pe.sweep.SpatialSweep()
-        # Assert a population with no infected will not change the queue
+        # Assert a population with one cell
+        test_sweep.bind_population(self.pop)
+        test_sweep(time)
+        self.assertTrue(self.cell_inf.person_queue.empty())
+
+        # Add in another cell with a susceptible
+        self.pop.add_cells(1)
+        self.cell_susc = self.pop.cells[1]
+        self.cell_susc.add_microcells(1)
+        self.microcell_susc = self.cell_susc.microcells[0]
+        self.microcell_susc.add_people(1)
+        self.infectee = self.microcell_susc.persons[0]
+
         test_sweep.bind_population(self.pop)
         test_sweep(time)
         self.assertTrue(self.cell_susc.person_queue.empty())
