@@ -96,6 +96,9 @@ class Simulation:
     def write_to_file(self, time):
         """Records the count number of a given list of infection statuses
         and writes these to file.
+
+        :param time: Time of output data
+        :type file_params: float
         """
         data = {s: 0 for s in list(InfectionStatus)}
         for cell in self.population.cells:
@@ -104,3 +107,14 @@ class Simulation:
         data["time"] = time
 
         self.writer.write(data)
+
+    @staticmethod
+    def set_random_seed(seed):
+        """ Set random seed for all subsequent operations. Should be used
+        before population configuration to control this process as well.
+
+        :param seed: Seed for RandomState
+        :type seed: int
+        """
+        random.seed(seed)
+        np.random.seed(seed)

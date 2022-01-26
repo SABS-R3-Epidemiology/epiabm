@@ -1,4 +1,6 @@
 import os
+import random
+import numpy as np
 import unittest
 from unittest.mock import patch, mock_open
 
@@ -73,6 +75,14 @@ class TestSimulation(unittest.TestCase):
             with patch.object(test_sim.writer, 'write') as mock:
                 test_sim.write_to_file(time)
                 mock.assert_called_with(data)
+
+    def test_set_random_seed(self):
+        pe.routine.Simulation.set_random_seed(seed=0)
+        value = random.random()
+        np_value = np.random.random()
+        self.assertAlmostEqual(value, 0.844422, places=5)
+        self.assertAlmostEqual(np_value, 0.548814, places=5)
+        # Values taken from known seed sequence
 
     @patch('pyEpiabm.output._CsvDictWriter.write')
     def test_random_seed(self, mock_write):

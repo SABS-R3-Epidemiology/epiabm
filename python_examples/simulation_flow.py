@@ -8,11 +8,16 @@ import matplotlib.pyplot as plt
 
 import pyEpiabm as pe
 
-# Pop_params are ued to configure the population structure being used in this
+# Method to set the seed at the start of the simulation, for reproducibility
+
+pe.routine.Simulation.set_random_seed(seed=42)
+
+# Pop_params are used to configure the population structure being used in this
 # simulation.
+
 pop_params = {"population_size": 100, "cell_number": 1,
               "microcell_number": 1, "household_number": 20,
-              "place_number": 2, "population_seed": 42}
+              "place_number": 2}
 
 pe.Parameters.instance().time_steps_per_day = 1
 
@@ -23,7 +28,7 @@ cell = population.cells[0]
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
-              "initial_infected_number": 5, "simulation_seed": 42}
+              "initial_infected_number": 5}
 
 file_params = {"output_file": "output.csv",
                "output_dir": "python_examples/simulation_outputs"}
