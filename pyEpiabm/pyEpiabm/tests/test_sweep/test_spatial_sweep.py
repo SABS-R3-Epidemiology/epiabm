@@ -57,7 +57,7 @@ class TestSpatialSweep(unittest.TestCase):
         test_sweep(time)
         self.assertTrue(self.cell_susc.person_queue.empty())
 
-        # Change person"s status to infected
+        # Change person's status to infected
         self.infector.update_status(pe.property.InfectionStatus.InfectMild)
         self.cell_susc.person_queue = Queue()
         test_sweep.bind_population(self.pop)
