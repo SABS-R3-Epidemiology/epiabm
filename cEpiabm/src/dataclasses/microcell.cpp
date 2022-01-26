@@ -59,6 +59,11 @@ namespace epiabm
         m_compartmentCounter.initialize(cell, m_people);
     }
 
+    unsigned int Microcell::compartmentCount(InfectionStatus status)
+    {
+        return m_compartmentCounter(status);
+    }
+
     void Microcell::personStatusChange(Person* person, InfectionStatus newStatus, unsigned short /*timestep*/)
     {
         m_compartmentCounter.notify(person->status(), newStatus);

@@ -40,6 +40,8 @@ namespace epiabm
         private:
     }; // class RandomSeedSweep
 
+    typedef std::shared_ptr<RandomSeedSweep> RandomSeedSweepPtr;
+
 } // namespace epiabm
 
 

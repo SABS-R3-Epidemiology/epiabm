@@ -339,3 +339,13 @@ TEST_CASE("dataclasses/cell: test infectious grouping", "[Cell]")
         }
     }
 }
+
+TEST_CASE("dataclasses/cell: test compartment counter", "[Cell]")
+{
+    Cell subject = makeSubject(10, 100);
+    REQUIRE_NOTHROW(subject.initialize());
+    REQUIRE(subject.compartmentCount(InfectionStatus::Susceptible) == 1000);
+    REQUIRE(subject.microcells()[0].compartmentCount(InfectionStatus::Susceptible) == 100);
+    REQUIRE(subject.compartmentCount(InfectionStatus::Exposed) == 0);
+    REQUIRE(subject.microcells()[0].compartmentCount(InfectionStatus::Exposed) == 0);
+}

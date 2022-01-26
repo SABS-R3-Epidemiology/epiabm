@@ -25,12 +25,12 @@ void run()
 
     // Make Population and Link Households
     PopulationPtr population = PopulationFactory().makePopulation(10, 10, 1000);
-    HouseholdLinker().linkHouseholds(population, 5, 100);
+    HouseholdLinker().linkHouseholds(population, 1, 100);
     population->initialize();
 
     // Randomly Seed Population with Infections
     {
-        RandomSeedSweep randomizer = RandomSeedSweep(200);
+        RandomSeedSweep randomizer = RandomSeedSweep(600);
         randomizer.bind_population(population);
         randomizer(0);
     }
