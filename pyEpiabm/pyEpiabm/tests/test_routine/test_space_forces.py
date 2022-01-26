@@ -22,19 +22,19 @@ class TestSpatialInfection(unittest.TestCase):
         cls.infectee = pe.Person(cls.microcell)
         cls.timestep = 1
 
-    def test_calc_place_susc(self):
+    def test_place_susc(self):
         result = SpatialInfection.space_susc(self.cell, self.infectee,
                                              self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
-    def test_calc_place_inf(self):
+    def test_place_inf(self):
         result = SpatialInfection.space_inf(self.cell, self.infector,
                                             self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
-    def test_calc_place_foi(self):
+    def test_place_foi(self):
         result = SpatialInfection.space_foi(self.cell, self.cell,
                                             self.infector, self.infectee,
                                             self.timestep)
