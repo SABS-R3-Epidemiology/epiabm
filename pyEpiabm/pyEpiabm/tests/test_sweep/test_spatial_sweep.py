@@ -40,7 +40,7 @@ class TestSpatialSweep(unittest.TestCase):
         time = 1
 
         test_sweep = pe.sweep.SpatialSweep()
-        # Assert a population with one cell
+        # Assert a population with one cell doesn't do anything
         test_sweep.bind_population(self.pop)
         test_sweep(time)
         self.assertTrue(self.cell_inf.person_queue.empty())
@@ -63,6 +63,20 @@ class TestSpatialSweep(unittest.TestCase):
         test_sweep.bind_population(self.pop)
         test_sweep(time)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
+
+        # Add multiple people to infector cell
+        self.cell_inf.microcells[0].add_people(10000)
+        self.cell_susc.person_queue = Queue()
+        test_sweep.bind_population(self.pop)
+        test_sweep(time)
+        self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
+
+        # Change infectee"s status to recovered
+        self.infectee.update_status(pe.property.InfectionStatus.Recovered)
+        self.cell_susc.person_queue = Queue()
+        test_sweep.bind_population(self.pop)
+        test_sweep(time)
+        self.assertTrue(self.cell_susc.person_queue.empty())
 
 
 if __name__ == '__main__':
