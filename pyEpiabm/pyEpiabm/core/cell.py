@@ -79,8 +79,8 @@ class Cell:
         :rtype: int
         """
         cell_data = self.compartment_counter.retrieve()
-        total_infectors = cell_data[InfectionStatus.InfectASympt] + \
-            cell_data[InfectionStatus.InfectMild] + \
-            cell_data[InfectionStatus.InfectGP]
+        total_infectors = (cell_data[InfectionStatus.InfectASympt]
+                           + cell_data[InfectionStatus.InfectMild]
+                           + cell_data[InfectionStatus.InfectGP])
 
         return total_infectors
