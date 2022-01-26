@@ -51,7 +51,7 @@ class SpatialInfection:
         Dependent on the infectious people in it, and social
         distancing measures.
 
-        :param inf_cell: cell doing infecting
+        :param inf_cell: Cell doing infecting
         :type inf_cell: Cell
         :param infector: Infector
         :type infector: Person
