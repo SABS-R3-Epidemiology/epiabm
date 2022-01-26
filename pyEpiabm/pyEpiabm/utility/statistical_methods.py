@@ -29,3 +29,9 @@ class StatisticalMethods:
         inverse_cdf = cdf_values
         latent_icdf = inverse_cdf
         return latent_icdf
+
+# Might define these two blocs into two methods, if we see it might be useful.
+# Otherwise, stock the result somewhere and delete the operations to define
+# default.
+
+# We will use latent_icdf in host_progression_sweep to define latent time.
