@@ -87,7 +87,7 @@ class SpatialSweep(AbstractSweep):
                 # infection to see whether an infection event
                 # occurs in this timestep between the given
                 # persons.
-                r = random.random(0, 1)
+                r = random.random()
 
                 if r < force_of_infection:
                     infectee_cell.enqueue_person(infectee)
