@@ -9,6 +9,6 @@ create a population.
 
 from .household_infection import HouseholdInfection
 from .place_infection import PlaceInfection
-from .simulation import Simulation
 from .spatial_infection import SpatialInfection
+from .simulation import Simulation
 from .toy_population_config import ToyPopulationFactory
