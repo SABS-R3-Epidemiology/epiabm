@@ -67,9 +67,9 @@ class SpatialInfection:
         """Calculate the force of infection between cells, for a particular
         infector and infectee.
 
-        :param inf_cell: cell doing infecting
+        :param inf_cell: Cell doing infecting
         :type inf_cell: Cell
-        :param susc_cell: cell receiving infections
+        :param susc_cell: Cell receiving infections
         :type susc_cell: Cell
         :param infector: Infector
         :type infector: Person
