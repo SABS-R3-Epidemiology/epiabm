@@ -48,8 +48,7 @@ class SpatialInfection:
     def space_inf(inf_cell: Cell, infector: Person,
                   timestep: int):
         """Calculate the infectiousness between cells.
-        Dependent on the infectious people in it, and social
-        distancing measures.
+        Dependent on the infectious people in it.
 
         :param inf_cell: Cell doing infecting
         :type inf_cell: Cell
