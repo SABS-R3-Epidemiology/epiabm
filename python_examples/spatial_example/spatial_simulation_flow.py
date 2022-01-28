@@ -57,10 +57,12 @@ filename = os.path.join(os.path.dirname(__file__), "spatial_outputs",
 df = pd.read_csv(filename)
 
 
-df = df.pivot(index='time', columns='cell', values="InfectionStatus.InfectMild")
+df = df.pivot(index='time', columns='cell',
+              values="InfectionStatus.InfectMild")
 df.plot()
 
 plt.legend(labels=(range(len(df.columns))), title='Cell')
 plt.title("Infection curves for multiple cells")
 plt.ylabel("Infected Population")
-plt.show()
+plt.savefig("python_examples/spatial_example/spatial_outputs/" +
+            "spatial_flow_Icurve_plot.png")

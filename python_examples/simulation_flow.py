@@ -59,4 +59,3 @@ df.plot(x="time", y=["InfectionStatus.Susceptible",
                      "InfectionStatus.InfectMild",
                      "InfectionStatus.Recovered"])
 plt.savefig("python_examples/simulation_outputs/simulation_flow_SIR_plot.png")
-plt.show()
