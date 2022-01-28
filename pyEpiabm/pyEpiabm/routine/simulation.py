@@ -84,7 +84,7 @@ class Simulation:
 
         output_titles = ["time"] + [s for s in InfectionStatus]
         if self.spatial_output:
-            output_titles += ["cell"]
+            output_titles.insert(0, "cell")
 
         self.writer = _CsvDictWriter(
             folder, filename,
@@ -121,15 +121,22 @@ class Simulation:
         :param time: Time of output data
         :type file_params: float
         """
-        data = {s: 0 for s in list(InfectionStatus)}
-        for cell in self.population.cells:
-            for k in data:
-                data[k] += cell.compartment_counter.retrieve()[k]
-        data["time"] = time
-        if self.spatial_output:
-            data["cell"] = hash(cell)
 
-        self.writer.write(data)
+        if self.spatial_output:  # Separate output line for each cell
+            for cell in self.population.cells:
+                data = {s: 0 for s in list(InfectionStatus)}
+                for k in data:
+                    data[k] += cell.compartment_counter.retrieve()[k]
+                data["time"] = time
+                data["cell"] = hash(cell)
+                self.writer.write(data)
+        else:  # Summed output across all cells in population
+            data = {s: 0 for s in list(InfectionStatus)}
+            for cell in self.population.cells:
+                for k in data:
+                    data[k] += cell.compartment_counter.retrieve()[k]
+            data["time"] = time
+            self.writer.write(data)
 
     @staticmethod
     def set_random_seed(seed):
