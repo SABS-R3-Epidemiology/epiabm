@@ -52,7 +52,7 @@ Configure a simulation with a number of parameters. These are split into two cat
 *`file_params`* _(For controlling output location)_
 * `output_file`: String for the name of the output .csv file
 * `output_dir`: String for the location of the output file, as a relative path
-* `spatial_output`: Boolean to determine whether a spatial output should be used
+* `spatial_output`: Boolean to determine whether a spatial output should be used _(Default false)_
 
 Two lists of sweeps must also be passed to this function - the first will be executed once at the start of the simulation (i.e. to determine the initial infections in the population), while the second list will be ran at every timestep (i.e. to propagate the infection through the population).
 

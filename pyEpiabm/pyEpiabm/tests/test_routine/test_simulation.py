@@ -25,6 +25,9 @@ class TestSimulation(unittest.TestCase):
         cls.file_params = {"output_file": "test_file.csv",
                            "output_dir": cls.mock_output_dir}
 
+        cls.spatial_file_params = dict(cls.file_params)
+        cls.spatial_file_params["spatial_output"] = True
+
         cls.initial_sweeps = [pe.sweep.InitialInfectedSweep()]
         cls.sweeps = [pe.sweep.PlaceSweep()]
 
@@ -45,6 +48,24 @@ class TestSimulation(unittest.TestCase):
             self.assertIsInstance(test_sim.population, pe.Population)
             del(test_sim.writer)
         mo.assert_called_with(filename, 'w')
+
+    def test_spatial_output_bool(self):
+        with patch('pyEpiabm.output._csv_dict_writer.open'):
+            test_sim = pe.routine.Simulation()
+
+            # Test default has no spatial output
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params)
+            self.assertFalse(test_sim.spatial_output)
+
+            # Test that we can change spatial output to true
+            spatial_sim = pe.routine.Simulation()
+            spatial_sim.configure(self.test_population, self.initial_sweeps,
+                                  self.sweeps, self.sim_params,
+                                  self.spatial_file_params)
+            self.assertTrue(spatial_sim.spatial_output)
+
+            del(test_sim.writer)
 
     @patch('pyEpiabm.sweep.PlaceSweep.__call__')
     @patch('pyEpiabm.sweep.InitialInfectedSweep.__call__')
@@ -75,6 +96,23 @@ class TestSimulation(unittest.TestCase):
 
             with patch.object(test_sim.writer, 'write') as mock:
                 test_sim.write_to_file(time)
+                mock.assert_called_with(data)
+
+    def test_s_write_to_file(self):
+        # For spatial option to write to file
+        mo = mock_open()
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            time = 1
+            spatial_sim = pe.routine.Simulation()
+            spatial_sim.configure(self.test_population, self.initial_sweeps,
+                                  self.sweeps, self.sim_params,
+                                  self.spatial_file_params)
+            data = {s: 0 for s in list(pe.property.InfectionStatus)}
+            data["time"] = time
+            data["cell"] = hash(self.test_population.cells[0])
+
+            with patch.object(spatial_sim.writer, 'write') as mock:
+                spatial_sim.write_to_file(time)
                 mock.assert_called_with(data)
 
     def test_set_random_seed(self):

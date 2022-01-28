@@ -61,7 +61,9 @@ class Simulation:
         self.population = population
         self.initial_sweeps = initial_sweeps
         self.sweeps = sweeps
-        self.spatial_output = file_params["spatial_output"]
+
+        self.spatial_output = file_params["spatial_output"] \
+            if "spatial_output" in file_params else False  # defaults to false
 
         # If random seed is specified in parameters, set this in numpy
         if "simulation_seed" in self.sim_params:
