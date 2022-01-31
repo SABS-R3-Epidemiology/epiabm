@@ -27,8 +27,8 @@ class TestAbstractReporter(unittest.TestCase):
         self.assertEqual(mock_remove.call_count, 2)  # For two elements in list
 
     @mock.patch("os.path.exists")
-    @mock.patch("os.scandir", side_effect=IsADirectoryError)
-    @mock.patch("os.remove")
+    @mock.patch("os.scandir", return_value=[mock.MagicMock()])
+    @mock.patch("os.remove", side_effect=IsADirectoryError)
     def test_construct_empty_clearance(self, mock_remove, mock_scandir,
                                        mock_pathexists):
         with self.assertRaises(IsADirectoryError):

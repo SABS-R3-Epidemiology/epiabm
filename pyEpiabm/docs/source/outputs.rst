@@ -12,7 +12,7 @@ Overview:
 - :class:`_CsvDictWriter`
 - :class:`_CsvWriter`
 
-.. autoclass::AbstractReporter
+.. autoclass:: AbstractReporter
     :members:
     :special-members: __init__, __call__
     
