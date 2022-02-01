@@ -1,5 +1,5 @@
 #
-# Example simulation script with data output and visualisation
+# Example simulation script with spatial data output and visualisation
 #
 
 import os
@@ -15,8 +15,8 @@ pe.routine.Simulation.set_random_seed(seed=42)
 # Pop_params are used to configure the population structure being used in this
 # simulation.
 
-pop_params = {"population_size": 100, "cell_number": 1,
-              "microcell_number": 1, "household_number": 20,
+pop_params = {"population_size": 1000, "cell_number": 5,
+              "microcell_number": 1, "household_number": 2,
               "place_number": 2}
 
 pe.Parameters.instance().time_steps_per_day = 1
@@ -31,8 +31,8 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
               "initial_infected_number": 5}
 
 file_params = {"output_file": "output.csv",
-               "output_dir": "python_examples/simulation_outputs",
-               "spatial_output": False}
+               "output_dir": "python_examples/spatial_example/spatial_outputs",
+               "spatial_output": True}
 
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.
@@ -52,10 +52,17 @@ del(sim.writer)
 del(sim)
 
 # Creation of a plot of results
-filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
+filename = os.path.join(os.path.dirname(__file__), "spatial_outputs",
                         "output.csv")
 df = pd.read_csv(filename)
-df.plot(x="time", y=["InfectionStatus.Susceptible",
-                     "InfectionStatus.InfectMild",
-                     "InfectionStatus.Recovered"])
-plt.savefig("python_examples/simulation_outputs/simulation_flow_SIR_plot.png")
+
+
+df = df.pivot(index='time', columns='cell',
+              values="InfectionStatus.InfectMild")
+df.plot()
+
+plt.legend(labels=(range(len(df.columns))), title='Cell')
+plt.title("Infection curves for multiple cells")
+plt.ylabel("Infected Population")
+plt.savefig("python_examples/spatial_example/spatial_outputs/" +
+            "spatial_flow_Icurve_plot.png")

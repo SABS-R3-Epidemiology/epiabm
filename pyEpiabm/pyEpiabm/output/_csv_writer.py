@@ -5,17 +5,26 @@
 import csv
 import typing
 
+from pyEpiabm.output.abstract_reporter import AbstractReporter
 
-class _CsvWriter:
-    def __init__(self, filename: str, fieldnames: typing.List):
+
+class _CsvWriter(AbstractReporter):
+    def __init__(self, folder: str, filename: str, fieldnames: typing.List,
+                 clear_folder: bool = True):
         """Initialises a file to store output in, and which categories
         to record.
 
+        :param folder: Output folder path
+        :type folder: str
         :param filename: Output file name
         :type filename: str
         :param fieldnames: List of categories to be saved
         :type fieldnames: list
+        :param clear_folder: Whether to empty the folder before saving results
+        :type time: bool
         """
+        super().__init__(folder, clear_folder)
+
         try:
             self.f = open(filename, 'w')
             self.writer = csv.writer(
