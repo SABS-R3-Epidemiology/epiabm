@@ -18,6 +18,9 @@ class Cell:
     """
     def __init__(self, loc: typing.Tuple[float, float] = (0, 0)):
         """Constructor Method.
+
+        :param loc: (x,y) coordinates of the place
+        :type loc: Tuple[float, float]
         """
         self.location = loc
         self.microcells = []
