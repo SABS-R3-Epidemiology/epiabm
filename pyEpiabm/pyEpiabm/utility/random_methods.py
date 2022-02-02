@@ -13,8 +13,8 @@ class RandomMethods:
         initialises these using 32-bit integer memory location information.
         We just choose random integers by hand instead. See the wiki for
         more info on this and the following random algorithm."""
-        self.prev_s1 = 163858365
-        self.prev_s2 = 6573920048
+        self.prev_s1 = 163858
+        self.prev_s2 = 6573920043
 
     @staticmethod
     def random_number():
