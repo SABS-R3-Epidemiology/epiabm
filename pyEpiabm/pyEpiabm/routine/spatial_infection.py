@@ -21,8 +21,8 @@ class SpatialInfection:
         :return: Average number of infection events from the cell
         :rtype: int
         """
-        R_0 = Parameters.instance().base_reproduction_num
-        total_infectors = inf_cell.infectious_number()
+        R_0 = Parameters.instance().basic_reproduction_num
+        total_infectors = inf_cell.number_infectious()
         # Add in other classes of people who are infectors
         number_to_infect = total_infectors * R_0
         # Round this float to nearest integer

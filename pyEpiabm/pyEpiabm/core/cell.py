@@ -71,7 +71,7 @@ class Cell:
         """
         self.compartment_counter.report(old_status, new_status)
 
-    def infectious_number(self):
+    def number_infectious(self):
         """Returns the total number of infectious people in each
         cell.
 

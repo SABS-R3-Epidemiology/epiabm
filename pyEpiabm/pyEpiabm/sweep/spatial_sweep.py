@@ -44,7 +44,7 @@ class SpatialSweep(AbstractSweep):
                 break
 
             # Check to ensure there is an infector in the cell
-            total_infectors = cell.infectious_number()
+            total_infectors = cell.number_infectious()
             if total_infectors == 0:
                 continue
 
