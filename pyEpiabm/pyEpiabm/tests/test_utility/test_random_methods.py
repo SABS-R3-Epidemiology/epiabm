@@ -3,7 +3,7 @@ import unittest
 from pyEpiabm.utility import RandomMethods
 
 
-class TestInfectionStatus(unittest.TestCase):
+class TestRandomMethods(unittest.TestCase):
     """Test the 'RandomMethods' class.
     """
     def test_init(self):
