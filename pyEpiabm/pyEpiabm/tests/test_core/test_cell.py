@@ -17,7 +17,13 @@ class TestCell(unittest.TestCase):
 
     def test_repr(self):
         self.assertEqual(repr(self.cell),
-                         "Cell with 0 microcells and 0 people.")
+                         "Cell with 0 microcells and 0 people"
+                         + " at location (0, 0).")
+
+    def test_cell_location(self):
+        local_cell = pe.Cell(loc=(-2, 3.2))
+        self.assertEqual(local_cell.location[0], -2)
+        self.assertEqual(local_cell.location[1], 3.2)
 
     def test_add_microcells(self, n=4):
         cell = pe.Cell()

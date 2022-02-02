@@ -2,6 +2,7 @@
 # Cell Class
 #
 
+import typing
 from queue import Queue
 
 from pyEpiabm.property import InfectionStatus
@@ -15,9 +16,10 @@ class Cell:
     """Class representing a Cell (Subset of Population).
     Collection of :class:`Microcell` s and :class:`Person` s.
     """
-    def __init__(self):
+    def __init__(self, loc: typing.Tuple[float, float] = (0, 0)):
         """Constructor Method.
         """
+        self.location = loc
         self.microcells = []
         self.persons = []
         self.places = []
@@ -31,7 +33,7 @@ class Cell:
         :rtype: str
         """
         return f"Cell with {len(self.microcells)} microcells " + \
-            f"and {len(self.persons)} people."
+            f"and {len(self.persons)} people at location {self.location}."
 
     def add_microcells(self, n):
         """Add n empty :class:`Microcell` s to Cell.
