@@ -7,8 +7,7 @@
 
 namespace epiabm
 {
-
-
+    
     CompartmentCounter::CompartmentCounter() :
         m_counts()
     {}

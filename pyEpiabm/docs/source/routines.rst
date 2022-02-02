@@ -2,22 +2,26 @@
 Routines
 ********
 
-.. currentmodule:: pyEpiabm
+.. currentmodule:: pyEpiabm.routine
 
-Routines provides various methods to act upon or create a population.
+Routines provides various methods to act upon or create a population, or members of it.
 
 Overview:
 
-- :class:`CovidsimHelpers`
+- :class:`HouseholdInfection`
+- :class:`PlaceInfection`
 - :class:`ToyPopulationFactory`
+- :class:`Simulation`
 
+.. autoclass:: HouseholdInfection
+    :members:
 
-Routines
-********
-
-.. autoclass:: CovidsimHelpers
+.. autoclass:: PlaceInfection
     :members:
     
 .. autoclass:: ToyPopulationFactory
+    :members:
+
+.. autoclass:: Simulation
     :members:
     

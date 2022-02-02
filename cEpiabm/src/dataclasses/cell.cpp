@@ -241,7 +241,7 @@ namespace epiabm
     {
         return m_exposedPeople.size();
     }
-
+    
     size_t Cell::numRecovered() const
     {
         return m_recoveredPeople.size();

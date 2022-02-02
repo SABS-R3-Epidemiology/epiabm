@@ -2,18 +2,18 @@
 Properties
 **********
 
-.. currentmodule:: pyEpiabm
+.. currentmodule:: pyEpiabm.property
 
 Properties provides various methods to get information from the population.
 
 Overview:
 
 - :class:`InfectionStatus`
-
-
-Properties
-**********
+- :class:`PlaceType`
 
 .. autoclass:: InfectionStatus
+    :members:
+    
+.. autoclass:: PlaceType
     :members:
     
