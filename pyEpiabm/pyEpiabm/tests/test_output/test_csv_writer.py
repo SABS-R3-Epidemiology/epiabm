@@ -22,18 +22,6 @@ class TestCsvWriter(unittest.TestCase):
         mo().write.assert_called_once_with('1,2,3\r\n')
         mock_mkdir.assert_called_with('mock_folder')
 
-    # #@patch('os.makedirs')
-    # def test_file_not_found(self):
-    #     mock_content = ['1', '2', '3']
-    #     with self.assertRaises(FileNotFoundError):
-    #         test_writer = pe.output._CsvWriter('mock_folder',
-    #                                            'mocked_folder/test_file',
-    #                                            mock_content)
-    #         self.assertIsNone(test_writer.f)
-    #         self.assertIsNone(test_writer.writer)
-    #     self.assertRaises(FileNotFoundError, pe.output._CsvWriter, 'folder',
-    #                       'mocked_folder/test_file', mock_content)
-
     @patch('os.makedirs')
     def test_write(self, mock_mkdir):
         """Test the write method of the _CsvWriter class.
