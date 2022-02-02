@@ -30,7 +30,7 @@ class SpatialInfection:
     @staticmethod
     def space_susc(susc_cell: Cell, infectee: Person,
                    timestep: int):
-        """Calculate the susceptibility of a one cell
+        """Calculate the susceptibility of one cell
         towards its neighbouring cells.
 
         :param susc_cell: Cell receiving infections
