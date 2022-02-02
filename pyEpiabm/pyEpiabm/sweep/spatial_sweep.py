@@ -6,7 +6,8 @@ import random
 import numpy as np
 
 from pyEpiabm.core import Parameters
-from pyEpiabm.routine import SpatialInfection, DistanceFunctions
+from pyEpiabm.routine import SpatialInfection
+from pyEpiabm.utility import DistanceFunctions
 
 from .abstract_sweep import AbstractSweep
 
@@ -58,8 +59,8 @@ class SpatialSweep(AbstractSweep):
             # so can't be the same cell
             possible_infectee_cells = self._population.cells.copy()
             possible_infectee_cells.remove(cell)
-            distance_weights = [1/DistanceFunctions.dist_euclid(cell.loc,
-                                cell2.loc) for cell2 in
+            distance_weights = [1/DistanceFunctions.dist_euclid(cell.location,
+                                cell2.location) for cell2 in
                                 possible_infectee_cells]
             cell_list = random.choices(possible_infectee_cells,
                                        weights=distance_weights,

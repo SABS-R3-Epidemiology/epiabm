@@ -27,7 +27,7 @@ class TestSpatialSweep(unittest.TestCase):
         cls.infector = cls.microcell_inf.persons[0]
         Parameters.instance().time_steps_per_day = 1
 
-    @mock.patch("pyEpiabm.routine.DistanceFunctions.dist_euclid")
+    @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     @mock.patch("numpy.random.poisson")
     @mock.patch("pyEpiabm.routine.SpatialInfection.space_foi")
     @mock.patch("pyEpiabm.routine.SpatialInfection.cell_inf")
