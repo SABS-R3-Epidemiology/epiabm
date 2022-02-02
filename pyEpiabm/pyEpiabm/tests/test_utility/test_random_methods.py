@@ -15,13 +15,6 @@ class TestInfectionStatus(unittest.TestCase):
         self.assertEqual(r.prev_s1, 163858)
         self.assertEqual(r.prev_s2, 6573920043)
 
-    def test_random_number(self):
-        """Tests that the random_number method returns the
-        a valid integer.
-        """
-        number = RandomMethods.random_number()
-        self.assertTrue(number >= 0)
-
     def test_covid_sim_rand(self):
         """Tests that the covid_sim_rand method returns the
         correct random numbers"""

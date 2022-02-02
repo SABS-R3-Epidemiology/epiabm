@@ -2,9 +2,6 @@
 # Calculate household force of infection based on Covidsim code
 #
 
-import numpy as np
-
-
 class RandomMethods:
     """Class to calculate methods in a style similar to CovidSim
     """
@@ -15,10 +12,6 @@ class RandomMethods:
         more info on this and the following random algorithm."""
         self.prev_s1 = 163858
         self.prev_s2 = 6573920043
-
-    @staticmethod
-    def random_number():
-        return np.random.random()
 
     def covid_sim_rand(self):
         """Reproduction of the ranf_mt method in the Rand.cpp class of covid-sim.
