@@ -11,7 +11,7 @@ class RandomMethods:
     def __init__(self):
         self.prev_s1 = 0
         self.prev_s2 = 0
-    
+
     @staticmethod
     def random_number():
         return np.random.random()
@@ -26,8 +26,8 @@ class RandomMethods:
         Xa1 = 40014
         Xa2 = 40692
         # Parameters that would vary on thread number in covid-sim:
-        s1 = self.prev_s1  # Value we think would be associated with thread number=1
-        s2 = self.prev_s2  # Value we think would be associated with thread number=1
+        s1 = self.prev_s1
+        s2 = self.prev_s2
         # Coming up with the randomness:
         k = s1 / 53668
         s1 = Xa1 * (s1 - k * 53668) - k * 12211
