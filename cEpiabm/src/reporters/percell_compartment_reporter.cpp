@@ -61,11 +61,13 @@ namespace epiabm
                     return true;
                 });
         }
+        // LCOV_EXCL_START
         catch (std::exception& e)
         {
             LOG << LOG_LEVEL_ERROR << "Per-Cell Compartment Reporter Error writing to file";
             throw e;
         }
+        // LCOV_EXCL_END
     }
 
     void PerCellCompartmentReporter::teardown()
