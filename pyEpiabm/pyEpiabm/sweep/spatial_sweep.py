@@ -85,7 +85,8 @@ class SpatialSweep(AbstractSweep):
                 # force of infection specific to cells and people
                 # involved in the infection event
                 force_of_infection = SpatialInfection.\
-                    space_foi(cell, infectee_cell, infector, infectee)
+                    space_foi(cell, infectee_cell, infector, infectee,
+                              timestep)
 
                 # Compare a uniform random number to the force of
                 # infection to see whether an infection event

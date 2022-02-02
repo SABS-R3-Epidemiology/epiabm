@@ -27,7 +27,7 @@ class DistanceFunctions:
         :return: Euclidean distance between the two tuples
         :rtype: float
         """
-        return np.sqrt((loc1[0] - loc2[0])**2 + (loc1[1] - loc2[1])**2)
+        return np.linalg.norm(np.abs(np.asarray(loc1) - np.asarray(loc2)))
 
     def dist_covidsim(loc1: typing.Tuple[float, float],
                       loc2: typing.Tuple[float, float] = (0, 0)):

@@ -25,6 +25,9 @@ class TestCell(unittest.TestCase):
         local_cell = pe.Cell(loc=(-2, 3.2))
         self.assertEqual(local_cell.location[0], -2)
         self.assertEqual(local_cell.location[1], 3.2)
+        self.assertRaises(ValueError, pe.Cell, (1, 1, 1))
+        self.assertRaises(ValueError, pe.Cell, (1, (8, 6)))
+        self.assertRaises(ValueError, pe.Cell, ([1, 1], 1))
 
     def test_add_microcells(self, n=4):
         cell = pe.Cell()
@@ -44,6 +47,12 @@ class TestCell(unittest.TestCase):
         self.assertEqual(cell.number_infectious(), 0)
         person.update_status(InfectionStatus.InfectMild)
         self.assertEqual(cell.number_infectious(), 1)
+
+    def test_set_loc(self):
+        cell = pe.Cell()
+        self.assertEqual(cell.location, (0, 0))
+        cell.set_location((3.0, 3.0))
+        self.assertEqual(cell.location, (3.0, 3.0))
 
 
 if __name__ == '__main__':

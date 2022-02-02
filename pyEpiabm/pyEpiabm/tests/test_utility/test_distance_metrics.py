@@ -10,7 +10,12 @@ class TestDistanceFunctions(unittest.TestCase):
     def test_dist_euclid(self):
         dist = DistanceFunctions.dist_euclid((3, 0))
         self.assertTrue(dist == 3)
-        # You will want better tests than these ;)
+
+        dist = DistanceFunctions.dist_euclid((-3, 0))
+        self.assertTrue(dist == 3)
+
+        dist = DistanceFunctions.dist_euclid((-3, 0), (3, 0))
+        self.assertTrue(dist == 6)
 
 
 if __name__ == '__main__':

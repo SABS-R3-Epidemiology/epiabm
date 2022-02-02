@@ -36,7 +36,7 @@ class TestSpatialSweep(unittest.TestCase):
         adds persons to the queue, with each infection
         event certain to happen.
         """
-        mock_dist.return_value = 1
+        mock_dist.return_value = 2
         mock_poisson.return_value = 1
         mock_inf.return_value = 10.0
         mock_force.return_value = 100.0
