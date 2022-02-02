@@ -34,14 +34,14 @@ class SpatialSweep(AbstractSweep):
         :type time: int
         """
         timestep = int(time * Parameters.instance().time_steps_per_day)
+
+        # As this tracks intercell infections need to check number of
+        # cells is more than one (edge case but worth having)
+        if len(self._population.cells) == 1:
+            return
         # Double loop over the whole population, checking infectiousness
         # status, and whether they are absent from their household.
         for cell in self._population.cells:
-
-            # As this tracks intercell infections need to check number of
-            # cells is more than one (edge case but worth having)
-            if len(self._population.cells) == 1:
-                break
 
             # Check to ensure there is an infector in the cell
             total_infectors = cell.number_infectious()
