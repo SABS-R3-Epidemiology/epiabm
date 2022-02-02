@@ -21,6 +21,7 @@ Contents
     properties
     routines
     sweeps
+    utility
 
 
 Search
