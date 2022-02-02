@@ -30,14 +30,14 @@ class TestCell(unittest.TestCase):
         cell = pe.Cell()
         cell._setup()
 
-    def test_infectious_number(self):
+    def test_number_infectious(self):
         cell = pe.Cell()
         cell.add_microcells(1)
         cell.microcells[0].add_people(1)
         person = cell.microcells[0].persons[0]
-        self.assertEqual(cell.infectious_number(), 0)
+        self.assertEqual(cell.number_infectious(), 0)
         person.update_status(InfectionStatus.InfectMild)
-        self.assertEqual(cell.infectious_number(), 1)
+        self.assertEqual(cell.number_infectious(), 1)
 
 
 if __name__ == '__main__':
