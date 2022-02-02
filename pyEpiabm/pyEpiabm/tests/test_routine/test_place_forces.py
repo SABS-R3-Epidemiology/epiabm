@@ -25,18 +25,18 @@ class TestPlaceInfection(unittest.TestCase):
         cls.place.add_person(cls.infectee)
         cls.timestep = 1
 
-    def test_calc_place_susc(self):
+    def test_place_susc(self):
         result = PlaceInfection.place_susc(self.place, self.infector,
                                            self.infectee, self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
-    def test_calc_place_inf(self):
+    def test_place_inf(self):
         result = PlaceInfection.place_inf(self.place, self.timestep)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
-    def test_calc_place_foi(self):
+    def test_place_foi(self):
         result = PlaceInfection.place_foi(self.place, self.infector,
                                           self.infectee, self.timestep)
         self.assertTrue(result > 0)

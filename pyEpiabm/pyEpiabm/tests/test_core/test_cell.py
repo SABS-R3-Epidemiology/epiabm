@@ -1,6 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
+from pyEpiabm.property.infection_status import InfectionStatus
 
 
 class TestCell(unittest.TestCase):
@@ -34,6 +35,15 @@ class TestCell(unittest.TestCase):
     def test_setup(self):
         cell = pe.Cell()
         cell._setup()
+
+    def test_number_infectious(self):
+        cell = pe.Cell()
+        cell.add_microcells(1)
+        cell.microcells[0].add_people(1)
+        person = cell.microcells[0].persons[0]
+        self.assertEqual(cell.number_infectious(), 0)
+        person.update_status(InfectionStatus.InfectMild)
+        self.assertEqual(cell.number_infectious(), 1)
 
 
 if __name__ == '__main__':

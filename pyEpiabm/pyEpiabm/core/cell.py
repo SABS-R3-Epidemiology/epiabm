@@ -72,3 +72,17 @@ class Cell:
         :type new_status: InfectionStatus
         """
         self.compartment_counter.report(old_status, new_status)
+
+    def number_infectious(self):
+        """Returns the total number of infectious people in each
+        cell.
+
+        :return: Total infectors in cell
+        :rtype: int
+        """
+        cell_data = self.compartment_counter.retrieve()
+        total_infectors = (cell_data[InfectionStatus.InfectASympt]
+                           + cell_data[InfectionStatus.InfectMild]
+                           + cell_data[InfectionStatus.InfectGP])
+
+        return total_infectors

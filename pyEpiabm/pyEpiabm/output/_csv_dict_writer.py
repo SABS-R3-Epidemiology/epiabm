@@ -25,16 +25,10 @@ class _CsvDictWriter(AbstractReporter):
         """
         super().__init__(folder, clear_folder)
 
-        try:
-            self.f = open(filename, 'w')
-            self.writer = csv.DictWriter(
-                self.f, fieldnames=fieldnames, delimiter=',')
-            self.writer.writeheader()
-        except FileNotFoundError as e:
-            self.f = None
-            self.writer = None
-            # TODO: Log file not found error
-            raise e
+        self.f = open(filename, 'w')
+        self.writer = csv.DictWriter(
+            self.f, fieldnames=fieldnames, delimiter=',')
+        self.writer.writeheader()
 
     def __del__(self):
         """Closes the file when the simulation is finished.
