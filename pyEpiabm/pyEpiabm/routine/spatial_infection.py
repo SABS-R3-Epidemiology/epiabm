@@ -11,7 +11,7 @@ class SpatialInfection:
     """
     @staticmethod
     def cell_inf(inf_cell: Cell, timestep: int):
-        """Calculate the infectiveness of one cell
+        """Calculate the infectiousness of one cell
         towards its neighbouring cells.
 
         :param inf_cell: Cell doing infecting
