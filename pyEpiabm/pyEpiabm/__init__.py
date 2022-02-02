@@ -15,6 +15,7 @@ from . import output
 from . import property
 from . import routine
 from . import sweep
+from . import utility
 
 # Expose modules in core within pyEpiabm namespace
 

@@ -12,4 +12,3 @@ from .place_infection import PlaceInfection
 from .spatial_infection import SpatialInfection
 from .simulation import Simulation
 from .toy_population_config import ToyPopulationFactory
-from .distance_metrics import DistanceFunctions
