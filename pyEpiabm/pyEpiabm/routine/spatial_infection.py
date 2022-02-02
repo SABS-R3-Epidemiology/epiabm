@@ -30,11 +30,10 @@ class SpatialInfection:
         # Choose randomly for the integers either side
         # with weights corrsponding to the distance to either
         # integer.
-        floor = int(number_to_infect)
+        number_to_infect = (int(number_to_infect)
+                            + int(number_to_infect - int(number_to_infect)
+                            > random.random))
 
-        weights = [number_to_infect - floor, 1 - (number_to_infect - floor)]
-        number_to_infect = random.choices([floor, floor + 1],
-                                          weights=weights, k=1)[0]
         return (number_to_infect)
 
     @staticmethod
