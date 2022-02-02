@@ -33,6 +33,7 @@ set(
     reporters/test_cell_compartment_reporter.cpp
     reporters/test_percell_compartment_reporter.cpp
     reporters/test_population_compartment_reporter.cpp
+    test_basic_simulation.cpp
 )
 
 add_executable(unit_tests ${test_src})

@@ -17,7 +17,15 @@ namespace epiabm
         }
     }
 
+    void Population::forEachPlace(std::function<bool(Place*)> callback)
+    {
+        for (size_t i = 0; i < m_places.size(); i++)
+            if (!callback(&m_places[i])) return;
+    }
+
     std::vector<Cell>& Population::cells() { return m_cells; }
+
+    std::vector<Place>& Population::places() { return m_places; }
 
     void Population::initialize()
     {

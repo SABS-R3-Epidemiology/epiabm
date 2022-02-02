@@ -20,7 +20,6 @@ namespace epiabm
     {
     private:
         std::vector<size_t> m_people;
-        std::vector<PlacePtr> m_places;
         std::vector<HouseholdPtr> m_households;
 
         size_t m_cellPos;
@@ -36,12 +35,10 @@ namespace epiabm
         size_t cellPos() const;
 
         void forEachPerson(Cell& cell, std::function<bool(Person*)> callback);
-        void forEachPlace(std::function<bool(Place*)> callback);
 
         Person& getPerson(Cell& cell, size_t i);
 
         std::vector<size_t>& people();
-        std::vector<PlacePtr>& places();
         std::vector<HouseholdPtr>& households();
 
         void initialize(Cell* cell);
