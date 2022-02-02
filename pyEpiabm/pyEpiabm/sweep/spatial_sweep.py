@@ -14,7 +14,7 @@ from .abstract_sweep import AbstractSweep
 class SpatialSweep(AbstractSweep):
     """Class to run the inter-cell space infections
     as part of the sweep function. Runs through cells
-    and calculates their infectious parameter and calculates
+    and calculates their infectiousness parameter and calculates
     a poisson variable of how many people each cell should
     infect. Then chooses other cells, and persons within that
     cell to assign as infectee. Then tests a infection event
