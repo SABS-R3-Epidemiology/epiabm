@@ -22,7 +22,7 @@ class TestSpatialInfection(unittest.TestCase):
         cls.infectee = pe.Person(cls.microcell)
         cls.timestep = 1
 
-    def test_place_susc(self):
+    def test_space_susc(self):
         result = SpatialInfection.space_susc(self.cell, self.infectee,
                                              self.timestep)
         self.assertTrue(result > 0)
