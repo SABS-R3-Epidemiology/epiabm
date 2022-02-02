@@ -70,7 +70,7 @@ class TestSpatialSweep(unittest.TestCase):
         test_sweep(time)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
 
-        # Change infectee"s status to recovered
+        # Change infectee's status to recovered
         self.infectee.update_status(pe.property.InfectionStatus.Recovered)
         self.cell_susc.person_queue = Queue()
         test_sweep.bind_population(self.pop)
