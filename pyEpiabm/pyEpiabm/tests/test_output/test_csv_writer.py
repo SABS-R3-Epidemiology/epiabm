@@ -8,7 +8,8 @@ class TestCsvWriter(unittest.TestCase):
     """Test the methods of the '_CsvWriter' class.
     """
 
-    def test_init(self):
+    @patch('os.makedirs')
+    def test_init(self, mock_mkdir):
         """Test the constructor method of the _CsvWriter class.
         """
         mo = mock_open()
@@ -19,19 +20,22 @@ class TestCsvWriter(unittest.TestCase):
             del(m)
         mo.assert_called_once_with('mock_filename', 'w')
         mo().write.assert_called_once_with('1,2,3\r\n')
+        mock_mkdir.assert_called_with('mock_folder')
 
-    def test_file_not_found(self):
-        mock_content = ['1', '2', '3']
-        with self.assertRaises(FileNotFoundError):
-            test_writer = pe.output._CsvWriter('mock_folder',
-                                               'mocked_folder/test_file',
-                                               mock_content)
-            self.assertIsNone(test_writer.f)
-            self.assertIsNone(test_writer.writer)
-        self.assertRaises(FileNotFoundError, pe.output._CsvWriter, 'folder',
-                          'mocked_folder/test_file', mock_content)
+    # #@patch('os.makedirs')
+    # def test_file_not_found(self):
+    #     mock_content = ['1', '2', '3']
+    #     with self.assertRaises(FileNotFoundError):
+    #         test_writer = pe.output._CsvWriter('mock_folder',
+    #                                            'mocked_folder/test_file',
+    #                                            mock_content)
+    #         self.assertIsNone(test_writer.f)
+    #         self.assertIsNone(test_writer.writer)
+    #     self.assertRaises(FileNotFoundError, pe.output._CsvWriter, 'folder',
+    #                       'mocked_folder/test_file', mock_content)
 
-    def test_write(self):
+    @patch('os.makedirs')
+    def test_write(self, mock_mkdir):
         """Test the write method of the _CsvWriter class.
         """
         mo = mock_open()
@@ -43,7 +47,8 @@ class TestCsvWriter(unittest.TestCase):
             m.write(new_content)
         mo().write.assert_has_calls([call('1,2,3\r\n'), call('a,b,c\r\n')])
 
-    def test_del(self):
+    @patch('os.makedirs')
+    def test_del(self, mock_mkdir):
         """Test the destructor method of the _CsvWriter class.
         """
         fake_file = MagicMock()
