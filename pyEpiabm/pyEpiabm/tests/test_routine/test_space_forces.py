@@ -21,6 +21,7 @@ class TestSpatialInfection(unittest.TestCase):
         cls.infector = pe.Person(cls.microcell)
         cls.infectee = pe.Person(cls.microcell)
         cls.timestep = 1
+        pe.Parameters.instance().base_reproduction_num = 2.8
 
     def test_space_susc(self):
         result = SpatialInfection.space_susc(self.cell, self.infectee,
