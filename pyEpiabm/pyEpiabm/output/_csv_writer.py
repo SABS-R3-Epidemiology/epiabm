@@ -25,16 +25,10 @@ class _CsvWriter(AbstractReporter):
         """
         super().__init__(folder, clear_folder)
 
-        try:
-            self.f = open(filename, 'w')
-            self.writer = csv.writer(
-                self.f, delimiter=',')
-            self.writer.writerow(fieldnames)
-        except FileNotFoundError as e:
-            self.f = None
-            self.writer = None
-            # TODO: Log file not found error
-            raise e
+        self.f = open(filename, 'w')
+        self.writer = csv.writer(
+            self.f, delimiter=',')
+        self.writer.writerow(fieldnames)
 
     def __del__(self):
         """Closes the file when the simulation is finished.
