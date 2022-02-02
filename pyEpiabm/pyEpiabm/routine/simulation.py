@@ -35,6 +35,8 @@ class Simulation:
             * `output_file`: String for the name of the output .csv file
             * `output_dir`: String for the location of the output file,
                  as a relative path
+            * `spatial_output`: Boolean to determine whether a spatial output
+                should be used
 
         :param population: Population structure for the model
         :type population: Population
@@ -54,12 +56,14 @@ class Simulation:
             file
         :type file_params: dict
 
-
         """
         self.sim_params = sim_params
         self.population = population
         self.initial_sweeps = initial_sweeps
         self.sweeps = sweeps
+
+        self.spatial_output = file_params["spatial_output"] \
+            if "spatial_output" in file_params else False  # defaults to false
 
         # If random seed is specified in parameters, set this in numpy
         if "simulation_seed" in self.sim_params:
@@ -75,13 +79,18 @@ class Simulation:
         # General sweeps run through the population on every timestep, and
         # include host progression and spatial infections.
 
-        filename = os.path.join(os.getcwd(),
-                                file_params["output_dir"],
-                                file_params["output_file"])
+        folder = os.path.join(os.getcwd(),
+                              file_params["output_dir"])
+
+        filename = os.path.join(folder, file_params["output_file"])
+
+        output_titles = ["time"] + [s for s in InfectionStatus]
+        if self.spatial_output:
+            output_titles.insert(0, "cell")
 
         self.writer = _CsvDictWriter(
-            filename,
-            ["time"] + [s for s in InfectionStatus])
+            folder, filename,
+            output_titles)
 
     def run_sweeps(self):
         """Iteration step of the simulation. First the initialisation sweeps
@@ -114,13 +123,22 @@ class Simulation:
         :param time: Time of output data
         :type file_params: float
         """
-        data = {s: 0 for s in list(InfectionStatus)}
-        for cell in self.population.cells:
-            for k in data:
-                data[k] += cell.compartment_counter.retrieve()[k]
-        data["time"] = time
 
-        self.writer.write(data)
+        if self.spatial_output:  # Separate output line for each cell
+            for cell in self.population.cells:
+                data = {s: 0 for s in list(InfectionStatus)}
+                for k in data:
+                    data[k] += cell.compartment_counter.retrieve()[k]
+                data["time"] = time
+                data["cell"] = hash(cell)
+                self.writer.write(data)
+        else:  # Summed output across all cells in population
+            data = {s: 0 for s in list(InfectionStatus)}
+            for cell in self.population.cells:
+                for k in data:
+                    data[k] += cell.compartment_counter.retrieve()[k]
+            data["time"] = time
+            self.writer.write(data)
 
     @staticmethod
     def set_random_seed(seed):
