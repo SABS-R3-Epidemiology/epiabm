@@ -64,9 +64,9 @@ class SpatialSweep(AbstractSweep):
             # Sample at random from the cell to find an infector. Have
             # checked to ensure there is an infector present.
             # THIS COULD BE V SLOW IF SMALL PROPORTION OF INFECTORS
-            infector = random.sample(cell.persons, 1)[0]
-            while not infector.is_infectious():
-                infector = random.sample(cell.persons, 1)[0]
+            possible_infectors = [person for person in cell.persons
+                                  if person.is_infectious()]
+            infector = random.choice(possible_infectors)
 
             # Each infection event corresponds to a infectee cell
             # on the cell list
