@@ -28,7 +28,7 @@ class TestSpatialInfection(unittest.TestCase):
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
-    def test_place_inf(self):
+    def test_space_inf(self):
         result = SpatialInfection.space_inf(self.cell, self.infector,
                                             self.timestep)
         self.assertTrue(result > 0)
