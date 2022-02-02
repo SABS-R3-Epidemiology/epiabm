@@ -11,9 +11,8 @@ class TestSpatialSweep(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        """Initialises a population with two cells and one person in
-        each cell. Sets up a single place containing (initially) only
-        one of these people.
+        """Initialises a population with one cell and one person in
+        the cell.
         """
         cls.pop = pe.Population()
         cls.pop.add_cells(1)
