@@ -62,7 +62,7 @@ namespace epiabm
                                                    std::mt19937{std::random_device{}()});
 
 
-        std::vector<Person> possible_infectors = cell.m_infectiousPeople();
+        std::vector<Person> possible_infectors = (*cell).m_infectiousPeople();
 
         Person infector = std::sample(possible_infectors.begin(), possible_infectors.end(),
                                1, std::mt19937{std::random_device{}()});
