@@ -127,3 +127,33 @@ class ToyPopulationFactory:
             for microcell in cell.microcells:
                 microcell.add_place(place_number, (1.0, 1.0),
                                     PlaceType.Hotel)
+
+    @staticmethod
+    def assign_cell_locations(population: Population, method: str = 'random',
+                              file: str = ""):
+        """Assigns cell locations based on method provided. Possible methods:
+
+            * 'random': Assigns all locations randomly within unit square
+            * 'file': Reads in location pairs from csv file
+
+        :param population: Population containing all person objects to be
+            considered for grouping
+        :type population: Population
+        :param place_number: Method of determining cell locations
+        :type place_number: str
+        :param file: Location of file to read in
+        :type file: str
+        """
+        # First assert that there is file if they want you to read from one
+
+        if method == "random":
+            for cell in population.cells:
+                cell.set_location(tuple(np.random.rand(2)))
+                print(cell.location)
+
+        elif method == "file":
+            assert file != ""
+            raise NotImplementedError
+
+        else:
+            raise ValueError(f"Unknown method: '{method}' not recognised")

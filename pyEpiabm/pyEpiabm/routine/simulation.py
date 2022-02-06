@@ -134,7 +134,7 @@ class Simulation:
                 data["time"] = time
                 data["cell"] = hash(cell)
                 data["location_x"] = cell.location[0]
-                data["location_y"] = cell.location[0]
+                data["location_y"] = cell.location[1]
                 self.writer.write(data)
         else:  # Summed output across all cells in population
             data = {s: 0 for s in list(InfectionStatus)}
