@@ -132,7 +132,7 @@ class Simulation:
                 for k in data:
                     data[k] += cell.compartment_counter.retrieve()[k]
                 data["time"] = time
-                data["cell"] = hash(cell)
+                data["cell"] = cell.id
                 data["location_x"] = cell.location[0]
                 data["location_y"] = cell.location[1]
                 self.writer.write(data)

@@ -144,15 +144,18 @@ class ToyPopulationFactory:
         :param file: Location of file to read in
         :type file: str
         """
+        # This function is not yet tested
         # First assert that there is file if they want you to read from one
 
         if method == "random":
             for cell in population.cells:
                 cell.set_location(tuple(np.random.rand(2)))
-                print(cell.location)
 
         elif method == "file":
             assert file != ""
+            # Can read in ID, location and even infectious numbers from file
+            # Check solumn names against infectious statuses, and add to
+            # relevant infectious status if they match
             raise NotImplementedError
 
         else:

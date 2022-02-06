@@ -23,6 +23,7 @@ class Cell:
         :type loc: Tuple(float, float)
         """
         self.location = loc
+        self.id = hash(self)
         self.microcells = []
         self.persons = []
         self.places = []
@@ -54,6 +55,14 @@ class Cell:
         :type loc: Tuple(float, float)
         """
         self.location = loc
+
+    def set_id(self, id):
+        """Updates ID of cell (i.e. to match file input).
+
+        :param id: Identity of cell
+        :type loc: float
+        """
+        self.id = id
 
     def enqueue_person(self, person: Person):
         """Add person to queue for processing at end of iteration.
