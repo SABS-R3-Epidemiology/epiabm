@@ -23,7 +23,7 @@ class TestPopConfig(unittest.TestCase):
         # Population is initialised with no households
         pop_params = {"population_size": pop_size, "cell_number": cell_number,
                       "microcell_number": microcell_number}
-        test_pop = ToyPopulationFactory().make_pop(pop_params)
+        test_pop = ToyPopulationFactory.make_pop(pop_params)
 
         total_people = 0
         count_non_empty_cells = 0
@@ -68,8 +68,8 @@ class TestPopConfig(unittest.TestCase):
                       "population_seed": seed}
 
         # Create two identical populations with the same seed
-        seed_pop = ToyPopulationFactory().make_pop(pop_params)
-        comp_pop = ToyPopulationFactory().make_pop(pop_params)
+        seed_pop = ToyPopulationFactory.make_pop(pop_params)
+        comp_pop = ToyPopulationFactory.make_pop(pop_params)
 
         self.assertEqual(str(seed_pop), str(comp_pop))
 
@@ -100,7 +100,7 @@ class TestPopConfig(unittest.TestCase):
         pop_params = {"population_size": pop_size, "cell_number": cell_number,
                       "microcell_number": microcell_number,
                       "household_number": household_number}
-        toy_pop = ToyPopulationFactory().make_pop(pop_params)
+        toy_pop = ToyPopulationFactory.make_pop(pop_params)
         total_people = 0
         households = []
         num_empty_households = 0
@@ -132,7 +132,7 @@ class TestPopConfig(unittest.TestCase):
         pop_params = {"population_size": pop_size, "cell_number": cell_number,
                       "microcell_number": microcell_number,
                       "place_number": place_number}
-        toy_pop = ToyPopulationFactory().make_pop(pop_params)
+        toy_pop = ToyPopulationFactory.make_pop(pop_params)
 
         places = []
         for cell in toy_pop.cells:

@@ -14,7 +14,8 @@ class ToyPopulationFactory:
     """ Class that creates a toy population for use in the simple
     python model.
     """
-    def make_pop(self, pop_params: typing.Dict):
+    @staticmethod
+    def make_pop(pop_params: typing.Dict):
         """Initialize a population object with a given population size,
         number of cells and microcells. A uniform multinomial distribution is
         used to distribute the number of people into the different microcells.
@@ -73,14 +74,15 @@ class ToyPopulationFactory:
         # are initialised. If the housrhold number defaults to zero
         # then no households are initialised.
         if household_number > 0:
-            self.add_households(new_pop, household_number)
+            ToyPopulationFactory.add_households(new_pop, household_number)
         if place_number > 0:
-            self.add_places(new_pop, place_number)
+            ToyPopulationFactory.add_places(new_pop, place_number)
 
         new_pop.setup()
         return new_pop
 
-    def add_households(self, population: Population, household_number: int):
+    @staticmethod
+    def add_households(population: Population, household_number: int):
         """Groups people in a microcell into households together.
 
         :param population: Population containing all person objects to be
@@ -105,7 +107,8 @@ class ToyPopulationFactory:
                         new_household.add_person(person)
                         person_index += 1
 
-    def add_places(self, population: Population, place_number: int):
+    @staticmethod
+    def add_places(population: Population, place_number: int):
         """Groups people in a microcell into households together.
 
         :param population: Population containing all person objects to be

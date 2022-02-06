@@ -22,7 +22,7 @@ pop_params = {"population_size": 1000, "cell_number": 5,
 pe.Parameters.instance().time_steps_per_day = 1
 
 # Create a population based on the parameters given.
-population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
+population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
 cell = population.cells[0]
 
 # sim_ and file_params give details for the running of the simulations and
