@@ -15,7 +15,7 @@ pe.routine.Simulation.set_random_seed(seed=42)
 # Pop_params are used to configure the population structure being used in this
 # simulation.
 
-pop_params = {"population_size": 1000, "cell_number": 5,
+pop_params = {"population_size": 1000, "cell_number": 10,
               "microcell_number": 1, "household_number": 2,
               "place_number": 2}
 
@@ -31,8 +31,8 @@ cell = population.cells[0]  # do we need this?
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
-              "initial_infected_number": 5}
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 20,
+              "initial_infected_number": 20}
 
 file_params = {"output_file": "output.csv",
                "output_dir": "python_examples/spatial_example/spatial_outputs",
