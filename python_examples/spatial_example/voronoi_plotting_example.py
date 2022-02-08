@@ -12,6 +12,9 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from scipy.spatial import Voronoi, voronoi_plot_2d
 
+import glob
+from PIL import Image
+
 
 def find_value_for_region(current_df, point, name):
     """Extract value from given column for entry at given point.
@@ -47,7 +50,7 @@ def plot_time_point(df, vor, name, time, ax, mapper):
     tesselation, colour coded by their value in column 'name' at a given time.
     """
     current_data = df.loc[df['time'] == time]
-    voronoi_plot_2d(vor, ax=ax, show_points=False, show_vertices=False)
+    fig = voronoi_plot_2d(vor, ax=ax, show_points=False, show_vertices=False)
 
     # Colourcode each region according to infection rate
     for r, region in enumerate(vor.regions):
@@ -56,6 +59,12 @@ def plot_time_point(df, vor, name, time, ax, mapper):
             value = find_value_for_region(current_data, point, name=name)
             polygon = [vor.vertices[i] for i in region]
             ax.fill(*zip(*polygon), color=mapper.to_rgba(value))
+
+    ax.set_aspect('equal')
+    ax.set_title(f"t = {time:.2f}")
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    return fig, ax
 
 
 def plot_time_grid(df, vor, name, grid_dim, save_loc):
@@ -79,14 +88,53 @@ def plot_time_grid(df, vor, name, grid_dim, save_loc):
     # Add each subplot
     for i, t in enumerate(times):
         plot_time_point(df, vor, name, t, axs[i], mapper)
-        axs[i].set_aspect('equal')
-        axs[i].set_title(f"t = {t:.2f}")
-        axs[i].set_xlim(0, 1)
-        axs[i].set_ylim(0, 1)
 
     cbar = plt.colorbar(mapper, ax=axs.tolist())
     cbar.set_label("Number of " + str(name))
+    plt.xlim((0, 1)), plt.ylim((0, 1))
     plt.savefig(save_loc)
+
+
+def generate_animation(df, vor, name, save_path, use_pillow=True):
+    """Plots a grid of spatial plot of all cells in the Voroni
+    tesselation, colour coded by their value in column 'name',
+    for numltiple times.
+
+    Has the option to use PillowWriter to generate the animation
+    on the fly, or generate the images separately and then compile
+    into an animation (recommended for older machines).
+    """
+    # Generate colour map to use
+    mapper = generate_colour_map(df, name=name)
+
+    times = df["time"].to_numpy()
+
+    fig = plt.figure()
+    ax = plt.axes(xlim=(0, 1), ylim=(0, 1))
+
+    def animate(i):
+        return plot_time_point(df, vor, name, i, ax, mapper)
+
+    if use_pillow:
+        anim = matplotlib.animation.FuncAnimation(fig, animate, frames=times)
+        writer = matplotlib.animation.PillowWriter(fps=30)
+        anim.save((save_path + str("voronoi_animation.gif")), writer=writer)
+    else:
+        for t in times:
+            t_fig, t_ax = plot_time_point(df, vor, name, t, ax, mapper)
+            cbar = plt.colorbar(mapper, t_ax)
+            cbar.set_label("Number of " + str(name))
+            t_ax.set_xlim(0, 1), t_ax.set_ylim(0, 1)
+            t_fig.savefig(save_path + "image" + f'{t:03d}' + "d.png")
+
+        fp_in = save_path + "image" + "*d.png"
+        fp_out = save_path + "voronoi_animation.gif"
+        img, *imgs = [Image.open(f) for f in sorted(glob.glob(fp_in))]
+        img.save(fp=fp_out, format='GIF', append_images=imgs,
+                 save_all=True, duration=200, loop=0)
+        for file in os.listdir(save_path):  # Delete images after use
+            if file.endswith('d.png'):
+                os.remove(os.path.join(save_path, file))
 
 
 # Read in the data from simulation output
@@ -104,7 +152,14 @@ locations = np.append(locations, [[999, 999], [-999, 999],
 vor = Voronoi(locations)
 
 # Plot grid of time points
-save_loc = ("python_examples/spatial_example/spatial_outputs/"
-            + "voronoi_grid.png")
-fig = plot_time_grid(df, vor, name="InfectionStatus.InfectMild",
-                     grid_dim=(2, 3), save_loc=save_loc)
+fig_loc = ("python_examples/spatial_example/spatial_outputs/"
+           + "voronoi_grid_img.png")
+plot_time_grid(df, vor, name="InfectionStatus.InfectMild",
+               grid_dim=(2, 3), save_loc=fig_loc)
+
+# Plot animation of simulation
+matplotlib.rcParams['animation.ffmpeg_path'] = os.path.join(os.getcwd(),
+                                                            "ffmpeg/ffmpeg")
+animation_path = ("python_examples/spatial_example/spatial_outputs/")
+anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
+                          save_path=animation_path, use_pillow=False)

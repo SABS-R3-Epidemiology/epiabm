@@ -20,4 +20,4 @@ It subsequently saves the results to a .csv file, and plots the infection curve 
 
 We also provide a script (`voroni_plotting_example.py`) for visualising the spatial distribution of the epidemic, generating cells based on a single location coordinate using [Voroni Tesselation](https://en.wikipedia.org/wiki/Voronoi_diagram).
 
-![Voronoi_grid.pt](./spatial_example/spatial_outputs/voronoi_grid.png)
+![Voronoi_grid.pt](./spatial_example/spatial_outputs/voronoi_grid_img.png)
