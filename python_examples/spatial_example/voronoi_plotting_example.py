@@ -226,8 +226,6 @@ plot_time_grid(df, vor, name="InfectionStatus.InfectMild",
                grid_dim=(2, 3), save_loc=fig_loc)
 
 # Plot animation of simulation
-matplotlib.rcParams['animation.ffmpeg_path'] = os.path.join(os.getcwd(),
-                                                            "ffmpeg/ffmpeg")
 animation_path = ("python_examples/spatial_example/spatial_outputs/")
 anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
                           save_path=animation_path, use_pillow=False)

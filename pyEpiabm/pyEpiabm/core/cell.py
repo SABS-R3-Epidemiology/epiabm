@@ -60,7 +60,7 @@ class Cell:
         """Updates ID of cell (i.e. to match file input).
 
         :param id: Identity of cell
-        :type loc: float
+        :type id: float
         """
         self.id = id
 

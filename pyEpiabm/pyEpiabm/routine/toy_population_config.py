@@ -60,7 +60,7 @@ class ToyPopulationFactory:
         new_pop.add_cells(cell_number)
         # Sets up a probability array for the multinomial.
         p = [1 / total_number_microcells] * total_number_microcells
-        # Distributes multinomially people into microcells.
+        # Multinomially distributes people into microcells.
         cell_split = np.random.multinomial(population_size, p, size=1)[0]
         i = 0
         for cell in new_pop.cells:
@@ -71,7 +71,7 @@ class ToyPopulationFactory:
                 i += 1
 
         # If a household number is given then that number of households
-        # are initialised. If the housrhold number defaults to zero
+        # are initialised. If the household number defaults to zero
         # then no households are initialised.
         if household_number > 0:
             ToyPopulationFactory.add_households(new_pop, household_number)
@@ -144,7 +144,6 @@ class ToyPopulationFactory:
         :param file: Location of file to read in
         :type file: str
         """
-
         if method == "random":
             for cell in population.cells:
                 cell.set_location(tuple(np.random.rand(2)))
@@ -152,7 +151,7 @@ class ToyPopulationFactory:
         elif method == "file":
             assert file != ""
             # Can read in ID, location and even infectious numbers from file
-            # Check solumn names against infectious statuses, and add to
+            # Check column names against infectious statuses, and add to
             # relevant infectious status if they match
             raise NotImplementedError
 
