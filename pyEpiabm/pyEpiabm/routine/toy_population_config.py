@@ -144,8 +144,6 @@ class ToyPopulationFactory:
         :param file: Location of file to read in
         :type file: str
         """
-        # This function is not yet tested
-        # First assert that there is file if they want you to read from one
 
         if method == "random":
             for cell in population.cells:

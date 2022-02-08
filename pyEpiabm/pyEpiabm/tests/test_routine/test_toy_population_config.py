@@ -143,6 +143,29 @@ class TestPopConfig(unittest.TestCase):
         self.assertEqual(place_number,
                          len(toy_pop.cells[0].microcells[0].places))
 
+    def test_assign_cell_locations(self):
+        pop_params = {"population_size": 10, "cell_number": 2,
+                      "microcell_number": 1}
+        test_pop = ToyPopulationFactory.make_pop(pop_params)
+        for cell in test_pop.cells:
+            self.assertEqual(cell.location[0], 0)
+            self.assertEqual(cell.location[1], 0)
+        ToyPopulationFactory.assign_cell_locations(test_pop)
+        for cell in test_pop.cells:
+            self.assertTrue((0 < cell.location[0]) & (1 > cell.location[0]))
+            self.assertTrue((0 < cell.location[1]) & (1 > cell.location[1]))
+
+        with self.assertRaises(AssertionError):
+            ToyPopulationFactory.assign_cell_locations(test_pop, method='file')
+
+        with self.assertRaises(NotImplementedError):
+            ToyPopulationFactory.assign_cell_locations(test_pop, method='file',
+                                                       file='loc')
+
+        with self.assertRaises(ValueError):
+            ToyPopulationFactory.assign_cell_locations(test_pop,
+                                                       method='other')
+
 
 if __name__ == '__main__':
     unittest.main()
