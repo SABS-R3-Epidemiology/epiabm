@@ -20,6 +20,15 @@ def find_value_for_region(current_df, point, name):
     """Extract value from given column for entry at given point.
     Requires a unique position (and so should only be passed data
     from a single point in time.
+
+    :param current_df: Dataframe, for a single time point
+    :type current_df: pd.Dataframe
+    :param point: Location of given cell
+    :type point: Tuple(float, float)
+    :param name: Name of quantity to extract
+    :type name: str
+    :return: Named attribute of given cell
+    :rtype: float
     """
     row = current_df.loc[(current_df['location_x'] == point[0])
                          & (current_df['location_y'] == point[1])]
@@ -28,9 +37,21 @@ def find_value_for_region(current_df, point, name):
     return row[name].values[0]  # Change to plot other characteristic
 
 
-def generate_colour_map(df, name, min_value=0, cmap=cm.Reds):
-    """Generates a given colour map, with the max value determined by
+def generate_colour_map(df, name, min_value=0.0, cmap=cm.Reds):
+    """Generates a given color map, with the max value determined by
     the max value in a given column of the provided dataframe.
+
+    :param df: Overall dataframe (from simulation output)
+    :type df: pd.Dataframe
+    :param name: Name of quantity to extract
+    :type name: str
+    :param min_value: Minimum value for colourmap
+    :type min_value: float
+    :param cmap: Colormap to use (default red)
+    :type cmap: colormap
+    :return: Mappable object to colour cells
+    :rtype: ScalarMappable object
+
     """
     max_inf = max(df[name])
     norm = matplotlib.colors.Normalize(vmin=min_value, vmax=max_inf, clip=True)
@@ -39,15 +60,38 @@ def generate_colour_map(df, name, min_value=0, cmap=cm.Reds):
 
 def find_time_points(time_series, num_times):
     """Returns a given number of time points from time series,
-    with approximately equal spacing"""
+    with approximately equal spacing.
+
+    :param time_series: Time values from simulation output
+    :type time_series: pd.Series
+    :param num_times: Number of values to extract
+    :type num_times: int
+    :return: Array of times to plot data at
+    :rtype: ndarray
+    """
     all_times = time_series.drop_duplicates()
     idx = np.round(np.linspace(0, len(all_times) - 1, num_times)).astype(int)
     return all_times.to_numpy()[idx]
 
 
 def plot_time_point(df, vor, name, time, ax, mapper):
-    """Returns figure object with a spatial plot of all cells in the Voroni
+    """Returns figure object with a spatial plot of all cells in the Voronoi
     tesselation, colour coded by their value in column 'name' at a given time.
+
+    :param df: Overall dataframe (from simulation output)
+    :type df: pd.Dataframe
+    :param vor: Voronoi tesselation object
+    :type vor: voronoi object
+    :param name: Name of quantity to extract
+    :type name: str
+    :param time: Time to plot spatial data from
+    :type time: float
+    :param ax: Axes object on which to plot data
+    :type ax: Axes
+    :param mapper: Mappable object to colour cells
+    :type mapper: ScalarMappable object
+    :return: Figure and axes objects with plotted data
+    :rtype: Figure, Axes
     """
     current_data = df.loc[df['time'] == time]
     fig = voronoi_plot_2d(vor, ax=ax, show_points=False, show_vertices=False)
@@ -68,9 +112,20 @@ def plot_time_point(df, vor, name, time, ax, mapper):
 
 
 def plot_time_grid(df, vor, name, grid_dim, save_loc):
-    """Plots a grid of spatial plot of all cells in the Voroni
+    """Plots a grid of spatial plot of all cells in the Voronoi
     tesselation, colour coded by their value in column 'name',
-    for numltiple times.
+    for multiple times.
+
+    :param df: Overall dataframe (from simulation output)
+    :type df: pd.Dataframe
+    :param vor: Voronoi tesselation object
+    :type vor: voronoi object
+    :param name: Name of quantity to extract
+    :type name: str
+    :param grid_dim: Size of grid of spatial plots
+    :type time: Tuple(int, int)
+    :param save_loc: Path of saved image
+    :type save_loc: str
     """
     # Generate colour map to use
     mapper = generate_colour_map(df, name=name)
@@ -96,13 +151,26 @@ def plot_time_grid(df, vor, name, grid_dim, save_loc):
 
 
 def generate_animation(df, vor, name, save_path, use_pillow=True):
-    """Plots a grid of spatial plot of all cells in the Voroni
+    """Plots a grid of spatial plot of all cells in the Voronoi
     tesselation, colour coded by their value in column 'name',
     for numltiple times.
 
     Has the option to use PillowWriter to generate the animation
     on the fly, or generate the images separately and then compile
     into an animation (recommended for older machines).
+
+
+    :param df: Overall dataframe (from simulation output)
+    :type df: pd.Dataframe
+    :param vor: Voronoi tesselation object
+    :type vor: voronoi object
+    :param name: Name of quantity to extract
+    :type name: str
+    :param save_path: Path to saved animation
+    :type save_path: str
+    :param use_pillow: Whether to use pillow to generate animations
+        on the fly, or from temporary images stored in memory
+    :type use_pillow: bool
     """
     # Generate colour map to use
     mapper = generate_colour_map(df, name=name)
