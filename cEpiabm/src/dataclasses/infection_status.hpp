@@ -18,8 +18,6 @@ namespace epiabm
         InfectICURecov,
         Recovered,
         Dead
-
-        
     };
 
     constexpr const char* status_string(InfectionStatus status)
