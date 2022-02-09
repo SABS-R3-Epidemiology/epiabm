@@ -42,6 +42,4 @@ namespace epiabm
 }
 
 
-
-
 #endif // EPIABM_SIMULATINS_BASIC_SIMULATION_HPP
