@@ -49,7 +49,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         place_number = pop_params["place_number"] \
             if "place_number" in pop_params else 0
 
-        # If random seed is specified in parameters, set this in numpy
+        # If random seed is specified in parameters, set this
         if "population_seed" in pop_params:
             np.random.seed(pop_params["population_seed"])
             random.seed(pop_params["population_seed"])
