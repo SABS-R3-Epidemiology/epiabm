@@ -1,4 +1,4 @@
-cell,microcell,location_x,location_y,household_num,InfectionStatus.Susceptible,InfectionStatus.InfectMild
+cell,microcell,location_x,location_y,household_number,InfectionStatus.Susceptible,InfectionStatus.InfectMild
 1,1,0.311,0.520,1,91,5
 2,1,0.546,0.184,1,99,3
 3,1,0.969,0.775,1,84,3
