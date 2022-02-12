@@ -15,7 +15,7 @@ namespace epiabm
 
     void SpatialSweep::operator()(const unsigned short timestep)
     {
-        if (m_population->cells().size() == 1){
+        if (m_population->cells().size() <= 1){
             return;  // no intercell infections if only one cell
         }
         m_population->forEachCell(
