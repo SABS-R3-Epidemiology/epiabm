@@ -32,7 +32,7 @@ namespace epiabm
      */
     bool SpatialSweep::cellCallback(const unsigned short timestep, Cell* cell)
     {
-        if (cell->numInfectious() == 0){
+        if (cell->numInfectious() <= 0){
             return true;  // Break out as there are no infectors in cell
         }
         double ave_num_of_infections = Covidsim::CalcCellInf(cell, timestep);
