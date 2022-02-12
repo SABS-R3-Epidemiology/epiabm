@@ -57,7 +57,7 @@ class Cell:
         self.location = loc
 
     def set_id(self, id):
-        """Updates ID of cell (i.e. to match file input).
+        """Updates ID of cell (i.e. for input from file).
 
         :param id: Identity of cell
         :type id: float
