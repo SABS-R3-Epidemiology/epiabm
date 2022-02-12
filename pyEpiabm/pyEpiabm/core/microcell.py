@@ -47,14 +47,17 @@ class Microcell:
         """
         self.id = id
 
-    def add_people(self, n):
-        """Adds n default :class:`Person` to Microcell.
+    def add_people(self, n, status=InfectionStatus.Susceptible):
+        """Adds n default :class:`Person` of given status to Microcell.
 
         :param n: Number of default :class:`Person` s to add
         :type n: int
+        :param status: Status of persons to add to cell
+        :type status: InfectionStatus
         """
         for i in range(n):
             p = Person(self)
+            p.update_status(status)
             self.cell.persons.append(p)
             self.persons.append(p)
 
