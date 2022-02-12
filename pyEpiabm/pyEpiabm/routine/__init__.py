@@ -8,6 +8,7 @@ create a population.
 """
 
 from .abstract_population_config import AbstractPopulationFactory
+from .file_population_config import FilePopulationFactory
 from .household_infection import HouseholdInfection
 from .place_infection import PlaceInfection
 from .spatial_infection import SpatialInfection
