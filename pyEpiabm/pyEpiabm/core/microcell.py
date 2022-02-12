@@ -24,6 +24,7 @@ class Microcell:
         :param cell: Microcell's parent :class:`Cell` instance
         :type cell: Cell
         """
+        self.id = hash(self)
         self.persons = []
         self.places = []
         self.cell = cell
@@ -37,6 +38,14 @@ class Microcell:
         :rtype: str
         """
         return f"Microcell with {len(self.persons)} people."
+
+    def set_id(self, id):
+        """Updates ID of microcell (i.e. for input from file).
+
+        :param id: Identity of microcell
+        :type id: float
+        """
+        self.id = id
 
     def add_people(self, n):
         """Adds n default :class:`Person` to Microcell.
