@@ -52,15 +52,15 @@ class FilePopulationFactory:
         # Validate all column names in input
         valid_names = ["cell", "microcell", "location_x",
                        "location_y", "household_num"]
-        for column in input.columns.values:  # Check all column headings
-            if not (hasattr(InfectionStatus, column) | column in valid_names):
-                raise ValueError(f"Unknown column heading '{column}' in input")
+        for col in input.columns.values:  # Check all column headings
+            if not (hasattr(InfectionStatus, col) | (col in valid_names)):
+                raise ValueError(f"Unknown column heading '{col}' in input")
 
         # Initialise a population class
         new_pop = Population()
 
         # Iterate through lines (one per microcell)
-        for i, line in input.iterrows():
+        for _, line in input.iterrows():
             # Check if cell exists, or create it
             cell = FilePopulationFactory.find_cell(new_pop, line["cell"])
 
@@ -72,9 +72,9 @@ class FilePopulationFactory:
             for microcell in cell.microcells:
                 if microcell.id == line["microcell"]:
                     raise ValueError(f"Duplicate microcells {microcell.id}"
-                                     + f"in cell {cell.id}")
+                                     + f" in cell {cell.id}")
 
-            new_microcell = Microcell()
+            new_microcell = Microcell(cell)
             cell.microcells.append(new_microcell)
             new_microcell.set_id(line["microcell"])
 
@@ -82,12 +82,12 @@ class FilePopulationFactory:
             for column in input.columns.values:
                 if hasattr(InfectionStatus, column):
                     value = getattr(InfectionStatus, column)
-                    new_microcell.add_people(input[column],
+                    new_microcell.add_people(line[column],
                                              InfectionStatus(value))
 
             # Add households to microcell
             if line["household_num"] > 0:
-                FilePopulationFactory.add_households(new_pop,
+                FilePopulationFactory.add_households(new_microcell,
                                                      line["household_num"])
 
         new_pop.setup()
