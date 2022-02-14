@@ -3,6 +3,7 @@ from unittest.mock import patch
 import pandas as pd
 
 import pyEpiabm as pe
+from pyEpiabm.core.population import Population
 from pyEpiabm.routine import FilePopulationFactory
 
 
@@ -77,8 +78,22 @@ class TestPopConfig(unittest.TestCase):
             FilePopulationFactory.make_pop('test_input.csv')
         mock_read.assert_called_with('test_input.csv')
 
+    def test_find_cell(self):
+        pop = pe.Population()
+        pop.add_cells(2)
+        pop.cells[1].set_id(42)
+
+        target_cell = FilePopulationFactory.find_cell(pop, 42)
+        self.assertEqual(target_cell.id, 42)
+        self.assertEqual(hash(target_cell), hash(pop.cells[1]))
+        self.assertEqual(len(pop.cells), 2)  # No new cell created
+
+        new_cell = FilePopulationFactory.find_cell(pop, 43)
+        self.assertEqual(new_cell.id, 43)
+        self.assertEqual(len(pop.cells), 3)  # New cell created
+
     @patch("pandas.read_csv")
-    def test_if_households(self, mock_read):
+    def test_add_households(self, mock_read):
         """Tests when households are implemented.
         """
         # Define multiple households in cells
@@ -104,9 +119,45 @@ class TestPopConfig(unittest.TestCase):
         self.assertTrue(len(households) <= 5)
         self.assertTrue(num_empty_households < 5)
 
-    # Test for random seed consistency
-    # Test find cell method
-    # Test add households method
+    def summarise_households(self, pop: Population):
+        # Returns lists of cell and microcell wise populations
+        # Not a testing function, but used in test below
+
+        households = []
+        sizes = []
+        for cell in pop.cells:
+            for microcell in cell.microcells:
+                for person in microcell.persons:
+                    if person.household not in households:
+                        households.append(person.household)
+                        sizes.append(len(person.household.persons))
+        return sizes
+
+    @patch("pandas.read_csv")
+    def test_household_seed(self, mock_read):
+        """Tests household allocation is consistent with random seed
+        """
+        input = {'cell': [1, 2], 'microcell': [1, 1],
+                 'household_num': [10, 10],
+                 'Susceptible': [200, 200]}
+        df = pd.DataFrame(input)
+        mock_read.return_value = df
+
+        # Create two identical populations with the same seed
+        seed_pop = FilePopulationFactory.make_pop('mock_file', 42)
+        comp_pop = FilePopulationFactory.make_pop('mock_file', 42)
+
+        self.assertEqual(str(seed_pop), str(comp_pop))
+
+        seed_households = self.summarise_households(seed_pop)
+        comp_households = self.summarise_households(comp_pop)
+        self.assertEqual(seed_households, comp_households)
+
+        # Also compare to a population with a different seed
+        diff_pop = FilePopulationFactory().make_pop('mock_file', 43)
+
+        diff_households = self.summarise_households(diff_pop)
+        self.assertNotEqual(seed_households, diff_households)
 
 
 if __name__ == '__main__':
