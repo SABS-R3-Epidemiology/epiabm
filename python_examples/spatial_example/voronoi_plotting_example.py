@@ -191,8 +191,9 @@ def generate_animation(df, vor, name, save_path, use_pillow=True):
     else:
         for t in times:
             t_fig, t_ax = plot_time_point(df, vor, name, t, ax, mapper)
-            cbar = plt.colorbar(mapper, t_ax)
-            cbar.set_label("Number of " + str(name))
+            if t == times[0]:
+                cbar = t_fig.colorbar(mapper)
+                cbar.set_label("Number of " + str(name))
             t_ax.set_xlim(0, 1), t_ax.set_ylim(0, 1)
             t_fig.savefig(save_path + "image" + f'{t:03d}' + "d.png")
 
