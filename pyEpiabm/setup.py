@@ -65,8 +65,6 @@ setup(
         'numpy>=1.8',
         'parameterized',
         'pandas',
-        'random',
-        'os'
     ],
     extras_require={
         'docs': [
