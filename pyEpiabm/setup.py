@@ -66,6 +66,7 @@ setup(
         'packaging',
         'parameterized',
         'pandas',
+        'pandas>=1.4;python_version>="3.8"'  # noqa
     ],
     extras_require={
         'docs': [
