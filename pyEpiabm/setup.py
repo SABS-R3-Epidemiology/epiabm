@@ -63,7 +63,10 @@ setup(
         # Dependencies go here!
         'matplotlib',
         'numpy>=1.8',
-        'parameterized'
+        'parameterized',
+        'pandas',
+        'random',
+        'os'
     ],
     extras_require={
         'docs': [
