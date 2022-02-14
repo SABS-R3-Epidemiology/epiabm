@@ -19,7 +19,7 @@ from PIL import Image
 def find_value_for_region(current_df, point, name):
     """Extract value from given column for entry at given point.
     Requires a unique position (and so should only be passed data
-    from a single point in time.
+    from a single point in time).
 
     :param current_df: Dataframe, for a single time point
     :type current_df: pd.Dataframe
@@ -176,6 +176,7 @@ def generate_animation(df, vor, name, save_path, use_pillow=True):
     mapper = generate_colour_map(df, name=name)
 
     times = df["time"].to_numpy()
+    times = np.unique(times)
 
     fig = plt.figure()
     ax = plt.axes(xlim=(0, 1), ylim=(0, 1))
@@ -185,7 +186,7 @@ def generate_animation(df, vor, name, save_path, use_pillow=True):
 
     if use_pillow:
         anim = matplotlib.animation.FuncAnimation(fig, animate, frames=times)
-        writer = matplotlib.animation.PillowWriter(fps=30)
+        writer = matplotlib.animation.PillowWriter(fps=3)
         anim.save((save_path + str("voronoi_animation.gif")), writer=writer)
     else:
         for t in times:
