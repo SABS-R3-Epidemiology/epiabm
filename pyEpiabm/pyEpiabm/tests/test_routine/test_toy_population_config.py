@@ -159,6 +159,7 @@ class TestPopConfig(unittest.TestCase):
         with self.assertRaises(ValueError):
             ToyPopulationFactory.assign_cell_locations(test_pop,
                                                        method='other')
+
     @parameterized.expand([(random.randint(2, 20) * numReps,)
                            for _ in range(numReps)])
     def test_assign_cell_locations_unix(self, cell_num):
