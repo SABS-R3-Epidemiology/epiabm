@@ -147,6 +147,10 @@ class FilePopulationFactory:
         household allocation must also be recorded to precisely save the
         simulation state.
 
+        WARNING: This function is only tested with versions of pandas > 1.4,
+        and may not function correctly in older cases. This will include cases
+        where the user is running python 3.7 or older versions.
+
         :param population: Population object to output
         :type population: Population
         :param output_file: Path to output file
