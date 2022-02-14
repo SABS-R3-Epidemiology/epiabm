@@ -13,9 +13,9 @@ class TestPopConfig(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.input = {'cell': [1, 2], 'microcell': [1, 1],
-                     'household_num': [1, 1],
-                     'location_x': [0, 0], 'location_y': [1, 1],
+        cls.input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
+                     'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
+                     'household_number': [1, 1],
                      'Susceptible': [8, 9], 'InfectMild': [2, 3]}
         cls.df = pd.DataFrame(cls.input)
 
@@ -31,7 +31,7 @@ class TestPopConfig(unittest.TestCase):
         mock_read.return_value = self.df
 
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_once_with('test_input.csv')
 
         total_people = 0
         total_infectious = 0
@@ -62,7 +62,7 @@ class TestPopConfig(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             FilePopulationFactory.make_pop('test_input.csv')
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_once_with('test_input.csv')
 
     @patch("pandas.read_csv")
     def test_duplicate_microcell(self, mock_read):
@@ -70,13 +70,13 @@ class TestPopConfig(unittest.TestCase):
         """
         # Move second microcell to first cell (with duplicate id)
         data = self.df.copy()
-        data['cell'][1] = 1
+        data.iat[1, 0] = 1
 
         mock_read.return_value = data
 
         with self.assertRaises(ValueError):
             FilePopulationFactory.make_pop('test_input.csv')
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_once_with('test_input.csv')
 
     def test_find_cell(self):
         pop = pe.Population()
@@ -98,7 +98,7 @@ class TestPopConfig(unittest.TestCase):
         """
         # Define multiple households in cells
         data = self.df.copy()
-        data['household_num'] = pd.Series([2, 3])
+        data['household_number'] = pd.Series([2, 3])
         mock_read.return_value = data
 
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
@@ -138,7 +138,7 @@ class TestPopConfig(unittest.TestCase):
         """Tests household allocation is consistent with random seed
         """
         input = {'cell': [1, 2], 'microcell': [1, 1],
-                 'household_num': [10, 10],
+                 'household_number': [10, 10],
                  'Susceptible': [200, 200]}
         df = pd.DataFrame(input)
         mock_read.return_value = df
@@ -158,6 +158,38 @@ class TestPopConfig(unittest.TestCase):
 
         diff_households = self.summarise_households(diff_pop)
         self.assertNotEqual(seed_households, diff_households)
+
+    @patch("pandas.read_csv")
+    @patch("pandas.DataFrame.to_csv")
+    def test_print_population_loc(self, mock_write, mock_read):
+        """Tests method to print population to csv, to ensure that
+        the file outputs to the correct location.
+        """
+        mock_read.return_value = self.df
+
+        test_pop = FilePopulationFactory.make_pop('test_input.csv')
+        self.assertEqual(len(test_pop.cells), 2)
+        self.assertEqual(test_pop.total_people(), 22)
+
+        FilePopulationFactory.print_population(test_pop, 'output.csv')
+        mock_write.assert_called_once()
+        self.assertEqual(mock_write.call_args[0], ('output.csv',))
+
+    @patch("pandas.read_csv")
+    @patch("copy.copy")
+    def test_print_population(self, mock_copy, mock_read):
+        """Tests method to print population to csv
+        """
+        data = self.df.copy()
+        data['household_number'] = pd.Series([2, 3])  # Meaningful households
+        mock_read.return_value = data
+
+        test_pop = FilePopulationFactory.make_pop('test_input.csv')
+        self.assertEqual(len(test_pop.cells), 2)
+        self.assertEqual(test_pop.total_people(), 22)
+
+        FilePopulationFactory.print_population(test_pop, 'output.csv')
+        pd.testing.assert_frame_equal(mock_copy.call_args.args[0], data)
 
 
 if __name__ == '__main__':
