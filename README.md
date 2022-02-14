@@ -40,6 +40,20 @@ Create a population based on the parameters given, from the following list:
 * `place_number`: Number of places in each microcell _(Optional)_
 * `population_seed`: Random seed for reproducible populations - see above _(Optional)_
 
+### Import Population
+Alternatively, it is possible to import a population from a `.csv` file, with the following headings:
+
+* `cell`: ID code for cell (Uses hash if unspecified)
+* `microcell`: ID code for microcell (Uses hash if unspecified)
+* `location_x`: The x coordinate of the parent cell location
+* `location_y`: The y coordinate of the parent cell location
+* `household_number`: Number of households in that microcell
+* Any number of columns with titles from the `InfectionStatus`
+    enum (such as `InfectionStatus.Susceptible`), giving the
+    number of people with that status in that cell
+
+File of this format can also be exported using the `pyEpiabm.routine.FilePopulationConfig.print_population()` method, i.e. for reproducibility or use in further simulations.
+
 ### Configure Simulation
 Configure a simulation with a number of parameters. These are split into two categories:
 
