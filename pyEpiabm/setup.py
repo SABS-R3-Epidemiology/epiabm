@@ -64,7 +64,7 @@ setup(
         'matplotlib',
         'numpy>=1.8',
         'parameterized',
-        'pandas',
+        'pandas>=1.4',
     ],
     extras_require={
         'docs': [

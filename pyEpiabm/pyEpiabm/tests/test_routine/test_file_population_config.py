@@ -178,7 +178,8 @@ class TestPopConfig(unittest.TestCase):
     @patch("pandas.read_csv")
     @patch("copy.copy")
     def test_print_population(self, mock_copy, mock_read):
-        """Tests method to print population to csv
+        """Tests method to print population to csv, to match content
+        with target.
         """
         data = self.df.copy()
         data['household_number'] = pd.Series([2, 3])  # Meaningful households
@@ -189,7 +190,8 @@ class TestPopConfig(unittest.TestCase):
         self.assertEqual(test_pop.total_people(), 22)
 
         FilePopulationFactory.print_population(test_pop, 'output.csv')
-        pd.testing.assert_frame_equal(mock_copy.call_args.args[0], data)
+        pd.testing.assert_frame_equal(mock_copy.call_args.args[0], data,
+                                      check_dtype=False)
 
 
 if __name__ == '__main__':
