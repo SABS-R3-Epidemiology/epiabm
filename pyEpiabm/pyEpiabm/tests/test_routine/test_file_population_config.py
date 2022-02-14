@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch
 import pandas as pd
+from packaging import version
 
 import pyEpiabm as pe
 from pyEpiabm.core.population import Population
@@ -190,8 +191,9 @@ class TestPopConfig(unittest.TestCase):
         self.assertEqual(test_pop.total_people(), 22)
 
         FilePopulationFactory.print_population(test_pop, 'output.csv')
-        pd.testing.assert_frame_equal(mock_copy.call_args.args[0], data,
-                                      check_dtype=False)
+        if version.parse(pd.__version__) >= version.parse("1.4.0"):
+            pd.testing.assert_frame_equal(mock_copy.call_args.args[0],
+                                          data, check_dtype=False)
 
 
 if __name__ == '__main__':
