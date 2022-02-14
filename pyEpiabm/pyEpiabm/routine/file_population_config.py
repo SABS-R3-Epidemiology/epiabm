@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import random
 import copy
+from packaging import version
 
 from pyEpiabm.core import Household, Population, Cell
 from pyEpiabm.core.microcell import Microcell
@@ -178,7 +179,7 @@ class FilePopulationFactory:
                         households.append(person.household)
                 data_dict['household_number'] = len(households)
 
-                if pd.__version__ >= 1.4:
+                if version.parse(pd.__version__) >= version.parse("1.4.0"):
                     new_row = pd.DataFrame(data=data_dict, columns=columns,
                                            index=[0])
                     df = pd.concat([df, new_row], ignore_index=True)
