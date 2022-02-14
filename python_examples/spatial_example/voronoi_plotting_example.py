@@ -182,12 +182,17 @@ def generate_animation(df, vor, name, save_path, use_pillow=True):
     ax = plt.axes(xlim=(0, 1), ylim=(0, 1))
 
     def animate(i):
-        return plot_time_point(df, vor, name, i, ax, mapper)
+        temp_fig, temp_ax = plot_time_point(df, vor, name, i, ax, mapper)
+        if i == 0:
+            cbar = temp_fig.colorbar(mapper)
+            cbar.set_label("Number of " + str(name))
+        return temp_fig, temp_ax
 
     if use_pillow:
-        anim = matplotlib.animation.FuncAnimation(fig, animate, frames=times)
-        writer = matplotlib.animation.PillowWriter(fps=3)
-        anim.save((save_path + str("voronoi_animation.gif")), writer=writer)
+        ani = matplotlib.animation.FuncAnimation(fig, animate, frames=times,
+                                                 init_func=lambda *args: None)
+        writer = matplotlib.animation.PillowWriter(fps=4)
+        ani.save((save_path + str("voronoi_animation.gif")), writer=writer)
     else:
         for t in times:
             t_fig, t_ax = plot_time_point(df, vor, name, t, ax, mapper)
@@ -230,4 +235,4 @@ plot_time_grid(df, vor, name="InfectionStatus.InfectMild",
 # Plot animation of simulation
 animation_path = ("python_examples/spatial_example/spatial_outputs/")
 anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
-                          save_path=animation_path, use_pillow=False)
+                          save_path=animation_path, use_pillow=True)
