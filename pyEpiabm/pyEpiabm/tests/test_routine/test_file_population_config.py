@@ -191,9 +191,7 @@ class TestPopConfig(unittest.TestCase):
 
         FilePopulationFactory.print_population(test_pop, 'output.csv')
         pd.testing.assert_frame_equal(mock_copy.call_args.args[0], data,
-                                      check_dtype=False,
-                                      check_column_type=False,
-                                      check_frame_type=False)
+                                      check_dtype=False)
 
 
 if __name__ == '__main__':
