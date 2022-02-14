@@ -178,9 +178,12 @@ class FilePopulationFactory:
                         households.append(person.household)
                 data_dict['household_number'] = len(households)
 
-                new_row = pd.DataFrame(data=data_dict, columns=columns,
-                                       index=[0])
-                df = pd.concat([df, new_row], ignore_index=True)
+                if pd.__version__ >= 1.4:
+                    new_row = pd.DataFrame(data=data_dict, columns=columns,
+                                           index=[0])
+                    df = pd.concat([df, new_row], ignore_index=True)
+                else:
+                    df = df.append(data_dict, ignore_index=True)
 
         df['household_number'] = df['household_number'].astype(int)
         for status in InfectionStatus:
