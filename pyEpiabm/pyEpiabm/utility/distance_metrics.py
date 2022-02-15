@@ -28,14 +28,3 @@ class DistanceFunctions:
         :rtype: float
         """
         return np.linalg.norm(np.abs(np.asarray(loc1) - np.asarray(loc2)))
-
-    def dist_covidsim(loc1: typing.Tuple[float, float],
-                      loc2: typing.Tuple[float, float] = (0, 0)):
-        """Calculates distance
-
-        :param loc1: (x,y) coordinates of the first place
-        :type loc1: Tuple[float, float]
-        :param loc2: (x,y) coordinates of the second place
-        :type loc2: Tuple[float, float]
-        """
-        pass
