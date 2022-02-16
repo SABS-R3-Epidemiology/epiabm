@@ -41,6 +41,7 @@ class TestMicrocell(unittest.TestCase):
         cell = pe.Cell()
         mcell = pe.Microcell(cell)
         mcell.add_people(5)
+        mcell._setup()
         cell._setup()
         mcell.notify_person_status_change(
             pe.property.InfectionStatus.Susceptible,
