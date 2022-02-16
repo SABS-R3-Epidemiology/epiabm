@@ -80,8 +80,8 @@ class HostProgressionSweep(AbstractSweep):
             for person in cell.persons:
                 if person.time_of_status_change == time:
                     person.update_status(person.next_infection_status)
-                    self._update_next_infection_status(person)
                     if person.infection_status != InfectionStatus.Recovered:
+                        self._update_next_infection_status(person)
                         if person.infection_status == InfectionStatus.Exposed:
                             person.time_of_status_change = time +\
                                  self._set_latent_time()
