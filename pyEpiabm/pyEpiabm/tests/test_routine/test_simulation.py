@@ -109,7 +109,10 @@ class TestSimulation(unittest.TestCase):
                                   self.spatial_file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
             data["time"] = time
-            data["cell"] = hash(self.test_population.cells[0])
+            cell = self.test_population.cells[0]
+            data["cell"] = hash(cell)
+            data["location_x"] = cell.location[0]
+            data["location_y"] = cell.location[0]
 
             with patch.object(spatial_sim.writer, 'write') as mock:
                 spatial_sim.write_to_file(time)

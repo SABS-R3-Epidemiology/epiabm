@@ -2,6 +2,7 @@
 # Cell Class
 #
 
+import typing
 from queue import Queue
 
 from pyEpiabm.property import InfectionStatus
@@ -15,9 +16,14 @@ class Cell:
     """Class representing a Cell (Subset of Population).
     Collection of :class:`Microcell` s and :class:`Person` s.
     """
-    def __init__(self):
+    def __init__(self, loc: typing.Tuple[float, float] = (0, 0)):
         """Constructor Method.
+
+        :param loc: Location of the cell, as an (x,y) tuple
+        :type loc: Tuple(float, float)
         """
+        self.location = loc
+        self.id = hash(self)
         self.microcells = []
         self.persons = []
         self.places = []
@@ -31,7 +37,7 @@ class Cell:
         :rtype: str
         """
         return f"Cell with {len(self.microcells)} microcells " + \
-            f"and {len(self.persons)} people."
+            f"and {len(self.persons)} people at location {self.location}."
 
     def add_microcells(self, n):
         """Add n empty :class:`Microcell` s to Cell.
@@ -41,6 +47,22 @@ class Cell:
         """
         for i in range(n):
             self.microcells.append(Microcell(self))
+
+    def set_location(self, loc: typing.Tuple[float, float]):
+        """Updates location of cell (used in population configuration).
+
+        :param loc: Location of the cell, as an (x,y) tuple
+        :type loc: Tuple(float, float)
+        """
+        self.location = loc
+
+    def set_id(self, id):
+        """Updates ID of cell (i.e. to match file input).
+
+        :param id: Identity of cell
+        :type id: float
+        """
+        self.id = id
 
     def enqueue_person(self, person: Person):
         """Add person to queue for processing at end of iteration.
