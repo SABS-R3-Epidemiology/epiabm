@@ -13,7 +13,7 @@ from pyEpiabm.property import InfectionStatus
 
 
 class FilePopulationFactory:
-    """ Class that creates a population  based on an input .csv file.
+    """ Class that creates a population based on an input .csv file.
     """
     @staticmethod
     def make_pop(input_file: str, random_seed: int = None):
