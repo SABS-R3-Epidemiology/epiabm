@@ -2,6 +2,7 @@ import unittest
 import random
 
 import pyEpiabm as pe
+from pyEpiabm.property.infection_status import InfectionStatus
 
 
 class TestCompartmentCounter(unittest.TestCase):
@@ -16,6 +17,10 @@ class TestCompartmentCounter(unittest.TestCase):
 
     def test_reportRetrieve(self):
         subject = pe._CompartmentCounter("")
+        self.assertRaises(ValueError, subject.report,
+                          InfectionStatus.Susceptible,
+                          InfectionStatus.InfectMild)
+        print(subject.retrieve())
         subject.initialize(1000)
         statuses = {s: 0 for s in pe.property.InfectionStatus}
         statuses[pe.property.InfectionStatus.Susceptible] = 1000

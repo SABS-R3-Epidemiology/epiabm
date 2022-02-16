@@ -23,9 +23,10 @@ class TestSpatialSweep(unittest.TestCase):
         cls.cell_inf.add_microcells(1)
         cls.microcell_inf = cls.cell_inf.microcells[0]
 
-        cls.microcell_inf.add_people(1)
+        cls.microcell_inf.add_people(100)
         cls.infector = cls.microcell_inf.persons[0]
         Parameters.instance().time_steps_per_day = 1
+        cls.pop.setup()
 
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     @mock.patch("numpy.random.poisson")
@@ -41,9 +42,17 @@ class TestSpatialSweep(unittest.TestCase):
         mock_inf.return_value = 10.0
         mock_force.return_value = 100.0
         time = 1
+        Parameters.instance().infection_radius = 5000
 
         test_sweep = SpatialSweep()
+
         # Assert a population with one cell doesn't do anything
+        Parameters.instance().do_CovidSim = False
+        test_sweep.bind_population(self.pop)
+        test_sweep(time)
+        self.assertTrue(self.cell_inf.person_queue.empty())
+
+        Parameters.instance().do_CovidSim = True
         test_sweep.bind_population(self.pop)
         test_sweep(time)
         self.assertTrue(self.cell_inf.person_queue.empty())
@@ -55,26 +64,40 @@ class TestSpatialSweep(unittest.TestCase):
         self.microcell_susc = self.cell_susc.microcells[0]
         self.microcell_susc.add_people(1)
         self.infectee = self.microcell_susc.persons[0]
+        self.pop.setup()
 
+        Parameters.instance().do_CovidSim = False
+        test_sweep.bind_population(self.pop)
+        test_sweep(time)
+        self.assertTrue(self.cell_susc.person_queue.empty())
+
+        Parameters.instance().do_CovidSim = True
         test_sweep.bind_population(self.pop)
         test_sweep(time)
         self.assertTrue(self.cell_susc.person_queue.empty())
 
         # Change person's status to infected
+        Parameters.instance().do_CovidSim = False
         self.infector.update_status(InfectionStatus.InfectMild)
+        test_sweep.bind_population(self.pop)
+        test_sweep(time)
+        self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
+
+        Parameters.instance().do_CovidSim = True
         self.cell_susc.person_queue = Queue()
         test_sweep.bind_population(self.pop)
         test_sweep(time)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
 
-        # Add multiple people to infector cell
-        self.cell_inf.microcells[0].add_people(10000)
+        # Change infectee's status to recovered so no susceptibles
+        Parameters.instance().do_CovidSim = False
+        self.infectee.update_status(InfectionStatus.Recovered)
         self.cell_susc.person_queue = Queue()
         test_sweep.bind_population(self.pop)
         test_sweep(time)
-        self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
+        self.assertTrue(self.cell_susc.person_queue.empty())
 
-        # Change infectee's status to recovered
+        Parameters.instance().do_CovidSim = True
         self.infectee.update_status(InfectionStatus.Recovered)
         self.cell_susc.person_queue = Queue()
         test_sweep.bind_population(self.pop)
