@@ -15,7 +15,7 @@ namespace epiabm
         unsigned short int )
     {
         const int R_value = 2;
-        return R_value * cell->numInfectious();
+        return static_cast<double>(R_value * cell->numInfectious());
     }
 
     double Covidsim::CalcSpaceInf(

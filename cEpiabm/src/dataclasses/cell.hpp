@@ -82,6 +82,9 @@ namespace epiabm
         size_t numRecovered() const;
         size_t numDead() const;
 
+        void sampleInfectious(size_t n, std::function<void(Person*)> callback);
+        void sampleSusceptible(size_t n, std::function<void(Person*)> callback);
+
         void initialize();
 
         unsigned int compartmentCount(InfectionStatus status);

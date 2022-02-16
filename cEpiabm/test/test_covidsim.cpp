@@ -16,6 +16,7 @@ TEST_CASE("covidsim: test CalcHouseInf")
 TEST_CASE("covidsim: test CalcCellInf")
 {
     Cell subject = Cell(0);
+    subject.microcells().push_back(Microcell(0));
     unsigned short int timestep = 0;
     REQUIRE(Covidsim::CalcCellInf(&subject, timestep) >= 0);
 
@@ -24,13 +25,15 @@ TEST_CASE("covidsim: test CalcCellInf")
     subject.people().reserve(10);
     for (size_t i = 0; i < 10; i++)
     {
-        subject.people().push_back(Person(0, i, 0));
+        subject.people().push_back(Person(0, i, i));
+        subject.microcells()[0].people().push_back(i);
         people.insert(&subject.people()[i]);
     }
     subject.forEachPerson(
         [&](Person* person)
         {
-            (*person).updateStatus(&subject, InfectionStatus::InfectMild, 0);
+            person->updateStatus(&subject, InfectionStatus::InfectMild, 0);
+            return true;
         });
     
     subject.initializeInfectiousGrouping();

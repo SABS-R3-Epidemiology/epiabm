@@ -21,6 +21,7 @@ set(
     sweeps/new_infection_sweep.cpp
     sweeps/basic_host_progression_sweep.cpp
     sweeps/random_seed_sweep.cpp
+    sweeps/spatial_sweep.cpp
     reporters/timestep_reporter_interface.cpp
     reporters/cell_compartment_reporter.cpp
     reporters/percell_compartment_reporter.cpp
@@ -49,6 +50,7 @@ set(
     sweeps/new_infection_sweep.hpp
     sweeps/basic_host_progression_sweep.hpp
     sweeps/random_seed_sweep.hpp
+    sweeps/spatial_sweep.hpp
     reporters/timestep_reporter_interface.hpp
     reporters/cell_compartment_reporter.hpp
     reporters/percell_compartment_reporter.hpp
