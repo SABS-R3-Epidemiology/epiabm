@@ -18,7 +18,7 @@ class TestHousehold(unittest.TestCase):
     def test_location_type(self):
         self.assertRaises(ValueError, pe.Household, (1, 1, 1))
         self.assertRaises(ValueError, pe.Household, (1, (8, 6)))
-        self.assertRaises(ValueError, pe.Household, ([1, 1], 1))
+        self.assertRaises(ValueError, pe.Household, ('1', 1))
 
 
 if __name__ == '__main__':

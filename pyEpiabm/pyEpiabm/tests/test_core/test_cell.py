@@ -63,8 +63,8 @@ class TestCell(unittest.TestCase):
     def test_set_loc(self):
         cell = pe.Cell()
         self.assertEqual(cell.location, (0, 0))
-        cell.set_location((3.0, 3.0))
-        self.assertEqual(cell.location, (3.0, 3.0))
+        cell.set_location((3.0, 2.0))
+        self.assertEqual(cell.location, (3.0, 2.0))
 
 
 if __name__ == '__main__':

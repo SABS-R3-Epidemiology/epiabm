@@ -10,26 +10,26 @@ import pyEpiabm as pe
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
-# pe.routine.Simulation.set_random_seed(seed=42)
+pe.routine.Simulation.set_random_seed(seed=42)
 
 # Pop_params are used to configure the population structure being used in this
 # simulation.
 
-pop_params = {"population_size": 1000, "cell_number": 10,
-              "microcell_number": 1, "household_number": 5,
+pop_params = {"population_size": 100, "cell_number": 1,
+              "microcell_number": 1, "household_number": 20,
               "place_number": 2}
 
 pe.Parameters.instance().time_steps_per_day = 1
-pe.Parameters.instance().basic_reproduction_num = 2.8
+pe.Parameters.instance().base_reproduction_num = 2.8
 
 # Create a population based on the parameters given.
 population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
-[cell.set_location((i, 0)) for i, cell in enumerate(population.cells)]
+cell = population.cells[0]
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
-              "initial_infected_number": 1}
+              "initial_infected_number": 5}
 
 file_params = {"output_file": "output.csv",
                "output_dir": "python_examples/simulation_outputs",
@@ -42,8 +42,7 @@ sim.configure(
     population,
     [pe.sweep.InitialInfectedSweep()],
     [pe.sweep.UpdatePlaceSweep(), pe.sweep.HouseholdSweep(),
-     pe.sweep.PlaceSweep(), pe.sweep.SpatialSweep(),
-     pe.sweep.QueueSweep(),
+     pe.sweep.PlaceSweep(), pe.sweep.QueueSweep(),
      pe.sweep.HostProgressionSweep()],
     sim_params,
     file_params)
@@ -61,4 +60,3 @@ df.plot(x="time", y=["InfectionStatus.Susceptible",
                      "InfectionStatus.InfectMild",
                      "InfectionStatus.Recovered"])
 plt.savefig("python_examples/simulation_outputs/simulation_flow_SIR_plot.png")
-plt.show()

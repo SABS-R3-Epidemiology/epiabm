@@ -24,10 +24,10 @@ class SpatialInfection:
         R_0 = Parameters.instance().basic_reproduction_num
         total_infectors = inf_cell.number_infectious()
 
-        number_to_infect = total_infectors * R_0
+        average_number_to_infect = total_infectors * R_0
         # This gives the expected number of infection events
         # caused by people within this cell.
-        return (number_to_infect)
+        return (average_number_to_infect)
 
     @staticmethod
     def space_susc(susc_cell: Cell, infectee: Person,

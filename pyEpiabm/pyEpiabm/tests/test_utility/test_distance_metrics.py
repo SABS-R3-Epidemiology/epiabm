@@ -17,6 +17,9 @@ class TestDistanceFunctions(unittest.TestCase):
         dist = DistanceFunctions.dist_euclid((-3, 0), (3, 0))
         self.assertTrue(dist == 6)
 
+        dist = DistanceFunctions.dist_euclid((-2, 0), (1, 4))
+        self.assertTrue(dist == 5.0)
+
 
 if __name__ == '__main__':
     unittest.main()

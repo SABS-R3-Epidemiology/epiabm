@@ -78,7 +78,7 @@ class TestPlace(unittest.TestCase):
         self.assertRaises(ValueError, pe.Place, (1.0, 1.0, 1.0),
                           pe.property.PlaceType.Hotel,
                           self.cell, self.microcell)
-        self.assertRaises(ValueError, pe.Place, (1.0, (8, 9)),
+        self.assertRaises(ValueError, pe.Place, (1.0, '8.0'),
                           pe.property.PlaceType.Hotel,
                           self.cell, self.microcell)
         self.assertRaises(ValueError, pe.Place, ([3], 1.0),
