@@ -45,9 +45,10 @@ namespace epiabm
         for (Cell any_cell : m_population->cells()){
             pos_inf_cells.push_back(&any_cell);
         }
-        pos_inf_cells.erase(std::remove_if(
-            pos_inf_cells.begin(), pos_inf_cells.end(), 
-            [&](Cell* other) { return other == cell; }), pos_inf_cells.end());  // Remove current cell from list
+        
+        pos_inf_cells.erase(std::remove(
+            pos_inf_cells.begin(), pos_inf_cells.end(), cell), pos_inf_cells.end());  // Remove current cell from list
+        
 
         // std::vector<size_t> cell_list_indices;
         // std::random_device rd;  // Obtain a seed for the random number engine
