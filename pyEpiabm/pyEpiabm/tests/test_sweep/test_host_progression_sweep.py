@@ -14,7 +14,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         cls.test_population = pe.Population()
         cls.test_population.add_cells(1)
         cls.test_population.cells[0].add_microcells(1)
-        cls.test_population.cells[0].microcells[0].add_people(2)
+        cls.test_population.cells[0].microcells[0].add_people(3)
         cls.person1 = cls.test_population.cells[0].microcells[0].persons[0]
         cls.person2 = cls.test_population.cells[0].microcells[0].persons[1]
         cls.person3 = cls.test_population.cells[0].microcells[0].persons[2]
@@ -44,7 +44,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         """
         test_sweep = pe.sweep.HostProgressionSweep()
         latency_time = test_sweep._set_latent_time()
-        self.assertIsInstance(latency_time, float)
+        self.assertIsInstance(latency_time, int)
         self.assertTrue(0 <= latency_time)
 
     def test_update_time(self):
@@ -77,9 +77,6 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertEqual(test_sweep._population.cells[0].persons[1].
                          infection_status, pe.property.InfectionStatus.Exposed)
 
-        # Test that the call fails for non-int time.
-        self.assertRaises(TypeError, test_sweep, 0.5)
-
         test_sweep(1)
         self.assertEqual(self.person2.infection_status,
                          pe.property.InfectionStatus.InfectMild)
@@ -87,8 +84,8 @@ class TestHostProgressionSweep(unittest.TestCase):
                          pe.property.InfectionStatus.Exposed)
         self.assertEqual(self.person1.infection_status,
                          pe.property.InfectionStatus.Susceptible)
-        self.assertIsInstance(self.person2.time_of_status_change, float)
-        self.assertIsInstance(self.person3.time_of_status_change, float)
+        self.assertIsInstance(self.person2.time_of_status_change, int)
+        self.assertIsInstance(self.person3.time_of_status_change, int)
         self.assertTrue(2 <= self.person2.time_of_status_change <= 11)
         self.assertTrue(0 <= self.person3.time_of_status_change)
 
