@@ -20,6 +20,8 @@ pop_params = {"population_size": 1000, "cell_number": 10,
               "place_number": 2}
 
 pe.Parameters.instance().time_steps_per_day = 1
+pe.Parameters.instance().do_Covidsim = True
+pe.Parameters.instance()
 
 # Create a population framework based on the parameters given.
 population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
