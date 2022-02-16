@@ -20,7 +20,6 @@ class TestCompartmentCounter(unittest.TestCase):
         self.assertRaises(ValueError, subject.report,
                           InfectionStatus.Susceptible,
                           InfectionStatus.InfectMild)
-        print(subject.retrieve())
         subject.initialize(1000)
         statuses = {s: 0 for s in pe.property.InfectionStatus}
         statuses[pe.property.InfectionStatus.Susceptible] = 1000
@@ -30,6 +29,9 @@ class TestCompartmentCounter(unittest.TestCase):
             newStatus = random.choice(list(pe.property.InfectionStatus))
             statuses[newStatus] += 1
             subject.report(pe.property.InfectionStatus.Susceptible, newStatus)
+        self.assertDictEqual(subject.retrieve(), statuses)
+        statuses[pe.property.InfectionStatus.Susceptible] += 1
+        subject.report_new_person()
         self.assertDictEqual(subject.retrieve(), statuses)
 
     def test_reportRetrieveLarge(self):

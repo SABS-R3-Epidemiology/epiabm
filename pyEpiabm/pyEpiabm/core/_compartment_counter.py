@@ -38,7 +38,7 @@ class _CompartmentCounter:
         self._compartments[InfectionStatus.Susceptible] = n_people
 
     def report(self, old_status: InfectionStatus,
-               new_status: InfectionStatus) -> None:
+               new_status: InfectionStatus, new_person=False) -> None:
         """Report Person has changed state.
         Update internal compartments state.
 
@@ -51,6 +51,12 @@ class _CompartmentCounter:
             raise ValueError("No people of this status in this cell.")
         self._compartments[old_status] -= 1
         self._compartments[new_status] += 1
+
+    def report_new_person(self) -> None:
+        """Separate to the initialise functionality, this adds a
+        new susceptible person to the cell.
+        """
+        self._compartments[InfectionStatus.Susceptible] += 1
 
     def retrieve(self) -> typing.Dict[InfectionStatus, int]:
         """Get Compartment Counts.

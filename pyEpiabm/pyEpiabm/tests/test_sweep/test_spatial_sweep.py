@@ -104,6 +104,18 @@ class TestSpatialSweep(unittest.TestCase):
         test_sweep(time)
         self.assertTrue(self.cell_susc.person_queue.empty())
 
+        # Add a cell with mostly recovered
+        mock_force.return_value = 0.0
+        Parameters.instance().do_CovidSim = False
+        self.cell_susc.microcells[0].add_people(100)
+        self.cell_inf.persons[0].update_status(InfectionStatus.InfectMild)
+        for person in self.cell_susc.persons[:-1]:
+            person.update_status(InfectionStatus.Recovered)
+        self.cell_susc.person_queue = Queue()
+        test_sweep.bind_population(self.pop)
+        test_sweep(time)
+        self.assertTrue(self.cell_susc.person_queue.empty())
+
 
 if __name__ == '__main__':
     unittest.main()

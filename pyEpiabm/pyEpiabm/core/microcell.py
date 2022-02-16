@@ -48,6 +48,8 @@ class Microcell:
             p = Person(self)
             self.cell.persons.append(p)
             self.persons.append(p)
+            self.compartment_counter.report_new_person()
+            self.cell.compartment_counter.report_new_person()
 
     def add_place(self, n: int, loc: typing.Tuple[float, float],
                   place_type):
