@@ -49,7 +49,7 @@ class SpatialSweep(AbstractSweep):
             if total_infectors == 0:
                 continue
 
-            # If there is an infector calculate number of infection events
+            # If there are any infectors calculate number of infection events
             # given out in total by the cell
             ave_num_of_infections = SpatialInfection.cell_inf(cell, timestep)
             number_to_infect = np.random.poisson(ave_num_of_infections)
