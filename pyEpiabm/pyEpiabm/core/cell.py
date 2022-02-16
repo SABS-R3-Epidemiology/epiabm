@@ -30,6 +30,10 @@ class Cell:
         self.person_queue = Queue()
         self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
 
+        if not (len(loc) == 2 and isinstance(loc[0], (float, int)) and
+                isinstance(loc[1], (float, int))):
+            raise ValueError("Location must be a tuple of float-type")
+
     def __repr__(self):
         """Returns a string representation of the Cell.
 
@@ -47,14 +51,6 @@ class Cell:
         """
         for i in range(n):
             self.microcells.append(Microcell(self))
-
-    def set_location(self, loc: typing.Tuple[float, float]):
-        """Updates location of cell (used in population configuration).
-
-        :param loc: Location of the cell, as an (x,y) tuple
-        :type loc: Tuple(float, float)
-        """
-        self.location = loc
 
     def set_id(self, id):
         """Updates ID of cell (i.e. to match file input).
@@ -106,3 +102,11 @@ class Cell:
                            + cell_data[InfectionStatus.InfectGP])
 
         return total_infectors
+
+    def set_location(self, loc: typing.Tuple[float, float]):
+        """Method to set or change the location of a cell.
+
+        :param loc: (x,y) coordinates of the place
+        :type loc: Tuple[float, float]
+        """
+        self.location = loc

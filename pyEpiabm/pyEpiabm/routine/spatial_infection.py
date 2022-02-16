@@ -2,7 +2,6 @@
 # Calculate spatial force of infection based on Covidsim code
 #
 
-import random
 from pyEpiabm.core import Person, Cell, Parameters
 
 
@@ -26,14 +25,8 @@ class SpatialInfection:
         total_infectors = inf_cell.number_infectious()
 
         number_to_infect = total_infectors * R_0
-        # This gives a possible decimal for number to infect.
-        # Choose randomly for the integers either side
-        # with weights corrsponding to the distance to either
-        # integer.
-        number_to_infect = (int(number_to_infect)
-                            + int(number_to_infect - int(number_to_infect)
-                            > random.random))
-
+        # This gives the expected number of infection events
+        # caused by people within this cell.
         return (number_to_infect)
 
     @staticmethod

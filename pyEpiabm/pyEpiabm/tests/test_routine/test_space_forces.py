@@ -45,7 +45,7 @@ class TestSpatialInfection(unittest.TestCase):
     def test_cell_inf(self):
         self.infector.update_status(InfectionStatus.InfectMild)
         result = SpatialInfection.cell_inf(self.cell, self.timestep)
-        self.assertIsInstance(result, int)
+        self.assertIsInstance(result, float)
         self.assertTrue(result >= 0)
 
 

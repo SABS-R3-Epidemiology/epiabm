@@ -29,6 +29,10 @@ class Household:
         self.susceptibility = susceptibility
         self.infectiousness = infectiousness
 
+        if not (len(loc) == 2 and isinstance(loc[0], (float, int)) and
+                isinstance(loc[1], (float, int))):
+            raise ValueError("Location must be a tuple of float-type")
+
     def __repr__(self):
         """Returns a string representation of Household.
 
