@@ -8,7 +8,7 @@ import numpy as np
 
 class DistanceFunctions:
     """Class which contains multiple distance functions
-    for use when considering spatial infections,  either
+    for use when considering spatial infections, either
     inter-place or inter-cell.
     """
     @staticmethod
@@ -24,7 +24,7 @@ class DistanceFunctions:
         :type loc1: Tuple[float, float]
         :param loc2: (x,y) coordinates of the second place
         :type loc2: Tuple[float, float]
-        :return: Euclidean distance between the two tuples
+        :return: Euclidean distance between the two tupleslength_squared
         :rtype: float
         """
         return np.linalg.norm(np.abs(np.asarray(loc1) - np.asarray(loc2)))
