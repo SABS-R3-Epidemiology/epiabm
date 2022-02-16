@@ -14,7 +14,8 @@ class ToyPopulationFactory:
     """ Class that creates a toy population for use in the simple
     python model.
     """
-    def make_pop(self, pop_params: typing.Dict):
+    @staticmethod
+    def make_pop(pop_params: typing.Dict):
         """Initialize a population object with a given population size,
         number of cells and microcells. A uniform multinomial distribution is
         used to distribute the number of people into the different microcells.
@@ -59,7 +60,7 @@ class ToyPopulationFactory:
         new_pop.add_cells(cell_number)
         # Sets up a probability array for the multinomial.
         p = [1 / total_number_microcells] * total_number_microcells
-        # Distributes multinomially people into microcells.
+        # Multinomially distributes people into microcells.
         cell_split = np.random.multinomial(population_size, p, size=1)[0]
         i = 0
         for cell in new_pop.cells:
@@ -70,17 +71,18 @@ class ToyPopulationFactory:
                 i += 1
 
         # If a household number is given then that number of households
-        # are initialised. If the housrhold number defaults to zero
+        # are initialised. If the household number defaults to zero
         # then no households are initialised.
         if household_number > 0:
-            self.add_households(new_pop, household_number)
+            ToyPopulationFactory.add_households(new_pop, household_number)
         if place_number > 0:
-            self.add_places(new_pop, place_number)
+            ToyPopulationFactory.add_places(new_pop, place_number)
 
         new_pop.setup()
         return new_pop
 
-    def add_households(self, population: Population, household_number: int):
+    @staticmethod
+    def add_households(population: Population, household_number: int):
         """Groups people in a microcell into households together.
 
         :param population: Population containing all person objects to be
@@ -105,7 +107,8 @@ class ToyPopulationFactory:
                         new_household.add_person(person)
                         person_index += 1
 
-    def add_places(self, population: Population, place_number: int):
+    @staticmethod
+    def add_places(population: Population, place_number: int):
         """Groups people in a microcell into households together.
 
         :param population: Population containing all person objects to be
@@ -124,3 +127,33 @@ class ToyPopulationFactory:
             for microcell in cell.microcells:
                 microcell.add_place(place_number, (1.0, 1.0),
                                     PlaceType.Hotel)
+
+    @staticmethod
+    def assign_cell_locations(population: Population, method: str = 'random',
+                              file: str = ""):
+        """Assigns cell locations based on method provided. Possible methods:
+
+            * 'random': Assigns all locations randomly within unit square
+            * 'file': Reads in location pairs from csv file
+
+        :param population: Population containing all person objects to be
+            considered for grouping
+        :type population: Population
+        :param place_number: Method of determining cell locations
+        :type place_number: str
+        :param file: Location of file to read in
+        :type file: str
+        """
+        if method == "random":
+            for cell in population.cells:
+                cell.set_location(tuple(np.random.rand(2)))
+
+        elif method == "file":
+            assert file != ""
+            # Can read in ID, location and even infectious numbers from file
+            # Check column names against infectious statuses, and add to
+            # relevant infectious status if they match
+            raise NotImplementedError
+
+        else:
+            raise ValueError(f"Unknown method: '{method}' not recognised")

@@ -86,7 +86,9 @@ class Simulation:
 
         output_titles = ["time"] + [s for s in InfectionStatus]
         if self.spatial_output:
-            output_titles.insert(0, "cell")
+            output_titles.insert(1, "cell")
+            output_titles.insert(2, "location_x")
+            output_titles.insert(3, "location_y")
 
         self.writer = _CsvDictWriter(
             folder, filename,
@@ -130,7 +132,9 @@ class Simulation:
                 for k in data:
                     data[k] += cell.compartment_counter.retrieve()[k]
                 data["time"] = time
-                data["cell"] = hash(cell)
+                data["cell"] = cell.id
+                data["location_x"] = cell.location[0]
+                data["location_y"] = cell.location[1]
                 self.writer.write(data)
         else:  # Summed output across all cells in population
             data = {s: 0 for s in list(InfectionStatus)}
