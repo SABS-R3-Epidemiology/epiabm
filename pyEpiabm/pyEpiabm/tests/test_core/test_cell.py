@@ -20,7 +20,7 @@ class TestCell(unittest.TestCase):
         self.assertEqual(self.cell.persons, [])
         self.assertEqual(self.cell.places, [])
         self.assertIsInstance(self.cell.person_queue, Queue)
-        self.assertRaises(ValueError, pe.Cell, (.2,.3,.4))
+        self.assertRaises(ValueError, pe.Cell, (.2, .3, .4))
 
     def test_repr(self):
         self.assertEqual(repr(self.cell),
