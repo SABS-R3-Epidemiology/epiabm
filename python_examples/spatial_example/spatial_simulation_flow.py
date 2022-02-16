@@ -31,8 +31,6 @@ population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
 
 # Configure population with input data
 pe.routine.ToyPopulationFactory.assign_cell_locations(population)
-# also run initial sweep here
-cell = population.cells[0]  # do we need this?
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.

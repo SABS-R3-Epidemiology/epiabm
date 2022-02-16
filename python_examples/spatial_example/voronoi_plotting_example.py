@@ -7,7 +7,7 @@ import os
 import math
 import numpy as np
 import pandas as pd
-import matplotlib
+import matplotlib.animation
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from scipy.spatial import Voronoi, voronoi_plot_2d
@@ -19,7 +19,7 @@ from PIL import Image
 def find_value_for_region(current_df, point, name):
     """Extract value from given column for entry at given point.
     Requires a unique position (and so should only be passed data
-    from a single point in time.
+    from a single point in time).
 
     :param current_df: Dataframe, for a single time point
     :type current_df: pd.Dataframe
