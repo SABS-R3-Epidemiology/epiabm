@@ -24,8 +24,8 @@ class FilePopulationFactory:
         populations.
 
         Input file contains columns:
-            * `cell`: ID code for cell (Uses hash if unspecified)
-            * `microcell`: ID code for microcell (Uses hash if unspecified)
+            * `cell`: ID code for cell
+            * `microcell`: ID code for microcell
             * `location_x`: The x coordinate of the parent cell location
             * `location_y`: The y coordinate of the parent cell location
             * `household_number`: Number of households in that microcell
@@ -54,7 +54,7 @@ class FilePopulationFactory:
         valid_names = ["cell", "microcell", "location_x",
                        "location_y", "household_number"]
         for col in input.columns.values:  # Check all column headings
-            if not (hasattr(InfectionStatus, col) | (col in valid_names)):
+            if not ((col in valid_names) or hasattr(InfectionStatus, col)):
                 raise ValueError(f"Unknown column heading '{col}' in input")
 
         # Initialise a population class

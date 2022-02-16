@@ -43,8 +43,8 @@ Create a population based on the parameters given, from the following list:
 ### Import Population
 Alternatively, it is possible to import a population from a `.csv` file, with the following headings:
 
-* `cell`: ID code for cell (Uses hash if unspecified)
-* `microcell`: ID code for microcell (Uses hash if unspecified)
+* `cell`: ID code for cell
+* `microcell`: ID code for microcell
 * `location_x`: The x coordinate of the parent cell location
 * `location_y`: The y coordinate of the parent cell location
 * `household_number`: Number of households in that microcell
