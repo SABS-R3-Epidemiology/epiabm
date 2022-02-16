@@ -53,7 +53,7 @@ namespace epiabm
 
         std::default_random_engine generator;
         std::poisson_distribution<int> distribution(ave_num_of_infections);
-        int number_to_infect = distribution(generator);
+        size_t number_to_infect = static_cast<size_t>(distribution(generator));
         
         std::vector<Cell*> inf_cells = getCellsToInfect(m_population->cells(), cell, number_to_infect);
 
