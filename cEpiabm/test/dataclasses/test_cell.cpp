@@ -348,7 +348,11 @@ TEST_CASE("dataclasses/cell: test infectious sampling", "[Cell]")
     auto callback = [&](Person* p) { infector = p; return true; };
     REQUIRE_FALSE(subject.sampleInfectious(1, callback));
 
-    auto callback2 = [&](Person* p) { p->updateStatus(&subject, InfectionStatus::InfectASympt, 1); return true; };
+    auto callback2 = [&](Person* p){
+        subject.markInfectious(p->cellPos()); 
+        p->updateStatus(&subject, InfectionStatus::InfectASympt, 1);
+        return true;
+    };
     REQUIRE(subject.sampleSusceptible(10, callback2));
     REQUIRE(subject.sampleInfectious(5, callback));
 }
