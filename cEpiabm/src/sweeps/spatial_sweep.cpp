@@ -45,8 +45,9 @@ namespace epiabm
         for (Cell any_cell : m_population->cells()){
             pos_inf_cells.push_back(&any_cell);
         }
-        pos_inf_cells.erase(std::remove(pos_inf_cells.begin(), pos_inf_cells.end(), &cell), 
-                            pos_inf_cells.end());  // Remove current cell from list
+        pos_inf_cells.erase(std::remove_if(
+            pos_inf_cells.begin(), pos_inf_cells.end(), 
+            [&](Cell* other) { return other == cell; }), pos_inf_cells.end());  // Remove current cell from list
 
         // std::vector<size_t> cell_list_indices;
         // std::random_device rd;  // Obtain a seed for the random number engine
@@ -56,41 +57,46 @@ namespace epiabm
         //     cell_list_indices.push_back(distrib(gen));
         // }
 
-        std::vector<Cell*> inf_cells = std::sample(pos_inf_cells.begin(), 
-                                                   pos_inf_cells.end(),
-                                                   number_to_infect, 
-                                                   std::mt19937{std::random_device{}()});
+        std::vector<Cell*> inf_cells = std::vector<Cell*>();
+        std::sample(pos_inf_cells.begin(), pos_inf_cells.end(),
+            std::back_inserter(inf_cells), number_to_infect,
+            std::mt19937{std::random_device{}()});
 
+        std::vector<Person*> possible_infectors = std::vector<Person*>();
+        cell->forEachInfectious([&](Person* p) { possible_infectors.push_back(p); return true; });
 
-        std::vector<Person> possible_infectors = (*cell).m_infectiousPeople();
-
-        Person infector = std::sample(possible_infectors.begin(), possible_infectors.end(),
-                               1, std::mt19937{std::random_device{}()});
+        Person* infector;
+        {
+            std::vector<Person*> infectors = std::vector<Person*>();
+            std::sample(possible_infectors.begin(), possible_infectors.end(),
+                std::back_inserter(infectors), 1, std::mt19937{std::random_device{}()});
+            infector = infectors[0];
+        }
 
         for (Cell* inf_cell_addr : pos_inf_cells){
-            Person infectee = std::sample(inf_cell_addr->m_people.begin(), 
-                                          inf_cell_addr->m_people.end(),
-                                          1, 
-                                          std::mt19937{std::random_device{}()});
+            if (inf_cell_addr->people().size() < 1) continue;
+
+            size_t infectee_index = static_cast<size_t>(std::rand())%inf_cell_addr->people().size();
+            Person* infectee = &inf_cell_addr->people()[infectee_index];
 
             // Could put the lines below in a callback like household_sweep?
-            if (infectee.status() != InfectionStatus::Susceptible){
+            if (infectee->status() != InfectionStatus::Susceptible){
                 continue;
             }
 
-            double infectiousness = Covidsim::CalcSpaceInf(cell, &infector, timestep);
-            double susceptibility = Covidsim::CalcSpaceSusc(cell, &infectee, timestep);
+            double infectiousness = Covidsim::CalcSpaceInf(cell, infector, timestep);
+            double susceptibility = Covidsim::CalcSpaceSusc(cell, infectee, timestep);
             double foi = infectiousness * susceptibility;
 
-            if (static_cast<double>(std::rand() % 1000000) / static_cast<double>(1000000) < foi)
+            if ((static_cast<double>(std::rand() % 1000000) / static_cast<double>(1000000)) < foi)
             {
                 // Infection attempt is successful
-                cell->enqueuePerson(infectee.cellPos());
+                cell->enqueuePerson(infectee->cellPos());
             }
-        return true;
+        //return true; // Not meant to be here?
         }
-
-
+        return true;
+        
     }
 
 } // namespace epiabm

@@ -30,7 +30,7 @@ TEST_CASE("sweeps/spatial_sweep: test spatial_sweep run sweep", "[SpatialSweep]"
     random_seed(population, 10, InfectionStatus::InfectASympt, 5);
     population->initialize();
     REQUIRE_NOTHROW(subject->bind_population(population));
-    for (int i = 0; i < 10; i++)
+    for (size_t i = 0; i < 10; i++)
         REQUIRE_NOTHROW((*subject)(static_cast<unsigned short>(i)));
 }
 
