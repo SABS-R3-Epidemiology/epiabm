@@ -2,7 +2,9 @@
 #include "cell.hpp"
 
 #include <iostream>
-
+#include <algorithm>
+#include <iterator>
+#include <random>
 
 namespace epiabm
 {
@@ -250,6 +252,32 @@ namespace epiabm
     size_t Cell::numDead() const
     {
         return m_deadPeople.size();
+    }
+
+    bool Cell::sampleInfectious(size_t n, std::function<void(Person*)> callback)
+    {
+        if (m_infectiousPeople.size() < 1){
+            return false;
+        }
+        std::vector<size_t> sampled = std::vector<size_t>();
+        std::sample(m_infectiousPeople.begin(), m_infectiousPeople.end(),
+            std::back_inserter(sampled), n, std::mt19937{std::random_device{}()});
+        for (const auto& s : sampled)
+            callback(&m_people[s]);
+        return true;
+    }
+
+    bool Cell::sampleSusceptible(size_t n, std::function<void(Person*)> callback)
+    {
+        if (m_susceptiblePeople.size() < 1){
+            return false;
+        }
+        std::vector<size_t> sampled = std::vector<size_t>();
+        std::sample(m_susceptiblePeople.begin(),m_susceptiblePeople.end(),
+            std::back_inserter(sampled), n, std::mt19937{std::random_device{}()});
+        for (const auto& s : sampled)
+            callback(&m_people[s]);
+        return true;
     }
 
     void Cell::initialize()
