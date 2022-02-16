@@ -10,6 +10,7 @@
 
 using namespace epiabm;
 
+
 TEST_CASE("sweeps/spatial_sweep: test initialize spatial_sweep", "[SpatialSweep]")
 {
     SpatialSweepPtr subject = std::make_shared<SpatialSweep>();
@@ -21,6 +22,24 @@ TEST_CASE("sweeps/spatial_sweep: test spatial_sweep bind_population", "[SpatialS
     PopulationPtr population = PopulationFactory().makePopulation(5, 5, 1000);
     population->initialize();
     REQUIRE_NOTHROW(subject->bind_population(population));
+}
+
+TEST_CASE("sweeps/spatial_sweep: test spatial_sweep with no cells", "[SpatialSweep]")
+{
+    SpatialSweepPtr subject = std::make_shared<SpatialSweep>();
+    PopulationPtr population = PopulationFactory().makePopulation(0, 1, 1);
+    population->initialize();
+    REQUIRE_NOTHROW(subject->bind_population(population));
+    REQUIRE_NOTHROW((*subject)(static_cast<unsigned short>(0)));
+}
+
+TEST_CASE("sweeps/spatial_sweep: test spatial_sweep with no infectors", "[SpatialSweep]")
+{
+    SpatialSweepPtr subject = std::make_shared<SpatialSweep>();
+    PopulationPtr population = PopulationFactory().makePopulation(5, 1, 0);
+    population->initialize();
+    REQUIRE_NOTHROW(subject->bind_population(population));
+    REQUIRE_NOTHROW((*subject)(static_cast<unsigned short>(0)));
 }
 
 TEST_CASE("sweeps/spatial_sweep: test spatial_sweep run sweep", "[SpatialSweep]")
