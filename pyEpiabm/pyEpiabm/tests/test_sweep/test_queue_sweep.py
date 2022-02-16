@@ -48,8 +48,11 @@ class TestQueueSweep(unittest.TestCase):
 
         # Check queue is cleared.
         self.assertTrue(self.cell.person_queue.empty())
-        # Check person 2 has updated status
-        self.assertEqual(self.person2.infection_status,
+        # Check person 2 current infection status
+        self.assertEqual(self.person2.next_infection_status,
+                         pe.property.InfectionStatus.Susceptible)
+        # Check person 2 has updated next infection status
+        self.assertEqual(self.person2.next_infection_status,
                          pe.property.InfectionStatus.Exposed)
         # Check person 2 has updated time
         self.assertEqual(self.person2.time_of_status_change,

@@ -23,6 +23,5 @@ class QueueSweep(AbstractSweep):
                 # Get takes person from the queue and removes them, so clears
                 # the queue for the next timestep.
                 # Update the infection status
-                person.update_status(InfectionStatus.Exposed)
-                person.next_infection_status = InfectionStatus.InfectMild
+                person.next_infection_status = InfectionStatus.Exposed
                 person.time_of_status_change = time

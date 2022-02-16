@@ -1,8 +1,13 @@
 #
 # Progression of infection within individuals
 #
-
 import random
+
+import pyEpiabm as pe
+
+import numpy as np
+
+import math
 
 from pyEpiabm.property import InfectionStatus
 
@@ -25,6 +30,25 @@ class HostProgressionSweep(AbstractSweep):
         # complex later.
         new_time = random.randint(1, 10)
         return new_time
+
+    def _set_latent_time(self):
+        """Calculates and returns latency period as calculated in
+        covid-sim to be given as time until next infection status
+        for a person who has been set as exposed.
+        """
+
+        latent_period = pe.Parameters.instance().latent_period
+        latent_period_iCDF = pe.Parameters.instance().latent_period_iCDF
+        time_steps_per_day = pe.Parameters.instance().time_steps_per_day
+        q = random.random() * pe.Parameters.instance().CDF_RES
+        i = math.floor(q)
+        q -= float(i)
+        latent_time = 0.5 -\
+            (latent_period * np.log(q * latent_period_iCDF[i + 1] +
+                                    (1.0 - q) * latent_period_iCDF[i]) *
+                time_steps_per_day)
+        latent_time = math.floor(latent_time)
+        return latent_time
 
     def _update_next_infection_status(self, person):
         """Assigns next infection status based on
@@ -51,14 +75,16 @@ class HostProgressionSweep(AbstractSweep):
         :param time: Current simulation time
         :type time: int
         """
-        if not (type(time) == int):
-            raise TypeError('Time needs to be type int')
+
         for cell in self._population.cells:
             for person in cell.persons:
                 if person.time_of_status_change == time:
-                    self._update_next_infection_status(person)
                     person.update_status(person.next_infection_status)
-                    if person.infection_status != \
-                            InfectionStatus.Recovered:
-                        person.time_of_status_change =\
-                            time + self._update_time_to_status_change()
+                    self._update_next_infection_status(person)
+                    if person.infection_status != InfectionStatus.Recovered:
+                        if person.infection_status == InfectionStatus.Exposed:
+                            person.time_of_status_change = time +\
+                                 self._set_latent_time()
+                        else:
+                            person.time_of_status_change = time +\
+                                 self._update_time_to_status_change()
