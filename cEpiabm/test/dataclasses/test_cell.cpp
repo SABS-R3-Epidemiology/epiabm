@@ -340,6 +340,32 @@ TEST_CASE("dataclasses/cell: test infectious grouping", "[Cell]")
     }
 }
 
+TEST_CASE("dataclasses/cell: test infectious sampling", "[Cell]")
+{
+    Cell subject = makeSubject(10, 100);
+    subject.initialize();
+    Person* infector;
+    auto callback = [&](Person* p) { infector = p; return true; };
+    REQUIRE_FALSE(subject.sampleInfectious(1, callback));
+
+    auto callback2 = [&](Person* p) { p->updateStatus(&subject, InfectionStatus::InfectASympt, 1); return true; };
+    REQUIRE(subject.sampleSusceptible(10, callback2));
+    REQUIRE(subject.sampleInfectious(5, callback));
+}
+
+TEST_CASE("dataclasses/cell: test susceptible sampling", "[Cell]")
+{
+    Cell subject = makeSubject(10, 100);
+    subject.initialize();
+    Cell empty = makeSubject(10, 0);
+    empty.initialize();
+
+    Person* infector;
+    auto callback = [&](Person* p) { infector = p; return true; };
+    REQUIRE(subject.sampleSusceptible(1, callback));
+    REQUIRE_FALSE(empty.sampleSusceptible(1, callback));
+}
+
 TEST_CASE("dataclasses/cell: test compartment counter", "[Cell]")
 {
     Cell subject = makeSubject(10, 100);
