@@ -6,14 +6,14 @@
 
 using namespace epiabm;
 
-TEST_CASE("covidsim: test CalcHouseInf")
+TEST_CASE("covidsim: test CalcHouseInf", "[Covidsim]")
 {
     Person subject = Person(0, 0, 0) ;
     unsigned short int timestep = 0;
     REQUIRE(Covidsim::CalcHouseInf(&subject, timestep) >= 0);
 }
 
-TEST_CASE("covidsim: test CalcCellInf")
+TEST_CASE("covidsim: test CalcCellInf", "[Covidsim]")
 {
     Cell subject = Cell(0);
     subject.microcells().push_back(Microcell(0));
@@ -41,7 +41,7 @@ TEST_CASE("covidsim: test CalcCellInf")
     // Should be R Value (2) * Number of infectious individuals
 }
 
-TEST_CASE("covidsim: test CalcSpaceInf")
+TEST_CASE("covidsim: test CalcSpaceInf", "[Covidsim]")
 {
     Cell subject = Cell(0);
     Person infector = Person(0, 0, 0) ;
@@ -49,7 +49,7 @@ TEST_CASE("covidsim: test CalcSpaceInf")
     REQUIRE(Covidsim::CalcSpaceInf(&subject, &infector, timestep) >= 0);
 }
 
-TEST_CASE("covidsim: test CalcHouseSucs")
+TEST_CASE("covidsim: test CalcHouseSucs", "[Covidsim]")
 {
     Person infector = Person(0, 0, 0) ;
     Person infectee = Person(0, 0, 0) ;
@@ -57,7 +57,7 @@ TEST_CASE("covidsim: test CalcHouseSucs")
     REQUIRE(Covidsim::CalcHouseSusc(&infector, &infectee, timestep) >= 0);
 }
 
-TEST_CASE("covidsim: test CalcPersonSucs")
+TEST_CASE("covidsim: test CalcPersonSucs", "[Covidsim]")
 {
     Person infector = Person(0, 0, 0) ;
     Person infectee = Person(0, 0, 0) ;
@@ -65,7 +65,7 @@ TEST_CASE("covidsim: test CalcPersonSucs")
     REQUIRE(Covidsim::CalcPersonSusc(&infector, &infectee, timestep) >= 0);
 }
 
-TEST_CASE("covidsim: test CalcSpaceSusc")
+TEST_CASE("covidsim: test CalcSpaceSusc", "[Covidsim]")
 {
     Cell subject = Cell(0);
     Person infectee = Person(0, 0, 0) ;
