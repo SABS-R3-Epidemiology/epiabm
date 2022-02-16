@@ -10,6 +10,7 @@ TEST_CASE("dataclasses/population: test initialize population", "[Population]")
 {
     Population subject = Population();
     REQUIRE(subject.cells().size() == 0);
+    REQUIRE(subject.places().empty());
 }
 
 TEST_CASE("dataclasses/population: test add cells", "[Population]")
@@ -74,4 +75,58 @@ TEST_CASE("dataclasses/population: test forEachCell early stop", "[Population]")
                 return ctr < 500;
             }));
     REQUIRE(cells.size() == 500);
+}
+
+TEST_CASE("dataclasses/population: test forEachPlace", "[Population]")
+{
+    Population subject = Population();
+    std::set<Place*> places = std::set<Place*>();
+    for (size_t i = 0; i < 100; i++)
+    {
+        subject.places().push_back(Place(i));
+    }
+    for (size_t i = 0; i < 100; i++) 
+    {
+        places.insert(&subject.places()[i]);
+    }
+    REQUIRE(subject.places().size() == 100);
+
+    subject.forEachPlace(
+        [&](Place* place)
+        {
+            REQUIRE(places.find(place) != places.end());
+            places.erase(place);
+            return true;
+        }
+    );
+    REQUIRE(places.size() == 0);
+}
+
+
+TEST_CASE("dataclasses/population: test forEachPlace early stop", "[Population]")
+{
+    Population subject = Population();
+    std::set<Place*> places = std::set<Place*>();
+    for (size_t i = 0; i < 100; i++)
+    {
+        subject.places().push_back(Place(i));
+    }
+    for (size_t i = 0; i < 100; i++) 
+    {
+        places.insert(&subject.places()[i]);
+        REQUIRE(subject.places()[i].populationPos() == i);
+    }
+    REQUIRE(subject.places().size() == 100);
+
+    int ctr = 0;
+    subject.forEachPlace(
+        [&](Place* place)
+        {
+            REQUIRE(places.find(place) != places.end());
+            places.erase(place);
+            ctr++;
+            return ctr < 50;
+        }
+    );
+    REQUIRE(places.size() == 50);
 }

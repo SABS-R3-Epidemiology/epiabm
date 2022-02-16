@@ -47,10 +47,12 @@ namespace epiabm
                     reporter->report(m_population, timestep);
             }
         }
+        // LCOV_EXCL_START
         catch (std::exception& e)
         {
             LOG << LOG_LEVEL_ERROR << "Error iterating through timesteps: " << e.what();
         }
+        // LCOV_EXCL_END
         LOG << LOG_LEVEL_NORMAL << "Completed Iterating through timesteps.";
 
         teardown();

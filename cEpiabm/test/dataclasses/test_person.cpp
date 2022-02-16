@@ -1,5 +1,6 @@
 #include "dataclasses/person.hpp"
 #include "dataclasses/cell.hpp"
+#include "dataclasses/population.hpp"
 
 #include "../catch/catch.hpp"
 
@@ -44,4 +45,30 @@ TEST_CASE("dataclasses/person: test setHousehold", "[Person]")
     REQUIRE(subject.setHousehold(
         static_cast<size_t>((std::rand()%500) * 2 + 1)) == false);
     REQUIRE(subject.household() == hh);
+}
+
+TEST_CASE("dataclasses/person: test places", "[Person]")
+{
+    Person subject = Person(0, 0, 0);
+    for (size_t i = 0; i < 5; i++) subject.places().insert(i);
+    REQUIRE(subject.places().size() == 5);
+}
+
+TEST_CASE("dataclasses/person: test forEachPlace", "[Person]")
+{
+    Person subject = Person(0, 0, 0);
+    Population population = Population();
+    for (size_t i = 0; i < 5; i++)
+    {
+        population.places().push_back(Place(i));
+        subject.places().insert(i);
+        population.places()[i].addMember(1, 2);
+    }
+    REQUIRE(subject.places().size() == 5);
+
+    auto callback = [&](Place* place)
+    {
+        REQUIRE(place->isMember(1, 2));
+    };
+    REQUIRE_NOTHROW(subject.forEachPlace(population, callback));
 }

@@ -15,6 +15,7 @@ namespace epiabm
     {
     private:
         std::map<InfectionStatus, unsigned int> m_counts;
+        
     public:
         CompartmentCounter();
         ~CompartmentCounter() = default;

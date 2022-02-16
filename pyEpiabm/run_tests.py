@@ -89,20 +89,18 @@ def doctest_rst_and_public_interface():
     # has been added to pyEpiabm and should be imported above and included in
     # this list.
     pyEpiabm_submodules = [
-        'pyEpiabm.abstract_sweep',
-        'pyEpiabm.cell',
-        'pyEpiabm.compartment_counter',
-        'pyEpiabm.covidsim_helpers',
-        'pyEpiabm.host_progression_sweep',
-        'pyEpiabm.household',
-        'pyEpiabm.household_sweep',
-        'pyEpiabm.infection_status',
-        'pyEpiabm.microcell',
-        'pyEpiabm.parameters',
-        'pyEpiabm.person',
-        'pyEpiabm.population',
-        'pyEpiabm.toy_population_config',
-        'pyEpiabm.version_info'
+        'pyEpiabm.core',
+        'pyEpiabm.output',
+        'pyEpiabm.property',
+        'pyEpiabm.routine',
+        'pyEpiabm.sweep',
+        'pyEpiabm.Cell',
+        'pyEpiabm.Household',
+        'pyEpiabm.Microcell',
+        'pyEpiabm.Parameters',
+        'pyEpiabm.Person',
+        'pyEpiabm.Place',
+        'pyEpiabm.Population',
     ]
 
     doc_symbols = get_all_documented_symbols()

@@ -10,7 +10,7 @@ namespace epiabm
     class Covidsim
     {
         public:
-        // Calculate Infectiveness Helpers
+        // Calculate Infectiousness Helpers
         static double CalcHouseInf(
             Person* infector,
             unsigned short int timestep);

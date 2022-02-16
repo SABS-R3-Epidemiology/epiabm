@@ -62,11 +62,13 @@ namespace epiabm
             *m_os << std::endl;
 
         }
+        // LCOV_EXCL_START
         catch (std::exception& e)
         {
             LOG << LOG_LEVEL_ERROR << "Cell Compartment Reporter Error writing to file";
             throw e;
         }
+        // LCOV_EXCL_END
     }
 
     std::set<InfectionStatus>& PopulationCompartmentReporter::compartments()

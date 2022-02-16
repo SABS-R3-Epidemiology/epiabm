@@ -1,5 +1,7 @@
 #include "person.hpp"
+#include "place.hpp"
 #include "cell.hpp"
+#include "population.hpp"
 
 #include <iostream>
 
@@ -11,7 +13,9 @@ namespace epiabm
         m_params(PersonParams()),
         m_cellPos(cellPos),
         m_mcellPos(mcellPos),
-        m_microcell(microcell)
+        m_microcell(microcell),
+        m_hasHousehold(false),
+        m_places()
     {}
 
     InfectionStatus Person::status() const { return m_status; }
@@ -38,5 +42,13 @@ namespace epiabm
 
     std::optional<size_t> Person::household()
     { return m_hasHousehold? m_household : std::optional<size_t>(); }
+
+    std::set<size_t>& Person::places() { return m_places; }
+
+    void Person::forEachPlace(Population& population, std::function<void(Place*)> callback)
+    {
+        for (const size_t& p : m_places)
+            callback(&population.places()[p]);
+    }
 
 } // namespace epiabm
