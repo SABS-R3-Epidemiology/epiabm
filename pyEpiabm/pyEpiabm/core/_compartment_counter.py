@@ -28,14 +28,17 @@ class _CompartmentCounter:
         """
         return self._identifier
 
-    def initialize(self, n_people) -> None:
-        """Initialize Compartments with n_people susceptible and 0 in all
-        of compartments (i.e. for all other InfectionStatus).
+    def initialize(self, cell) -> None:
+        """Initialize Compartments by a cell/microcell containing people.
+        Assumes the counter is empty so should only be used in initialisation.
 
-        :param n_people: Number of people CompartmentCounter is tracking
-        :type n_people: int
+        :param cell: Cell or Microcell CompartmentCounter is tracking
+        :type cell: `Cell` or `Microcell`
         """
-        self._compartments[InfectionStatus.Susceptible] = n_people
+        # Not sure how the docs work if it accepts two input types
+        for person in cell.persons:
+            inf_status = person.infection_status
+            self._compartments[inf_status] += 1
 
     def report(self, old_status: InfectionStatus,
                new_status: InfectionStatus, new_person=False) -> None:

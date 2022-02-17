@@ -72,7 +72,7 @@ class Cell:
         """Setup method. Should be called once Population has been setup.
         Called by population (doesn't need to be called manually).
         """
-        self.compartment_counter.initialize(len(self.persons))
+        self.compartment_counter.initialize(self)
         for mcell in self.microcells:
             mcell._setup()
 
