@@ -191,7 +191,7 @@ def generate_animation(df, vor, name, save_path, use_pillow=True):
     if use_pillow:
         ani = matplotlib.animation.FuncAnimation(fig, animate, frames=times,
                                                  init_func=lambda *args: None)
-        writer = matplotlib.animation.PillowWriter(fps=4)
+        writer = matplotlib.animation.PillowWriter(fps=10)
         ani.save((save_path + str("voronoi_animation.gif")), writer=writer)
     else:
         for t in times:
@@ -201,12 +201,13 @@ def generate_animation(df, vor, name, save_path, use_pillow=True):
                 cbar.set_label("Number of " + str(name))
             t_ax.set_xlim(0, 1), t_ax.set_ylim(0, 1)
             t_fig.savefig(save_path + "image" + f'{t:03d}' + "d.png")
+            plt.close(t_fig)
 
         fp_in = save_path + "image" + "*d.png"
         fp_out = save_path + "voronoi_animation.gif"
         img, *imgs = [Image.open(f) for f in sorted(glob.glob(fp_in))]
         img.save(fp=fp_out, format='GIF', append_images=imgs,
-                 save_all=True, duration=200, loop=0)
+                 save_all=True, duration=50, loop=0)
         for file in os.listdir(save_path):  # Delete images after use
             if file.endswith('d.png'):
                 os.remove(os.path.join(save_path, file))
@@ -235,4 +236,4 @@ plot_time_grid(df, vor, name="InfectionStatus.InfectMild",
 # Plot animation of simulation
 animation_path = ("python_examples/spatial_example/spatial_outputs/")
 anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
-                          save_path=animation_path, use_pillow=True)
+                          save_path=animation_path, use_pillow=False)
