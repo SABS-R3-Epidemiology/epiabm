@@ -121,6 +121,13 @@ class SpatialSweep(AbstractSweep):
         """Helper function which takes an infector and infectee,
         in different cells and tests whether contact between
         them will lead to an infection event.
+
+        :param infector: Infector
+        :type infector: Person
+        :param infectee: Infectee
+        :type infectee: Person
+        :param timestep: Current simulation timestep
+        :type timestep: int
         """
         if not infectee.is_susceptible():
             return
