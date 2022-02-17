@@ -26,7 +26,6 @@ class TestSpatialSweep(unittest.TestCase):
         cls.microcell_inf.add_people(100)
         cls.infector = cls.microcell_inf.persons[0]
         Parameters.instance().time_steps_per_day = 1
-        cls.pop.setup()
 
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     @mock.patch("numpy.random.poisson")
@@ -64,7 +63,6 @@ class TestSpatialSweep(unittest.TestCase):
         self.microcell_susc = self.cell_susc.microcells[0]
         self.microcell_susc.add_people(1)
         self.infectee = self.microcell_susc.persons[0]
-        self.pop.setup()
 
         Parameters.instance().do_CovidSim = False
         test_sweep.bind_population(self.pop)

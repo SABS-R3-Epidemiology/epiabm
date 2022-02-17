@@ -13,8 +13,6 @@ class TestPerson(unittest.TestCase):
         cls.microcell = cls.cell.microcells[0]
         cls.microcell.add_people(1)
         cls.person = cls.microcell.persons[0]
-        cls.microcell._setup()
-        cls.cell._setup()
 
     def test__init__(self):
         self.assertEqual(self.person.age, 0)

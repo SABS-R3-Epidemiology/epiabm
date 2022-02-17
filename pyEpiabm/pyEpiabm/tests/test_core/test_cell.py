@@ -56,7 +56,6 @@ class TestCell(unittest.TestCase):
         cell.add_microcells(1)
         cell.microcells[0].add_people(1)
         person = cell.microcells[0].persons[0]
-        cell._setup()
         self.assertEqual(cell.number_infectious(), 0)
         person.update_status(InfectionStatus.InfectMild)
         self.assertEqual(cell.number_infectious(), 1)

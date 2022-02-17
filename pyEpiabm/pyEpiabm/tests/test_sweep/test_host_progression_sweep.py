@@ -17,7 +17,6 @@ class TestHostProgressionSweep(unittest.TestCase):
         cls.test_population.cells[0].microcells[0].add_people(2)
         cls.person1 = cls.test_population.cells[0].microcells[0].persons[0]
         cls.person2 = cls.test_population.cells[0].microcells[0].persons[1]
-        cls.test_population.setup()
 
     def test_construct(self):
         """Test that the host progression sweep initialises correctly.
