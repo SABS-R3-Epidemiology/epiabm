@@ -10,18 +10,18 @@ import pyEpiabm as pe
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
-pe.routine.Simulation.set_random_seed(seed=42)
+pe.routine.Simulation.set_random_seed(seed=30)
 
 # Pop_params are used to configure the population structure being used in this
 # simulation.
 
-pop_params = {"population_size": 1000, "cell_number": 20,
+pop_params = {"population_size": 5000, "cell_number": 200,
               "microcell_number": 1, "household_number": 2}
 
 pe.Parameters.instance().time_steps_per_day = 1
 pe.Parameters.instance().do_CovidSim = True
 pe.Parameters.instance().basic_reproduction_num = 2.0
-pe.Parameters.instance().infection_radius = 0.25
+pe.Parameters.instance().infection_radius = 0.1
 
 # Create a population framework based on the parameters given.
 population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
