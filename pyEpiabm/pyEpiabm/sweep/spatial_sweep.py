@@ -105,8 +105,6 @@ class SpatialSweep(AbstractSweep):
                 cell_list = random.choices(possible_infectee_cells,
                                            weights=distance_weights,
                                            k=number_to_infect)
-                print(cell_list)
-
                 # Each infection event corresponds to a infectee cell
                 # on the cell list
                 for infectee_cell in cell_list:
