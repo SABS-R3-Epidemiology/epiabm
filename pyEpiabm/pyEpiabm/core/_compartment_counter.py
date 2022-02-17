@@ -36,6 +36,9 @@ class _CompartmentCounter:
         :type cell: `Cell` or `Microcell`
         """
         # Not sure how the docs work if it accepts two input types
+        # First reset to zeros. This may seem unnecessary, but will
+        # prevent duplicate code double-counting.
+        self._compartments = {status: 0 for status in InfectionStatus}
         for person in cell.persons:
             inf_status = person.infection_status
             self._compartments[inf_status] += 1
