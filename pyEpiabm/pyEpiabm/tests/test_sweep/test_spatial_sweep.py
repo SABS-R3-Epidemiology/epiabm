@@ -114,6 +114,28 @@ class TestSpatialSweep(unittest.TestCase):
         test_sweep(time)
         self.assertTrue(self.cell_susc.person_queue.empty())
 
+    @mock.patch("random.random")
+    def test_do_infection_event(self, mock_random):
+        test_sweep = SpatialSweep()
+        mock_random.return_value = 0  # Certain infection
+
+        # Add in another cell, the subject of the infection,
+        # initially with an recovered individual and no susceptibles
+
+        cell_susc = self.pop.cells[1]
+        microcell_susc = cell_susc.microcells[0]
+        fake_infectee = microcell_susc.persons[1]
+
+        self.assertTrue(cell_susc.person_queue.empty())
+        test_sweep.do_infection_event(self.infector, fake_infectee, 1)
+        self.assertFalse(mock_random.called)  # Should have already returned
+        self.assertTrue(cell_susc.person_queue.empty())
+
+        real_infectee = microcell_susc.persons[-1]  # Susceptible individual
+        test_sweep.do_infection_event(self.infector, real_infectee, 1)
+        mock_random.assert_called_once()
+        self.assertEqual(cell_susc.person_queue.qsize(), 1)
+
 
 if __name__ == '__main__':
     unittest.main()
