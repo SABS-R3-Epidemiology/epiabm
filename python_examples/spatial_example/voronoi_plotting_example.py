@@ -218,9 +218,11 @@ def generate_animation(df, vor, name, grid_lim, save_path, use_pillow=True):
 
         fp_in = save_path + "image" + "*d.png"
         fp_out = save_path + "voronoi_animation.gif"
-        img, *imgs = [Image.open(f) for f in sorted(glob.glob(fp_in))]
+        img, *imgs = [Image.open(f).convert('RGB')
+                      for f in sorted(glob.glob(fp_in))]
         img.save(fp=fp_out, format='GIF', append_images=imgs,
-                 save_all=True, duration=200, loop=0)
+                 save_all=True, duration=200, loop=0,
+                 optimise=True)
         for file in os.listdir(save_path):  # Delete images after use
             if file.endswith('d.png'):
                 os.remove(os.path.join(save_path, file))
@@ -255,4 +257,4 @@ plot_time_grid(df, vor, name="InfectionStatus.InfectMild",
 animation_path = ("python_examples/spatial_example/spatial_outputs/")
 anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
                           grid_lim=grid_limits, save_path=animation_path,
-                          use_pillow=True)
+                          use_pillow=False)
