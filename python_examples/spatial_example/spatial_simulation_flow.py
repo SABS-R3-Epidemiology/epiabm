@@ -24,6 +24,11 @@ pe.Parameters.instance().time_steps_per_day = 1
 # Create a population framework based on the parameters given.
 population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
 
+# Alternatively, can generate population from input file
+# file_loc = "python_examples/spatial_example/input.csv"
+# population = pe.routine.FilePopulationFactory.make_pop(file_loc,
+#                                                        random_seed=42)
+
 # Configure population with input data
 pe.routine.ToyPopulationFactory.assign_cell_locations(population)
 

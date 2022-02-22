@@ -5,12 +5,15 @@
 import typing
 import numpy as np
 import random
+import math
 
 from pyEpiabm.core import Household, Population
 from pyEpiabm.property import PlaceType
 
+from .abstract_population_config import AbstractPopulationFactory
 
-class ToyPopulationFactory:
+
+class ToyPopulationFactory(AbstractPopulationFactory):
     """ Class that creates a toy population for use in the simple
     python model.
     """
@@ -46,7 +49,7 @@ class ToyPopulationFactory:
         place_number = pop_params["place_number"] \
             if "place_number" in pop_params else 0
 
-        # If random seed is specified in parameters, set this in numpy
+        # If random seed is specified in parameters, set this
         if "population_seed" in pop_params:
             np.random.seed(pop_params["population_seed"])
             random.seed(pop_params["population_seed"])
@@ -129,31 +132,38 @@ class ToyPopulationFactory:
                                     PlaceType.Hotel)
 
     @staticmethod
-    def assign_cell_locations(population: Population, method: str = 'random',
-                              file: str = ""):
+    def assign_cell_locations(population: Population, method: str = 'random'):
         """Assigns cell locations based on method provided. Possible methods:
 
             * 'random': Assigns all locations randomly within unit square
-            * 'file': Reads in location pairs from csv file
+            * 'uniform_x': Spreads points evenly along x axis in range (0, 1)
+            * 'grid': Distributes points according to a square grid within a
+                unit square. There will be cells missing in the last row if
+                the input is not a square number
 
         :param population: Population containing all person objects to be
             considered for grouping
         :type population: Population
-        :param place_number: Method of determining cell locations
-        :type place_number: str
-        :param file: Location of file to read in
-        :type file: str
+        :param method: Method of determining cell locations
+        :type method: str
         """
         if method == "random":
             for cell in population.cells:
                 cell.set_location(tuple(np.random.rand(2)))
 
-        elif method == "file":
-            assert file != ""
-            # Can read in ID, location and even infectious numbers from file
-            # Check column names against infectious statuses, and add to
-            # relevant infectious status if they match
-            raise NotImplementedError
+        elif method == "uniform_x":
+            cell_number = len(population.cells)
+            x_pos = np.linspace(0, 1, cell_number)
+            for i, cell in enumerate(population.cells):
+                cell.set_location((x_pos[i], 0))
+
+        elif method == "grid":
+            cell_number = len(population.cells)
+            grid_len = math.ceil(math.sqrt(cell_number))
+            pos = np.linspace(0, 1, grid_len)
+            for i, cell in enumerate(population.cells):
+                cell.set_location((pos[i % grid_len],
+                                   pos[i // grid_len]))
 
         else:
             raise ValueError(f"Unknown method: '{method}' not recognised")

@@ -74,7 +74,7 @@ def find_time_points(time_series, num_times):
     return all_times.to_numpy()[idx]
 
 
-def plot_time_point(df, vor, name, time, ax, mapper):
+def plot_time_point(df, vor, name, time, grid_lim, ax, mapper):
     """Returns figure object with a spatial plot of all cells in the Voronoi
     tesselation, colour coded by their value in column 'name' at a given time.
 
@@ -86,6 +86,9 @@ def plot_time_point(df, vor, name, time, ax, mapper):
     :type name: str
     :param time: Time to plot spatial data from
     :type time: float
+    :param grid_lim: Spatial extent of plots, in the form
+        [[min_x, max_x], [min_y, max_y]]
+    :type grid_lim: List
     :param ax: Axes object on which to plot data
     :type ax: Axes
     :param mapper: Mappable object to colour cells
@@ -106,12 +109,12 @@ def plot_time_point(df, vor, name, time, ax, mapper):
 
     ax.set_aspect('equal')
     ax.set_title(f"t = {time:.2f}")
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0, 1)
+    ax.set_xlim(grid_lim[0][0], grid_lim[0][1])
+    ax.set_ylim(grid_lim[1][0], grid_lim[1][1])
     return fig, ax
 
 
-def plot_time_grid(df, vor, name, grid_dim, save_loc):
+def plot_time_grid(df, vor, name, grid_dim, grid_lim, save_loc):
     """Plots a grid of spatial plot of all cells in the Voronoi
     tesselation, colour coded by their value in column 'name',
     for multiple times.
@@ -123,7 +126,10 @@ def plot_time_grid(df, vor, name, grid_dim, save_loc):
     :param name: Name of quantity to extract
     :type name: str
     :param grid_dim: Size of grid of spatial plots
-    :type time: Tuple(int, int)
+    :type grid_dim: Tuple(int, int)
+    :param grid_lim: Spatial extent of plots, in the form
+        [[min_x, max_x], [min_y, max_y]]
+    :type grid_lim: List
     :param save_loc: Path of saved image
     :type save_loc: str
     """
@@ -142,15 +148,16 @@ def plot_time_grid(df, vor, name, grid_dim, save_loc):
 
     # Add each subplot
     for i, t in enumerate(times):
-        plot_time_point(df, vor, name, t, axs[i], mapper)
+        plot_time_point(df, vor, name, t, grid_lim, axs[i], mapper)
 
     cbar = plt.colorbar(mapper, ax=axs.tolist())
     cbar.set_label("Number of " + str(name))
-    plt.xlim((0, 1)), plt.ylim((0, 1))
+    plt.xlim(grid_lim[0][0], grid_lim[0][1])
+    plt.ylim(grid_lim[1][0], grid_lim[1][1])
     plt.savefig(save_loc)
 
 
-def generate_animation(df, vor, name, save_path, use_pillow=True):
+def generate_animation(df, vor, name, grid_lim, save_path, use_pillow=True):
     """Plots a grid of spatial plot of all cells in the Voronoi
     tesselation, colour coded by their value in column 'name',
     for numltiple times.
@@ -166,6 +173,9 @@ def generate_animation(df, vor, name, save_path, use_pillow=True):
     :type vor: voronoi object
     :param name: Name of quantity to extract
     :type name: str
+    :param grid_lim: Spatial extent of plots, in the form
+        [[min_x, max_x], [min_y, max_y]]
+    :type grid_lim: List
     :param save_path: Path to saved animation
     :type save_path: str
     :param use_pillow: Whether to use pillow to generate animations
@@ -179,10 +189,12 @@ def generate_animation(df, vor, name, save_path, use_pillow=True):
     times = np.unique(times)
 
     fig = plt.figure()
-    ax = plt.axes(xlim=(0, 1), ylim=(0, 1))
+    ax = plt.axes(xlim=(grid_lim[0][0], grid_lim[0][1]),
+                  ylim=(grid_lim[1][0], grid_lim[1][1]))
 
     def animate(i):
-        temp_fig, temp_ax = plot_time_point(df, vor, name, i, ax, mapper)
+        temp_fig, temp_ax = plot_time_point(df, vor, name, i, grid_lim, ax,
+                                            mapper)
         if i == 0:
             cbar = temp_fig.colorbar(mapper)
             cbar.set_label("Number of " + str(name))
@@ -195,11 +207,13 @@ def generate_animation(df, vor, name, save_path, use_pillow=True):
         ani.save((save_path + str("voronoi_animation.gif")), writer=writer)
     else:
         for t in times:
-            t_fig, t_ax = plot_time_point(df, vor, name, t, ax, mapper)
+            t_fig, t_ax = plot_time_point(df, vor, name, t, grid_lim, ax,
+                                          mapper)
             if t == times[0]:
                 cbar = t_fig.colorbar(mapper)
                 cbar.set_label("Number of " + str(name))
-            t_ax.set_xlim(0, 1), t_ax.set_ylim(0, 1)
+            t_ax.set_xlim(grid_lim[0][0], grid_lim[0][1])
+            t_ax.set_ylim(grid_lim[1][0], grid_lim[1][1])
             t_fig.savefig(save_path + "image" + f'{t:03d}' + "d.png")
 
         fp_in = save_path + "image" + "*d.png"
@@ -219,6 +233,11 @@ df = pd.read_csv(filename)
 
 locations = np.transpose(np.stack((df["location_x"], df["location_y"])))
 
+max_x, max_y = np.ceil(np.amax(locations, axis=0))
+min_x, min_y = np.floor(np.amin(locations, axis=0))
+grid_limits = [[min_x, max_x], [min_y, max_y]]
+
+
 # Add 4 distant dummy points to ensure all cells are finite
 locations = np.append(locations, [[999, 999], [-999, 999],
                                   [999, -999], [-999, -999]], axis=0)
@@ -230,9 +249,10 @@ vor = Voronoi(locations)
 fig_loc = ("python_examples/spatial_example/spatial_outputs/"
            + "voronoi_grid_img.png")
 plot_time_grid(df, vor, name="InfectionStatus.InfectMild",
-               grid_dim=(2, 3), save_loc=fig_loc)
+               grid_dim=(2, 3), grid_lim=grid_limits, save_loc=fig_loc)
 
 # Plot animation of simulation
 animation_path = ("python_examples/spatial_example/spatial_outputs/")
 anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
-                          save_path=animation_path, use_pillow=True)
+                          grid_lim=grid_limits, save_path=animation_path,
+                          use_pillow=True)
