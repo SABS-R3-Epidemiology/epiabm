@@ -36,7 +36,7 @@ class HouseholdSweep(AbstractSweep):
                     continue
 
                 if infector.household is None:
-                    raise AttributeError(f"{infector} is not part of a"
+                    raise AttributeError(f"{infector} is not part of a "
                                          + "household")
 
                 # Check to see whether a household member is susceptible.
