@@ -24,6 +24,7 @@ class Microcell:
         :param cell: Microcell's parent :class:`Cell` instance
         :type cell: Cell
         """
+        self.id = hash(self)
         self.persons = []
         self.places = []
         self.cell = cell
@@ -38,14 +39,25 @@ class Microcell:
         """
         return f"Microcell with {len(self.persons)} people."
 
-    def add_people(self, n):
-        """Adds n default :class:`Person` to Microcell.
+    def set_id(self, id):
+        """Updates ID of microcell (i.e. for input from file).
+
+        :param id: Identity of microcell
+        :type id: float
+        """
+        self.id = id
+
+    def add_people(self, n, status=InfectionStatus.Susceptible):
+        """Adds n default :class:`Person` of given status to Microcell.
 
         :param n: Number of default :class:`Person` s to add
         :type n: int
+        :param status: Status of persons to add to cell
+        :type status: InfectionStatus
         """
         for i in range(n):
             p = Person(self)
+            p.update_status(status)
             self.cell.persons.append(p)
             self.persons.append(p)
             self.compartment_counter.report_new_person()
