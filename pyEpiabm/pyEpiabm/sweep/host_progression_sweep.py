@@ -5,11 +5,11 @@ import random
 
 import pyEpiabm as pe
 
-import math
-
 from pyEpiabm.property import InfectionStatus
 
 from .abstract_sweep import AbstractSweep
+
+from pyEpiabm.utility import InverseCdf
 
 
 class HostProgressionSweep(AbstractSweep):
@@ -37,16 +37,9 @@ class HostProgressionSweep(AbstractSweep):
 
         latent_period = pe.Parameters.instance().latent_period
         latent_period_iCDF = pe.Parameters.instance().latent_period_iCDF
-        time_steps_per_day = pe.Parameters.instance().time_steps_per_day
-        q = random.random() * pe.Parameters.instance().CDF_RES
-        i = math.floor(q)
-        q -= float(i)
-        latent_time = 0.5 +\
-            latent_period*( q * latent_period_iCDF[i + 1] +
-                (1.0 - q) * latent_period_iCDF[i] *
-                time_steps_per_day)
+        latent_icdf_object = InverseCdf(latent_period, latent_period_iCDF)
+        latent_time = latent_icdf_object.icdf_choose_exp()
 
-        latent_time = math.floor(latent_time)
         if latent_time < 0:
             raise AssertionError('Negative latent time')
         return latent_time
