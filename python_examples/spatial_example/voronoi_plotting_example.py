@@ -257,9 +257,5 @@ plot_time_grid(df, vor, name="InfectionStatus.InfectMild",
 # Plot animation of simulation
 animation_path = ("python_examples/spatial_example/spatial_outputs/")
 anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
-<<<<<<< HEAD
-                          save_path=animation_path, use_pillow=False)
-=======
                           grid_lim=grid_limits, save_path=animation_path,
                           use_pillow=False)
->>>>>>> 605cc9e247cdc54016205175cef006683b607c5f
