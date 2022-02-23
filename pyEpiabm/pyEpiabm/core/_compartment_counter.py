@@ -29,7 +29,7 @@ class _CompartmentCounter:
         return self._identifier
 
     def initialize(self, cell) -> None:
-        """Initialize Compartments by a cell/microcell containing people.
+        """Initialize Compartments for a cell/microcell containing people.
         Assumes the counter is empty so should only be used in initialisation.
 
         :param cell: Cell or Microcell CompartmentCounter is tracking
