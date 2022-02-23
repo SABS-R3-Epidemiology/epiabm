@@ -6,6 +6,7 @@ import random
 import os
 import typing
 import numpy as np
+from tqdm import tqdm
 
 from pyEpiabm.core import Population
 from pyEpiabm.output import _CsvDictWriter
@@ -105,18 +106,17 @@ class Simulation:
         """
 
         # Initialise on the time step before starting.
-        t = self.sim_params["simulation_start_time"]
         for sweep in self.initial_sweeps:
             sweep(self.sim_params)
-        # First entry of the data file is the initial state
-        self.write_to_file(t)
-        t += 1
 
-        while t < self.sim_params["simulation_end_time"]:
+        # First entry of the data file is the initial state
+        self.write_to_file(self.sim_params["simulation_start_time"])
+
+        for t in tqdm(range(self.sim_params["simulation_start_time"] + 1,
+                            self.sim_params["simulation_end_time"])):
             for sweep in self.sweeps:
                 sweep(t)
             self.write_to_file(t)
-            t += 1
 
     def write_to_file(self, time):
         """Records the count number of a given list of infection statuses
