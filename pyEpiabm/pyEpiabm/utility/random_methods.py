@@ -1,5 +1,5 @@
 #
-# Calculate household force of infection based on Covidsim code
+# Generate random number, as is done in Covidsim code
 #
 
 class RandomMethods:
