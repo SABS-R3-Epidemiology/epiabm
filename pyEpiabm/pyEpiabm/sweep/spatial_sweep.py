@@ -2,6 +2,7 @@
 # Infection due to contact in between people in different cells
 #
 
+
 import random
 import numpy as np
 
@@ -97,11 +98,17 @@ class SpatialSweep(AbstractSweep):
                 # Chooses a list of cells (with replacement) for each infection
                 # event to occur in. Specifically inter-cell infections
                 # so can't be the same cell
+                distance_weights = []
+                max_weight = 1000
+                # Possibly don't want this to be unfeasibly large as still
+                # have a valid population with clumps of cells
+                for cell2 in possible_infectee_cells:
+                    try:
+                        distance_weights.append(1/DistanceFunctions.dist(
+                                    cell.location, cell2.location))
+                    except ZeroDivisionError:
+                        distance_weights.append(max_weight)
 
-                distance_weights = [1/DistanceFunctions.dist(
-                                    cell.location, cell2.location)
-                                    for cell2 in
-                                    possible_infectee_cells]
                 cell_list = random.choices(possible_infectee_cells,
                                            weights=distance_weights,
                                            k=number_to_infect)

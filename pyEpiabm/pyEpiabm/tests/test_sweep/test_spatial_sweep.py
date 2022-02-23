@@ -68,6 +68,10 @@ class TestSpatialSweep(unittest.TestCase):
         test_sweep.bind_population(self.pop)
         test_sweep(time)
         self.assertTrue(self.cell_susc.person_queue.empty())
+        self.cell_susc.set_location((2.0, 1.0))
+        test_sweep.bind_population(self.pop)
+        test_sweep(time)
+        self.assertTrue(self.cell_susc.person_queue.empty())
 
         Parameters.instance().do_CovidSim = True
         test_sweep.bind_population(self.pop)
