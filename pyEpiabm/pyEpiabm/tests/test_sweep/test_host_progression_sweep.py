@@ -1,5 +1,5 @@
 import unittest
-
+from unittest import mock
 import pyEpiabm as pe
 
 
@@ -46,6 +46,17 @@ class TestHostProgressionSweep(unittest.TestCase):
         latency_time = test_sweep._set_latent_time()
         self.assertIsInstance(latency_time, int)
         self.assertTrue(0 <= latency_time)
+
+    @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_exp')
+    def test_neg_latent_time(self, mock_choose):
+        """Test that an Assertion Error is raised if the set latent time
+        is negative.
+        """
+        mock_choose.return_value = -1
+        with self.assertRaises(AssertionError):
+            test_sweep = pe.sweep.HostProgressionSweep()
+            latency_time = test_sweep._set_latent_time()
+            self.assertTrue(latency_time < 0)
 
     def test_update_time(self):
         """Test the update time function on the test population. This generates
