@@ -35,9 +35,6 @@ class _CompartmentCounter:
         :param cell: Cell or Microcell CompartmentCounter is tracking
         :type cell: `Cell` or `Microcell`
         """
-        # Not sure how the docs work if it accepts two input types
-        # First reset to zeros. This may seem unnecessary, but will
-        # prevent duplicate code double-counting.
         self._compartments = {status: 0 for status in InfectionStatus}
         for person in cell.persons:
             inf_status = person.infection_status
@@ -53,7 +50,7 @@ class _CompartmentCounter:
         :param new_status: Person's new infection state
         :type new_status: InfectionStatus
         """
-        if self._compartments[old_status] == 0:
+        if self._compartments[old_status] <= 0:
             raise ValueError("No people of this status in this cell.")
         self._compartments[old_status] -= 1
         self._compartments[new_status] += 1
