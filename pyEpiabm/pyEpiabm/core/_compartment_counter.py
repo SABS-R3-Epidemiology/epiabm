@@ -29,22 +29,19 @@ class _CompartmentCounter:
         return self._identifier
 
     def initialize(self, cell) -> None:
-        """Initialize Compartments by a cell/microcell containing people.
+        """Initialize Compartments for a cell/microcell containing people.
         Assumes the counter is empty so should only be used in initialisation.
 
         :param cell: Cell or Microcell CompartmentCounter is tracking
         :type cell: `Cell` or `Microcell`
         """
-        # Not sure how the docs work if it accepts two input types
-        # First reset to zeros. This may seem unnecessary, but will
-        # prevent duplicate code double-counting.
         self._compartments = {status: 0 for status in InfectionStatus}
         for person in cell.persons:
             inf_status = person.infection_status
             self._compartments[inf_status] += 1
 
     def report(self, old_status: InfectionStatus,
-               new_status: InfectionStatus, new_person=False) -> None:
+               new_status: InfectionStatus) -> None:
         """Report Person has changed state.
         Update internal compartments state.
 
