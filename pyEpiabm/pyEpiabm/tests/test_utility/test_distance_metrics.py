@@ -22,10 +22,20 @@ class TestDistanceFunctions(unittest.TestCase):
 
     def test_dist(self):
         f = DistanceFunctions.dist
-        self.assertAlmostEquals(f((3, 0)), 3)
-        self.assertAlmostEquals(f((-3, 0)), 3)
-        self.assertAlmostEquals(f((-3, 0), (3, 0)), 6)
-        self.assertAlmostEquals(f((-2, 0), (1, 4)), 5)
+        self.assertAlmostEqual(f((3, 0)), 3)
+        self.assertAlmostEqual(f((-3, 0)), 3)
+        self.assertAlmostEqual(f((-3, 0), (3, 0)), 6)
+        self.assertAlmostEqual(f((-2, 0), (1, 4)), 5)
+    
+    def test_periodic(self):
+        f = DistanceFunctions.dist_periodic
+        stride = (5, 4)
+        scales = (10, 8)
+
+        self.assertAlmostEqual(f((2, 0), stride, scales), 4)
+        self.assertAlmostEqual(f((-3, 0), stride, scales), 4)
+        self.assertAlmostEqual(f((-3, 0), stride, scales, (3, 0)), 2)
+        self.assertAlmostEqual(f((1, -3), stride, scales, (1, 4)), 4)
 
 
 if __name__ == '__main__':
