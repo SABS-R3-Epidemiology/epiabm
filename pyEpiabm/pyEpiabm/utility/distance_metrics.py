@@ -12,6 +12,20 @@ class DistanceFunctions:
     inter-place or inter-cell.
     """
     @staticmethod
+    def dist(loc1: typing.Tuple[float, float],
+             loc2: typing.Tuple[float, float] = (0, 0)) -> float:
+        """Calculate distance based on currently configured distance metric
+
+        :param loc1: (x,y) coordinates of the first place
+        :type loc1: Tuple[float, float]
+        :param loc2: (x,y) coordinates of the second place
+        :type loc2: Tuple[float, float]
+        :return: Distance between the two tuples
+        :rtype: float
+        """
+        return DistanceFunctions.dist_euclid(loc1, loc2)
+
+    @staticmethod
     def dist_euclid(loc1: typing.Tuple[float, float],
                     loc2: typing.Tuple[float, float] = (0, 0)):
         """Calculates distance based on the standard L2, Euclidean

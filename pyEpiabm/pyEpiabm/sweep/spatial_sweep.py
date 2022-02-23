@@ -84,7 +84,7 @@ class SpatialSweep(AbstractSweep):
                     # Sample at random from the infectee cell to find
                     # an infectee
                     infectee = random.sample(infectee_cell.persons, 1)[0]
-                    infection_distance = DistanceFunctions.dist_euclid(
+                    infection_distance = DistanceFunctions.dist(
                      cell.location, infectee_cell.location) / Parameters.\
                         instance().infection_radius
                     if (infection_distance < random.random()):
@@ -98,7 +98,7 @@ class SpatialSweep(AbstractSweep):
                 # event to occur in. Specifically inter-cell infections
                 # so can't be the same cell
 
-                distance_weights = [1/DistanceFunctions.dist_euclid(
+                distance_weights = [1/DistanceFunctions.dist(
                                     cell.location, cell2.location)
                                     for cell2 in
                                     possible_infectee_cells]
