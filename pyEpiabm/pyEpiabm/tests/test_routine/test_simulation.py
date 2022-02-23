@@ -32,7 +32,7 @@ class TestSimulation(unittest.TestCase):
         cls.sweeps = [pe.sweep.PlaceSweep()]
 
     def notqdm(iterable, *args, **kwargs):
-        """eplacement for tqdm that just passes back the iterable
+        """Replacement for tqdm that just passes back the iterable
         useful to silence `tqdm` in tests
         """
         return iterable
