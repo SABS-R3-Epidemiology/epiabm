@@ -12,9 +12,12 @@ class TestInitialInfectedSweep(unittest.TestCase):
         2 people are located in one microcell.
         """
         cls.pop_factory = pe.routine.ToyPopulationFactory()
-        cls.test_population = cls.pop_factory.make_pop(2, 1, 1, 1)
+        cls.pop_params = {"population_size": 2, "cell_number": 1,
+                          "microcell_number": 1, "household_number": 1}
+        cls.test_population = cls.pop_factory.make_pop(cls.pop_params)
         cls.cell = cls.test_population.cells[0]
-        cls.person1 = cls.test_population.cells[0].microcells[0].persons[0]
+        cls.microcell = cls.cell.microcells[0]
+        cls.person1 = cls.cell.microcells[0].persons[0]
         cls.person2 = cls.test_population.cells[0].microcells[0].persons[1]
 
     def test_call(self):
@@ -25,8 +28,7 @@ class TestInitialInfectedSweep(unittest.TestCase):
         # Test asking for more infected people than the population number
         # raises an error.
         params = {"initial_infected_number": 4}
-        with self.assertRaises(ValueError):
-            test_sweep(params)
+        self.assertRaises(ValueError, test_sweep, params)
 
         # Test that call assigns correct number of infectious people.
         params = {"initial_infected_number": 1}
@@ -35,13 +37,12 @@ class TestInitialInfectedSweep(unittest.TestCase):
         num_infectious = self.cell.compartment_counter.retrieve()[status]
         self.assertEqual(num_infectious, 1)
 
-        # Test that trying to infect a population with out enough
+        # Test that trying to infect a population without enough
         # susceptible people raises an error.
         self.person1.update_status(pe.property.InfectionStatus.Recovered)
         self.person2.update_status(pe.property.InfectionStatus.Recovered)
         params = {"initial_infected_number": 1}
-        with self.assertRaises(ValueError):
-            test_sweep(params)
+        self.assertRaises(ValueError, test_sweep, params)
 
 
 if __name__ == '__main__':

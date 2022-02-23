@@ -9,8 +9,10 @@ class TestPerson(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.cell = pe.Cell()
-        cls.microcell = pe.Microcell(cls.cell)
-        cls.person = pe.Person(cls.microcell)
+        cls.cell.add_microcells(1)
+        cls.microcell = cls.cell.microcells[0]
+        cls.microcell.add_people(1)
+        cls.person = cls.microcell.persons[0]
 
     def test__init__(self):
         self.assertEqual(self.person.age, 0)
@@ -23,13 +25,13 @@ class TestPerson(unittest.TestCase):
 
     def test_is_infectious(self):
         self.assertFalse(self.person.is_infectious())
-        self.person.infection_status = pe.property.InfectionStatus.InfectMild
+        self.person.update_status(pe.property.InfectionStatus.InfectMild)
         self.assertTrue(self.person.is_infectious())
 
     def test_is_susceptible(self):
-        self.person.infection_status = pe.property.InfectionStatus.Susceptible
+        self.person.update_status(pe.property.InfectionStatus.Susceptible)
         self.assertTrue(self.person.is_susceptible())
-        self.person.infection_status = pe.property.InfectionStatus.InfectMild
+        self.person.update_status(pe.property.InfectionStatus.InfectMild)
         self.assertFalse(self.person.is_susceptible())
 
     def test_update_status(self):

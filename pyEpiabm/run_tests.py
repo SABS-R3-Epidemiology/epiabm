@@ -94,6 +94,7 @@ def doctest_rst_and_public_interface():
         'pyEpiabm.property',
         'pyEpiabm.routine',
         'pyEpiabm.sweep',
+        'pyEpiabm.utility',
         'pyEpiabm.Cell',
         'pyEpiabm.Household',
         'pyEpiabm.Microcell',

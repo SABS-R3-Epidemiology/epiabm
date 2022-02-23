@@ -2,8 +2,10 @@
 # Simulates a complete pandemic
 #
 
+import random
 import os
 import typing
+import numpy as np
 
 from pyEpiabm.core import Population
 from pyEpiabm.output import _CsvDictWriter
@@ -22,6 +24,20 @@ class Simulation:
                   file_params: typing.Dict):
         """Initialise a population structure for use in the simulation.
 
+        sim_params Contains:
+            * `simulation_start_time`: The initial time for the simulation
+            * `simulation_end_time`: The final time to stop the simulation
+            * `initial_infected_number`: The initial number of infected
+                individuals in the population
+            * `simulation_seed`:  Random seed for reproducible simulations
+
+        file_params Contains:
+            * `output_file`: String for the name of the output .csv file
+            * `output_dir`: String for the location of the output file,
+                 as a relative path
+            * `spatial_output`: Boolean to determine whether a spatial output
+                should be used
+
         :param population: Population structure for the model
         :type population: Population
         :param pop_params: Dictionary of parameter specific to the population
@@ -39,11 +55,21 @@ class Simulation:
         :param file_params: Dictionary of parameters specific to the output
             file
         :type file_params: dict
+
         """
         self.sim_params = sim_params
         self.population = population
         self.initial_sweeps = initial_sweeps
         self.sweeps = sweeps
+
+        self.spatial_output = file_params["spatial_output"] \
+            if "spatial_output" in file_params else False  # defaults to false
+
+        # If random seed is specified in parameters, set this in numpy
+        if "simulation_seed" in self.sim_params:
+            random.seed(self.sim_params["simulation_seed"])
+            np.random.seed(self.sim_params["simulation_seed"])
+
         # Initial sweeps configure the population by changing the type,
         # infection status, infectiousness or susceptibility of people
         # or places. Only runs on the first timestep.
@@ -53,13 +79,20 @@ class Simulation:
         # General sweeps run through the population on every timestep, and
         # include host progression and spatial infections.
 
-        filename = os.path.join(os.getcwd(),
-                                file_params["output_dir"],
-                                file_params["output_file"])
+        folder = os.path.join(os.getcwd(),
+                              file_params["output_dir"])
+
+        filename = os.path.join(folder, file_params["output_file"])
+
+        output_titles = ["time"] + [s for s in InfectionStatus]
+        if self.spatial_output:
+            output_titles.insert(1, "cell")
+            output_titles.insert(2, "location_x")
+            output_titles.insert(3, "location_y")
 
         self.writer = _CsvDictWriter(
-            filename,
-            ["time"] + [s for s in InfectionStatus])
+            folder, filename,
+            output_titles)
 
     def run_sweeps(self):
         """Iteration step of the simulation. First the initialisation sweeps
@@ -88,11 +121,36 @@ class Simulation:
     def write_to_file(self, time):
         """Records the count number of a given list of infection statuses
         and writes these to file.
-        """
-        data = {s: 0 for s in list(InfectionStatus)}
-        for cell in self.population.cells:
-            for k in data:
-                data[k] += cell.compartment_counter.retrieve()[k]
-        data["time"] = time
 
-        self.writer.write(data)
+        :param time: Time of output data
+        :type file_params: float
+        """
+
+        if self.spatial_output:  # Separate output line for each cell
+            for cell in self.population.cells:
+                data = {s: 0 for s in list(InfectionStatus)}
+                for k in data:
+                    data[k] += cell.compartment_counter.retrieve()[k]
+                data["time"] = time
+                data["cell"] = cell.id
+                data["location_x"] = cell.location[0]
+                data["location_y"] = cell.location[1]
+                self.writer.write(data)
+        else:  # Summed output across all cells in population
+            data = {s: 0 for s in list(InfectionStatus)}
+            for cell in self.population.cells:
+                for k in data:
+                    data[k] += cell.compartment_counter.retrieve()[k]
+            data["time"] = time
+            self.writer.write(data)
+
+    @staticmethod
+    def set_random_seed(seed):
+        """ Set random seed for all subsequent operations. Should be used
+        before population configuration to control this process as well.
+
+        :param seed: Seed for RandomState
+        :type seed: int
+        """
+        random.seed(seed)
+        np.random.seed(seed)

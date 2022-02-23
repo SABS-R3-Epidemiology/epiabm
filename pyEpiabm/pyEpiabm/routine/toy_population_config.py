@@ -2,7 +2,9 @@
 # Factory for creation of a toy population
 #
 
+import typing
 import numpy as np
+import random
 
 from pyEpiabm.core import Household, Population
 from pyEpiabm.property import PlaceType
@@ -12,41 +14,53 @@ class ToyPopulationFactory:
     """ Class that creates a toy population for use in the simple
     python model.
     """
-    def make_pop(self, population_size: int, cell_number: int,
-                 microcell_number: int, household_number: int = 0,
-                 place_number: int = 0):
+    @staticmethod
+    def make_pop(pop_params: typing.Dict):
         """Initialize a population object with a given population size,
         number of cells and microcells. A uniform multinomial distribution is
         used to distribute the number of people into the different microcells.
         There is also an option to distribute people into households or places.
 
-        :param pop_size: Total number of people in population
-        :type pop_size: int
-        :param cell_number: Number of cell objects the population will be
-            split into
-        :type cell_number: int
-        :param microcell_number: Number of microcell objects per cell
-        :type microcell_number: int
-        :param household_number: Number of households per microcell
-        :type household_number: int
-        :param place_number: Number of places per microcell
-        :type place_number: int
+        file_params contains (with optional args as (*)):
+            * `population_size`: Number of people in population
+            * `cell_number`: Number of cells in population
+            * `microcell_number`: Number of microcells in each cell
+            * `household_number`: Number of households in each microcell (*)
+            * `place_number`: Number of places in each microcell (*)
+            * `population_seed`: Random seed for reproducible populations (*)
 
+        :param file_params: Dictionary of parameters for generating a
+            population
+        :type file_params: dict
         :return: Population object with individuals distributed into
             households
         :rtype: Population
         """
+        # Unpack variables from input dictionary
+        population_size = pop_params["population_size"]
+        cell_number = pop_params["cell_number"]
+        microcell_number = pop_params["microcell_number"]
+
+        household_number = pop_params["household_number"] \
+            if "household_number" in pop_params else 0
+        place_number = pop_params["place_number"] \
+            if "place_number" in pop_params else 0
+
+        # If random seed is specified in parameters, set this in numpy
+        if "population_seed" in pop_params:
+            np.random.seed(pop_params["population_seed"])
+            random.seed(pop_params["population_seed"])
+
         # Initialise a population class
         new_pop = Population()
 
         # Checks parameter type and stores as class objects.
-
         total_number_microcells = cell_number * microcell_number
 
         new_pop.add_cells(cell_number)
         # Sets up a probability array for the multinomial.
         p = [1 / total_number_microcells] * total_number_microcells
-        # Distributes multinomially people into microcells.
+        # Multinomially distributes people into microcells.
         cell_split = np.random.multinomial(population_size, p, size=1)[0]
         i = 0
         for cell in new_pop.cells:
@@ -57,17 +71,17 @@ class ToyPopulationFactory:
                 i += 1
 
         # If a household number is given then that number of households
-        # are initialised. If the housrhold number defaults to zero
+        # are initialised. If the household number defaults to zero
         # then no households are initialised.
         if household_number > 0:
-            self.add_households(new_pop, household_number)
+            ToyPopulationFactory.add_households(new_pop, household_number)
         if place_number > 0:
-            self.add_places(new_pop, place_number)
+            ToyPopulationFactory.add_places(new_pop, place_number)
 
-        new_pop.setup()
         return new_pop
 
-    def add_households(self, population: Population, household_number: int):
+    @staticmethod
+    def add_households(population: Population, household_number: int):
         """Groups people in a microcell into households together.
 
         :param population: Population containing all person objects to be
@@ -92,7 +106,8 @@ class ToyPopulationFactory:
                         new_household.add_person(person)
                         person_index += 1
 
-    def add_places(self, population: Population, place_number: int):
+    @staticmethod
+    def add_places(population: Population, place_number: int):
         """Groups people in a microcell into households together.
 
         :param population: Population containing all person objects to be
@@ -111,3 +126,33 @@ class ToyPopulationFactory:
             for microcell in cell.microcells:
                 microcell.add_place(place_number, (1.0, 1.0),
                                     PlaceType.Hotel)
+
+    @staticmethod
+    def assign_cell_locations(population: Population, method: str = 'random',
+                              file: str = ""):
+        """Assigns cell locations based on method provided. Possible methods:
+
+            * 'random': Assigns all locations randomly within unit square
+            * 'file': Reads in location pairs from csv file
+
+        :param population: Population containing all person objects to be
+            considered for grouping
+        :type population: Population
+        :param place_number: Method of determining cell locations
+        :type place_number: str
+        :param file: Location of file to read in
+        :type file: str
+        """
+        if method == "random":
+            for cell in population.cells:
+                cell.set_location(tuple(np.random.rand(2)))
+
+        elif method == "file":
+            assert file != ""
+            # Can read in ID, location and even infectious numbers from file
+            # Check column names against infectious statuses, and add to
+            # relevant infectious status if they match
+            raise NotImplementedError
+
+        else:
+            raise ValueError(f"Unknown method: '{method}' not recognised")

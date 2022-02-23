@@ -2,6 +2,7 @@
 # Cell Class
 #
 
+import typing
 from queue import Queue
 
 from pyEpiabm.property import InfectionStatus
@@ -15,14 +16,23 @@ class Cell:
     """Class representing a Cell (Subset of Population).
     Collection of :class:`Microcell` s and :class:`Person` s.
     """
-    def __init__(self):
+    def __init__(self, loc: typing.Tuple[float, float] = (0, 0)):
         """Constructor Method.
+
+        :param loc: Location of the cell, as an (x,y) tuple
+        :type loc: Tuple(float, float)
         """
+        self.location = loc
+        self.id = hash(self)
         self.microcells = []
         self.persons = []
         self.places = []
         self.person_queue = Queue()
         self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
+
+        if not (len(loc) == 2 and isinstance(loc[0], (float, int)) and
+                isinstance(loc[1], (float, int))):
+            raise ValueError("Location must be a tuple of float-type")
 
     def __repr__(self):
         """Returns a string representation of the Cell.
@@ -31,7 +41,7 @@ class Cell:
         :rtype: str
         """
         return f"Cell with {len(self.microcells)} microcells " + \
-            f"and {len(self.persons)} people."
+            f"and {len(self.persons)} people at location {self.location}."
 
     def add_microcells(self, n):
         """Add n empty :class:`Microcell` s to Cell.
@@ -41,6 +51,14 @@ class Cell:
         """
         for i in range(n):
             self.microcells.append(Microcell(self))
+
+    def set_id(self, id):
+        """Updates ID of cell (i.e. to match file input).
+
+        :param id: Identity of cell
+        :type id: float
+        """
+        self.id = id
 
     def enqueue_person(self, person: Person):
         """Add person to queue for processing at end of iteration.
@@ -54,7 +72,7 @@ class Cell:
         """Setup method. Should be called once Population has been setup.
         Called by population (doesn't need to be called manually).
         """
-        self.compartment_counter.initialize(len(self.persons))
+        self.compartment_counter.initialize(self)
         for mcell in self.microcells:
             mcell._setup()
 
@@ -70,3 +88,25 @@ class Cell:
         :type new_status: InfectionStatus
         """
         self.compartment_counter.report(old_status, new_status)
+
+    def number_infectious(self):
+        """Returns the total number of infectious people in each
+        cell.
+
+        :return: Total infectors in cell
+        :rtype: int
+        """
+        cell_data = self.compartment_counter.retrieve()
+        total_infectors = (cell_data[InfectionStatus.InfectASympt]
+                           + cell_data[InfectionStatus.InfectMild]
+                           + cell_data[InfectionStatus.InfectGP])
+
+        return total_infectors
+
+    def set_location(self, loc: typing.Tuple[float, float]):
+        """Method to set or change the location of a cell.
+
+        :param loc: (x,y) coordinates of the place
+        :type loc: Tuple[float, float]
+        """
+        self.location = loc

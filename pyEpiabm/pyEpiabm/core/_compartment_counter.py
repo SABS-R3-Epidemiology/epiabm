@@ -28,17 +28,23 @@ class _CompartmentCounter:
         """
         return self._identifier
 
-    def initialize(self, n_people) -> None:
-        """Initialize Compartments with n_people susceptible and 0 in all
-        of compartments (i.e. for all other InfectionStatus).
+    def initialize(self, cell) -> None:
+        """Initialize Compartments for a cell/microcell containing people.
+        Assumes the counter is empty so should only be used in initialisation.
 
-        :param n_people: Number of people CompartmentCounter is tracking
-        :type n_people: int
+        :param cell: Cell or Microcell CompartmentCounter is tracking
+        :type cell: `Cell` or `Microcell`
         """
-        self._compartments[InfectionStatus.Susceptible] = n_people
+        # Not sure how the docs work if it accepts two input types
+        # First reset to zeros. This may seem unnecessary, but will
+        # prevent duplicate code double-counting.
+        self._compartments = {status: 0 for status in InfectionStatus}
+        for person in cell.persons:
+            inf_status = person.infection_status
+            self._compartments[inf_status] += 1
 
     def report(self, old_status: InfectionStatus,
-               new_status: InfectionStatus) -> None:
+               new_status: InfectionStatus, new_person=False) -> None:
         """Report Person has changed state.
         Update internal compartments state.
 
@@ -47,8 +53,16 @@ class _CompartmentCounter:
         :param new_status: Person's new infection state
         :type new_status: InfectionStatus
         """
+        if self._compartments[old_status] <= 0:
+            raise ValueError("No people of this status in this cell.")
         self._compartments[old_status] -= 1
         self._compartments[new_status] += 1
+
+    def report_new_person(self) -> None:
+        """Separate to the initialise functionality, this adds a
+        new susceptible person to the cell.
+        """
+        self._compartments[InfectionStatus.Susceptible] += 1
 
     def retrieve(self) -> typing.Dict[InfectionStatus, int]:
         """Get Compartment Counts.

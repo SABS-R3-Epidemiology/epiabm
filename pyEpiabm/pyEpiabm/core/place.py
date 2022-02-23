@@ -40,6 +40,10 @@ class Place:
         if not (self.microcell.cell == self.cell):
             raise KeyError("Microcell is not contained in cell")
 
+        if not (len(loc) == 2 and isinstance(loc[0], (float, int)) and
+                isinstance(loc[1], (float, int))):
+            raise ValueError("Location must be a tuple of float-type")
+
     def set_max_cap(self, max_capacity: int):
         """Sets the maximum capacity of a place.
 

@@ -48,6 +48,8 @@ class Microcell:
             p = Person(self)
             self.cell.persons.append(p)
             self.persons.append(p)
+            self.compartment_counter.report_new_person()
+            self.cell.compartment_counter.report_new_person()
 
     def add_place(self, n: int, loc: typing.Tuple[float, float],
                   place_type):
@@ -65,7 +67,7 @@ class Microcell:
         """Setup method. Should be called once Population has been setup.
         Called by population (doesn't need to be called manually).
         """
-        self.compartment_counter.initialize(len(self.persons))
+        self.compartment_counter.initialize(self)
 
     def notify_person_status_change(
             self,
