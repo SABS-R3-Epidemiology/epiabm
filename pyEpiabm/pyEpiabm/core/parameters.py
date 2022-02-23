@@ -2,7 +2,7 @@
 # Parameters
 #
 
-
+import numpy as np
 class Parameters:
     """Class for global parameters.
 
@@ -13,7 +13,7 @@ class Parameters:
         """
         def __init__(self):
             self.latent_period = 4.59
-            self.latent_period_iCDF = [0, 0.098616903, 0.171170649,
+            self.latent_period_iCDF = np.array([0, 0.098616903, 0.171170649,
                                        0.239705594, 0.307516598,
                                        0.376194441, 0.446827262,
                                        0.520343677, 0.597665592,
@@ -22,7 +22,7 @@ class Parameters:
                                        1.086313899, 1.219915022,
                                        1.37573215, 1.563841395,
                                        1.803041398, 2.135346254,
-                                       2.694118208, 3.964172493]
+                                       2.694118208, 3.964172493])
             self.CDF_RES = 20
             pass
 

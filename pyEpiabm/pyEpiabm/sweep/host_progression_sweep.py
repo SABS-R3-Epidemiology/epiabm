@@ -5,8 +5,6 @@ import random
 
 import pyEpiabm as pe
 
-import numpy as np
-
 import math
 
 from pyEpiabm.property import InfectionStatus
@@ -43,11 +41,14 @@ class HostProgressionSweep(AbstractSweep):
         q = random.random() * pe.Parameters.instance().CDF_RES
         i = math.floor(q)
         q -= float(i)
-        latent_time = 0.5 -\
-            (latent_period * np.log(q * latent_period_iCDF[i + 1] +
-                                    (1.0 - q) * latent_period_iCDF[i]) *
+        latent_time = 0.5 +\
+            latent_period*( q * latent_period_iCDF[i + 1] +
+                (1.0 - q) * latent_period_iCDF[i] *
                 time_steps_per_day)
+
         latent_time = math.floor(latent_time)
+        if latent_time < 0:
+            raise AssertionError('Negative latent time')
         return latent_time
 
     def _update_next_infection_status(self, person):
