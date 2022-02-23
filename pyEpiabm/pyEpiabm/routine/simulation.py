@@ -106,14 +106,14 @@ class Simulation:
         """
 
         # Initialise on the time step before starting.
-        t = self.sim_params["simulation_start_time"]
         for sweep in self.initial_sweeps:
             sweep(self.sim_params)
-        # First entry of the data file is the initial state
-        self.write_to_file(t)
-        t += 1
 
-        for t in tqdm(range(self.sim_params["simulation_end_time"])):
+        # First entry of the data file is the initial state
+        self.write_to_file(self.sim_params["simulation_start_time"])
+
+        for t in tqdm(range(self.sim_params["simulation_start_time"] + 1,
+                            self.sim_params["simulation_end_time"])):
             for sweep in self.sweeps:
                 sweep(t)
             self.write_to_file(t)
