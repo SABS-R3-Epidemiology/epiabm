@@ -38,11 +38,11 @@ class DistanceFunctions:
         :type loc1: Tuple[float, float]
         :param loc2: (x,y) coordinates of the second place
         :type loc2: Tuple[float, float]
-        :return: Euclidean distance between the two tupleslength_squared
+        :return: Euclidean distance between the two tuples
         :rtype: float
         """
         return np.linalg.norm(np.abs(np.asarray(loc1) - np.asarray(loc2)))
-    
+
     def dist_periodic(loc1: typing.Tuple[int, int],
                       stride: int,
                       scales: typing.Tuple[float, float],
@@ -52,6 +52,7 @@ class DistanceFunctions:
         mapped to the whole globe. Periodic conditions at the boundary
         mean this only applies to a global grid. Scales should be
         (Earth perimeter, vertical range)
+
         :param loc1: index location of the first place
         :type loc1: Tuple[int, int]
         :param stride: number of indices in a row

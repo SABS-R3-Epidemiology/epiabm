@@ -26,7 +26,7 @@ class TestDistanceFunctions(unittest.TestCase):
         self.assertAlmostEqual(f((-3, 0)), 3)
         self.assertAlmostEqual(f((-3, 0), (3, 0)), 6)
         self.assertAlmostEqual(f((-2, 0), (1, 4)), 5)
-    
+
     def test_periodic(self):
         f = DistanceFunctions.dist_periodic
         stride = (5, 4)

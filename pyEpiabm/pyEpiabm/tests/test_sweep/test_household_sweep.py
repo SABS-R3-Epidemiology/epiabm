@@ -77,6 +77,20 @@ class TestHouseholdSweep(unittest.TestCase):
         self.test_sweep(self.time)
         self.assertTrue(self.cell.person_queue.empty())
 
+    def test_no_households(self):
+        pop_nh = pe.Population()  # Population without households
+        pop_nh.add_cells(1)
+        pop_nh.cells[0].add_microcells(1)
+        pop_nh.cells[0].microcells[0].add_people(2)
+        person_inf = pop_nh.cells[0].microcells[0].persons[0]
+        person_inf.infection_status = pe.property.InfectionStatus.InfectMild
+        pe.Parameters.instance().time_steps_per_day = 1
+
+        false_sweep = pe.sweep.HouseholdSweep()
+        false_sweep.bind_population(pop_nh)
+        with self.assertRaises(AttributeError):
+            false_sweep(1)
+
 
 if __name__ == '__main__':
     unittest.main()
