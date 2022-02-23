@@ -8,3 +8,4 @@ create a population.
 
 from .distance_metrics import DistanceFunctions
 from .random_methods import RandomMethods
+from .inverse_cdf import InverseCdf
