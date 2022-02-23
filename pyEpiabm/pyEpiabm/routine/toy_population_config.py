@@ -5,16 +5,20 @@
 import typing
 import numpy as np
 import random
+import math
 
 from pyEpiabm.core import Household, Population
 from pyEpiabm.property import PlaceType
 
+from .abstract_population_config import AbstractPopulationFactory
 
-class ToyPopulationFactory:
+
+class ToyPopulationFactory(AbstractPopulationFactory):
     """ Class that creates a toy population for use in the simple
     python model.
     """
-    def make_pop(self, pop_params: typing.Dict):
+    @staticmethod
+    def make_pop(pop_params: typing.Dict):
         """Initialize a population object with a given population size,
         number of cells and microcells. A uniform multinomial distribution is
         used to distribute the number of people into the different microcells.
@@ -45,7 +49,7 @@ class ToyPopulationFactory:
         place_number = pop_params["place_number"] \
             if "place_number" in pop_params else 0
 
-        # If random seed is specified in parameters, set this in numpy
+        # If random seed is specified in parameters, set this
         if "population_seed" in pop_params:
             np.random.seed(pop_params["population_seed"])
             random.seed(pop_params["population_seed"])
@@ -59,7 +63,7 @@ class ToyPopulationFactory:
         new_pop.add_cells(cell_number)
         # Sets up a probability array for the multinomial.
         p = [1 / total_number_microcells] * total_number_microcells
-        # Distributes multinomially people into microcells.
+        # Multinomially distributes people into microcells.
         cell_split = np.random.multinomial(population_size, p, size=1)[0]
         i = 0
         for cell in new_pop.cells:
@@ -70,17 +74,18 @@ class ToyPopulationFactory:
                 i += 1
 
         # If a household number is given then that number of households
-        # are initialised. If the housrhold number defaults to zero
+        # are initialised. If the household number defaults to zero
         # then no households are initialised.
         if household_number > 0:
-            self.add_households(new_pop, household_number)
+            ToyPopulationFactory.add_households(new_pop, household_number)
         if place_number > 0:
-            self.add_places(new_pop, place_number)
+            ToyPopulationFactory.add_places(new_pop, place_number)
 
         new_pop.setup()
         return new_pop
 
-    def add_households(self, population: Population, household_number: int):
+    @staticmethod
+    def add_households(population: Population, household_number: int):
         """Groups people in a microcell into households together.
 
         :param population: Population containing all person objects to be
@@ -105,7 +110,8 @@ class ToyPopulationFactory:
                         new_household.add_person(person)
                         person_index += 1
 
-    def add_places(self, population: Population, place_number: int):
+    @staticmethod
+    def add_places(population: Population, place_number: int):
         """Groups people in a microcell into households together.
 
         :param population: Population containing all person objects to be
@@ -124,3 +130,40 @@ class ToyPopulationFactory:
             for microcell in cell.microcells:
                 microcell.add_place(place_number, (1.0, 1.0),
                                     PlaceType.Hotel)
+
+    @staticmethod
+    def assign_cell_locations(population: Population, method: str = 'random'):
+        """Assigns cell locations based on method provided. Possible methods:
+
+            * 'random': Assigns all locations randomly within unit square
+            * 'uniform_x': Spreads points evenly along x axis in range (0, 1)
+            * 'grid': Distributes points according to a square grid within a
+                unit square. There will be cells missing in the last row if
+                the input is not a square number
+
+        :param population: Population containing all person objects to be
+            considered for grouping
+        :type population: Population
+        :param method: Method of determining cell locations
+        :type method: str
+        """
+        if method == "random":
+            for cell in population.cells:
+                cell.set_location(tuple(np.random.rand(2)))
+
+        elif method == "uniform_x":
+            cell_number = len(population.cells)
+            x_pos = np.linspace(0, 1, cell_number)
+            for i, cell in enumerate(population.cells):
+                cell.set_location((x_pos[i], 0))
+
+        elif method == "grid":
+            cell_number = len(population.cells)
+            grid_len = math.ceil(math.sqrt(cell_number))
+            pos = np.linspace(0, 1, grid_len)
+            for i, cell in enumerate(population.cells):
+                cell.set_location((pos[i % grid_len],
+                                   pos[i // grid_len]))
+
+        else:
+            raise ValueError(f"Unknown method: '{method}' not recognised")

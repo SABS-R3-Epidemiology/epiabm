@@ -18,11 +18,12 @@ class Cell:
     """
     def __init__(self, loc: typing.Tuple[float, float] = (0, 0)):
         """Constructor Method.
-
-        :param loc: (x,y) coordinates of the place
-        :type loc: Tuple[float, float]
+        
+        :param loc: Location of the cell, as an (x,y) tuple
+        :type loc: Tuple(float, float)
         """
         self.location = loc
+        self.id = hash(self)
         self.microcells = []
         self.persons = []
         self.places = []
@@ -50,6 +51,22 @@ class Cell:
         """
         for i in range(n):
             self.microcells.append(Microcell(self))
+
+    def set_location(self, loc: typing.Tuple[float, float]):
+        """Updates location of cell (used in population configuration).
+
+        :param loc: Location of the cell, as an (x,y) tuple
+        :type loc: Tuple(float, float)
+        """
+        self.location = loc
+
+    def set_id(self, id: float):
+        """Updates ID of cell (i.e. for input from file).
+
+        :param id: Identity of cell
+        :type id: float
+        """
+        self.id = id
 
     def enqueue_person(self, person: Person):
         """Add person to queue for processing at end of iteration.

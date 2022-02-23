@@ -1,4 +1,5 @@
 import random
+import math
 import unittest
 from parameterized import parameterized
 
@@ -23,7 +24,7 @@ class TestPopConfig(unittest.TestCase):
         # Population is initialised with no households
         pop_params = {"population_size": pop_size, "cell_number": cell_number,
                       "microcell_number": microcell_number}
-        test_pop = ToyPopulationFactory().make_pop(pop_params)
+        test_pop = ToyPopulationFactory.make_pop(pop_params)
 
         total_people = 0
         count_non_empty_cells = 0
@@ -68,8 +69,8 @@ class TestPopConfig(unittest.TestCase):
                       "population_seed": seed}
 
         # Create two identical populations with the same seed
-        seed_pop = ToyPopulationFactory().make_pop(pop_params)
-        comp_pop = ToyPopulationFactory().make_pop(pop_params)
+        seed_pop = ToyPopulationFactory.make_pop(pop_params)
+        comp_pop = ToyPopulationFactory.make_pop(pop_params)
 
         self.assertEqual(str(seed_pop), str(comp_pop))
 
@@ -100,7 +101,7 @@ class TestPopConfig(unittest.TestCase):
         pop_params = {"population_size": pop_size, "cell_number": cell_number,
                       "microcell_number": microcell_number,
                       "household_number": household_number}
-        toy_pop = ToyPopulationFactory().make_pop(pop_params)
+        toy_pop = ToyPopulationFactory.make_pop(pop_params)
         total_people = 0
         households = []
         num_empty_households = 0
@@ -132,7 +133,7 @@ class TestPopConfig(unittest.TestCase):
         pop_params = {"population_size": pop_size, "cell_number": cell_number,
                       "microcell_number": microcell_number,
                       "place_number": place_number}
-        toy_pop = ToyPopulationFactory().make_pop(pop_params)
+        toy_pop = ToyPopulationFactory.make_pop(pop_params)
 
         places = []
         for cell in toy_pop.cells:
@@ -142,6 +143,58 @@ class TestPopConfig(unittest.TestCase):
         # Test the correct number of place shave been added to each microcell
         self.assertEqual(place_number,
                          len(toy_pop.cells[0].microcells[0].places))
+
+    def test_assign_cell_locations_rand(self):
+        pop_params = {"population_size": 10, "cell_number": 2,
+                      "microcell_number": 1}
+        test_pop = ToyPopulationFactory.make_pop(pop_params)
+        for cell in test_pop.cells:
+            self.assertEqual(cell.location[0], 0)
+            self.assertEqual(cell.location[1], 0)
+        ToyPopulationFactory.assign_cell_locations(test_pop)
+        for cell in test_pop.cells:
+            self.assertTrue((0 < cell.location[0]) & (1 > cell.location[0]))
+            self.assertTrue((0 < cell.location[1]) & (1 > cell.location[1]))
+
+        with self.assertRaises(ValueError):
+            ToyPopulationFactory.assign_cell_locations(test_pop,
+                                                       method='other')
+
+    @parameterized.expand([(random.randint(2, 20) * numReps,)
+                           for _ in range(numReps)])
+    def test_assign_cell_locations_unix(self, cell_num):
+        pop_params = {"population_size": 100, "cell_number": cell_num,
+                      "microcell_number": 1}
+        test_pop = ToyPopulationFactory.make_pop(pop_params)
+        ToyPopulationFactory.assign_cell_locations(test_pop, "uniform_x")
+        for i, cell in enumerate(test_pop.cells):
+            self.assertAlmostEqual(cell.location[0], i / (cell_num - 1))
+            self.assertAlmostEqual(cell.location[1], 0)
+
+    @parameterized.expand([(random.randint(2, 20) * numReps,)
+                          for _ in range(numReps)])
+    def test_assign_cell_locations_grid(self, cell_num):
+        pop_params = {"population_size": 100, "cell_number": cell_num,
+                      "microcell_number": 1}
+        test_pop = ToyPopulationFactory.make_pop(pop_params)
+        ToyPopulationFactory.assign_cell_locations(test_pop, "grid")
+        grid_len = math.ceil(math.sqrt(cell_num))
+        for i, cell in enumerate(test_pop.cells):
+            self.assertAlmostEqual(cell.location[0],
+                                   (i % grid_len) / (grid_len - 1))
+            self.assertAlmostEqual(cell.location[1],
+                                   (i // grid_len) / (grid_len - 1))
+
+    def test_assign_cell_locations_known_grid(self):
+        pop_params = {"population_size": 100, "cell_number": 4,
+                      "microcell_number": 1}
+        test_pop = ToyPopulationFactory.make_pop(pop_params)
+        ToyPopulationFactory.assign_cell_locations(test_pop, "grid")
+        x_pos = [0, 1, 0, 1]
+        y_pos = [0, 0, 1, 1]
+        for i, cell in enumerate(test_pop.cells):
+            self.assertAlmostEqual(cell.location[0], x_pos[i])
+            self.assertAlmostEqual(cell.location[1], y_pos[i])
 
 
 if __name__ == '__main__':

@@ -20,11 +20,21 @@ class TestMicrocell(unittest.TestCase):
         self.assertEqual(repr(self.microcell),
                          "Microcell with 0 people.")
 
+    def test_set_id(self):
+        id_mcell = pe.Microcell(self.cell)
+        self.assertEqual(id_mcell.id, hash(id_mcell))
+        id_mcell.set_id(2.0)
+        self.assertEqual(id_mcell.id, 2.0)
+
     def test_add_people(self, n=4):
-        microcell = pe.Microcell(self.cell)
+        cell = pe.Cell()
+        microcell = pe.Microcell(cell)
         self.assertEqual(len(microcell.persons), 0)
         microcell.add_people(n)
         self.assertEqual(len(microcell.persons), n)
+        microcell.add_people(n + 1, pe.property.InfectionStatus.InfectASympt)
+        self.assertEqual(len(microcell.persons), 2 * n + 1)
+        self.assertEqual(cell.number_infectious(), n + 1)
 
     def test_add_place(self, n=3):
         microcell = pe.Microcell(self.cell)

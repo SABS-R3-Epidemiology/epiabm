@@ -31,6 +31,12 @@ class TestSimulation(unittest.TestCase):
         cls.initial_sweeps = [pe.sweep.InitialInfectedSweep()]
         cls.sweeps = [pe.sweep.PlaceSweep()]
 
+    def notqdm(iterable, *args, **kwargs):
+        """Replacement for tqdm that just passes back the iterable
+        useful to silence `tqdm` in tests
+        """
+        return iterable
+
     def test_configure(self):
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
@@ -67,6 +73,7 @@ class TestSimulation(unittest.TestCase):
 
             del(test_sim.writer)
 
+    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.sweep.PlaceSweep.__call__')
     @patch('pyEpiabm.sweep.InitialInfectedSweep.__call__')
     @patch('pyEpiabm.routine.Simulation.write_to_file')
@@ -109,7 +116,10 @@ class TestSimulation(unittest.TestCase):
                                   self.spatial_file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
             data["time"] = time
-            data["cell"] = hash(self.test_population.cells[0])
+            cell = self.test_population.cells[0]
+            data["cell"] = hash(cell)
+            data["location_x"] = cell.location[0]
+            data["location_y"] = cell.location[0]
 
             with patch.object(spatial_sim.writer, 'write') as mock:
                 spatial_sim.write_to_file(time)
@@ -123,6 +133,7 @@ class TestSimulation(unittest.TestCase):
         self.assertAlmostEqual(np_value, 0.548814, places=5)
         # Values taken from known seed sequence
 
+    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write')
     def test_random_seed(self, mock_write):
         pop_params = {"population_size": 250, "cell_number": 1,
