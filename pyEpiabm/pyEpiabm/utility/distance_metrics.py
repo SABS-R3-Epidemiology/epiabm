@@ -64,12 +64,16 @@ class DistanceFunctions:
         :return: Euclidean distance between the two tuples
         :rtype: float
         """
-        # Convert indices to distance mesures by dividing by 
+        # Convert indices to distance mesures by dividing by
         # total number of indices in each row.
         # These points are still on a rectangular grid
-        global1 = np.multiply(np.divide(np.asarray(loc1), stride), scales)
-        global2 = np.multiply(np.divide(np.asarray(loc2), stride), scales)
-
+        scales = np.asarray(scales)
+        stride = np.asarray(stride)
+        global1 = (scales*np.asarray(loc1)) / stride
+        global2 = (scales*np.asarray(loc2)) / stride
+        for loc in [global1, global2]:
+            if loc[1] < 0:
+                loc[1] = scales[1] + loc[1] + (scales/stride)[1]
         diff = np.abs(global1 - global2)
         # Enforce periodicity of the map from the grid to the Earth.
         # If the distance between points is more than half the total length,
@@ -77,5 +81,4 @@ class DistanceFunctions:
         for index in range(1):
             if diff[index] > 0.5*scales[index]:
                 diff[index] = scales[index] - diff[index]
-
-        np.linalg.norm(diff)
+        return np.linalg.norm(diff)
