@@ -53,7 +53,7 @@ class _CompartmentCounter:
         :param new_status: Person's new infection state
         :type new_status: InfectionStatus
         """
-        if self._compartments[old_status] == 0:
+        if self._compartments[old_status] <= 0:
             raise ValueError("No people of this status in this cell.")
         self._compartments[old_status] -= 1
         self._compartments[new_status] += 1
