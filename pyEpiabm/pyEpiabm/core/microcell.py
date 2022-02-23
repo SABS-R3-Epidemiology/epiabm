@@ -55,13 +55,13 @@ class Microcell:
         :param status: Status of persons to add to cell
         :type status: InfectionStatus
         """
-        for i in range(n):
+        for _ in range(n):
             p = Person(self)
-            p.update_status(status)
             self.cell.persons.append(p)
             self.persons.append(p)
             self.compartment_counter.report_new_person()
             self.cell.compartment_counter.report_new_person()
+            p.update_status(status)
 
     def add_place(self, n: int, loc: typing.Tuple[float, float],
                   place_type):
