@@ -18,7 +18,7 @@ class Cell:
     """
     def __init__(self, loc: typing.Tuple[float, float] = (0, 0)):
         """Constructor Method.
-        
+
         :param loc: Location of the cell, as an (x,y) tuple
         :type loc: Tuple(float, float)
         """
@@ -51,14 +51,6 @@ class Cell:
         """
         for i in range(n):
             self.microcells.append(Microcell(self))
-
-    def set_location(self, loc: typing.Tuple[float, float]):
-        """Updates location of cell (used in population configuration).
-
-        :param loc: Location of the cell, as an (x,y) tuple
-        :type loc: Tuple(float, float)
-        """
-        self.location = loc
 
     def set_id(self, id: float):
         """Updates ID of cell (i.e. for input from file).
