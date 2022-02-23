@@ -2,13 +2,9 @@
 # Progression of infection within individuals
 #
 import random
-
 import pyEpiabm as pe
-
 from pyEpiabm.property import InfectionStatus
-
 from .abstract_sweep import AbstractSweep
-
 from pyEpiabm.utility import InverseCdf
 
 
@@ -34,7 +30,6 @@ class HostProgressionSweep(AbstractSweep):
         covid-sim to be given as time until next infection status
         for a person who has been set as exposed.
         """
-
         latent_period = pe.Parameters.instance().latent_period
         latent_period_iCDF = pe.Parameters.instance().latent_period_iCDF
         latent_icdf_object = InverseCdf(latent_period, latent_period_iCDF)

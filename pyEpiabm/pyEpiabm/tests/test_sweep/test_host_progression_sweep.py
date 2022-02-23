@@ -4,7 +4,7 @@ import pyEpiabm as pe
 
 
 class TestHostProgressionSweep(unittest.TestCase):
-    """Test the 'HostProgressionSweep' class.
+    """Tests the 'HostProgressionSweep' class.
     """
     @classmethod
     def setUpClass(cls) -> None:
@@ -20,7 +20,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         cls.person3 = cls.test_population.cells[0].microcells[0].persons[2]
 
     def test_construct(self):
-        """Test that the host progression sweep initialises correctly.
+        """Tests that the host progression sweep initialises correctly.
         """
         pe.sweep.HostProgressionSweep()
 
@@ -40,7 +40,7 @@ class TestHostProgressionSweep(unittest.TestCase):
                           self.person2)
 
     def test_set_latent_time(self):
-        """Test the set latent time returns a float greater than 0.
+        """Tests the set latent time returns a float greater than 0.
         """
         test_sweep = pe.sweep.HostProgressionSweep()
         latency_time = test_sweep._set_latent_time()
@@ -49,7 +49,7 @@ class TestHostProgressionSweep(unittest.TestCase):
 
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_exp')
     def test_neg_latent_time(self, mock_choose):
-        """Test that an Assertion Error is raised if the set latent time
+        """Tests that an Assertion Error is raised if the set latent time
         is negative.
         """
         mock_choose.return_value = -1
@@ -59,7 +59,7 @@ class TestHostProgressionSweep(unittest.TestCase):
             self.assertTrue(latency_time < 0)
 
     def test_update_time(self):
-        """Test the update time function on the test population. This generates
+        """Tests the update time function on the test population. This generates
         a random integer (uniformly) between 1 and 10.
         """
         test_sweep = pe.sweep.HostProgressionSweep()
@@ -68,7 +68,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertTrue(1 <= time <= 10)
 
     def test_call(self):
-        """Test the main function of the Host Progression Sweep.
+        """Tests the main function of the Host Progression Sweep.
         Person 3 is set to susceptible and becoming exposed. Person 2 is set to
         exposed and becoming infectious in one time step. Checks the
         population updates as expected.
