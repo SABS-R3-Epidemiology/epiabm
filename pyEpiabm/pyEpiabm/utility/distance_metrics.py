@@ -29,7 +29,7 @@ class DistanceFunctions:
     def dist_euclid(loc1: typing.Tuple[float, float],
                     loc2: typing.Tuple[float, float] = (0, 0)):
         """Calculates distance based on the standard L2, Euclidean
-        norm. This assumes the space is appromiately planar, and
+        norm. This assumes the space is approximately planar, and
         so is a good approximation for smaller areas where the curvature
         of the Earth is not significant. Passing a single location
         argument will return the norm of this tuple.
