@@ -115,9 +115,8 @@ class SpatialSweep(AbstractSweep):
                     distance_weights = [1 for _ in distance_weights]
                 elif number_of_nans > 0:
                     max_weight = np.nanmax(distance_weights)
-                    distance_weights = [max_weight if np.isnan(weight)
-                                        else weight for weight in
-                                        distance_weights]
+                    distance_weights = np.nan_to_num(distance_weights,
+                                                     nan=max_weight)
                 cell_list = random.choices(possible_infectee_cells,
                                            weights=distance_weights,
                                            k=number_to_infect)

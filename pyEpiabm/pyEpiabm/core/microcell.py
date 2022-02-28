@@ -55,13 +55,13 @@ class Microcell:
         :param status: Status of persons to add to cell
         :type status: InfectionStatus
         """
+        self.compartment_counter.increment_compartment(n, status)
+        self.cell.compartment_counter.increment_compartment(n, status)
         for _ in range(n):
             p = Person(self)
             self.cell.persons.append(p)
             self.persons.append(p)
-            self.compartment_counter.report_new_person()
-            self.cell.compartment_counter.report_new_person()
-            p.update_status(status)
+            p.infection_status = status
 
     def add_place(self, n: int, loc: typing.Tuple[float, float],
                   place_type):
@@ -74,12 +74,6 @@ class Microcell:
             p = Place(loc, place_type, self.cell, self)
             self.cell.places.append(p)
             self.places.append(p)
-
-    def _setup(self) -> None:
-        """Setup method. Should be called once Population has been setup.
-        Called by population (doesn't need to be called manually).
-        """
-        self.compartment_counter.initialize(self)
 
     def notify_person_status_change(
             self,

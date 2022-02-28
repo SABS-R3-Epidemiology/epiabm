@@ -34,11 +34,11 @@ class _CompartmentCounter:
 
         :param cell: Cell or Microcell CompartmentCounter is tracking
         :type cell: `Cell` or `Microcell`
-        """
+        """"""
         self._compartments = {status: 0 for status in InfectionStatus}
         for person in cell.persons:
             inf_status = person.infection_status
-            self._compartments[inf_status] += 1
+            self._compartments[inf_status] += 1"""
 
     def report(self, old_status: InfectionStatus,
                new_status: InfectionStatus) -> None:
@@ -55,11 +55,17 @@ class _CompartmentCounter:
         self._compartments[old_status] -= 1
         self._compartments[new_status] += 1
 
-    def report_new_person(self) -> None:
-        """Separate to the initialise functionality, this adds a
-        new susceptible person to the cell.
+    def increment_compartment(self, n_persons: int,
+                              infection_status: InfectionStatus) -> None:
+        """Funtion to add a block of people with the same infection status
+        to a compartment.
+
+        :param n_person: number of people being added to cell or microcell
+        :type n_person: int
+        :param infection_status: status of people being added
+        :type infection_status: InfectionStatus
         """
-        self._compartments[InfectionStatus.Susceptible] += 1
+        self._compartments[infection_status] += n_persons
 
     def retrieve(self) -> typing.Dict[InfectionStatus, int]:
         """Get Compartment Counts.

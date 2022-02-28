@@ -45,7 +45,6 @@ class TestMicrocell(unittest.TestCase):
     def test_setup(self):
         cell = pe.Cell()
         cell.add_microcells(5)
-        cell._setup()
 
     def test_report(self):
         cell = pe.Cell()

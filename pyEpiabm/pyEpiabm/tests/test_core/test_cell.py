@@ -47,10 +47,6 @@ class TestCell(unittest.TestCase):
         cell.add_microcells(n)
         self.assertEqual(len(cell.microcells), n)
 
-    def test_setup(self):
-        cell = pe.Cell()
-        cell._setup()
-
     def test_number_infectious(self):
         cell = pe.Cell()
         cell.add_microcells(1)
