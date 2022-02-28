@@ -195,6 +195,20 @@ class TestPopConfig(unittest.TestCase):
             pd.testing.assert_frame_equal(mock_copy.call_args.args[0],
                                           data, check_dtype=False)
 
+    @patch("pandas.read_csv")
+    @patch("copy.copy")
+    @patch("logging.warning")
+    @patch.object(pd, '__version__', "1.3.0")
+    def test_print_population_dependancy(self, mock_logger,
+                                         mock_copy, mock_read):
+        """Tests method to print population to csv, to match content
+        with target.
+        """
+        test_pop = FilePopulationFactory.make_pop('test_input.csv')
+
+        FilePopulationFactory.print_population(test_pop, 'output.csv')
+        mock_logger.assert_called_once()
+
 
 if __name__ == '__main__':
     unittest.main()

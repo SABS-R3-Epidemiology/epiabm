@@ -7,6 +7,7 @@ import pandas as pd
 import random
 import copy
 import logging
+from packaging import version
 
 from pyEpiabm.core import Household, Population, Cell
 from pyEpiabm.core.microcell import Microcell
@@ -158,6 +159,10 @@ class FilePopulationFactory:
         :param output_file: Path to output file
         :type output_file: str
         """
+        if version.parse(pd.__version__) < version.parse("1.4.0"):
+            logging.warning(f"Pandas version {pd.__version__} is outdated, "
+                            + "tests only consider version 1.4 and greater. ")
+
         columns = ['cell', 'microcell', 'location_x', 'location_y',
                    'household_number']
         for status in InfectionStatus:
