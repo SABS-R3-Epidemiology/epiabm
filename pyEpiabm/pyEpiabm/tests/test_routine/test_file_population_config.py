@@ -22,8 +22,7 @@ class TestPopConfig(unittest.TestCase):
 
     @patch("pandas.read_csv")
     def test_make_pop(self, mock_read):
-        """Tests for when the population is implemented by default with
-        no households. Parameters are assigned at random.
+        """Tests for when the population is read in from file.
         """
         # Population is initialised with no households
         with self.assertRaises(TypeError):
@@ -53,21 +52,35 @@ class TestPopConfig(unittest.TestCase):
         # Test a population class object is returned
         self.assertIsInstance(test_pop, pe.Population)
 
+    @patch('logging.exception')
     @patch("pandas.read_csv")
-    def test_invalid_input(self, mock_read):
+    def test_make_pop_exception(self, mock_read, mock_log):
+        """Tests for when the population is read from empty file.
+        """
+        mock_read.side_effect = FileNotFoundError
+
+        FilePopulationFactory.make_pop('test_input.csv')
+        mock_log.assert_called_once_with("FileNotFoundError while reading"
+                                         + " population")
+
+    @patch('logging.exception')
+    @patch("pandas.read_csv")
+    def test_invalid_input(self, mock_read, mock_log):
         """Test error handling for unknown column name
         """
         # Read in data with incorrect infection status
         data = self.df.copy().rename(columns={'InfectMild': 'InfectUnknown'})
         mock_read.return_value = data
 
-        with self.assertRaises(ValueError):
-            FilePopulationFactory.make_pop('test_input.csv')
+        FilePopulationFactory.make_pop('test_input.csv')
+        mock_log.assert_called_once_with("ValueError while reading"
+                                         + " population")
         mock_read.assert_called_once_with('test_input.csv')
 
+    @patch('logging.exception')
     @patch("pandas.read_csv")
-    def test_duplicate_microcell(self, mock_read):
-        """Test error handling for unknown column name
+    def test_duplicate_microcell(self, mock_read, mock_log):
+        """Test error handling for duplicate microcell
         """
         # Move second microcell to first cell (with duplicate id)
         data = self.df.copy()
@@ -75,8 +88,9 @@ class TestPopConfig(unittest.TestCase):
 
         mock_read.return_value = data
 
-        with self.assertRaises(ValueError):
-            FilePopulationFactory.make_pop('test_input.csv')
+        FilePopulationFactory.make_pop('test_input.csv')
+        mock_log.assert_called_once_with("ValueError while reading"
+                                         + " population")
         mock_read.assert_called_once_with('test_input.csv')
 
     def test_find_cell(self):

@@ -1,6 +1,7 @@
 import random
 import math
 import unittest
+from unittest.mock import patch
 from parameterized import parameterized
 
 import pyEpiabm as pe
@@ -41,6 +42,19 @@ class TestPopConfig(unittest.TestCase):
 
         # Test a population class object is returned
         self.assertIsInstance(test_pop, pe.Population)
+
+    @patch("numpy.random.multinomial")
+    @patch('logging.exception')
+    def test_make_pop_exception(self, patch_log, patch_random):
+        """Tests for when the population is implemented with errors
+        """
+        patch_random.side_effect = ValueError
+        # Population is initialised with no households
+        pop_params = {"population_size": 10, "cell_number": 1,
+                      "microcell_number": 1}
+        ToyPopulationFactory.make_pop(pop_params)
+        patch_log.assert_called_once_with("Fatal error while generating"
+                                          + " toy population")
 
     def summarise_pop(self, pop):
         # Returns lists of cell and microcell wise populations
