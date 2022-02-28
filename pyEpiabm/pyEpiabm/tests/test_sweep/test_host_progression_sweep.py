@@ -40,11 +40,7 @@ class TestHostProgressionSweep(unittest.TestCase):
                           self.person2)
 
     def test_set_latent_time(self):
-<<<<<<< HEAD
         """Test the set latent time returns a float greater than 0.0.
-=======
-        """Tests the set latent time returns a float greater than 0.
->>>>>>> 8c4cce534faf162ea26e3fd3e49baf48076bd12c
         """
         current_time = 5.0
         test_sweep = pe.sweep.HostProgressionSweep()
@@ -64,13 +60,8 @@ class TestHostProgressionSweep(unittest.TestCase):
             self.assertTrue(latency_time < 0)
 
     def test_update_time(self):
-<<<<<<< HEAD
         """Test the update time function on the test population. This generates
         a random float (uniformly) between 1.0 and 10.0.
-=======
-        """Tests the update time function on the test population. This generates
-        a random integer (uniformly) between 1 and 10.
->>>>>>> 8c4cce534faf162ea26e3fd3e49baf48076bd12c
         """
         current_time = 5.0
         test_sweep = pe.sweep.HostProgressionSweep()

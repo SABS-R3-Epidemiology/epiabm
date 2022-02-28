@@ -4,14 +4,9 @@
 import random
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
-<<<<<<< HEAD
 from pyEpiabm.utility import InverseCdf
 
 from .abstract_sweep import AbstractSweep
-=======
-from .abstract_sweep import AbstractSweep
-from pyEpiabm.utility import InverseCdf
->>>>>>> 8c4cce534faf162ea26e3fd3e49baf48076bd12c
 
 
 class HostProgressionSweep(AbstractSweep):

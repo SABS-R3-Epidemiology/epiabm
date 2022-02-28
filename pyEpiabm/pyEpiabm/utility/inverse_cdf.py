@@ -14,21 +14,25 @@ class InverseCdf:
     """
 
     def __init__(self, mean, icdf_array):
-        """Constructor Method.
+        """Constructor Method
 
         :param mean: Mean of the icdf
         :type mean: float
-        :param icdf_array: Array of quantiles of the icdf_array
+        :param icdf_array: Array of quantiles of the icdf_array, values
+        in array must be approximately evenely spaced
         :type icdf_array: numpy array
+        :param CDF_RES: Resolution of icdf taken as length of icdf array
+        :type: int
+        :param time_steps_per_day: number of time steps per day in simulation
+        :type: int
         """
         self.mean = mean
-        self.icdf_array = icdf_array
-        self.CDF_RES = pe.Parameters.instance().CDF_RES
+        self.icdf_array = np.asarray(icdf_array)
+        self.CDF_RES = len(icdf_array)
         self.time_steps_per_day = pe.Parameters.instance().time_steps_per_day
-        
 
     def icdf_choose_noexp(self) -> float:
-        """Chooses a value from the input inverse cumulative distribution function,
+        """Samples a value from the inverse cumulative distribution function,
         following what is done in CovidSim (without exponentialisation), and
         returns the value as a float.
 
@@ -39,13 +43,13 @@ class InverseCdf:
         q = rand_num * self.CDF_RES
         i = math.floor(q)
         q -= float(i)
-        ti = (self.mean 
-            * (q * self.icdf_array[i+1] + (1.0 - q) * self.icdf_array[i]))
+        ti = (self.mean
+              * (q * self.icdf_array[i+1] + (1.0 - q) * self.icdf_array[i]))
         value = math.floor(0.5 + (ti * self.time_steps_per_day))
         return value
 
     def icdf_choose_exp(self) -> float:
-        """Chooses a value from the input inverse cumulative distribution function,
+        """Samples a value from the inverse cumulative distribution function,
         following what is done in CovidSim (with exponentiation), and
         returns the value as a float.
 
@@ -56,9 +60,10 @@ class InverseCdf:
         rand_num = random.random()
         q = rand_num * self.CDF_RES
 
-        #We take the integer part of q because we require i to be an index.
-        #By taking away the integer part of q we ae left with a random number i,
-        #on the unit interval that is used for weighted average between icdf values.
+        # We take the integer part of q because we require i to be an index.
+        # By taking away the integer part of q we ae left with a random
+        # number i, on the unit interval that is used for weighted
+        # average between icdf values.
         i = math.floor(q)
         q -= float(i)
         ti = -self.mean * \

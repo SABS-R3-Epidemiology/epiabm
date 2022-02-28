@@ -2,8 +2,9 @@
 # Utility subpackage of the pyEpiabm module.
 #
 
-""" pyEpiabm.utility provides various methods to act upon or
-create a population.
+""" pyEpiabm.utility provides methods used to calculate infection
+and host progression parameters and is also implemented in
+other calculations and algorithms throughout pyEpiabm files.
 """
 
 from .distance_metrics import DistanceFunctions
