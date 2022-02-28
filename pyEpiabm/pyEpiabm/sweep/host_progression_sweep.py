@@ -2,12 +2,16 @@
 # Progression of infection within individuals
 #
 import random
-
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
+<<<<<<< HEAD
 from pyEpiabm.utility import InverseCdf
 
 from .abstract_sweep import AbstractSweep
+=======
+from .abstract_sweep import AbstractSweep
+from pyEpiabm.utility import InverseCdf
+>>>>>>> 8c4cce534faf162ea26e3fd3e49baf48076bd12c
 
 
 class HostProgressionSweep(AbstractSweep):
@@ -40,7 +44,6 @@ class HostProgressionSweep(AbstractSweep):
         :param time: Current simulation time
         :type time: float
         """
-
         latent_period = pe.Parameters.instance().latent_period
         latent_period_iCDF = pe.Parameters.instance().latent_period_iCDF
         latent_icdf_object = InverseCdf(latent_period, latent_period_iCDF)

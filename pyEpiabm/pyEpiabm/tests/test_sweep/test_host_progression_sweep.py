@@ -1,10 +1,10 @@
 import unittest
-
+from unittest import mock
 import pyEpiabm as pe
 
 
 class TestHostProgressionSweep(unittest.TestCase):
-    """Test the 'HostProgressionSweep' class.
+    """Tests the 'HostProgressionSweep' class.
     """
     @classmethod
     def setUpClass(cls) -> None:
@@ -20,7 +20,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         cls.person3 = cls.test_population.cells[0].microcells[0].persons[2]
 
     def test_construct(self):
-        """Test that the host progression sweep initialises correctly.
+        """Tests that the host progression sweep initialises correctly.
         """
         pe.sweep.HostProgressionSweep()
 
@@ -40,7 +40,11 @@ class TestHostProgressionSweep(unittest.TestCase):
                           self.person2)
 
     def test_set_latent_time(self):
+<<<<<<< HEAD
         """Test the set latent time returns a float greater than 0.0.
+=======
+        """Tests the set latent time returns a float greater than 0.
+>>>>>>> 8c4cce534faf162ea26e3fd3e49baf48076bd12c
         """
         current_time = 5.0
         test_sweep = pe.sweep.HostProgressionSweep()
@@ -48,9 +52,25 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertIsInstance(self.person1.time_of_status_change, float)
         self.assertTrue(5.0 <= self.person1.time_of_status_change)
 
+    @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_exp')
+    def test_neg_latent_time(self, mock_choose):
+        """Tests that an Assertion Error is raised if the set latent time
+        is negative.
+        """
+        mock_choose.return_value = -1
+        with self.assertRaises(AssertionError):
+            test_sweep = pe.sweep.HostProgressionSweep()
+            latency_time = test_sweep._set_latent_time()
+            self.assertTrue(latency_time < 0)
+
     def test_update_time(self):
+<<<<<<< HEAD
         """Test the update time function on the test population. This generates
         a random float (uniformly) between 1.0 and 10.0.
+=======
+        """Tests the update time function on the test population. This generates
+        a random integer (uniformly) between 1 and 10.
+>>>>>>> 8c4cce534faf162ea26e3fd3e49baf48076bd12c
         """
         current_time = 5.0
         test_sweep = pe.sweep.HostProgressionSweep()
@@ -59,7 +79,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertTrue(6.0 <= self.person1.time_of_status_change <= 15.0)
 
     def test_call(self):
-        """Test the main function of the Host Progression Sweep.
+        """Tests the main function of the Host Progression Sweep.
         Person 3 is set to susceptible and becoming exposed. Person 2 is set to
         exposed and becoming infectious in one time step. Checks the
         population updates as expected.
