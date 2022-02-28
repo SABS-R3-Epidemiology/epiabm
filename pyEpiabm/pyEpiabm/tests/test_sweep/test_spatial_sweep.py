@@ -1,6 +1,7 @@
 import unittest
 from unittest import mock
 from queue import Queue
+import numpy as np
 
 from pyEpiabm.core import Population, Parameters
 from pyEpiabm.property import InfectionStatus
@@ -27,13 +28,14 @@ class TestSpatialSweep(unittest.TestCase):
         cls.infector = cls.microcell_inf.persons[0]
         Parameters.instance().time_steps_per_day = 1
 
+    @mock.patch("numpy.nan_to_num")
     @mock.patch("random.sample")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     @mock.patch("numpy.random.poisson")
     @mock.patch("pyEpiabm.routine.SpatialInfection.space_foi")
     @mock.patch("pyEpiabm.routine.SpatialInfection.cell_inf")
     def test__call__(self, mock_inf, mock_force, mock_poisson, mock_dist,
-                     mock_infectee):
+                     mock_infectee, mock_nan):
         """Test whether the spatial sweep function correctly
         adds persons to the queue, with each infection
         event certain to happen.
@@ -73,29 +75,28 @@ class TestSpatialSweep(unittest.TestCase):
         test_sweep(time)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
 
-        # Check when one nan in distance
+        # Check when all (one) nan in distance, won't call nan_to_num
         mock_dist.return_value = 0
         self.cell_susc.person_queue = Queue()
         test_sweep.bind_population(self.pop)
         test_sweep(time)
+        self.assertFalse(mock_nan.called)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
 
+        # All (one) valid distances also won't call nan_to_num
         mock_dist.return_value = 2
         Parameters.instance().do_CovidSim = True
         self.cell_susc.person_queue = Queue()
         test_sweep.bind_population(self.pop)
         test_sweep(time)
+        self.assertFalse(mock_nan.called)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
 
-        # Change infectee's status to recovered so no susceptibles
+        # Three cells to test distance, one nan, one valid
+        # distance will call nan_to_num
         Parameters.instance().do_CovidSim = False
-        self.infectee.update_status(InfectionStatus.Recovered)
-        self.cell_susc.person_queue = Queue()
-        test_sweep.bind_population(self.pop)
-        test_sweep(time)
-        self.assertTrue(self.cell_susc.person_queue.empty())
+        mock_nan.return_value = [2, 2]
 
-        # Add third cell to cover different distances
         self.infectee.update_status(InfectionStatus.Susceptible)
         mock_dist.side_effect = [0, 2]
         self.pop.add_cells(1)
@@ -105,6 +106,7 @@ class TestSpatialSweep(unittest.TestCase):
         self.cell_susc.person_queue = Queue()
         test_sweep.bind_population(self.pop)
         test_sweep(time)
+        mock_nan.assert_called_once_with([np.nan, 0.5], nan=0.5)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
 
     @mock.patch("random.random")
