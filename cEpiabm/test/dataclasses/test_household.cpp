@@ -12,7 +12,7 @@ using namespace epiabm;
 
 inline Cell makeSubject(size_t n_microcells, size_t n_households, size_t n_people)
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     subject.microcells().reserve(n_households);
     subject.people().reserve(n_microcells * n_people);
     for (size_t i = 0; i < n_microcells; i++)
@@ -22,7 +22,7 @@ inline Cell makeSubject(size_t n_microcells, size_t n_households, size_t n_peopl
         subject.microcells()[i].households().reserve(n_households);
         for (size_t j = 0; j < n_households; j++)
         {
-            subject.microcells()[i].households().push_back(Household(j));
+            subject.microcells()[i].households().push_back(std::make_shared<Household>(j));
         }
         for (size_t j = 0; j < n_people; j++)
         {
@@ -30,6 +30,7 @@ inline Cell makeSubject(size_t n_microcells, size_t n_households, size_t n_peopl
 
             subject.people().push_back(
                 Person(
+                    i,
                     subject.people().size(),
                     subject.microcells()[i].people().size() - 1));
 
@@ -127,7 +128,7 @@ inline void forEachMemberTest(size_t n_microcells, size_t n_households, size_t n
             size_t hh = static_cast<size_t>(std::rand())%n_households;
             REQUIRE(subject.people()[subject.microcells()[mc].people()[p]]
                         .setHousehold(hh));
-            REQUIRE(subject.microcells()[mc].households()[hh].addMember(p));
+            REQUIRE(subject.microcells()[mc].households()[hh]->addMember(p));
             members[mc][hh].insert(
                 &subject.people()[subject.microcells()[mc].people()[p]]);
         }
@@ -139,13 +140,14 @@ inline void forEachMemberTest(size_t n_microcells, size_t n_households, size_t n
         {
             auto callback = [&](Person *p)
             {
-                REQUIRE(p->household() == hh);
+                REQUIRE(p->household().has_value());
+                REQUIRE(p->household().value() == hh);
                 REQUIRE((members[mc][hh].find(p) == members[mc][hh].end()) == false);
                 members[mc][hh].erase(p);
                 return true;
             };
 
-            REQUIRE_NOTHROW(subject.microcells()[mc].households()[hh].forEachMember(
+            REQUIRE_NOTHROW(subject.microcells()[mc].households()[hh]->forEachMember(
                 subject, subject.microcells()[mc], callback));
 
             REQUIRE(members[mc][hh].size() == 0);
@@ -165,7 +167,7 @@ inline void forEachMemberTest(size_t n_microcells, size_t n_households, size_t n
                 return (ctr < (n_people / 2));
             };
 
-            REQUIRE_NOTHROW(subject.microcells()[mc].households()[hh].forEachMember(
+            REQUIRE_NOTHROW(subject.microcells()[mc].households()[hh]->forEachMember(
                 subject, subject.microcells()[mc], callback));
 
             REQUIRE(members[mc][hh].size() == ctr);

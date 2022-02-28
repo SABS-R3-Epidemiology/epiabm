@@ -2,6 +2,7 @@
 #define EPIABM_DATACLASSES_POPULATION_HPP
 
 #include "cell.hpp"
+#include "place.hpp"
 
 #include <functional>
 #include <vector>
@@ -14,6 +15,7 @@ namespace epiabm
     {
     private:
         std::vector<Cell> m_cells;
+        std::vector<Place> m_places;
         
     public:
         Population();
@@ -26,14 +28,17 @@ namespace epiabm
          * @param callback 
          */
         void forEachCell(std::function<bool(Cell*)> callback);
+        void forEachPlace(std::function<bool(Place*)> callback);
+
+        std::vector<Cell>& cells();
+        std::vector<Place>& places();
 
         /**
-         * @brief Get Cells in Population.
-         * 
-         * @return std::vector<Cell>& 
+         * @brief Pre-simulation start initialization
+         * Called by simulation class post initialization to setup any helper structures
          */
-        std::vector<Cell>& cells();
-    
+        void initialize();
+
     private:
     };
 

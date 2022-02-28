@@ -11,7 +11,7 @@ namespace epiabm
 
     struct HouseholdParams
     {
-        double susceptibliity = 0, infectiveness = 0;
+        double susceptibility = 0, infectiousness = 0;
         std::pair<double, double> location = {0, 0};
     };
 
@@ -20,7 +20,7 @@ namespace epiabm
     private:
         HouseholdParams m_params;
 
-        size_t m_mcellPos;
+        size_t m_mcellPos; // Position within Microcell::m_households vector
 
     public:
         Household(size_t mcellPos);

@@ -1,6 +1,5 @@
-
 #
-# pyepiabm setuptools script
+# pyEpiabm setuptools script
 #
 
 from setuptools import setup, find_packages
@@ -63,7 +62,8 @@ setup(
     install_requires=[
         # Dependencies go here!
         'matplotlib',
-        'numpy>=1.8'
+        'numpy>=1.8',
+        'parameterized'
     ],
     extras_require={
         'docs': [

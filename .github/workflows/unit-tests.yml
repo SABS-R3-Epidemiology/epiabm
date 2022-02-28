@@ -1,4 +1,4 @@
-name: Unit tests (python versions)
+name: Unit tests (pyEpiabm)
 
 on:
   push:
