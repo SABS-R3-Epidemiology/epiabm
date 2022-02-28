@@ -58,7 +58,8 @@ sim.run_sweeps()
 del(sim.writer)
 del(sim)
 
-# Creation of a plot of results
+# Creation of a plot of results (without logging matplotlib info)
+logging.getLogger("matplotlib").setLevel(logging.WARNING)
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
                         "output.csv")
 df = pd.read_csv(filename)

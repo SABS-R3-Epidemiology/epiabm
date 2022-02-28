@@ -77,6 +77,7 @@ class Simulation:
         # or places. Only runs on the first timestep.
         for s in initial_sweeps + sweeps:
             s.bind_population(self.population)
+            logging.info(f"Bound sweep {s.__class__.__name__} to population")
 
         # General sweeps run through the population on every timestep, and
         # include host progression and spatial infections.
@@ -85,7 +86,7 @@ class Simulation:
                               file_params["output_dir"])
 
         filename = os.path.join(folder, file_params["output_file"])
-        logging.error(f"Set output location to {filename}")
+        logging.info(f"Set output location to {filename}")
 
         output_titles = ["time"] + [s for s in InfectionStatus]
         if self.spatial_output:
@@ -111,6 +112,8 @@ class Simulation:
         for sweep in self.initial_sweeps:
             sweep(self.sim_params)
 
+        logging.info("Initial Sweeps Completed")
+
         # First entry of the data file is the initial state
         self.write_to_file(self.sim_params["simulation_start_time"])
 
@@ -120,6 +123,8 @@ class Simulation:
                 sweep(t)
             self.write_to_file(t)
             logging.debug(f'Iteration {t} completed')
+
+        logging.info(f"Final time {t} reached")
 
     def write_to_file(self, time):
         """Records the count number of a given list of infection statuses

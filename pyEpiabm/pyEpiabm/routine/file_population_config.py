@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import random
 import copy
+import logging
 
 from pyEpiabm.core import Household, Population, Cell
 from pyEpiabm.core.microcell import Microcell
@@ -93,6 +94,7 @@ class FilePopulationFactory:
                                                      households)
 
         new_pop.setup()
+        logging.info(f"New Population from file {input_file} configured")
         return new_pop
 
     @staticmethod
@@ -193,3 +195,4 @@ class FilePopulationFactory:
                 df.drop(columns=str(status.name), inplace=True)
         output_df = copy.copy(df)  # To access dataframe in testing
         output_df.to_csv(output_file, header=True, index=False)
+        logging.info(f"Population saved to location {output_file}")

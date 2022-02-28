@@ -3,6 +3,7 @@
 #
 
 import typing
+import logging
 import numpy as np
 import random
 import math
@@ -82,6 +83,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             ToyPopulationFactory.add_places(new_pop, place_number)
 
         new_pop.setup()
+        logging.info(f"Toy Population Configured with {cell_number} cells")
         return new_pop
 
     @staticmethod
