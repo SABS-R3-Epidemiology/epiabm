@@ -109,7 +109,8 @@ class TestSpatialSweep(unittest.TestCase):
         test_sweep(time)
         self.assertTrue(self.cell_susc.person_queue.empty())
 
-        # Add a cell with mostly recovered
+        # Add a cell with mostly recovered. Mock force ensure no
+        # infection events.
         mock_force.return_value = 0.0
         Parameters.instance().do_CovidSim = False
         self.cell_susc.microcells[0].add_people(100)
@@ -120,6 +121,19 @@ class TestSpatialSweep(unittest.TestCase):
         test_sweep.bind_population(self.pop)
         test_sweep(time)
         self.assertTrue(self.cell_susc.person_queue.empty())
+
+        # Add third cell to cover different distances
+        mock_dist.side_effect = [0, 2]
+        self.pop.add_cells(1)
+        self.third_cell = self.pop.cells[2]
+        self.third_cell.add_microcells(1)
+        self.third_cell.microcells[0].add_people(1)
+        self.cell_susc.person_queue = Queue()
+        test_sweep.bind_population(self.pop)
+        test_sweep(time)
+        enqueued_people = (self.cell_susc.person_queue.qsize()
+                           + self.third_cell.person_queue.qsize())
+        self.assertEqual(enqueued_people, 0)
 
     @mock.patch("random.random")
     def test_do_infection_event(self, mock_random):

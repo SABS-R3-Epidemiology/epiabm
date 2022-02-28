@@ -63,7 +63,6 @@ class SpatialSweep(AbstractSweep):
             # given out in total by the cell
             ave_num_of_infections = SpatialInfection.cell_inf(cell, timestep)
             number_to_infect = np.random.poisson(ave_num_of_infections)
-
             # Sample at random from the cell to find an infector. Have
             # checked to ensure there is an infector present.
             possible_infectors = [person for person in cell.persons
@@ -99,7 +98,6 @@ class SpatialSweep(AbstractSweep):
                 # event to occur in. Specifically inter-cell infections
                 # so can't be the same cell
                 distance_weights = []
-                max_weight = 1000
                 # Possibly don't want this to be unfeasibly large as still
                 # have a valid population with clumps of cells
                 for cell2 in possible_infectee_cells:
@@ -107,8 +105,18 @@ class SpatialSweep(AbstractSweep):
                         distance_weights.append(1/DistanceFunctions.dist(
                                     cell.location, cell2.location))
                     except ZeroDivisionError:
-                        distance_weights.append(max_weight)
-
+                        # If cells are on top of each other use nan placeholder
+                        distance_weights.append(np.nan)
+                # Cells on top of each currently have a distance weight equal
+                # to the maximum of all other weights.
+                # Possibly want to do twice this.
+                max_weight = np.nanmax(distance_weights)
+                if np.isnan(max_weight):
+                    distance_weights = [1 for _ in distance_weights]
+                else:
+                    distance_weights = [max_weight if np.isnan(weight)
+                                        else weight for weight in
+                                        distance_weights]
                 cell_list = random.choices(possible_infectee_cells,
                                            weights=distance_weights,
                                            k=number_to_infect)
