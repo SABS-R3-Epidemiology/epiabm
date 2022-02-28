@@ -22,7 +22,6 @@ class TestInverseCdf(unittest.TestCase):
     def test_choose_noexp(self, icdf):
         icdf = np.sort(icdf)
         icdf = 10 * icdf
-        print(icdf)
         icdf_object = InverseCdf(3, icdf)
         value = icdf_object.icdf_choose_noexp()
         self.assertTrue(0 <= value)
@@ -32,7 +31,6 @@ class TestInverseCdf(unittest.TestCase):
     def test_choose_exp(self, icdf):
         icdf = np.sort(icdf)
         icdf = 10 * icdf
-        print(icdf)
         icdf_object = InverseCdf(3, icdf)
         value = icdf_object.icdf_choose_exp()
         self.assertTrue(0 <= value)
