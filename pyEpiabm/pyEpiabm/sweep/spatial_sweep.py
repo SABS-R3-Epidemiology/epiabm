@@ -96,7 +96,7 @@ class SpatialSweep(AbstractSweep):
             else:
                 # Chooses a list of cells (with replacement) for each infection
                 # event to occur in. Specifically inter-cell infections
-                # so can't be the same cell
+                # so can't be the same cell.
                 distance_weights = []
                 # Possibly don't want this to be unfeasibly large as still
                 # have a valid population with clumps of cells
@@ -105,7 +105,7 @@ class SpatialSweep(AbstractSweep):
                         distance_weights.append(1/DistanceFunctions.dist(
                                     cell.location, cell2.location))
                     except ZeroDivisionError:
-                        # If cells are on top of each other use nan placeholder.
+                        # If cells are on top of each other use nan placeholder
                         distance_weights.append(np.nan)
                 # Cells on top of each currently have a distance weight equal
                 # to the maximum of all other weights.

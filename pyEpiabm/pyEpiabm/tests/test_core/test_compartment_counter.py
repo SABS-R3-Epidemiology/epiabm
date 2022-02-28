@@ -46,7 +46,7 @@ class TestCompartmentCounter(unittest.TestCase):
     def test_reportRetrieveLarge(self):
         # Would note this takes a while to run so slows down unittests
         subject = pe._CompartmentCounter("")
-        large_num = 1000000
+        large_num = 10000
         self.microcell.add_people(large_num - len(self.microcell.persons))
         subject.initialize(self.microcell)
         statuses = {s: 0 for s in pe.property.InfectionStatus}
