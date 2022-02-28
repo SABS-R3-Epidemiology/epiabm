@@ -2,6 +2,7 @@
 # Progression of infection within individuals
 #
 import random
+import numpy as np
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
 from .abstract_sweep import AbstractSweep
@@ -39,6 +40,17 @@ class HostProgressionSweep(AbstractSweep):
             raise AssertionError('Negative latent time')
         return latent_time
 
+    def _set_infectiousness(self):
+        """Assigns the infectiousness of a person for when they go from
+        the exposed infection state to the next state.
+
+        :return: Infectiousness of a person
+        :rtype: float
+        """
+        init_infectiousness = 1
+        infectiousness = init_infectiousness * np.random.gamma(1, 1)
+        return infectiousness
+
     def _update_next_infection_status(self, person):
         """Assigns next infection status based on
         current infection status.
@@ -59,7 +71,8 @@ class HostProgressionSweep(AbstractSweep):
     def __call__(self, time: int):
         """Sweeps through all people in the population and updates
         their infection status if it is time and assigns them their
-        next infection status and a new time of next status change.
+        next infection status, a new time of next status change, and
+        their infectiousness.
 
         :param time: Current simulation time
         :type time: int
@@ -72,8 +85,9 @@ class HostProgressionSweep(AbstractSweep):
                     if person.infection_status != InfectionStatus.Recovered:
                         self._update_next_infection_status(person)
                         if person.infection_status == InfectionStatus.Exposed:
+                            person.infectiousness = self._set_infectiousness()
                             person.time_of_status_change = time +\
-                                 self._set_latent_time()
+                                self._set_latent_time()
                         else:
                             person.time_of_status_change = time +\
                                  self._update_time_to_status_change()
