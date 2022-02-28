@@ -94,6 +94,23 @@ class TestSimulation(TestMockedLogs):
             patch_sweep.assert_called_with(time_sweep)
             patch_write.assert_called_with(time_write)
 
+    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('logging.exception')
+    @patch('pyEpiabm.sweep.InitialInfectedSweep.__call__')
+    def test_run_sweeps_exception(self, patch_initial, patch_log):
+        patch_initial.side_effect = NotImplementedError
+
+        mo = mock_open()
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+
+            broken_sim = pe.routine.Simulation()
+            broken_sim.configure(self.test_population, self.initial_sweeps,
+                                 self.sweeps, self.sim_params,
+                                 self.file_params)
+            broken_sim.run_sweeps()
+            patch_log.assert_called_once_with("Fatal error while running"
+                                              + " sweeps")
+
     def test_write_to_file(self):
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):

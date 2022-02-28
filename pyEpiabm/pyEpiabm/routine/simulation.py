@@ -107,24 +107,27 @@ class Simulation:
         argument for their call method but the elements of sweeps take time
         as an argument for their call method.
         """
+        try:
+            # Initialise on the time step before starting.
+            for sweep in self.initial_sweeps:
+                sweep(self.sim_params)
 
-        # Initialise on the time step before starting.
-        for sweep in self.initial_sweeps:
-            sweep(self.sim_params)
+            logging.info("Initial Sweeps Completed")
 
-        logging.info("Initial Sweeps Completed")
+            # First entry of the data file is the initial state
+            self.write_to_file(self.sim_params["simulation_start_time"])
 
-        # First entry of the data file is the initial state
-        self.write_to_file(self.sim_params["simulation_start_time"])
+            for t in tqdm(range(self.sim_params["simulation_start_time"] + 1,
+                                self.sim_params["simulation_end_time"])):
+                for sweep in self.sweeps:
+                    sweep(t)
+                self.write_to_file(t)
+                logging.debug(f'Iteration {t} completed')
 
-        for t in tqdm(range(self.sim_params["simulation_start_time"] + 1,
-                            self.sim_params["simulation_end_time"])):
-            for sweep in self.sweeps:
-                sweep(t)
-            self.write_to_file(t)
-            logging.debug(f'Iteration {t} completed')
+            logging.info(f"Final time {t} reached")
 
-        logging.info(f"Final time {t} reached")
+        except Exception:
+            logging.exception("Fatal error while running sweeps")
 
     def write_to_file(self, time):
         """Records the count number of a given list of infection statuses
