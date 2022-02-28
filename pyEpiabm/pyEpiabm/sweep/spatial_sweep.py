@@ -110,10 +110,11 @@ class SpatialSweep(AbstractSweep):
                 # Cells on top of each currently have a distance weight equal
                 # to the maximum of all other weights.
                 # Possibly want to do twice this.
-                max_weight = np.nanmax(distance_weights)
-                if np.isnan(max_weight):
+                number_of_nans = sum(np.isnan(distance_weights))
+                if number_of_nans == len(distance_weights):
                     distance_weights = [1 for _ in distance_weights]
-                else:
+                elif number_of_nans > 0:
+                    max_weight = np.nanmax(distance_weights)
                     distance_weights = [max_weight if np.isnan(weight)
                                         else weight for weight in
                                         distance_weights]
