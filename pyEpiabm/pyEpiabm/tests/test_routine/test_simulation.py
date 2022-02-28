@@ -6,12 +6,15 @@ from unittest.mock import patch, mock_open
 
 import pyEpiabm as pe
 
+from pyEpiabm.tests.mocked_logging_tests import TestMockedLogs
 
-class TestSimulation(unittest.TestCase):
+
+class TestSimulation(TestMockedLogs):
     """Tests the 'Simulation' class.
     """
     @classmethod
     def setUpClass(cls) -> None:
+        super(TestSimulation, cls).setUpClass()  # Sets up patch on logging
         cls.pop_factory = pe.routine.ToyPopulationFactory()
         cls.pop_params = {"population_size": 0, "cell_number": 1,
                           "microcell_number": 1, "household_number": 1}
