@@ -24,40 +24,44 @@ class InverseCdf:
         self.mean = mean
         self.icdf_array = icdf_array
         self.CDF_RES = pe.Parameters.instance().CDF_RES
+        self.time_steps_per_day = pe.Parameters.instance().time_steps_per_day
+        
 
     def icdf_choose_noexp(self) -> float:
         """Chooses a value from the input inverse cumulative distribution function,
         following what is done in CovidSim (without exponentialisation), and
         returns the value as a float.
 
-        :returns: chosen value among the quantiles
+        :returns: Mean scaled relative to given icdf
         :rtype: float
         """
-        time_steps_per_day = pe.Parameters.instance().time_steps_per_day
         rand_num = random.random()
-        q = rand_num*self.CDF_RES
+        q = rand_num * self.CDF_RES
         i = math.floor(q)
         q -= float(i)
-        ti = self.mean \
-            * (q * self.icdf_array[i+1] + (1.0 - q) * self.icdf_array[i])
-        value = math.floor(0.5 + (ti * time_steps_per_day))
+        ti = (self.mean 
+            * (q * self.icdf_array[i+1] + (1.0 - q) * self.icdf_array[i]))
+        value = math.floor(0.5 + (ti * self.time_steps_per_day))
         return value
 
     def icdf_choose_exp(self) -> float:
         """Chooses a value from the input inverse cumulative distribution function,
-        following what is done in CovidSim (with exponentialisation), and
+        following what is done in CovidSim (with exponentiation), and
         returns the value as a float.
 
-        :returns: chosen value among the quantiles
+        :returns: Mean scaled relative to given icdf
         :rtype: float
         """
         exp_icdf_array = np.exp(-self.icdf_array)
-        time_steps_per_day = pe.Parameters.instance().time_steps_per_day
         rand_num = random.random()
-        q = rand_num*self.CDF_RES
+        q = rand_num * self.CDF_RES
+
+        #We take the integer part of q because we require i to be an index.
+        #By taking away the integer part of q we ae left with a random number i,
+        #on the unit interval that is used for weighted average between icdf values.
         i = math.floor(q)
         q -= float(i)
         ti = -self.mean * \
             np.log((q * exp_icdf_array[i+1] + (1.0 - q) * exp_icdf_array[i]))
-        value = math.floor(0.5 + (ti * time_steps_per_day))
+        value = math.floor(0.5 + (ti * self.time_steps_per_day))
         return value

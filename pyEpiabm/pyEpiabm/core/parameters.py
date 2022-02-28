@@ -26,6 +26,7 @@ class Parameters:
                                                 1.803041398, 2.135346254,
                                                 2.694118208, 3.964172493])
             self.CDF_RES = 20
+            self.time_steps_per_day = 1
             pass
 
     _instance = None  # Singleton instance

@@ -16,6 +16,9 @@ class RandomMethods:
     def covid_sim_rand(self):
         """Reproduction of the ranf_mt method in the Rand.cpp class of covid-sim.
         In covid-sim, they would use the thread number to generate the output.
+
+        :returns: Returns random number between 0 and 1
+        :rtype: float
         """
         # Set parameters:
         Xm1 = 2147483563

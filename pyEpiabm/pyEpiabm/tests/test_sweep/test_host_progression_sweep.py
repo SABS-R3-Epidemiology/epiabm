@@ -40,21 +40,23 @@ class TestHostProgressionSweep(unittest.TestCase):
                           self.person2)
 
     def test_set_latent_time(self):
-        """Test the set latent time returns a float greater than 0.
+        """Test the set latent time returns a float greater than 0.0.
         """
+        current_time = 5.0
         test_sweep = pe.sweep.HostProgressionSweep()
-        latency_time = test_sweep._set_latent_time()
-        self.assertIsInstance(latency_time, int)
-        self.assertTrue(0 <= latency_time)
+        test_sweep._calc_latent_time(self.person1, current_time)
+        self.assertIsInstance(self.person1.time_of_status_change, float)
+        self.assertTrue(5.0 <= self.person1.time_of_status_change)
 
     def test_update_time(self):
         """Test the update time function on the test population. This generates
-        a random integer (uniformly) between 1 and 10.
+        a random float (uniformly) between 1.0 and 10.0.
         """
+        current_time = 5.0
         test_sweep = pe.sweep.HostProgressionSweep()
-        time = test_sweep._update_time_to_status_change()
-        self.assertIsInstance(time, int)
-        self.assertTrue(1 <= time <= 10)
+        test_sweep._update_time_to_status_change(self.person1, current_time)
+        self.assertIsInstance(self.person1.time_of_status_change, float)
+        self.assertTrue(6.0 <= self.person1.time_of_status_change <= 15.0)
 
     def test_call(self):
         """Test the main function of the Host Progression Sweep.
@@ -63,11 +65,11 @@ class TestHostProgressionSweep(unittest.TestCase):
         population updates as expected.
         """
         self.person2.infection_status = pe.property.InfectionStatus.Exposed
-        self.person2.time_of_status_change = 1
+        self.person2.time_of_status_change = 1.0
         self.person2.next_infection_status = \
             pe.property.InfectionStatus.InfectMild
         self.person3.infection_status = pe.property.InfectionStatus.Susceptible
-        self.person3.time_of_status_change = 1
+        self.person3.time_of_status_change = 1.0
         self.person3.next_infection_status = \
             pe.property.InfectionStatus.Exposed
         test_sweep = pe.sweep.HostProgressionSweep()
@@ -77,17 +79,17 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertEqual(test_sweep._population.cells[0].persons[1].
                          infection_status, pe.property.InfectionStatus.Exposed)
 
-        test_sweep(1)
+        test_sweep(1.0)
         self.assertEqual(self.person2.infection_status,
                          pe.property.InfectionStatus.InfectMild)
         self.assertEqual(self.person3.infection_status,
                          pe.property.InfectionStatus.Exposed)
         self.assertEqual(self.person1.infection_status,
                          pe.property.InfectionStatus.Susceptible)
-        self.assertIsInstance(self.person2.time_of_status_change, int)
-        self.assertIsInstance(self.person3.time_of_status_change, int)
-        self.assertTrue(2 <= self.person2.time_of_status_change <= 11)
-        self.assertTrue(0 <= self.person3.time_of_status_change)
+        self.assertIsInstance(self.person2.time_of_status_change, float)
+        self.assertIsInstance(self.person3.time_of_status_change, float)
+        self.assertTrue(2.0 <= self.person2.time_of_status_change <= 11.0)
+        self.assertTrue(0.0 <= self.person3.time_of_status_change)
 
 
 if __name__ == "__main__":
