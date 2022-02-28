@@ -27,7 +27,7 @@ class HostProgressionSweep(AbstractSweep):
 
     def _set_latent_time(self):
         """Calculates and returns latency period as calculated in
-        covid-sim to be given as time until next infection status
+        CovidSim, given as the time until next infection status
         for a person who has been set as exposed.
         """
         latent_period = pe.Parameters.instance().latent_period
