@@ -3,10 +3,16 @@
 #
 
 import os
+import logging
 import pandas as pd
 import matplotlib.pyplot as plt
 
 import pyEpiabm as pe
+
+# Setup output for logging file
+logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
+                    format=('%(asctime)s - %(name)s'
+                            + '- %(levelname)s - %(message)s'))
 
 # Method to set the seed at the start of the simulation, for reproducibility
 

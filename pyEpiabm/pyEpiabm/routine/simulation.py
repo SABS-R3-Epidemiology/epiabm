@@ -4,6 +4,7 @@
 
 import random
 import os
+import logging
 import typing
 import numpy as np
 from tqdm import tqdm
@@ -84,6 +85,7 @@ class Simulation:
                               file_params["output_dir"])
 
         filename = os.path.join(folder, file_params["output_file"])
+        logging.error(f"Set output location to {filename}")
 
         output_titles = ["time"] + [s for s in InfectionStatus]
         if self.spatial_output:
@@ -117,6 +119,7 @@ class Simulation:
             for sweep in self.sweeps:
                 sweep(t)
             self.write_to_file(t)
+            logging.debug(f'Iteration {t} completed')
 
     def write_to_file(self, time):
         """Records the count number of a given list of infection statuses
@@ -154,3 +157,4 @@ class Simulation:
         """
         random.seed(seed)
         np.random.seed(seed)
+        logging.info(f"Set random seed to: {seed}")
