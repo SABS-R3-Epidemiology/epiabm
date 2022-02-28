@@ -51,7 +51,6 @@ class TestCompartmentCounter(unittest.TestCase):
             person.update_status(InfectionStatus.Susceptible)
         large_num = 10000
         self.microcell.add_people(large_num - len(self.microcell.persons))
-        self.subject.initialize(self.microcell)
         statuses = {s: 0 for s in InfectionStatus}
         statuses[InfectionStatus.Susceptible] = large_num
         self.assertDictEqual(self.subject.retrieve(), statuses)

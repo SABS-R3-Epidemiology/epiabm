@@ -28,18 +28,6 @@ class _CompartmentCounter:
         """
         return self._identifier
 
-    def initialize(self, cell) -> None:
-        """Initialize Compartments for a cell/microcell containing people.
-        Assumes the counter is empty so should only be used in initialisation.
-
-        :param cell: Cell or Microcell CompartmentCounter is tracking
-        :type cell: `Cell` or `Microcell`
-        """"""
-        self._compartments = {status: 0 for status in InfectionStatus}
-        for person in cell.persons:
-            inf_status = person.infection_status
-            self._compartments[inf_status] += 1"""
-
     def report(self, old_status: InfectionStatus,
                new_status: InfectionStatus) -> None:
         """Report Person has changed state.
