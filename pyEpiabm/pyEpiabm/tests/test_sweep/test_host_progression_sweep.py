@@ -44,7 +44,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         """
         current_time = 5.0
         test_sweep = pe.sweep.HostProgressionSweep()
-        test_sweep._calc_latent_time(self.person1, current_time)
+        test_sweep._set_latent_time(self.person1, current_time)
         self.assertIsInstance(self.person1.time_of_status_change, float)
         self.assertTrue(5.0 <= self.person1.time_of_status_change)
 
