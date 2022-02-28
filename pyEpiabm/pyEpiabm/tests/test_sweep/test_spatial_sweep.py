@@ -27,11 +27,13 @@ class TestSpatialSweep(unittest.TestCase):
         cls.infector = cls.microcell_inf.persons[0]
         Parameters.instance().time_steps_per_day = 1
 
+    @mock.patch("random.sample")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     @mock.patch("numpy.random.poisson")
     @mock.patch("pyEpiabm.routine.SpatialInfection.space_foi")
     @mock.patch("pyEpiabm.routine.SpatialInfection.cell_inf")
-    def test__call__(self, mock_inf, mock_force, mock_poisson, mock_dist):
+    def test__call__(self, mock_inf, mock_force, mock_poisson, mock_dist,
+                     mock_infectee):
         """Test whether the spatial sweep function correctly
         adds persons to the queue, with each infection
         event certain to happen.
@@ -51,36 +53,27 @@ class TestSpatialSweep(unittest.TestCase):
         test_sweep(time)
         self.assertTrue(self.cell_inf.person_queue.empty())
 
-        Parameters.instance().do_CovidSim = True
-        test_sweep.bind_population(self.pop)
-        test_sweep(time)
-        self.assertTrue(self.cell_inf.person_queue.empty())
-
-        # Add in another cell with a susceptible
+        # Add in another cell with a susceptible, but still
+        # no infectors so no infection events.
         self.pop.add_cells(1)
         self.cell_susc = self.pop.cells[1]
         self.cell_susc.add_microcells(1)
         self.microcell_susc = self.cell_susc.microcells[0]
         self.microcell_susc.add_people(1)
         self.infectee = self.microcell_susc.persons[0]
+        mock_infectee.return_value = [self.infectee]
 
-        Parameters.instance().do_CovidSim = False
         test_sweep.bind_population(self.pop)
         test_sweep(time)
         self.assertTrue(self.cell_susc.person_queue.empty())
 
-        Parameters.instance().do_CovidSim = True
-        test_sweep.bind_population(self.pop)
-        test_sweep(time)
-        self.assertTrue(self.cell_susc.person_queue.empty())
-
-        # Change person's status to infected
-        Parameters.instance().do_CovidSim = False
+        # Change infector's status to infected
         self.infector.update_status(InfectionStatus.InfectMild)
         test_sweep.bind_population(self.pop)
         test_sweep(time)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
 
+        # Check when one nan in distance
         mock_dist.return_value = 0
         self.cell_susc.person_queue = Queue()
         test_sweep.bind_population(self.pop)
@@ -102,27 +95,8 @@ class TestSpatialSweep(unittest.TestCase):
         test_sweep(time)
         self.assertTrue(self.cell_susc.person_queue.empty())
 
-        Parameters.instance().do_CovidSim = True
-        self.infectee.update_status(InfectionStatus.Recovered)
-        self.cell_susc.person_queue = Queue()
-        test_sweep.bind_population(self.pop)
-        test_sweep(time)
-        self.assertTrue(self.cell_susc.person_queue.empty())
-
-        # Add a cell with mostly recovered. Mock force ensure no
-        # infection events.
-        mock_force.return_value = 0.0
-        Parameters.instance().do_CovidSim = False
-        self.cell_susc.microcells[0].add_people(100)
-        self.cell_inf.persons[0].update_status(InfectionStatus.InfectMild)
-        for person in self.cell_susc.persons[:-1]:
-            person.update_status(InfectionStatus.Recovered)
-        self.cell_susc.person_queue = Queue()
-        test_sweep.bind_population(self.pop)
-        test_sweep(time)
-        self.assertTrue(self.cell_susc.person_queue.empty())
-
         # Add third cell to cover different distances
+        self.infectee.update_status(InfectionStatus.Susceptible)
         mock_dist.side_effect = [0, 2]
         self.pop.add_cells(1)
         self.third_cell = self.pop.cells[2]
@@ -131,9 +105,7 @@ class TestSpatialSweep(unittest.TestCase):
         self.cell_susc.person_queue = Queue()
         test_sweep.bind_population(self.pop)
         test_sweep(time)
-        enqueued_people = (self.cell_susc.person_queue.qsize()
-                           + self.third_cell.person_queue.qsize())
-        self.assertEqual(enqueued_people, 0)
+        self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
 
     @mock.patch("random.random")
     def test_do_infection_event(self, mock_random):
@@ -144,16 +116,19 @@ class TestSpatialSweep(unittest.TestCase):
         # initially with an recovered individual and no susceptibles
 
         cell_susc = self.pop.cells[1]
+        cell_susc.person_queue = Queue()
         microcell_susc = cell_susc.microcells[0]
+        microcell_susc.add_people(1)
         fake_infectee = microcell_susc.persons[1]
+        fake_infectee.update_status(InfectionStatus.Recovered)
+        actual_infectee = microcell_susc.persons[0]
 
         self.assertTrue(cell_susc.person_queue.empty())
         test_sweep.do_infection_event(self.infector, fake_infectee, 1)
         self.assertFalse(mock_random.called)  # Should have already returned
         self.assertTrue(cell_susc.person_queue.empty())
 
-        real_infectee = microcell_susc.persons[-1]  # Susceptible individual
-        test_sweep.do_infection_event(self.infector, real_infectee, 1)
+        test_sweep.do_infection_event(self.infector, actual_infectee, 1)
         mock_random.assert_called_once()
         self.assertEqual(cell_susc.person_queue.qsize(), 1)
 
