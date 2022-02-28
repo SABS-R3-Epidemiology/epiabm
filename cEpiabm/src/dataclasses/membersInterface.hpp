@@ -13,8 +13,11 @@ namespace epiabm
     class Microcell;
 
     /**
-     * @brief Manages Sets of People (Members) part of a Place / Household
-     * 
+     * @brief Interface for classes which contain members
+     * Can only link people within the same cell
+     * NOTE: Initially Household and Place shared this functionality,
+     *          but Place has been modified to allow inter-cell linkages.
+     *          Interface may not be required anymore since only Households have this functionality
      */
     class MembersInterface
     {
@@ -22,9 +25,20 @@ namespace epiabm
         std::set<size_t> m_members; // Indices of people in Microcell::m_people vector
 
     public:
-        MembersInterface(size_t mcellPos);
+        /**
+         * @brief Construct a new Members Interface object
+         * 
+         */
+        MembersInterface();
         virtual ~MembersInterface() = default;
 
+        /**
+         * @brief Loop through each member
+         * 
+         * @param cell 
+         * @param microcell 
+         * @param callback 
+         */
         virtual void forEachMember(Cell &cell, Microcell &microcell,
             std::function<bool(Person *)> callback);
         virtual bool isMember(size_t person) const;
@@ -34,7 +48,6 @@ namespace epiabm
         virtual std::set<size_t> &members();
 
     private:
-        size_t m_mcellPos; // Position within Microcell's m_households or m_places vectors
     };
 
     typedef std::shared_ptr<MembersInterface> MembersInterfacePtr;

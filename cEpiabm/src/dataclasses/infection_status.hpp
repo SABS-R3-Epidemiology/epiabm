@@ -20,6 +20,12 @@ namespace epiabm
         Dead
     };
 
+    /**
+     * @brief Convert InfectionStatus Enum into a String Representation
+     * 
+     * @param status InfectionStatus Enum to convert
+     * @return constexpr const char* String representation of the status
+     */
     constexpr const char* status_string(InfectionStatus status)
     {
         switch (status)

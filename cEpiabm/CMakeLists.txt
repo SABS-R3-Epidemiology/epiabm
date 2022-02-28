@@ -35,7 +35,6 @@ if (ENABLE_TESTING)
     add_subdirectory(test)
 endif ()
 
-<<<<<<< HEAD
 option(MAKE_DOCS "Enable doxygen/sphinx commands" OFF)
 if (EXISTS ${CMAKE_SOURCE_DIR}/venv/bin/sphinx-build)
     set(MAKE_DOCS ON)
@@ -45,11 +44,9 @@ if (MAKE_DOCS)
     add_subdirectory(docs)
 endif ()
 
-=======
 if (ENABLE_EXAMPLES)
     add_subdirectory(examples)
 endif()
->>>>>>> cpp-working-simulation
 
 
 add_library(epiabm::epiabm_module ALIAS epiabm_lib)

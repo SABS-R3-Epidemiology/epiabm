@@ -62,7 +62,7 @@ TEST_CASE("dataclasses/household: test destructor", "[Household]")
         subject = nullptr;
     }
     {
-        MembersInterface* mi = new MembersInterface(5);
+        MembersInterface* mi = new MembersInterface();
         delete mi;
         mi = nullptr;
     }

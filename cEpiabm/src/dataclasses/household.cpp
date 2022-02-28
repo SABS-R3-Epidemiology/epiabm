@@ -6,7 +6,7 @@ namespace epiabm
 {
 
     Household::Household(size_t mcellPos) :
-        MembersInterface(mcellPos),
+        MembersInterface(),
         m_params(),
         m_mcellPos(mcellPos)
     {}

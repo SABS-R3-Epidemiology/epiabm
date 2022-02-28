@@ -6,9 +6,8 @@
 namespace epiabm
 {
 
-    MembersInterface::MembersInterface(size_t mcellPos) :
-        m_members(),
-        m_mcellPos(mcellPos)
+    MembersInterface::MembersInterface() :
+        m_members()
     {}
 
     void MembersInterface::forEachMember(Cell& cell, Microcell& microcell, std::function<bool(Person*)> callback)
