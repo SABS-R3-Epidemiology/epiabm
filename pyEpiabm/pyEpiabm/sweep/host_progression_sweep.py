@@ -48,8 +48,7 @@ class HostProgressionSweep(AbstractSweep):
         latent_icdf_object = InverseCdf(latent_period, latent_period_iCDF)
         latent_time = latent_icdf_object.icdf_choose_exp()
 
-        if latent_time < 0.0:
-            raise AssertionError('Negative latent time')
+        assert latent_time >= 0.0, 'Negative latent time'
 
         person.time_of_status_change = time + latent_time
 
