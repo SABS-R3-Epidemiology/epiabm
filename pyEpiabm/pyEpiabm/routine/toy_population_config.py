@@ -81,7 +81,6 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         if place_number > 0:
             ToyPopulationFactory.add_places(new_pop, place_number)
 
-        new_pop.setup()
         return new_pop
 
     @staticmethod

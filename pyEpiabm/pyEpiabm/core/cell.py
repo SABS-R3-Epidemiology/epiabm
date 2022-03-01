@@ -68,14 +68,6 @@ class Cell:
         """
         self.person_queue.put(person)
 
-    def _setup(self) -> None:
-        """Setup method. Should be called once Population has been setup.
-        Called by population (doesn't need to be called manually).
-        """
-        self.compartment_counter.initialize(len(self.persons))
-        for mcell in self.microcells:
-            mcell._setup()
-
     def notify_person_status_change(
             self,
             old_status: InfectionStatus,

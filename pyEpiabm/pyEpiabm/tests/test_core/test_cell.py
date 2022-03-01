@@ -20,6 +20,7 @@ class TestCell(unittest.TestCase):
         self.assertEqual(self.cell.persons, [])
         self.assertEqual(self.cell.places, [])
         self.assertIsInstance(self.cell.person_queue, Queue)
+        self.assertRaises(ValueError, pe.Cell, (.2, .3, .4))
 
     def test_repr(self):
         self.assertEqual(repr(self.cell),
@@ -46,10 +47,6 @@ class TestCell(unittest.TestCase):
         cell.add_microcells(n)
         self.assertEqual(len(cell.microcells), n)
 
-    def test_setup(self):
-        cell = pe.Cell()
-        cell._setup()
-
     def test_number_infectious(self):
         cell = pe.Cell()
         cell.add_microcells(1)
@@ -62,8 +59,8 @@ class TestCell(unittest.TestCase):
     def test_set_loc(self):
         cell = pe.Cell()
         self.assertEqual(cell.location, (0, 0))
-        cell.set_location((3.0, 3.0))
-        self.assertEqual(cell.location, (3.0, 3.0))
+        cell.set_location((3.0, 2.0))
+        self.assertEqual(cell.location, (3.0, 2.0))
 
 
 if __name__ == '__main__':

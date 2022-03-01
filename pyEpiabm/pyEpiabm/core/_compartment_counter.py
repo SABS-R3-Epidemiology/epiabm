@@ -28,15 +28,6 @@ class _CompartmentCounter:
         """
         return self._identifier
 
-    def initialize(self, n_people) -> None:
-        """Initialize Compartments with n_people susceptible and 0 in all
-        of compartments (i.e. for all other InfectionStatus).
-
-        :param n_people: Number of people CompartmentCounter is tracking
-        :type n_people: int
-        """
-        self._compartments[InfectionStatus.Susceptible] = n_people
-
     def report(self, old_status: InfectionStatus,
                new_status: InfectionStatus) -> None:
         """Report Person has changed state.
@@ -47,8 +38,22 @@ class _CompartmentCounter:
         :param new_status: Person's new infection state
         :type new_status: InfectionStatus
         """
+        if self._compartments[old_status] <= 0:
+            raise ValueError("No people of this status in this cell.")
         self._compartments[old_status] -= 1
         self._compartments[new_status] += 1
+
+    def _increment_compartment(self, n_persons: int,
+                               infection_status: InfectionStatus) -> None:
+        """Funtion to add a block of people with the same infection status
+        to a compartment.
+
+        :param n_person: number of people being added to cell or microcell
+        :type n_person: int
+        :param infection_status: status of people being added
+        :type infection_status: InfectionStatus
+        """
+        self._compartments[infection_status] += n_persons
 
     def retrieve(self) -> typing.Dict[InfectionStatus, int]:
         """Get Compartment Counts.

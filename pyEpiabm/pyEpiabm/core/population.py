@@ -31,12 +31,6 @@ class Population:
         for i in range(n):
             self.cells.append(Cell())
 
-    def setup(self) -> None:
-        """Setup method. Should be called once Population has been setup.
-        """
-        for cell in self.cells:
-            cell._setup()
-
     def total_people(self):
         """Returns the total number of people in the population.
         Will obviously match the configuration parameter, but useful
