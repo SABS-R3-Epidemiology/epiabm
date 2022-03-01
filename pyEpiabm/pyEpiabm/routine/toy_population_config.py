@@ -3,12 +3,14 @@
 #
 
 import typing
+import logging
 import numpy as np
 import random
 import math
 
 from pyEpiabm.core import Household, Population
 from pyEpiabm.property import PlaceType
+from pyEpiabm.utility import log_exceptions
 
 from .abstract_population_config import AbstractPopulationFactory
 
@@ -18,6 +20,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
     python model.
     """
     @staticmethod
+    @log_exceptions()
     def make_pop(pop_params: typing.Dict):
         """Initialize a population object with a given population size,
         number of cells and microcells. A uniform multinomial distribution is
@@ -53,6 +56,8 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         if "population_seed" in pop_params:
             np.random.seed(pop_params["population_seed"])
             random.seed(pop_params["population_seed"])
+            logging.info("Set population random seed to:"
+                         + str(pop_params["population_seed"]))
 
         # Initialise a population class
         new_pop = Population()
@@ -81,6 +86,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         if place_number > 0:
             ToyPopulationFactory.add_places(new_pop, place_number)
 
+        logging.info(f"Toy Population Configured with {cell_number} cells")
         return new_pop
 
     @staticmethod
@@ -146,23 +152,28 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         :param method: Method of determining cell locations
         :type method: str
         """
-        if method == "random":
-            for cell in population.cells:
-                cell.set_location(tuple(np.random.rand(2)))
+        try:
+            if method == "random":
+                for cell in population.cells:
+                    cell.set_location(tuple(np.random.rand(2)))
 
-        elif method == "uniform_x":
-            cell_number = len(population.cells)
-            x_pos = np.linspace(0, 1, cell_number)
-            for i, cell in enumerate(population.cells):
-                cell.set_location((x_pos[i], 0))
+            elif method == "uniform_x":
+                cell_number = len(population.cells)
+                x_pos = np.linspace(0, 1, cell_number)
+                for i, cell in enumerate(population.cells):
+                    cell.set_location((x_pos[i], 0))
 
-        elif method == "grid":
-            cell_number = len(population.cells)
-            grid_len = math.ceil(math.sqrt(cell_number))
-            pos = np.linspace(0, 1, grid_len)
-            for i, cell in enumerate(population.cells):
-                cell.set_location((pos[i % grid_len],
-                                   pos[i // grid_len]))
+            elif method == "grid":
+                cell_number = len(population.cells)
+                grid_len = math.ceil(math.sqrt(cell_number))
+                pos = np.linspace(0, 1, grid_len)
+                for i, cell in enumerate(population.cells):
+                    cell.set_location((pos[i % grid_len],
+                                       pos[i // grid_len]))
 
-        else:
-            raise ValueError(f"Unknown method: '{method}' not recognised")
+            else:
+                raise ValueError(f"Unknown method: '{method}' not recognised")
+
+        except Exception as e:
+            logging.exception(f"{type(e).__name__} in ToyPopulationFactory"
+                              + ".assign_cell_locations()")

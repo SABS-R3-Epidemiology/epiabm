@@ -3,6 +3,7 @@
 #
 
 import os
+import logging
 
 
 class AbstractReporter:
@@ -26,10 +27,10 @@ class AbstractReporter:
                 try:
                     for file in os.scandir(folder):
                         os.remove(file.path)
-                except IsADirectoryError:
-                    # TODO - LOG can't clear a folder with subdirectories
-                    raise IsADirectoryError("Cannot clear folder as "
-                                            + "it is a directory")
+                except IsADirectoryError as e:
+                    logging.exception(f"{type(e).__name__}: cannot delete"
+                                      + f" folder {folder} as it contains"
+                                      + " subfolders")
 
         else:
             os.makedirs(folder)

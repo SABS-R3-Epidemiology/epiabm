@@ -6,16 +6,20 @@ import numpy as np
 import pandas as pd
 import random
 import copy
+import logging
+from packaging import version
 
 from pyEpiabm.core import Household, Population, Cell
 from pyEpiabm.core.microcell import Microcell
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.utility import log_exceptions
 
 
 class FilePopulationFactory:
     """ Class that creates a population based on an input .csv file.
     """
     @staticmethod
+    @log_exceptions()
     def make_pop(input_file: str, random_seed: int = None):
         """Initialize a population object from an input csv file, with one
         row per microcell. A uniform multinomial distribution is
@@ -45,6 +49,7 @@ class FilePopulationFactory:
         if random_seed is not None:
             np.random.seed(random_seed)
             random.seed(random_seed)
+            logging.info(f"Set population random seed to: {random_seed}")
 
         # Read file into pandas dataframe
         input = pd.read_csv(input_file)
@@ -55,7 +60,7 @@ class FilePopulationFactory:
                        "location_y", "household_number"]
         for col in input.columns.values:  # Check all column headings
             if not ((col in valid_names) or hasattr(InfectionStatus, col)):
-                raise ValueError(f"Unknown column heading '{col}' in input")
+                raise ValueError(f"Unknown column heading '{col}'")
 
         # Initialise a population class
         new_pop = Population()
@@ -79,7 +84,6 @@ class FilePopulationFactory:
             cell.microcells.append(new_microcell)
             new_microcell.set_id(line["microcell"])
 
-            # Add people of each infection status - need to move after setup?
             for column in input.columns.values:
                 if hasattr(InfectionStatus, column):
                     value = getattr(InfectionStatus, column)
@@ -92,6 +96,7 @@ class FilePopulationFactory:
                 FilePopulationFactory.add_households(new_microcell,
                                                      households)
 
+        logging.info(f"New Population from file {input_file} configured")
         return new_pop
 
     @staticmethod
@@ -139,6 +144,7 @@ class FilePopulationFactory:
                 person_index += 1
 
     @staticmethod
+    @log_exceptions()
     def print_population(population: Population, output_file: str):
         """Outputs population as .csv file, in format usable by the make_pop()
         method. Used for verification, or saving current simulation state. Note
@@ -155,6 +161,10 @@ class FilePopulationFactory:
         :param output_file: Path to output file
         :type output_file: str
         """
+        if version.parse(pd.__version__) < version.parse("1.4.0"):
+            logging.warning(f"Pandas version {pd.__version__} is outdated,"
+                            + " only tests version 1.4 and above.")
+
         columns = ['cell', 'microcell', 'location_x', 'location_y',
                    'household_number']
         for status in InfectionStatus:
@@ -187,8 +197,10 @@ class FilePopulationFactory:
 
         df['household_number'] = df['household_number'].astype(int)
         for status in InfectionStatus:
-            df[str(status.name)] = df[str(status.name)].fillna(0).astype(int)
+            df[str(status.name)] = df[str(status.name)].fillna(0)\
+                .astype(int)
             if (df[str(status.name)] == 0).all():  # Delete unused statuses
                 df.drop(columns=str(status.name), inplace=True)
         output_df = copy.copy(df)  # To access dataframe in testing
         output_df.to_csv(output_file, header=True, index=False)
+        logging.info(f"Population saved to location {output_file}")

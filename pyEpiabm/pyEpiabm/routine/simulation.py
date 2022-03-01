@@ -4,6 +4,7 @@
 
 import random
 import os
+import logging
 import typing
 import numpy as np
 from tqdm import tqdm
@@ -12,11 +13,13 @@ from pyEpiabm.core import Population
 from pyEpiabm.output import _CsvDictWriter
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import AbstractSweep
+from pyEpiabm.utility import log_exceptions
 
 
 class Simulation:
     """Class to run a full simulation.
     """
+    @log_exceptions()
     def configure(self,
                   population: Population,
                   initial_sweeps: typing.List[AbstractSweep],
@@ -64,7 +67,7 @@ class Simulation:
         self.sweeps = sweeps
 
         self.spatial_output = file_params["spatial_output"] \
-            if "spatial_output" in file_params else False  # defaults to false
+            if "spatial_output" in file_params else False
 
         # If random seed is specified in parameters, set this in numpy
         if "simulation_seed" in self.sim_params:
@@ -76,6 +79,8 @@ class Simulation:
         # or places. Only runs on the first timestep.
         for s in initial_sweeps + sweeps:
             s.bind_population(self.population)
+            logging.info(f"Bound sweep {s.__class__.__name__} to"
+                         + " population")
 
         # General sweeps run through the population on every timestep, and
         # include host progression and spatial infections.
@@ -84,6 +89,7 @@ class Simulation:
                               file_params["output_dir"])
 
         filename = os.path.join(folder, file_params["output_file"])
+        logging.info(f"Set output location to {filename}")
 
         output_titles = ["time"] + [s for s in InfectionStatus]
         if self.spatial_output:
@@ -95,6 +101,7 @@ class Simulation:
             folder, filename,
             output_titles)
 
+    @log_exceptions()
     def run_sweeps(self):
         """Iteration step of the simulation. First the initialisation sweeps
         configure the population on the first timestep. Then at each
@@ -104,10 +111,11 @@ class Simulation:
         argument for their call method but the elements of sweeps take time
         as an argument for their call method.
         """
-
         # Initialise on the time step before starting.
         for sweep in self.initial_sweeps:
             sweep(self.sim_params)
+
+        logging.info("Initial Sweeps Completed")
 
         # First entry of the data file is the initial state
         self.write_to_file(self.sim_params["simulation_start_time"])
@@ -117,6 +125,9 @@ class Simulation:
             for sweep in self.sweeps:
                 sweep(t)
             self.write_to_file(t)
+            logging.debug(f'Iteration {t} completed')
+
+        logging.info(f"Final time {t} reached")
 
     def write_to_file(self, time):
         """Records the count number of a given list of infection statuses
@@ -154,3 +165,4 @@ class Simulation:
         """
         random.seed(seed)
         np.random.seed(seed)
+        logging.info(f"Set simulation random seed to: {seed}")
