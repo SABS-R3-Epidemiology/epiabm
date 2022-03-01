@@ -33,8 +33,9 @@ class HostProgressionSweep(AbstractSweep):
         person.time_of_status_change = time + new_time
 
     def _set_latent_time(self, person, time):
-        """Calculates and returns latency period as calculated in
-        CovidSim, given as the time until next infection status
+        """Calculates latency period as calculated in CovidSim,
+         and updates the time_of_status_change for the given 
+          Person, given as the time until next infection status
         for a person who has been set as exposed.
 
         :param Person: Person class with infection status attributes
