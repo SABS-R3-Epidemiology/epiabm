@@ -58,6 +58,18 @@ class TestSimulation(TestMockedLogs):
             del(test_sim.writer)
         mo.assert_called_with(filename, 'w')
 
+    @patch('logging.exception')
+    @patch('os.path.join')
+    def test_configure_exception(self, mock_join, mock_log):
+        mock_join.side_effect = SyntaxError
+        mo = mock_open()
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params)
+            mock_log.assert_called_once_with("Fatal error while configuring"
+                                             + " population")
+
     def test_spatial_output_bool(self):
         with patch('pyEpiabm.output._csv_dict_writer.open'):
             test_sim = pe.routine.Simulation()

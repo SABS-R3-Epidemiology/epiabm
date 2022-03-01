@@ -59,44 +59,49 @@ class Simulation:
         :type file_params: dict
 
         """
-        self.sim_params = sim_params
-        self.population = population
-        self.initial_sweeps = initial_sweeps
-        self.sweeps = sweeps
+        try:
+            self.sim_params = sim_params
+            self.population = population
+            self.initial_sweeps = initial_sweeps
+            self.sweeps = sweeps
 
-        self.spatial_output = file_params["spatial_output"] \
-            if "spatial_output" in file_params else False  # defaults to false
+            self.spatial_output = file_params["spatial_output"] \
+                if "spatial_output" in file_params else False
 
-        # If random seed is specified in parameters, set this in numpy
-        if "simulation_seed" in self.sim_params:
-            random.seed(self.sim_params["simulation_seed"])
-            np.random.seed(self.sim_params["simulation_seed"])
+            # If random seed is specified in parameters, set this in numpy
+            if "simulation_seed" in self.sim_params:
+                random.seed(self.sim_params["simulation_seed"])
+                np.random.seed(self.sim_params["simulation_seed"])
 
-        # Initial sweeps configure the population by changing the type,
-        # infection status, infectiousness or susceptibility of people
-        # or places. Only runs on the first timestep.
-        for s in initial_sweeps + sweeps:
-            s.bind_population(self.population)
-            logging.info(f"Bound sweep {s.__class__.__name__} to population")
+            # Initial sweeps configure the population by changing the type,
+            # infection status, infectiousness or susceptibility of people
+            # or places. Only runs on the first timestep.
+            for s in initial_sweeps + sweeps:
+                s.bind_population(self.population)
+                logging.info(f"Bound sweep {s.__class__.__name__} to"
+                             + " population")
 
-        # General sweeps run through the population on every timestep, and
-        # include host progression and spatial infections.
+            # General sweeps run through the population on every timestep, and
+            # include host progression and spatial infections.
 
-        folder = os.path.join(os.getcwd(),
-                              file_params["output_dir"])
+            folder = os.path.join(os.getcwd(),
+                                  file_params["output_dir"])
 
-        filename = os.path.join(folder, file_params["output_file"])
-        logging.info(f"Set output location to {filename}")
+            filename = os.path.join(folder, file_params["output_file"])
+            logging.info(f"Set output location to {filename}")
 
-        output_titles = ["time"] + [s for s in InfectionStatus]
-        if self.spatial_output:
-            output_titles.insert(1, "cell")
-            output_titles.insert(2, "location_x")
-            output_titles.insert(3, "location_y")
+            output_titles = ["time"] + [s for s in InfectionStatus]
+            if self.spatial_output:
+                output_titles.insert(1, "cell")
+                output_titles.insert(2, "location_x")
+                output_titles.insert(3, "location_y")
 
-        self.writer = _CsvDictWriter(
-            folder, filename,
-            output_titles)
+            self.writer = _CsvDictWriter(
+                folder, filename,
+                output_titles)
+
+        except Exception:
+            logging.exception("Fatal error while configuring population")
 
     def run_sweeps(self):
         """Iteration step of the simulation. First the initialisation sweeps
