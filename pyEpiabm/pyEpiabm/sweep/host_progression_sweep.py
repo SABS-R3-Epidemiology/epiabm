@@ -42,15 +42,26 @@ class HostProgressionSweep(AbstractSweep):
             raise AssertionError('Negative latent time')
         return latent_time
 
-    def _set_infectiousness(self):
+    def _set_infectiousness(self, person):
         """Assigns the infectiousness of a person for when they go from
-        the exposed infection state to the next state.
+        the exposed infection state to the next state, either InfectAsympt,
+        InfectMild or InfectGP.
+        *Needs to be called right after an exposed person has been given its
+        new infection status in the sweep*
 
+        :param Person: Person class with infection status attributes
+        :type Person: Person
         :return: Infectiousness of a person
         :rtype: float
         """
-        init_infectiousness = 1
-        infectiousness = init_infectiousness * np.random.gamma(1, 1)
+        init_infectiousness = np.random.gamma(1, 1)
+        if person.infection_status == InfectionStatus.InfectASympt:
+            infectiousness = init_infectiousness *\
+                             pe.Parameters.instance().asympt_infectiousness
+        elif (person.infection_status == InfectionStatus.InfectMild or
+              person.infection_status == InfectionStatus.InfectGP):
+            infectiousness = init_infectiousness *\
+                             pe.Parameters.instance().sympt_infectiousness
         return infectiousness
 
     def _set_next_inf_status_from_exposed(self):
@@ -165,13 +176,13 @@ class HostProgressionSweep(AbstractSweep):
         """
         # If the current infection state of the person is mild or asymptomatic,
         # the person's next infection state is recovered.
-        if person.infection_status == InfectionStatus.InfectASympt:
+        if person.infection_status == InfectionStatus.Exposed:
+            person.next_infection_status = \
+                self._set_next_inf_status_from_exposed()
+        elif person.infection_status == InfectionStatus.InfectASympt:
             person.next_infection_status = InfectionStatus.Recovered
         elif person.infection_status == InfectionStatus.InfectMild:
             person.next_infection_status = InfectionStatus.Recovered
-        elif person.infection_status == InfectionStatus.Exposed:
-            person.next_infection_status = \
-                self._set_next_inf_status_from_exposed()
         elif person.infection_status == InfectionStatus.InfectGP:
             person.next_infection_status = \
                 self._set_next_inf_status_from_gp()
@@ -205,7 +216,7 @@ class HostProgressionSweep(AbstractSweep):
                     if person.infection_status != InfectionStatus.Recovered:
                         self._update_next_infection_status(person)
                         if person.infection_status == InfectionStatus.Exposed:
-                            person.infectiousness = self._set_infectiousness()
+                            # person.infectiousness= self._set_infectiousness()
                             person.time_of_status_change = time +\
                                 self._set_latent_time()
                         else:
