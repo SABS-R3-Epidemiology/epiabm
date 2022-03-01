@@ -83,7 +83,6 @@ class HostProgressionSweep(AbstractSweep):
                                     in [InfectionStatus.Susceptible]
                     continue
                 while person.time_of_status_change <= time:
-                    print(person.time_of_status_change)
                     person.update_status(person.next_infection_status)
                     if person.infection_status == InfectionStatus.Recovered:
                         person.next_infection_status = None
