@@ -60,8 +60,8 @@ class TestPopConfig(unittest.TestCase):
         mock_read.side_effect = FileNotFoundError
 
         FilePopulationFactory.make_pop('test_input.csv')
-        mock_log.assert_called_once_with("FileNotFoundError while reading"
-                                         + " population")
+        mock_log.assert_called_once_with("FileNotFoundError in"
+                                         + " FilePopulationFactory.makepop()")
 
     @patch('logging.exception')
     @patch("pandas.read_csv")
@@ -73,8 +73,8 @@ class TestPopConfig(unittest.TestCase):
         mock_read.return_value = data
 
         FilePopulationFactory.make_pop('test_input.csv')
-        mock_log.assert_called_once_with("ValueError while reading"
-                                         + " population")
+        mock_log.assert_called_once_with("ValueError in FilePopulation"
+                                         + "Factory.makepop()")
         mock_read.assert_called_once_with('test_input.csv')
 
     @patch('logging.exception')
@@ -89,8 +89,8 @@ class TestPopConfig(unittest.TestCase):
         mock_read.return_value = data
 
         FilePopulationFactory.make_pop('test_input.csv')
-        mock_log.assert_called_once_with("ValueError while reading"
-                                         + " population")
+        mock_log.assert_called_once_with("ValueError in FilePopulation"
+                                         + "Factory.makepop()")
         mock_read.assert_called_once_with('test_input.csv')
 
     def test_find_cell(self):
@@ -222,8 +222,8 @@ class TestPopConfig(unittest.TestCase):
 
         FilePopulationFactory.print_population(test_pop, 'output.csv')
 
-        mock_log.assert_called_once_with("FileNotFoundError while printing"
-                                         + " population")
+        mock_log.assert_called_once_with("FileNotFoundError in FilePopulation"
+                                         + "Factory.print_population()")
 
     @patch("pandas.read_csv")
     @patch("copy.copy")

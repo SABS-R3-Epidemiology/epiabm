@@ -53,8 +53,8 @@ class TestPopConfig(unittest.TestCase):
         pop_params = {"population_size": 10, "cell_number": 1,
                       "microcell_number": 1}
         ToyPopulationFactory.make_pop(pop_params)
-        patch_log.assert_called_once_with("Fatal error while generating"
-                                          + " toy population")
+        patch_log.assert_called_once_with("Fatal error in ToyPopulation"
+                                          + "Factory.makepop()")
 
     def summarise_pop(self, pop):
         # Returns lists of cell and microcell wise populations
@@ -173,8 +173,8 @@ class TestPopConfig(unittest.TestCase):
 
         mock_log.assert_not_called()
         ToyPopulationFactory.assign_cell_locations(test_pop, method='other')
-        mock_log.assert_called_once_with("ValueError while assigning"
-                                         + " cell locations")
+        mock_log.assert_called_once_with("ValueError in ToyPopulationFactory"
+                                         + ".assign_cell_locations()")
 
     @parameterized.expand([(random.randint(2, 20) * numReps,)
                            for _ in range(numReps)])

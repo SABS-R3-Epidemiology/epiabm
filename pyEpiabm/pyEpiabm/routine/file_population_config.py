@@ -98,7 +98,8 @@ class FilePopulationFactory:
             return new_pop
 
         except Exception as e:
-            logging.exception(f"{type(e).__name__} while reading population")
+            logging.exception(f"{type(e).__name__} in FilePopulationFactory"
+                              + ".makepop()")
 
     @staticmethod
     def find_cell(population: Population, cell_id: float):
@@ -207,4 +208,5 @@ class FilePopulationFactory:
             logging.info(f"Population saved to location {output_file}")
 
         except Exception as e:
-            logging.exception(f"{type(e).__name__} while printing population")
+            logging.exception(f"{type(e).__name__} in FilePopulationFactory"
+                              + ".print_population()")

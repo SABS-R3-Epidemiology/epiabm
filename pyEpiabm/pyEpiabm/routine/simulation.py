@@ -101,7 +101,7 @@ class Simulation:
                 output_titles)
 
         except Exception:
-            logging.exception("Fatal error while configuring population")
+            logging.exception("Fatal error in Simulation.configure()")
 
     def run_sweeps(self):
         """Iteration step of the simulation. First the initialisation sweeps
@@ -132,7 +132,7 @@ class Simulation:
             logging.info(f"Final time {t} reached")
 
         except Exception:
-            logging.exception("Fatal error while running sweeps")
+            logging.exception("Fatal error in Simulation.run_sweeps()")
 
     def write_to_file(self, time):
         """Records the count number of a given list of infection statuses

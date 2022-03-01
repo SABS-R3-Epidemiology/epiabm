@@ -87,7 +87,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             return new_pop
 
         except Exception:
-            logging.exception("Fatal error while generating toy population")
+            logging.exception("Fatal error in ToyPopulationFactory.makepop()")
 
     @staticmethod
     def add_households(population: Population, household_number: int):
@@ -175,5 +175,5 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                 raise ValueError(f"Unknown method: '{method}' not recognised")
 
         except Exception as e:
-            logging.exception(f"{type(e).__name__} while assigning cell"
-                              + " locations")
+            logging.exception(f"{type(e).__name__} in ToyPopulationFactory"
+                              + ".assign_cell_locations()")
