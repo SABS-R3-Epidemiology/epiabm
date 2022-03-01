@@ -20,14 +20,19 @@ class TestPopConfig(unittest.TestCase):
                      'Susceptible': [8, 9], 'InfectMild': [2, 3]}
         cls.df = pd.DataFrame(cls.input)
 
+    @patch('logging.exception')
+    def test_make_pop_no_file(self, mock_log):
+        """Tests for when no file is specified.
+        """
+        FilePopulationFactory.make_pop()
+        mock_log.assert_called_once_with("TypeError in"
+                                         + " FilePopulationFactory.make_pop()")
+
     @patch("pandas.read_csv")
     def test_make_pop(self, mock_read):
         """Tests for when the population is read in from file.
         """
         # Population is initialised with no households
-        with self.assertRaises(TypeError):
-            FilePopulationFactory.make_pop()
-
         mock_read.return_value = self.df
 
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
@@ -61,7 +66,7 @@ class TestPopConfig(unittest.TestCase):
 
         FilePopulationFactory.make_pop('test_input.csv')
         mock_log.assert_called_once_with("FileNotFoundError in"
-                                         + " FilePopulationFactory.makepop()")
+                                         + " FilePopulationFactory.make_pop()")
 
     @patch('logging.exception')
     @patch("pandas.read_csv")
@@ -74,7 +79,7 @@ class TestPopConfig(unittest.TestCase):
 
         FilePopulationFactory.make_pop('test_input.csv')
         mock_log.assert_called_once_with("ValueError in FilePopulation"
-                                         + "Factory.makepop()")
+                                         + "Factory.make_pop()")
         mock_read.assert_called_once_with('test_input.csv')
 
     @patch('logging.exception')
@@ -90,7 +95,7 @@ class TestPopConfig(unittest.TestCase):
 
         FilePopulationFactory.make_pop('test_input.csv')
         mock_log.assert_called_once_with("ValueError in FilePopulation"
-                                         + "Factory.makepop()")
+                                         + "Factory.make_pop()")
         mock_read.assert_called_once_with('test_input.csv')
 
     def test_find_cell(self):

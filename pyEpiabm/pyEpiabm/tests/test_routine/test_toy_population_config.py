@@ -53,8 +53,8 @@ class TestPopConfig(unittest.TestCase):
         pop_params = {"population_size": 10, "cell_number": 1,
                       "microcell_number": 1}
         ToyPopulationFactory.make_pop(pop_params)
-        patch_log.assert_called_once_with("Fatal error in ToyPopulation"
-                                          + "Factory.makepop()")
+        patch_log.assert_called_once_with("ValueError in ToyPopulation"
+                                          + "Factory.make_pop()")
 
     def summarise_pop(self, pop):
         # Returns lists of cell and microcell wise populations

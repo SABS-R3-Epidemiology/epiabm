@@ -13,11 +13,13 @@ from pyEpiabm.core import Population
 from pyEpiabm.output import _CsvDictWriter
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import AbstractSweep
+from pyEpiabm.utility import log_exceptions
 
 
 class Simulation:
     """Class to run a full simulation.
     """
+    @log_exceptions()
     def configure(self,
                   population: Population,
                   initial_sweeps: typing.List[AbstractSweep],
@@ -59,50 +61,47 @@ class Simulation:
         :type file_params: dict
 
         """
-        try:
-            self.sim_params = sim_params
-            self.population = population
-            self.initial_sweeps = initial_sweeps
-            self.sweeps = sweeps
+        self.sim_params = sim_params
+        self.population = population
+        self.initial_sweeps = initial_sweeps
+        self.sweeps = sweeps
 
-            self.spatial_output = file_params["spatial_output"] \
-                if "spatial_output" in file_params else False
+        self.spatial_output = file_params["spatial_output"] \
+            if "spatial_output" in file_params else False
 
-            # If random seed is specified in parameters, set this in numpy
-            if "simulation_seed" in self.sim_params:
-                random.seed(self.sim_params["simulation_seed"])
-                np.random.seed(self.sim_params["simulation_seed"])
+        # If random seed is specified in parameters, set this in numpy
+        if "simulation_seed" in self.sim_params:
+            random.seed(self.sim_params["simulation_seed"])
+            np.random.seed(self.sim_params["simulation_seed"])
 
-            # Initial sweeps configure the population by changing the type,
-            # infection status, infectiousness or susceptibility of people
-            # or places. Only runs on the first timestep.
-            for s in initial_sweeps + sweeps:
-                s.bind_population(self.population)
-                logging.info(f"Bound sweep {s.__class__.__name__} to"
-                             + " population")
+        # Initial sweeps configure the population by changing the type,
+        # infection status, infectiousness or susceptibility of people
+        # or places. Only runs on the first timestep.
+        for s in initial_sweeps + sweeps:
+            s.bind_population(self.population)
+            logging.info(f"Bound sweep {s.__class__.__name__} to"
+                         + " population")
 
-            # General sweeps run through the population on every timestep, and
-            # include host progression and spatial infections.
+        # General sweeps run through the population on every timestep, and
+        # include host progression and spatial infections.
 
-            folder = os.path.join(os.getcwd(),
-                                  file_params["output_dir"])
+        folder = os.path.join(os.getcwd(),
+                              file_params["output_dir"])
 
-            filename = os.path.join(folder, file_params["output_file"])
-            logging.info(f"Set output location to {filename}")
+        filename = os.path.join(folder, file_params["output_file"])
+        logging.info(f"Set output location to {filename}")
 
-            output_titles = ["time"] + [s for s in InfectionStatus]
-            if self.spatial_output:
-                output_titles.insert(1, "cell")
-                output_titles.insert(2, "location_x")
-                output_titles.insert(3, "location_y")
+        output_titles = ["time"] + [s for s in InfectionStatus]
+        if self.spatial_output:
+            output_titles.insert(1, "cell")
+            output_titles.insert(2, "location_x")
+            output_titles.insert(3, "location_y")
 
-            self.writer = _CsvDictWriter(
-                folder, filename,
-                output_titles)
+        self.writer = _CsvDictWriter(
+            folder, filename,
+            output_titles)
 
-        except Exception:
-            logging.exception("Fatal error in Simulation.configure()")
-
+    @log_exceptions()
     def run_sweeps(self):
         """Iteration step of the simulation. First the initialisation sweeps
         configure the population on the first timestep. Then at each
@@ -112,27 +111,23 @@ class Simulation:
         argument for their call method but the elements of sweeps take time
         as an argument for their call method.
         """
-        try:
-            # Initialise on the time step before starting.
-            for sweep in self.initial_sweeps:
-                sweep(self.sim_params)
+        # Initialise on the time step before starting.
+        for sweep in self.initial_sweeps:
+            sweep(self.sim_params)
 
-            logging.info("Initial Sweeps Completed")
+        logging.info("Initial Sweeps Completed")
 
-            # First entry of the data file is the initial state
-            self.write_to_file(self.sim_params["simulation_start_time"])
+        # First entry of the data file is the initial state
+        self.write_to_file(self.sim_params["simulation_start_time"])
 
-            for t in tqdm(range(self.sim_params["simulation_start_time"] + 1,
-                                self.sim_params["simulation_end_time"])):
-                for sweep in self.sweeps:
-                    sweep(t)
-                self.write_to_file(t)
-                logging.debug(f'Iteration {t} completed')
+        for t in tqdm(range(self.sim_params["simulation_start_time"] + 1,
+                            self.sim_params["simulation_end_time"])):
+            for sweep in self.sweeps:
+                sweep(t)
+            self.write_to_file(t)
+            logging.debug(f'Iteration {t} completed')
 
-            logging.info(f"Final time {t} reached")
-
-        except Exception:
-            logging.exception("Fatal error in Simulation.run_sweeps()")
+        logging.info(f"Final time {t} reached")
 
     def write_to_file(self, time):
         """Records the count number of a given list of infection statuses

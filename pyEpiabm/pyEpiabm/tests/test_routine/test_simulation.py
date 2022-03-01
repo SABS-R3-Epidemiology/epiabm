@@ -67,7 +67,7 @@ class TestSimulation(TestMockedLogs):
             test_sim = pe.routine.Simulation()
             test_sim.configure(self.test_population, self.initial_sweeps,
                                self.sweeps, self.sim_params, self.file_params)
-            mock_log.assert_called_once_with("Fatal error in"
+            mock_log.assert_called_once_with("SyntaxError in"
                                              + " Simulation.configure()")
 
     def test_spatial_output_bool(self):
@@ -119,8 +119,8 @@ class TestSimulation(TestMockedLogs):
                                  self.sweeps, self.sim_params,
                                  self.file_params)
             broken_sim.run_sweeps()
-            patch_log.assert_called_once_with("Fatal error in Simulation"
-                                              + ".run_sweeps()")
+            patch_log.assert_called_once_with("NotImplementedError in"
+                                              + " Simulation.run_sweeps()")
 
     def test_write_to_file(self):
         mo = mock_open()

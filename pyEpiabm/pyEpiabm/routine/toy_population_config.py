@@ -10,6 +10,7 @@ import math
 
 from pyEpiabm.core import Household, Population
 from pyEpiabm.property import PlaceType
+from pyEpiabm.utility import log_exceptions
 
 from .abstract_population_config import AbstractPopulationFactory
 
@@ -19,6 +20,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
     python model.
     """
     @staticmethod
+    @log_exceptions()
     def make_pop(pop_params: typing.Dict):
         """Initialize a population object with a given population size,
         number of cells and microcells. A uniform multinomial distribution is
@@ -40,56 +42,52 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             households
         :rtype: Population
         """
-        try:
-            # Unpack variables from input dictionary
-            population_size = pop_params["population_size"]
-            cell_number = pop_params["cell_number"]
-            microcell_number = pop_params["microcell_number"]
+        # Unpack variables from input dictionary
+        population_size = pop_params["population_size"]
+        cell_number = pop_params["cell_number"]
+        microcell_number = pop_params["microcell_number"]
 
-            household_number = pop_params["household_number"] \
-                if "household_number" in pop_params else 0
-            place_number = pop_params["place_number"] \
-                if "place_number" in pop_params else 0
+        household_number = pop_params["household_number"] \
+            if "household_number" in pop_params else 0
+        place_number = pop_params["place_number"] \
+            if "place_number" in pop_params else 0
 
-            # If random seed is specified in parameters, set this
-            if "population_seed" in pop_params:
-                np.random.seed(pop_params["population_seed"])
-                random.seed(pop_params["population_seed"])
-                logging.info("Set population random seed to:"
-                             + str(pop_params["population_seed"]))
+        # If random seed is specified in parameters, set this
+        if "population_seed" in pop_params:
+            np.random.seed(pop_params["population_seed"])
+            random.seed(pop_params["population_seed"])
+            logging.info("Set population random seed to:"
+                         + str(pop_params["population_seed"]))
 
-            # Initialise a population class
-            new_pop = Population()
+        # Initialise a population class
+        new_pop = Population()
 
-            # Checks parameter type and stores as class objects.
-            total_number_microcells = cell_number * microcell_number
+        # Checks parameter type and stores as class objects.
+        total_number_microcells = cell_number * microcell_number
 
-            new_pop.add_cells(cell_number)
-            # Sets up a probability array for the multinomial.
-            p = [1 / total_number_microcells] * total_number_microcells
-            # Multinomially distributes people into microcells.
-            cell_split = np.random.multinomial(population_size, p, size=1)[0]
-            i = 0
-            for cell in new_pop.cells:
-                cell.add_microcells(microcell_number)
-                for microcell in cell.microcells:
-                    people_in_microcell = cell_split[i]
-                    microcell.add_people(people_in_microcell)
-                    i += 1
+        new_pop.add_cells(cell_number)
+        # Sets up a probability array for the multinomial.
+        p = [1 / total_number_microcells] * total_number_microcells
+        # Multinomially distributes people into microcells.
+        cell_split = np.random.multinomial(population_size, p, size=1)[0]
+        i = 0
+        for cell in new_pop.cells:
+            cell.add_microcells(microcell_number)
+            for microcell in cell.microcells:
+                people_in_microcell = cell_split[i]
+                microcell.add_people(people_in_microcell)
+                i += 1
 
-            # If a household number is given then that number of households
-            # are initialised. If the household number defaults to zero
-            # then no households are initialised.
-            if household_number > 0:
-                ToyPopulationFactory.add_households(new_pop, household_number)
-            if place_number > 0:
-                ToyPopulationFactory.add_places(new_pop, place_number)
+        # If a household number is given then that number of households
+        # are initialised. If the household number defaults to zero
+        # then no households are initialised.
+        if household_number > 0:
+            ToyPopulationFactory.add_households(new_pop, household_number)
+        if place_number > 0:
+            ToyPopulationFactory.add_places(new_pop, place_number)
 
-            logging.info(f"Toy Population Configured with {cell_number} cells")
-            return new_pop
-
-        except Exception:
-            logging.exception("Fatal error in ToyPopulationFactory.makepop()")
+        logging.info(f"Toy Population Configured with {cell_number} cells")
+        return new_pop
 
     @staticmethod
     def add_households(population: Population, household_number: int):

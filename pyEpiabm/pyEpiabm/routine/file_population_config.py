@@ -12,12 +12,14 @@ from packaging import version
 from pyEpiabm.core import Household, Population, Cell
 from pyEpiabm.core.microcell import Microcell
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.utility import log_exceptions
 
 
 class FilePopulationFactory:
     """ Class that creates a population based on an input .csv file.
     """
     @staticmethod
+    @log_exceptions()
     def make_pop(input_file: str, random_seed: int = None):
         """Initialize a population object from an input csv file, with one
         row per microcell. A uniform multinomial distribution is
@@ -43,64 +45,59 @@ class FilePopulationFactory:
             households
         :rtype: Population
         """
-        try:
-            # If random seed is specified in parameters, set this
-            if random_seed is not None:
-                np.random.seed(random_seed)
-                random.seed(random_seed)
-                logging.info(f"Set population random seed to: {random_seed}")
+        # If random seed is specified in parameters, set this
+        if random_seed is not None:
+            np.random.seed(random_seed)
+            random.seed(random_seed)
+            logging.info(f"Set population random seed to: {random_seed}")
 
-            # Read file into pandas dataframe
-            input = pd.read_csv(input_file)
-            loc_given = ("location_x" and "location_y" in input.columns.values)
+        # Read file into pandas dataframe
+        input = pd.read_csv(input_file)
+        loc_given = ("location_x" and "location_y" in input.columns.values)
 
-            # Validate all column names in input
-            valid_names = ["cell", "microcell", "location_x",
-                           "location_y", "household_number"]
-            for col in input.columns.values:  # Check all column headings
-                if not ((col in valid_names) or hasattr(InfectionStatus, col)):
-                    raise ValueError(f"Unknown column heading '{col}'")
+        # Validate all column names in input
+        valid_names = ["cell", "microcell", "location_x",
+                       "location_y", "household_number"]
+        for col in input.columns.values:  # Check all column headings
+            if not ((col in valid_names) or hasattr(InfectionStatus, col)):
+                raise ValueError(f"Unknown column heading '{col}'")
 
-            # Initialise a population class
-            new_pop = Population()
+        # Initialise a population class
+        new_pop = Population()
 
-            # Iterate through lines (one per microcell)
-            for _, line in input.iterrows():
-                # Check if cell exists, or create it
-                cell = FilePopulationFactory.find_cell(new_pop, line["cell"])
+        # Iterate through lines (one per microcell)
+        for _, line in input.iterrows():
+            # Check if cell exists, or create it
+            cell = FilePopulationFactory.find_cell(new_pop, line["cell"])
 
-                if loc_given:
-                    location = (line["location_x"], line["location_y"])
-                    cell.set_location(location)
+            if loc_given:
+                location = (line["location_x"], line["location_y"])
+                cell.set_location(location)
 
-                # Raise error if microcell exists, then create new one
-                for microcell in cell.microcells:
-                    if microcell.id == line["microcell"]:
-                        raise ValueError(f"Duplicate microcells {microcell.id}"
-                                         + f" in cell {cell.id}")
+            # Raise error if microcell exists, then create new one
+            for microcell in cell.microcells:
+                if microcell.id == line["microcell"]:
+                    raise ValueError(f"Duplicate microcells {microcell.id}"
+                                     + f" in cell {cell.id}")
 
-                new_microcell = Microcell(cell)
-                cell.microcells.append(new_microcell)
-                new_microcell.set_id(line["microcell"])
+            new_microcell = Microcell(cell)
+            cell.microcells.append(new_microcell)
+            new_microcell.set_id(line["microcell"])
 
-                for column in input.columns.values:
-                    if hasattr(InfectionStatus, column):
-                        value = getattr(InfectionStatus, column)
-                        new_microcell.add_people(int(line[column]),
-                                                 InfectionStatus(value))
+            for column in input.columns.values:
+                if hasattr(InfectionStatus, column):
+                    value = getattr(InfectionStatus, column)
+                    new_microcell.add_people(int(line[column]),
+                                             InfectionStatus(value))
 
-                # Add households to microcell
-                if line["household_number"] > 0:
-                    households = int(line["household_number"])
-                    FilePopulationFactory.add_households(new_microcell,
-                                                         households)
+            # Add households to microcell
+            if line["household_number"] > 0:
+                households = int(line["household_number"])
+                FilePopulationFactory.add_households(new_microcell,
+                                                     households)
 
-            logging.info(f"New Population from file {input_file} configured")
-            return new_pop
-
-        except Exception as e:
-            logging.exception(f"{type(e).__name__} in FilePopulationFactory"
-                              + ".makepop()")
+        logging.info(f"New Population from file {input_file} configured")
+        return new_pop
 
     @staticmethod
     def find_cell(population: Population, cell_id: float):
@@ -147,6 +144,7 @@ class FilePopulationFactory:
                 person_index += 1
 
     @staticmethod
+    @log_exceptions()
     def print_population(population: Population, output_file: str):
         """Outputs population as .csv file, in format usable by the make_pop()
         method. Used for verification, or saving current simulation state. Note
@@ -163,51 +161,46 @@ class FilePopulationFactory:
         :param output_file: Path to output file
         :type output_file: str
         """
-        try:
-            if version.parse(pd.__version__) < version.parse("1.4.0"):
-                logging.warning(f"Pandas version {pd.__version__} is outdated,"
-                                + " only tests version 1.4 and above.")
+        if version.parse(pd.__version__) < version.parse("1.4.0"):
+            logging.warning(f"Pandas version {pd.__version__} is outdated,"
+                            + " only tests version 1.4 and above.")
 
-            columns = ['cell', 'microcell', 'location_x', 'location_y',
-                       'household_number']
-            for status in InfectionStatus:
-                columns.append(str(status.name))
-            df = pd.DataFrame(columns=columns)
+        columns = ['cell', 'microcell', 'location_x', 'location_y',
+                   'household_number']
+        for status in InfectionStatus:
+            columns.append(str(status.name))
+        df = pd.DataFrame(columns=columns)
 
-            for cell in population.cells:
-                for microcell in cell.microcells:
-                    data_dict = {
-                        "cell": cell.id,
-                        "microcell": microcell.id,
-                        "location_x": cell.location[0],
-                        "location_y": cell.location[1],
-                    }
+        for cell in population.cells:
+            for microcell in cell.microcells:
+                data_dict = {
+                    "cell": cell.id,
+                    "microcell": microcell.id,
+                    "location_x": cell.location[0],
+                    "location_y": cell.location[1],
+                }
 
-                    households = []
-                    for person in microcell.persons:
-                        status = str(person.infection_status.name)
-                        if status in data_dict:
-                            data_dict[status] += 1
-                        else:  # New status
-                            data_dict[status] = 1
-                        if person.household not in households:
-                            households.append(person.household)
-                    data_dict['household_number'] = len(households)
+                households = []
+                for person in microcell.persons:
+                    status = str(person.infection_status.name)
+                    if status in data_dict:
+                        data_dict[status] += 1
+                    else:  # New status
+                        data_dict[status] = 1
+                    if person.household not in households:
+                        households.append(person.household)
+                data_dict['household_number'] = len(households)
 
-                    new_row = pd.DataFrame(data=data_dict, columns=columns,
-                                           index=[0])
-                    df = pd.concat([df, new_row], ignore_index=True)
+                new_row = pd.DataFrame(data=data_dict, columns=columns,
+                                       index=[0])
+                df = pd.concat([df, new_row], ignore_index=True)
 
-            df['household_number'] = df['household_number'].astype(int)
-            for status in InfectionStatus:
-                df[str(status.name)] = df[str(status.name)].fillna(0)\
-                    .astype(int)
-                if (df[str(status.name)] == 0).all():  # Delete unused statuses
-                    df.drop(columns=str(status.name), inplace=True)
-            output_df = copy.copy(df)  # To access dataframe in testing
-            output_df.to_csv(output_file, header=True, index=False)
-            logging.info(f"Population saved to location {output_file}")
-
-        except Exception as e:
-            logging.exception(f"{type(e).__name__} in FilePopulationFactory"
-                              + ".print_population()")
+        df['household_number'] = df['household_number'].astype(int)
+        for status in InfectionStatus:
+            df[str(status.name)] = df[str(status.name)].fillna(0)\
+                .astype(int)
+            if (df[str(status.name)] == 0).all():  # Delete unused statuses
+                df.drop(columns=str(status.name), inplace=True)
+        output_df = copy.copy(df)  # To access dataframe in testing
+        output_df.to_csv(output_file, header=True, index=False)
+        logging.info(f"Population saved to location {output_file}")
