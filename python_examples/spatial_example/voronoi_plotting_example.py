@@ -203,7 +203,7 @@ def generate_animation(df, vor, name, grid_lim, save_path, use_pillow=True):
     if use_pillow:
         ani = matplotlib.animation.FuncAnimation(fig, animate, frames=times,
                                                  init_func=lambda *args: None)
-        writer = matplotlib.animation.PillowWriter(fps=4)
+        writer = matplotlib.animation.PillowWriter(fps=10)
         ani.save((save_path + str("voronoi_animation.gif")), writer=writer)
     else:
         for t in times:
@@ -215,6 +215,7 @@ def generate_animation(df, vor, name, grid_lim, save_path, use_pillow=True):
             t_ax.set_xlim(grid_lim[0][0], grid_lim[0][1])
             t_ax.set_ylim(grid_lim[1][0], grid_lim[1][1])
             t_fig.savefig(save_path + "image" + f'{t:03d}' + "d.png")
+            plt.close(t_fig)
 
         fp_in = save_path + "image" + "*d.png"
         fp_out = save_path + "voronoi_animation.gif"

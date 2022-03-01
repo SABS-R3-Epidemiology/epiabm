@@ -2,11 +2,14 @@
 # Infection due to contact in between people in different cells
 #
 
+
 import random
 import numpy as np
 
 from pyEpiabm.core import Parameters
+from pyEpiabm.property import InfectionStatus
 from pyEpiabm.routine import SpatialInfection
+from pyEpiabm.utility import DistanceFunctions
 
 from .abstract_sweep import AbstractSweep
 
@@ -42,52 +45,116 @@ class SpatialSweep(AbstractSweep):
         # Double loop over the whole population, checking infectiousness
         # status, and whether they are absent from their household.
         for cell in self._population.cells:
-
             # Check to ensure there is an infector in the cell
             total_infectors = cell.number_infectious()
             if total_infectors == 0:
                 continue
-
-            # If there is an infector calculate number of infection events
+            # Creates a list of posible infectee cells which excludes the
+            # infector cell.
+            possible_infectee_cells = self._population.cells.copy()
+            possible_infectee_cells.remove(cell)
+            possible_infectee_num = sum([cell2.compartment_counter.retrieve()
+                                        [InfectionStatus.Susceptible]
+                                        for cell2 in possible_infectee_cells])
+            if possible_infectee_num == 0:
+                # Break the loop if no people outside the cell are susceptible.
+                continue
+            # If there are any infectors calculate number of infection events
             # given out in total by the cell
             ave_num_of_infections = SpatialInfection.cell_inf(cell, timestep)
             number_to_infect = np.random.poisson(ave_num_of_infections)
-
-            # Chooses a list of cells (with replacement) for each infection
-            # event to occur in. Specifically inter-cell infections
-            # so can't be the same cell
-            possible_infectee_cells = self._population.cells.copy()
-            possible_infectee_cells.remove(cell)
-            cell_list = random.choices(possible_infectee_cells,
-                                       k=number_to_infect)
-
             # Sample at random from the cell to find an infector. Have
             # checked to ensure there is an infector present.
-            # THIS COULD BE V SLOW IF SMALL PROPORTION OF INFECTORS
             possible_infectors = [person for person in cell.persons
                                   if person.is_infectious()]
             infector = random.choice(possible_infectors)
 
-            # Each infection event corresponds to a infectee cell
-            # on the cell list
-            for infectee_cell in cell_list:
+            if Parameters.instance().do_CovidSim:
+                # Chooses cells based on a cumulative transmission array
+                # one and a time a tests each infection event.
+                while number_to_infect > 0:
+                    # Weighting for cell choice in Covidsim uses cum_trans and
+                    # invCDF arrays, but really can't see how these are
+                    # initialised. Have used the number of susceptible for now.
+                    weights = [cell2.compartment_counter.retrieve()
+                               [InfectionStatus.Susceptible]
+                               for cell2 in possible_infectee_cells]
+                    infectee_cell = random.choices(possible_infectee_cells,
+                                                   weights=weights, k=1)[0]
+                    # Sample at random from the infectee cell to find
+                    # an infectee
+                    infectee = random.sample(infectee_cell.persons, 1)[0]
+                    infection_distance = DistanceFunctions.dist(
+                     cell.location, infectee_cell.location) / Parameters.\
+                        instance().infection_radius
+                    if (infection_distance < random.random()):
+                        # Covidsim rejects the infection event if the distance
+                        # between infector/infectee is too large.
+                        self.do_infection_event(infector, infectee, timestep)
+                        number_to_infect -= 1
 
-                # Sample at random from the infectee cell to find
-                # an infectee
-                infectee = random.sample(infectee_cell.persons, 1)[0]
-                if not infectee.is_susceptible():
-                    continue
+            else:
+                # Chooses a list of cells (with replacement) for each infection
+                # event to occur in. Specifically inter-cell infections
+                # so can't be the same cell.
+                distance_weights = []
+                # Possibly don't want this to be unfeasibly large as still
+                # have a valid population with clumps of cells
+                for cell2 in possible_infectee_cells:
+                    try:
+                        distance_weights.append(1/DistanceFunctions.dist(
+                                    cell.location, cell2.location))
+                    except ZeroDivisionError:
+                        # If cells are on top of each other use nan placeholder
+                        distance_weights.append(np.nan)
+                # Cells on top of each currently have a distance weight equal
+                # to the maximum of all other weights.
+                # Possibly want to do twice this.
+                number_of_nans = sum(np.isnan(distance_weights))
+                if number_of_nans == len(distance_weights):
+                    distance_weights = [1 for _ in distance_weights]
+                elif number_of_nans > 0:
+                    max_weight = np.nanmax(distance_weights)
+                    distance_weights = np.nan_to_num(distance_weights,
+                                                     nan=max_weight)
+                cell_list = random.choices(possible_infectee_cells,
+                                           weights=distance_weights,
+                                           k=number_to_infect)
+                # Each infection event corresponds to a infectee cell
+                # on the cell list
+                for infectee_cell in cell_list:
 
-                # force of infection specific to cells and people
-                # involved in the infection event
-                force_of_infection = SpatialInfection.\
-                    space_foi(cell, infectee_cell, infector, infectee)
+                    # Sample at random from the infectee cell to find
+                    # an infectee
+                    infectee = random.sample(infectee_cell.persons, 1)[0]
+                    self.do_infection_event(infector, infectee, timestep)
 
-                # Compare a uniform random number to the force of
-                # infection to see whether an infection event
-                # occurs in this timestep between the given
-                # persons.
-                r = random.random()
+    def do_infection_event(self, infector, infectee,
+                           timestep):
+        """Helper function which takes an infector and infectee,
+        in different cells and tests whether contact between
+        them will lead to an infection event.
 
-                if r < force_of_infection:
-                    infectee_cell.enqueue_person(infectee)
+        :param infector: Infector
+        :type infector: Person
+        :param infectee: Infectee
+        :type infectee: Person
+        :param timestep: Current simulation timestep
+        :type timestep: int
+        """
+        if not infectee.is_susceptible():
+            return
+
+        # force of infection specific to cells and people
+        # involved in the infection event
+        force_of_infection = SpatialInfection.\
+            space_foi(infector.microcell.cell, infectee.microcell.cell,
+                      infector, infectee, timestep)
+
+        # Compare a uniform random number to the force of
+        # infection to see whether an infection event
+        # occurs in this timestep between the given
+        # persons.
+        r = random.random()
+        if r < force_of_infection:
+            infectee.microcell.cell.enqueue_person(infectee)

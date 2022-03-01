@@ -23,11 +23,6 @@ class TestPopulation(unittest.TestCase):
         population.add_cells(n)
         self.assertEqual(len(population.cells), n)
 
-    def test_setup(self):
-        population = pe.Population()
-        population.add_cells(5)
-        population.setup()
-
     def test_total_people(self):
         self.assertEqual(self.population.total_people(), 0)
 

@@ -92,7 +92,6 @@ class FilePopulationFactory:
                 FilePopulationFactory.add_households(new_microcell,
                                                      households)
 
-        new_pop.setup()
         return new_pop
 
     @staticmethod
