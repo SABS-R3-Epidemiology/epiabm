@@ -38,7 +38,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         test_sweep._update_next_infection_status(self.person2)
         self.assertEqual(self.person2.next_infection_status,
                          pe.property.InfectionStatus.Recovered)
-        self.person2.infection_status = pe.property.InfectionStatus.Recovered
+        self.person2.update_status(pe.property.InfectionStatus.Recovered)
         self.assertRaises(TypeError, test_sweep._update_next_infection_status,
                           self.person2)
 
@@ -84,12 +84,11 @@ class TestHostProgressionSweep(unittest.TestCase):
 
         # First check that people progress through the
         # infection stages correctly.
-        self.person2.infection_status = pe.property.InfectionStatus.Exposed
+        self.person2.update_status(pe.property.InfectionStatus.Exposed)
         self.person2.time_of_status_change = 1.0
-
         self.person2.next_infection_status = \
             pe.property.InfectionStatus.InfectMild
-        self.person1.infection_status = pe.property.InfectionStatus.Susceptible
+        self.person1.update_status(pe.property.InfectionStatus.Susceptible)
         self.person1.time_of_status_change = 1.0
         self.person1.next_infection_status = \
             pe.property.InfectionStatus.Exposed
@@ -124,11 +123,11 @@ class TestHostProgressionSweep(unittest.TestCase):
 
         # First reconfigure population and sweep.
         self.person1.time_of_status_change = None
-        self.person1.infection_status = InfectionStatus.Exposed
+        self.person1.update_status(InfectionStatus.Susceptible)
         self.person2.time_of_status_change = None
-        self.person2.infection_status = InfectionStatus.Susceptible
+        self.person2.update_status(InfectionStatus.Exposed)
         self.person3.time_of_status_change = None
-        self.person3.infection_status = InfectionStatus.Susceptible
+        self.person3.update_status(InfectionStatus.Susceptible)
         test_sweep = pe.sweep.HostProgressionSweep()
         test_sweep.bind_population(self.test_population)
 
@@ -139,8 +138,9 @@ class TestHostProgressionSweep(unittest.TestCase):
         # Reconfigure population and check that Person 1 has the correct
         # properties on being set as recovered.
         self.person1.time_of_status_change = 1.0
-        self.person1.infection_status = InfectionStatus.InfectMild
+        self.person1.update_status(InfectionStatus.InfectMild)
         self.person1.next_infection_status = InfectionStatus.Recovered
+        self.person2.update_status(InfectionStatus.Susceptible)
         test_sweep(1.0)
         self.assertEqual(self.person1.infection_status,
                          InfectionStatus.Recovered)
@@ -153,7 +153,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         # from suscptible to infected in the same time step.
         pe.Parameters.instance().latent_period_iCDF = np.zeros(21)
         self.person1.time_of_status_change = 1.0
-        self.person1.infection_status = InfectionStatus.Susceptible
+        self.person1.update_status(InfectionStatus.Susceptible)
         self.person1.next_infection_status = InfectionStatus.Exposed
         test_sweep(1.0)
         self.assertEqual(self.person1.infection_status,

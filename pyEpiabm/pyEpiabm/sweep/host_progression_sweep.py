@@ -81,7 +81,7 @@ class HostProgressionSweep(AbstractSweep):
                 if person.time_of_status_change is None:
                     assert person.infection_status \
                                     in [InfectionStatus.Susceptible]
-                    continue
+                    continue  # pragma: no cover
                 while person.time_of_status_change <= time:
                     person.update_status(person.next_infection_status)
                     if person.infection_status == InfectionStatus.Recovered:
