@@ -2,7 +2,6 @@
 # Calculate spatial force of infection based on Covidsim code
 #
 
-import random
 from pyEpiabm.core import Person, Cell, Parameters
 
 
@@ -25,17 +24,10 @@ class SpatialInfection:
         R_0 = Parameters.instance().basic_reproduction_num
         total_infectors = inf_cell.number_infectious()
 
-        number_to_infect = total_infectors * R_0
-        # This gives a possible decimal for number to infect.
-        # Choose randomly for the integers either side
-        # with weights corrsponding to the distance to either
-        # integer.
-        floor = int(number_to_infect)
-
-        weights = [number_to_infect - floor, 1 - (number_to_infect - floor)]
-        number_to_infect = random.choices([floor, floor + 1],
-                                          weights=weights, k=1)[0]
-        return (number_to_infect)
+        average_number_to_infect = total_infectors * R_0
+        # This gives the expected number of infection events
+        # caused by people within this cell.
+        return (average_number_to_infect)
 
     @staticmethod
     def space_susc(susc_cell: Cell, infectee: Person,

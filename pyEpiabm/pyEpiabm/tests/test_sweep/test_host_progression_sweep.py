@@ -28,7 +28,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         is set to infected and we check that their status changes to Recovered
         on the next time step.
         """
-        self.person2.infection_status = pe.property.InfectionStatus.InfectMild
+        self.person2.update_status(pe.property.InfectionStatus.InfectMild)
         test_sweep = pe.sweep.HostProgressionSweep()
         test_sweep.bind_population(self.test_population)
         test_sweep._update_next_infection_status(self.person2)
@@ -52,7 +52,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         Person 2 is set to exposed and becoming infectious in one time step.
         Checks the populations updates as expected.
         """
-        self.person2.infection_status = pe.property.InfectionStatus.Exposed
+        self.person2.update_status(pe.property.InfectionStatus.Exposed)
         self.person2.time_of_status_change = 1
         self.person2.next_infection_status = \
             pe.property.InfectionStatus.InfectMild

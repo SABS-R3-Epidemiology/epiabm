@@ -17,9 +17,11 @@ class TestSpatialInfection(unittest.TestCase):
         infectee, both in the same place and household.
         """
         cls.cell = pe.Cell()
-        cls.microcell = pe.Microcell(cls.cell)
-        cls.infector = pe.Person(cls.microcell)
-        cls.infectee = pe.Person(cls.microcell)
+        cls.cell.add_microcells(1)
+        cls.microcell = cls.cell.microcells[0]
+        cls.microcell.add_people(2)
+        cls.infector = cls.microcell.persons[0]
+        cls.infectee = cls.microcell.persons[1]
         cls.timestep = 1
         pe.Parameters.instance().basic_reproduction_num = 2.8
 
@@ -45,7 +47,7 @@ class TestSpatialInfection(unittest.TestCase):
     def test_cell_inf(self):
         self.infector.update_status(InfectionStatus.InfectMild)
         result = SpatialInfection.cell_inf(self.cell, self.timestep)
-        self.assertIsInstance(result, int)
+        self.assertIsInstance(result, float)
         self.assertTrue(result >= 0)
 
 
