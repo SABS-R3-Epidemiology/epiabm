@@ -55,6 +55,8 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             if "population_seed" in pop_params:
                 np.random.seed(pop_params["population_seed"])
                 random.seed(pop_params["population_seed"])
+                logging.info("Set population random seed to:"
+                             + str(pop_params["population_seed"]))
 
             # Initialise a population class
             new_pop = Population()

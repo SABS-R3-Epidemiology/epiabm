@@ -48,6 +48,7 @@ class FilePopulationFactory:
             if random_seed is not None:
                 np.random.seed(random_seed)
                 random.seed(random_seed)
+                logging.info(f"Set population random seed to: {random_seed}")
 
             # Read file into pandas dataframe
             input = pd.read_csv(input_file)

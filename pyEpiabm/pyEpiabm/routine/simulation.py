@@ -170,4 +170,4 @@ class Simulation:
         """
         random.seed(seed)
         np.random.seed(seed)
-        logging.info(f"Set random seed to: {seed}")
+        logging.info(f"Set simulation random seed to: {seed}")
