@@ -17,7 +17,9 @@ class HostProgressionSweep(AbstractSweep):
 
     def _update_time_to_status_change(self, person, time):
         """Assigns time until next infection status update,
-         given as a random integer between 1 and 10.
+         given as a random integer between 1 and 10. Used
+         for persons with infection stati that have no transition/
+         latent time implemented yet - temporary function.
 
         :param Person: Person class with infection status attributes
         :type Person: Person
