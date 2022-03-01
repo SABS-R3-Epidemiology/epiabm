@@ -70,7 +70,6 @@ class SpatialSweep(AbstractSweep):
                                   if person.is_infectious()]
             infector = random.choice(possible_infectors)
 
-
             if Parameters.instance().do_CovidSim:
                 # Chooses cells based on a cumulative transmission array
                 # one and a time a tests each infection event.
@@ -160,4 +159,3 @@ class SpatialSweep(AbstractSweep):
         r = random.random()
         if r < force_of_infection:
             infectee.microcell.cell.enqueue_person(infectee)
-

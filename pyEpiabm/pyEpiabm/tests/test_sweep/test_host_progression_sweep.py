@@ -82,7 +82,6 @@ class TestHostProgressionSweep(unittest.TestCase):
         suscpeitble.
         """
 
-
         # First check that people progress through the
         # infection stages correctly.
         self.person2.infection_status = pe.property.InfectionStatus.Exposed
