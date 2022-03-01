@@ -94,7 +94,6 @@ class FilePopulationFactory:
                     FilePopulationFactory.add_households(new_microcell,
                                                          households)
 
-            new_pop.setup()
             logging.info(f"New Population from file {input_file} configured")
             return new_pop
 

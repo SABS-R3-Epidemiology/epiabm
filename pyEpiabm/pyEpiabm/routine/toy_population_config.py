@@ -83,7 +83,6 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             if place_number > 0:
                 ToyPopulationFactory.add_places(new_pop, place_number)
 
-            new_pop.setup()
             logging.info(f"Toy Population Configured with {cell_number} cells")
             return new_pop
 
