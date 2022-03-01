@@ -61,9 +61,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         mock_choose.return_value = -1
         with self.assertRaises(AssertionError):
             test_sweep = pe.sweep.HostProgressionSweep()
-            latency_time = \
-                test_sweep._set_latent_time(self.person1, current_time)
-            self.assertTrue(latency_time < 0)
+            test_sweep._set_latent_time(self.person1, current_time)
 
     def test_update_time(self):
         """Test the update time function on the test population. This generates
