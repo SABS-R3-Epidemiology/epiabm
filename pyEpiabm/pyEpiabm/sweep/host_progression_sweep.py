@@ -89,7 +89,7 @@ class HostProgressionSweep(AbstractSweep):
                     if person.infection_status == InfectionStatus.Recovered:
                         person.next_infection_status = None
                         person.time_of_status_change = np.inf
-                    if person.infection_status != InfectionStatus.Recovered:
+                    else:
                         self._update_next_infection_status(person)
                         if person.infection_status == InfectionStatus.Exposed:
                             self._set_latent_time(person, time)
