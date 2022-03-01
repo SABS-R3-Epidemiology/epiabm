@@ -12,12 +12,12 @@ class TestInverseCdf(unittest.TestCase):
     """
     def test_construct(self):
         mean = 5
-        icdf_array = np.ones(20)
+        icdf_array = np.ones(21)
         icdf_object = InverseCdf(mean, icdf_array)
         self.assertEqual(icdf_object.mean, 5)
-        self.assertEqual(icdf_object.icdf_array.all(), np.ones(20).all())
+        self.assertEqual(icdf_object.icdf_array.all(), np.ones(21).all())
 
-    @parameterized.expand([(np.random.rand(20) * numReps,)
+    @parameterized.expand([(np.random.rand(21) * numReps,)
                           for _ in range(numReps)])
     def test_choose_noexp(self, icdf):
         icdf = np.sort(icdf)
@@ -26,7 +26,7 @@ class TestInverseCdf(unittest.TestCase):
         value = icdf_object.icdf_choose_noexp()
         self.assertTrue(0 <= value)
 
-    @parameterized.expand([(np.random.rand(20) * numReps,)
+    @parameterized.expand([(np.random.rand(21) * numReps,)
                            for _ in range(numReps)])
     def test_choose_exp(self, icdf):
         icdf = np.sort(icdf)

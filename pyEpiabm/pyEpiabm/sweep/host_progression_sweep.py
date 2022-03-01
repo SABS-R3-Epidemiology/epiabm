@@ -2,6 +2,7 @@
 # Progression of infection within individuals
 #
 import random
+import numpy as np
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import InverseCdf
@@ -77,8 +78,16 @@ class HostProgressionSweep(AbstractSweep):
 
         for cell in self._population.cells:
             for person in cell.persons:
+                if person.time_of_status_change is None:
+                    assert person.infection_status \
+                                    in [InfectionStatus.Susceptible]
+                    continue
                 while person.time_of_status_change <= time:
+                    print(person.time_of_status_change)
                     person.update_status(person.next_infection_status)
+                    if person.infection_status == InfectionStatus.Recovered:
+                        person.next_infection_status = None
+                        person.time_of_status_change = np.inf
                     if person.infection_status != InfectionStatus.Recovered:
                         self._update_next_infection_status(person)
                         if person.infection_status == InfectionStatus.Exposed:

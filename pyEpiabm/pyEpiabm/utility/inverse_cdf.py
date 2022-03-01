@@ -28,7 +28,7 @@ class InverseCdf:
         """
         self.mean = mean
         self.icdf_array = np.asarray(icdf_array)
-        self.CDF_RES = len(icdf_array)
+        self.CDF_RES = len(icdf_array) - 1
         self.time_steps_per_day = pe.Parameters.instance().time_steps_per_day
 
     def icdf_choose_noexp(self) -> float:
