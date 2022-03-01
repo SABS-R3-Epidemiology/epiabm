@@ -19,7 +19,7 @@ class InverseCdf:
         :param mean: Mean of the icdf
         :type mean: float
         :param icdf_array: Array of quantiles of the icdf_array, values
-        in array must be approximately evenely spaced
+        in array must be approximately evenly spaced
         :type icdf_array: numpy array
         :param CDF_RES: Resolution of icdf taken as length of icdf array
         :type: int
