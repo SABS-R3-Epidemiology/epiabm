@@ -43,8 +43,8 @@ class _CompartmentCounter:
         self._compartments[old_status] -= 1
         self._compartments[new_status] += 1
 
-    def increment_compartment(self, n_persons: int,
-                              infection_status: InfectionStatus) -> None:
+    def _increment_compartment(self, n_persons: int,
+                               infection_status: InfectionStatus) -> None:
         """Funtion to add a block of people with the same infection status
         to a compartment.
 

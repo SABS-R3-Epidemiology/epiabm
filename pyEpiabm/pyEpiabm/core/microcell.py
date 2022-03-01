@@ -55,8 +55,8 @@ class Microcell:
         :param status: Status of persons to add to cell
         :type status: InfectionStatus
         """
-        self.compartment_counter.increment_compartment(n, status)
-        self.cell.compartment_counter.increment_compartment(n, status)
+        self.compartment_counter._increment_compartment(n, status)
+        self.cell.compartment_counter._increment_compartment(n, status)
         for _ in range(n):
             p = Person(self)
             self.cell.persons.append(p)

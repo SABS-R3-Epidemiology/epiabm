@@ -40,7 +40,7 @@ class TestCompartmentCounter(unittest.TestCase):
         self.assertDictEqual(self.subject.retrieve(), statuses)
         statuses[InfectionStatus.Susceptible] += 1
         # Explicitly tests the incremenet compartment function.
-        self.subject.increment_compartment(1, InfectionStatus.Susceptible)
+        self.subject._increment_compartment(1, InfectionStatus.Susceptible)
         self.assertDictEqual(self.subject.retrieve(), statuses)
         # Now need to remove the false addition above.
         self.subject.retrieve()[InfectionStatus.Susceptible] -= 1
