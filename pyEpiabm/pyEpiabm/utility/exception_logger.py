@@ -5,10 +5,13 @@
 import logging
 
 
-def log_exceptions(message=""):
+def log_exceptions(message: str = ""):
     """Provides a try/except clause around the function it is applied to.
     Logs the type of error, and name of the function, if an error occurs,
     with an optional message appended on the end.
+
+    :param message: Optional message to append to default log text
+    :type message: str
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
