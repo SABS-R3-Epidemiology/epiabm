@@ -153,23 +153,28 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         :param method: Method of determining cell locations
         :type method: str
         """
-        if method == "random":
-            for cell in population.cells:
-                cell.set_location(tuple(np.random.rand(2)))
+        try:
+            if method == "random":
+                for cell in population.cells:
+                    cell.set_location(tuple(np.random.rand(2)))
 
-        elif method == "uniform_x":
-            cell_number = len(population.cells)
-            x_pos = np.linspace(0, 1, cell_number)
-            for i, cell in enumerate(population.cells):
-                cell.set_location((x_pos[i], 0))
+            elif method == "uniform_x":
+                cell_number = len(population.cells)
+                x_pos = np.linspace(0, 1, cell_number)
+                for i, cell in enumerate(population.cells):
+                    cell.set_location((x_pos[i], 0))
 
-        elif method == "grid":
-            cell_number = len(population.cells)
-            grid_len = math.ceil(math.sqrt(cell_number))
-            pos = np.linspace(0, 1, grid_len)
-            for i, cell in enumerate(population.cells):
-                cell.set_location((pos[i % grid_len],
-                                   pos[i // grid_len]))
+            elif method == "grid":
+                cell_number = len(population.cells)
+                grid_len = math.ceil(math.sqrt(cell_number))
+                pos = np.linspace(0, 1, grid_len)
+                for i, cell in enumerate(population.cells):
+                    cell.set_location((pos[i % grid_len],
+                                       pos[i // grid_len]))
 
-        else:
-            raise ValueError(f"Unknown method: '{method}' not recognised")
+            else:
+                raise ValueError(f"Unknown method: '{method}' not recognised")
+
+        except Exception as e:
+            logging.exception(f"{type(e).__name__} while assigning cell"
+                              + " locations")

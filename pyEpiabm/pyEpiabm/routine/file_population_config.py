@@ -162,45 +162,50 @@ class FilePopulationFactory:
         :param output_file: Path to output file
         :type output_file: str
         """
-        if version.parse(pd.__version__) < version.parse("1.4.0"):
-            logging.warning(f"Pandas version {pd.__version__} is outdated, "
-                            + "tests only consider version 1.4 and greater. ")
+        try:
+            if version.parse(pd.__version__) < version.parse("1.4.0"):
+                logging.warning(f"Pandas version {pd.__version__} is outdated,"
+                                + " only tests version 1.4 and above.")
 
-        columns = ['cell', 'microcell', 'location_x', 'location_y',
-                   'household_number']
-        for status in InfectionStatus:
-            columns.append(str(status.name))
-        df = pd.DataFrame(columns=columns)
+            columns = ['cell', 'microcell', 'location_x', 'location_y',
+                       'household_number']
+            for status in InfectionStatus:
+                columns.append(str(status.name))
+            df = pd.DataFrame(columns=columns)
 
-        for cell in population.cells:
-            for microcell in cell.microcells:
-                data_dict = {
-                    "cell": cell.id,
-                    "microcell": microcell.id,
-                    "location_x": cell.location[0],
-                    "location_y": cell.location[1],
-                }
+            for cell in population.cells:
+                for microcell in cell.microcells:
+                    data_dict = {
+                        "cell": cell.id,
+                        "microcell": microcell.id,
+                        "location_x": cell.location[0],
+                        "location_y": cell.location[1],
+                    }
 
-                households = []
-                for person in microcell.persons:
-                    status = str(person.infection_status.name)
-                    if status in data_dict:
-                        data_dict[status] += 1
-                    else:  # New status
-                        data_dict[status] = 1
-                    if person.household not in households:
-                        households.append(person.household)
-                data_dict['household_number'] = len(households)
+                    households = []
+                    for person in microcell.persons:
+                        status = str(person.infection_status.name)
+                        if status in data_dict:
+                            data_dict[status] += 1
+                        else:  # New status
+                            data_dict[status] = 1
+                        if person.household not in households:
+                            households.append(person.household)
+                    data_dict['household_number'] = len(households)
 
-                new_row = pd.DataFrame(data=data_dict, columns=columns,
-                                       index=[0])
-                df = pd.concat([df, new_row], ignore_index=True)
+                    new_row = pd.DataFrame(data=data_dict, columns=columns,
+                                           index=[0])
+                    df = pd.concat([df, new_row], ignore_index=True)
 
-        df['household_number'] = df['household_number'].astype(int)
-        for status in InfectionStatus:
-            df[str(status.name)] = df[str(status.name)].fillna(0).astype(int)
-            if (df[str(status.name)] == 0).all():  # Delete unused statuses
-                df.drop(columns=str(status.name), inplace=True)
-        output_df = copy.copy(df)  # To access dataframe in testing
-        output_df.to_csv(output_file, header=True, index=False)
-        logging.info(f"Population saved to location {output_file}")
+            df['household_number'] = df['household_number'].astype(int)
+            for status in InfectionStatus:
+                df[str(status.name)] = df[str(status.name)].fillna(0)\
+                    .astype(int)
+                if (df[str(status.name)] == 0).all():  # Delete unused statuses
+                    df.drop(columns=str(status.name), inplace=True)
+            output_df = copy.copy(df)  # To access dataframe in testing
+            output_df.to_csv(output_file, header=True, index=False)
+            logging.info(f"Population saved to location {output_file}")
+
+        except Exception as e:
+            logging.exception(f"{type(e).__name__} while printing population")

@@ -158,7 +158,8 @@ class TestPopConfig(unittest.TestCase):
         self.assertEqual(place_number,
                          len(toy_pop.cells[0].microcells[0].places))
 
-    def test_assign_cell_locations_rand(self):
+    @patch('logging.exception')
+    def test_assign_cell_locations_rand(self, mock_log):
         pop_params = {"population_size": 10, "cell_number": 2,
                       "microcell_number": 1}
         test_pop = ToyPopulationFactory.make_pop(pop_params)
@@ -170,9 +171,10 @@ class TestPopConfig(unittest.TestCase):
             self.assertTrue((0 < cell.location[0]) & (1 > cell.location[0]))
             self.assertTrue((0 < cell.location[1]) & (1 > cell.location[1]))
 
-        with self.assertRaises(ValueError):
-            ToyPopulationFactory.assign_cell_locations(test_pop,
-                                                       method='other')
+        mock_log.assert_not_called()
+        ToyPopulationFactory.assign_cell_locations(test_pop, method='other')
+        mock_log.assert_called_once_with("ValueError while assigning"
+                                         + " cell locations")
 
     @parameterized.expand([(random.randint(2, 20) * numReps,)
                            for _ in range(numReps)])

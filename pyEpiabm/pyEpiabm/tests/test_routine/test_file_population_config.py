@@ -209,6 +209,22 @@ class TestPopConfig(unittest.TestCase):
             pd.testing.assert_frame_equal(mock_copy.call_args.args[0],
                                           data, check_dtype=False)
 
+    @patch('logging.exception')
+    @patch("pandas.DataFrame.to_csv")
+    @patch("pandas.read_csv")
+    def test_print_pop_exception(self, mock_read, mock_print, mock_log):
+        """Tests for when the population is read from empty file.
+        """
+        mock_print.side_effect = FileNotFoundError
+        mock_read.return_value = self.df
+
+        test_pop = FilePopulationFactory.make_pop('test_input.csv')
+
+        FilePopulationFactory.print_population(test_pop, 'output.csv')
+
+        mock_log.assert_called_once_with("FileNotFoundError while printing"
+                                         + " population")
+
     @patch("pandas.read_csv")
     @patch("copy.copy")
     @patch("logging.warning")
