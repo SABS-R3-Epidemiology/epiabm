@@ -43,7 +43,8 @@ class TestHostProgressionSweep(unittest.TestCase):
                           self.person2)
 
     def test_set_latent_time(self):
-        """Test the set latent time returns a float greater than 0.0.
+        """Test that set latent time returns a float greater than
+        or equal to 0.0.
         """
         current_time = 5.0
         test_sweep = pe.sweep.HostProgressionSweep()

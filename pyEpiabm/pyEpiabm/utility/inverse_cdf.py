@@ -21,11 +21,11 @@ class InverseCdf:
         :param icdf_array: Array of quantiles of the icdf_array, values
         in array must be approximately evenly spaced
         :type icdf_array: np.ndarray
-        :param CDF_RES: Resolution of icdf taken as length of icdf array
-        :type: int
-        :param time_steps_per_day: number of time steps per day in simulation
-        :type: int
         """
+
+        # CDF_RES is the resolution of icdf taken as length of icdf array.
+        # Time_steps_per_day is the number of time steps per day in
+        # the simulation.
         self.mean = mean
         self.icdf_array = np.asarray(icdf_array)
         self.CDF_RES = len(icdf_array) - 1
@@ -45,7 +45,7 @@ class InverseCdf:
         q -= float(i)
         ti = (self.mean
               * (q * self.icdf_array[i+1] + (1.0 - q) * self.icdf_array[i]))
-        value = math.floor(0.5 + (ti * self.time_steps_per_day))
+        value = float(math.floor(0.5 + (ti * self.time_steps_per_day)))
         return value
 
     def icdf_choose_exp(self) -> float:
@@ -68,5 +68,5 @@ class InverseCdf:
         q -= float(i)
         ti = -self.mean * \
             np.log((q * exp_icdf_array[i+1] + (1.0 - q) * exp_icdf_array[i]))
-        value = math.floor(0.5 + (ti * self.time_steps_per_day))
+        value = float(math.floor(0.5 + (ti * self.time_steps_per_day)))
         return value
