@@ -6,9 +6,10 @@ import numpy as np
 from pyEpiabm.core import Population, Parameters
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import SpatialSweep
+from pyEpiabm.tests.mocked_logging_tests import TestMockedLogs
 
 
-class TestSpatialSweep(unittest.TestCase):
+class TestSpatialSweep(TestMockedLogs):
     """Test the "SpatialSweep" class.
     """
 
@@ -17,6 +18,7 @@ class TestSpatialSweep(unittest.TestCase):
         """Initialises a population with one cell and one person in
         the cell.
         """
+        super(TestSpatialSweep, cls).setUpClass()
         cls.pop = Population()
         cls.pop.add_cells(1)
         cls.cell_inf = cls.pop.cells[0]
@@ -28,6 +30,7 @@ class TestSpatialSweep(unittest.TestCase):
         cls.infector = cls.microcell_inf.persons[0]
         Parameters.instance().time_steps_per_day = 1
 
+    @mock.patch("random.choices")
     @mock.patch("numpy.nan_to_num")
     @mock.patch("random.sample")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
@@ -35,7 +38,7 @@ class TestSpatialSweep(unittest.TestCase):
     @mock.patch("pyEpiabm.routine.SpatialInfection.space_foi")
     @mock.patch("pyEpiabm.routine.SpatialInfection.cell_inf")
     def test__call__(self, mock_inf, mock_force, mock_poisson, mock_dist,
-                     mock_infectee, mock_nan):
+                     mock_infectee, mock_nan, mock_choices):
         """Test whether the spatial sweep function correctly
         adds persons to the queue, with each infection
         event certain to happen.
@@ -45,7 +48,7 @@ class TestSpatialSweep(unittest.TestCase):
         mock_inf.return_value = 10.0
         mock_force.return_value = 100.0
         time = 1
-        Parameters.instance().infection_radius = 5000
+        Parameters.instance().infection_radius = 1000
 
         test_sweep = SpatialSweep()
 
@@ -64,6 +67,7 @@ class TestSpatialSweep(unittest.TestCase):
         self.microcell_susc.add_people(1)
         self.infectee = self.microcell_susc.persons[0]
         mock_infectee.return_value = [self.infectee]
+        mock_choices.return_value = [self.cell_susc]
 
         test_sweep.bind_population(self.pop)
         test_sweep(time)
@@ -100,12 +104,17 @@ class TestSpatialSweep(unittest.TestCase):
         self.assertFalse(mock_nan.called)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
 
+        Parameters.instance().do_CovidSim = False
+        self.infectee.update_status(InfectionStatus.Susceptible)
+        self.cell_susc.person_queue = Queue()
+        test_sweep.bind_population(self.pop)
+        Parameters.instance().infection_radius = 0.00001
+        test_sweep(time)
+        Parameters.instance().infection_radius = 1000
+
         # Three cells to test distance, one nan, one valid
         # distance will call nan_to_num
-        Parameters.instance().do_CovidSim = False
         mock_nan.return_value = [2, 2]
-
-        self.infectee.update_status(InfectionStatus.Susceptible)
         mock_dist.side_effect = [0, 2]
         self.pop.add_cells(1)
         self.third_cell = self.pop.cells[2]
