@@ -88,7 +88,8 @@ class SpatialSweep(AbstractSweep):
                     infection_distance = DistanceFunctions.dist(
                      cell.location, infectee_cell.location) / Parameters.\
                         instance().infection_radius
-                    if (infection_distance < random.random()):
+                    r = random.random()
+                    if (infection_distance < r):
                         # Covidsim rejects the infection event if the distance
                         # between infector/infectee is too large.
                         self.do_infection_event(infector, infectee, timestep)
@@ -118,13 +119,16 @@ class SpatialSweep(AbstractSweep):
                     max_weight = np.nanmax(distance_weights)
                     distance_weights = np.nan_to_num(distance_weights,
                                                      nan=max_weight)
+                # Use of the cutoff distance idea from CovidSim.
+                cutoff = Parameters.instance().infection_radius
+                distance_weights = [weight/sum(distance_weights) for weight in
+                                    distance_weights if weight > 1/cutoff]
                 cell_list = random.choices(possible_infectee_cells,
                                            weights=distance_weights,
                                            k=number_to_infect)
                 # Each infection event corresponds to a infectee cell
                 # on the cell list
                 for infectee_cell in cell_list:
-
                     # Sample at random from the infectee cell to find
                     # an infectee
                     infectee = random.sample(infectee_cell.persons, 1)[0]
