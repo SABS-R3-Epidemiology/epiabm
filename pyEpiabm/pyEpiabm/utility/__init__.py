@@ -3,8 +3,8 @@
 #
 
 """ pyEpiabm.utility provides methods used to calculate infection
-and host progression parameters and is also implemented in
-other calculations and algorithms throughout pyEpiabm files.
+and host progression parameters, and other calculations and
+algorithms called throughout pyEpiabm.
 """
 
 from .distance_metrics import DistanceFunctions
