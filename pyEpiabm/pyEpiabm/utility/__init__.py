@@ -10,3 +10,4 @@ other calculations and algorithms throughout pyEpiabm files.
 from .distance_metrics import DistanceFunctions
 from .random_methods import RandomMethods
 from .inverse_cdf import InverseCdf
+from .exception_logger import log_exceptions

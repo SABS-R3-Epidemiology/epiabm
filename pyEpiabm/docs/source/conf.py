@@ -19,11 +19,11 @@ sys.path.insert(0, os.path.abspath('../..'))
 # -- Project information -----------------------------------------------------
 
 project = 'pyEpiabm'  # noqa
-copyright = '2020, SABS-R3-Epidemiology'
+copyright = '2022, SABS-R3-Epidemiology'
 author = 'SABS-R3-Epidemiology'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.1'
+release = '0.0.3'
 
 
 # -- General configuration ---------------------------------------------------

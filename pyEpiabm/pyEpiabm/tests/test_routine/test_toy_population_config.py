@@ -1,6 +1,7 @@
 import random
 import math
 import unittest
+from unittest.mock import patch
 from parameterized import parameterized
 
 import pyEpiabm as pe
@@ -41,6 +42,19 @@ class TestPopConfig(unittest.TestCase):
 
         # Test a population class object is returned
         self.assertIsInstance(test_pop, pe.Population)
+
+    @patch("numpy.random.multinomial")
+    @patch('logging.exception')
+    def test_make_pop_exception(self, patch_log, patch_random):
+        """Tests for when the population is implemented with errors
+        """
+        patch_random.side_effect = ValueError
+        # Population is initialised with no households
+        pop_params = {"population_size": 10, "cell_number": 1,
+                      "microcell_number": 1}
+        ToyPopulationFactory.make_pop(pop_params)
+        patch_log.assert_called_once_with("ValueError in ToyPopulation"
+                                          + "Factory.make_pop()")
 
     def summarise_pop(self, pop):
         # Returns lists of cell and microcell wise populations
@@ -144,7 +158,8 @@ class TestPopConfig(unittest.TestCase):
         self.assertEqual(place_number,
                          len(toy_pop.cells[0].microcells[0].places))
 
-    def test_assign_cell_locations_rand(self):
+    @patch('logging.exception')
+    def test_assign_cell_locations_rand(self, mock_log):
         pop_params = {"population_size": 10, "cell_number": 2,
                       "microcell_number": 1}
         test_pop = ToyPopulationFactory.make_pop(pop_params)
@@ -156,9 +171,10 @@ class TestPopConfig(unittest.TestCase):
             self.assertTrue((0 < cell.location[0]) & (1 > cell.location[0]))
             self.assertTrue((0 < cell.location[1]) & (1 > cell.location[1]))
 
-        with self.assertRaises(ValueError):
-            ToyPopulationFactory.assign_cell_locations(test_pop,
-                                                       method='other')
+        mock_log.assert_not_called()
+        ToyPopulationFactory.assign_cell_locations(test_pop, method='other')
+        mock_log.assert_called_once_with("ValueError in ToyPopulationFactory"
+                                         + ".assign_cell_locations()")
 
     @parameterized.expand([(random.randint(2, 20) * numReps,)
                            for _ in range(numReps)])

@@ -6,12 +6,15 @@ from unittest.mock import patch, mock_open
 
 import pyEpiabm as pe
 
+from pyEpiabm.tests.mocked_logging_tests import TestMockedLogs
 
-class TestSimulation(unittest.TestCase):
+
+class TestSimulation(TestMockedLogs):
     """Tests the 'Simulation' class.
     """
     @classmethod
     def setUpClass(cls) -> None:
+        super(TestSimulation, cls).setUpClass()  # Sets up patch on logging
         cls.pop_factory = pe.routine.ToyPopulationFactory()
         cls.pop_params = {"population_size": 0, "cell_number": 1,
                           "microcell_number": 1, "household_number": 1}
@@ -55,6 +58,18 @@ class TestSimulation(unittest.TestCase):
             del(test_sim.writer)
         mo.assert_called_with(filename, 'w')
 
+    @patch('logging.exception')
+    @patch('os.path.join')
+    def test_configure_exception(self, mock_join, mock_log):
+        mock_join.side_effect = SyntaxError
+        mo = mock_open()
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params)
+            mock_log.assert_called_once_with("SyntaxError in"
+                                             + " Simulation.configure()")
+
     def test_spatial_output_bool(self):
         with patch('pyEpiabm.output._csv_dict_writer.open'):
             test_sim = pe.routine.Simulation()
@@ -90,6 +105,22 @@ class TestSimulation(unittest.TestCase):
             patch_initial.assert_called_with(self.sim_params)
             patch_sweep.assert_called_with(time_sweep)
             patch_write.assert_called_with(time_write)
+
+    @patch('logging.exception')
+    @patch('pyEpiabm.sweep.InitialInfectedSweep.__call__')
+    def test_run_sweeps_exception(self, patch_initial, patch_log):
+        patch_initial.side_effect = NotImplementedError
+
+        mo = mock_open()
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+
+            broken_sim = pe.routine.Simulation()
+            broken_sim.configure(self.test_population, self.initial_sweeps,
+                                 self.sweeps, self.sim_params,
+                                 self.file_params)
+            broken_sim.run_sweeps()
+            patch_log.assert_called_once_with("NotImplementedError in"
+                                              + " Simulation.run_sweeps()")
 
     def test_write_to_file(self):
         mo = mock_open()
