@@ -33,7 +33,7 @@ class TestCell(unittest.TestCase):
         self.assertEqual(local_cell.location[1], 3.2)
         self.assertRaises(ValueError, pe.Cell, (1, 1, 1))
         self.assertRaises(ValueError, pe.Cell, (1, (8, 6)))
-        self.assertRaises(ValueError, pe.Cell, ([1, 1], 1))
+        self.assertRaises(ValueError, pe.Cell, ('1', 1))
 
     def test_set_id(self):
         id_cell = pe.Cell()
