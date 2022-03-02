@@ -16,6 +16,11 @@ class HostProgressionSweep(AbstractSweep):
     and time to next infection status change.
     """
 
+    def __init__(self, state_transition_matrix):
+
+        self.state_transition_matrix = state_transition_matrix
+        self.number_of_states = len(InfectionStatus)
+
     def _update_time_to_status_change(self, person, time):
         """Assigns time until next infection status update,
          given as a random integer between 1 and 10. Used
@@ -178,7 +183,7 @@ class HostProgressionSweep(AbstractSweep):
             next_inf_status = InfectionStatus.InfectICURecov
         return next_inf_status
 
-    def _update_next_infection_status(self, person):
+    def old_update_next_infection_status(self, person):
         """Assigns next infection status based on current infection status
         and on probabilities of outcome.
 
@@ -209,6 +214,30 @@ class HostProgressionSweep(AbstractSweep):
             raise TypeError('update_next_infection_status should only ' +
                             'be applied to individuals with mild ' +
                             'infection status, or exposed')
+
+    def _update_next_infection_status(self, person):
+        """Assigns next infection status based on current infection status
+        and on probabilities of transition to different statuses. Weights
+        are taken from row in state transition matrix that corresponds to
+        the person's current infection status. Weights are then used in
+        random.choices method to select person's next infection status.
+
+        :param Person: Person class with infection status attributes
+        :type Person: Person
+        """
+
+        row_index = person.infection_status
+        weights = self.state_transition_matrix[row_index].to_numpy()
+        outcomes = range(1, self.number_of_states + 1)
+
+        if len(weights) != len(outcomes):
+            raise AssertionError('The number of infection statuses must \
+                                match the number of transition probabilities')
+
+        next_infection_status_number = random.choices(outcomes, weights)
+        next_infection_status = InfectionStatus(next_infection_status_number)
+
+        person.next_infection_status = next_infection_status
 
     def __call__(self, time: float):
         """Sweeps through all people in the population, updates
