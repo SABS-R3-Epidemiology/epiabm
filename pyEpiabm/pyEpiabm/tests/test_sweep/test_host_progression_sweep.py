@@ -73,14 +73,15 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertIsInstance(self.person1.time_of_status_change, float)
         self.assertTrue(6.0 <= self.person1.time_of_status_change <= 15.0)
 
-    def test_call_main(self):
+    @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_exp')
+    def test_call_main(self, mock_latent):
         """Tests the main function of the Host Progression Sweep.
         Person 1 is set to susceptible and becoming exposed. Person 2 is set to
         exposed and becoming infectious in one time step. Checks the
         population updates as expected. Check that Person 3 stays as
         susceptible.
         """
-
+        mock_latent.return_value = 1.0
         # First check that people progress through the
         # infection stages correctly.
         self.person2.update_status(pe.property.InfectionStatus.Exposed)
@@ -109,6 +110,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertIsInstance(self.person1.time_of_status_change, float)
         self.assertTrue(2.0 <= self.person2.time_of_status_change <= 11.0)
         self.assertTrue(0.0 <= self.person1.time_of_status_change)
+        mock_latent.assert_called_once()
 
     def test_call_specific(self):
         """Tests the specific cases in the call method such as people
