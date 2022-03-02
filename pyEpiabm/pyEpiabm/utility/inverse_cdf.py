@@ -62,7 +62,7 @@ class InverseCdf:
         q = rand_num * self.CDF_RES
 
         # We take the integer part of q because we require i to be an index.
-        # By taking away the integer part of q we ae left with a random
+        # By taking away the integer part of q we are left with a random
         # number i, on the unit interval that is used for weighted
         # average between icdf values.
         i = math.floor(q)
