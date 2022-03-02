@@ -78,7 +78,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         Person 1 is set to susceptible and becoming exposed. Person 2 is set to
         exposed and becoming infectious in one time step. Checks the
         population updates as expected. Check that Person 3 stays as
-        suscpeitble.
+        susceptible.
         """
 
         # First check that people progress through the
