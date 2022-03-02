@@ -50,8 +50,8 @@ class InverseCdf:
 
     def icdf_choose_exp(self) -> float:
         """Samples a value from the inverse cumulative distribution function,
-        following what is done in CovidSim (with exponentiation), and
-        returns the value as a float.
+        following what is done in CovidSim (with negative exponentiation),
+        and returns the value as a float.
 
         :returns: Mean scaled relative to given icdf
         :rtype: float
