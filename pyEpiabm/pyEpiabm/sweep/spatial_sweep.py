@@ -88,8 +88,7 @@ class SpatialSweep(AbstractSweep):
                     infection_distance = DistanceFunctions.dist(
                      cell.location, infectee_cell.location) / Parameters.\
                         instance().infection_radius
-                    r = random.random()
-                    if (infection_distance < r):
+                    if (infection_distance < random.random()):
                         # Covidsim rejects the infection event if the distance
                         # between infector/infectee is too large.
                         self.do_infection_event(infector, infectee, timestep)
