@@ -116,7 +116,6 @@ class TestHostProgressionSweep(unittest.TestCase):
         infection status and that people who have been set as recovered
         are dealth with correctly.
         """
-
         # Check assertion error for infection status when None is set
         # as time to status change.
 
