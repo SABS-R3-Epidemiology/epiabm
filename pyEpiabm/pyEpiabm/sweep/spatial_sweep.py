@@ -63,6 +63,7 @@ class SpatialSweep(AbstractSweep):
             # given out in total by the cell
             ave_num_of_infections = SpatialInfection.cell_inf(cell, timestep)
             number_to_infect = np.random.poisson(ave_num_of_infections)
+
             # Sample at random from the cell to find an infector. Have
             # checked to ensure there is an infector present.
             possible_infectors = [person for person in cell.persons

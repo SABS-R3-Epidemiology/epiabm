@@ -12,7 +12,10 @@ Overview:
 
 - :class:`DistanceFunctions`
 
+- :class:`RandomMethods`
+
 .. autoclass:: DistanceFunctions
     :members:
 
-
+.. autoclass:: RandomMethods
+    :members:
