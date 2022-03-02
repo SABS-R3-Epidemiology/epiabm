@@ -36,7 +36,6 @@ class TestSpatialSweep(unittest.TestCase):
     @mock.patch("pyEpiabm.routine.SpatialInfection.cell_inf")
     def test__call__(self, mock_inf, mock_force, mock_poisson, mock_dist,
                      mock_infectee, mock_nan):
-
         """Test whether the spatial sweep function correctly
         adds persons to the queue, with each infection
         event certain to happen.
