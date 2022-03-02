@@ -64,7 +64,7 @@ class TestHostProgressionSweep(unittest.TestCase):
             test_sweep._set_latent_time(self.person1, current_time)
 
     def test_update_time(self):
-        """Test the update time function on the test population. This generates
+        """Tests the update time function on the test population. This generates
         a random float (uniformly) between 1.0 and 10.0.
         """
         current_time = 5.0
