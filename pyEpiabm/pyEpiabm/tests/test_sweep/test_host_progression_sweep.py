@@ -114,7 +114,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         """Tests the specific cases in the call method such as people
         with None as their time to next infection status are the correct
         infection status and that people who have been set as recovered
-        are dealth with correctly.
+        are dealt with correctly.
         """
         # Check assertion error for infection status when None is set
         # as time to status change.
