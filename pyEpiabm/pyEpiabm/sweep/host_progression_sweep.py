@@ -70,9 +70,9 @@ class HostProgressionSweep(AbstractSweep):
                             'infection status, or exposed')
 
     def __call__(self, time: float):
-        """Sweeps through all people in the population and updates
+        """Sweeps through all people in the population, updates
         their infection status if it is time and assigns them their
-        next infection status and a new time of next status change.
+        next infection status and the time of their next status change.
 
         :param time: Current simulation time
         :type time: float
