@@ -1,6 +1,6 @@
 BSD 3-Clause License
 
-Copyright (c) 2021, SABS-R3-Epidemiology
+Copyright (c) 2022, SABS-R3-Epidemiology
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
