@@ -38,7 +38,7 @@ class HostProgressionSweep(AbstractSweep):
         Person, given as the time until next infection status
         for a person who has been set as exposed.
 
-        :param Person: Person class with infection status attributes
+        :param Person: Person instance with infection status attributes
         :type Person: Person
         :param time: Current simulation time
         :type time: float
