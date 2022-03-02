@@ -21,7 +21,7 @@ class HostProgressionSweep(AbstractSweep):
          for persons with infection statuses that have no transition/
          latent time implemented yet - temporary function.
 
-        :param Person: Person class with infection status attributes
+        :param Person: Person instance with infection status attributes
         :type Person: Person
         :param time: Current simulation time
         :type time: float
