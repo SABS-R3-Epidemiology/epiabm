@@ -9,8 +9,8 @@ import numpy as np
 
 
 class InverseCdf:
-    """Class of inverse cumulative distribution functions and their associated
-    methods, in a style similar to CovidSim.
+    """Class of inverse cumulative distribution functions (icdf) and their
+    associated methods, in a style similar to CovidSim.
     """
 
     def __init__(self, mean, icdf_array):
