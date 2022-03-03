@@ -19,15 +19,17 @@ class TestSpatialSweep(TestMockedLogs):
         the cell.
         """
         super(TestSpatialSweep, cls).setUpClass()
-        cls.pop = Population()
-        cls.pop.add_cells(1)
-        cls.cell_inf = cls.pop.cells[0]
+    
+    def setUp(self):
+        self.pop = Population()
+        self.pop.add_cells(1)
+        self.cell_inf = self.pop.cells[0]
 
-        cls.cell_inf.add_microcells(1)
-        cls.microcell_inf = cls.cell_inf.microcells[0]
+        self.cell_inf.add_microcells(1)
+        self.microcell_inf = self.cell_inf.microcells[0]
 
-        cls.microcell_inf.add_people(100)
-        cls.infector = cls.microcell_inf.persons[0]
+        self.microcell_inf.add_people(100)
+        self.infector = self.microcell_inf.persons[0]
         Parameters.instance().time_steps_per_day = 1
 
     @mock.patch("random.choices")
@@ -134,6 +136,11 @@ class TestSpatialSweep(TestMockedLogs):
         mock_nan.assert_called_once_with([np.nan, 0.5], nan=0.5)
         self.assertEqual(cell_susc.person_queue.qsize(), 1)
 
+        # Test assert raised on weights length
+        mock_nan.return_value = [2]
+        mock_dist.side_effect = [0, 2]
+        self.assertRaises(AssertionError, test_sweep, time)
+
     @mock.patch("random.random")
     def test_do_infection_event(self, mock_random):
         test_sweep = SpatialSweep()
@@ -145,9 +152,9 @@ class TestSpatialSweep(TestMockedLogs):
         test_pop = self.pop
         test_pop.add_cells(1)
         cell_susc = test_pop.cells[1]
-        cell_susc.person_queue = Queue()
+        cell_susc.add_microcells(1)
         microcell_susc = cell_susc.microcells[0]
-        microcell_susc.add_people(1)
+        microcell_susc.add_people(2)
         fake_infectee = microcell_susc.persons[1]
         fake_infectee.update_status(InfectionStatus.Recovered)
         actual_infectee = microcell_susc.persons[0]

@@ -129,7 +129,8 @@ class SpatialSweep(AbstractSweep):
                                     weight in distance_weights]
                 # Will catch the case if distance weights isn't configured
                 # correctly and returns the wrong length.
-                assert len(distance_weights) == len(possible_infectee_cells)
+                assert len(distance_weights) == len(possible_infectee_cells), (
+                    "distance weights are not the same length as cell list")
 
                 try:
                     # Will catch a list of zeros
