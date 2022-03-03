@@ -105,12 +105,17 @@ class TestSpatialSweep(TestMockedLogs):
         self.assertFalse(mock_nan.called)
         self.assertEqual(cell_susc.person_queue.qsize(), 1)
 
-        # Check a zero infection radius doesn't return infection
+        # Check a zero or very small infection radius doesn't
+        # return infection
         Parameters.instance().do_CovidSim = False
         infectee.update_status(InfectionStatus.Susceptible)
         cell_susc.person_queue = Queue()
         test_sweep.bind_population(test_pop)
         Parameters.instance().infection_radius = 0
+        test_sweep(time)
+        self.assertEqual(cell_susc.person_queue.qsize(), 0)
+        test_sweep.bind_population(test_pop)
+        Parameters.instance().infection_radius = 0.00001
         test_sweep(time)
         self.assertEqual(cell_susc.person_queue.qsize(), 0)
         Parameters.instance().infection_radius = 1000
