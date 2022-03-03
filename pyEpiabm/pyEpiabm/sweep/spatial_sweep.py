@@ -43,7 +43,7 @@ class SpatialSweep(AbstractSweep):
         # cells is more than one (edge case but worth having)
         if len(self._population.cells) == 1:
             return
-        # If infecion radius is set to zero no infections will occur so
+        # If infection radius is set to zero no infections will occur so
         # break immediately to save time.
         if Parameters.instance().infection_radius == 0:
             return
