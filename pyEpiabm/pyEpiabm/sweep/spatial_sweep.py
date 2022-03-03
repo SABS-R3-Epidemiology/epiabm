@@ -5,6 +5,7 @@
 
 import random
 import numpy as np
+import logging
 
 from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
@@ -41,6 +42,10 @@ class SpatialSweep(AbstractSweep):
         # As this tracks intercell infections need to check number of
         # cells is more than one (edge case but worth having)
         if len(self._population.cells) == 1:
+            return
+        # If infecion radius is set to zero no infections will occur so
+        # break immediately to save time.
+        if Parameters.instance().infection_radius == 0:
             return
         # Double loop over the whole population, checking infectiousness
         # status, and whether they are absent from their household.
@@ -120,11 +125,25 @@ class SpatialSweep(AbstractSweep):
                                                      nan=max_weight)
                 # Use of the cutoff distance idea from CovidSim.
                 cutoff = Parameters.instance().infection_radius
-                distance_weights = [weight if (weight > 1/cutoff) else 0 for
+                distance_weights = [weight if (cutoff > 1/weight) else 0 for
                                     weight in distance_weights]
-                cell_list = random.choices(possible_infectee_cells,
-                                           weights=distance_weights,
-                                           k=number_to_infect)
+                # Will catch the case if distance weights isn't configured
+                # correctly and returns the wrong length.
+                assert len(distance_weights) == len(possible_infectee_cells)
+
+                try:
+                    # Will catch a list of zeros
+                    1/sum(distance_weights)
+                    cell_list = random.choices(possible_infectee_cells,
+                                               weights=distance_weights,
+                                               k=number_to_infect)
+                except ZeroDivisionError:
+                    logging.exception(f"{type(ValueError).__name__}: no cells"
+                                      + f" within radius {cutoff} of"
+                                      + f" cell {cell.id} at location"
+                                      + f" {cell.location}. Skip cell.")
+                    continue
+
                 # Each infection event corresponds to a infectee cell
                 # on the cell list
                 for infectee_cell in cell_list:
