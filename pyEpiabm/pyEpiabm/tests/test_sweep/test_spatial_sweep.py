@@ -125,9 +125,9 @@ class TestSpatialSweep(TestMockedLogs):
         mock_nan.return_value = [2, 2]
         mock_dist.side_effect = [0, 2]
         test_pop.add_cells(1)
-        self.third_cell = test_pop.cells[2]
-        self.third_cell.add_microcells(1)
-        self.third_cell.microcells[0].add_people(1)
+        third_cell = test_pop.cells[2]
+        third_cell.add_microcells(1)
+        third_cell.microcells[0].add_people(1)
         cell_susc.person_queue = Queue()
         test_sweep.bind_population(test_pop)
         test_sweep(time)
