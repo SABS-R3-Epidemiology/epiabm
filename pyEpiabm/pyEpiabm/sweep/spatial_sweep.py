@@ -141,7 +141,7 @@ class SpatialSweep(AbstractSweep):
                     logging.exception(f"{type(ValueError).__name__}: no cells"
                                       + f" within radius {cutoff} of"
                                       + f" cell {cell.id} at location"
-                                      + f" {cell.location}. Skip cell.")
+                                      + f" {cell.location} - skipping cell.")
                     continue
 
                 # Each infection event corresponds to a infectee cell
