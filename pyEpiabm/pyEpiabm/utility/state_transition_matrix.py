@@ -47,7 +47,7 @@ class StateTransitionMatrix:
         :rtype: Pandas dataframe
         """
         matrix.loc['Susceptible', 'Exposed'] = 1
-        matrix.loc['Exposed', 'InfectASympt'] = 0.33
+        matrix.loc['Exposed', 'InfectASympt'] = 0.34
         matrix.loc['Exposed', 'InfectMild'] = 0.410061048258529
         matrix.loc['Exposed', 'InfectGP'] = 0.249938951741471
         matrix.loc['InfectASympt', 'Recovered'] = 1

@@ -66,14 +66,14 @@ class TestHostProgressionSweep(unittest.TestCase):
             test_sweep._set_latent_time(self.person1, current_time)
 
        
-    # def test_set_infectiousness(self):
-    #     """Tests that the set infectiousness function returns a positive
-    #     float.
-    #     """
-    #     test_sweep = pe.sweep.HostProgressionSweep()
-    #     infectiousness = test_sweep._set_infectiousness()
-    #     self.assertIsInstance(infectiousness, float)
-    #     self.assertTrue(0 <= infectiousness)
+    def test_set_infectiousness(self):
+         """Tests that the set infectiousness function returns a positive
+         float.
+         """
+         test_sweep = pe.sweep.HostProgressionSweep()
+         infectiousness = test_sweep._set_infectiousness(self.person1)
+         self.assertIsInstance(infectiousness, float)
+         self.assertTrue(0 <= infectiousness)
       
     def test_update_time(self):
         """Tests the update time function on the test population. This generates
