@@ -5,6 +5,8 @@
 import numpy as np
 
 from pyEpiabm.utility.state_transition_matrix import StateTransitionMatrix
+
+
 class Parameters:
     """Class for global parameters.
 
@@ -157,12 +159,13 @@ class Parameters:
             self.prob_hosp_to_icu = 0.3969284544  # From average of by age prop
             self.mortality_prob_gp = 0  # From average of by age prop
             self.mortality_prob_hosp = 0.2676376  # From average of by age prop
-            self.mortality_prob_icu = 0.5234896  # From average of by age 
-            
-            #Build infection state transition matrix
+            self.mortality_prob_icu = 0.5234896  # From average of by age
+
+            # Build infection state transition matrix
             matrix_object = StateTransitionMatrix()
             empty_matrix = matrix_object.build_state_transition_matrix()
-            self.state_transition_matrix = matrix_object.fill_state_transition_matrix(empty_matrix)
+            self.state_transition_matrix =\
+                matrix_object.fill_state_transition_matrix(empty_matrix)
             pass
 
     _instance = None  # Singleton instance

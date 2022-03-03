@@ -20,7 +20,6 @@ class TestStateTransitionMatrix(unittest.TestCase):
                   'Recovered', 'Dead']
         zero_filled_dataframe = pd.DataFrame(np.zeros((10, 10)),
                                              columns=labels, index=labels)
-        print(zero_filled_dataframe.shape)
         assert_frame_equal(matrix, zero_filled_dataframe)
 
     def test_fill_state_transition_matrix(self):
@@ -31,11 +30,9 @@ class TestStateTransitionMatrix(unittest.TestCase):
         matrix_object = StateTransitionMatrix()
         matrix = matrix_object.build_state_transition_matrix()
         filled_matrix = matrix_object.fill_state_transition_matrix(matrix)
-        print(filled_matrix)
         filled_matrix['sum'] = filled_matrix.sum(axis=1)
         for i in filled_matrix['sum']:
             self.assertAlmostEqual(i, 1)
-
 
 
 if __name__ == '__main__':

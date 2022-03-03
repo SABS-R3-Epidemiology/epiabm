@@ -31,7 +31,8 @@ class TestHostProgressionSweep(unittest.TestCase):
         cls.test_population2 = pe.Population()
         cls.test_population2.add_cells(1)
         cls.test_population2.cells[0].add_microcells(1)
-        cls.test_population2.cells[0].microcells[0].add_people(len(InfectionStatus))
+        cls.test_population2.cells[0].microcells[0].\
+            add_people(len(InfectionStatus))
         cls.people = []
         for i in range(len(InfectionStatus)):
             person = cls.test_population2.cells[0].microcells[0].persons[i]
@@ -187,7 +188,8 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.person1.next_infection_status = \
             pe.property.InfectionStatus.Exposed
         test_sweep = pe.sweep.HostProgressionSweep()
-        self.state_transition_matrix = pe.Parameters.instance().state_transition_matrix
+        self.state_transition_matrix = \
+            pe.Parameters.instance().state_transition_matrix
         test_sweep.bind_population(self.test_population1)
 
         # Tests population bound successfully.
@@ -224,7 +226,8 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.person3.update_status(InfectionStatus.Susceptible)
         test_sweep = pe.sweep.HostProgressionSweep()
         test_sweep.bind_population(self.test_population1)
-        test_sweep.state_transition_matrix = pe.Parameters.instance().state_transition_matrix
+        test_sweep.state_transition_matrix = \
+            pe.Parameters.instance().state_transition_matrix
 
         # Run sweep and check assertion error is raised for Person 1.
         with self.assertRaises(AssertionError):
