@@ -19,19 +19,15 @@ class StateTransitionMatrix:
         :returns: Symmetric matrix in the form of a dataframe
         :rtype: Pandas dataframe
         """
+        # Currently, method very rigid. Can add flexibility later.
         nb_states = len(InfectionStatus)
         zero_trans = np.zeros((nb_states, nb_states))
+        labels = ['Susceptible', 'Exposed', 'InfectAsympt', 'InfectMild',
+                  'InfectGP', 'InfectHosp', 'InfectICU', 'InfectICURecov',
+                  'Recovered', 'Dead']
         init_matrix = pd.DataFrame(zero_trans,
-                                   columns=['Susceptible', 'Exposed',
-                                            'InfectAsympt', 'InfectMild',
-                                            'InfectGP', 'InfectHosp',
-                                            'InfectICU', 'InfectICURecov',
-                                            'Recovered', 'Dead'],
-                                   index=['Susceptible', 'Exposed',
-                                          'InfectAsympt', 'InfectMild',
-                                          'InfectGP', 'InfectHosp',
-                                          'InfectICU', 'InfectICURecov',
-                                          'Recovered', 'Dead'])
+                                   columns=labels,
+                                   index=labels)
         return init_matrix
 
     def fill_state_transition_matrix(self, matrix):
@@ -51,7 +47,7 @@ class StateTransitionMatrix:
         :rtype: Pandas dataframe
         """
         matrix.loc['Susceptible', 'Exposed'] = 1
-        matrix.loc['Exposed', 'InfectAsympt'] = 0.33
+        matrix.loc['Exposed', 'InfectAsympt'] = 0.34
         matrix.loc['Exposed', 'InfectMild'] = 0.410061048258529
         matrix.loc['Exposed', 'InfectGP'] = 0.249938951741471
         matrix.loc['InfectAsympt', 'Recovered'] = 1
