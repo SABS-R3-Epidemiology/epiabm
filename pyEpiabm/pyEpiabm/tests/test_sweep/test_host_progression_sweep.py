@@ -1,4 +1,3 @@
-from ast import In
 import unittest
 from unittest import mock
 import numpy as np
@@ -17,7 +16,8 @@ class TestHostProgressionSweep(unittest.TestCase):
         2 people are located in one microcell.
         """
 
-        # Create population that will be used to test all methods except update status
+        # Create population that will be used to test all
+        #  methods except update status
         cls.test_population1 = pe.Population()
         cls.test_population1.add_cells(1)
         cls.test_population1.cells[0].add_microcells(1)
@@ -26,7 +26,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         cls.person2 = cls.test_population1.cells[0].microcells[0].persons[1]
         cls.person3 = cls.test_population1.cells[0].microcells[0].persons[2]
 
-        # Create a population with people of all infection statuses to 
+        # Create a population with people of all infection statuses to
         # test update status method
         cls.test_population2 = pe.Population()
         cls.test_population2.add_cells(1)

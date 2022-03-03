@@ -4,10 +4,10 @@
 # from inspect import Parameter
 import random
 import numpy as np
+
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import InverseCdf
-from pyEpiabm.utility import StateTransitionMatrix
 
 from .abstract_sweep import AbstractSweep
 
@@ -22,10 +22,11 @@ class HostProgressionSweep(AbstractSweep):
         transition matrix is set where each row of the matrix corresponds
         to a current infection status of a person. The columns of that
         row then indicate the transition probabilities for the remaining
-        infection statuses. Number of infection states is also set by 
+        infection statuses. Number of infection states is also set by
         taking the size of the InfectionStatus enum.
         """
-        self.state_transition_matrix = pe.Parameters.instance().state_transition_matrix
+        self.state_transition_matrix = \
+            pe.Parameters.instance().state_transition_matrix
         self.number_of_states = len(InfectionStatus)
 
     def _update_time_to_status_change(self, person, time):
