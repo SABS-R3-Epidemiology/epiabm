@@ -19,7 +19,7 @@ class TestSpatialSweep(TestMockedLogs):
         the cell.
         """
         super(TestSpatialSweep, cls).setUpClass()
-    
+
     def setUp(self):
         self.pop = Population()
         self.pop.add_cells(1)
