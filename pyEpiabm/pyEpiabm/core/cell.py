@@ -49,7 +49,7 @@ class Cell:
         :param n: Number of empty :class:`Microcell` s to add
         :type n: int
         """
-        for i in range(n):
+        for _ in range(n):
             self.microcells.append(Microcell(self))
 
     def set_id(self, id: float):
