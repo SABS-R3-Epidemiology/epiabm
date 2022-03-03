@@ -87,6 +87,12 @@ class TestHostProgressionSweep(unittest.TestCase):
 
         test_sweep = pe.sweep.HostProgressionSweep()
 
+        # Check assertion is raised if length of weights
+        # and outcomes are different
+        test_sweep.state_transition_matrix['Test col'] = ""
+        with self.assertRaises(AssertionError):
+            test_sweep._update_next_infection_status(self.people[0])
+
         # Check that method works with identity state matrix
         identity_matrix = pd.DataFrame(np.identity(len(InfectionStatus)),
                                        columns=['Susceptible', 'Exposed',
