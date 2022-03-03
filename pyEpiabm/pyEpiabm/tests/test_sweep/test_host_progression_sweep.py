@@ -68,6 +68,20 @@ class TestHostProgressionSweep(unittest.TestCase):
         """Tests that the set infectiousness function returns a positive
         float.
         """
+        # Test with person1 as InfectASympt infection status
+        self.person1.update_status(InfectionStatus.InfectASympt)
+        test_sweep = pe.sweep.HostProgressionSweep()
+        infectiousness = test_sweep._set_infectiousness(self.person1)
+        self.assertIsInstance(infectiousness, float)
+        self.assertTrue(0 <= infectiousness)
+        # Test with person1 as InfectMild infection status
+        self.person1.update_status(InfectionStatus.InfectMild)
+        test_sweep = pe.sweep.HostProgressionSweep()
+        infectiousness = test_sweep._set_infectiousness(self.person1)
+        self.assertIsInstance(infectiousness, float)
+        self.assertTrue(0 <= infectiousness)
+        # Test with person1 as InfectGP
+        self.person1.update_status(InfectionStatus.InfectGP)
         test_sweep = pe.sweep.HostProgressionSweep()
         infectiousness = test_sweep._set_infectiousness(self.person1)
         self.assertIsInstance(infectiousness, float)
@@ -84,9 +98,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertTrue(6.0 <= self.person1.time_of_status_change <= 15.0)
 
     def test_update_next_infection_status(self):
-
         test_sweep = pe.sweep.HostProgressionSweep()
-
         # Check assertion is raised if length of weights
         # and outcomes are different
         test_sweep.state_transition_matrix['Test col'] = ""
