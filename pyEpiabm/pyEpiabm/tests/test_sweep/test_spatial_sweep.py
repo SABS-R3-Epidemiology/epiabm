@@ -84,6 +84,7 @@ class TestSpatialSweep(unittest.TestCase):
 
         # Check when all (one) nan in distance, won't call nan_to_num
         mock_dist.return_value = 0
+
         self.cell_susc.person_queue = Queue()
         test_sweep.bind_population(self.pop)
         test_sweep(time)

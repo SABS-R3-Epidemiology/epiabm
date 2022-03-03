@@ -31,9 +31,9 @@ class TestCell(unittest.TestCase):
         local_cell = pe.Cell(loc=(-2, 3.2))
         self.assertEqual(local_cell.location[0], -2)
         self.assertEqual(local_cell.location[1], 3.2)
-        local_cell.set_location(loc=(5, 4))
-        self.assertEqual(local_cell.location[0], 5)
-        self.assertEqual(local_cell.location[1], 4)
+        self.assertRaises(ValueError, pe.Cell, (1, 1, 1))
+        self.assertRaises(ValueError, pe.Cell, (1, (8, 6)))
+        self.assertRaises(ValueError, pe.Cell, ('1', 1))
 
     def test_set_id(self):
         id_cell = pe.Cell()

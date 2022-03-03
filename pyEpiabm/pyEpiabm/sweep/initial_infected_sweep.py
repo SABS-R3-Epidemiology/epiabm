@@ -46,4 +46,5 @@ class InitialInfectedSweep(AbstractSweep):
                                        sim_params["initial_infected_number"])
         for person in pers_to_infect:
             person.update_status(InfectionStatus.InfectMild)
+            person.next_infection_status = InfectionStatus.Recovered
             person.update_time_to_status_change()

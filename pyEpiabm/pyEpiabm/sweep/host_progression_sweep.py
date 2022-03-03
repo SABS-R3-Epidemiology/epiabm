@@ -1,10 +1,11 @@
 #
 # Progression of infection within individuals
 #
-
 import random
-
+import numpy as np
+import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.utility import InverseCdf
 
 from .abstract_sweep import AbstractSweep
 
@@ -14,17 +15,42 @@ class HostProgressionSweep(AbstractSweep):
     and time to next infection status change.
     """
 
-    def _update_time_to_status_change(self):
+    def _update_time_to_status_change(self, person, time):
         """Assigns time until next infection status update,
-         given as a random integer between 1 and 10.
+         given as a random integer between 1 and 10. Used
+         for persons with infection statuses that have no transition/
+         latent time implemented yet - temporary function.
 
-        :return: Time until next infection status update
-        :rtype: int
+        :param Person: Person instance with infection status attributes
+        :type Person: Person
+        :param time: Current simulation time
+        :type time: float
         """
         # This is left as a random integer for now but will be made more
         # complex later.
         new_time = random.randint(1, 10)
-        return new_time
+        new_time = float(new_time)
+        person.time_of_status_change = time + new_time
+
+    def _set_latent_time(self, person, time):
+        """Calculates latency period as calculated in CovidSim,
+        and updates the time_of_status_change for the given
+        Person, given as the time until next infection status
+        for a person who has been set as exposed.
+
+        :param Person: Person instance with infection status attributes
+        :type Person: Person
+        :param time: Current simulation time
+        :type time: float
+        """
+        latent_period = pe.Parameters.instance().latent_period
+        latent_period_iCDF = pe.Parameters.instance().latent_period_iCDF
+        latent_icdf_object = InverseCdf(latent_period, latent_period_iCDF)
+        latent_time = latent_icdf_object.icdf_choose_exp()
+
+        assert latent_time >= 0.0, 'Negative latent time'
+
+        person.time_of_status_change = time + latent_time
 
     def _update_next_infection_status(self, person):
         """Assigns next infection status based on
@@ -43,22 +69,29 @@ class HostProgressionSweep(AbstractSweep):
                             'be applied to individuals with mild ' +
                             'infection status, or exposed')
 
-    def __call__(self, time: int):
-        """Sweeps through all people in the population and updates
+    def __call__(self, time: float):
+        """Sweeps through all people in the population, updates
         their infection status if it is time and assigns them their
-        next infection status and a new time of next status change.
+        next infection status and the time of their next status change.
 
         :param time: Current simulation time
-        :type time: int
+        :type time: float
         """
-        if not (type(time) == int):
-            raise TypeError('Time needs to be type int')
+
         for cell in self._population.cells:
             for person in cell.persons:
-                if person.time_of_status_change == time:
-                    self._update_next_infection_status(person)
+                if person.time_of_status_change is None:
+                    assert person.infection_status \
+                                    in [InfectionStatus.Susceptible]
+                    continue  # pragma: no cover
+                while person.time_of_status_change <= time:
                     person.update_status(person.next_infection_status)
-                    if person.infection_status != \
-                            InfectionStatus.Recovered:
-                        person.time_of_status_change =\
-                            time + self._update_time_to_status_change()
+                    if person.infection_status == InfectionStatus.Recovered:
+                        person.next_infection_status = None
+                        person.time_of_status_change = np.inf
+                    else:
+                        self._update_next_infection_status(person)
+                        if person.infection_status == InfectionStatus.Exposed:
+                            self._set_latent_time(person, time)
+                        else:
+                            self._update_time_to_status_change(person, time)
