@@ -22,7 +22,7 @@ class StateTransitionMatrix:
         # Currently, method very rigid. Can add flexibility later.
         nb_states = len(InfectionStatus)
         zero_trans = np.zeros((nb_states, nb_states))
-        labels = ['Susceptible', 'Exposed', 'InfectAsympt', 'InfectMild',
+        labels = ['Susceptible', 'Exposed', 'InfectASympt', 'InfectMild',
                   'InfectGP', 'InfectHosp', 'InfectICU', 'InfectICURecov',
                   'Recovered', 'Dead']
         init_matrix = pd.DataFrame(zero_trans,
