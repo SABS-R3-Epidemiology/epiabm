@@ -23,12 +23,12 @@ class StateTransitionMatrix:
         zero_trans = np.zeros((nb_states, nb_states))
         init_matrix = pd.DataFrame(zero_trans,
                                    columns=['Susceptible', 'Exposed',
-                                            'InfectAsympt', 'InfectMild',
+                                            'InfectASympt', 'InfectMild',
                                             'InfectGP', 'InfectHosp',
                                             'InfectICU', 'InfectICURecov',
                                             'Recovered', 'Dead'],
                                    index=['Susceptible', 'Exposed',
-                                          'InfectAsympt', 'InfectMild',
+                                          'InfectASympt', 'InfectMild',
                                           'InfectGP', 'InfectHosp',
                                           'InfectICU', 'InfectICURecov',
                                           'Recovered', 'Dead'])
@@ -51,10 +51,10 @@ class StateTransitionMatrix:
         :rtype: Pandas dataframe
         """
         matrix.loc['Susceptible', 'Exposed'] = 1
-        matrix.loc['Exposed', 'InfectAsympt'] = 0.33
+        matrix.loc['Exposed', 'InfectASympt'] = 0.33
         matrix.loc['Exposed', 'InfectMild'] = 0.410061048258529
         matrix.loc['Exposed', 'InfectGP'] = 0.249938951741471
-        matrix.loc['InfectAsympt', 'Recovered'] = 1
+        matrix.loc['InfectASympt', 'Recovered'] = 1
         matrix.loc['InfectMild', 'Recovered'] = 1
         matrix.loc['InfectGP', 'Recovered'] = 0.837111575271931
         matrix.loc['InfectGP', 'InfectHosp'] = 0.162888424728069
