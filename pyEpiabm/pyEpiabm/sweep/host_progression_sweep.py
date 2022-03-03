@@ -101,6 +101,8 @@ class HostProgressionSweep(AbstractSweep):
         row_index = person.infection_status.name
         weights = self.state_transition_matrix.loc[row_index].to_numpy()
         outcomes = range(1, self.number_of_states + 1)
+        print(weights)
+        #print(len(outcomes))
 
         if len(weights) != len(outcomes):
             raise AssertionError('The number of infection statuses must \

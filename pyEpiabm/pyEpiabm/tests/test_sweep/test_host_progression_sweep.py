@@ -168,6 +168,7 @@ class TestHostProgressionSweep(unittest.TestCase):
          self.person1.next_infection_status = \
              pe.property.InfectionStatus.Exposed
          test_sweep = pe.sweep.HostProgressionSweep()
+         self.state_transition_matrix = pe.Parameters.instance().state_transition_matrix
          test_sweep.bind_population(self.test_population1)
 
          # Tests population bound successfully.

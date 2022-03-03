@@ -19,19 +19,15 @@ class StateTransitionMatrix:
         :returns: Symmetric matrix in the form of a dataframe
         :rtype: Pandas dataframe
         """
+        # Currently, method very rigid. Can add flexibility later.
         nb_states = len(InfectionStatus)
         zero_trans = np.zeros((nb_states, nb_states))
+        labels = ['Susceptible', 'Exposed', 'InfectAsympt', 'InfectMild',
+                  'InfectGP', 'InfectHosp', 'InfectICU', 'InfectICURecov',
+                  'Recovered', 'Dead']
         init_matrix = pd.DataFrame(zero_trans,
-                                   columns=['Susceptible', 'Exposed',
-                                            'InfectASympt', 'InfectMild',
-                                            'InfectGP', 'InfectHosp',
-                                            'InfectICU', 'InfectICURecov',
-                                            'Recovered', 'Dead'],
-                                   index=['Susceptible', 'Exposed',
-                                          'InfectASympt', 'InfectMild',
-                                          'InfectGP', 'InfectHosp',
-                                          'InfectICU', 'InfectICURecov',
-                                          'Recovered', 'Dead'])
+                                   columns=labels,
+                                   index=labels)
         return init_matrix
 
     def fill_state_transition_matrix(self, matrix):
