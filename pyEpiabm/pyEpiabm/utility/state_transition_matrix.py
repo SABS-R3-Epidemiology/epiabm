@@ -78,7 +78,7 @@ class StateTransitionMatrix:
         :type new_probability: float
         """
         try:
-            (current_infection_status_row not in InfectionStatus) or\
+            if (current_infection_status_row not in InfectionStatus) or \
                     (next_infection_status_column not in InfectionStatus):
                 raise ValueError('row and column inputs must be contained in\
                                 the InfectionStatus enum')
