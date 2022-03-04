@@ -13,13 +13,6 @@ class TestSpatialSweep(TestMockedLogs):
     """Test the "SpatialSweep" class.
     """
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        """Initialises a population with one cell and one person in
-        the cell.
-        """
-        super(TestSpatialSweep, cls).setUpClass()
-
     def setUp(self):
         self.pop = Population()
         self.pop.add_cells(1)
@@ -104,7 +97,7 @@ class TestSpatialSweep(TestMockedLogs):
         cell_susc.person_queue = Queue()
         test_sweep.bind_population(test_pop)
         test_sweep(time)
-        self.assertFalse(mock_nan.called)
+        mock_nan.assert_not_called
         self.assertEqual(cell_susc.person_queue.qsize(), 1)
 
         # Check a zero or very small infection radius doesn't

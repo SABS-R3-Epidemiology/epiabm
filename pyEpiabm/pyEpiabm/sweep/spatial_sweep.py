@@ -130,11 +130,11 @@ class SpatialSweep(AbstractSweep):
                 # Will catch the case if distance weights isn't configured
                 # correctly and returns the wrong length.
                 assert len(distance_weights) == len(possible_infectee_cells), (
-                    "distance weights are not the same length as cell list")
+                    "Distance weights are not the same length as cell list")
 
                 try:
                     # Will catch a list of zeros
-                    1/sum(distance_weights)
+                    1 / sum(distance_weights)
                     cell_list = random.choices(possible_infectee_cells,
                                                weights=distance_weights,
                                                k=number_to_infect)
