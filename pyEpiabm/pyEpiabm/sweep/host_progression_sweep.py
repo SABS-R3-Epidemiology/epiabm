@@ -1,14 +1,13 @@
 #
 # Progression of infection within individuals
 #
-# from inspect import Parameter
 import random
 import numpy as np
 
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import InverseCdf
-
+from pyEpiabm.utility import TransitionTimeMatrix
 from .abstract_sweep import AbstractSweep
 
 
@@ -28,23 +27,6 @@ class HostProgressionSweep(AbstractSweep):
         self.state_transition_matrix = \
             pe.Parameters.instance().state_transition_matrix
         self.number_of_states = len(InfectionStatus)
-
-    def _update_time_to_status_change(self, person, time):
-        """Assigns time until next infection status update,
-         given as a random integer between 1 and 10. Used
-         for persons with infection statuses that have no transition/
-         latent time implemented yet - temporary function.
-
-        :param Person: Person instance with infection status attributes
-        :type Person: Person
-        :param time: Current simulation time
-        :type time: float
-        """
-        # This is left as a random integer for now but will be made more
-        # complex later.
-        new_time = random.randint(1, 10)
-        new_time = float(new_time)
-        person.time_of_status_change = time + new_time
 
     def _set_latent_time(self, person, time):
         """Calculates latency period as calculated in CovidSim,
@@ -110,6 +92,68 @@ class HostProgressionSweep(AbstractSweep):
         next_infection_status_number = random.choices(outcomes, weights)[0]
         next_infection_status = InfectionStatus(next_infection_status_number)
         person.next_infection_status = next_infection_status
+
+    def _update_time_to_status_change(self, person, time):
+        """Assigns time until next infection status update,
+         given as a random integer between 1 and 10. Used
+         for persons with infection statuses that have no transition/
+         latent time implemented yet - temporary function.
+        :param Person: Person instance with infection status attributes
+        :type Person: Person
+        :param time: Current simulation time
+        :type time: float
+        """
+        # This is left as a random integer for now but will be made more
+        # complex later.
+        new_time = random.randint(1, 10)
+        new_time = float(new_time)
+        person.time_of_status_change = time + new_time
+
+    def _update_time_status_change(self, person, time):
+        """Calculates transition time as calculated in CovidSim,
+        and updates the time_of_status_change for the given
+        Person, given as the time until next infection status
+        for a person who has a new infection status. If it is expected that
+        the person will not transition again (for example in Recovered or Dead
+        statuses), then the time of status change is set to infinity.
+
+        :param Person: Person class with infection status attributes
+        :type Person: Person
+        :param time: Current simulation time
+        :type time: float
+        """
+        # SOMETHING WRONG, TESTS FAILING. TO SEE.
+        # Gets the parameters that will be used:
+        latent_to_symptom_delay =\
+            pe.Parameters.instance().latent_to_sympt_delay
+        model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
+        delay = np.floor(latent_to_symptom_delay / model_time_step)
+
+        # Defines the transition time. If the person will not transition again,
+        # the transition time is set to infinity. Else, the transition time is
+        # defined using the TransitionTimeMatrix class, with a method choose
+        # from the InverseCdf class.
+        if (person.infection_status == InfectionStatus.Recovered or
+                person.infection_status == InfectionStatus.Dead):
+            transition_time = np.inf
+        else:
+            row_index = person.infection_status.name
+            column_index = person.next_infection_status.name
+            transition_time_object = TransitionTimeMatrix()
+            transition_time_matrix =\
+                transition_time_object.fill_transition_time()
+            transition_time_icdf_object = transition_time_matrix[row_index,
+                                                                 column_index]
+            transition_time = transition_time_icdf_object.icdf_choose_noexp()
+
+        # Adds delay to transition time for first level symptomatic infection
+        # statuses (InfectMild or InfectGP), as is done in CovidSim.
+        if (person.infection_status == InfectionStatus.InfectMild or
+                person.infection_status == InfectionStatus.InfectGP):
+            time = time + delay
+        # Assigns the time of status change using current time and transition
+        # time:
+        person.time_of_status_change = time + transition_time
 
     def __call__(self, time: float):
         """Sweeps through all people in the population, updates
