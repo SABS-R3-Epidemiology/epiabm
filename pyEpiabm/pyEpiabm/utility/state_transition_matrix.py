@@ -4,11 +4,13 @@
 
 import pandas as pd
 import numpy as np
+
+import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
 
 
 class StateTransitionMatrix:
-    """Class to generate the state transition matrix
+    """Class to generate and edit the state transition matrix
     """
     def build_state_transition_matrix(self):
         """Builds the structure of the state transition matrix that is used in
@@ -63,3 +65,35 @@ class StateTransitionMatrix:
         matrix.loc['Recovered', 'Recovered'] = 1
         matrix.loc['Dead', 'Dead'] = 1
         return matrix
+
+    def update_probability(self, current_infection_status_row,
+                           next_infection_status_column, new_probability):
+        """Method to manually update a transition probability in the
+        transition state matrix.
+
+        :param current_infection_status_row: infection status corresponding to
+        the row where the probability will be updated
+        :param next_infection_status_column: infection status corresponding to
+        the column where the probability will be updated
+        :type next_infection_status_column: enum
+        :param new_probability: updated transition probability value
+        :type new_probability: float
+        """
+        try:
+            if (current_infection_status_row not in InfectionStatus) or\
+                    (next_infection_status_column not in InfectionStatus):
+                raise ValueError('row and column inputs must be contained in\
+                                the InfectionStatus enum')
+        except TypeError:
+            raise ValueError('row and column inputs must be contained in\
+                                the InfectionStatus enum')
+
+        if (new_probability < 0) or (new_probability > 1):
+            raise ValueError('new probability must be a valid probability between\
+                            0 and 1')
+
+        # Extract row and column names from enum and retrieve trasition matrix
+        matrix = pe.Parameters.instance().state_transition_matrix
+        row = current_infection_status_row.name
+        column = next_infection_status_column.name
+        matrix.loc[row, column] = new_probability
