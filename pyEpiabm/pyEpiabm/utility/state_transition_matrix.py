@@ -79,7 +79,9 @@ class StateTransitionMatrix:
         """
         try:
             (current_infection_status_row not in InfectionStatus) or\
-                    (next_infection_status_column not in InfectionStatus)
+                    (next_infection_status_column not in InfectionStatus):
+                raise ValueError('row and column inputs must be contained in\
+                                the InfectionStatus enum')
         except TypeError:
             raise ValueError('row and column inputs must be contained in\
                                 the InfectionStatus enum')
