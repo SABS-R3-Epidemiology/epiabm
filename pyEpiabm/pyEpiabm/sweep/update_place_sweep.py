@@ -20,7 +20,7 @@ class UpdatePlaceSweep(AbstractSweep):
         :type time: int
         """
         # Double loop over the whole population, clearing places
-        # and refilling them.
+        # of the variable population and refilling them.
 
         # Can call a this line if being called in from file etc.
         # place_params = Parameters.instance().place_params
@@ -33,22 +33,24 @@ class UpdatePlaceSweep(AbstractSweep):
                     # just going to completely update each time
                     # as in the previous code
                 elif place.place_type.value == 1:  # CAREHOME
-                    if place.person_groups[0].empty():
+                    if not place.initialised:
                         # Initialise the fixed population of workers
-                        self.update_place_group(place, group_index=0)
-                    if place.person_groups[1].empty():
-                        # Initialise the fixed population 
                         max_cap = 10  # for example, would actually come in
                         # from a dictionary
-                        self.update_place_group(place, max_capacity=max_cap,
+                        self.update_place_group(place, group_index=0)
+                        max_residents = 100
+                        self.update_place_group(place,
+                                                max_capacity=max_residents,
                                                 group_index=1)
+                        place.initialised = True
 
                 elif place.place_type.value == 3:  # RESTAURANT
-                    if place.person_groups[0].empty():
+                    if not place.initialised:
                         # Initialise the fixed population
                         max_cap = 10
                         self.update_place_group(place, max_capacity=max_cap,
                                                 group_index=0)
+                        place.initialised = True
                     # Variable population is people not in the fixed pop.
                     # Changed at each timestep
                     place.empty_place(1)
@@ -63,7 +65,7 @@ class UpdatePlaceSweep(AbstractSweep):
 
                 elif place.place_type.value == 5:  # WORKSPACE
                     # Fixed population is initialised on first run
-                    if place.person_groups[0].empty():
+                    if place.initialised:
                         continue
                     group_num = 5  # again would be an exterior param
                     group_size = 20
@@ -74,12 +76,11 @@ class UpdatePlaceSweep(AbstractSweep):
                         self.update_place_group(place, group_index=i,
                                                 person_list=person_list,
                                                 max_capacity=group_size)
-
+                    place.initialised = True
 
     def update_place_group(place, max_capacity: int = 50, group_index: int = 0,
                            person_list: list = None):
-        """Specific method to update people in a place or
-        place group.
+        """Specific method to update people in a place or place group.
 
         :param place: Place to change
         :type place: Place

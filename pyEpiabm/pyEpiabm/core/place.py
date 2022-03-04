@@ -37,6 +37,7 @@ class Place:
         self.max_capacity = 50
         self.susceptibility = 0
         self.infectiousness = 0
+        self.initialised = False
 
         self.cell = cell
         self.microcell = microcell
