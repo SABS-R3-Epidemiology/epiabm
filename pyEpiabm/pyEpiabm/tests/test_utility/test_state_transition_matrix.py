@@ -53,8 +53,8 @@ class TestStateTransitionMatrix(unittest.TestCase):
 
         # Test error for incorrect columns is raised
         with self.assertRaises(ValueError):
-            row = None
-            column = None
+            row = ''
+            column = ''
             matrix_object.update_probability(row, column, 0.5)
 
         # Test error for incorrect probability is raised
