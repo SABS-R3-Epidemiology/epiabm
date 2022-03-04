@@ -98,14 +98,21 @@ class Person:
         new_time = random.randint(1, 10)
         self.time_of_status_change = new_time
 
-    def add_place(self, place):
+    def add_place(self, place, person_group: int = 0):
         """Method adds a place to the place list if the person visits
-        or is associated with this place.
+        or is associated with this place. Places are saved as a tuple
+        with the place as the first entry and group person is associated
+        with as the second.
+
+        :param place: Place person should be removed from
+        :type place: Place
+        :param person_group: key for the person group dictionary
+        :type person_group: int
         """
         if place.cell != self.microcell.cell:
             raise AttributeError("Place and person are not in the same\
                                  cell")
-        self.places.append(place)
+        self.places.append((place, person_group))
 
     def remove_place(self, place):
         """Method to remove person for each associated place, to be
@@ -114,7 +121,9 @@ class Person:
         :param place: Place person should be removed from
         :type place: Place
         """
-        if place not in self.places:
+        place_list = [i[0] for i in self.places]
+        if place not in place_list:
             raise KeyError("Person not found in this place")
         else:
-            self.places.remove(place)
+            ind = place_list.index(place)
+            self.places.pop(ind)

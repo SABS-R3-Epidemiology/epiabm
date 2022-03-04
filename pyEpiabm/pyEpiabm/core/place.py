@@ -12,7 +12,9 @@ from .person import Person
 class Place:
     """Creates a place class which represents spaces such
     as cafes, restaurants and hotels where people may come
-    into contact with others outside their household.
+    into contact with others outside their household. People
+    can be stratified in this place into different groups
+    which may interact differently (ie workers and visitors).
     """
     def __init__(self, loc: typing.Tuple[float, float],
                  place_type: PlaceType, cell, microcell):
@@ -29,6 +31,8 @@ class Place:
         """
         self._location = loc
         self.persons = []
+        self.person_groups = {0: []}
+        self.num_person_groups = 0
         self.place_type = place_type
         self.max_capacity = 50
         self.susceptibility = 0
@@ -69,14 +73,21 @@ class Place:
         """
         self.susceptibility = susceptibility
 
-    def add_person(self, person: Person):
+    def add_person(self, person: Person, person_group: int = 0):
         """Add a person into the place.
 
         :param person: Person to add
         :type person: Person
+        :param person_group: key for the person group dictionary
+        :type person_group: int
         """
         self.persons.append(person)
-        person.add_place(self)
+        if person_group in self.person_groups.keys():
+            self.person_groups[person_group].append(person)
+        else:
+            self.person_groups[person_group] = [person]
+            self.num_person_groups += 1
+        person.add_place(self, person_group)
 
     def remove_person(self, person: Person):
         """Remove a person from place.
@@ -87,13 +98,35 @@ class Place:
         if person not in self.persons:
             raise KeyError("Person not found in this place")
         else:
+            group_index = self.get_group_index(person)
+            self.person_groups[group_index].remove(person)
+            # If anyone can think of a better way to remove
+            # people from a dictionary without knowing the
+            # key lmk.
             person.remove_place(self)
             self.persons.remove(person)
 
-    def empty_place(self):
-        """Remove all people from place. For example
-        a restaurant or park might regularly change
-        all occupants each timestep.
+    def get_group_index(self, person):
+        """Get the group of a person in the place.
+
+        :param person: Person to remove from place
+        :type person: Person
         """
-        while len(self.persons) > 0:
-            self.remove_person(self.persons[0])
+        place_list = [i[0] for i in person.places]
+        ind = place_list.index(self)
+        return person.places[ind][1]
+
+    def empty_place(self, person_groups: list = [0]):
+        """Remove all people from place who are in a specific
+        person group. For example
+        a restaurant or park might regularly change
+        all occupants each timestep, but workers at the
+        restaurant will be present each timestep.
+
+        :param person_groups: list of person_group
+        indicies to be removed
+        :type person_groups: list
+        """
+        for group in person_groups:
+            for person in self.person_groups[group]:
+                self.remove_person(person)

@@ -24,6 +24,7 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(test_place._location, (1.0, 1.0))
         self.assertEqual(test_place.persons, [])
         self.assertEqual(test_place.place_type, pe.property.PlaceType.Hotel)
+        self.assertDictEqual(test_place.person_groups, {0: []})
         self.assertEqual(test_place.max_capacity, 50)
         self.assertEqual(test_place.susceptibility, 0)
         self.assertEqual(test_place.infectiousness, 0)
@@ -41,16 +42,20 @@ class TestPlace(unittest.TestCase):
                               self.cell, self.microcell)
         test_place.add_person(self.person)
         self.assertEqual(len(self.person.places), 1)
+        self.assertDictEqual(test_place.person_groups, {0: [self.person]})
         self.assertEqual(len(test_place.persons), 1)
+        self.assertEqual(test_place.get_group_index(self.person), 0)
 
         test_place.remove_person(self.person)
+        self.assertDictEqual(test_place.person_groups, {0: []})
         self.assertEqual(len(test_place.persons), 0)
         self.assertRaises(KeyError, test_place.remove_person, self.person)
 
-        test_place.add_person(self.person)
+        test_place.add_person(self.person, person_group=1)
+        self.assertEqual(test_place.get_group_index(self.person), 1)
         test_place.add_person(pe.Person(self.microcell))
         self.assertEqual(len(test_place.persons), 2)
-        test_place.empty_place()
+        test_place.empty_place([0, 1])
         self.assertEqual(len(test_place.persons), 0)
 
     def test_set_susc(self):
