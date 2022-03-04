@@ -2,7 +2,6 @@
 # Generate matrix with transition times
 #
 import pyEpiabm as pe
-import numpy as np
 from pyEpiabm.utility import InverseCdf
 from pyEpiabm.utility import StateTransitionMatrix
 
@@ -11,10 +10,23 @@ class TransitionTimeMatrix:
     """Class to generate the matrix with transition times
     """
     def __init__(self):
+        """Initialises the transition time matrix the same way as for the
+        state transition matrix, ie with the right labels for the rows and
+        the columns and zeros as elements.
+        """
         self.initial_matrix =\
             StateTransitionMatrix.build_state_transition_matrix(self)
 
     def fill_transition_time(self):
+        """Fills the transition time matrix with InverseCdf objects, where the
+        times of transition are defined. For example, the element ij in the
+        matrix is the InverseCdf object for defining the transition time of
+        someone with current infection status associated with the row i to
+        move to the infection status associated with the columns j.
+
+        :returns: Matrix in the form of a dataframe
+        :rtype: Pandas dataframe
+        """
         matrix = self.initial_matrix
         matrix.loc['Exposed', 'InfectASympt'] =\
             InverseCdf(pe.Parameters.instance().latent_period,
