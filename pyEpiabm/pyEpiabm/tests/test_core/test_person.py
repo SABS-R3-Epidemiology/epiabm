@@ -7,7 +7,7 @@ class TestPerson(unittest.TestCase):
     """Test the 'Person' class.
     """
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUp(cls) -> None:
         cls.cell = pe.Cell()
         cls.cell.add_microcells(1)
         cls.microcell = cls.cell.microcells[0]

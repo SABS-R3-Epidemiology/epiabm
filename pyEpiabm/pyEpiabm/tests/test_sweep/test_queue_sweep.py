@@ -7,7 +7,7 @@ class TestQueueSweep(unittest.TestCase):
     """Test the 'QueueSweep' class.
     """
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUp(cls) -> None:
         """Sets up a population we can use throughout the test.
         2 people are located in one microcell.
         """

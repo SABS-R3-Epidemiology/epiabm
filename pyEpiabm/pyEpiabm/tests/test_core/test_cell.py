@@ -9,7 +9,7 @@ class TestCell(unittest.TestCase):
     """Test the 'Cell' class.
     """
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUp(cls) -> None:
         cls.cell = pe.Cell()
 
     def test__init__(self):
@@ -36,31 +36,27 @@ class TestCell(unittest.TestCase):
         self.assertRaises(ValueError, pe.Cell, ('1', 1))
 
     def test_set_id(self):
-        id_cell = pe.Cell()
-        self.assertEqual(id_cell.id, hash(id_cell))
-        id_cell.set_id(2.0)
-        self.assertEqual(id_cell.id, 2.0)
+        self.assertEqual(self.cell.id, hash(self.cell))
+        self.cell.set_id(2.0)
+        self.assertEqual(self.cell.id, 2.0)
 
     def test_add_microcells(self, n=4):
-        cell = pe.Cell()
-        self.assertEqual(len(cell.microcells), 0)
-        cell.add_microcells(n)
-        self.assertEqual(len(cell.microcells), n)
+        self.assertEqual(len(self.cell.microcells), 0)
+        self.cell.add_microcells(n)
+        self.assertEqual(len(self.cell.microcells), n)
 
     def test_number_infectious(self):
-        cell = pe.Cell()
-        cell.add_microcells(1)
-        cell.microcells[0].add_people(1)
-        person = cell.microcells[0].persons[0]
-        self.assertEqual(cell.number_infectious(), 0)
+        self.cell.add_microcells(1)
+        self.cell.microcells[0].add_people(1)
+        person = self.cell.microcells[0].persons[0]
+        self.assertEqual(self.cell.number_infectious(), 0)
         person.update_status(InfectionStatus.InfectMild)
-        self.assertEqual(cell.number_infectious(), 1)
+        self.assertEqual(self.cell.number_infectious(), 1)
 
     def test_set_loc(self):
-        cell = pe.Cell()
-        self.assertEqual(cell.location, (0, 0))
-        cell.set_location((3.0, 2.0))
-        self.assertEqual(cell.location, (3.0, 2.0))
+        self.assertEqual(self.cell.location, (0, 0))
+        self.cell.set_location((3.0, 2.0))
+        self.assertEqual(self.cell.location, (3.0, 2.0))
 
 
 if __name__ == '__main__':
