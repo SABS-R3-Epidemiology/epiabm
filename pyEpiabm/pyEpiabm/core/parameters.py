@@ -161,7 +161,7 @@ class Parameters:
             self.mortality_prob_hosp = 0.2676376  # From average of by age prop
             self.mortality_prob_icu = 0.5234896  # From average of by age
 
-            # Build infection state transition matrix
+            # Build infection state transition matrix and set as parameter
             matrix_object = StateTransitionMatrix()
             empty_matrix = matrix_object.build_state_transition_matrix()
             self.state_transition_matrix =\

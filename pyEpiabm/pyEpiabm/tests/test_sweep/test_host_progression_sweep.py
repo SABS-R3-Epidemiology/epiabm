@@ -72,21 +72,21 @@ class TestHostProgressionSweep(unittest.TestCase):
         # Test with person1 as InfectASympt infection status
         self.person1.update_status(InfectionStatus.InfectASympt)
         test_sweep = pe.sweep.HostProgressionSweep()
-        infectiousness = test_sweep._set_infectiousness(self.person1)
-        self.assertIsInstance(infectiousness, float)
-        self.assertTrue(0 <= infectiousness)
+        test_sweep._set_infectiousness(self.person1)
+        self.assertIsInstance(self.person1.infectiousness, float)
+        self.assertTrue(0 <= self.person1.infectiousness)
         # Test with person1 as InfectMild infection status
         self.person1.update_status(InfectionStatus.InfectMild)
         test_sweep = pe.sweep.HostProgressionSweep()
-        infectiousness = test_sweep._set_infectiousness(self.person1)
-        self.assertIsInstance(infectiousness, float)
-        self.assertTrue(0 <= infectiousness)
+        test_sweep._set_infectiousness(self.person1)
+        self.assertIsInstance(self.person1.infectiousness, float)
+        self.assertTrue(0 <= self.person1.infectiousness)
         # Test with person1 as InfectGP
         self.person1.update_status(InfectionStatus.InfectGP)
         test_sweep = pe.sweep.HostProgressionSweep()
-        infectiousness = test_sweep._set_infectiousness(self.person1)
-        self.assertIsInstance(infectiousness, float)
-        self.assertTrue(0 <= infectiousness)
+        test_sweep._set_infectiousness(self.person1)
+        self.assertIsInstance(self.person1.infectiousness, float)
+        self.assertTrue(0 <= self.person1.infectiousness)
 
     def test_update_time(self):
         """Tests the update time function on the test population. This generates
@@ -145,8 +145,8 @@ class TestHostProgressionSweep(unittest.TestCase):
             self.assertEqual(person.next_infection_status,
                              InfectionStatus.Dead)
 
-        # Check that method works for an upper triangular state transition
-        # matrix.
+        # Check that method works for a random upper triangular
+        # state transition matrix
         random_matrix = np.random.rand(len(InfectionStatus),
                                        len(InfectionStatus))
         random_matrix = np.triu(random_matrix)

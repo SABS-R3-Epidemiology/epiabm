@@ -86,7 +86,7 @@ class HostProgressionSweep(AbstractSweep):
               person.infection_status == InfectionStatus.InfectGP):
             infectiousness = init_infectiousness *\
                              pe.Parameters.instance().sympt_infectiousness
-        return infectiousness
+        person.infectiousness = infectiousness
 
     def _update_next_infection_status(self, person):
         """Assigns next infection status based on current infection status
@@ -128,6 +128,11 @@ class HostProgressionSweep(AbstractSweep):
                     continue  # pragma: no cover
                 while person.time_of_status_change <= time:
                     person.update_status(person.next_infection_status)
+                    # line directly below is short hand way to check
+                    # infection status is one of a list of options.
+                    # Makes use of the enum
+                    if person.infection_status.value in [3, 4, 5]:
+                        self._set_infectiousness(person)
                     if person.infection_status == InfectionStatus.Recovered:
                         person.next_infection_status = None
                         person.time_of_status_change = np.inf
