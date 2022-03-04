@@ -6,10 +6,9 @@ import pyEpiabm as pe
 class TestMicrocell(unittest.TestCase):
     """Test the 'Microcell' class.
     """
-    @classmethod
-    def setUp(cls) -> None:
-        cls.cell = pe.Cell()
-        cls.microcell = pe.Microcell(cls.cell)
+    def setUp(self) -> None:
+        self.cell = pe.Cell()
+        self.microcell = pe.Microcell(self.cell)
 
     def test__init__(self):
         self.assertEqual(self.microcell.persons, [])

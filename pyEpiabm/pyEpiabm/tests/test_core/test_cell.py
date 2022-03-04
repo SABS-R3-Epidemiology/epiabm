@@ -8,9 +8,8 @@ from pyEpiabm.property.infection_status import InfectionStatus
 class TestCell(unittest.TestCase):
     """Test the 'Cell' class.
     """
-    @classmethod
-    def setUp(cls) -> None:
-        cls.cell = pe.Cell()
+    def setUp(self) -> None:
+        self.cell = pe.Cell()
 
     def test__init__(self):
         self.assertEqual(self.cell.location[0], 0)

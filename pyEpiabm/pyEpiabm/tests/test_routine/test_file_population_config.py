@@ -12,13 +12,12 @@ class TestPopConfig(unittest.TestCase):
     """Test the 'ToyPopConfig' class.
     """
 
-    @classmethod
-    def setUp(cls) -> None:
-        cls.input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
+    def setUp(self) -> None:
+        self.input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
                      'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
                      'household_number': [1, 1],
                      'Susceptible': [8, 9], 'InfectMild': [2, 3]}
-        cls.df = pd.DataFrame(cls.input)
+        self.df = pd.DataFrame(self.input)
 
     @patch('logging.exception')
     def test_make_pop_no_file(self, mock_log):
