@@ -1,11 +1,12 @@
 import unittest
-import pyEpiabm as pe
-from pyEpiabm.property.infection_status import InfectionStatus
-
-from pyEpiabm.utility import StateTransitionMatrix
+from enum import Enum
 import pandas as pd
 import numpy as np
 from pandas.testing import assert_frame_equal
+
+import pyEpiabm as pe
+from pyEpiabm.property.infection_status import InfectionStatus
+from pyEpiabm.utility import StateTransitionMatrix
 
 
 class TestStateTransitionMatrix(unittest.TestCase):
@@ -52,6 +53,15 @@ class TestStateTransitionMatrix(unittest.TestCase):
         pe.Parameters.instance().state_transition_matrix = back_up_matrix
 
         # Test error for incorrect columns is raised
+        class TestInfectionStatus(Enum):
+
+            Susceptiblesssss = 1
+
+        with self.assertRaises(ValueError):
+            row = TestInfectionStatus.Susceptiblesssss
+            column = TestInfectionStatus.Susceptiblesssss
+            matrix_object.update_probability(row, column, 0.5)
+
         with self.assertRaises(ValueError):
             row = None
             column = None
