@@ -24,9 +24,7 @@ class StateTransitionMatrix:
         # Currently, method very rigid. Can add flexibility later.
         nb_states = len(InfectionStatus)
         zero_trans = np.zeros((nb_states, nb_states))
-        labels = ['Susceptible', 'Exposed', 'InfectASympt', 'InfectMild',
-                  'InfectGP', 'InfectHosp', 'InfectICU', 'InfectICURecov',
-                  'Recovered', 'Dead']
+        labels = [status.name for status in InfectionStatus]
         init_matrix = pd.DataFrame(zero_trans,
                                    columns=labels,
                                    index=labels)
@@ -41,10 +39,10 @@ class StateTransitionMatrix:
         status associated with the row i to move to the infection status
         associated with the columns j.
 
-        :param Matrix: Initialised state transition matrix, with right column
+        :param matrix: Initialised state transition matrix, with right column
         and row names. The first column contains the current infection status
         and all the transition probabilities are set to zero.
-        :type Matrix: Pandas dataframe
+        :type matrix: Pandas dataframe
         :returns: Matrix in the form of a dataframe
         :rtype: Pandas dataframe
         """
@@ -80,10 +78,8 @@ class StateTransitionMatrix:
         :type new_probability: float
         """
         try:
-            if (current_infection_status_row not in InfectionStatus) or\
-                    (next_infection_status_column not in InfectionStatus):
-                raise ValueError('row and column inputs must be contained in\
-                                the InfectionStatus enum')
+            (current_infection_status_row not in InfectionStatus) or\
+                    (next_infection_status_column not in InfectionStatus)
         except TypeError:
             raise ValueError('row and column inputs must be contained in\
                                 the InfectionStatus enum')

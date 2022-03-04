@@ -17,9 +17,7 @@ class TestStateTransitionMatrix(unittest.TestCase):
         """
         matrix_object = StateTransitionMatrix()
         matrix = matrix_object.build_state_transition_matrix()
-        labels = ['Susceptible', 'Exposed', 'InfectASympt', 'InfectMild',
-                  'InfectGP', 'InfectHosp', 'InfectICU', 'InfectICURecov',
-                  'Recovered', 'Dead']
+        labels = [status.name for status in InfectionStatus]
         zero_filled_dataframe = pd.DataFrame(np.zeros((10, 10)),
                                              columns=labels, index=labels)
         assert_frame_equal(matrix, zero_filled_dataframe)

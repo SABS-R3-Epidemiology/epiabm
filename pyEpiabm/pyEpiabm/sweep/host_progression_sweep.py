@@ -1,7 +1,7 @@
 #
 # Progression of infection within individuals
 #
-# from inspect import Parameter
+
 import random
 import numpy as np
 
@@ -131,7 +131,9 @@ class HostProgressionSweep(AbstractSweep):
                     # line directly below is short hand way to check
                     # infection status is one of a list of options.
                     # Makes use of the enum
-                    if person.infection_status.value in [3, 4, 5]:
+                    if person.infection_status.name in ['InfectASympt',
+                                                        'InfectMild',
+                                                        'InfectGP']:
                         self._set_infectiousness(person)
                     if person.infection_status == InfectionStatus.Recovered:
                         person.next_infection_status = None
