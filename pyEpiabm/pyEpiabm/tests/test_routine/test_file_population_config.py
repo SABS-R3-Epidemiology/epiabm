@@ -13,7 +13,7 @@ class TestPopConfig(unittest.TestCase):
     """
 
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUp(cls) -> None:
         cls.input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
                      'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
                      'household_number': [1, 1],
@@ -74,7 +74,7 @@ class TestPopConfig(unittest.TestCase):
         """Test error handling for unknown column name
         """
         # Read in data with incorrect infection status
-        data = self.df.copy().rename(columns={'InfectMild': 'InfectUnknown'})
+        data = self.df.rename(columns={'InfectMild': 'InfectUnknown'})
         mock_read.return_value = data
 
         FilePopulationFactory.make_pop('test_input.csv')
@@ -88,10 +88,10 @@ class TestPopConfig(unittest.TestCase):
         """Test error handling for duplicate microcell
         """
         # Move second microcell to first cell (with duplicate id)
-        data = self.df.copy()
-        data.iat[1, 0] = 1
 
-        mock_read.return_value = data
+        self.df.iat[1, 0] = 1
+
+        mock_read.return_value = self.df
 
         FilePopulationFactory.make_pop('test_input.csv')
         mock_log.assert_called_once_with("ValueError in FilePopulation"
@@ -117,9 +117,8 @@ class TestPopConfig(unittest.TestCase):
         """Tests when households are implemented.
         """
         # Define multiple households in cells
-        data = self.df.copy()
-        data['household_number'] = pd.Series([2, 3])
-        mock_read.return_value = data
+        self.df['household_number'] = pd.Series([2, 3])
+        mock_read.return_value = self.df
 
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
 
@@ -199,11 +198,10 @@ class TestPopConfig(unittest.TestCase):
     @patch("copy.copy")
     def test_print_population(self, mock_copy, mock_read):
         """Tests method to print population to csv, to match content
-        with target.
+        with target. Uses meaningful household data.
         """
-        data = self.df.copy()
-        data['household_number'] = pd.Series([2, 3])  # Meaningful households
-        mock_read.return_value = data
+        self.df['household_number'] = pd.Series([2, 3])
+        mock_read.return_value = self.df
 
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
         self.assertEqual(len(test_pop.cells), 2)
@@ -212,7 +210,7 @@ class TestPopConfig(unittest.TestCase):
         FilePopulationFactory.print_population(test_pop, 'output.csv')
         if version.parse(pd.__version__) >= version.parse("1.4.0"):
             pd.testing.assert_frame_equal(mock_copy.call_args.args[0],
-                                          data, check_dtype=False)
+                                          self.df, check_dtype=False)
 
     @patch('logging.exception')
     @patch("pandas.DataFrame.to_csv")
