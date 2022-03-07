@@ -10,8 +10,11 @@ def log_exceptions(message: str = ""):
     Logs the type of error, and name of the function, if an error occurs,
     with an optional message appended on the end.
 
-    :param message: Optional message to append to default log text
-    :type message: str
+    Parameters
+    ----------
+    message : str
+        Optional message to append to default log text
+
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
