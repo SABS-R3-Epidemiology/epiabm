@@ -70,9 +70,12 @@ class TestSpatialSweep(TestMockedLogs):
                           self.cell_inf, [cell_susc, third_cell], 1)
 
         # test value error is raised if all cells too far away
+        print('here')
         Parameters.instance().infection_radius = 0.000001
         mock_dist.side_effect = [0, 2]
         mock_nan.return_value = [1, 1]
+        test_list = test_sweep.find_infectees(self.cell_inf, [cell_susc,
+                                              third_cell], 1)
         # test logger is called here
 
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
@@ -151,9 +154,15 @@ class TestSpatialSweep(TestMockedLogs):
         # Check when we have an infector but no infectees
         infectee.update_status(InfectionStatus.Recovered)
         cell_susc.person_queue = Queue()
-        test_sweep.bind_population(test_pop)
         test_sweep(time)
-        infectee.update_status(InfectionStatus.Susceptible)
+        self.assertEqual(cell_susc.person_queue.qsize(), 0)
+
+        # Test parameters break-out clause
+        Parameters.instance().infection_radius = 0
+        test_sweep(time)
+        mock_inf_list.assert_not_called
+        mock_list_covid.assert_not_called
+        self.assertEqual(cell_susc.person_queue.qsize(), 0)
 
     @mock.patch("random.random")
     def test_do_infection_event(self, mock_random):
