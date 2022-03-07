@@ -23,6 +23,7 @@ class SpatialSweep(AbstractSweep):
     cell to assign as infectee. Then tests a infection event
     against each susceptible member of the place. The resulting
     exposed person is added to an infection queue.
+
     """
 
     def __call__(self, time: float):
@@ -33,8 +34,11 @@ class SpatialSweep(AbstractSweep):
         infection event occurs on individual and cell infectiousness
         and susceptibility.
 
-        :param time: Current simulation time
-        :type time: int
+        Parameters
+        ----------
+        time : int
+            Current simulation time
+
         """
         timestep = int(time * Parameters.instance().time_steps_per_day)
 
@@ -136,12 +140,15 @@ class SpatialSweep(AbstractSweep):
         in different cells and tests whether contact between
         them will lead to an infection event.
 
-        :param infector: Infector
-        :type infector: Person
-        :param infectee: Infectee
-        :type infectee: Person
-        :param timestep: Current simulation timestep
-        :type timestep: int
+        Parameters
+        ----------
+        infector : Person
+            Infector
+        infectee : Person
+            Infectee
+        timestep : int
+            Current simulation timestep
+
         """
         if not infectee.is_susceptible():
             return

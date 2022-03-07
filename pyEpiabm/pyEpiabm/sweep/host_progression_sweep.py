@@ -13,6 +13,7 @@ from .abstract_sweep import AbstractSweep
 class HostProgressionSweep(AbstractSweep):
     """Class for sweeping through population and updating host infection status
     and time to next infection status change.
+
     """
 
     def _update_time_to_status_change(self, person, time):
@@ -21,10 +22,13 @@ class HostProgressionSweep(AbstractSweep):
          for persons with infection statuses that have no transition/
          latent time implemented yet - temporary function.
 
-        :param Person: Person instance with infection status attributes
-        :type Person: Person
-        :param time: Current simulation time
-        :type time: float
+        Parameters
+        ----------
+        Person : Person
+            Person instance with infection status attributes
+        time : float
+            Current simulation time
+
         """
         # This is left as a random integer for now but will be made more
         # complex later.
@@ -38,10 +42,13 @@ class HostProgressionSweep(AbstractSweep):
         Person, given as the time until next infection status
         for a person who has been set as exposed.
 
-        :param Person: Person instance with infection status attributes
-        :type Person: Person
-        :param time: Current simulation time
-        :type time: float
+        Parameters
+        ----------
+        Person : Person
+            Person instance with infection status attributes
+        time : float
+            Current simulation time
+
         """
         latent_period = pe.Parameters.instance().latent_period
         latent_period_iCDF = pe.Parameters.instance().latent_period_iCDF
@@ -56,8 +63,11 @@ class HostProgressionSweep(AbstractSweep):
         """Assigns next infection status based on
         current infection status.
 
-        :param Person: Person class with infection status attributes
-        :type Person: Person
+        Parameters
+        ----------
+        Person : Person
+            Person class with infection status attributes
+
         """
         # More infection statuses will be incorporated in future.
         if person.infection_status == InfectionStatus.InfectMild:
@@ -74,8 +84,11 @@ class HostProgressionSweep(AbstractSweep):
         their infection status if it is time and assigns them their
         next infection status and the time of their next status change.
 
-        :param time: Current simulation time
-        :type time: float
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+
         """
 
         for cell in self._population.cells:
