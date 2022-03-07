@@ -125,7 +125,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
 
     @staticmethod
     def add_places(population: Population, place_number: int):
-        """Groups people in a microcell into households together.
+        """Generates places within a Population.
 
         Parameters
         ----------
