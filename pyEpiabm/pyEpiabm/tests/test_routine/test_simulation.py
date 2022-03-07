@@ -6,12 +6,15 @@ from unittest.mock import patch, mock_open
 
 import pyEpiabm as pe
 
+from pyEpiabm.tests.mocked_logging_tests import TestMockedLogs
 
-class TestSimulation(unittest.TestCase):
+
+class TestSimulation(TestMockedLogs):
     """Tests the 'Simulation' class.
     """
     @classmethod
     def setUpClass(cls) -> None:
+        super(TestSimulation, cls).setUpClass()  # Sets up patch on logging
         cls.pop_factory = pe.routine.ToyPopulationFactory()
         cls.pop_params = {"population_size": 0, "cell_number": 1,
                           "microcell_number": 1, "household_number": 1}
@@ -31,6 +34,12 @@ class TestSimulation(unittest.TestCase):
         cls.initial_sweeps = [pe.sweep.InitialInfectedSweep()]
         cls.sweeps = [pe.sweep.PlaceSweep()]
 
+    def notqdm(iterable, *args, **kwargs):
+        """Replacement for tqdm that just passes back the iterable
+        useful to silence `tqdm` in tests
+        """
+        return iterable
+
     def test_configure(self):
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
@@ -48,6 +57,18 @@ class TestSimulation(unittest.TestCase):
             self.assertIsInstance(test_sim.population, pe.Population)
             del(test_sim.writer)
         mo.assert_called_with(filename, 'w')
+
+    @patch('logging.exception')
+    @patch('os.path.join')
+    def test_configure_exception(self, mock_join, mock_log):
+        mock_join.side_effect = SyntaxError
+        mo = mock_open()
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params)
+            mock_log.assert_called_once_with("SyntaxError in"
+                                             + " Simulation.configure()")
 
     def test_spatial_output_bool(self):
         with patch('pyEpiabm.output._csv_dict_writer.open'):
@@ -67,6 +88,7 @@ class TestSimulation(unittest.TestCase):
 
             del(test_sim.writer)
 
+    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.sweep.PlaceSweep.__call__')
     @patch('pyEpiabm.sweep.InitialInfectedSweep.__call__')
     @patch('pyEpiabm.routine.Simulation.write_to_file')
@@ -83,6 +105,22 @@ class TestSimulation(unittest.TestCase):
             patch_initial.assert_called_with(self.sim_params)
             patch_sweep.assert_called_with(time_sweep)
             patch_write.assert_called_with(time_write)
+
+    @patch('logging.exception')
+    @patch('pyEpiabm.sweep.InitialInfectedSweep.__call__')
+    def test_run_sweeps_exception(self, patch_initial, patch_log):
+        patch_initial.side_effect = NotImplementedError
+
+        mo = mock_open()
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+
+            broken_sim = pe.routine.Simulation()
+            broken_sim.configure(self.test_population, self.initial_sweeps,
+                                 self.sweeps, self.sim_params,
+                                 self.file_params)
+            broken_sim.run_sweeps()
+            patch_log.assert_called_once_with("NotImplementedError in"
+                                              + " Simulation.run_sweeps()")
 
     def test_write_to_file(self):
         mo = mock_open()
@@ -109,7 +147,10 @@ class TestSimulation(unittest.TestCase):
                                   self.spatial_file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
             data["time"] = time
-            data["cell"] = hash(self.test_population.cells[0])
+            cell = self.test_population.cells[0]
+            data["cell"] = hash(cell)
+            data["location_x"] = cell.location[0]
+            data["location_y"] = cell.location[0]
 
             with patch.object(spatial_sim.writer, 'write') as mock:
                 spatial_sim.write_to_file(time)
@@ -123,6 +164,7 @@ class TestSimulation(unittest.TestCase):
         self.assertAlmostEqual(np_value, 0.548814, places=5)
         # Values taken from known seed sequence
 
+    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write')
     def test_random_seed(self, mock_write):
         pop_params = {"population_size": 250, "cell_number": 1,

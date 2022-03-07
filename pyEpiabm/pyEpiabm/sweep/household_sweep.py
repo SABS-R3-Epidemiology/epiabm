@@ -35,6 +35,10 @@ class HouseholdSweep(AbstractSweep):
                 if not infector.is_infectious():
                     continue
 
+                if infector.household is None:
+                    raise AttributeError(f"{infector} is not part of a "
+                                         + "household")
+
                 # Check to see whether a household member is susceptible.
                 for infectee in infector.household.persons:
                     if not infectee.is_susceptible():

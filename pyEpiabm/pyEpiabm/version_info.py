@@ -6,7 +6,7 @@
 #  - Changes to minor indicate new features, possible slight backwards
 #    incompatibility
 #  - Changes to revision indicate bugfixes, tiny new features
-VERSION_INT = 0, 0, 1
+VERSION_INT = 0, 0, 3
 
 # String version of the version number
 VERSION = '.'.join([str(x) for x in VERSION_INT])

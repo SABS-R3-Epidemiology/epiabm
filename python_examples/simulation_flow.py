@@ -3,10 +3,16 @@
 #
 
 import os
+import logging
 import pandas as pd
 import matplotlib.pyplot as plt
 
 import pyEpiabm as pe
+
+# Setup output for logging file
+logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
+                    format=('%(asctime)s - %(name)s'
+                            + '- %(levelname)s - %(message)s'))
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
@@ -20,6 +26,7 @@ pop_params = {"population_size": 100, "cell_number": 1,
               "place_number": 2}
 
 pe.Parameters.instance().time_steps_per_day = 1
+pe.Parameters.instance().base_reproduction_num = 2.8
 
 # Create a population based on the parameters given.
 population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
@@ -51,7 +58,8 @@ sim.run_sweeps()
 del(sim.writer)
 del(sim)
 
-# Creation of a plot of results
+# Creation of a plot of results (without logging matplotlib info)
+logging.getLogger("matplotlib").setLevel(logging.WARNING)
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
                         "output.csv")
 df = pd.read_csv(filename)

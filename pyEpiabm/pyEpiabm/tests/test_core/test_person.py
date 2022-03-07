@@ -6,11 +6,12 @@ import pyEpiabm as pe
 class TestPerson(unittest.TestCase):
     """Test the 'Person' class.
     """
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls.cell = pe.Cell()
-        cls.microcell = pe.Microcell(cls.cell)
-        cls.person = pe.Person(cls.microcell)
+    def setUp(self) -> None:
+        self.cell = pe.Cell()
+        self.cell.add_microcells(1)
+        self.microcell = self.cell.microcells[0]
+        self.microcell.add_people(1)
+        self.person = self.microcell.persons[0]
 
     def test__init__(self):
         self.assertEqual(self.person.age, 0)
@@ -23,13 +24,13 @@ class TestPerson(unittest.TestCase):
 
     def test_is_infectious(self):
         self.assertFalse(self.person.is_infectious())
-        self.person.infection_status = pe.property.InfectionStatus.InfectMild
+        self.person.update_status(pe.property.InfectionStatus.InfectMild)
         self.assertTrue(self.person.is_infectious())
 
     def test_is_susceptible(self):
-        self.person.infection_status = pe.property.InfectionStatus.Susceptible
+        self.person.update_status(pe.property.InfectionStatus.Susceptible)
         self.assertTrue(self.person.is_susceptible())
-        self.person.infection_status = pe.property.InfectionStatus.InfectMild
+        self.person.update_status(pe.property.InfectionStatus.InfectMild)
         self.assertFalse(self.person.is_susceptible())
 
     def test_update_status(self):

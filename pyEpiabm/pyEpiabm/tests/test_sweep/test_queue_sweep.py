@@ -6,22 +6,21 @@ import pyEpiabm as pe
 class TestQueueSweep(unittest.TestCase):
     """Test the 'QueueSweep' class.
     """
-    @classmethod
-    def setUpClass(cls) -> None:
+    def setUp(self) -> None:
         """Sets up a population we can use throughout the test.
         2 people are located in one microcell.
         """
-        cls.pop_factory = pe.routine.ToyPopulationFactory()
-        cls.pop_params = {"population_size": 2, "cell_number": 1,
-                          "microcell_number": 1, "household_number": 1}
-        cls.test_population = cls.pop_factory.make_pop(cls.pop_params)
+        self.pop_factory = pe.routine.ToyPopulationFactory()
+        self.pop_params = {"population_size": 2, "cell_number": 1,
+                           "microcell_number": 1, "household_number": 1}
+        self.test_population = self.pop_factory.make_pop(self.pop_params)
 
-        cls.cell = cls.test_population.cells[0]
-        cls.person1 = cls.test_population.cells[0].microcells[0].persons[0]
-        cls.person1.infection_status = pe.property.InfectionStatus.InfectMild
-        cls.person2 = cls.test_population.cells[0].microcells[0].persons[1]
+        self.cell = self.test_population.cells[0]
+        self.person1 = self.test_population.cells[0].microcells[0].persons[0]
+        self.person1.infection_status = pe.property.InfectionStatus.InfectMild
+        self.person2 = self.test_population.cells[0].microcells[0].persons[1]
 
-        cls.time = 1
+        self.time = 1
 
     def test_bind(self):
         """Test population binds correctly.
@@ -48,8 +47,11 @@ class TestQueueSweep(unittest.TestCase):
 
         # Check queue is cleared.
         self.assertTrue(self.cell.person_queue.empty())
-        # Check person 2 has updated status
+        # Check person 2 current infection status
         self.assertEqual(self.person2.infection_status,
+                         pe.property.InfectionStatus.Susceptible)
+        # Check person 2 has updated next infection status
+        self.assertEqual(self.person2.next_infection_status,
                          pe.property.InfectionStatus.Exposed)
         # Check person 2 has updated time
         self.assertEqual(self.person2.time_of_status_change,

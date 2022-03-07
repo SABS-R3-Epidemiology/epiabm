@@ -2,7 +2,8 @@
 # Runs all unit tests included in pyEpiabm.
 # Run from epiabm directory with coverage using:
 #   `coverage run pyEpiabm/run_tests.py --unit`
-# Doc tests can also be ran from pyEpiabm with `python3 run_tests.py --doctest`
+# Report coverage with `coverage report -m`, or build html with `coverage html`
+# Doc tests can be ran from pyEpiabm with `python3 run_tests.py --doctest`
 #
 
 from __future__ import absolute_import, division
@@ -94,6 +95,7 @@ def doctest_rst_and_public_interface():
         'pyEpiabm.property',
         'pyEpiabm.routine',
         'pyEpiabm.sweep',
+        'pyEpiabm.utility',
         'pyEpiabm.Cell',
         'pyEpiabm.Household',
         'pyEpiabm.Microcell',
