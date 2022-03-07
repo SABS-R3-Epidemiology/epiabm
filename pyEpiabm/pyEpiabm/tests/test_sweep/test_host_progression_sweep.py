@@ -9,18 +9,17 @@ from pyEpiabm.property.infection_status import InfectionStatus
 class TestHostProgressionSweep(unittest.TestCase):
     """Tests the 'HostProgressionSweep' class.
     """
-    @classmethod
-    def setUpClass(cls) -> None:
+    def setUp(self) -> None:
         """Sets up a population we can use throughout the test.
         2 people are located in one microcell.
         """
-        cls.test_population = pe.Population()
-        cls.test_population.add_cells(1)
-        cls.test_population.cells[0].add_microcells(1)
-        cls.test_population.cells[0].microcells[0].add_people(3)
-        cls.person1 = cls.test_population.cells[0].microcells[0].persons[0]
-        cls.person2 = cls.test_population.cells[0].microcells[0].persons[1]
-        cls.person3 = cls.test_population.cells[0].microcells[0].persons[2]
+        self.test_population = pe.Population()
+        self.test_population.add_cells(1)
+        self.test_population.cells[0].add_microcells(1)
+        self.test_population.cells[0].microcells[0].add_people(3)
+        self.person1 = self.test_population.cells[0].microcells[0].persons[0]
+        self.person2 = self.test_population.cells[0].microcells[0].persons[1]
+        self.person3 = self.test_population.cells[0].microcells[0].persons[2]
 
     def test_construct(self):
         """Tests that the host progression sweep initialises correctly.
