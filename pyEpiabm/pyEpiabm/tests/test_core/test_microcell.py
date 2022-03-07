@@ -6,10 +6,9 @@ import pyEpiabm as pe
 class TestMicrocell(unittest.TestCase):
     """Test the 'Microcell' class.
     """
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls.cell = pe.Cell()
-        cls.microcell = pe.Microcell(cls.cell)
+    def setUp(self) -> None:
+        self.cell = pe.Cell()
+        self.microcell = pe.Microcell(self.cell)
 
     def test__init__(self):
         self.assertEqual(self.microcell.persons, [])
@@ -21,36 +20,32 @@ class TestMicrocell(unittest.TestCase):
                          "Microcell with 0 people.")
 
     def test_set_id(self):
-        id_mcell = pe.Microcell(self.cell)
-        self.assertEqual(id_mcell.id, hash(id_mcell))
-        id_mcell.set_id(2.0)
-        self.assertEqual(id_mcell.id, 2.0)
+        self.assertEqual(self.microcell.id, hash(self.microcell))
+        self.microcell.set_id(2.0)
+        self.assertEqual(self.microcell.id, 2.0)
 
     def test_add_people(self, n=4):
-        cell = pe.Cell()
-        microcell = pe.Microcell(cell)
-        self.assertEqual(len(microcell.persons), 0)
-        microcell.add_people(n)
-        self.assertEqual(len(microcell.persons), n)
-        microcell.add_people(n + 1, pe.property.InfectionStatus.InfectASympt)
-        self.assertEqual(len(microcell.persons), 2 * n + 1)
-        self.assertEqual(cell.number_infectious(), n + 1)
+        self.assertEqual(len(self.microcell.persons), 0)
+        self.microcell.add_people(n)
+        self.assertEqual(len(self.microcell.persons), n)
+        self.microcell.add_people(n + 1,
+                                  pe.property.InfectionStatus.InfectASympt)
+        self.assertEqual(len(self.microcell.persons), 2 * n + 1)
+        self.assertEqual(self.cell.number_infectious(), n + 1)
 
     def test_add_place(self, n=3):
-        microcell = pe.Microcell(self.cell)
-        self.assertEqual(len(microcell.places), 0)
-        microcell.add_place(n, (1.0, 1.0), pe.property.PlaceType.Hotel)
-        self.assertEqual(len(microcell.places), n)
+        self.assertEqual(len(self.microcell.places), 0)
+        self.microcell.add_place(n, (1.0, 1.0), pe.property.PlaceType.Hotel)
+        self.assertEqual(len(self.microcell.places), n)
 
-    def test_setup(self):
-        cell = pe.Cell()
-        cell.add_microcells(5)
+    def test_setup(self, n=5):
+        self.assertEqual(len(self.cell.microcells), 0)
+        self.cell.add_microcells(n)
+        self.assertEqual(len(self.cell.microcells), n)
 
     def test_report(self):
-        cell = pe.Cell()
-        mcell = pe.Microcell(cell)
-        mcell.add_people(5)
-        mcell.notify_person_status_change(
+        self.microcell.add_people(5)
+        self.microcell.notify_person_status_change(
             pe.property.InfectionStatus.Susceptible,
             pe.property.InfectionStatus.Recovered)
 

@@ -6,13 +6,12 @@ import pyEpiabm as pe
 class TestPerson(unittest.TestCase):
     """Test the 'Person' class.
     """
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls.cell = pe.Cell()
-        cls.cell.add_microcells(1)
-        cls.microcell = cls.cell.microcells[0]
-        cls.microcell.add_people(1)
-        cls.person = cls.microcell.persons[0]
+    def setUp(self) -> None:
+        self.cell = pe.Cell()
+        self.cell.add_microcells(1)
+        self.microcell = self.cell.microcells[0]
+        self.microcell.add_people(1)
+        self.person = self.microcell.persons[0]
 
     def test__init__(self):
         self.assertEqual(self.person.age, 0)
