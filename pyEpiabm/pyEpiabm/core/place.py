@@ -79,7 +79,7 @@ class Place:
 
         :param person: Person to add
         :type person: Person
-        :param person_group: key for the person group dictionary
+        :param person_group: Key for the person group dictionary
         :type person_group: int
         """
         self.persons.append(person)
@@ -101,16 +101,13 @@ class Place:
         else:
             group_index = self.get_group_index(person)
             self.person_groups[group_index].remove(person)
-            # If anyone can think of a better way to remove
-            # people from a dictionary without knowing the
-            # key lmk.
             person.remove_place(self)
             self.persons.remove(person)
 
     def get_group_index(self, person):
         """Get the group of a person in the place.
 
-        :param person: Person to remove from place
+        :param person: Person associated with group
         :type person: Person
         """
         place_list = [i[0] for i in person.places]
@@ -124,8 +121,8 @@ class Place:
         all occupants each timestep, but workers at the
         restaurant will be present each timestep.
 
-        :param person_groups: list of person_group
-        indicies to be removed
+        :param person_groups: List of person_group
+            indicies to be removed
         :type person_groups: list
         """
         for group in person_groups:

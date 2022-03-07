@@ -101,10 +101,10 @@ class Person:
     def add_place(self, place, person_group: int = 0):
         """Method adds a place to the place list if the person visits
         or is associated with this place. Places are saved as a tuple
-        with the place as the first entry and group person is associated
-        with as the second.
+        with the place as the first entry and the group the person is
+        associated with as the second.
 
-        :param place: Place person should be removed from
+        :param place: Place person should be added to
         :type place: Place
         :param person_group: key for the person group dictionary
         :type person_group: int

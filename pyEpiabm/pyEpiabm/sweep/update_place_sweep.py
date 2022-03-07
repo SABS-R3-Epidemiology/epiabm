@@ -53,11 +53,11 @@ class UpdatePlaceSweep(AbstractSweep):
                         place.initialised = True
                     # Variable population is people not in the fixed pop.
                     # Changed at each timestep
-                    place.empty_place(1)
-                    person_list = [person for person in place.cell.persons if
-                                   person not in place.person_groups[1]]
+                    place.empty_place(person_groups=[1])
+                    candidate_list = [person for person in place.cell.persons
+                                      if person not in place.person_groups[1]]
                     self.update_place_group(place, group_index=1,
-                                            person_list=person_list)
+                                            person_list=candidate_list)
 
                 elif place.place_type.value == 4:  # OUTDOORS
                     place.empty_place()
@@ -84,11 +84,11 @@ class UpdatePlaceSweep(AbstractSweep):
 
         :param place: Place to change
         :type place: Place
-        :param max_capacity: maximum people of this group in this place
+        :param max_capacity: Maximum people of this group in this place
         :type max_capacity: int
-        :param group_index: key for the person group dictionary
+        :param group_index: Key for the person group dictionary
         :type group_index: int
-        :param person_list: list of people that may be present in the cell
+        :param person_list: List of people that may be present in the cell
         :type person_list: list
         """
         # If a specific list of people is not provided, use the whole cell
