@@ -18,7 +18,7 @@ class Parameters:
         def __init__(self):
             """Detailed description of parameters is given
             in github wiki:
-            https://github.com/SABS-R3-Epidemiology/epiabm/wiki.
+            https://github.com/SABS-R3-Epidemiology/epiabm/wiki
             """
             self.latent_period = 4.59
             self.asympt_infect_period = 14
