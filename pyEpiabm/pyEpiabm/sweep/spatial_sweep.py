@@ -134,12 +134,13 @@ class SpatialSweep(AbstractSweep):
 
                 try:
                     # Will catch a list of zeros
-                    1 / sum(distance_weights)
+                    if sum(distance_weights) == 0:
+                        raise(ValueError)
                     cell_list = random.choices(possible_infectee_cells,
                                                weights=distance_weights,
                                                k=number_to_infect)
-                except ZeroDivisionError:
-                    logging.exception(f"{type(ValueError).__name__}: no cells"
+                except ValueError as e:
+                    logging.exception(f"{type(e).__name__}: no cells"
                                       + f" within radius {cutoff} of"
                                       + f" cell {cell.id} at location"
                                       + f" {cell.location} - skipping cell.")
