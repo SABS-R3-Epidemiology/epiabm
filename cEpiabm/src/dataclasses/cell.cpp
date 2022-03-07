@@ -296,12 +296,12 @@ namespace epiabm
         return m_compartmentCounter(status);
     }
 
-    void setLocation(std::pair<double, double> loc)
+    void Cell::setLocation(std::pair<double, double> loc)
     {
         m_location = loc;
     }
         
-    std::pair<double, double> getLocation()
+    std::pair<double, double> Cell::getLocation() const
     {
         return m_location;
     }

@@ -48,15 +48,15 @@ namespace epiabm
     {
         std::vector<double> weightVector;
         if (doDistance){
-            std::pair <double, double> current_loc = currentCell->m_location;
-            for (Cell cell : cells){
-                weightVector.push_back(DistanceMetrics::dist(cell.m_location, current_loc));
+            std::pair <double, double> current_loc = currentCell->getLocation();
+            for (Cell& cell : cells){
+                weightVector.push_back(DistanceMetrics::dist(cell.getLocation(), current_loc));
             }
         }
         else if (doCovidsim)
         {
-            for (Cell cell : cells){
-                if (cell* == currentCell){ // want to compare pointers to cells here
+            for (Cell& cell : cells){
+                if (&cell == currentCell){ // want to compare pointers here
                     weightVector.push_back(0);
                 }
                 else {
