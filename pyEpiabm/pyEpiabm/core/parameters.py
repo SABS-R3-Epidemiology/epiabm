@@ -16,6 +16,9 @@ class Parameters:
         """Singleton Parameters Object.
         """
         def __init__(self):
+            """ Detailed description of parameters is given
+            in github wiki.
+            """
             self.latent_period = 4.59
             self.asympt_infect_period = 14
             self.mean_mild_to_recov = 7

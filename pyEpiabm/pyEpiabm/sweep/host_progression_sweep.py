@@ -29,6 +29,9 @@ class HostProgressionSweep(AbstractSweep):
         self.state_transition_matrix = \
             pe.Parameters.instance().state_transition_matrix
         self.number_of_states = len(InfectionStatus)
+        assert self.state_transition_matrix.shape ==\
+            (self.number_of_states, self.number_of_states),\
+            'Matrix dimensions must match number of infection states'
 
     def _update_time_to_status_change(self, person, time):
         """Assigns time until next infection status update,
@@ -77,8 +80,8 @@ class HostProgressionSweep(AbstractSweep):
         """Assigns the infectiousness of a person for when they go from
         the exposed infection state to the next state, either InfectAsympt,
         InfectMild or InfectGP.
-        *Needs to be called right after an exposed person has been given its
-        new infection status in the sweep*
+        Called right after an exposed person has been given its
+        new infection status in the call method below.
 
         Parameters
         ----------
@@ -147,9 +150,6 @@ class HostProgressionSweep(AbstractSweep):
                     continue  # pragma: no cover
                 while person.time_of_status_change <= time:
                     person.update_status(person.next_infection_status)
-                    # line directly below is short hand way to check
-                    # infection status is one of a list of options.
-                    # Makes use of the enum
                     if person.infection_status.name in ['InfectASympt',
                                                         'InfectMild',
                                                         'InfectGP']:
