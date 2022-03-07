@@ -40,8 +40,8 @@ class StateTransitionMatrix:
         associated with the columns j.
 
         :param matrix: Initialised state transition matrix, with right column
-        and row names. The first column contains the current infection status
-        and all the transition probabilities are set to zero.
+            and row names. The first column contains the current infection
+            status and all the transition probabilities are set to zero.
         :type matrix: Pandas dataframe
         :returns: Matrix in the form of a dataframe
         :rtype: Pandas dataframe
