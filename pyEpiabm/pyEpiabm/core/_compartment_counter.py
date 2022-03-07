@@ -14,8 +14,11 @@ class _CompartmentCounter:
     def __init__(self, identifier: str):
         """Constructor Method.
 
-        :param identifier: Identifier for this counter
-        :type identifier: str
+        Parameters
+        ----------
+        identifier : str
+            Identifier for this counter
+
         """
         # Identifier
         self._identifier = identifier
