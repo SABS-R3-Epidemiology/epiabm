@@ -12,7 +12,7 @@ from pyEpiabm.property import InfectionStatus
 class StateTransitionMatrix:
     """Class to generate and edit the state transition matrix
     """
-    def build_state_transition_matrix(self):
+    def create_empty_state_transition_matrix(self):
         """Builds the structure of the state transition matrix that is used in
         the host progression sweep. Labels the rows and the columns with the
         infection status. Fill the rest of the dataframe with zero
@@ -30,7 +30,7 @@ class StateTransitionMatrix:
                                    index=labels)
         return init_matrix
 
-    def fill_state_transition_matrix(self, matrix):
+    def create_state_transition_matrix(self):
         """Fill the state transition matrix with the non-zeros probabilities.
         The rows are associated to the current infection status, the
         columns to the next infection status, and the elements are the
@@ -39,13 +39,10 @@ class StateTransitionMatrix:
         status associated with the row i to move to the infection status
         associated with the columns j.
 
-        :param matrix: Initialised state transition matrix, with right column
-            and row names. The first column contains the current infection
-            status and all the transition probabilities are set to zero.
-        :type matrix: pd.Dataframe
         :returns: Matrix in the form of a dataframe
         :rtype: Pandas dataframe
         """
+        matrix = self.create_empty_state_transition_matrix()
         matrix.loc['Susceptible', 'Exposed'] = 1
         matrix.loc['Exposed', 'InfectASympt'] = 0.34
         matrix.loc['Exposed', 'InfectMild'] = 0.410061048258529

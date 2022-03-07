@@ -17,7 +17,8 @@ class Parameters:
         """
         def __init__(self):
             """ Detailed description of parameters is given
-            in github wiki.
+            in github wiki:
+            https://github.com/SABS-R3-Epidemiology/epiabm/wiki.
             """
             self.latent_period = 4.59
             self.asympt_infect_period = 14
@@ -160,9 +161,8 @@ class Parameters:
 
             # Build infection state transition matrix and set as parameter
             matrix_object = StateTransitionMatrix()
-            empty_matrix = matrix_object.build_state_transition_matrix()
             self.state_transition_matrix =\
-                matrix_object.fill_state_transition_matrix(empty_matrix)
+                matrix_object.create_state_transition_matrix()
             pass
 
     _instance = None  # Singleton instance

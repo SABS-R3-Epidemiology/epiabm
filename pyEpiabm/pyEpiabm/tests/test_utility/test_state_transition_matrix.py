@@ -12,26 +12,25 @@ from pyEpiabm.utility import StateTransitionMatrix
 class TestStateTransitionMatrix(unittest.TestCase):
     """Test the 'StateTransitionMatrix' class.
     """
-    def test_build_initial_matrix(self):
+    def test_create_empty_transition_matrix(self):
         """Tests the build_state_transition_matrix method by asserting if it is
         equal to the initial matrix expected.
         """
         matrix_object = StateTransitionMatrix()
-        matrix = matrix_object.build_state_transition_matrix()
+        matrix = matrix_object.create_empty_state_transition_matrix()
         labels = [status.name for status in InfectionStatus]
         zero_filled_dataframe = pd.DataFrame(np.zeros((len(InfectionStatus),
                                                        len(InfectionStatus))),
                                              columns=labels, index=labels)
         assert_frame_equal(matrix, zero_filled_dataframe)
 
-    def test_fill_state_transition_matrix(self):
+    def test_create_state_transition_matrix(self):
         """Tests the fill_state_transition_matrix method and asserts that each row
         sums to 1 (ie that the transition probabilities for each current
         infection status sum to 1).
         """
         matrix_object = StateTransitionMatrix()
-        matrix = matrix_object.build_state_transition_matrix()
-        filled_matrix = matrix_object.fill_state_transition_matrix(matrix)
+        filled_matrix = matrix_object.create_state_transition_matrix()
         filled_matrix['sum'] = filled_matrix.sum(axis=1)
         for i in filled_matrix['sum']:
             self.assertAlmostEqual(i, 1)
