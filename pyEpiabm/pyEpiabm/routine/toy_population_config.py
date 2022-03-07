@@ -132,7 +132,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         population : Population
             Population where :class:`Place`s will be added
         place_number : int
-            Number of places to form
+            Number of places to generate per :class:`Microcell`
 
         """
         # Further consideration of whether we initialise place types
