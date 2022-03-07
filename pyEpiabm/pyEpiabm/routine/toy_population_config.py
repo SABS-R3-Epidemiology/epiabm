@@ -160,8 +160,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         Parameters
         ----------
         population : Population
-            Population containing all person objects to be considered for
-            grouping
+            Population containing all cells to be assigned locations
         method : str
             Method of determining cell locations
 
