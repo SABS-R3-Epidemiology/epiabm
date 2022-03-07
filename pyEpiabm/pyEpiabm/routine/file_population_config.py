@@ -34,9 +34,9 @@ class FilePopulationFactory:
             * `location_x`: The x coordinate of the parent cell location
             * `location_y`: The y coordinate of the parent cell location
             * `household_number`: Number of households in that microcell
-            * Any number of columns with titles from the `InfectionStatus`
-                enum (such as `InfectionStatus.Susceptible`), giving the
-                number of people with that status in that cell
+            * Any number of columns with titles from the `InfectionStatus` \
+              enum (such as `InfectionStatus.Susceptible`), giving the \
+              number of people with that status in that cell
 
         Parameters
         ----------

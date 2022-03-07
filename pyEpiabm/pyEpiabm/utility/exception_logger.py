@@ -3,6 +3,7 @@
 #
 
 import logging
+from functools import wraps
 
 
 def log_exceptions(message: str = ""):
@@ -17,6 +18,7 @@ def log_exceptions(message: str = ""):
 
     """
     def decorator(func):
+        @wraps(func)
         def wrapper(*args, **kwargs):
             try:
                 return func(*args, **kwargs)
