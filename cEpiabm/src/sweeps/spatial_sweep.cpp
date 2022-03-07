@@ -26,16 +26,17 @@ namespace epiabm
 
     inline std::vector<Cell*> getCellsToInfect(std::vector<Cell>& cells, Cell* currentCell, size_t n)
     {
-        std::vector<size_t> allCells = std::vector<size_t>();
-        allCells.reserve(cells.size()-1);
-        for (size_t i = 0; i < cells.size(); i++)
-            if (i != currentCell->index()) allCells.push_back(i);
-
+        std::vector<double> weightVector = getWeightsFromCells(cells, currentCell);
         std::vector<size_t> chosenCellIndices = std::vector<size_t>();
-        std::sample(allCells.begin(), allCells.end(),
-            std::back_inserter(chosenCellIndices), n,
-            std::mt19937{std::random_device{}()});
-        
+        std::random_device rd;
+        std::mt19937 generator(rd());
+        std::discrete_distribution<Cell*> distribution(weightVector.begin(), weightVector.end()); 
+
+        for(int i=0; i<n; ++i){
+            int cell_ind = distribution(generator); // generator spits out integers
+            chosenCellIndices.push_back(cell_ind);
+        }
+
         std::vector<Cell*> chosen = std::vector<Cell*>();
         chosen.reserve(n);
         for (const auto i : chosenCellIndices) chosen.push_back(&cells[i]);
