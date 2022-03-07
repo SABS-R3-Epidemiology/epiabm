@@ -19,6 +19,7 @@ namespace epiabm
     {
     private:
         size_t m_index;
+        std::pair<double, double> m_location;
 
         std::vector<Person> m_people;
         std::vector<Microcell> m_microcells;
@@ -88,6 +89,8 @@ namespace epiabm
         void initialize();
 
         unsigned int compartmentCount(InfectionStatus status);
+        void setLocation(std::pair<double, double> loc);
+        std::pair<double, double> getLocation() const;
 
         void personStatusChange(Person* person, InfectionStatus newStatus, unsigned short timestep);
 

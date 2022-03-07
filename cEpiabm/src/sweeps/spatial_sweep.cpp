@@ -1,7 +1,9 @@
 
 #include "spatial_sweep.hpp"
 #include "../covidsim.hpp"
-#include "../dataclasses/cell.hpp"
+#include "../dataclasses/cell.hpp"  // again seem to be having problems with relative path
+#include "../utility/distance_metrics.hpp"
+#include "../reporters/cell_compartment_reporter.hpp"
 
 #include <functional>
 #include <random>
@@ -38,6 +40,31 @@ namespace epiabm
         chosen.reserve(n);
         for (const auto i : chosenCellIndices) chosen.push_back(&cells[i]);
         return chosen;
+    }
+
+    inline std::vector<double> getWeightsFromCells(std::vector<Cell>& cells, Cell* currentCell,
+    bool doDistance = true, bool doCovidsim = false)
+    {
+        std::vector<double> weightVector;
+        if (doDistance){
+            std::pair <double, double> current_loc = currentCell->m_location;
+            for (Cell cell : cells){
+                weightVector.push_back(DistanceMetrics::dist(cell.m_location, current_loc));
+            }
+        }
+        else if (doCovidsim)
+        {
+            for (Cell cell : cells){
+                if (cell* == currentCell){ // want to compare pointers to cells here
+                    weightVector.push_back(0);
+                }
+                else {
+                    size_t num_infectious = cell.numInfectious();
+                    weightVector.push_back(static_cast<int>(num_infectious));
+                }
+            }
+        }
+        return weightVector;
     }
 
     /**
