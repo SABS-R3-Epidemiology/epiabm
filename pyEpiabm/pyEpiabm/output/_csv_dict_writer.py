@@ -14,14 +14,17 @@ class _CsvDictWriter(AbstractReporter):
         """Initialises a file to store output in, and which categories
         to record.
 
-        :param folder: Output folder path
-        :type folder: str
-        :param filename: Output file name
-        :type filename: str
-        :param fieldnames: List of categories to be saved
-        :type fieldnames: list
-        :param clear_folder: Whether to empty the folder before saving results
-        :type time: bool
+        Parameters
+        ----------
+        folder : str
+            Output folder path
+        filename : str
+            Output file name
+        fieldnames : list
+            List of categories to be saved
+        clear_folder : bool
+            Whether to empty the folder before saving results
+
         """
         super().__init__(folder, clear_folder)
 
@@ -33,6 +36,7 @@ class _CsvDictWriter(AbstractReporter):
     def __del__(self):
         """Closes the file when the simulation is finished.
         Required for file data to be further used.
+
         """
         if self.f:
             self.f.close()
@@ -40,6 +44,10 @@ class _CsvDictWriter(AbstractReporter):
     def write(self, row: typing.Dict):
         """Writes data to file.
 
-        :param row: Dictionary of data to be saved
-        :type row: dict"""
+        Parameters
+        ----------
+        row : dict
+            Dictionary of data to be saved
+
+        """
         self.writer.writerow(row)
