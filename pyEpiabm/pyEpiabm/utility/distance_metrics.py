@@ -27,7 +27,7 @@ class DistanceFunctions:
         Returns
         -------
         float
-            Distance between the two tuples
+            Distance between the two locations
 
         """
         return DistanceFunctions.dist_euclid(loc1, loc2)
