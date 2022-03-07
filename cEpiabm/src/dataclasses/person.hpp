@@ -40,9 +40,9 @@ namespace epiabm
 
     public:
         Person(size_t microcell, size_t cellPos, size_t mcellPos);
-        ~Person() = default;
-        Person(const Person&) = default;
-        Person(Person&&) = default;
+        ~Person();
+        //Person(const Person&) = default;
+        //Person(Person&&) = default;
 
         InfectionStatus status() const;
         PersonParams& params();

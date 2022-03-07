@@ -1,6 +1,6 @@
 
 #include "basic_host_progression_sweep.hpp"
-
+#include "../logfile.hpp"
 
 namespace epiabm
 {
@@ -9,9 +9,11 @@ namespace epiabm
 
     void BasicHostProgressionSweep::operator()(const unsigned short timestep)
     {
+        LOG << LOG_LEVEL_DEBUG << "Beginning Basic Host Progression Sweep " << timestep;
         m_population->forEachCell(std::bind(
             &BasicHostProgressionSweep::cellCallback, this,
             timestep, std::placeholders::_1));
+        LOG << LOG_LEVEL_DEBUG << "Finished Basic Host Progression Sweep " << timestep;
     }
 
     /**
@@ -78,6 +80,9 @@ namespace epiabm
     {
         if (timestep < person->params().next_status_time) return true;
         InfectionStatus next = next_status(person);
+        LOG << LOG_LEVEL_INFO << "Basic host progression of ("
+            << cell->index() << "," << person->cellPos() << ") from "
+            << status_string(person->status()) << " to " << status_string(next);
         person->updateStatus(cell, next, timestep);
 
         if (next == InfectionStatus::Recovered)

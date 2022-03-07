@@ -24,6 +24,7 @@ set(
     dataclasses/test_compartment_counter.cpp
     dataclasses/test_infection_status.cpp
     test_population_factory.cpp
+    test_toy_population_factory.cpp
     test_output_file_handler.cpp
     test_log_file.cpp
     test_covidsim.cpp

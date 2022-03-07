@@ -8,10 +8,10 @@ set(
     dataclasses/cell.cpp
     dataclasses/microcell.cpp
     dataclasses/person.cpp
-    dataclasses/membersInterface.cpp
     dataclasses/place.cpp
     dataclasses/household.cpp
     population_factory.cpp
+    toy_population_factory.cpp
     household_linker.cpp
     output_folder_handler.cpp
     logfile.cpp
@@ -37,10 +37,10 @@ set(
     dataclasses/microcell.hpp
     dataclasses/infection_status.hpp
     dataclasses/person.hpp
-    dataclasses/membersInterface.hpp
     dataclasses/place.hpp
     dataclasses/household.hpp
     population_factory.hpp
+    toy_population_factory.hpp
     household_linker.hpp
     output_folder_handler.hpp
     logfile.hpp
@@ -73,3 +73,9 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         target_link_libraries(epiabm_lib PRIVATE stdc++fs)
     endif ()
 endif ()
+
+if (PYTHON_BINDINGS)
+    set_target_properties(epiabm_lib PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+    pybind11_add_module(epiabm python_bindings/bindings.cpp)
+    target_link_libraries(epiabm PRIVATE epiabm_lib)
+endif()

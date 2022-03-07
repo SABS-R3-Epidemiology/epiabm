@@ -28,7 +28,7 @@ namespace epiabm
 
     public:
         Microcell(size_t cellPos);
-        ~Microcell() = default;
+        ~Microcell();
         Microcell(const Microcell&);
         Microcell(Microcell&&);
 

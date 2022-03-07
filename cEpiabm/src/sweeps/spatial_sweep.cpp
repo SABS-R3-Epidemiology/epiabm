@@ -2,6 +2,7 @@
 #include "spatial_sweep.hpp"
 #include "../covidsim.hpp"
 #include "../dataclasses/cell.hpp"
+#include "../logfile.hpp"
 
 #include <functional>
 #include <random>
@@ -15,11 +16,13 @@ namespace epiabm
 
     void SpatialSweep::operator()(const unsigned short timestep)
     {
+        LOG << LOG_LEVEL_DEBUG << "Beginning Spatial Sweep " << timestep;
         if (m_population->cells().size() <= 1){
             return;  // no intercell infections if only one cell
         }
         m_population->forEachCell(
             std::bind(&SpatialSweep::cellCallback, this, timestep, std::placeholders::_1));
+        LOG << LOG_LEVEL_DEBUG << "Finished Spatial Sweep " << timestep;
     }
 
     inline std::vector<Cell*> getCellsToInfect(std::vector<Cell>& cells, Cell* currentCell, size_t n)
@@ -82,7 +85,10 @@ namespace epiabm
             if ((static_cast<double>(std::rand() % 1000000) / static_cast<double>(1000000)) < foi)
             {
                 // Infection attempt is successful
-                cell->enqueuePerson(infectee->cellPos());
+                LOG << LOG_LEVEL_INFO << "Spatial infection between ("
+                    << cell->index() << "," << infector->cellPos() << ") and ("
+                    << inf_cell_addr->index() << "," << infectee->cellPos() << ")";
+                inf_cell_addr->enqueuePerson(infectee->cellPos());
             }
         }
         return true;

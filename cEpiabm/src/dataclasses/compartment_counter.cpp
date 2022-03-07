@@ -4,12 +4,16 @@
 #include "cell.hpp"
 
 #include <vector>
+#include <iostream>
 
 namespace epiabm
 {
     
     CompartmentCounter::CompartmentCounter() :
         m_counts()
+    {}
+
+    CompartmentCounter::~CompartmentCounter()
     {}
 
     void CompartmentCounter::clear()

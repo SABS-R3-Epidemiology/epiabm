@@ -96,4 +96,5 @@ TEST_CASE("logfile: test others", "[LogFile]")
     LogFile::Instance()->unlock();
     LogFile::Instance()->enable_cout();
     LogFile::Instance()->disable_cout();
+    LogFile::Instance()->setLevel(2);
 }
