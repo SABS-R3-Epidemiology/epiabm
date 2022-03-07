@@ -34,8 +34,11 @@ class SpatialSweep(AbstractSweep):
         infection event occurs on individual and cell infectiousness
         and susceptibility.
 
-        :param time: Current simulation time
-        :type time: int
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+
         """
         timestep = int(time * Parameters.instance().time_steps_per_day)
 
@@ -160,12 +163,15 @@ class SpatialSweep(AbstractSweep):
         in different cells and tests whether contact between
         them will lead to an infection event.
 
-        :param infector: Infector
-        :type infector: Person
-        :param infectee: Infectee
-        :type infectee: Person
-        :param timestep: Current simulation timestep
-        :type timestep: int
+        Parameters
+        ----------
+        infector : Person
+            Infector instance of Person
+        infectee : Person
+            Infectee instance of Person
+        timestep : int
+            Current simulation timestep
+
         """
         if not infectee.is_susceptible():
             return
