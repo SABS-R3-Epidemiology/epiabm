@@ -142,8 +142,8 @@ class HostProgressionSweep(AbstractSweep):
             transition_time_object = TransitionTimeMatrix()
             transition_time_matrix =\
                 transition_time_object.fill_transition_time()
-            transition_time_icdf_object = transition_time_matrix[row_index,
-                                                                 column_index]
+            transition_time_icdf_object =\
+                transition_time_matrix.loc[row_index, column_index]
             transition_time = transition_time_icdf_object.icdf_choose_noexp()
 
         # Adds delay to transition time for first level symptomatic infection
@@ -174,10 +174,6 @@ class HostProgressionSweep(AbstractSweep):
                     person.update_status(person.next_infection_status)
                     if person.infection_status == InfectionStatus.Recovered:
                         person.next_infection_status = None
-                        person.time_of_status_change = np.inf
                     else:
                         self._update_next_infection_status(person)
-                        if person.infection_status == InfectionStatus.Exposed:
-                            self._set_latent_time(person, time)
-                        else:
-                            self._update_time_to_status_change(person, time)
+                    self._update_time_status_change(person, time)
