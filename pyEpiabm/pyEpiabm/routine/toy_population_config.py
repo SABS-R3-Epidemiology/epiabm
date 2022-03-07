@@ -130,8 +130,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         Parameters
         ----------
         population : Population
-            Population containing all person objects to be considered for
-            grouping
+            Population where :class:`Place`s will be added
         place_number : int
             Number of places to form
 
