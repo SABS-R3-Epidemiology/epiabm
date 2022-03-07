@@ -3,6 +3,7 @@ root = true
 
 # Always use Unix style new lines with new line ending on every file and trim whitespace
 [*]
+charset = utf-8
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
