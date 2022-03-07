@@ -153,9 +153,9 @@ class ToyPopulationFactory(AbstractPopulationFactory):
 
             * 'random': Assigns all locations randomly within unit square
             * 'uniform_x': Spreads points evenly along x axis in range (0, 1)
-            * 'grid': Distributes points according to a square grid within a
-                unit square. There will be cells missing in the last row if
-                the input is not a square number
+            * 'grid': Distributes points according to a square grid within a \
+               unit square. There will be cells missing in the last row \
+               if the input is not a square number
 
         Parameters
         ----------
