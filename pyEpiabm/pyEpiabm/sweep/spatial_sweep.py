@@ -40,7 +40,7 @@ class SpatialSweep(AbstractSweep):
             Current simulation time
 
         """
-        timestep = int(time * Parameters.instance().time_steps_per_day)
+        timestep = float(time * Parameters.instance().time_steps_per_day)
 
         # As this tracks intercell infections need to check number of
         # cells is more than one (edge case but worth having)
@@ -219,7 +219,7 @@ class SpatialSweep(AbstractSweep):
             Infector instance of Person
         infectee : Person
             Infectee instance of Person
-        timestep : int
+        timestep : float
             Current simulation timestep
 
         """
