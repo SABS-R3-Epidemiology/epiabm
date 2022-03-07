@@ -16,13 +16,13 @@ class TestHostProgressionSweep(unittest.TestCase):
         """
         # Create population that will be used to test all
         #  methods except update status
-        self.test_population = pe.Population()
-        self.test_population.add_cells(1)
-        self.test_population.cells[0].add_microcells(1)
-        self.test_population.cells[0].microcells[0].add_people(3)
-        self.person1 = self.test_population.cells[0].microcells[0].persons[0]
-        self.person2 = self.test_population.cells[0].microcells[0].persons[1]
-        self.person3 = self.test_population.cells[0].microcells[0].persons[2]
+        self.test_population1 = pe.Population()
+        self.test_population1.add_cells(1)
+        self.test_population1.cells[0].add_microcells(1)
+        self.test_population1.cells[0].microcells[0].add_people(3)
+        self.person1 = self.test_population1.cells[0].microcells[0].persons[0]
+        self.person2 = self.test_population1.cells[0].microcells[0].persons[1]
+        self.person3 = self.test_population1.cells[0].microcells[0].persons[2]
 
         # Create a population with people of all infection statuses to
         # test update status method
