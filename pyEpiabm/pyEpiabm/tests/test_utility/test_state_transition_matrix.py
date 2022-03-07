@@ -19,7 +19,8 @@ class TestStateTransitionMatrix(unittest.TestCase):
         matrix_object = StateTransitionMatrix()
         matrix = matrix_object.build_state_transition_matrix()
         labels = [status.name for status in InfectionStatus]
-        zero_filled_dataframe = pd.DataFrame(np.zeros((10, 10)),
+        zero_filled_dataframe = pd.DataFrame(np.zeros((len(InfectionStatus),
+                                                       len(InfectionStatus))),
                                              columns=labels, index=labels)
         assert_frame_equal(matrix, zero_filled_dataframe)
 
@@ -36,7 +37,6 @@ class TestStateTransitionMatrix(unittest.TestCase):
             self.assertAlmostEqual(i, 1)
 
     def test_update_probability(self):
-
         # Test method updates probability as expected
         back_up_matrix = \
             pe.Parameters.instance().state_transition_matrix.copy()
@@ -54,7 +54,6 @@ class TestStateTransitionMatrix(unittest.TestCase):
 
         # Test error for incorrect columns is raised
         class TestInfectionStatus(Enum):
-
             Susceptiblesssss = 1
 
         with self.assertRaises(ValueError):

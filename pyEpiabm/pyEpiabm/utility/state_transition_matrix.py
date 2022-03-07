@@ -80,15 +80,15 @@ class StateTransitionMatrix:
         try:
             if (current_infection_status_row not in InfectionStatus) or \
                     (next_infection_status_column not in InfectionStatus):
-                raise ValueError('row and column inputs must be contained in\
+                raise ValueError('Row and column inputs must be contained in\
                                 the InfectionStatus enum')
         except TypeError:
-            raise ValueError('row and column inputs must be contained in\
+            raise ValueError('Row and column inputs must be contained in\
                                 the InfectionStatus enum')
 
         if (new_probability < 0) or (new_probability > 1):
-            raise ValueError('new probability must be a valid probability between\
-                            0 and 1')
+            raise ValueError('New probability must be a valid probability larger than\
+                            or equal to 0 and less than or equal to 1')
 
         # Extract row and column names from enum and retrieve trasition matrix
         matrix = pe.Parameters.instance().state_transition_matrix
