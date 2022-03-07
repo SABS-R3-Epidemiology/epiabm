@@ -18,7 +18,7 @@ class SpatialInfection:
         Parameters
         ----------
         inf_cell : Cell
-            Cell doing infecting
+            Cell causing the infection
         timestep : int
             Current simulation timestep
 
