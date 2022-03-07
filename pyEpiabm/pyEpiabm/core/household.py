@@ -16,6 +16,7 @@ class Household:
                  susceptibility=0, infectiousness=0):
         """Constructor Method.
 
+        
         :param loc: Location of household
         :type loc: Tuple[float, float]
         :param susceptibility: Household's base susceptibility
