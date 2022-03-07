@@ -17,6 +17,7 @@ from pyEpiabm.utility import log_exceptions
 
 class FilePopulationFactory:
     """ Class that creates a population based on an input .csv file.
+
     """
     @staticmethod
     @log_exceptions()
@@ -37,13 +38,18 @@ class FilePopulationFactory:
                 enum (such as `InfectionStatus.Susceptible`), giving the
                 number of people with that status in that cell
 
-        :param input_file: Path to input file
-        :type input_file: str
-        :param random_seed: Seed for reproducible household distribution
-        :type random_seed: int
-        :return: Population object with individuals distributed into
-            households
-        :rtype: Population
+        Parameters
+        ----------
+        input_file : str
+            Path to input file
+        random_seed : int
+            Seed for reproducible household distribution
+
+        Returns
+        -------
+        Population
+            Population object with individuals distributed into households
+
         """
         # If random seed is specified in parameters, set this
         if random_seed is not None:
@@ -104,12 +110,18 @@ class FilePopulationFactory:
         """Returns cell with given ID in population, creates one if
         no cell with that ID exists.
 
-        :param population: Population containing target cell
-        :type population: Population
-        :param cell_id: ID for target cell
-        :type cell_id: float
-        :return: Cell with given ID in population
-        :rtype: Cell
+        Parameters
+        ----------
+        population : Population
+            Population containing target cell
+        cell_id : float
+            ID for target cell
+
+        Returns
+        -------
+        Cell
+            Cell with given ID in population
+
         """
         for cell in population.cells:
             if cell.id == cell_id:
@@ -123,11 +135,14 @@ class FilePopulationFactory:
     def add_households(microcell: Microcell, household_number: int):
         """Groups people in a microcell into households together.
 
-        :param microcell: Microcell containing all person objects to be
-            considered for grouping
-        :type microcell: Microcell
-        :param household_number: Number of households to form
-        :type household_number: int
+        Parameters
+        ----------
+        microcell : Microcell
+            Microcell containing all person objects to be considered
+            for grouping
+        household_number : int
+            Number of households to form
+
         """
         # Initialises another multinomial distribution
         q = [1 / household_number] * household_number
@@ -156,10 +171,13 @@ class FilePopulationFactory:
         and may not function correctly in older cases. This will include cases
         where the user is running python 3.7 or older versions.
 
-        :param population: Population object to output
-        :type population: Population
-        :param output_file: Path to output file
-        :type output_file: str
+        Parameters
+        ----------
+        population : Population
+            Population object to output
+        output_file: str
+            Path to output file
+
         """
         if version.parse(pd.__version__) < version.parse("1.4.0"):
             logging.warning(f"Pandas version {pd.__version__} is outdated,"
