@@ -26,9 +26,10 @@ class TestSpatialSweep(TestMockedLogs):
         Parameters.instance().time_steps_per_day = 1
         Parameters.instance().do_CovidSim = False
 
+    @mock.patch("logging.exception")
     @mock.patch("numpy.nan_to_num")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
-    def test_find_infectees(self, mock_dist, mock_nan):
+    def test_find_infectees(self, mock_dist, mock_nan, mock_logger):
         Parameters.instance().infection_radius = 1000
         test_pop = self.pop
         test_sweep = SpatialSweep()
@@ -70,12 +71,12 @@ class TestSpatialSweep(TestMockedLogs):
                           self.cell_inf, [cell_susc, third_cell], 1)
 
         # test value error is raised if all cells too far away
-        print('here')
         Parameters.instance().infection_radius = 0.000001
         mock_dist.side_effect = [0, 2]
         mock_nan.return_value = [1, 1]
         test_list = test_sweep.find_infectees(self.cell_inf, [cell_susc,
                                               third_cell], 1)
+        mock_logger.assert_called
         # test logger is called here
 
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
