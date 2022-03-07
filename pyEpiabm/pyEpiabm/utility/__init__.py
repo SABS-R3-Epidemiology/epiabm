@@ -11,3 +11,4 @@ from .distance_metrics import DistanceFunctions
 from .random_methods import RandomMethods
 from .inverse_cdf import InverseCdf
 from .exception_logger import log_exceptions
+from .state_transition_matrix import StateTransitionMatrix
