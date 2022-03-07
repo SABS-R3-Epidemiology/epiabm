@@ -40,9 +40,9 @@ class StateTransitionMatrix:
         associated with the columns j.
 
         :param matrix: Initialised state transition matrix, with right column
-        and row names. The first column contains the current infection status
-        and all the transition probabilities are set to zero.
-        :type matrix: Pandas dataframe
+            and row names. The first column contains the current infection
+            status and all the transition probabilities are set to zero.
+        :type matrix: pd.Dataframe
         :returns: Matrix in the form of a dataframe
         :rtype: Pandas dataframe
         """
@@ -69,12 +69,13 @@ class StateTransitionMatrix:
         """Method to manually update a transition probability in the
         transition state matrix.
 
-        :param current_infection_status_row: infection status corresponding to
+        :param current_infection_status_row: Infection status corresponding to
         the row where the probability will be updated
-        :param next_infection_status_column: infection status corresponding to
+        :type current_infection_status_column: enum
+        :param next_infection_status_column: Infection status corresponding to
         the column where the probability will be updated
         :type next_infection_status_column: enum
-        :param new_probability: updated transition probability value
+        :param new_probability: Updated transition probability value
         :type new_probability: float
         """
         try:
