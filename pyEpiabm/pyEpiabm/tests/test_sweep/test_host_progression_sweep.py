@@ -16,7 +16,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         """
         # Create population that will be used to test all
         #  methods except update status
-         self.test_population = pe.Population()
+        self.test_population = pe.Population()
         self.test_population.add_cells(1)
         self.test_population.cells[0].add_microcells(1)
         self.test_population.cells[0].microcells[0].add_people(3)
