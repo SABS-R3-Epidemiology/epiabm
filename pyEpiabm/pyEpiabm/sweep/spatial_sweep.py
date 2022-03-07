@@ -125,8 +125,8 @@ class SpatialSweep(AbstractSweep):
                                                      nan=max_weight)
                 # Use of the cutoff distance idea from CovidSim.
                 cutoff = Parameters.instance().infection_radius
-                distance_weights = [weight if (cutoff > 1/weight) else 0 for
-                                    weight in distance_weights]
+                distance_weights = [weight if (cutoff > 1/weight) else 0
+                                    for weight in distance_weights]
                 # Will catch the case if distance weights isn't configured
                 # correctly and returns the wrong length.
                 assert len(distance_weights) == len(possible_infectee_cells), (
