@@ -40,7 +40,7 @@ class SpatialSweep(AbstractSweep):
             Current simulation time
 
         """
-        timestep = float(time * Parameters.instance().time_steps_per_day)
+        timestep = int(time * Parameters.instance().time_steps_per_day)
 
         # As this tracks intercell infections need to check number of
         # cells is more than one (edge case but worth having)
@@ -109,6 +109,7 @@ class SpatialSweep(AbstractSweep):
         ----------
         infectee_list : List
             List of exposed people to test an infection event
+
         """
         infectee_list = []
         # Chooses a list of cells (with replacement) for each infection
@@ -177,7 +178,8 @@ class SpatialSweep(AbstractSweep):
         possible_infectee_cells : List
             List of possible cells to infect
         number_to_infect : int
-            maximum number of people to infect
+            Maximum number of people to infect
+
         """
         infectee_list = []
         count = 0
