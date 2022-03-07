@@ -28,7 +28,7 @@ class Population:
         :param n: Number of empty :class:`Cell` s to add
         :type n: int
         """
-        for i in range(n):
+        for _ in range(n):
             self.cells.append(Cell())
 
     def total_people(self):

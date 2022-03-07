@@ -36,7 +36,7 @@ pe.routine.ToyPopulationFactory.assign_cell_locations(population)
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 80,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 250,
               "initial_infected_number": 1}
 
 file_params = {"output_file": "output.csv",

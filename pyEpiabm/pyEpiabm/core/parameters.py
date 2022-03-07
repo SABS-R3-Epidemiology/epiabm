@@ -16,6 +16,10 @@ class Parameters:
         """Singleton Parameters Object.
         """
         def __init__(self):
+            """Detailed description of parameters is given
+            in github wiki:
+            https://github.com/SABS-R3-Epidemiology/epiabm/wiki
+            """
             self.latent_period = 4.59
             self.asympt_infect_period = 14
             self.mean_mild_to_recov = 7
@@ -154,18 +158,11 @@ class Parameters:
             self.sympt_infectiousness = 1.5
             self.asympt_infectiousness = 1
             self.latent_to_sympt_delay = 0.5
-            self.prob_gp = 0.3786953814  # From average of by age prop
-            self.prob_gp_to_hosp = 0.1628884247  # From average of by age prop
-            self.prob_hosp_to_icu = 0.3969284544  # From average of by age prop
-            self.mortality_prob_gp = 0  # From average of by age prop
-            self.mortality_prob_hosp = 0.2676376  # From average of by age prop
-            self.mortality_prob_icu = 0.5234896  # From average of by age
 
-            # Build infection state transition matrix
+            # Build infection state transition matrix and set as parameter
             matrix_object = StateTransitionMatrix()
-            empty_matrix = matrix_object.build_state_transition_matrix()
             self.state_transition_matrix =\
-                matrix_object.fill_state_transition_matrix(empty_matrix)
+                matrix_object.create_state_transition_matrix()
             pass
 
     _instance = None  # Singleton instance

@@ -16,6 +16,21 @@ import glob
 from PIL import Image
 
 
+def point_in_region(point: np.ndarray, grid_lim: list):
+    """Checks whether point is within grid limits specified.
+    Used to exclude distant points from colouring.
+
+    :param point: Point to consider
+    :type point: np.ndarray
+    :param grid_lim: Spatial extent of plots, in the form
+        [[min_x, max_x], [min_y, max_y]]
+    :type grid_lim: List
+    """
+    x_valid = (point[0] >= grid_lim[0][0]) & (point[0] <= grid_lim[0][1])
+    y_valid = (point[1] >= grid_lim[1][0]) & (point[1] <= grid_lim[1][1])
+    return x_valid & y_valid
+
+
 def find_value_for_region(current_df, point, name):
     """Extract value from given column for entry at given point.
     Requires a unique position (and so should only be passed data
@@ -32,6 +47,7 @@ def find_value_for_region(current_df, point, name):
     """
     row = current_df.loc[(current_df['location_x'] == point[0])
                          & (current_df['location_y'] == point[1])]
+    assert len(row[name]) > 0, "No value found for point"
     assert len(row[name]) == 1, "Multiple values found at point"
     assert name in current_df.columns.values, "Column name not in dataframe"
     return row[name].values[0]  # Change to plot other characteristic
@@ -101,11 +117,15 @@ def plot_time_point(df, vor, name, time, grid_lim, ax, mapper):
 
     # Colourcode each region according to infection rate
     for r, region in enumerate(vor.regions):
+        if r == 0:  # Vor.regions indexes from 1
+            continue
         if -1 not in region:
-            point = vor.points[r]
-            value = find_value_for_region(current_data, point, name=name)
-            polygon = [vor.vertices[i] for i in region]
-            ax.fill(*zip(*polygon), color=mapper.to_rgba(value))
+            point_idx = np.where(vor.point_region == r)[0]
+            point = vor.points[point_idx][0]
+            if point_in_region(point, grid_lim):
+                value = find_value_for_region(current_data, point, name=name)
+                polygon = [vor.vertices[i] for i in region]
+                ax.fill(*zip(*polygon), color=mapper.to_rgba(value))
 
     ax.set_aspect('equal')
     ax.set_title(f"t = {time:.2f}")
@@ -222,7 +242,7 @@ def generate_animation(df, vor, name, grid_lim, save_path, use_pillow=True):
         img, *imgs = [Image.open(f).convert('RGB')
                       for f in sorted(glob.glob(fp_in))]
         img.save(fp=fp_out, format='GIF', append_images=imgs,
-                 save_all=True, duration=200, loop=0,
+                 save_all=True, duration=20, loop=0,
                  optimise=True)
         for file in os.listdir(save_path):  # Delete images after use
             if file.endswith('d.png'):
@@ -234,7 +254,9 @@ filename = os.path.join(os.path.dirname(__file__), "spatial_outputs",
                         "output.csv")
 df = pd.read_csv(filename)
 
-locations = np.transpose(np.stack((df["location_x"], df["location_y"])))
+locations = np.unique(np.transpose(np.stack((df["location_x"],
+                                             df["location_y"]))),
+                      axis=0)
 
 max_x, max_y = np.ceil(np.amax(locations, axis=0))
 min_x, min_y = np.floor(np.amin(locations, axis=0))
