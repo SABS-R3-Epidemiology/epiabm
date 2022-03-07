@@ -18,8 +18,11 @@ class StateTransitionMatrix:
         infection status. Fill the rest of the dataframe with zero
         probabilities of transition.
 
-        :returns: Symmetric matrix in the form of a dataframe
-        :rtype: Pandas dataframe
+        Returns
+        -------
+        pd.Dataframe
+            Symmetric matrix in the form of a dataframe
+
         """
         # Currently, method very rigid. Can add flexibility later.
         nb_states = len(InfectionStatus)
@@ -39,12 +42,18 @@ class StateTransitionMatrix:
         status associated with the row i to move to the infection status
         associated with the columns j.
 
-        :param matrix: Initialised state transition matrix, with right column
-        and row names. The first column contains the current infection status
-        and all the transition probabilities are set to zero.
-        :type matrix: Pandas dataframe
-        :returns: Matrix in the form of a dataframe
-        :rtype: Pandas dataframe
+        Parameters
+        ----------
+        matrix : pd.Dataframe
+            Initialised state transition matrix, with right column
+            and row names. The first column contains the current infection
+            status and all the transition probabilities are set to zero.
+
+        Returns
+        -------
+        pd.Dataframe
+            Matrix in the form of a dataframe
+
         """
         matrix.loc['Susceptible', 'Exposed'] = 1
         matrix.loc['Exposed', 'InfectASympt'] = 0.34
@@ -69,13 +78,17 @@ class StateTransitionMatrix:
         """Method to manually update a transition probability in the
         transition state matrix.
 
-        :param current_infection_status_row: infection status corresponding to
-        the row where the probability will be updated
-        :param next_infection_status_column: infection status corresponding to
-        the column where the probability will be updated
-        :type next_infection_status_column: enum
-        :param new_probability: updated transition probability value
-        :type new_probability: float
+        Parameters
+        ----------
+        current_infection_status_row : enum
+            Infection status corresponding to
+            the row where the probability will be updated
+        next_infection_status_column : enum
+            Infection status corresponding to
+            the column where the probability will be updated
+        new_probability : float
+            Updated transition probability value
+
         """
         try:
             if (current_infection_status_row not in InfectionStatus) or \
