@@ -80,7 +80,7 @@ class DistanceFunctions:
         Returns
         -------
         float
-            Euclidean distance between the two tuples
+            Periodic distance between the two locations
 
         """
         # Convert indices to distance mesures by dividing by
