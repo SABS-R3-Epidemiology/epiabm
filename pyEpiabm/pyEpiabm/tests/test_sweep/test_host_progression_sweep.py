@@ -11,7 +11,7 @@ class TestHostProgressionSweep(unittest.TestCase):
     """Tests the 'HostProgressionSweep' class.
     """
     def setUp(self) -> None:
-        """Sets up two population we can use throughout the test.
+        """Sets up two populations we can use throughout the test.
         3 people are located in one microcell.
         """
         # Create population that will be used to test all

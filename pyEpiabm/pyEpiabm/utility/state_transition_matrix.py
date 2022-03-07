@@ -18,8 +18,11 @@ class StateTransitionMatrix:
         infection status. Fill the rest of the dataframe with zero
         probabilities of transition.
 
-        :returns: Symmetric matrix in the form of a dataframe
-        :rtype: Pandas dataframe
+        Returns
+        -------
+        pd.Dataframe
+            Symmetric matrix in the form of a dataframe
+
         """
         # Currently, method very rigid. Can add flexibility later.
         nb_states = len(InfectionStatus)
@@ -39,8 +42,11 @@ class StateTransitionMatrix:
         status associated with the row i to move to the infection status
         associated with the columns j.
 
-        :returns: Matrix in the form of a dataframe
-        :rtype: Pandas dataframe
+        Returns
+        -------
+        pd.Dataframe
+            Matrix in the form of a dataframe
+
         """
         matrix = self.create_empty_state_transition_matrix()
         matrix.loc['Susceptible', 'Exposed'] = 1
@@ -66,14 +72,17 @@ class StateTransitionMatrix:
         """Method to manually update a transition probability in the
         transition state matrix.
 
-        :param current_infection_status_row: Infection status corresponding to
-        the row where the probability will be updated
-        :type current_infection_status_column: enum
-        :param next_infection_status_column: Infection status corresponding to
-        the column where the probability will be updated
-        :type next_infection_status_column: enum
-        :param new_probability: Updated transition probability value
-        :type new_probability: float
+        Parameters
+        ----------
+        current_infection_status_row : enum
+            Infection status corresponding to
+            the row where the probability will be updated
+        next_infection_status_column : enum
+            Infection status corresponding to
+            the column where the probability will be updated
+        new_probability : float
+            Updated transition probability value
+
         """
         try:
             if (current_infection_status_row not in InfectionStatus) or \

@@ -16,7 +16,7 @@ class Parameters:
         """Singleton Parameters Object.
         """
         def __init__(self):
-            """ Detailed description of parameters is given
+            """Detailed description of parameters is given
             in github wiki:
             https://github.com/SABS-R3-Epidemiology/epiabm/wiki.
             """

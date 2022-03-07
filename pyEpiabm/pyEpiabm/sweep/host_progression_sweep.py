@@ -24,6 +24,7 @@ class HostProgressionSweep(AbstractSweep):
         row then indicate the transition probabilities for the remaining
         infection statuses. Number of infection states is also set by
         taking the size of the InfectionStatus enum.
+
         """
         self.state_transition_matrix = \
             pe.Parameters.instance().state_transition_matrix
@@ -34,14 +35,17 @@ class HostProgressionSweep(AbstractSweep):
 
     def _update_time_to_status_change(self, person, time):
         """Assigns time until next infection status update,
-         given as a random integer between 1 and 10. Used
-         for persons with infection statuses that have no transition/
-         latent time implemented yet - temporary function.
+        given as a random integer between 1 and 10. Used
+        for persons with infection statuses that have no transition/
+        latent time implemented yet - temporary function.
 
-        :param Person: Person instance with infection status attributes
-        :type Person: Person
-        :param time: Current simulation time
-        :type time: float
+        Parameters
+        ----------
+        Person : Person
+            Instance with infection status attributes
+        time: float
+            Current simulation time
+
         """
         # This is left as a random integer for now but will be made more
         # complex later.
@@ -55,10 +59,13 @@ class HostProgressionSweep(AbstractSweep):
         Person, given as the time until next infection status
         for a person who has been set as exposed.
 
-        :param Person: Person instance with infection status attributes
-        :type Person: Person
-        :param time: Current simulation time
-        :type time: float
+        Parameters
+        ----------
+        Person : Person
+            Instance with infection status attributes
+        time: float
+            Current simulation time
+
         """
         latent_period = pe.Parameters.instance().latent_period
         latent_period_iCDF = pe.Parameters.instance().latent_period_iCDF
@@ -76,10 +83,16 @@ class HostProgressionSweep(AbstractSweep):
         Called right after an exposed person has been given its
         new infection status in the call method below.
 
-        :param Person: Person class with infection status attributes
-        :type Person: Person
-        :return: Infectiousness of a person
-        :rtype: float
+        Parameters
+        ----------
+        Person : Person
+            Instance of person class with infection status attributes
+
+        Returns
+        -------
+        float
+            Infectiousness of a person
+
         """
         init_infectiousness = np.random.gamma(1, 1)
         if person.infection_status == InfectionStatus.InfectASympt:
@@ -98,8 +111,11 @@ class HostProgressionSweep(AbstractSweep):
         the person's current infection status. Weights are then used in
         random.choices method to select person's next infection status.
 
-        :param Person: Person class with infection status attributes
-        :type Person: Person
+        Parameters
+        ----------
+        Person : Person
+            Instance of person class with infection status attributes
+
         """
 
         row_index = person.infection_status.name
@@ -119,8 +135,11 @@ class HostProgressionSweep(AbstractSweep):
         their infection status if it is time and assigns them their
         next infection status and the time of their next status change.
 
-        :param time: Current simulation time
-        :type time: float
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+
         """
 
         for cell in self._population.cells:
