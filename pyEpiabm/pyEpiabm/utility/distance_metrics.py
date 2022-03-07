@@ -51,7 +51,7 @@ class DistanceFunctions:
         Returns
         -------
         float
-            Euclidean distance between the two tuples
+            Euclidean distance between the two locations
 
         """
         return np.linalg.norm(np.abs(np.asarray(loc1) - np.asarray(loc2)))
