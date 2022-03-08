@@ -5,6 +5,7 @@
 
 import os
 import math
+import typing
 import numpy as np
 import pandas as pd
 import matplotlib.animation
@@ -16,7 +17,8 @@ import glob
 from PIL import Image
 
 
-def point_in_region(point: np.ndarray, grid_lim: list):
+def point_in_region(point: np.ndarray,
+                    grid_lim: typing.List[typing.List[float]]):
     """Checks whether point is within grid limits specified.
     Used to exclude distant points from colouring.
 
@@ -24,7 +26,7 @@ def point_in_region(point: np.ndarray, grid_lim: list):
     ----------
     point : np.ndarray
         Point to consider
-    grid_lim : list
+    grid_lim : typing.List[typing.List[float]]
         Spatial extent of plots, in the form [[min_x, max_x], [min_y, max_y]]
 
     Returns
@@ -38,16 +40,17 @@ def point_in_region(point: np.ndarray, grid_lim: list):
     return x_valid & y_valid
 
 
-def find_value_for_region(current_df, point, name):
+def find_value_for_region(current_df: pd.DataFrame,
+                          point: typing.Tuple[float, float], name: str):
     """Extract value from given column for entry at given point.
     Requires a unique position (and so should only be passed data
     from a single point in time).
 
     Parameters
     ----------
-    current_df : pd.Dataframe
-        Dataframe, for a single time point
-    point : Tuple(float, float)
+    current_df : pd.DataFrame
+        DataFrame, for a single time point
+    point : typing.Tuple[float, float]
         Location of given cell
     name : str
         Name of quantity to extract
@@ -66,13 +69,14 @@ def find_value_for_region(current_df, point, name):
     return row[name].values[0]  # Change to plot other characteristic
 
 
-def generate_colour_map(df, name, min_value=0.0, cmap=cm.Reds):
+def generate_colour_map(df: pd.DataFrame, name: str, min_value: float = 0.0,
+                        cmap: plt.cm = cm.Reds):
     """Generates a given color map, with the max value determined by
     the max value in a given column of the provided dataframe.
 
     Parameters
     ----------
-    df : pd.Dataframe
+    df : pd.DataFrame
         Overall dataframe (from simulation output)
     name : str
         Name of quantity to extract
@@ -92,7 +96,7 @@ def generate_colour_map(df, name, min_value=0.0, cmap=cm.Reds):
     return cm.ScalarMappable(norm=norm, cmap=cmap)
 
 
-def find_time_points(time_series, num_times):
+def find_time_points(time_series: pd.Series, num_times: int):
     """Returns a given number of time points from time series,
     with approximately equal spacing.
 
@@ -114,13 +118,15 @@ def find_time_points(time_series, num_times):
     return all_times.to_numpy()[idx]
 
 
-def plot_time_point(df, vor, name, time, grid_lim, ax, mapper):
+def plot_time_point(df: pd.DataFrame, vor: Voronoi, name: str, time: float,
+                    grid_lim: typing.List[typing.List[float]], ax: plt.Axes,
+                    mapper: plt.cm.ScalarMappable):
     """Returns figure object with a spatial plot of all cells in the Voronoi
     tesselation, colour coded by their value in column 'name' at a given time.
 
     Parameters
     ----------
-    df : pd.Dataframe
+    df : pd.DataFrame
         Overall dataframe (from simulation output)
     vor : voronoi object
         Voronoi tesselation object
@@ -128,7 +134,7 @@ def plot_time_point(df, vor, name, time, grid_lim, ax, mapper):
         Name of quantity to extract
     time : float
         Time to plot spatial data from
-    grid_lim : list
+    grid_lim : typing.List[typing.List[float]]
         Spatial extent of plots, in the form [[min_x, max_x], [min_y, max_y]]
     ax : Axes
         Axes object on which to plot data
@@ -163,22 +169,24 @@ def plot_time_point(df, vor, name, time, grid_lim, ax, mapper):
     return fig, ax
 
 
-def plot_time_grid(df, vor, name, grid_dim, grid_lim, save_loc):
+def plot_time_grid(df: pd.DataFrame, vor: Voronoi, name: str,
+                   grid_dim: typing.Tuple[float, float],
+                   grid_lim: typing.List[typing.List[float]], save_loc: str):
     """Plots a grid of spatial plot of all cells in the Voronoi
     tesselation, colour coded by their value in column 'name',
     for multiple times.
 
     Parameters
     ----------
-    df : pd.Dataframe
+    df : pd.DataFrame
         Overall dataframe (from simulation output)
     vor : voronoi object
         Voronoi tesselation object
     name : str
         Name of quantity to extract
-    grid_dim : Tuple(int, int)
+    grid_dim : typing.Tuple[float, float]
         Size of grid of spatial plots
-    grid_lim : list
+    grid_lim : typing.List[typing.List[float]]
         Spatial extent of plots, in the form [[min_x, max_x], [min_y, max_y]]
     save_loc : str
         Path of saved image
@@ -207,7 +215,9 @@ def plot_time_grid(df, vor, name, grid_dim, grid_lim, save_loc):
     plt.savefig(save_loc)
 
 
-def generate_animation(df, vor, name, grid_lim, save_path, use_pillow=True):
+def generate_animation(df: pd.DataFrame, vor: Voronoi, name: str,
+                       grid_lim: typing.List[typing.List[float]],
+                       save_path: str, use_pillow: bool = True):
     """Plots a grid of spatial plot of all cells in the Voronoi
     tesselation, colour coded by their value in column 'name',
     for numltiple times.
@@ -219,13 +229,13 @@ def generate_animation(df, vor, name, grid_lim, save_path, use_pillow=True):
 
     Parameters
     ----------
-    df : pd.Dataframe
+    df : pd.DataFrame
         Overall dataframe (from simulation output)
     vor : voronoi object
         Voronoi tesselation object
     name : str
         Name of quantity to extract
-    grid_lim : list
+    grid_lim : typing.List[typing.List[float]]
         Spatial extent of plots, in the form [[min_x, max_x], [min_y, max_y]]
     save_path : str
         Path to saved animation
@@ -307,8 +317,8 @@ fig_loc = ("python_examples/spatial_example/spatial_outputs/"
 plot_time_grid(df, vor, name="InfectionStatus.InfectMild",
                grid_dim=(2, 3), grid_lim=grid_limits, save_loc=fig_loc)
 
-# Plot animation of simulation
-animation_path = ("python_examples/spatial_example/spatial_outputs/")
-anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
-                          grid_lim=grid_limits, save_path=animation_path,
-                          use_pillow=False)
+# # Plot animation of simulation
+# animation_path = ("python_examples/spatial_example/spatial_outputs/")
+# anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
+#                           grid_lim=grid_limits, save_path=animation_path,
+#                           use_pillow=False)

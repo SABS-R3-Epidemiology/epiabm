@@ -6,8 +6,9 @@
 import random
 import numpy as np
 import logging
+import typing
 
-from pyEpiabm.core import Parameters
+from pyEpiabm.core import Cell, Parameters, Person
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.routine import SpatialInfection
 from pyEpiabm.utility import DistanceFunctions
@@ -91,8 +92,9 @@ class SpatialSweep(AbstractSweep):
             for infectee in infectee_list:
                 self.do_infection_event(infector, infectee, timestep)
 
-    def find_infectees(self, infector_cell, possible_infectee_cells,
-                       number_to_infect):
+    def find_infectees(self, infector_cell: Cell,
+                       possible_infectee_cells: typing.List[Cell],
+                       number_to_infect: int):
         """Given a specific infector, a list of possible infectee cells,
         and the number of people needed to infect, follows a distance based
         implementation to create a list of infectees.
@@ -101,14 +103,14 @@ class SpatialSweep(AbstractSweep):
         ----------
         infector_cell : Cell
             Infector cell instance of Cell
-        possible_infectee_cells : list
+        possible_infectee_cells : typing.List[Cell]
             List of possible cells to infect
         number_to_infect : int
             maximum number of people to infect
 
         Returns
         ----------
-        infectee_list : list
+        infectee_list : typing.List[Person]
             List of exposed people to test an infection event
 
         """
@@ -166,8 +168,9 @@ class SpatialSweep(AbstractSweep):
             infectee_list.append(random.sample(infectee_cell.persons, 1)[0])
         return infectee_list
 
-    def find_infectees_Covidsim(self, infector, possible_infectee_cells,
-                                number_to_infect):
+    def find_infectees_Covidsim(self, infector: Person,
+                                possible_infectee_cells: typing.List[Cell],
+                                number_to_infect: int):
         """Given a specific infector, a list of possible infectee cells,
         and the number of people needed to infect, follows Covidsim's
         implementation to create a list of infectees.
@@ -176,10 +179,15 @@ class SpatialSweep(AbstractSweep):
         ----------
         infector : Person
             Infector instance of person
-        possible_infectee_cells : list
+        possible_infectee_cells : typing.List[Cell]
             List of possible cells to infect
         number_to_infect : int
             Maximum number of people to infect
+
+        Returns
+        -------
+        typing.List[Person]
+            List of people to infect
 
         """
         infectee_list = []
@@ -210,8 +218,8 @@ class SpatialSweep(AbstractSweep):
                 # total population.
         return infectee_list
 
-    def do_infection_event(self, infector, infectee,
-                           timestep):
+    def do_infection_event(self, infector: Person, infectee: Person,
+                           timestep: float):
         """Helper function which takes an infector and infectee,
         in different cells and tests whether contact between
         them will lead to an infection event.
@@ -224,6 +232,11 @@ class SpatialSweep(AbstractSweep):
             Infectee instance of Person
         timestep : float
             Current simulation timestep
+
+        Returns
+        -------
+        typing.List[Person]
+            List of people to infect
 
         """
         if not infectee.is_susceptible():
