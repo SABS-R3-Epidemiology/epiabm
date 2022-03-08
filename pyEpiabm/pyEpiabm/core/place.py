@@ -35,6 +35,7 @@ class Place:
         self.num_person_groups = 0
         self.place_type = place_type
         self.max_capacity = 50
+        self.mean_capacity = 25
         self.susceptibility = 0
         self.infectiousness = 0
         self.initialised = False
@@ -57,6 +58,15 @@ class Place:
         :type max_capacity: int
         """
         self.max_capacity = max_capacity
+
+    def set_mean_cap(self, mean_capacity: float):
+        """Sets the maximum capacity of a place.
+
+        :param mean_capacity: Maximum number of people
+            allowed in place
+        :type mean_capacity: float
+        """
+        self.mean_capacity = mean_capacity
 
     def set_infectiousness(self, infectiousness: float):
         """Sets a baseline infectiousness for the place.
@@ -114,7 +124,7 @@ class Place:
         ind = place_list.index(self)
         return person.places[ind][1]
 
-    def empty_place(self, person_groups: list = [0]):
+    def empty_place(self, groups_to_empty: list = [0]):
         """Remove all people from place who are in a specific
         person group. For example
         a restaurant or park might regularly change
@@ -125,6 +135,8 @@ class Place:
             indicies to be removed
         :type person_groups: list
         """
-        for group in person_groups:
+        for group in groups_to_empty:
+            if group not in self.person_groups.keys():
+                continue
             for person in self.person_groups[group]:
                 self.remove_person(person)

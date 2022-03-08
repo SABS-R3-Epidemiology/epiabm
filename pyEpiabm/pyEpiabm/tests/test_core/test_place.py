@@ -57,6 +57,8 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(len(test_place.persons), 2)
         test_place.empty_place([0, 1])
         self.assertEqual(len(test_place.persons), 0)
+        test_place.empty_place([4])
+        self.assertEqual(len(test_place.persons), 0)
 
     def test_set_susc(self):
         test_place = pe.Place((1.0, 1.0), pe.property.PlaceType.Hotel,
@@ -78,6 +80,13 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(test_place.max_capacity, 50)
         test_place.set_max_cap(10)
         self.assertEqual(test_place.max_capacity, 10)
+
+    def test_set_mean_cap(self):
+        test_place = pe.Place((1.0, 1.0), pe.property.PlaceType.Hotel,
+                              self.cell, self.microcell)
+        self.assertEqual(test_place.mean_capacity, 25)
+        test_place.set_mean_cap(10)
+        self.assertEqual(test_place.mean_capacity, 10)
 
     def test_location_type(self):
         self.assertRaises(ValueError, pe.Place, (1.0, 1.0, 1.0),

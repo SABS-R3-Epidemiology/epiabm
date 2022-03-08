@@ -32,28 +32,11 @@ class UpdatePlaceSweep(AbstractSweep):
                     # not sure how to handle this yet so
                     # just going to completely update each time
                     # as in the previous code
-                elif place.place_type.value == 1:  # CAREHOME
-                    if not place.initialised:
-                        # Initialise the fixed population of workers
-                        max_cap = 10  # for example, would actually come in
-                        # from a dictionary
-                        self.update_place_group(place, group_index=0)
-                        max_residents = 100
-                        self.update_place_group(place,
-                                                max_capacity=max_residents,
-                                                group_index=1)
-                        place.initialised = True
 
                 elif place.place_type.value == 3:  # RESTAURANT
-                    if not place.initialised:
-                        # Initialise the fixed population
-                        max_cap = 10
-                        self.update_place_group(place, max_capacity=max_cap,
-                                                group_index=0)
-                        place.initialised = True
                     # Variable population is people not in the fixed pop.
                     # Changed at each timestep
-                    place.empty_place(person_groups=[1])
+                    place.empty_place(groups_to_empty=[1])
                     candidate_list = [person for person in place.cell.persons
                                       if person not in place.person_groups[1]]
                     self.update_place_group(place, group_index=1,
@@ -63,23 +46,9 @@ class UpdatePlaceSweep(AbstractSweep):
                     place.empty_place()
                     self.update_place_group(place)
 
-                elif place.place_type.value == 5:  # WORKSPACE
-                    # Fixed population is initialised on first run
-                    if place.initialised:
-                        continue
-                    group_num = 5  # again would be an exterior param
-                    group_size = 20
-                    # thinking of making sure people don't have more than one
-                    # workplace
-                    person_list = place.cell.persons
-                    for i in range(group_num):
-                        self.update_place_group(place, group_index=i,
-                                                person_list=person_list,
-                                                max_capacity=group_size)
-                    place.initialised = True
-
-    def update_place_group(place, max_capacity: int = 50, group_index: int = 0,
-                           person_list: list = None):
+    def update_place_group(self, place, mean_capacity: float = 25,
+                           max_capacity: int = 50,
+                           group_index: int = 0, person_list: list = None):
         """Specific method to update people in a place or place group.
 
         :param place: Place to change
@@ -98,8 +67,8 @@ class UpdatePlaceSweep(AbstractSweep):
         # Ensure that the number of people put in the place
         # is at most its capacity or the total number of
         # people in the cell.
-        max_capacity = np.minimum(max_capacity, len(person_list))
-        new_capacity = random.randint(1, max_capacity)
+        new_capacity = np.random.lognormal(mean_capacity)
+        new_capacity = min(new_capacity, max_capacity, len(person_list))
         count = 0
         while count < new_capacity:
             i = random.randint(1, len(person_list))
