@@ -5,7 +5,6 @@
 import random
 import numpy as np
 
-from pyEpiabm.core import Parameters
 from pyEpiabm.routine import PlaceInfection
 
 from .abstract_sweep import AbstractSweep
@@ -33,8 +32,6 @@ class PlaceSweep(AbstractSweep):
             Current simulation time
 
         """
-        timestep = int(time * Parameters.instance().time_steps_per_day)
-
         # Double loop over the whole population, checking infectiousness
         # status, and whether they are absent from their household.
         for cell in self._population.cells:
@@ -42,7 +39,7 @@ class PlaceSweep(AbstractSweep):
                 if not infector.is_infectious():
                     continue
                 for place in infector.places:
-                    infectiousness = PlaceInfection.place_inf(place, timestep)
+                    infectiousness = PlaceInfection.place_inf(place, time)
                     # High infectiousness (>= 1) means all susceptible
                     # occupants become infected.
                     if infectiousness > 1:
@@ -77,7 +74,7 @@ class PlaceSweep(AbstractSweep):
 
                             force_of_infection = PlaceInfection.\
                                 place_foi(place, infector, infectee,
-                                          timestep)
+                                          time)
 
                             # Compare a uniform random number to the force of
                             # infection to see whether an infection event
