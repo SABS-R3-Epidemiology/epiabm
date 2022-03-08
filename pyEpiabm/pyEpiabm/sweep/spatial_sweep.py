@@ -101,14 +101,14 @@ class SpatialSweep(AbstractSweep):
         ----------
         infector_cell : Cell
             Infector cell instance of Cell
-        possible_infectee_cells : List
+        possible_infectee_cells : list
             List of possible cells to infect
         number_to_infect : int
             maximum number of people to infect
 
         Returns
         ----------
-        infectee_list : List
+        infectee_list : list
             List of exposed people to test an infection event
 
         """
@@ -176,7 +176,7 @@ class SpatialSweep(AbstractSweep):
         ----------
         infector : Person
             Infector instance of person
-        possible_infectee_cells : List
+        possible_infectee_cells : list
             List of possible cells to infect
         number_to_infect : int
             Maximum number of people to infect
