@@ -125,7 +125,6 @@ class Person:
         :type place: Place
         :param person_group: key for the person group dictionary
         :type person_group: int
-        
 
         """
         if place.cell != self.microcell.cell:
