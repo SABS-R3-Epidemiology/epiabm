@@ -49,9 +49,9 @@ class Simulation:
             Population structure for the model
         pop_params : dict
             Dictionary of parameter specific to the population
-        initial_sweeps : list
+        initial_sweeps : typing.List
             List of sweeps used to initialise the simulation
-        sweeps : list
+        sweeps : typing.List
             List of sweeps used in the simulation. Queue sweep and host
             progression sweep should appear at the end of the list
         sim_params : dict

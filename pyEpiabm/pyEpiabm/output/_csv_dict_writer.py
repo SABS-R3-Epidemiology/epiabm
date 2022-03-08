@@ -20,7 +20,7 @@ class _CsvDictWriter(AbstractReporter):
             Output folder path
         filename : str
             Output file name
-        fieldnames : list
+        fieldnames : typing.List
             List of categories to be saved
         clear_folder : bool
             Whether to empty the folder before saving results
