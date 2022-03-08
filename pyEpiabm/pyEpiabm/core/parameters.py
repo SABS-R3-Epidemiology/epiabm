@@ -162,6 +162,10 @@ class Parameters:
             self.asympt_infectiousness = 1
             self.latent_to_sympt_delay = 0.5
 
+            # Set Infection Parameters
+            self.household_transmission = 0.1  # Household Attack Rate
+            self.false_positive_rate = 0
+
             # Build infection state transition matrix and set as parameter
             matrix_object = StateTransitionMatrix()
             self.state_transition_matrix =\
