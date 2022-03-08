@@ -5,7 +5,6 @@
 import numpy as np
 
 from pyEpiabm.utility.state_transition_matrix import StateTransitionMatrix
-from pyEpiabm.utility.transition_time_matrix import TransitionTimeMatrix
 
 
 class Parameters:

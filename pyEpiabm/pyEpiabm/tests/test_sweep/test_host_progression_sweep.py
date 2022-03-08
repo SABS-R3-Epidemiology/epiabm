@@ -86,7 +86,7 @@ class TestHostProgressionSweep(unittest.TestCase):
                 self.assertEqual(person.next_infection_status, None)
             else:
                 self.assertEqual(person.infection_status,
-                                person.next_infection_status)
+                                 person.next_infection_status)
 
         # Check that method works for each infection status with all people
         # going to InfectICURecov infection status
@@ -104,7 +104,7 @@ class TestHostProgressionSweep(unittest.TestCase):
                 self.assertEqual(person.next_infection_status, None)
             else:
                 self.assertEqual(person.next_infection_status,
-                                InfectionStatus.InfectICURecov)
+                                 InfectionStatus.InfectICURecov)
 
         # Check that method works for a random upper triangular
         # state transition matrix
@@ -125,9 +125,27 @@ class TestHostProgressionSweep(unittest.TestCase):
                 current_enum_value = person.infection_status.value
                 next_enum_value = person.next_infection_status.value
                 self.assertTrue(current_enum_value <= next_enum_value)
-    
-    #def test_update_time_status_change(self):
-     #   pass
+
+    def test_update_time_status_change(self, current_time=100.0):
+        test_sweep = pe.sweep.HostProgressionSweep()
+
+        # Check that people who have their time to status change set correctly
+        # depending on their current infection status
+        for i in range(len(InfectionStatus)):
+            person = self.people[i]
+            person.update_status(InfectionStatus(i + 1))
+            person.next_infection_status = None
+
+        for person in self.people:
+            test_sweep._update_next_infection_status(person)
+            test_sweep._update_time_status_change(person, current_time)
+            if person.infection_status.name in ['Recovered', 'Dead']:
+                self.assertEqual(person.time_of_status_change, np.inf)
+            elif person.infection_status.name in ['InfectMild', 'InfectGP']:
+                delayed_time = current_time + test_sweep.delay
+                self.assertTrue(delayed_time <= person.time_of_status_change)
+            else:
+                self.assertTrue(current_time <= person.time_of_status_change)
 
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
     def test_call_main(self, mock_next_time):
@@ -206,20 +224,26 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertEqual(self.person1.next_infection_status, None)
         self.assertEqual(self.person1.time_of_status_change, np.inf)
 
-        # Reconfigure population and check that a person is able to progress
-        # infection status multiple times in the same time step. This will be
-        # checked by setting the latent time as 0 so Person 1 should progress
-        # from susceptible to one if the infected statuses in the same time
-        # step.
-        pe.Parameters.instance().latent_period_iCDF = np.zeros(21)
+    @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
+    def test_multiple_transitions_in_one_time_step(self, mock_next_time):
+        """
+        Reconfigure population and check that a person is able to progress
+        infection status multiple times in the same time step. This will be
+        checked by setting the time transition time as 0 so Person 1 should
+        progress from susceptible through the whole infection timeline ending
+        up as either recovered or dead in one time step.
+        """
+
+        mock_next_time.return_value = 0.0
         self.person1.time_of_status_change = 1.0
         self.person1.update_status(InfectionStatus.Susceptible)
         self.person1.next_infection_status = InfectionStatus.Exposed
+        test_sweep = pe.sweep.HostProgressionSweep()
+        test_sweep.bind_population(self.test_population1)
         test_sweep(1.0)
         self.assertIn(self.person1.infection_status,
-                      [InfectionStatus.InfectMild,
-                       InfectionStatus.InfectASympt,
-                       InfectionStatus.InfectGP])
+                      [InfectionStatus.Recovered,
+                       InfectionStatus.Dead])
 
 
 if __name__ == "__main__":

@@ -21,9 +21,10 @@ class HostProgressionSweep(AbstractSweep):
         transition matrix is set where each row of the matrix corresponds
         to a current infection status of a person. The columns of that
         row then indicate the transition probabilities for the remaining
-        infection statuses. Number of infection states is also set by
-        taking the size of the InfectionStatus enum.
-
+        infection statuses. Number of infection states is set by
+        taking the size of the InfectionStatus enum. Transition time matrix
+        is also initialised and associated parameters are called from the
+        parameters class.
         """
         self.state_transition_matrix = \
             pe.Parameters.instance().state_transition_matrix
@@ -31,13 +32,19 @@ class HostProgressionSweep(AbstractSweep):
         assert self.state_transition_matrix.shape ==\
             (self.number_of_states, self.number_of_states),\
             'Matrix dimensions must match number of infection states'
+
+        # Instantiate transmission time matrix
         time_matrix_object = TransitionTimeMatrix()
         self.transition_time_matrix =\
-             time_matrix_object.fill_transition_time()
+            time_matrix_object.fill_transition_time()
+
+        # Instantiate parameters to be used in update transition time
+        # method
         self.latent_to_symptom_delay =\
             pe.Parameters.instance().latent_to_sympt_delay
         self.model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
-        self.delay = np.floor(self.latent_to_symptom_delay / self.model_time_step)
+        self.delay = np.floor(self.latent_to_symptom_delay /
+                              self.model_time_step)
 
     def _set_infectiousness(self, person):
         """Assigns the infectiousness of a person for when they go from
@@ -81,7 +88,7 @@ class HostProgressionSweep(AbstractSweep):
 
         """
         if person.infection_status.name in ['Recovered', 'Dead']:
-                        person.next_infection_status = None
+            person.next_infection_status = None
         else:
             row_index = person.infection_status.name
             weights = self.state_transition_matrix.loc[row_index].to_numpy()
@@ -89,10 +96,12 @@ class HostProgressionSweep(AbstractSweep):
 
             if len(weights) != len(outcomes):
                 raise AssertionError('The number of infection statuses must \
-                                    match the number of transition probabilities')
+                                    match the number of transition \
+                                    probabilities')
 
             next_infection_status_number = random.choices(outcomes, weights)[0]
-            next_infection_status = InfectionStatus(next_infection_status_number)
+            next_infection_status =\
+                InfectionStatus(next_infection_status_number)
             person.next_infection_status = next_infection_status
 
     def _update_time_status_change(self, person, time):
@@ -120,7 +129,13 @@ class HostProgressionSweep(AbstractSweep):
             column_index = person.next_infection_status.name
             transition_time_icdf_object =\
                 self.transition_time_matrix.loc[row_index, column_index]
-            transition_time = transition_time_icdf_object.icdf_choose_noexp()
+            # Checks for susceptible to exposed case
+            #  where transition time is zero
+            if transition_time_icdf_object == 0.0:
+                transition_time = 0.0
+            else:
+                transition_time =\
+                    transition_time_icdf_object.icdf_choose_noexp()
 
         # Adds delay to transition time for first level symptomatic infection
         # statuses (InfectMild or InfectGP), as is done in CovidSim.
