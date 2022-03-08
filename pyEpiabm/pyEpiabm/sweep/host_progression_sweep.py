@@ -7,6 +7,7 @@ import numpy as np
 
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.utility import TransitionTimeMatrix
 from .abstract_sweep import AbstractSweep
 
 
@@ -30,8 +31,9 @@ class HostProgressionSweep(AbstractSweep):
         assert self.state_transition_matrix.shape ==\
             (self.number_of_states, self.number_of_states),\
             'Matrix dimensions must match number of infection states'
-        self.transmission_time_matrix =\
-             pe.Parameters.instance().transmission_time_matrix
+        time_matrix_object = TransitionTimeMatrix()
+        self.transition_time_matrix =\
+             time_matrix_object.fill_transition_time()
         self.latent_to_symptom_delay =\
             pe.Parameters.instance().latent_to_sympt_delay
         self.model_time_step = 1 / pe.Parameters.instance().time_steps_per_day

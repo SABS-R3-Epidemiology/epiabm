@@ -164,14 +164,8 @@ class Parameters:
             matrix_object = StateTransitionMatrix()
             self.state_transition_matrix =\
                 matrix_object.create_state_transition_matrix()
-            
-            # Build time to next infection status transition matrix and
-            # set as parameter
-            time_matrix_object = TransitionTimeMatrix()
-            self.transmission_time_matrix =\
-                 time_matrix_object.fill_transition_time()
-            pass
 
+            pass
     _instance = None  # Singleton instance
 
     @staticmethod
