@@ -64,16 +64,21 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertTrue(0 <= self.person1.infectiousness)
 
     def test_update_next_infection_status(self):
+        """Tests that an assertion error is raised if length of weights
+        and outcomes are different. Tests that the update_next_infection_status
+        method works with an identity state matrix as state_transition_matrix.
+        Tests that the method works for each infection status with all people
+        going to InfectICURecov infection status. Tests that method works for
+        a random upper triangular state transition matrix.
+        """
         test_sweep = pe.sweep.HostProgressionSweep()
-        # Check assertion is raised if length of weights
-        # and outcomes are different
+
         test_sweep.state_transition_matrix = \
             pe.Parameters.instance().state_transition_matrix.copy()
         test_sweep.state_transition_matrix['Test col'] = ""
         with self.assertRaises(AssertionError):
             test_sweep._update_next_infection_status(self.people[0])
 
-        # Check that method works with identity state matrix
         identity_matrix = pd.DataFrame(np.identity(len(InfectionStatus)),
                                        columns=[status.name for
                                        status in InfectionStatus],
@@ -88,8 +93,6 @@ class TestHostProgressionSweep(unittest.TestCase):
                 self.assertEqual(person.infection_status,
                                  person.next_infection_status)
 
-        # Check that method works for each infection status with all people
-        # going to InfectICURecov infection status
         matrix = np.zeros([len(InfectionStatus), len(InfectionStatus)])
         matrix[:, -3] = 1
         matrix = pd.DataFrame(matrix,
@@ -106,8 +109,6 @@ class TestHostProgressionSweep(unittest.TestCase):
                 self.assertEqual(person.next_infection_status,
                                  InfectionStatus.InfectICURecov)
 
-        # Check that method works for a random upper triangular
-        # state transition matrix
         random_matrix = np.random.rand(len(InfectionStatus),
                                        len(InfectionStatus))
         random_matrix = np.triu(random_matrix)
@@ -127,10 +128,10 @@ class TestHostProgressionSweep(unittest.TestCase):
                 self.assertTrue(current_enum_value <= next_enum_value)
 
     def test_update_time_status_change(self, current_time=100.0):
+        """Tests that people who have their time to status change set correctly
+        depending on their current infection status.
+        """
         test_sweep = pe.sweep.HostProgressionSweep()
-
-        # Check that people who have their time to status change set correctly
-        # depending on their current infection status
         for i in range(len(InfectionStatus)):
             person = self.people[i]
             person.update_status(InfectionStatus(i + 1))
@@ -226,8 +227,7 @@ class TestHostProgressionSweep(unittest.TestCase):
 
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
     def test_multiple_transitions_in_one_time_step(self, mock_next_time):
-        """
-        Reconfigure population and check that a person is able to progress
+        """Reconfigure population and check that a person is able to progress
         infection status multiple times in the same time step. This will be
         checked by setting the time transition time as 0 so Person 1 should
         progress from susceptible through the whole infection timeline ending

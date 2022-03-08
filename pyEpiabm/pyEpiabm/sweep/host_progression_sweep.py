@@ -114,10 +114,13 @@ class HostProgressionSweep(AbstractSweep):
         the person will not transition again (for example in Recovered or Dead
         statuses), then the time of status change is set to infinity.
 
-        :param Person: Person class with infection status attributes
-        :type Person: Person
-        :param time: Current simulation time
-        :type time: float
+        Parameters
+        ----------
+        Person : Person
+            Instance of person class with infection status attributes
+        time : float
+            Current simulation time
+
         """
         # Defines the transition time. If the person will not transition again,
         # the transition time is set to infinity. Else, the transition time is

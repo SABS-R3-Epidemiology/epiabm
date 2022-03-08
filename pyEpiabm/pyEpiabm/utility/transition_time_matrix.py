@@ -24,8 +24,11 @@ class TransitionTimeMatrix:
         someone with current infection status associated with the row i to
         move to the infection status associated with the columns j.
 
-        :returns: Matrix in the form of a dataframe
-        :rtype: pd.Dataframe
+        Returns
+        -------
+        pd.DataFrame
+            Matrix in the form of a dataframe
+
         """
         matrix = self.initial_matrix
         matrix.loc['Exposed', 'InfectASympt'] =\
