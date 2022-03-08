@@ -17,6 +17,7 @@ class PlaceSweep(AbstractSweep):
     people within a cell and tests a infection event against each
     susceptible member of the place. The resulting
     exposed person is added to an infection queue.
+
     """
 
     def __call__(self, time: float):
@@ -26,8 +27,11 @@ class PlaceSweep(AbstractSweep):
         people present, based on individual and place infectiousness
         and susceptibility.
 
-        :param time: Current simulation time
-        :type time: int
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+
         """
         timestep = int(time * Parameters.instance().time_steps_per_day)
 

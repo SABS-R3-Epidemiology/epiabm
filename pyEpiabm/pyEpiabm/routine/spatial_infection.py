@@ -8,18 +8,25 @@ from pyEpiabm.core import Person, Cell, Parameters
 class SpatialInfection:
     """Class to calculate the infectiousness and susceptibility
     parameters for the force of infection parameter, between cells.
+
     """
     @staticmethod
     def cell_inf(inf_cell: Cell, timestep: int):
         """Calculate the infectiousness of one cell
         towards its neighbouring cells.
 
-        :param inf_cell: Cell doing infecting
-        :type inf_cell: Cell
-        :param timestep: Current simulation timestep
-        :type timestep: int
-        :return: Average number of infection events from the cell
-        :rtype: int
+        Parameters
+        ----------
+        inf_cell : Cell
+            Cell causing the infection
+        timestep : int
+            Current simulation timestep
+
+        Returns
+        -------
+        int
+            Average number of infection events from the cell
+
         """
         R_0 = Parameters.instance().basic_reproduction_num
         total_infectors = inf_cell.number_infectious()
@@ -35,14 +42,20 @@ class SpatialInfection:
         """Calculate the susceptibility of one cell
         towards its neighbouring cells.
 
-        :param susc_cell: Cell receiving infections
-        :type susc_cell: Cell
-        :param infectee: Infectee
-        :type infectee: Person
-        :param timestep: Current simulation timestep
-        :type timestep: int
-        :return: Susceptibility parameter of cell
-        :rtype: float
+        Parameters
+        ----------
+        susc_cell : Cell
+            Cell receiving infections
+        infectee : Person
+            Infectee
+        timestep : int
+            Current simulation timestep
+
+        Returns
+        -------
+        float
+            Susceptibility parameter of cell
+
         """
         return 0.2
 
@@ -52,14 +65,20 @@ class SpatialInfection:
         """Calculate the infectiousness between cells.
         Dependent on the infectious people in it.
 
-        :param inf_cell: Cell doing infecting
-        :type inf_cell: Cell
-        :param infector: Infector
-        :type infector: Person
-        :param timestep: Current simulation timestep
-        :type timestep: int
-        :return: Infectiousness parameter of cell
-        :rtype: float
+        Parameters
+        ----------
+        inf_cell : Cell
+            Cell causing the infection
+        infector : Person
+            Infector
+        timestep : int
+            Current simulation timestep
+
+        Returns
+        -------
+        float
+            Infectiousness parameter of cell
+
         """
         return 0.5
 
@@ -69,18 +88,24 @@ class SpatialInfection:
         """Calculate the force of infection between cells, for a particular
         infector and infectee.
 
-        :param inf_cell: Cell doing infecting
-        :type inf_cell: Cell
-        :param susc_cell: Cell receiving infections
-        :type susc_cell: Cell
-        :param infector: Infector
-        :type infector: Person
-        :param infectee: Infectee
-        :type infectee: Person
-        :param timestep: Current simulation timestep
-        :type timestep: int
-        :return: Force of infection parameter of cell
-        :rtype: float
+        Parameters
+        ----------
+        inf_cell : Cell
+            Cell doing infecting
+        susc_cell : Cell
+            Cell receiving infections
+        infector : Person
+            Infector
+        infectee : Person
+            Infectee
+        timestep : int
+            Current simulation timestep
+
+        Returns
+        -------
+        float
+            Force of infection parameter of cell
+
         """
         infectiousness = SpatialInfection.space_inf(inf_cell, infector,
                                                     timestep)

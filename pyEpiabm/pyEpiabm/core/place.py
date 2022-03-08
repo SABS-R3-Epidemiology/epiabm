@@ -13,19 +13,23 @@ class Place:
     """Creates a place class which represents spaces such
     as cafes, restaurants and hotels where people may come
     into contact with others outside their household.
+
     """
     def __init__(self, loc: typing.Tuple[float, float],
                  place_type: PlaceType, cell, microcell):
         """Constructor method.
 
-        :param loc: (x,y) coordinates of the place
-        :type loc: Tuple[float, float]
-        :param place_type: Categorises the place
-        :type place_type: 'PlaceType' enum
-        :param cell: An instance of :class:`Cell`
-        :type cell: Cell
-        :param microcell: An instance of :class:`Microcell`
-        :type microcell: Microcell
+        Parameters
+        ----------
+        loc : Tuple[float, float]
+            (x,y) coordinates of the place
+        place_type : 'PlaceType' enum
+            Categorises the place
+        cell : Cell
+            An instance of :class:`Cell`
+        microcell : Microcell
+            An instance of :class:`Microcell`
+
         """
         self._location = loc
         self.persons = []
@@ -47,33 +51,44 @@ class Place:
     def set_max_cap(self, max_capacity: int):
         """Sets the maximum capacity of a place.
 
-        :param max_capacity: Maximum number of people
-            allowed in place
-        :type max_capacity: int
+        Parameters
+        ----------
+        max_capacity : int
+            Maximum number of people allowed in place
+
         """
         self.max_capacity = max_capacity
 
     def set_infectiousness(self, infectiousness: float):
         """Sets a baseline infectiousness for the place.
 
-        :param infectiousness: Baseline infectiousness
-        :type infectiousness: float
+        Parameters
+        ----------
+        infectiousness : float
+            Baseline infectiousness
+
         """
         self.infectiousness = infectiousness
 
     def set_susceptibility(self, susceptibility: float):
         """Sets a baseline susceptibility for the place.
 
-        :param susceptibility: Baseline susceptibility
-        :type susceptibility: float
+        Parameters
+        ----------
+        susceptibility : float
+            Baseline susceptibility
+
         """
         self.susceptibility = susceptibility
 
     def add_person(self, person: Person):
         """Add a person into the place.
 
-        :param person: Person to add
-        :type person: Person
+        Parameters
+        ----------
+        person: Person
+            Person to add
+
         """
         self.persons.append(person)
         person.add_place(self)
@@ -81,8 +96,11 @@ class Place:
     def remove_person(self, person: Person):
         """Remove a person from place.
 
-        :param person: Person to remove from place
-        :type person: Person
+        Parameters
+        ----------
+        person: Person
+            Person to remove from place
+
         """
         if person not in self.persons:
             raise KeyError("Person not found in this place")
@@ -94,6 +112,7 @@ class Place:
         """Remove all people from place. For example
         a restaurant or park might regularly change
         all occupants each timestep.
+
         """
         while len(self.persons) > 0:
             self.remove_person(self.persons[0])
