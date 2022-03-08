@@ -24,7 +24,7 @@ def point_in_region(point: np.ndarray, grid_lim: list):
     ----------
     point : np.ndarray
         Point to consider
-    grid_lim : List
+    grid_lim : list
         Spatial extent of plots, in the form [[min_x, max_x], [min_y, max_y]]
 
     Returns
@@ -128,7 +128,7 @@ def plot_time_point(df, vor, name, time, grid_lim, ax, mapper):
         Name of quantity to extract
     time : float
         Time to plot spatial data from
-    grid_lim : List
+    grid_lim : list
         Spatial extent of plots, in the form [[min_x, max_x], [min_y, max_y]]
     ax : Axes
         Axes object on which to plot data
@@ -178,7 +178,7 @@ def plot_time_grid(df, vor, name, grid_dim, grid_lim, save_loc):
         Name of quantity to extract
     grid_dim : Tuple(int, int)
         Size of grid of spatial plots
-    grid_lim : List
+    grid_lim : list
         Spatial extent of plots, in the form [[min_x, max_x], [min_y, max_y]]
     save_loc : str
         Path of saved image
@@ -225,7 +225,7 @@ def generate_animation(df, vor, name, grid_lim, save_path, use_pillow=True):
         Voronoi tesselation object
     name : str
         Name of quantity to extract
-    grid_lim : List
+    grid_lim : list
         Spatial extent of plots, in the form [[min_x, max_x], [min_y, max_y]]
     save_path : str
         Path to saved animation
