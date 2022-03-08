@@ -6,6 +6,7 @@ import random
 import numpy as np
 
 import pyEpiabm as pe
+from pyEpiabm.core import Person
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import InverseCdf
 
@@ -34,7 +35,7 @@ class HostProgressionSweep(AbstractSweep):
             (self.number_of_states, self.number_of_states),\
             'Matrix dimensions must match number of infection states'
 
-    def _update_time_to_status_change(self, person, time):
+    def _update_time_to_status_change(self, person: Person, time: float):
         """Assigns time until next infection status update,
         given as a random integer between 1 and 10. Used
         for persons with infection statuses that have no transition/
@@ -54,7 +55,7 @@ class HostProgressionSweep(AbstractSweep):
         new_time = float(new_time)
         person.time_of_status_change = time + new_time
 
-    def _set_latent_time(self, person, time):
+    def _set_latent_time(self, person: Person, time: float):
         """Calculates latency period as calculated in CovidSim,
         and updates the time_of_status_change for the given
         Person, given as the time until next infection status
@@ -77,7 +78,7 @@ class HostProgressionSweep(AbstractSweep):
 
         person.time_of_status_change = time + latent_time
 
-    def _set_infectiousness(self, person):
+    def _set_infectiousness(self, person: Person):
         """Assigns the infectiousness of a person for when they go from
         the exposed infection state to the next state, either InfectAsympt,
         InfectMild or InfectGP.
@@ -105,7 +106,7 @@ class HostProgressionSweep(AbstractSweep):
                              pe.Parameters.instance().sympt_infectiousness
         person.infectiousness = infectiousness
 
-    def _update_next_infection_status(self, person):
+    def _update_next_infection_status(self, person: Person):
         """Assigns next infection status based on current infection status
         and on probabilities of transition to different statuses. Weights
         are taken from row in state transition matrix that corresponds to

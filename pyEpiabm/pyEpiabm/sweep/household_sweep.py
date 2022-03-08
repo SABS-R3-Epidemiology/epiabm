@@ -19,14 +19,14 @@ class HouseholdSweep(AbstractSweep):
 
     """
 
-    def __call__(self, time: int):
+    def __call__(self, time: float):
         """Given a population structure, loops over infected members
         and considers whether they infected household members based
         on individual, and spatial infectiousness and susceptibility.
 
         Parameters
         ----------
-        time : int
+        time : float
             Simulation time
 
         """

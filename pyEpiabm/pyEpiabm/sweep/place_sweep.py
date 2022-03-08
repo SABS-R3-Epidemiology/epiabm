@@ -29,7 +29,7 @@ class PlaceSweep(AbstractSweep):
 
         Parameters
         ----------
-        time : int
+        time : float
             Current simulation time
 
         """

@@ -13,13 +13,13 @@ class UpdatePlaceSweep(AbstractSweep):
     class.
 
     """
-    def __call__(self, time: int):
+    def __call__(self, time: float):
         """Given a population structure, updates the people
         present in each place at a specific timepoint.
 
         Parameters
         ----------
-        time : int
+        time : float
             Current simulation time
 
         """
