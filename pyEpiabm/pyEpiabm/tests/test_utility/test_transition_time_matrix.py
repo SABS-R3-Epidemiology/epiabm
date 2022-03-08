@@ -1,9 +1,10 @@
 import unittest
-
-import pyEpiabm as pe
-from pyEpiabm.utility import TransitionTimeMatrix
 import pandas as pd
 import numpy as np
+
+import pyEpiabm as pe
+from pyEpiabm.property.infection_status import InfectionStatus
+from pyEpiabm.utility import TransitionTimeMatrix
 from pandas.testing import assert_frame_equal
 
 
@@ -16,10 +17,8 @@ class TestTransitionTimeMatrix(unittest.TestCase):
         """
         matrix_object = TransitionTimeMatrix()
         init_matrix = matrix_object.initial_matrix
-        labels = ['Susceptible', 'Exposed', 'InfectASympt', 'InfectMild',
-                  'InfectGP', 'InfectHosp', 'InfectICU', 'InfectICURecov',
-                  'Recovered', 'Dead']
-        zero_filled_dataframe = pd.DataFrame(np.zeros((10, 10)),
+        labels = [x.name for x in InfectionStatus]
+        zero_filled_dataframe = pd.DataFrame(np.zeros((len(InfectionStatus), len(InfectionStatus))),
                                              columns=labels, index=labels)
         assert_frame_equal(init_matrix, zero_filled_dataframe)
 
@@ -29,7 +28,7 @@ class TestTransitionTimeMatrix(unittest.TestCase):
         InverseCdf."""
         matrix_object = TransitionTimeMatrix()
         matrix = matrix_object.fill_transition_time()
-        self.assertEqual(matrix.size, 100)
+        self.assertEqual(matrix.size, len(InfectionStatus)**2)
         for row in matrix.to_numpy():
             for element in row:
                 if element != 0:

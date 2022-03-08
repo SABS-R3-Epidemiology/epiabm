@@ -15,7 +15,7 @@ class TransitionTimeMatrix:
         the columns and zeros as elements.
         """
         self.initial_matrix =\
-            StateTransitionMatrix.build_state_transition_matrix(self)
+            StateTransitionMatrix().create_empty_state_transition_matrix()
 
     def fill_transition_time(self):
         """Fills the transition time matrix with InverseCdf objects, where the
@@ -25,7 +25,7 @@ class TransitionTimeMatrix:
         move to the infection status associated with the columns j.
 
         :returns: Matrix in the form of a dataframe
-        :rtype: Pandas dataframe
+        :rtype: pd.Dataframe
         """
         matrix = self.initial_matrix
         matrix.loc['Exposed', 'InfectASympt'] =\
