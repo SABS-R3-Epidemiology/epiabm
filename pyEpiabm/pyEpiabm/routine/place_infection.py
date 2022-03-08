@@ -15,16 +15,22 @@ class PlaceInfection:
                    timestep: int):
         """Calculate the susceptibility of a place.
 
-        :param infector: Infector
-        :type infector: Person
-        :param infectee: Infectee
-        :type infectee: Person
-        :param place: Place
-        :type place: Place
-        :param timestep: Current simulation timestep
-        :type timestep: int
-        :return: Susceptibility parameter of place
-        :rtype: float
+        Parameters
+        ----------
+        infector : Person
+            Infector
+        infectee : Person
+            Infectee
+        place : Place
+            Place
+        timestep : int
+            Current simulation timestep
+
+        Returns
+        -------
+        float
+            Susceptibility parameter of place
+
         """
         return 0.2
 
@@ -33,12 +39,18 @@ class PlaceInfection:
         """Calculate the infectiousness of a place.
         Not dependent on the people in it.
 
-        :param place: Place
-        :type place: Place
-        :param timestep: Current simulation timestep
-        :type timestep: int
-        :return: Infectiousness parameter of place
-        :rtype: float
+        Parameters
+        ----------
+        place : Place
+            Place
+        timestep : int
+            Current simulation timestep
+
+        Returns
+        -------
+        float
+            Infectiousness parameter of place
+
         """
         return 0.5
 
@@ -48,16 +60,22 @@ class PlaceInfection:
         """Calculate the force of infection of a place, for a particular
         infector and infectee.
 
-        :param infector: Infector
-        :type infector: Person
-        :param infectee: Infectee
-        :type infectee: Person
-        :param place: Place
-        :type place: Place
-        :param timestep: Current simulation timestep
-        :type timestep: int
-        :return: Force of infection parameter of place
-        :rtype: float
+        Parameters
+        ----------
+        infector : Person
+            Infector
+        infectee : Person
+            Infectee
+        place : Place
+            Place
+        timestep : int
+            Current simulation timestep
+
+        Returns
+        -------
+        float
+            Force of infection parameter of place
+
         """
         infectiousness = PlaceInfection.place_inf(place, timestep)
         susceptibility = PlaceInfection.place_susc(place, infector, infectee,

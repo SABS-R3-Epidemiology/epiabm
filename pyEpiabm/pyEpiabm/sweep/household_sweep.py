@@ -16,15 +16,19 @@ class HouseholdSweep(AbstractSweep):
     person as input and tests a infection event against each
     susceptible member of their household. The resulting
     exposed person is added to an infection queue.
+
     """
 
-    def __call__(self, time: int):
+    def __call__(self, time: float):
         """Given a population structure, loops over infected members
         and considers whether they infected household members based
         on individual, and spatial infectiousness and susceptibility.
 
-        : param time: Simulation time
-        : type time: int
+        Parameters
+        ----------
+        time : float
+            Simulation time
+
         """
         timestep = int(time * Parameters.instance().time_steps_per_day)
 

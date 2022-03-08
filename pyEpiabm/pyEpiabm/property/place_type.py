@@ -7,6 +7,7 @@ from enum import Enum
 
 class PlaceType(Enum):
     """Enum representing a place"s type.
+
     """
     Hotel = 1  # specific to travelling persons
     CareHome = 2  # two groups, workers [0] and residents [1], both remain

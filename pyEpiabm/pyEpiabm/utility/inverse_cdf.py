@@ -11,17 +11,21 @@ import numpy as np
 class InverseCdf:
     """Class of inverse cumulative distribution functions (icdf) and their
     associated methods, in a style similar to CovidSim.
+
     """
 
     def __init__(self, mean, icdf_array):
         """Constructor Method
 
-        :param mean: Mean of the icdf
-        :type mean: float
-        :param icdf_array: Array of quantiles of the icdf_array, values
-        in array must be evenly spaced with the final value being as
-        close to one as possible
-        :type icdf_array: np.ndarray
+        Parameters
+        ----------
+        mean : float
+            Mean of the icdf
+        icdf_array : np.ndarray
+            Array of quantiles of the icdf_array, values in array must be
+            evenly spaced with the final value being as close to one as
+            possible
+
         """
 
         # CDF_RES is the resolution of icdf taken as length of icdf array.
@@ -37,8 +41,11 @@ class InverseCdf:
         following what is done in CovidSim (without exponentialisation), and
         returns the value as a float.
 
-        :returns: Mean scaled relative to given icdf
-        :rtype: float
+        Returns
+        -------
+        float
+            Mean scaled relative to given icdf
+
         """
         rand_num = random.random()
         q = rand_num * self.CDF_RES
@@ -54,8 +61,11 @@ class InverseCdf:
         following what is done in CovidSim (with negative exponentiation),
         and returns the value as a float.
 
-        :returns: Mean scaled relative to given icdf
-        :rtype: float
+        Returns
+        -------
+        float
+            Mean scaled relative to given icdf
+
         """
         exp_icdf_array = np.exp(-self.icdf_array)
         rand_num = random.random()

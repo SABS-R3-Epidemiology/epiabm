@@ -18,6 +18,7 @@ from pyEpiabm.utility import log_exceptions
 
 class Simulation:
     """Class to run a full simulation.
+
     """
     @log_exceptions()
     def configure(self,
@@ -31,34 +32,33 @@ class Simulation:
         sim_params Contains:
             * `simulation_start_time`: The initial time for the simulation
             * `simulation_end_time`: The final time to stop the simulation
-            * `initial_infected_number`: The initial number of infected
-                individuals in the population
+            * `initial_infected_number`: The initial number of infected \
+               individuals in the population
             * `simulation_seed`:  Random seed for reproducible simulations
 
         file_params Contains:
             * `output_file`: String for the name of the output .csv file
-            * `output_dir`: String for the location of the output file,
-                 as a relative path
-            * `spatial_output`: Boolean to determine whether a spatial output
-                should be used
+            * `output_dir`: String for the location of the output file, \
+               as a relative path
+            * `spatial_output`: Boolean to determine whether a spatial output \
+               should be used
 
-        :param population: Population structure for the model
-        :type population: Population
-        :param pop_params: Dictionary of parameter specific to the population
-        :type pop_params: dict
-        :param initial_sweeps: List of sweeps used to initialise the
-            simulation
-        :type initial_sweeps: list
-        :param sweeps: List of sweeps used in the simulation. Queue
-            sweep and host progression sweep should appear at the end of the
-            list
-        :type sweeps: list
-        :param sim_params: Dictionary of parameters specific to the simulation
-            used and used as input for call method of initial sweeps
-        :type sim_params: dict
-        :param file_params: Dictionary of parameters specific to the output
-            file
-        :type file_params: dict
+        Parameters
+        ----------
+        population : Population
+            Population structure for the model
+        pop_params : dict
+            Dictionary of parameter specific to the population
+        initial_sweeps : typing.List
+            List of sweeps used to initialise the simulation
+        sweeps : typing.List
+            List of sweeps used in the simulation. Queue sweep and host
+            progression sweep should appear at the end of the list
+        sim_params : dict
+            Dictionary of parameters specific to the simulation used and used
+            as input for call method of initial sweeps
+        file_params : dict
+            Dictionary of parameters specific to the output file
 
         """
         self.sim_params = sim_params
@@ -110,6 +110,7 @@ class Simulation:
         that the elements of intial sweeps take the sim_params dict as an
         argument for their call method but the elements of sweeps take time
         as an argument for their call method.
+
         """
         # Initialise on the time step before starting.
         for sweep in self.initial_sweeps:
@@ -133,8 +134,11 @@ class Simulation:
         """Records the count number of a given list of infection statuses
         and writes these to file.
 
-        :param time: Time of output data
-        :type file_params: float
+        Parameters
+        ----------
+        time : float
+            Time of output data
+
         """
 
         if self.spatial_output:  # Separate output line for each cell
@@ -160,8 +164,11 @@ class Simulation:
         """ Set random seed for all subsequent operations. Should be used
         before population configuration to control this process as well.
 
-        :param seed: Seed for RandomState
-        :type seed: int
+        Parameters
+        ----------
+        seed : int
+            Seed for RandomState
+
         """
         random.seed(seed)
         np.random.seed(seed)

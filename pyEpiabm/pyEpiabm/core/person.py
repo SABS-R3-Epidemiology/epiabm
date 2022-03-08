@@ -10,33 +10,37 @@ from pyEpiabm.property import InfectionStatus
 class Person:
     """Class to represent each person in a population.
 
-    :param microcell: An instance of an :class:`Microcell`
-    :type microcell: Microcell
+    Parameters
+    ----------
+    microcell : Microcell
+        An instance of an :class:`Microcell`
 
-    Class attributes.
+    Attributes
+    ----------
+    infection_status : InfectionStatus
+        Person's current infection status
+    next_infection_status : InfectionStatus
+        Person's next infection status after current one
+    time_of_status_change: int
+        Time when person's infection status is updated
 
-    :param infection_status: Person's current infection status
-    :type infection_status: InfectionStatus
-    :param next_infection_status: Person's next infection status after
-        current one
-    :type next_infection_status: InfectionStatus
-    :param time_of_status_change: Time when person's infection status
-        is updated
-    :type time_of_status_change: int
     """
 
     def __init__(self, microcell,
                  age=0, susceptibility=0, infectiousness=0):
         """Constructor Method.
 
-        :param microcell: Person's parent :class:`Microcell` instance
-        :type microcell: Microcell
-        :param age: Person's age
-        :type age: float
-        :param susceptibility: Person's susceptibility
-        :type susceptibility: float
-        :param infectiousness: Person's infectiousness
-        :type infectiousness: float
+        Parameters
+        ----------
+        microcell : Microcell
+            Person's parent :class:`Microcell` instance
+        age : float
+            Person's age
+        susceptibility : float
+            Person's susceptibility
+        infectiousness : float
+            Person's infectiousness
+
         """
         self.age = age
         self.susceptibility = susceptibility
@@ -51,8 +55,11 @@ class Person:
     def is_infectious(self):
         """Query if the person is currently infectious.
 
-        :return: Whether person is currently infectious
-        :rtype: bool
+        Returns
+        -------
+        bool
+            Whether person is currently infectious
+
         """
         return self.infection_status in [
             InfectionStatus.InfectASympt,
@@ -65,16 +72,22 @@ class Person:
     def is_susceptible(self):
         """Query if the person is currently susceptible.
 
-        :return: Whether person is currently susceptible
-        :rtype: bool
+        Returns
+        -------
+        bool
+            Whether person is currently susceptible
+
         """
         return self.infection_status == InfectionStatus.Susceptible
 
     def __repr__(self):
         """Returns a string representation of Person.
 
-        :return: String representation of person
-        :rtype: str
+        Returns
+        -------
+        str
+            String representation of person
+
         """
         return f"Person, Age = {self.age}."
 
@@ -82,8 +95,11 @@ class Person:
                       new_status: InfectionStatus) -> None:
         """Update Person's Infection Status.
 
-        :param new_status: Person's new status
-        :type new_status: InfectionStatus
+        Parameters
+        ----------
+        new_status : InfectionStatus
+            Person's new status
+
         """
         self.microcell.notify_person_status_change(
             self.infection_status, new_status)
@@ -92,6 +108,7 @@ class Person:
     def update_time_to_status_change(self) -> None:
         """Method that assigns time until next infection status update,
          given as a random integer between 1 and 10.
+
         """
         # This is left as a random integer for now but will be made more
         # complex later.
@@ -108,6 +125,8 @@ class Person:
         :type place: Place
         :param person_group: key for the person group dictionary
         :type person_group: int
+        
+
         """
         if place.cell != self.microcell.cell:
             raise AttributeError("Place and person are not in the same\
@@ -118,8 +137,11 @@ class Person:
         """Method to remove person for each associated place, to be
         used when updating places.
 
-        :param place: Place person should be removed from
-        :type place: Place
+        Parameters
+        ----------
+        place: Place
+            Place person should be removed from
+
         """
         place_list = [i[0] for i in self.places]
         if place not in place_list:
