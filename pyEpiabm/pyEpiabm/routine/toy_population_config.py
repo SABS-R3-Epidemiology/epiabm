@@ -130,7 +130,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         Parameters
         ----------
         population : Population
-            Population where :class:`Place`s will be added
+            Population where :class:`Place` s will be added
         place_number : int
             Number of places to generate per :class:`Microcell`
 

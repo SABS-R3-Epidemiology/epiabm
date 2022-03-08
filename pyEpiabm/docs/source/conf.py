@@ -50,7 +50,6 @@ else:
     autodoc_default_options = {
         'members': None,
         'inherited-members': None,
-        'imported-memebers': None,
     }
 
 # Napoleon settings
