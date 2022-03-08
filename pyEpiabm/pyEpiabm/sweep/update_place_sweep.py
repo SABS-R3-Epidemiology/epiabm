@@ -11,13 +11,17 @@ from .abstract_sweep import AbstractSweep
 class UpdatePlaceSweep(AbstractSweep):
     """Class to update people in the "Place"
     class.
+
     """
-    def __call__(self, time: int):
+    def __call__(self, time: float):
         """Given a population structure, updates the people
         present in each place at a specific timepoint.
 
-        :param time: Current simulation time
-        :type time: int
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+
         """
         # Double loop over the whole population, clearing places
         # and refilling them.

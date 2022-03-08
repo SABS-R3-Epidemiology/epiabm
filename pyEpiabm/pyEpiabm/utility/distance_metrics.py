@@ -10,18 +10,25 @@ class DistanceFunctions:
     """Class which contains multiple distance functions
     for use when considering spatial infections, either
     inter-place or inter-cell.
+
     """
     @staticmethod
     def dist(loc1: typing.Tuple[float, float],
              loc2: typing.Tuple[float, float] = (0, 0)) -> float:
         """Calculate distance based on currently configured distance metric
 
-        :param loc1: (x,y) coordinates of the first place
-        :type loc1: Tuple[float, float]
-        :param loc2: (x,y) coordinates of the second place
-        :type loc2: Tuple[float, float]
-        :return: Distance between the two tuples
-        :rtype: float
+        Parameters
+        ----------
+        loc1 : Tuple[float, float]
+            (x,y) coordinates of the first place
+        loc2 : Tuple[float, float]
+            (x,y) coordinates of the second place
+
+        Returns
+        -------
+        float
+            Distance between the two locations
+
         """
         return DistanceFunctions.dist_euclid(loc1, loc2)
 
@@ -34,12 +41,18 @@ class DistanceFunctions:
         of the Earth is not significant. Passing a single location
         argument will return the norm of this tuple.
 
-        :param loc1: (x,y) coordinates of the first place
-        :type loc1: Tuple[float, float]
-        :param loc2: (x,y) coordinates of the second place
-        :type loc2: Tuple[float, float]
-        :return: Euclidean distance between the two tuples
-        :rtype: float
+        Parameters
+        ----------
+        loc1 : Tuple[float, float]
+            (x,y) coordinates of the first place
+        loc2 : Tuple[float, float]
+            (x,y) coordinates of the second place
+
+        Returns
+        -------
+        float
+            Euclidean distance between the two locations
+
         """
         return np.linalg.norm(np.abs(np.asarray(loc1) - np.asarray(loc2)))
 
@@ -54,16 +67,22 @@ class DistanceFunctions:
         mean this only applies to a global grid. Scales should be
         (Earth perimeter, vertical range)
 
-        :param loc1: index location of the first place
-        :type loc1: Tuple[int, int]
-        :param stride: number of indices in a row
-        :type stride: int
-        :param scales: conversion to global coordinates
-        :type scales: Tuple[float, float]
-        :param loc2: index location of the second place
-        :type loc2: Tuple[int, int]
-        :return: Euclidean distance between the two tuples
-        :rtype: float
+        Parameters
+        ----------
+        loc1 : Tuple[int, int]
+            Index location of the first place
+        stride : int
+            Number of indices in a row
+        scales : Tuple[float, float]
+            Conversion to global coordinates
+        loc2 : Tuple[int, int]
+            Index location of the second place
+
+        Returns
+        -------
+        float
+            Periodic distance between the two locations
+
         """
         # Convert indices to distance mesures by dividing by
         # total number of indices in each row.

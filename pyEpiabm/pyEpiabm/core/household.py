@@ -16,13 +16,15 @@ class Household:
                  susceptibility=0, infectiousness=0):
         """Constructor Method.
 
-        :param loc: Location of household
-        :type loc: Tuple[float, float]
-        :param susceptibility: Household's base susceptibility
-            to infection events
-        :type susceptibility: float
-        :param infectiousness: Household's base infectiousness
-        :type infectiousness: float
+        Parameters
+        ----------
+        loc : Tuple[float, float]
+            Location of household
+        susceptibility : float
+            Household's base susceptibility to infection events
+        infectiousness : float
+            Household's base infectiousness
+
         """
         self.persons = []
         self.location = loc
@@ -36,8 +38,11 @@ class Household:
     def __repr__(self):
         """Returns a string representation of Household.
 
-        :return: String representation of the household
-        :rtype: str
+        Returns
+        -------
+        str
+            String representation of the household
+
         """
         return "Household at " \
             + f"({self.location[0]:.2f}, {self.location[1]:.2f}) "\
@@ -46,8 +51,11 @@ class Household:
     def add_person(self, person):
         """Adds a person to this household.
 
-        :param person: Person to be added
-        :type person: Person
+        Parameters
+        ----------
+        person : Person
+            Person to be added
+
         """
         self.persons.append(person)
         person.household = self

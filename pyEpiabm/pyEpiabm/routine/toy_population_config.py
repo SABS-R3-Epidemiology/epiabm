@@ -18,6 +18,7 @@ from .abstract_population_config import AbstractPopulationFactory
 class ToyPopulationFactory(AbstractPopulationFactory):
     """ Class that creates a toy population for use in the simple
     python model.
+
     """
     @staticmethod
     @log_exceptions()
@@ -35,12 +36,16 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             * `place_number`: Number of places in each microcell (*)
             * `population_seed`: Random seed for reproducible populations (*)
 
-        :param file_params: Dictionary of parameters for generating a
-            population
-        :type file_params: dict
-        :return: Population object with individuals distributed into
-            households
-        :rtype: Population
+        Parameters
+        ----------
+        file_params : dict
+            Dictionary of parameters for generating a population
+
+        Returns
+        -------
+        Population
+            Population object with individuals distributed into households
+
         """
         # Unpack variables from input dictionary
         population_size = pop_params["population_size"]
@@ -93,11 +98,14 @@ class ToyPopulationFactory(AbstractPopulationFactory):
     def add_households(population: Population, household_number: int):
         """Groups people in a microcell into households together.
 
-        :param population: Population containing all person objects to be
-            considered for grouping
-        :type population: Population
-        :param household_number: Number of households to form
-        :type household_number: int
+        Parameters
+        ----------
+        population : Population
+            Population containing all person objects to be considered for
+            grouping
+        household_number : int
+            Number of households to form
+
         """
         # Initialises another multinomial distribution
         q = [1 / household_number] * household_number
@@ -117,13 +125,15 @@ class ToyPopulationFactory(AbstractPopulationFactory):
 
     @staticmethod
     def add_places(population: Population, place_number: int):
-        """Groups people in a microcell into households together.
+        """Generates places within a Population.
 
-        :param population: Population containing all person objects to be
-            considered for grouping
-        :type population: Population
-        :param place_number: Number of places to form
-        :type place_number: int
+        Parameters
+        ----------
+        population : Population
+            Population where :class:`Place` s will be added
+        place_number : int
+            Number of places to generate per :class:`Microcell`
+
         """
         # Further consideration of whether we initialise place types
         # at this step is needed.
@@ -142,15 +152,17 @@ class ToyPopulationFactory(AbstractPopulationFactory):
 
             * 'random': Assigns all locations randomly within unit square
             * 'uniform_x': Spreads points evenly along x axis in range (0, 1)
-            * 'grid': Distributes points according to a square grid within a
-                unit square. There will be cells missing in the last row if
-                the input is not a square number
+            * 'grid': Distributes points according to a square grid within a \
+               unit square. There will be cells missing in the last row \
+               if the input is not a square number
 
-        :param population: Population containing all person objects to be
-            considered for grouping
-        :type population: Population
-        :param method: Method of determining cell locations
-        :type method: str
+        Parameters
+        ----------
+        population : Population
+            Population containing all cells to be assigned locations
+        method : str
+            Method of determining cell locations
+
         """
         try:
             if method == "random":
