@@ -29,7 +29,7 @@ class HouseholdInfection:
             Infectiousness parameter of household
 
         """
-        return Person.infectiousness
+        return 1.0  # Person.infectiousness
 
     @staticmethod
     def household_susc(infector: Person, infectee: Person, timestep: int):
@@ -52,7 +52,8 @@ class HouseholdInfection:
             Susceptibility parameter of household
 
         """
-        return personal_susc(infector: Person, infectee: Person, timestep: int)  # Not yet implemented
+        # personal_susc(infector: Person, infectee: Person, timestep: int)
+        return 1.0
 
     @staticmethod
     def household_foi(infector: Person, infectee: Person, timestep: int):
@@ -78,7 +79,7 @@ class HouseholdInfection:
         false_pos = 1 / (1 - Parameters.instance().false_positive_rate)
         infectiousness = (HouseholdInfection.household_inf(infector, timestep)
                           * seasonality * false_pos
-                          * Parameters.instance.household_transmission)
+                          * Parameters.instance().household_transmission)
 
         susceptibility = HouseholdInfection.household_susc(infector, infectee,
                                                            timestep)
