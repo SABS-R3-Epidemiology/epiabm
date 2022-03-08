@@ -6,6 +6,7 @@ import random
 import numpy as np
 
 import pyEpiabm as pe
+from pyEpiabm.core import Person
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import TransitionTimeMatrix
 from .abstract_sweep import AbstractSweep
@@ -14,6 +15,7 @@ from .abstract_sweep import AbstractSweep
 class HostProgressionSweep(AbstractSweep):
     """Class for sweeping through population and updating host infection status
     and time to next infection status change.
+
     """
 
     def __init__(self):
@@ -46,7 +48,7 @@ class HostProgressionSweep(AbstractSweep):
         self.delay = np.floor(self.latent_to_symptom_delay /
                               self.model_time_step)
 
-    def _set_infectiousness(self, person):
+    def _set_infectiousness(self, person: Person):
         """Assigns the infectiousness of a person for when they go from
         the exposed infection state to the next state, either InfectAsympt,
         InfectMild or InfectGP.
@@ -74,7 +76,7 @@ class HostProgressionSweep(AbstractSweep):
                              pe.Parameters.instance().sympt_infectiousness
         person.infectiousness = infectiousness
 
-    def _update_next_infection_status(self, person):
+    def _update_next_infection_status(self, person: Person):
         """Assigns next infection status based on current infection status
         and on probabilities of transition to different statuses. Weights
         are taken from row in state transition matrix that corresponds to

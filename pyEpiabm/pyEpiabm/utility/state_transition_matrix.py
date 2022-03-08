@@ -2,6 +2,7 @@
 # Generate state transmission matrix
 #
 
+import enum
 import pandas as pd
 import numpy as np
 
@@ -20,7 +21,7 @@ class StateTransitionMatrix:
 
         Returns
         -------
-        pd.Dataframe
+        pd.DataFrame
             Symmetric matrix in the form of a dataframe
 
         """
@@ -44,7 +45,7 @@ class StateTransitionMatrix:
 
         Returns
         -------
-        pd.Dataframe
+        pd.DataFrame
             Matrix in the form of a dataframe
 
         """
@@ -67,8 +68,9 @@ class StateTransitionMatrix:
         matrix.loc['Dead', 'Dead'] = 1
         return matrix
 
-    def update_probability(self, current_infection_status_row,
-                           next_infection_status_column, new_probability):
+    def update_probability(self, current_infection_status_row: enum,
+                           next_infection_status_column: enum,
+                           new_probability: float):
         """Method to manually update a transition probability in the
         transition state matrix.
 
