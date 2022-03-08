@@ -214,7 +214,7 @@ class SpatialSweep(AbstractSweep):
             infection_distance = (SK.weighting(DistanceFunctions.dist(
                 infector.microcell.cell.location, infectee_cell.location)) /
                 Parameters.instance().infection_radius)
-            if (infection_distance < random.random()):
+            if (infection_distance > random.random()):
                 # Covidsim rejects the infection event if the distance
                 # between infector/infectee is too large.
                 infectee_list.append(infectee)
