@@ -12,7 +12,7 @@ from pyEpiabm.core import Cell, Parameters, Person
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.routine import SpatialInfection
 from pyEpiabm.utility import DistanceFunctions
-from pyEpiabm.utility import Kernel
+from pyEpiabm.utility import SpatialKernel as SK
 
 from .abstract_sweep import AbstractSweep
 
@@ -196,7 +196,7 @@ class SpatialSweep(AbstractSweep):
         while number_to_infect > 0 and count < self._population.total_people():
             count += 1
             # Weighting for cell choice in Covidsim uses cum_trans and
-            # invCDF arrays, which are equivilent to weighting by total
+            # invCDF arrays, which are equivalent to weighting by total
             # susceptibles*max_transmission. May want to add transmission
             # parameter later.
             weights = [cell2.compartment_counter.retrieve()
@@ -207,10 +207,11 @@ class SpatialSweep(AbstractSweep):
             # Sample at random from the infectee cell to find
             # an infectee
             infectee = random.sample(infectee_cell.persons, 1)[0]
-            # Covidsim used explicitly the kernel distance between people,
-            # and divided by the kernel of the minimum distance between
+            # Covidsim tested each infection event by testing the ratio
+            # of the spatial kernel applied to the distance between people
+            # to the spatial kernel of the shorted distance between
             # their cells.
-            infection_distance = (Kernel.weighting(DistanceFunctions.dist(
+            infection_distance = (SK.weighting(DistanceFunctions.dist(
                 infector.microcell.cell.location, infectee_cell.location)) /
                 Parameters.instance().infection_radius)
             if (infection_distance < random.random()):
