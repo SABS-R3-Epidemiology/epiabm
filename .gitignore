@@ -105,7 +105,6 @@ target/
 
 # VS Code
 *.vscode
-*.editorconfig
 
 # Jupyter Notebook
 .ipynb_checkpoints
