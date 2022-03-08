@@ -15,9 +15,9 @@ namespace epiabm
             DistanceMetrics();
             ~DistanceMetrics() = default;
 
-            static double dist(location loc1, location loc2);
-            static double distEuclid(location loc1, location loc2);
-            static double distCovidsim(location loc1, location loc2);
+            static double Dist(location loc1, location loc2);
+            static double DistEuclid(location loc1, location loc2);
+            static double DistCovidsim(location loc1, location loc2);
     };
 } // namespace epiabm
 
