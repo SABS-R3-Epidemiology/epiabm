@@ -6,7 +6,7 @@
 
 ## General Information
 
-This programme implements an agent-based SEIR based model with added spatial complexity. It immitates the Imperial CovidSim model, but aims to simplify and clarify the model by using more user friendly software practices. It also provides various sub-models (with elements of the CovidSim model removed) for research and pedagogical investigation into the effect of different aspects of the model.
+This programme implements an agent-based SEIR model with added compartments and spatial complexity. It immitates the Imperial CovidSim model, but aims to simplify and clarify the model by using more user friendly software practices. It also provides various sub-models (with elements of the CovidSim model removed) for research and pedagogical investigation into the effect of different aspects of the model.
 
 ## Model Summary
 
