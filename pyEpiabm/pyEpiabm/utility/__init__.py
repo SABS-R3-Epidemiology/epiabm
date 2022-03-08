@@ -8,6 +8,7 @@ algorithms called throughout pyEpiabm.
 """
 
 from .distance_metrics import DistanceFunctions
+from .covidsim_kernel import Kernel
 from .random_methods import RandomMethods
 from .inverse_cdf import InverseCdf
 from .exception_logger import log_exceptions

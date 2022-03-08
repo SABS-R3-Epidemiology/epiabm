@@ -43,6 +43,7 @@ class DistanceFunctions:
         """
         return np.linalg.norm(np.abs(np.asarray(loc1) - np.asarray(loc2)))
 
+    @staticmethod
     def dist_periodic(loc1: typing.Tuple[int, int],
                       stride: int,
                       scales: typing.Tuple[float, float],

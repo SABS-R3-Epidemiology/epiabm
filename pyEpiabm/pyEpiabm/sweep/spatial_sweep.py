@@ -11,6 +11,7 @@ from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.routine import SpatialInfection
 from pyEpiabm.utility import DistanceFunctions
+from pyEpiabm.utility import Kernel
 
 from .abstract_sweep import AbstractSweep
 
@@ -180,14 +181,20 @@ class SpatialSweep(AbstractSweep):
         number_to_infect : int
             Maximum number of people to infect
 
+        Returns
+        ----------
+        infectee_list : List
+            List of exposed people to test an infection event
+
         """
         infectee_list = []
         count = 0
         while number_to_infect > 0 and count < self._population.total_people():
             count += 1
             # Weighting for cell choice in Covidsim uses cum_trans and
-            # invCDF arrays, but really can't see how these are
-            # initialised. Have used the number of susceptible for now.
+            # invCDF arrays, which are equivilent to weighting by total
+            # susceptibles*max_transmission. May want to add transmission
+            # parameter later.
             weights = [cell2.compartment_counter.retrieve()
                        [InfectionStatus.Susceptible]
                        for cell2 in possible_infectee_cells]
@@ -196,8 +203,11 @@ class SpatialSweep(AbstractSweep):
             # Sample at random from the infectee cell to find
             # an infectee
             infectee = random.sample(infectee_cell.persons, 1)[0]
-            infection_distance = (DistanceFunctions.dist(
-                infector.microcell.cell.location, infectee_cell.location) /
+            # Covidsim used explicitly the kernel distance between people,
+            # and divided by the kernel of the minimum distance between
+            # their cells.
+            infection_distance = (Kernel.weighting(DistanceFunctions.dist(
+                infector.microcell.cell.location, infectee_cell.location)) /
                 Parameters.instance().infection_radius)
             if (infection_distance < random.random()):
                 # Covidsim rejects the infection event if the distance
