@@ -18,7 +18,7 @@ to another person / potential infector).
 
 from .infection_status import InfectionStatus
 from .place_type import PlaceType
-from .personal_infection import PersonalInfection
-from .household_infection import HouseholdInfection
-from .place_infection import PlaceInfection
-from .spatial_infection import SpatialInfection
+from .personal_foi import PersonalInfection
+from .household_foi import HouseholdInfection
+from .place_foi import PlaceInfection
+from .spatial_foi import SpatialInfection

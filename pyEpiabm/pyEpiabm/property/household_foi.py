@@ -4,7 +4,7 @@
 
 from pyEpiabm.core import Parameters
 
-from .personal_infection import PersonalInfection
+from .personal_foi import PersonalInfection
 
 
 class HouseholdInfection:
