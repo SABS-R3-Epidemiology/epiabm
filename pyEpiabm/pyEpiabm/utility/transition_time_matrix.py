@@ -141,6 +141,9 @@ class TransitionTimeMatrix:
         next_infection_status_column : enum
             Infection status corresponding to
             the column where the probability will be updated
+        matrix : pd.Dataframe
+            Transition time matrix that will have one of it's
+            entries changed
         new_transition_time_icdf : list
             The associated list of icdf values if wanting to
             specify a new distribution for a transition time

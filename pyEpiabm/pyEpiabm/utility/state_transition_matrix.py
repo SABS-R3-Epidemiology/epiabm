@@ -84,6 +84,9 @@ class StateTransitionMatrix:
             the column where the probability will be updated
         new_probability : float
             Updated transition probability value
+        matrix : pd.Dataframe
+            Input state transition matrix that will have 
+            one of it's probabilities changed
 
         """
         try:
