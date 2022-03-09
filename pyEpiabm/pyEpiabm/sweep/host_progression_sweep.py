@@ -172,9 +172,9 @@ class HostProgressionSweep(AbstractSweep):
         # time:
         person.time_of_status_change = time + transition_time
 
-    def infectiousness_progression():
-        """Defines an array to scale a person's infectiousness depending on
-        time since start of infection.
+    def _infectiousness_progression(self):
+        """Defines an array to scale a person's infectiousness that depends on
+        time since the start of the infection.
         """
         infectious_profile = pe.Parameters.instance().infectiousness_prof
         inf_prof_res = pe.Parameters.instance().infprof_res
@@ -202,6 +202,13 @@ class HostProgressionSweep(AbstractSweep):
             infectiousness_prog[i] = infectiousness_prog[i] / s
         return infectiousness_prog
 
+    def _update_infectiousness(self, person, time: float):
+        """Updates infectiousness of a person.
+        """
+        scale_infectiousness = self._infectiousness_progression
+        time_since_infection = time - person.infection_start_time
+        person.infectiousness *= scale_infectiousness[time_since_infection]
+
     def __call__(self, time: float):
         """Sweeps through all people in the population, updates
         their infection status if it is time and assigns them their
@@ -226,5 +233,9 @@ class HostProgressionSweep(AbstractSweep):
                              InfectionStatus.InfectMild,
                              InfectionStatus.InfectGP]:
                         self.set_infectiousness(person, time)
+                    # add infectiousness = Nan if recov or dead
                     self._update_next_infection_status(person)
                     self._update_time_status_change(person, time)
+                if person.infection_status in [InfectionStatus.InfectASympt]:
+                    # add other infection statuses
+                    self._update_infectiousness(person, time)
