@@ -8,8 +8,10 @@ import numpy as np
 import pyEpiabm as pe
 from pyEpiabm.core import Person
 from pyEpiabm.property import InfectionStatus
+
 from pyEpiabm.utility import StateTransitionMatrix
 from pyEpiabm.utility import TransitionTimeMatrix
+
 from .abstract_sweep import AbstractSweep
 
 
@@ -38,7 +40,7 @@ class HostProgressionSweep(AbstractSweep):
         assert self.state_transition_matrix.shape ==\
             (self.number_of_states, self.number_of_states),\
             'Matrix dimensions must match number of infection states'
-
+    
         # Instantiate transmission time matrix
         time_matrix_object = TransitionTimeMatrix()
         self.transition_time_matrix =\
@@ -52,12 +54,15 @@ class HostProgressionSweep(AbstractSweep):
         self.delay = np.floor(self.latent_to_symptom_delay /
                               self.model_time_step)
 
-    def _set_infectiousness(self, person: Person):
+    @staticmethod
+    def set_infectiousness(person: Person):
         """Assigns the infectiousness of a person for when they go from
         the exposed infection state to the next state, either InfectAsympt,
         InfectMild or InfectGP.
         Called right after an exposed person has been given its
         new infection status in the call method below.
+        This static method is non private as it is also used by the initial
+        infected sweep to give new infected individuals an infectiousness.
 
         Parameters
         ----------
@@ -171,7 +176,6 @@ class HostProgressionSweep(AbstractSweep):
             Current simulation time
 
         """
-
         for cell in self._population.cells:
             for person in cell.persons:
                 if person.time_of_status_change is None:
