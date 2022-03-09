@@ -27,7 +27,7 @@ class Person:
     """
 
     def __init__(self, microcell,
-                 age=0, susceptibility=0, infectiousness=0):
+                 age=0, infectiousness=0):
         """Constructor Method.
 
         Parameters
@@ -36,14 +36,11 @@ class Person:
             Person's parent :class:`Microcell` instance
         age : float
             Person's age
-        susceptibility : float
-            Person's susceptibility
         infectiousness : float
             Person's infectiousness
 
         """
         self.age = age
-        self.susceptibility = susceptibility
         self.infectiousness = infectiousness
         self.microcell = microcell
         self.infection_status = InfectionStatus.Susceptible
@@ -78,7 +75,8 @@ class Person:
             Whether person is currently susceptible
 
         """
-        return self.infection_status == InfectionStatus.Susceptible
+        return self.infection_status == InfectionStatus.\
+            Susceptible
 
     def __repr__(self):
         """Returns a string representation of Person.
