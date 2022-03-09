@@ -147,7 +147,7 @@ class HostProgressionSweep(AbstractSweep):
         # statuses (InfectMild or InfectGP), as is done in CovidSim.
         if (person.infection_status == InfectionStatus.InfectMild or
                 person.infection_status == InfectionStatus.InfectGP):
-            time = time + self.delay
+            time += self.delay
         # Assigns the time of status change using current time and transition
         # time:
         person.time_of_status_change = time + transition_time
