@@ -36,7 +36,7 @@ class Place:
         self._location = loc
         self.persons = []
         self.person_groups = {0: []}
-        self.num_person_groups = 0
+        self.num_person_groups = 1
         self.place_type = place_type
         self.max_capacity = 50
         self.mean_capacity = 25
@@ -68,8 +68,7 @@ class Place:
     def set_mean_cap(self, mean_capacity: float):
         """Sets the maximum capacity of a place.
 
-        :param mean_capacity: Maximum number of people
-            allowed in place
+        :param mean_capacity: Mean capacity of place type
         :type mean_capacity: float
         """
         self.mean_capacity = mean_capacity
@@ -103,7 +102,7 @@ class Place:
         ----------
         person: Person
             Person to add
-        person_group : Int
+        person_group : int
             Key for the person group dictionary
 
         """
@@ -138,8 +137,11 @@ class Place:
         :param person: Person associated with group
         :type person: Person
         """
-        place_list = [i[0] for i in person.places]
-        ind = place_list.index(self)
+        if person not in self.persons:
+            raise KeyError("Person not found in this place")
+        else:
+            place_list = [i[0] for i in person.places]
+            ind = place_list.index(self)
         return person.places[ind][1]
 
     def empty_place(self, groups_to_empty: list = [0]):
