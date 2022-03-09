@@ -20,7 +20,7 @@ class TransitionTimeMatrix:
 
     def fill_transition_time(self):
         """Fills the transition time matrix with InverseCdf objects, where the
-        times of transition are defined. For example, the element ij in the
+        distributions of times of transition are defined. For example, the element ij in the
         matrix is the InverseCdf object for defining the transition time of
         someone with current infection status associated with the row i to
         move to the infection status associated with the columns j.
