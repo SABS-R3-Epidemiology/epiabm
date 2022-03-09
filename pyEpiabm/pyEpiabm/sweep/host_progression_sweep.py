@@ -137,11 +137,14 @@ class HostProgressionSweep(AbstractSweep):
                 self.transition_time_matrix.loc[row_index, column_index]
             # Checks for susceptible to exposed case
             #  where transition time is zero
-            if transition_time_icdf_object == 0.0:
-                transition_time = 0.0
-            else:
+            try:
                 transition_time =\
                     transition_time_icdf_object.icdf_choose_noexp()
+            except AttributeError as e:
+                   if "object has no attribute 'icdf_choose_noexp'" in str(e):
+                       transition_time = transition_time_icdf_object
+                   else:
+                       raise
 
         # Adds delay to transition time for first level symptomatic infection
         # statuses (InfectMild or InfectGP), as is done in CovidSim.
