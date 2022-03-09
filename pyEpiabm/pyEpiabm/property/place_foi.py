@@ -38,7 +38,7 @@ class PlaceInfection:
         # Use group-wise capacity not max_capacity once implemented
         return (pyEpiabm.core.Parameters.instance().place_transmission
                 / place.max_capacity
-                * PersonalInfection.person_inf(infector))
+                * PersonalInfection.person_inf(infector, time))
 
     @staticmethod
     def place_susc(place, infector, infectee,
