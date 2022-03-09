@@ -4,6 +4,7 @@
 
 import random
 import numpy as np
+import logging
 
 from .abstract_sweep import AbstractSweep
 
@@ -40,6 +41,7 @@ class UpdatePlaceSweep(AbstractSweep):
                 elif place.place_type.value == 3:  # RESTAURANT
                     # Variable population is people not in the fixed pop.
                     # Changed at each timestep
+                    print('here')
                     place.empty_place(groups_to_empty=[1])
                     candidate_list = [person for person in place.cell.persons
                                       if person not in place.person_groups[1]]
@@ -73,10 +75,16 @@ class UpdatePlaceSweep(AbstractSweep):
         # people in the cell.
         new_capacity = np.random.lognormal(mean_capacity)
         new_capacity = min(new_capacity, max_capacity, len(person_list))
+        if len(person_list) <= 0:
+            logging.warning("No people in the person list supplied.")
         count = 0
         while count < new_capacity:
             i = random.randint(1, len(person_list))
-            # Checks person is not already in the place.
-            if person_list[i-1] not in place.persons:
+            person = person_list[i-1]
+            # Checks person is not already in the place, and that they
+            # haven't already been assigned to this place type.
+            if ((person not in place.persons) and
+                    (place.place_type not in person.place_types)):
+
                 place.add_person(person_list[i-1], group_index)
                 count += 1

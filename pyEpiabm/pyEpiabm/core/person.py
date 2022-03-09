@@ -49,6 +49,7 @@ class Person:
         self.infection_status = InfectionStatus.Susceptible
         self.household = None
         self.places = []
+        self.place_types = []
         self.next_infection_status = None
         self.time_of_status_change = None
 
@@ -131,6 +132,7 @@ class Person:
             raise AttributeError("Place and person are not in the same\
                                  cell")
         self.places.append((place, person_group))
+        self.place_types.append(place.place_type)
 
     def remove_place(self, place):
         """Method to remove person for each associated place, to be
@@ -148,3 +150,4 @@ class Person:
         else:
             ind = place_list.index(place)
             self.places.pop(ind)
+            self.place_types.remove(place.place_type)

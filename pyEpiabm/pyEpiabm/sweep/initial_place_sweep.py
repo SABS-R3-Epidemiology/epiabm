@@ -58,6 +58,13 @@ class InitialisePlaceSweep(AbstractSweep):
                                                   person_list=person_list,
                                                   mean_capacity=mean_size,
                                                   max_capacity=max_size)
+                        # Remove added people from list of possible addees.
+                        # Only if there were sufficient people to add.
+                        if i in place.person_groups.keys():
+                            person_list = [person for person in person_list
+                                           if person not in
+                                           place.person_groups[i]]
+
         # Add temporary population via the update sweep
         add_temporary_population = UpdatePlaceSweep()
         add_temporary_population.bind_population(self._population)

@@ -53,12 +53,12 @@ class TestInitialisePlaceSweep(unittest.TestCase):
         mock_update.called_with(place)
 
         place.place_type = PlaceType.Workplace
+        mock_update.side_effect = place.add_person(person)
         test_sweep()
         mock_update.called_with(place)
 
         place.place_type = PlaceType.Restaurant
         place.add_person(person, 1)
-        place.remove_person(person)
         test_sweep()
         mock_update.called_with(place)
 

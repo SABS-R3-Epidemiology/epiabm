@@ -59,7 +59,7 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(len(test_place.persons), 0)
         test_place.empty_place([4])
         self.assertEqual(len(test_place.persons), 0)
-        self.assertRaises(ValueError, test_place.get_group_index, self.person)
+        self.assertRaises(KeyError, test_place.get_group_index, self.person)
 
     def test_set_susc(self):
         test_place = pe.Place((1.0, 1.0), pe.property.PlaceType.Hotel,
