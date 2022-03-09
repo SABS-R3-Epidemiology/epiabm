@@ -145,7 +145,7 @@ class HostProgressionSweep(AbstractSweep):
             transition_time_icdf_object =\
                 self.transition_time_matrix.loc[row_index, column_index]
             # Checks for susceptible to exposed case
-            #  where transition time is zero
+            # where transition time is zero
             try:
                 transition_time =\
                     transition_time_icdf_object.icdf_choose_noexp()
