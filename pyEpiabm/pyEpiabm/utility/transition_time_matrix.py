@@ -13,6 +13,7 @@ class TransitionTimeMatrix:
         """Initialises the transition time matrix the same way as for the
         state transition matrix, ie with the right labels for the rows and
         the columns and zeros as elements.
+
         """
         self.initial_matrix =\
             StateTransitionMatrix().create_empty_state_transition_matrix()
