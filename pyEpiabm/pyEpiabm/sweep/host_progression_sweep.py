@@ -51,8 +51,7 @@ class HostProgressionSweep(AbstractSweep):
         """
         # This is left as a random integer for now but will be made more
         # complex later.
-        new_time = random.randint(1, 10)
-        new_time = float(new_time)
+        new_time = float(random.randint(1, 10))
         person.time_of_status_change = time + new_time
 
     def _set_latent_time(self, person: Person, time: float):
