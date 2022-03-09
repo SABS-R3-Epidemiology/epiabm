@@ -27,7 +27,7 @@ class PersonalInfection:
             Infectiousness parameter of person
 
         """
-        return 1.0  # infector.infectiousness
+        return infector.infectiousness
 
     @staticmethod
     def person_susc(infector, infectee, time: float):

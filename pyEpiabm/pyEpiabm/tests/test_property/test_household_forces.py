@@ -18,6 +18,7 @@ class TestHouseholdInfection(unittest.TestCase):
         cls.cell = pe.Cell()
         cls.microcell = pe.Microcell(cls.cell)
         cls.infector = pe.Person(cls.microcell)
+        cls.infector.infectiousness = 1.0
         cls.infectee = pe.Person(cls.microcell)
         cls.time = 1
 
