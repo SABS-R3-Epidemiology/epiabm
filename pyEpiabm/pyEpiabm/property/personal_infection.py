@@ -1,0 +1,54 @@
+#
+# Calculate infectiousness and susceptibility for an individual
+#
+
+
+class PersonalInfection:
+    """Class to calculate the infectiousness and susceptibility
+    parameters an individual.
+
+    """
+    @staticmethod
+    def person_inf(infector, timestep: int):
+        """Calculate the infectiousness of a person. Does not
+        include interventions such as isolation, or whether individual
+        is a carehome resident.
+
+        Parameters
+        ----------
+        infector : Person
+            Infector
+        timestep : int
+            Current simulation timestep
+
+        Returns
+        -------
+        float
+            Infectiousness parameter of person
+
+        """
+        return infector.infectiousness
+
+    @staticmethod
+    def person_susc(infector, infectee, timestep: int):
+        """Calculate the susceptibility of one person to another. Does not
+        include interventions such as isolation, or whether individual is a
+        carehome resident. Also does not yet include age variation, and uses
+        default value of unity.
+
+        Parameters
+        ----------
+        infector : Person
+            Infector
+        infectee : Person
+            Infectee
+        timestep : int
+            Current simulation timestep
+
+        Returns
+        -------
+        float
+            Susceptibility parameter of household
+
+        """
+        return 1.0
