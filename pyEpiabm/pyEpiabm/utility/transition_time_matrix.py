@@ -24,7 +24,7 @@ class TransitionTimeMatrix:
             StateTransitionMatrix().create_empty_state_transition_matrix()
 
     def create_transition_time_matrix(self):
-        """Fills the transition time matrix with :class: `InverseCdf` objects,
+        """Fills the transition time matrix with :class:`InverseCdf` objects,
         where the distributions of times of transition are defined. For
         example, the element ij in the matrix is the :class: `InverseCdf`
         object for defining the transition time of someone with current
