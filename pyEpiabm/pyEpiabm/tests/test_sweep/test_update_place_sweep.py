@@ -1,9 +1,11 @@
 import unittest
 from unittest import mock
 
-import pyEpiabm as pe
 from pyEpiabm.property.infection_status import InfectionStatus
 from pyEpiabm.property.place_type import PlaceType
+from pyEpiabm.core.population import Population
+from pyEpiabm.core.parameters import Parameters
+from pyEpiabm.sweep.update_place_sweep import UpdatePlaceSweep
 
 
 class TestUpdatePlaceSweep(unittest.TestCase):
@@ -14,7 +16,7 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         """Initialises a population with one infected person. Sets up a
         single household containing this person.
         """
-        self.pop = pe.Population()
+        self.pop = Population()
         self.pop.add_cells(1)
         self.cell = self.pop.cells[0]
         self.pop.cells[0].add_microcells(1)
@@ -24,7 +26,7 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         self.person.update_status(InfectionStatus.InfectMild)
         self.microcell.add_place(1, (1, 1), PlaceType.Hotel)
         self.place = self.cell.places[0]
-        pe.Parameters.instance().time_steps_per_day = 1
+        Parameters.instance().time_steps_per_day = 1
         self.time = 1
 
     def test_bind(self):
@@ -32,18 +34,19 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         the given population.
         """
         test_pop = self.pop
-        test_sweep = pe.sweep.UpdatePlaceSweep()
+        test_sweep = UpdatePlaceSweep()
         test_sweep.bind_population(test_pop)
         self.assertEqual(test_sweep._population.cells[0].
-                         places[0].place_type, pe.property.PlaceType.Hotel)
+                         places[0].place_type, PlaceType.Hotel)
 
-    def test_update_place(self):
+    @mock.patch('logging.warning')
+    def test_update_place(self, log_mock):
         """Test explicitly the update place function.
         """
         test_pop = self.pop
         place = test_pop.cells[0].places[0]
         person = test_pop.cells[0].persons[0]
-        test_sweep = pe.sweep.UpdatePlaceSweep()
+        test_sweep = UpdatePlaceSweep()
         test_sweep.bind_population(test_pop)
         test_sweep.update_place_group(place)
         self.assertTrue(place.persons)
@@ -54,6 +57,8 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         self.assertDictEqual(place.person_groups,
                              {0: [], 1: [person]})
         self.place.empty_place()
+        test_sweep.update_place_group(place, person_list=[])
+        log_mock.called
 
     @mock.patch("pyEpiabm.sweep.UpdatePlaceSweep.update_place_group")
     def test__call__(self, mock_update):
@@ -65,7 +70,7 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         place = test_pop.cells[0].places[0]
         person = test_pop.cells[0].persons[0]
         mock_update.return_value = None
-        test_sweep = pe.sweep.UpdatePlaceSweep()
+        test_sweep = UpdatePlaceSweep()
         test_sweep.bind_population(test_pop)
         self.assertFalse(place.persons)
         test_sweep(1)

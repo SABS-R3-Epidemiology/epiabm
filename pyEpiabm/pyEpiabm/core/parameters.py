@@ -4,6 +4,8 @@
 
 import numpy as np
 
+from pyEpiabm.utility.state_transition_matrix import StateTransitionMatrix
+
 
 class Parameters:
     """Class for global parameters.
@@ -160,10 +162,24 @@ class Parameters:
             self.asympt_infectiousness = 1
             self.latent_to_sympt_delay = 0.5
 
-            # Set Infection Parameters
-            self.household_transmission = 0.1  # Household Attack Rate
-            self.false_positive_rate = 0
+            # PLACE PARAMS
+            # Copied striaght from Covidsim so for four placetypes:
+            # Three school systems (primary, secondary, sixth form)
+            # and a workplace option, hence array size four.
+            # any single values apply to each place type
+            self.minimum_age = [3, 11, 16, 21]
+            self.nearest_places = [3, 3, 6, 0]
+            self.kernel_shape = 3
+            self.kernel_scale = 4000
+            self.mean_size = [230, 1010,  3300,  14.28]
+            self.max_size = [0, 0, 0, 5927]
+            self.size_power = [0, 0, 0, 1.34]
+            self.size_offset = [0, 0, 0, 5.35]
 
+            # Build infection state transition matrix and set as parameter
+            matrix_object = StateTransitionMatrix()
+            self.state_transition_matrix =\
+                matrix_object.create_state_transition_matrix()
             pass
 
     _instance = None  # Singleton instance

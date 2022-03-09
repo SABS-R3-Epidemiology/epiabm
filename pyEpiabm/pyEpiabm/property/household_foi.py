@@ -2,7 +2,7 @@
 # Calculate household force of infection based on Covidsim code
 #
 
-from pyEpiabm.core import Parameters
+import pyEpiabm.core
 
 from .personal_foi import PersonalInfection
 
@@ -77,10 +77,12 @@ class HouseholdInfection:
 
         """
         seasonality = 1.0  # Not yet implemeted
-        false_pos = 1 / (1 - Parameters.instance().false_positive_rate)
+        false_pos = 1 / (1 - pyEpiabm.core.Parameters.instance().
+                         false_positive_rate)
         infectiousness = (HouseholdInfection.household_inf(infector, time)
                           * seasonality * false_pos
-                          * Parameters.instance().household_transmission)
+                          * pyEpiabm.core.Parameters.instance().
+                          household_transmission)
 
         susceptibility = HouseholdInfection.household_susc(infector, infectee,
                                                            time)
