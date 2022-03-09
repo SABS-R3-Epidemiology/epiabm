@@ -12,13 +12,13 @@ Overview:
 
 - :class:`DistanceFunctions`
 
-- :class: `InverseCdf`
+- :class:`InverseCdf`
 
 - :class:`RandomMethods`
 
-- :class: `SpatialKernel`
+- :class:`SpatialKernel`
 
-- :class: `StateTransitionMatrix`
+- :class:`StateTransitionMatrix`
 
 .. autoclass:: DistanceFunctions
     :members:
