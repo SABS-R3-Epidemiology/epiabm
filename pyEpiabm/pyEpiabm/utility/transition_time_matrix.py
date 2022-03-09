@@ -16,7 +16,7 @@ class TransitionTimeMatrix:
     """
     def __init__(self):
         """Initialises the transition time matrix the same way as for the
-        :class: `StateTransitionMatrix`, i.e. with the right labels for
+        :class:`StateTransitionMatrix`, i.e. with the right labels for
         the rows and the columns and zeros as elements.
 
         """
