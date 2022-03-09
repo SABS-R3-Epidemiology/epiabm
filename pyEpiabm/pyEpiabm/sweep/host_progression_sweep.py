@@ -118,7 +118,7 @@ class HostProgressionSweep(AbstractSweep):
         Parameters
         ----------
         Person : Person
-            Instance of person class with infection status attributes
+            Instance of Person class with :class:`InfectionStatus` attributes
         time : float
             Current simulation time
 
