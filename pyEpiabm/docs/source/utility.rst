@@ -23,7 +23,7 @@ Overview:
 .. autoclass:: DistanceFunctions
     :members:
 
-.. autoclass:: InverseCDF
+.. autoclass:: InverseCdf
     :members:
 
 .. autoclass:: RandomMethods
