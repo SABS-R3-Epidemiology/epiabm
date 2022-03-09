@@ -4,6 +4,8 @@
 
 from pyEpiabm.core import Parameters
 
+from .personal_infection import PersonalInfection
+
 
 class HouseholdInfection:
     """Class to calculate the infectiousness and susceptibility
@@ -29,7 +31,7 @@ class HouseholdInfection:
             Infectiousness parameter of household
 
         """
-        return 1.0  # Person.infectiousness
+        return PersonalInfection.person_inf(infector)
 
     @staticmethod
     def household_susc(infector, infectee, timestep: int):
@@ -52,8 +54,7 @@ class HouseholdInfection:
             Susceptibility parameter of household
 
         """
-        # personal_susc(infector: Person, infectee: Person, timestep: int)
-        return 1.0
+        return PersonalInfection.person_calc(infector, infectee)
 
     @staticmethod
     def household_foi(infector, infectee, timestep: int):
