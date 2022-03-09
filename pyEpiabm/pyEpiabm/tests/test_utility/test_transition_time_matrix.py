@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 import pyEpiabm as pe
-from pyEpiabm.property.infection_status import InfectionStatus
+from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import TransitionTimeMatrix
 from pandas.testing import assert_frame_equal
 
