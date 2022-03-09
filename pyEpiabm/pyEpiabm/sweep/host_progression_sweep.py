@@ -139,6 +139,36 @@ class HostProgressionSweep(AbstractSweep):
         next_infection_status = InfectionStatus(next_infection_status_number)
         person.next_infection_status = next_infection_status
 
+    def infectiousness_progression():
+        """Defines an array to scale a person's infectiousness depending on
+        time since start of infection.
+        """
+        infectious_profile = pe.Parameters.instance().infectiousness_prof
+        inf_prof_res = pe.Parameters.instance().infprof_res
+        max_inf_steps = pe.Parameters.instance().max_infectious_steps
+        time_steps_per_day = pe.Parameters.instance().time_steps_per_day
+        infectious_period = pe.Parameters.instance().infectious_period
+        k = int(np.ceil(infectious_period * time_steps_per_day))
+        assert(k < max_inf_steps)
+        infectious_profile[inf_prof_res] = 0
+        infectiousness_prog = np.zeros(max_inf_steps)
+        s = 0
+        for i in range(k):
+            t = ((i / time_steps_per_day) / infectious_period) * inf_prof_res
+            j = int(np.floor(t))
+            t = t - j
+            if j < inf_prof_res:
+                infectiousness_prog[i] = (infectious_profile[j] * (1 - t) +
+                                          infectious_profile[j + 1] * t)
+                s = s + infectiousness_prog[i]
+            else:
+                infectiousness_prog[i] = infectious_profile[inf_prof_res]
+                s = s + infectiousness_prog[i]
+        s = s / k
+        for i in range(k+1):
+            infectiousness_prog[i] = infectiousness_prog[i] / s
+        return infectiousness_prog
+
     def __call__(self, time: float):
         """Sweeps through all people in the population, updates
         their infection status if it is time and assigns them their
