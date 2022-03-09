@@ -8,9 +8,7 @@ import numpy as np
 import pyEpiabm as pe
 from pyEpiabm.core import Person
 from pyEpiabm.property import InfectionStatus
-
-from pyEpiabm.utility import StateTransitionMatrix
-from pyEpiabm.utility import TransitionTimeMatrix
+from pyEpiabm.utility import StateTransitionMatrix, TransitionTimeMatrix
 
 from .abstract_sweep import AbstractSweep
 
