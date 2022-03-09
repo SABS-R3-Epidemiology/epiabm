@@ -22,7 +22,7 @@ class HostProgressionSweep(AbstractSweep):
         """Initialise parameters to be used in class methods. State
         transition matrix is set where each row of the matrix corresponds
         to a current infection status of a person. The columns of that
-        row then indicate the transition probabilities for the remaining
+        row then indicate the transition probabilities to the remaining
         infection statuses. Number of infection states is set by
         taking the size of the InfectionStatus enum. Transition time matrix
         is also initialised and associated parameters are called from the
