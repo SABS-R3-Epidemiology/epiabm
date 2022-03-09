@@ -33,6 +33,11 @@ class InitialInfectedSweep(AbstractSweep):
             raise ValueError('Initial number of infected people needs to be \
                                             less than the total population')
 
+        start_time = sim_params["simulation_start_time"]
+        if start_time < 0:
+            raise ValueError('Simulation start time needs to be greater or\
+                              equal to 0')
+
         # Checks whether there are enough susceptible people to infect.
         status = InfectionStatus.Susceptible
         num_susceptible = 0
@@ -53,4 +58,4 @@ class InitialInfectedSweep(AbstractSweep):
             person.update_status(InfectionStatus.InfectMild)
             person.next_infection_status = InfectionStatus.Recovered
             person.update_time_to_status_change()
-            HostProgressionSweep.set_infectiousness(person)
+            HostProgressionSweep.set_infectiousness(person, start_time)

@@ -55,10 +55,12 @@ class HostProgressionSweep(AbstractSweep):
                               self.model_time_step)
 
     @staticmethod
-    def set_infectiousness(person: Person):
+    def set_infectiousness(person: Person, time: float):
         """Assigns the infectiousness of a person for when they go from
         the exposed infection state to the next state, either InfectAsympt,
-        InfectMild or InfectGP.
+        InfectMild or InfectGP. Also assigns the infection start time and
+        stores it in the person's attribute.
+
         Called right after an exposed person has been given its
         new infection status in the call method below.
         This static method is non private as it is also used by the initial
@@ -68,11 +70,15 @@ class HostProgressionSweep(AbstractSweep):
         ----------
         Person : Person
             Instance of person class with infection status attributes
+        time : float
+            Current simulation time
 
         Returns
         -------
         float
             Infectiousness of a person
+        float
+            Infection start time of a person
 
         """
         init_infectiousness = np.random.gamma(1, 1)
@@ -84,6 +90,7 @@ class HostProgressionSweep(AbstractSweep):
             infectiousness = init_infectiousness *\
                              pe.Parameters.instance().sympt_infectiousness
         person.infectiousness = infectiousness
+        person.infection_start_time = time
 
     def _update_next_infection_status(self, person: Person):
         """Assigns next infection status based on current infection status
@@ -218,6 +225,6 @@ class HostProgressionSweep(AbstractSweep):
                             [InfectionStatus.InfectASympt,
                              InfectionStatus.InfectMild,
                              InfectionStatus.InfectGP]:
-                        self.set_infectiousness(person)
+                        self.set_infectiousness(person, time)
                     self._update_next_infection_status(person)
                     self._update_time_status_change(person, time)

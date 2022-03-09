@@ -48,17 +48,17 @@ class TestHostProgressionSweep(unittest.TestCase):
         """
         # Test with person1 as InfectASympt infection status
         self.person1.update_status(InfectionStatus.InfectASympt)
-        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1)
+        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 0)
         self.assertIsInstance(self.person1.infectiousness, float)
         self.assertTrue(0 <= self.person1.infectiousness)
         # Test with person1 as InfectMild infection status
         self.person1.update_status(InfectionStatus.InfectMild)
-        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1)
+        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 0)
         self.assertIsInstance(self.person1.infectiousness, float)
         self.assertTrue(0 <= self.person1.infectiousness)
         # Test with person1 as InfectGP
         self.person1.update_status(InfectionStatus.InfectGP)
-        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1)
+        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 0)
         self.assertIsInstance(self.person1.infectiousness, float)
         self.assertTrue(0 <= self.person1.infectiousness)
 
