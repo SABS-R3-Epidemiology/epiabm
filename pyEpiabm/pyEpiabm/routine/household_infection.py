@@ -11,15 +11,15 @@ class HouseholdInfection:
 
     """
     @staticmethod
-    def household_inf(infector: Person, timestep: int):
+    def household_inf(infector: Person, time: float):
         """Calculate the infectiousness of a household.
 
         Parameters
         ----------
         infector : Person
             Infector
-        timestep : int
-            Current simulation timestep
+        time : float
+            Current simulation time
 
         Returns
         -------
@@ -30,7 +30,7 @@ class HouseholdInfection:
         return 0.1
 
     @staticmethod
-    def household_susc(infector: Person, infectee: Person, timestep: int):
+    def household_susc(infector: Person, infectee: Person, time: float):
         """Calculate the susceptibility of a household.
 
         Parameters
@@ -39,8 +39,8 @@ class HouseholdInfection:
             Infector
         infectee : Person
             Infectee
-        timestep : int
-            Current simulation timestep
+        time : float
+            Current simulation time
 
         Returns
         -------
@@ -51,7 +51,7 @@ class HouseholdInfection:
         return 0.1
 
     @staticmethod
-    def household_foi(infector: Person, infectee: Person, timestep: int):
+    def household_foi(infector: Person, infectee: Person, time: float):
         """Calculate the force of infection parameter of a household,
         for a particular infector and infectee.
 
@@ -61,8 +61,8 @@ class HouseholdInfection:
             Infector
         infectee : Person
             Infectee
-        timestep : int
-            Current simulation timestep
+        time : float
+            Current simulation time
 
         Returns
         -------
@@ -70,7 +70,7 @@ class HouseholdInfection:
             Force of infection parameter of household
 
         """
-        infectiousness = HouseholdInfection.household_inf(infector, timestep)
+        infectiousness = HouseholdInfection.household_inf(infector, time)
         susceptibility = HouseholdInfection.household_susc(infector, infectee,
-                                                           timestep)
+                                                           time)
         return (infectiousness * susceptibility)

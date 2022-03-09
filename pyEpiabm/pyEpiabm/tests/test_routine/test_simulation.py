@@ -21,7 +21,7 @@ class TestSimulation(TestMockedLogs):
         cls.test_population = cls.pop_factory.make_pop(cls.pop_params)
         pe.Parameters.instance().time_steps_per_day = 1
         cls.sim_params = {"simulation_start_time": 0,
-                          "simulation_end_time": 2,
+                          "simulation_end_time": 1,
                           "initial_infected_number": 0}
 
         cls.mock_output_dir = "pyEpiabm/pyEpiabm/tests/test_output/mock"
@@ -97,7 +97,7 @@ class TestSimulation(TestMockedLogs):
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
 
             time_sweep = self.sim_params["simulation_start_time"] + 1
-            time_write = self.sim_params["simulation_end_time"] - 1
+            time_write = self.sim_params["simulation_end_time"]
             test_sim = pe.routine.Simulation()
             test_sim.configure(self.test_population, self.initial_sweeps,
                                self.sweeps, self.sim_params, self.file_params)
