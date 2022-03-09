@@ -49,6 +49,15 @@ class TestMicrocell(unittest.TestCase):
             pe.property.InfectionStatus.Susceptible,
             pe.property.InfectionStatus.Recovered)
 
+    def test_set_location(self):
+        local_cell = pe.Cell(loc=(-2, 3.2))
+        microcell = pe.Microcell(local_cell)
+        self.assertEqual(microcell.location[0], -2)
+        self.assertEqual(microcell.location[1], 3.2)
+        self.assertRaises(ValueError, microcell.set_location, (1, 1, 1))
+        self.assertRaises(ValueError, microcell.set_location, (1, (8, 6)))
+        self.assertRaises(ValueError, microcell.set_location, ('1', 1))
+
 
 if __name__ == '__main__':
     unittest.main()
