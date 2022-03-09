@@ -30,8 +30,6 @@ class HouseholdSweep(AbstractSweep):
             Simulation time
 
         """
-        timestep = int(time * Parameters.instance().time_steps_per_day)
-
         # Double loop over the whole population, checking infectiousness
         # status, and whether they are absent from their household.
         for cell in self._population.cells:
@@ -51,7 +49,7 @@ class HouseholdSweep(AbstractSweep):
                     # Calculate "force of infection" parameter which will
                     # determine the likelihood of an infection event.
                     force_of_infection = HouseholdInfection.household_foi(
-                        infector, infectee, timestep)
+                        infector, infectee, time)
 
                     # Compare a uniform random number to the force of infection
                     # to see whether an infection event occurs in this timestep

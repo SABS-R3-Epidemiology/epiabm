@@ -9,7 +9,7 @@ import typing
 import numpy as np
 from tqdm import tqdm
 
-from pyEpiabm.core import Population
+from pyEpiabm.core import Parameters, Population
 from pyEpiabm.output import _CsvDictWriter
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import AbstractSweep
@@ -112,23 +112,28 @@ class Simulation:
         as an argument for their call method.
 
         """
+        # Define time step between sweeps
+        ts = 1 / Parameters.instance().time_steps_per_day
+
         # Initialise on the time step before starting.
         for sweep in self.initial_sweeps:
             sweep(self.sim_params)
 
-        logging.info("Initial Sweeps Completed")
+        logging.info("Initial Sweeps Completed at time "
+                     + f"{self.sim_params['simulation_start_time']} days")
 
         # First entry of the data file is the initial state
         self.write_to_file(self.sim_params["simulation_start_time"])
 
-        for t in tqdm(range(self.sim_params["simulation_start_time"] + 1,
-                            self.sim_params["simulation_end_time"])):
+        for t in tqdm(np.arange(self.sim_params["simulation_start_time"] + ts,
+                                self.sim_params["simulation_end_time"] + ts,
+                                ts)):
             for sweep in self.sweeps:
                 sweep(t)
             self.write_to_file(t)
-            logging.debug(f'Iteration {t} completed')
+            logging.debug(f'Iteration at time {t} days completed')
 
-        logging.info(f"Final time {t} reached")
+        logging.info(f"Final time {t} days reached")
 
     def write_to_file(self, time):
         """Records the count number of a given list of infection statuses

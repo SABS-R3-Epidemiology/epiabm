@@ -22,8 +22,8 @@ class HouseholdInfection:
         ----------
         infector : Person
             Infector
-        timestep : int
-            Current simulation timestep
+        time : float
+            Current simulation time
 
         Returns
         -------
@@ -45,8 +45,8 @@ class HouseholdInfection:
             Infector
         infectee : Person
             Infectee
-        timestep : int
-            Current simulation timestep
+        time : float
+            Current simulation time
 
         Returns
         -------
@@ -57,7 +57,7 @@ class HouseholdInfection:
         return PersonalInfection.person_calc(infector, infectee)
 
     @staticmethod
-    def household_foi(infector, infectee, timestep: int):
+    def household_foi(infector, infectee, time: int):
         """Calculate the force of infection parameter of a household,
         for a particular infector and infectee.
 
@@ -67,8 +67,8 @@ class HouseholdInfection:
             Infector
         infectee : Person
             Infectee
-        timestep : int
-            Current simulation timestep
+        time : float
+            Current simulation time
 
         Returns
         -------
@@ -78,10 +78,10 @@ class HouseholdInfection:
         """
         seasonality = 1.0  # Not yet implemeted
         false_pos = 1 / (1 - Parameters.instance().false_positive_rate)
-        infectiousness = (HouseholdInfection.household_inf(infector, timestep)
+        infectiousness = (HouseholdInfection.household_inf(infector, time)
                           * seasonality * false_pos
                           * Parameters.instance().household_transmission)
 
         susceptibility = HouseholdInfection.household_susc(infector, infectee,
-                                                           timestep)
+                                                           time)
         return (infectiousness * susceptibility)

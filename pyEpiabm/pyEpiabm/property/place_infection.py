@@ -12,7 +12,7 @@ class PlaceInfection:
 
     @staticmethod
     def place_susc(place, infector, infectee,
-                   timestep: int):
+                   time: float):
         """Calculate the susceptibility of a place.
 
         Parameters
@@ -23,8 +23,8 @@ class PlaceInfection:
             Infectee
         place : Place
             Place
-        timestep : int
-            Current simulation timestep
+        time : float
+            Current simulation time
 
         Returns
         -------
@@ -35,7 +35,7 @@ class PlaceInfection:
         return 0.2
 
     @staticmethod
-    def place_inf(place, timestep: int):
+    def place_inf(place, time: float):
         """Calculate the infectiousness of a place.
         Not dependent on the people in it.
 
@@ -43,8 +43,8 @@ class PlaceInfection:
         ----------
         place : Place
             Place
-        timestep : int
-            Current simulation timestep
+        time : float
+            Current simulation time
 
         Returns
         -------
@@ -57,7 +57,7 @@ class PlaceInfection:
 
     @staticmethod
     def place_foi(place, infector, infectee,
-                  timestep: int):
+                  time: float):
         """Calculate the force of infection of a place, for a particular
         infector and infectee.
 
@@ -69,8 +69,8 @@ class PlaceInfection:
             Infectee
         place : Place
             Place
-        timestep : int
-            Current simulation timestep
+        time : float
+            Current simulation time
 
         Returns
         -------
@@ -78,7 +78,7 @@ class PlaceInfection:
             Force of infection parameter of place
 
         """
-        infectiousness = PlaceInfection.place_inf(place, timestep)
+        infectiousness = PlaceInfection.place_inf(place, time)
         susceptibility = PlaceInfection.place_susc(place, infector, infectee,
-                                                   timestep)
+                                                   time)
         return (infectiousness * susceptibility)

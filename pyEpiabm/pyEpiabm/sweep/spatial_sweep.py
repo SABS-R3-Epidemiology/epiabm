@@ -41,8 +41,6 @@ class SpatialSweep(AbstractSweep):
             Current simulation time
 
         """
-        timestep = int(time * Parameters.instance().time_steps_per_day)
-
         # As this tracks intercell infections need to check number of
         # cells is more than one (edge case but worth having)
         if len(self._population.cells) == 1:
@@ -70,7 +68,7 @@ class SpatialSweep(AbstractSweep):
                 continue
             # If there are any infectors calculate number of infection events
             # given out in total by the cell
-            ave_num_of_infections = SpatialInfection.cell_inf(cell, timestep)
+            ave_num_of_infections = SpatialInfection.cell_inf(cell, time)
             number_to_infect = np.random.poisson(ave_num_of_infections)
 
             # Sample at random from the cell to find an infector. Have
@@ -89,7 +87,7 @@ class SpatialSweep(AbstractSweep):
                                                     number_to_infect)
 
             for infectee in infectee_list:
-                self.do_infection_event(infector, infectee, timestep)
+                self.do_infection_event(infector, infectee, time)
 
     def find_infectees(self, infector_cell: Cell,
                        possible_infectee_cells: typing.List[Cell],
@@ -218,7 +216,7 @@ class SpatialSweep(AbstractSweep):
         return infectee_list
 
     def do_infection_event(self, infector: Person, infectee: Person,
-                           timestep: float):
+                           time: float):
         """Helper function which takes an infector and infectee,
         in different cells and tests whether contact between
         them will lead to an infection event.
@@ -229,8 +227,8 @@ class SpatialSweep(AbstractSweep):
             Infector instance of Person
         infectee : Person
             Infectee instance of Person
-        timestep : float
-            Current simulation timestep
+        time : float
+            Current simulation time
 
         Returns
         -------
@@ -245,7 +243,7 @@ class SpatialSweep(AbstractSweep):
         # involved in the infection event
         force_of_infection = SpatialInfection.\
             space_foi(infector.microcell.cell, infectee.microcell.cell,
-                      infector, infectee, timestep)
+                      infector, infectee, time)
 
         # Compare a uniform random number to the force of
         # infection to see whether an infection event
