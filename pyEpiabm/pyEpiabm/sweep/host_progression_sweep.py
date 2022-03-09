@@ -132,7 +132,7 @@ class HostProgressionSweep(AbstractSweep):
         """
         # Defines the transition time. If the person will not transition again,
         # the transition time is set to infinity. Else, the transition time is
-        # defined using the TransitionTimeMatrix class, with a method choose
+        # defined using the TransitionTimeMatrix class, with the method `choose()`
         # from the InverseCdf class.
         if (person.infection_status == InfectionStatus.Recovered or
                 person.infection_status == InfectionStatus.Dead):
