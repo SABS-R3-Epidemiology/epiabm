@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 import pyEpiabm as pe
-from pyEpiabm.property.infection_status import InfectionStatus
+from pyEpiabm.property import InfectionStatus
 
 
 class TestHostProgressionSweep(unittest.TestCase):

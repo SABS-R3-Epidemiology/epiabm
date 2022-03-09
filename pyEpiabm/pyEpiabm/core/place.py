@@ -4,7 +4,7 @@
 
 import typing
 
-from pyEpiabm.property import PlaceType
+from ..property.place_type import PlaceType
 
 from .person import Person
 

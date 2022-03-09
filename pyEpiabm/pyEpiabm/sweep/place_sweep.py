@@ -6,7 +6,7 @@ import random
 import numpy as np
 
 from pyEpiabm.core import Parameters
-from pyEpiabm.routine import PlaceInfection
+from pyEpiabm.property import PlaceInfection
 
 from .abstract_sweep import AbstractSweep
 

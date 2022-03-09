@@ -2,7 +2,7 @@
 # Calculate household force of infection based on Covidsim code
 #
 
-from pyEpiabm.core import Parameters, Person
+from pyEpiabm.core import Parameters
 
 
 class HouseholdInfection:
@@ -11,7 +11,7 @@ class HouseholdInfection:
 
     """
     @staticmethod
-    def household_inf(infector: Person, timestep: int):
+    def household_inf(infector, timestep: int):
         """Calculate the infectiousness of a person in a given
         household. Does not include interventions such as isolation,
         or whether individual is a carehome resident.
@@ -32,7 +32,7 @@ class HouseholdInfection:
         return 1.0  # Person.infectiousness
 
     @staticmethod
-    def household_susc(infector: Person, infectee: Person, timestep: int):
+    def household_susc(infector, infectee, timestep: int):
         """Calculate the susceptibility of one person to another in a given
         household. Does not include interventions such as isolation,
         or whether individual is a carehome resident.
@@ -56,7 +56,7 @@ class HouseholdInfection:
         return 1.0
 
     @staticmethod
-    def household_foi(infector: Person, infectee: Person, timestep: int):
+    def household_foi(infector, infectee, timestep: int):
         """Calculate the force of infection parameter of a household,
         for a particular infector and infectee.
 

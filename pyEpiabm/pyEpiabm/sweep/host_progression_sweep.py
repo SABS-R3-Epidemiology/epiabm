@@ -8,7 +8,7 @@ import numpy as np
 import pyEpiabm as pe
 from pyEpiabm.core import Person
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.utility import InverseCdf
+from pyEpiabm.utility import InverseCdf, StateTransitionMatrix
 
 from .abstract_sweep import AbstractSweep
 
@@ -28,8 +28,13 @@ class HostProgressionSweep(AbstractSweep):
         taking the size of the InfectionStatus enum.
 
         """
-        self.state_transition_matrix = \
-            pe.Parameters.instance().state_transition_matrix
+        # Build infection state transition matrix and set as parameter
+        matrix_object = StateTransitionMatrix()
+        self.state_transition_matrix =\
+            matrix_object.create_state_transition_matrix()
+        pe.Parameters.instance().state_transition_matrix =\
+            self.state_transition_matrix
+
         self.number_of_states = len(InfectionStatus)
         assert self.state_transition_matrix.shape ==\
             (self.number_of_states, self.number_of_states),\

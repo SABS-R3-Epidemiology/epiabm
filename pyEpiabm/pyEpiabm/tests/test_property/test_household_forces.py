@@ -1,7 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.routine import HouseholdInfection
+from pyEpiabm.property import HouseholdInfection
 
 
 class TestHouseholdInfection(unittest.TestCase):

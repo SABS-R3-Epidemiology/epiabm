@@ -1,7 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.routine import PlaceInfection
+from pyEpiabm.property import PlaceInfection
 
 
 class TestPlaceInfection(unittest.TestCase):

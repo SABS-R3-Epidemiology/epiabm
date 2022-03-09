@@ -4,8 +4,6 @@
 
 import numpy as np
 
-from pyEpiabm.utility.state_transition_matrix import StateTransitionMatrix
-
 
 class Parameters:
     """Class for global parameters.
@@ -166,10 +164,6 @@ class Parameters:
             self.household_transmission = 0.1  # Household Attack Rate
             self.false_positive_rate = 0
 
-            # Build infection state transition matrix and set as parameter
-            matrix_object = StateTransitionMatrix()
-            self.state_transition_matrix =\
-                matrix_object.create_state_transition_matrix()
             pass
 
     _instance = None  # Singleton instance

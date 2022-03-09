@@ -5,7 +5,7 @@
 import random
 
 from pyEpiabm.core import Parameters
-from pyEpiabm.routine import HouseholdInfection
+from pyEpiabm.property import HouseholdInfection
 
 from .abstract_sweep import AbstractSweep
 

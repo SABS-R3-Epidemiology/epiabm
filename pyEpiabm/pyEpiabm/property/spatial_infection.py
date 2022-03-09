@@ -2,7 +2,7 @@
 # Calculate spatial force of infection based on Covidsim code
 #
 
-from pyEpiabm.core import Person, Cell, Parameters
+from pyEpiabm.core import Parameters
 
 
 class SpatialInfection:
@@ -11,7 +11,7 @@ class SpatialInfection:
 
     """
     @staticmethod
-    def cell_inf(inf_cell: Cell, timestep: int):
+    def cell_inf(inf_cell, timestep: int):
         """Calculate the infectiousness of one cell
         towards its neighbouring cells.
 
@@ -37,7 +37,7 @@ class SpatialInfection:
         return (average_number_to_infect)
 
     @staticmethod
-    def space_susc(susc_cell: Cell, infectee: Person,
+    def space_susc(susc_cell, infectee,
                    timestep: int):
         """Calculate the susceptibility of one cell
         towards its neighbouring cells.
@@ -60,7 +60,7 @@ class SpatialInfection:
         return 0.2
 
     @staticmethod
-    def space_inf(inf_cell: Cell, infector: Person,
+    def space_inf(inf_cell, infector,
                   timestep: int):
         """Calculate the infectiousness between cells.
         Dependent on the infectious people in it.
@@ -83,8 +83,8 @@ class SpatialInfection:
         return 0.5
 
     @staticmethod
-    def space_foi(inf_cell: Cell, susc_cell: Cell, infector: Person,
-                  infectee: Person, timestep: int):
+    def space_foi(inf_cell, susc_cell, infector,
+                  infectee, timestep: int):
         """Calculate the force of infection between cells, for a particular
         infector and infectee.
 

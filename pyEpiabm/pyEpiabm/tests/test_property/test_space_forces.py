@@ -1,8 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.property import InfectionStatus
-from pyEpiabm.routine import SpatialInfection
+from pyEpiabm.property import InfectionStatus, SpatialInfection
 
 
 class TestSpatialInfection(unittest.TestCase):

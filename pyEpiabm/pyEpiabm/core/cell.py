@@ -5,7 +5,7 @@
 import typing
 from queue import Queue
 
-from pyEpiabm.property import InfectionStatus
+from ..property.infection_status import InfectionStatus
 
 from .microcell import Microcell
 from .person import Person
