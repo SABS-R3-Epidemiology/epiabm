@@ -13,7 +13,7 @@ class HouseholdInfection:
 
     """
     @staticmethod
-    def household_inf(infector, timestep: int):
+    def household_inf(infector, time: float):
         """Calculate the infectiousness of a person in a given
         household. Does not include interventions such as isolation,
         or whether individual is a carehome resident.
@@ -31,10 +31,10 @@ class HouseholdInfection:
             Infectiousness parameter of household
 
         """
-        return PersonalInfection.person_inf(infector)
+        return PersonalInfection.person_inf(infector, time)
 
     @staticmethod
-    def household_susc(infector, infectee, timestep: int):
+    def household_susc(infector, infectee, time: float):
         """Calculate the susceptibility of one person to another in a given
         household. Does not include interventions such as isolation,
         or whether individual is a carehome resident.
@@ -54,10 +54,10 @@ class HouseholdInfection:
             Susceptibility parameter of household
 
         """
-        return PersonalInfection.person_calc(infector, infectee)
+        return PersonalInfection.person_susc(infector, infectee, time)
 
     @staticmethod
-    def household_foi(infector, infectee, time: int):
+    def household_foi(infector, infectee, time: float):
         """Calculate the force of infection parameter of a household,
         for a particular infector and infectee.
 

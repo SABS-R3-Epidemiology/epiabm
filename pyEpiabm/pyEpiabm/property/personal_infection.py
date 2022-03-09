@@ -9,7 +9,7 @@ class PersonalInfection:
 
     """
     @staticmethod
-    def person_inf(infector, timestep: int):
+    def person_inf(infector, time: float):
         """Calculate the infectiousness of a person. Does not
         include interventions such as isolation, or whether individual
         is a carehome resident.
@@ -18,8 +18,8 @@ class PersonalInfection:
         ----------
         infector : Person
             Infector
-        timestep : int
-            Current simulation timestep
+        time: float
+            Current simulation time
 
         Returns
         -------
@@ -27,10 +27,10 @@ class PersonalInfection:
             Infectiousness parameter of person
 
         """
-        return infector.infectiousness
+        return 1.0  # infector.infectiousness
 
     @staticmethod
-    def person_susc(infector, infectee, timestep: int):
+    def person_susc(infector, infectee, time: float):
         """Calculate the susceptibility of one person to another. Does not
         include interventions such as isolation, or whether individual is a
         carehome resident. Also does not yet include age variation, and uses
@@ -42,8 +42,8 @@ class PersonalInfection:
             Infector
         infectee : Person
             Infectee
-        timestep : int
-            Current simulation timestep
+        time : float
+            Current simulation time
 
         Returns
         -------
