@@ -13,7 +13,8 @@ class SpatialInfection:
     @staticmethod
     def cell_inf(inf_cell, time: float):
         """Calculate the infectiousness of one cell
-        towards its neighbouring cells.
+        towards its neighbouring cells. Does not include interventions such
+        as isolation, or whether individual is a carehome resident.
 
         Parameters
         ----------
@@ -34,36 +35,15 @@ class SpatialInfection:
         average_number_to_infect = total_infectors * R_0
         # This gives the expected number of infection events
         # caused by people within this cell.
-        return (average_number_to_infect)
-
-    @staticmethod
-    def space_susc(susc_cell, infectee,
-                   time: float):
-        """Calculate the susceptibility of one cell
-        towards its neighbouring cells.
-
-        Parameters
-        ----------
-        susc_cell : Cell
-            Cell receiving infections
-        infectee : Person
-            Infectee
-        time : float
-            Current simulation time
-
-        Returns
-        -------
-        float
-            Susceptibility parameter of cell
-
-        """
-        return 0.2
+        return average_number_to_infect
 
     @staticmethod
     def space_inf(inf_cell, infector,
                   time: float):
-        """Calculate the infectiousness between cells.
-        Dependent on the infectious people in it.
+        """Calculate the infectiousness between cells, dependent on the
+        infectious people in it. Does not include interventions such as
+        isolation, whether individual is a carehome resident, or age
+        dependance on spatial contact.
 
         Parameters
         ----------
@@ -80,7 +60,31 @@ class SpatialInfection:
             Infectiousness parameter of cell
 
         """
-        return 0.5
+        return infector.infectiousness
+
+    @staticmethod
+    def space_susc(susc_cell, infectee,
+                   time: float):
+        """Calculate the susceptibility of one cell towards its neighbouring cells.
+        Does not include interventions such as isolation, age of individual
+        or whether individual is a carehome resident.
+
+        Parameters
+        ----------
+        susc_cell : Cell
+            Cell receiving infections
+        infectee : Person
+            Infectee
+        time : float
+            Current simulation time
+
+        Returns
+        -------
+        float
+            Susceptibility parameter of cell
+
+        """
+        return 1.0
 
     @staticmethod
     def space_foi(inf_cell, susc_cell, infector,

@@ -180,6 +180,8 @@ class Parameters:
             matrix_object = StateTransitionMatrix()
             self.state_transition_matrix =\
                 matrix_object.create_state_transition_matrix()
+            self.place_transmission = 0.1
+
             pass
 
     _instance = None  # Singleton instance
