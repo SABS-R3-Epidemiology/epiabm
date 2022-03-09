@@ -1,7 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.routine import PlaceInfection
+from pyEpiabm.property import PlaceInfection
 
 
 class TestPlaceInfection(unittest.TestCase):
@@ -23,22 +23,22 @@ class TestPlaceInfection(unittest.TestCase):
                              cls.cell, cls.microcell)
         cls.place.add_person(cls.infector)
         cls.place.add_person(cls.infectee)
-        cls.timestep = 1
+        cls.time = 1.0
 
     def test_place_susc(self):
         result = PlaceInfection.place_susc(self.place, self.infector,
-                                           self.infectee, self.timestep)
+                                           self.infectee, self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
     def test_place_inf(self):
-        result = PlaceInfection.place_inf(self.place, self.timestep)
+        result = PlaceInfection.place_inf(self.place, self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
     def test_place_foi(self):
         result = PlaceInfection.place_foi(self.place, self.infector,
-                                          self.infectee, self.timestep)
+                                          self.infectee, self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 

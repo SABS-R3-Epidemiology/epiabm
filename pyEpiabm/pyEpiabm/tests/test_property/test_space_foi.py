@@ -1,8 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.property import InfectionStatus
-from pyEpiabm.routine import SpatialInfection
+from pyEpiabm.property import InfectionStatus, SpatialInfection
 
 
 class TestSpatialInfection(unittest.TestCase):
@@ -22,31 +21,31 @@ class TestSpatialInfection(unittest.TestCase):
         cls.microcell.add_people(2)
         cls.infector = cls.microcell.persons[0]
         cls.infectee = cls.microcell.persons[1]
-        cls.timestep = 1
+        cls.time = 1.0
         pe.Parameters.instance().basic_reproduction_num = 2.8
 
     def test_space_susc(self):
         result = SpatialInfection.space_susc(self.cell, self.infectee,
-                                             self.timestep)
+                                             self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
     def test_space_inf(self):
         result = SpatialInfection.space_inf(self.cell, self.infector,
-                                            self.timestep)
+                                            self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
     def test_space_foi(self):
         result = SpatialInfection.space_foi(self.cell, self.cell,
                                             self.infector, self.infectee,
-                                            self.timestep)
+                                            self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
     def test_cell_inf(self):
         self.infector.update_status(InfectionStatus.InfectMild)
-        result = SpatialInfection.cell_inf(self.cell, self.timestep)
+        result = SpatialInfection.cell_inf(self.cell, self.time)
         self.assertIsInstance(result, float)
         self.assertTrue(result >= 0)
 

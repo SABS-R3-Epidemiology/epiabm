@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 import pyEpiabm as pe
-from pyEpiabm.property.infection_status import InfectionStatus
+from pyEpiabm.property import InfectionStatus
 
 
 class TestHostProgressionSweep(unittest.TestCase):
@@ -68,18 +68,17 @@ class TestHostProgressionSweep(unittest.TestCase):
         """
         # Test with person1 as InfectASympt infection status
         self.person1.update_status(InfectionStatus.InfectASympt)
-        test_sweep = pe.sweep.HostProgressionSweep()
-        test_sweep._set_infectiousness(self.person1)
+        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1)
         self.assertIsInstance(self.person1.infectiousness, float)
         self.assertTrue(0 <= self.person1.infectiousness)
         # Test with person1 as InfectMild infection status
         self.person1.update_status(InfectionStatus.InfectMild)
-        test_sweep._set_infectiousness(self.person1)
+        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1)
         self.assertIsInstance(self.person1.infectiousness, float)
         self.assertTrue(0 <= self.person1.infectiousness)
         # Test with person1 as InfectGP
         self.person1.update_status(InfectionStatus.InfectGP)
-        test_sweep._set_infectiousness(self.person1)
+        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1)
         self.assertIsInstance(self.person1.infectiousness, float)
         self.assertTrue(0 <= self.person1.infectiousness)
 
