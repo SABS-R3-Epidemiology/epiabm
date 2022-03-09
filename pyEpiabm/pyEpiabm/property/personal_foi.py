@@ -5,7 +5,7 @@
 
 class PersonalInfection:
     """Class to calculate the infectiousness and susceptibility
-    parameters an individual.
+    parameters of a :class:`Person`.
 
     """
     @staticmethod
