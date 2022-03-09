@@ -27,7 +27,7 @@ class InitialisePlaceSweep(AbstractSweep):
         helper.bind_population(self._population)
         for cell in self._population.cells:
             for place in cell.places:
-                if place.place_type.value == 1:  # CAREHOME
+                if place.place_type.value == 2:  # CAREHOME
                     # Initialise the fixed population of workers
                     mean_size = 10  # for example, would actually come in
                     # from a dictionary
