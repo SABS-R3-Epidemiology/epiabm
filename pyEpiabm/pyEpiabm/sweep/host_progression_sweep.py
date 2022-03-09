@@ -27,6 +27,7 @@ class HostProgressionSweep(AbstractSweep):
         taking the size of the InfectionStatus enum. Transition time matrix
         is also initialised and associated parameters are called from the
         parameters class.
+
         """
         self.state_transition_matrix = \
             pe.Parameters.instance().state_transition_matrix
