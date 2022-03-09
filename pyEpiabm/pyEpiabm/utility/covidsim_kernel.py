@@ -9,7 +9,7 @@ class SpatialKernel:
     """
     @staticmethod
     def weighting(distance: float, scale: float = 1, shape: float = 1.0):
-        """Returns the weighting given by the Covidsim distance
+        r"""Returns the weighting given by the Covidsim distance
         weighting.
         The formula is given by
 
@@ -17,7 +17,7 @@ class SpatialKernel:
             \frac{1}{(1+\frac{\text{distance}}{\text{scale}})^\text{shape}}
 
         and is further detailed in the wiki:
-        https://github.com/SABS-R3-Epidemiology/epiabm/wiki
+        https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Comparison-to-Ferguson-Model
 
         Parameters
         ----------
@@ -27,6 +27,7 @@ class SpatialKernel:
             Parameter to scale the kernel function
         shape : float
             Parameter to change the shape of the kernel function
+
         Returns
         -------
         weight : float
@@ -35,4 +36,4 @@ class SpatialKernel:
         """
         assert (scale > 0), "Spatial kernel scale must be positive."
         assert (shape > 0), "Spatial kernel shape must be positive."
-        return 1 / (1+distance / scale) ** shape
+        return 1 / (1 + distance / scale) ** shape
