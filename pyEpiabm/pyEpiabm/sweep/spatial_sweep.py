@@ -211,10 +211,10 @@ class SpatialSweep(AbstractSweep):
             # of the spatial kernel applied to the distance between people
             # to the spatial kernel of the shorted distance between
             # their cells.
-            infection_distance = ((DistanceFunctions.dist(
-                infector.microcell.cell.location, infectee_cell.location)) /
-                Parameters.instance().infection_radius)
-            infection_kernel = SpatialKernel.weighting(infection_distance)
+            infection_distance = (DistanceFunctions.dist(
+                infector.microcell.cell.location, infectee_cell.location))
+            infection_kernel = (SpatialKernel.weighting(infection_distance) /
+                                Parameters.instance().infection_radius)
             if (infection_kernel > random.random()):
                 # Covidsim rejects the infection event if the distance
                 # between infector/infectee is too large.

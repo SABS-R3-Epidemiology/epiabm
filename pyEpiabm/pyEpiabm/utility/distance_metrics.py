@@ -102,3 +102,29 @@ class DistanceFunctions:
             if diff[index] > 0.5*scales[index]:
                 diff[index] = scales[index] - diff[index]
         return np.linalg.norm(diff)
+
+    def minimum_between_cells(cell1, cell2):
+        """Function to find the minimum distance between microcells
+        in two cells. Covidsim uses this to weight the spatial kernel.
+
+        Parameters
+        ----------
+        cell1 : Cell
+            First cell to find the minimum distance between
+
+        cell2 : Cell
+            Second cell to find the minimum distance between
+
+        Returns
+        -------
+        float
+            Minimum distance between the two cells
+        """
+        dist = np.inf
+        for microcell1 in cell1.microcells:
+            for microcell2 in cell2.microcells:
+                microcell_dist = DistanceFunctions.dist(microcell1.location,
+                                                        microcell2.location)
+                if microcell_dist < dist:
+                    dist = microcell_dist
+        return dist
