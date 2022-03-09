@@ -92,7 +92,7 @@ class TestHostProgressionSweep(unittest.TestCase):
 
         matrix = np.zeros([len(InfectionStatus), len(InfectionStatus)])
         # Set ICU recovery infection status column values to 1. This way
-        # everyone who is not recovered or dead wiil have their next
+        # everyone who is not recovered or dead will have their next
         # infection status set as ICURecov
         matrix[:, -3] = 1
         matrix = pd.DataFrame(matrix,
