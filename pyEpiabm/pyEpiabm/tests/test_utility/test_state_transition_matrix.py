@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 from pandas.testing import assert_frame_equal
 
-import pyEpiabm as pe
 from pyEpiabm.property.infection_status import InfectionStatus
 from pyEpiabm.utility import StateTransitionMatrix
 
@@ -37,19 +36,16 @@ class TestStateTransitionMatrix(unittest.TestCase):
 
     def test_update_probability(self):
         # Test method updates probability as expected
-        back_up_matrix = \
-            pe.Parameters.instance().state_transition_matrix.copy()
         matrix_object = StateTransitionMatrix()
         row_status = InfectionStatus.Susceptible
         column_status = InfectionStatus.Exposed
         new_probability = 0.5
+        transition_matrix = matrix_object.create_state_transition_matrix()
         matrix_object.update_probability(row_status,
-                                         column_status, new_probability)
+                                         column_status, new_probability,
+                                         transition_matrix)
         self.assertEqual(0.5,
-                         pe.Parameters.instance().
-                         state_transition_matrix.loc['Susceptible', 'Exposed'])
-
-        pe.Parameters.instance().state_transition_matrix = back_up_matrix
+                         transition_matrix.loc['Susceptible', 'Exposed'])
 
         # Test error for incorrect columns is raised
         class TestInfectionStatus(Enum):
@@ -58,18 +54,21 @@ class TestStateTransitionMatrix(unittest.TestCase):
         with self.assertRaises(ValueError):
             row = TestInfectionStatus.Susceptiblesssss
             column = TestInfectionStatus.Susceptiblesssss
-            matrix_object.update_probability(row, column, 0.5)
+            matrix_object.update_probability(row, column, 0.5,
+                                             transition_matrix)
 
         with self.assertRaises(ValueError):
             row = None
             column = None
-            matrix_object.update_probability(row, column, 0.5)
+            matrix_object.update_probability(row, column, 0.5,
+                                             transition_matrix)
 
         # Test error for incorrect probability is raised
         with self.assertRaises(ValueError):
             row = InfectionStatus.Susceptible
             column = InfectionStatus.Susceptible
-            matrix_object.update_probability(row, column, 10.0)
+            matrix_object.update_probability(row, column, 10.0,
+                                             transition_matrix)
 
 
 if __name__ == '__main__':

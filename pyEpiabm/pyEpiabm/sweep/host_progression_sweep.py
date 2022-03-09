@@ -8,6 +8,7 @@ import numpy as np
 import pyEpiabm as pe
 from pyEpiabm.core import Person
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.utility import StateTransitionMatrix
 from pyEpiabm.utility import TransitionTimeMatrix
 from .abstract_sweep import AbstractSweep
 
@@ -29,8 +30,10 @@ class HostProgressionSweep(AbstractSweep):
         parameters class.
 
         """
-        self.state_transition_matrix = \
-            pe.Parameters.instance().state_transition_matrix
+        # Instantiate state transition matrix
+        matrix_object = StateTransitionMatrix()
+        self.state_transition_matrix =\
+            matrix_object.create_state_transition_matrix()
         self.number_of_states = len(InfectionStatus)
         assert self.state_transition_matrix.shape ==\
             (self.number_of_states, self.number_of_states),\
@@ -39,7 +42,7 @@ class HostProgressionSweep(AbstractSweep):
         # Instantiate transmission time matrix
         time_matrix_object = TransitionTimeMatrix()
         self.transition_time_matrix =\
-            time_matrix_object.fill_transition_time()
+            time_matrix_object.create_transition_time_matrix()
 
         # Instantiate parameters to be used in update transition time
         # method
@@ -90,7 +93,8 @@ class HostProgressionSweep(AbstractSweep):
             Instance of person class with infection status attributes
 
         """
-        if person.infection_status in [InfectionStatus.Recovered, InfectionStatus.Dead]:
+        if person.infection_status in [InfectionStatus.Recovered,
+                                       InfectionStatus.Dead]:
             person.next_infection_status = None
         else:
             row_index = person.infection_status.name
@@ -141,10 +145,11 @@ class HostProgressionSweep(AbstractSweep):
                 transition_time =\
                     transition_time_icdf_object.icdf_choose_noexp()
             except AttributeError as e:
-                   if "object has no attribute 'icdf_choose_noexp'" in str(e):
-                       transition_time = transition_time_icdf_object
-                   else:
-                       raise
+                if "object has no attribute 'icdf_choose_noexp'" in str(e):
+                    transition_time = transition_time_icdf_object
+                else:
+                    print('a')
+                    raise
 
         # Adds delay to transition time for first level symptomatic infection
         # statuses (InfectMild or InfectGP), as is done in CovidSim.
@@ -175,9 +180,10 @@ class HostProgressionSweep(AbstractSweep):
                     continue  # pragma: no cover
                 while person.time_of_status_change <= time:
                     person.update_status(person.next_infection_status)
-                    if person.infection_status in [InfectionStatus.InfectASympt,
-                                                   InfectionStatus.InfectMild,
-                                                   InfectionStatus.InfectGP]:
+                    if person.infection_status in \
+                            [InfectionStatus.InfectASympt,
+                             InfectionStatus.InfectMild,
+                             InfectionStatus.InfectGP]:
                         self._set_infectiousness(person)
                     self._update_next_infection_status(person)
                     self._update_time_status_change(person, time)

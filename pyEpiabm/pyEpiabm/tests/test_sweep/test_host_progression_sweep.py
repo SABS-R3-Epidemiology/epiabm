@@ -73,8 +73,6 @@ class TestHostProgressionSweep(unittest.TestCase):
         """
         test_sweep = pe.sweep.HostProgressionSweep()
 
-        test_sweep.state_transition_matrix = \
-            pe.Parameters.instance().state_transition_matrix.copy()
         test_sweep.state_transition_matrix['Test col'] = ""
         with self.assertRaises(AssertionError):
             test_sweep._update_next_infection_status(self.people[0])
@@ -94,6 +92,9 @@ class TestHostProgressionSweep(unittest.TestCase):
                                  person.next_infection_status)
 
         matrix = np.zeros([len(InfectionStatus), len(InfectionStatus)])
+        # Set ICU recovery infection status column values to 1. This way
+        # everyone who is not recovered or dead wiil have their next
+        # infection status set as ICURecov
         matrix[:, -3] = 1
         matrix = pd.DataFrame(matrix,
                               columns=[status.name for
@@ -148,6 +149,24 @@ class TestHostProgressionSweep(unittest.TestCase):
             else:
                 self.assertTrue(current_time <= person.time_of_status_change)
 
+    def test_icdf_exception_raise(self):
+        """Tests exception is raised with incorrect icdf or value in time
+        transition matrix.
+        """
+        class BadICDF:
+            def icdf_choose_noexp(self):
+                raise AttributeError('test')
+
+        test_sweep = pe.sweep.HostProgressionSweep()
+        person = self.people[0]
+        test_sweep._update_next_infection_status(self.people[0])
+        row_index = person.infection_status.name
+        column_index = person.next_infection_status.name
+        test_sweep.transition_time_matrix.loc[row_index, column_index] \
+            = BadICDF()
+        with self.assertRaises(AttributeError):
+            test_sweep._update_time_status_change(self.people[0], 1.0)
+
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
     def test_call_main(self, mock_next_time):
         """Tests the main function of the Host Progression Sweep.
@@ -168,8 +187,6 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.person1.next_infection_status = \
             pe.property.InfectionStatus.Exposed
         test_sweep = pe.sweep.HostProgressionSweep()
-        self.state_transition_matrix = \
-            pe.Parameters.instance().state_transition_matrix
         test_sweep.bind_population(self.test_population1)
 
         # Tests population bound successfully.
@@ -206,8 +223,6 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.person3.update_status(InfectionStatus.Susceptible)
         test_sweep = pe.sweep.HostProgressionSweep()
         test_sweep.bind_population(self.test_population1)
-        test_sweep.state_transition_matrix = \
-            pe.Parameters.instance().state_transition_matrix
 
         # Run sweep and check assertion error is raised for Person 1.
         with self.assertRaises(AssertionError):

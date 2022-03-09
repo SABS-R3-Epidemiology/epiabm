@@ -6,7 +6,6 @@ import enum
 import pandas as pd
 import numpy as np
 
-import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
 
 
@@ -70,7 +69,8 @@ class StateTransitionMatrix:
 
     def update_probability(self, current_infection_status_row: enum,
                            next_infection_status_column: enum,
-                           new_probability: float):
+                           new_probability: float,
+                           matrix: pd.DataFrame):
         """Method to manually update a transition probability in the
         transition state matrix.
 
@@ -100,7 +100,6 @@ class StateTransitionMatrix:
                             or equal to 0 and less than or equal to 1')
 
         # Extract row and column names from enum and retrieve trasition matrix
-        matrix = pe.Parameters.instance().state_transition_matrix
         row = current_infection_status_row.name
         column = next_infection_status_column.name
         matrix.loc[row, column] = new_probability
