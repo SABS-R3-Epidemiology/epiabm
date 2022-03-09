@@ -182,6 +182,10 @@ class Parameters:
                 matrix_object.create_state_transition_matrix()
             self.place_transmission = 0.1
 
+            # Set Infection Parameters
+            self.household_transmission = 0.1  # Household Attack Rate
+            self.false_positive_rate = 0
+
             pass
 
     _instance = None  # Singleton instance
