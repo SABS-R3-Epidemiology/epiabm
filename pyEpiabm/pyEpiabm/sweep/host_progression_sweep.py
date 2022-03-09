@@ -22,11 +22,12 @@ class HostProgressionSweep(AbstractSweep):
         """Initialise parameters to be used in class methods. State
         transition matrix is set where each row of the matrix corresponds
         to a current infection status of a person. The columns of that
-        row then indicate the transition probabilities for the remaining
+        row then indicate the transition probabilities to the remaining
         infection statuses. Number of infection states is set by
         taking the size of the InfectionStatus enum. Transition time matrix
         is also initialised and associated parameters are called from the
         parameters class.
+
         """
         self.state_transition_matrix = \
             pe.Parameters.instance().state_transition_matrix
@@ -89,7 +90,7 @@ class HostProgressionSweep(AbstractSweep):
             Instance of person class with infection status attributes
 
         """
-        if person.infection_status.name in ['Recovered', 'Dead']:
+        if person.infection_status in [InfectionStatus.Recovered, InfectionStatus.Dead]:
             person.next_infection_status = None
         else:
             row_index = person.infection_status.name
@@ -117,7 +118,7 @@ class HostProgressionSweep(AbstractSweep):
         Parameters
         ----------
         Person : Person
-            Instance of person class with infection status attributes
+            Instance of Person class with :class:`InfectionStatus` attributes
         time : float
             Current simulation time
 
@@ -146,7 +147,7 @@ class HostProgressionSweep(AbstractSweep):
         # statuses (InfectMild or InfectGP), as is done in CovidSim.
         if (person.infection_status == InfectionStatus.InfectMild or
                 person.infection_status == InfectionStatus.InfectGP):
-            time = time + self.delay
+            time += self.delay
         # Assigns the time of status change using current time and transition
         # time:
         person.time_of_status_change = time + transition_time
@@ -171,9 +172,9 @@ class HostProgressionSweep(AbstractSweep):
                     continue  # pragma: no cover
                 while person.time_of_status_change <= time:
                     person.update_status(person.next_infection_status)
-                    if person.infection_status.name in ['InfectASympt',
-                                                        'InfectMild',
-                                                        'InfectGP']:
+                    if person.infection_status in [InfectionStatus.InfectASympt,
+                                                   InfectionStatus.InfectMild,
+                                                   InfectionStatus.InfectGP]:
                         self._set_infectiousness(person)
                     self._update_next_infection_status(person)
                     self._update_time_status_change(person, time)

@@ -13,16 +13,18 @@ class TransitionTimeMatrix:
         """Initialises the transition time matrix the same way as for the
         :class: `StateTransitionMatrix`, ie with the right labels for the rows and
         the columns and zeros as elements.
+
         """
         self.initial_matrix =\
             StateTransitionMatrix().create_empty_state_transition_matrix()
 
     def fill_transition_time(self):
         """Fills the transition time matrix with :class: `InverseCdf` objects, where the
-        times of transition are defined. For example, the element ij in the
+        distributions of times of transition are defined. For example, the element ij in the
         matrix is the :class: `InverseCdf` object for defining the transition time of
         someone with current infection status associated with the row i to
-        move to the infection status associated with the columns j.
+        move to the infection status associated with the columns j. Transitions that we do
+        not expect to happen are assigned a value of 0.0 in the matrix.
 
         Returns
         -------

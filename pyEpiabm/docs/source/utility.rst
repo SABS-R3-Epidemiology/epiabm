@@ -14,8 +14,18 @@ Overview:
 
 - :class:`RandomMethods`
 
+- :class:`StateTransitionMatrix`
+
+- :class:`TransitionTimeMatrix`
+
 .. autoclass:: DistanceFunctions
     :members:
 
 .. autoclass:: RandomMethods
+    :members:
+
+.. autoclass:: StateTransitionMatrix
+    :members:
+
+.. autoclass:: TransitionTimeMatrix
     :members:
