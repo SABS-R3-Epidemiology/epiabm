@@ -107,11 +107,8 @@ class TestTransitionTimeMatrix(unittest.TestCase):
             test_mean = 1.0
             test_icdf = np.ones(10)
             matrix_object.update_transition_time_with_icdf(
-                row,
-                column,
-                transition_matrix,
-                test_icdf,
-                test_mean)
+                row, column, transition_matrix,
+                test_icdf, test_mean)
 
         with self.assertRaises(ValueError):
             row = None
