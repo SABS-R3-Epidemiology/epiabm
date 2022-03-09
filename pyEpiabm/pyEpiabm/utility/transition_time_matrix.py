@@ -26,7 +26,7 @@ class TransitionTimeMatrix:
     def create_transition_time_matrix(self):
         """Fills the transition time matrix with :class:`InverseCdf` objects,
         where the distributions of times of transition are defined. For
-        example, the element ij in the matrix is the :class: `InverseCdf`
+        example, the element ij in the matrix is the :class:`InverseCdf`
         object for defining the transition time of someone with current
         infection status associated with the row i to move to the infection
         status associated with the columns j. Transitions that we do not
