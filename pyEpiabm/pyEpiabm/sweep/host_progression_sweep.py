@@ -8,9 +8,7 @@ import numpy as np
 import pyEpiabm as pe
 from pyEpiabm.core import Person
 from pyEpiabm.property import InfectionStatus
-
-from pyEpiabm.utility import StateTransitionMatrix
-from pyEpiabm.utility import TransitionTimeMatrix
+from pyEpiabm.utility import StateTransitionMatrix, TransitionTimeMatrix
 
 from .abstract_sweep import AbstractSweep
 
@@ -134,7 +132,7 @@ class HostProgressionSweep(AbstractSweep):
         """
         # Defines the transition time. If the person will not transition again,
         # the transition time is set to infinity. Else, the transition time is
-        # defined using the TransitionTimeMatrix class, with a method choose
+        # defined using the TransitionTimeMatrix class, with the method `choose()`
         # from the InverseCdf class.
         if (person.infection_status == InfectionStatus.Recovered or
                 person.infection_status == InfectionStatus.Dead):
@@ -145,7 +143,7 @@ class HostProgressionSweep(AbstractSweep):
             transition_time_icdf_object =\
                 self.transition_time_matrix.loc[row_index, column_index]
             # Checks for susceptible to exposed case
-            #  where transition time is zero
+            # where transition time is zero
             try:
                 transition_time =\
                     transition_time_icdf_object.icdf_choose_noexp()

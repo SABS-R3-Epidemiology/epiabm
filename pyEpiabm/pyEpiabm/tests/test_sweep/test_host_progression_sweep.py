@@ -92,7 +92,7 @@ class TestHostProgressionSweep(unittest.TestCase):
 
         matrix = np.zeros([len(InfectionStatus), len(InfectionStatus)])
         # Set ICU recovery infection status column values to 1. This way
-        # everyone who is not recovered or dead wiil have their next
+        # everyone who is not recovered or dead will have their next
         # infection status set as ICURecov
         matrix[:, -3] = 1
         matrix = pd.DataFrame(matrix,
@@ -243,7 +243,7 @@ class TestHostProgressionSweep(unittest.TestCase):
     def test_multiple_transitions_in_one_time_step(self, mock_next_time):
         """Reconfigure population and check that a person is able to progress
         infection status multiple times in the same time step. This will be
-        checked by setting the time transition time as 0 so Person 1 should
+        checked by setting the time transition time to 0 so Person 1 should
         progress from susceptible through the whole infection timeline ending
         up as either recovered or dead in one time step.
         """
