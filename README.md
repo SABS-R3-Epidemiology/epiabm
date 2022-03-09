@@ -33,7 +33,7 @@ pyEpiabm is not yet avaliable on [PyPI](https://pypi.org/), but the module can b
 pip install -e .
 ```
 
-from the top level directory. If you also wish to build the docs locally, this requires additional dependancies, which must be specified:
+from the `pyEpiabm` directory. If you also wish to build the docs locally, this requires additional dependancies, which must be specified:
 
 ```console
 pip install -e .[docs]
