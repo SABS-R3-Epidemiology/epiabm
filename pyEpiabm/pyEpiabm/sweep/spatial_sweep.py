@@ -9,8 +9,7 @@ import logging
 import typing
 
 from pyEpiabm.core import Cell, Parameters, Person
-from pyEpiabm.property import InfectionStatus
-from pyEpiabm.routine import SpatialInfection
+from pyEpiabm.property import InfectionStatus, SpatialInfection
 from pyEpiabm.utility import DistanceFunctions
 
 from .abstract_sweep import AbstractSweep

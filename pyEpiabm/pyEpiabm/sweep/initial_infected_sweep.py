@@ -5,6 +5,7 @@
 import random
 
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.sweep.host_progression_sweep import HostProgressionSweep
 
 from .abstract_sweep import AbstractSweep
 
@@ -52,3 +53,4 @@ class InitialInfectedSweep(AbstractSweep):
             person.update_status(InfectionStatus.InfectMild)
             person.next_infection_status = InfectionStatus.Recovered
             person.update_time_to_status_change()
+            HostProgressionSweep.set_infectiousness(person)
