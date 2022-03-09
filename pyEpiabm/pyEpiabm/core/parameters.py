@@ -186,7 +186,6 @@ class Parameters:
             self.false_positive_rate = 0
 
             pass
-
     _instance = None  # Singleton instance
 
     @staticmethod

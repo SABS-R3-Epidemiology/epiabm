@@ -42,26 +42,6 @@ class TestHostProgressionSweep(unittest.TestCase):
         """
         pe.sweep.HostProgressionSweep()
 
-    def test_set_latent_time(self, current_time=5.0):
-        """Tests that set latent time returns a float greater than
-        or equal to 0.0.
-        """
-        test_sweep = pe.sweep.HostProgressionSweep()
-        test_sweep._set_latent_time(self.person1, current_time)
-        self.assertIsInstance(self.person1.time_of_status_change, float)
-        self.assertTrue(current_time <= self.person1.time_of_status_change)
-
-    @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_exp')
-    def test_neg_latent_time(self, mock_choose):
-        """Tests that an Assertion Error is raised if the set latent time
-        is negative.
-        """
-        current_time = 0.0
-        mock_choose.return_value = -1
-        test_sweep = pe.sweep.HostProgressionSweep()
-        with self.assertRaises(AssertionError):
-            test_sweep._set_latent_time(self.person1, current_time)
-
     def test_set_infectiousness(self):
         """Tests that the set infectiousness function returns a positive
         float.
@@ -82,27 +62,20 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertIsInstance(self.person1.infectiousness, float)
         self.assertTrue(0 <= self.person1.infectiousness)
 
-    def test_update_time(self):
-        """Tests the update time function on the test population. This generates
-        a random float (uniformly) between 1.0 and 10.0.
-        """
-        current_time = 5.0
-        test_sweep = pe.sweep.HostProgressionSweep()
-        test_sweep._update_time_to_status_change(self.person1, current_time)
-        self.assertIsInstance(self.person1.time_of_status_change, float)
-        self.assertTrue(6.0 <= self.person1.time_of_status_change <= 15.0)
-
     def test_update_next_infection_status(self):
+        """Tests that an assertion error is raised if length of weights
+        and outcomes are different. Tests that the update_next_infection_status
+        method works with an identity state matrix as state_transition_matrix.
+        Tests that the method works for each infection status with all people
+        going to InfectICURecov infection status. Tests that method works for
+        a random upper triangular state transition matrix.
+        """
         test_sweep = pe.sweep.HostProgressionSweep()
-        # Check assertion is raised if length of weights
-        # and outcomes are different
-        test_sweep.state_transition_matrix = \
-            pe.Parameters.instance().state_transition_matrix.copy()
+
         test_sweep.state_transition_matrix['Test col'] = ""
         with self.assertRaises(AssertionError):
             test_sweep._update_next_infection_status(self.people[0])
 
-        # Check that method works with identity state matrix
         identity_matrix = pd.DataFrame(np.identity(len(InfectionStatus)),
                                        columns=[status.name for
                                        status in InfectionStatus],
@@ -111,13 +84,17 @@ class TestHostProgressionSweep(unittest.TestCase):
         test_sweep.state_transition_matrix = identity_matrix
         for person in self.people:
             test_sweep._update_next_infection_status(person)
-            self.assertEqual(person.infection_status,
-                             person.next_infection_status)
+            if person.infection_status.name in ['Recovered', 'Dead']:
+                self.assertEqual(person.next_infection_status, None)
+            else:
+                self.assertEqual(person.infection_status,
+                                 person.next_infection_status)
 
-        # Check that method works for each infection status with all people
-        # going to dead infection status
         matrix = np.zeros([len(InfectionStatus), len(InfectionStatus)])
-        matrix[:, -1] = 1
+        # Set ICU recovery infection status column values to 1. This way
+        # everyone who is not recovered or dead wiil have their next
+        # infection status set as ICURecov
+        matrix[:, -3] = 1
         matrix = pd.DataFrame(matrix,
                               columns=[status.name for
                                        status in InfectionStatus],
@@ -126,11 +103,12 @@ class TestHostProgressionSweep(unittest.TestCase):
         test_sweep.state_transition_matrix = matrix
         for person in self.people:
             test_sweep._update_next_infection_status(person)
-            self.assertEqual(person.next_infection_status,
-                             InfectionStatus.Dead)
+            if person.infection_status.name in ['Recovered', 'Dead']:
+                self.assertEqual(person.next_infection_status, None)
+            else:
+                self.assertEqual(person.next_infection_status,
+                                 InfectionStatus.InfectICURecov)
 
-        # Check that method works for a random upper triangular
-        # state transition matrix
         random_matrix = np.random.rand(len(InfectionStatus),
                                        len(InfectionStatus))
         random_matrix = np.triu(random_matrix)
@@ -142,19 +120,61 @@ class TestHostProgressionSweep(unittest.TestCase):
         test_sweep.state_transition_matrix = random_matrix
         for person in self.people:
             test_sweep._update_next_infection_status(person)
-            current_enum_value = person.infection_status.value
-            next_enum_value = person.next_infection_status.value
-            self.assertTrue(current_enum_value <= next_enum_value)
+            if person.infection_status.name in ['Recovered', 'Dead']:
+                self.assertEqual(person.next_infection_status, None)
+            else:
+                current_enum_value = person.infection_status.value
+                next_enum_value = person.next_infection_status.value
+                self.assertTrue(current_enum_value <= next_enum_value)
 
-    @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_exp')
-    def test_call_main(self, mock_latent):
+    def test_update_time_status_change(self, current_time=100.0):
+        """Tests that people who have their time to status change set correctly
+        depending on their current infection status.
+        """
+        test_sweep = pe.sweep.HostProgressionSweep()
+        for i in range(len(InfectionStatus)):
+            person = self.people[i]
+            person.update_status(InfectionStatus(i + 1))
+            person.next_infection_status = None
+
+        for person in self.people:
+            test_sweep._update_next_infection_status(person)
+            test_sweep._update_time_status_change(person, current_time)
+            if person.infection_status.name in ['Recovered', 'Dead']:
+                self.assertEqual(person.time_of_status_change, np.inf)
+            elif person.infection_status.name in ['InfectMild', 'InfectGP']:
+                delayed_time = current_time + test_sweep.delay
+                self.assertTrue(delayed_time <= person.time_of_status_change)
+            else:
+                self.assertTrue(current_time <= person.time_of_status_change)
+
+    def test_icdf_exception_raise(self):
+        """Tests exception is raised with incorrect icdf or value in time
+        transition matrix.
+        """
+        class BadICDF:
+            def icdf_choose_noexp(self):
+                raise AttributeError('test')
+
+        test_sweep = pe.sweep.HostProgressionSweep()
+        person = self.people[0]
+        test_sweep._update_next_infection_status(self.people[0])
+        row_index = person.infection_status.name
+        column_index = person.next_infection_status.name
+        test_sweep.transition_time_matrix.loc[row_index, column_index] \
+            = BadICDF()
+        with self.assertRaises(AttributeError):
+            test_sweep._update_time_status_change(self.people[0], 1.0)
+
+    @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
+    def test_call_main(self, mock_next_time):
         """Tests the main function of the Host Progression Sweep.
         Person 1 is set to susceptible and becoming exposed. Person 2 is set to
         exposed and becoming infectious in one time step. Checks the
         population updates as expected. Check that Person 3 stays as
         susceptible.
         """
-        mock_latent.return_value = 1.0
+        mock_next_time.return_value = 1.0
         # First check that people progress through the
         # infection stages correctly.
         self.person2.update_status(pe.property.InfectionStatus.Exposed)
@@ -166,8 +186,6 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.person1.next_infection_status = \
             pe.property.InfectionStatus.Exposed
         test_sweep = pe.sweep.HostProgressionSweep()
-        self.state_transition_matrix = \
-            pe.Parameters.instance().state_transition_matrix
         test_sweep.bind_population(self.test_population1)
 
         # Tests population bound successfully.
@@ -184,7 +202,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertIsInstance(self.person1.time_of_status_change, float)
         self.assertTrue(2.0 <= self.person2.time_of_status_change <= 11.0)
         self.assertTrue(0.0 <= self.person1.time_of_status_change)
-        mock_latent.assert_called_once()
+        self.assertEqual(mock_next_time.call_count, 2)
 
     def test_call_specific(self):
         """Tests the specific cases in the call method such as people
@@ -204,8 +222,6 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.person3.update_status(InfectionStatus.Susceptible)
         test_sweep = pe.sweep.HostProgressionSweep()
         test_sweep.bind_population(self.test_population1)
-        test_sweep.state_transition_matrix = \
-            pe.Parameters.instance().state_transition_matrix
 
         # Run sweep and check assertion error is raised for Person 1.
         with self.assertRaises(AssertionError):
@@ -223,20 +239,25 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertEqual(self.person1.next_infection_status, None)
         self.assertEqual(self.person1.time_of_status_change, np.inf)
 
-        # Reconfigure population and check that a person is able to progress
-        # infection status multiple times in the same time step. This will be
-        # checked by setting the latent time as 0 so Person 1 should progress
-        # from susceptible to one if the infected statuses in the same time
-        # step.
-        pe.Parameters.instance().latent_period_iCDF = np.zeros(21)
+    @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
+    def test_multiple_transitions_in_one_time_step(self, mock_next_time):
+        """Reconfigure population and check that a person is able to progress
+        infection status multiple times in the same time step. This will be
+        checked by setting the time transition time as 0 so Person 1 should
+        progress from susceptible through the whole infection timeline ending
+        up as either recovered or dead in one time step.
+        """
+
+        mock_next_time.return_value = 0.0
         self.person1.time_of_status_change = 1.0
         self.person1.update_status(InfectionStatus.Susceptible)
         self.person1.next_infection_status = InfectionStatus.Exposed
+        test_sweep = pe.sweep.HostProgressionSweep()
+        test_sweep.bind_population(self.test_population1)
         test_sweep(1.0)
         self.assertIn(self.person1.infection_status,
-                      [InfectionStatus.InfectMild,
-                       InfectionStatus.InfectASympt,
-                       InfectionStatus.InfectGP])
+                      [InfectionStatus.Recovered,
+                       InfectionStatus.Dead])
 
 
 if __name__ == "__main__":
