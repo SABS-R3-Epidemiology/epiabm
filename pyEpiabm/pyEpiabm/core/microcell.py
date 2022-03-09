@@ -4,7 +4,7 @@
 
 import typing
 
-from ..property.infection_status import InfectionStatus
+from pyEpiabm.property import InfectionStatus
 
 from .person import Person
 from .place import Place

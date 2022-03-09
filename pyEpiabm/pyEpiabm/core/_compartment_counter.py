@@ -4,7 +4,7 @@
 
 import typing
 
-from ..property.infection_status import InfectionStatus
+from pyEpiabm.property import InfectionStatus
 
 
 class _CompartmentCounter:
