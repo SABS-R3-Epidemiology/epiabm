@@ -4,7 +4,7 @@
 
 import random
 
-import pyEpiabm.property
+from pyEpiabm.property import InfectionStatus
 
 
 class Person:
@@ -46,7 +46,7 @@ class Person:
         self.susceptibility = susceptibility
         self.infectiousness = infectiousness
         self.microcell = microcell
-        self.infection_status = pyEpiabm.property.InfectionStatus.Susceptible
+        self.infection_status = InfectionStatus.Susceptible
         self.household = None
         self.places = []
         self.next_infection_status = None
@@ -62,12 +62,12 @@ class Person:
 
         """
         return self.infection_status in [
-            pyEpiabm.property.InfectionStatus.InfectASympt,
-            pyEpiabm.property.InfectionStatus.InfectMild,
-            pyEpiabm.property.InfectionStatus.InfectGP,
-            pyEpiabm.property.InfectionStatus.InfectHosp,
-            pyEpiabm.property.InfectionStatus.InfectICU,
-            pyEpiabm.property.InfectionStatus.InfectICURecov]
+            InfectionStatus.InfectASympt,
+            InfectionStatus.InfectMild,
+            InfectionStatus.InfectGP,
+            InfectionStatus.InfectHosp,
+            InfectionStatus.InfectICU,
+            InfectionStatus.InfectICURecov]
 
     def is_susceptible(self):
         """Query if the person is currently susceptible.
@@ -78,7 +78,7 @@ class Person:
             Whether person is currently susceptible
 
         """
-        return self.infection_status == pyEpiabm.property.InfectionStatus.\
+        return self.infection_status == InfectionStatus.\
             Susceptible
 
     def __repr__(self):
@@ -93,7 +93,7 @@ class Person:
         return f"Person, Age = {self.age}."
 
     def update_status(self,
-                      new_status: pyEpiabm.property.InfectionStatus) -> None:
+                      new_status: InfectionStatus) -> None:
         """Update Person's Infection Status.
 
         Parameters
