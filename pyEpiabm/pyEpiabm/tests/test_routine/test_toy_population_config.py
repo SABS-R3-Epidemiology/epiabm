@@ -176,22 +176,27 @@ class TestPopConfig(unittest.TestCase):
         mock_log.assert_called_once_with("ValueError in ToyPopulationFactory"
                                          + ".assign_cell_locations()")
 
-    @parameterized.expand([(random.randint(2, 20) * numReps,)
+    @parameterized.expand([(random.randint(2, 20) * numReps,
+                            random.randint(2, 20) * numReps)
                            for _ in range(numReps)])
-    def test_assign_cell_locations_unix(self, cell_num):
+    def test_assign_cell_locations_unix(self, cell_num, mcell_num):
         pop_params = {"population_size": 100, "cell_number": cell_num,
-                      "microcell_number": 1}
+                      "microcell_number": mcell_num}
         test_pop = ToyPopulationFactory.make_pop(pop_params)
         ToyPopulationFactory.assign_cell_locations(test_pop, "uniform_x")
         for i, cell in enumerate(test_pop.cells):
             self.assertAlmostEqual(cell.location[0], i / (cell_num - 1))
             self.assertAlmostEqual(cell.location[1], 0)
+            for j, mcell in enumerate(cell.microcells):
+                self.assertAlmostEqual(mcell.location[0], cell.location[0])
+                self.assertAlmostEqual(mcell.location[1], j / (mcell_num - 1))
 
-    @parameterized.expand([(random.randint(2, 20) * numReps,)
+    @parameterized.expand([(random.randint(2, 20) * numReps,
+                            random.randint(2, 20) * numReps)
                           for _ in range(numReps)])
-    def test_assign_cell_locations_grid(self, cell_num):
+    def test_assign_cell_locations_grid(self, cell_num, mcell_num):
         pop_params = {"population_size": 100, "cell_number": cell_num,
-                      "microcell_number": 1}
+                      "microcell_number": mcell_num}
         test_pop = ToyPopulationFactory.make_pop(pop_params)
         ToyPopulationFactory.assign_cell_locations(test_pop, "grid")
         grid_len = math.ceil(math.sqrt(cell_num))
@@ -200,6 +205,16 @@ class TestPopConfig(unittest.TestCase):
                                    (i % grid_len) / (grid_len - 1))
             self.assertAlmostEqual(cell.location[1],
                                    (i // grid_len) / (grid_len - 1))
+            mcell_len = math.ceil(math.sqrt(len(cell.microcells)))
+            for j, mcell in enumerate(cell.microcells):
+                test_x = (cell.location[0] +
+                          (j % mcell_len - .5 * (mcell_len - 1)) /
+                          (grid_len * (mcell_len - 1)))
+                test_y = (cell.location[1] +
+                          (j // mcell_len - .5 * (mcell_len - 1)) /
+                          (grid_len * (mcell_len - 1)))
+                self.assertAlmostEqual(mcell.location[0], test_x)
+                self.assertAlmostEqual(mcell.location[1], test_y)
 
     def test_assign_cell_locations_known_grid(self):
         pop_params = {"population_size": 100, "cell_number": 4,

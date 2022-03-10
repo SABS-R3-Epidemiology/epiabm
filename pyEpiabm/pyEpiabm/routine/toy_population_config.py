@@ -187,9 +187,10 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             elif method == "uniform_x":
                 cell_number = len(population.cells)
                 x_pos = np.linspace(0, 1, cell_number)
-                y_pos = np.linspace(0, 1, cell_number)
                 for i, cell in enumerate(population.cells):
                     cell.set_location((x_pos[i], 0))
+                    mcell_number = len(cell.microcells)
+                    y_pos = np.linspace(0, 1, mcell_number)
                     for j, microcell in enumerate(cell.microcells):
                         microcell.set_location((x_pos[i], y_pos[j]))
 
@@ -202,11 +203,13 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                                        pos[i // grid_len]))
                     mcell_num = len(cell.microcells)
                     mcell_len = math.ceil(math.sqrt(mcell_num))
+                    m_pos = np.linspace(0, 1, mcell_len)
                     for j, microcell in enumerate(cell.microcells):
-                        microcell.set_location((pos[i % grid_len] +
-                                                pos[j % mcell_len],
-                                                pos[i // grid_len] +
-                                                pos[j // mcell_len]))
+                        x = pos[i % grid_len] + \
+                            (m_pos[j % mcell_len]-0.5)/grid_len
+                        y = pos[i // grid_len] + \
+                            (m_pos[j // mcell_len]-0.5)/grid_len
+                        microcell.set_location((x, y))
 
             else:
                 raise ValueError(f"Unknown method: '{method}' not recognised")
