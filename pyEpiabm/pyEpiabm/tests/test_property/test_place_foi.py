@@ -18,6 +18,7 @@ class TestPlaceInfection(unittest.TestCase):
         cls.cell = pe.Cell()
         cls.microcell = pe.Microcell(cls.cell)
         cls.infector = pe.Person(cls.microcell)
+        cls.infector.infectiousness = 1.0
         cls.infectee = pe.Person(cls.microcell)
         cls.place = pe.Place((1, 1), pe.property.PlaceType.Hotel,
                              cls.cell, cls.microcell)
@@ -32,7 +33,7 @@ class TestPlaceInfection(unittest.TestCase):
         self.assertIsInstance(result, float)
 
     def test_place_inf(self):
-        result = PlaceInfection.place_inf(self.place, self.time)
+        result = PlaceInfection.place_inf(self.place, self.infector, self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 

@@ -8,17 +8,19 @@ Utilites provides various methods that don't act on a population directly.
 
 Overview:
 
-.. function:: log_exceptions
-
 - :class:`DistanceFunctions`
-
+- :class:`InverseCdf`
 - :class:`RandomMethods`
+- :class:`StateTransitionMatrix`
 
 - :class:`StateTransitionMatrix`
 
 - :class:`TransitionTimeMatrix`
 
 .. autoclass:: DistanceFunctions
+    :members:
+
+.. autoclass:: InverseCdf
     :members:
 
 .. autoclass:: RandomMethods
@@ -29,3 +31,5 @@ Overview:
 
 .. autoclass:: TransitionTimeMatrix
     :members:
+
+.. autofunction:: log_exceptions
