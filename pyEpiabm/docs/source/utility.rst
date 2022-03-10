@@ -15,8 +15,6 @@ Overview:
 - :class:`SpatialKernel`
 - :class:`StateTransitionMatrix`
 
-- :class:`StateTransitionMatrix`
-
 - :class:`TransitionTimeMatrix`
 
 .. autoclass:: DistanceFunctions

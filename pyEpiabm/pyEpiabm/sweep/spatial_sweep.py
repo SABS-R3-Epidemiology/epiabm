@@ -10,8 +10,7 @@ import typing
 
 from pyEpiabm.core import Cell, Parameters, Person
 from pyEpiabm.property import InfectionStatus, SpatialInfection
-from pyEpiabm.utility import DistanceFunctions
-from pyEpiabm.utility import SpatialKernel
+from pyEpiabm.utility import DistanceFunctions, SpatialKernel
 
 from .abstract_sweep import AbstractSweep
 

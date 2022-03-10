@@ -10,8 +10,7 @@ import math
 
 from pyEpiabm.core import Household, Population
 from pyEpiabm.property import PlaceType
-from pyEpiabm.utility import log_exceptions
-from pyEpiabm.utility import DistanceFunctions
+from pyEpiabm.utility import DistanceFunctions, log_exceptions
 
 from .abstract_population_config import AbstractPopulationFactory
 
@@ -169,7 +168,6 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             if method == "random":
                 for cell in population.cells:
                     cell.set_location(tuple(np.random.rand(2)))
-                for cell in population.cells:
                     for microcell in cell.microcells:
                         inter_dist = [0]
                         cell_dist = 100
