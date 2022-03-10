@@ -15,12 +15,13 @@ Overview:
 - :class:`InitialisePlaceSweep`
 - :class:`PlaceSweep`
 - :class:`QueueSweep`
+- :class:`SpatialSweep`
 - :class:`UpdatePlaceSweep`
 
 .. autoclass:: AbstractSweep
     :members:
     :special-members: __call__
-    
+
 .. autoclass:: HostProgressionSweep
     :members:
     :special-members: __call__
@@ -45,7 +46,10 @@ Overview:
     :members:
     :special-members: __call__
 
+.. autoclass:: SpatialSweep
+    :members:
+    :special-members: __call__
+
 .. autoclass:: UpdatePlaceSweep
     :members:
     :special-members: __call__
-    
