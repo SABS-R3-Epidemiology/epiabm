@@ -144,18 +144,20 @@ class Place:
             ind = place_list.index(self)
         return person.places[ind][1]
 
-    def empty_place(self, groups_to_empty: list = [0]):
+    def empty_place(self, groups_to_empty: list = []):
         """Remove all people from place who are in a specific
-        person group. For example
-        a restaurant or park might regularly change
-        all occupants each timestep, but workers at the
-        restaurant will be present each timestep.
+        person group. For example a restaurant or park might
+        regularly change all occupants each timestep, but
+        workers at the restaurant will be present each timestep.
+        Defaults to emptying the whole place.
 
         :param person_groups: List of person_group
             indicies to be removed
         :type person_groups: list
 
         """
+        if len(groups_to_empty) == 0:
+            groups_to_empty = [key for key in self.person_groups.keys()]
         for group in groups_to_empty:
             if group not in self.person_groups.keys():
                 continue

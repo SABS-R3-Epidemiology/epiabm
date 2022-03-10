@@ -1,6 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
+from pyEpiabm.property import PlaceType
 
 
 class TestPlace(unittest.TestCase):
@@ -19,11 +20,11 @@ class TestPlace(unittest.TestCase):
     def test_construct(self):
         """Tests constructor method.
         """
-        test_place = pe.Place((1.0, 1.0), pe.property.PlaceType.Workplace,
+        test_place = pe.Place((1.0, 1.0), PlaceType.Workplace,
                               self.cell, self.microcell)
         self.assertEqual(test_place._location, (1.0, 1.0))
         self.assertEqual(test_place.persons, [])
-        self.assertEqual(test_place.place_type, pe.property.PlaceType.Workplace)
+        self.assertEqual(test_place.place_type, PlaceType.Workplace)
         self.assertDictEqual(test_place.person_groups, {0: []})
         self.assertEqual(test_place.max_capacity, 50)
         self.assertEqual(test_place.susceptibility, 0)

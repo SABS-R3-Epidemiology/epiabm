@@ -120,10 +120,12 @@ class Person:
         with the place as the first entry and the group the person is
         associated with as the second.
 
-        :param place: Place person should be added to
-        :type place: Place
-        :param person_group: key for the person group dictionary
-        :type person_group: int
+        Parameters
+        ----------
+        place: Place
+            Place person should be added to
+        person_group : int
+            Key for the person group dictionary
 
         """
         if place.cell != self.microcell.cell:
