@@ -100,6 +100,9 @@ class TransitionTimeMatrix:
         next_infection_status_column : enum
             Infection status corresponding to
             the column where the probability will be updated
+        matrix : pd.Dataframe
+            Transition time matrix that will have one of it's
+            entries changed
         new_transition_time : float
             Updated transition time value
 

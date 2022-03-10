@@ -9,8 +9,7 @@ import pyEpiabm as pe
 from pyEpiabm.core import Person
 from pyEpiabm.property import InfectionStatus
 
-from pyEpiabm.utility import StateTransitionMatrix
-from pyEpiabm.utility import TransitionTimeMatrix
+from pyEpiabm.utility import StateTransitionMatrix, TransitionTimeMatrix
 
 from .abstract_sweep import AbstractSweep
 
@@ -79,8 +78,8 @@ class HostProgressionSweep(AbstractSweep):
         if person.infection_status == InfectionStatus.InfectASympt:
             infectiousness = init_infectiousness *\
                              pe.Parameters.instance().asympt_infectiousness
-        elif (person.infection_status == InfectionStatus.InfectMild) or \
-             (person.infection_status == InfectionStatus.InfectGP):
+        elif (person.infection_status == InfectionStatus.InfectMild or
+              person.infection_status == InfectionStatus.InfectGP):
             infectiousness = init_infectiousness *\
                              pe.Parameters.instance().sympt_infectiousness
         person.infectiousness = infectiousness
@@ -107,9 +106,9 @@ class HostProgressionSweep(AbstractSweep):
             outcomes = range(1, self.number_of_states + 1)
 
             if len(weights) != len(outcomes):
-                raise AssertionError('The number of infection statuses must \
-                                    match the number of transition \
-                                    probabilities')
+                raise AssertionError('The number of infection statuses must' +
+                                     'match the number of transition' +
+                                     'probabilities')
 
             next_infection_status_number = random.choices(outcomes, weights)[0]
             next_infection_status =\
@@ -152,6 +151,11 @@ class HostProgressionSweep(AbstractSweep):
             except AttributeError as e:
                 if "object has no attribute 'icdf_choose_noexp'" in str(e):
                     transition_time = transition_time_icdf_object
+                    assert isinstance(
+                        transition_time_icdf_object,
+                        (float, int)), \
+                        ("Entries of transition time matrix \
+                        must either be ICDF" + " objects or numbers")
                 else:
                     raise
 
