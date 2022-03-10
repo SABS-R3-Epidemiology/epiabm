@@ -41,7 +41,8 @@ class Person:
 
         """
         self.age = age
-        self.infectiousness = infectiousness
+        self.initial_infectiousness = infectiousness
+        self.infectiousness = 0
         self.microcell = microcell
         self.infection_status = InfectionStatus.Susceptible
         self.household = None

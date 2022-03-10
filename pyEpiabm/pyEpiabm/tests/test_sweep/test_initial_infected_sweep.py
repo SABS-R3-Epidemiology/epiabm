@@ -30,10 +30,15 @@ class TestInitialInfectedSweep(unittest.TestCase):
         params = {"initial_infected_number": 4, "simulation_start_time": 0}
         self.assertRaises(ValueError, test_sweep, params)
 
-        # Test that summed infectiousness from individuals is zero before call
+        # Test asking negative start time
+        params = {"initial_infected_number": 1, "simulation_start_time": -2}
+        self.assertRaises(ValueError, test_sweep, params)
+
+        # Test that summed initial infectiousness from individuals is zero
+        # before call
         summed_inf = 0
         for person in self.microcell.persons:
-            summed_inf += person.infectiousness
+            summed_inf += person.initial_infectiousness
         self.assertEqual(summed_inf, 0)
 
         # Test that call assigns correct number of infectious people.
@@ -43,9 +48,9 @@ class TestInitialInfectedSweep(unittest.TestCase):
         num_infectious = self.cell.compartment_counter.retrieve()[status]
         self.assertEqual(num_infectious, 1)
 
-        # Test that summed infectiousness from individuals is non-zero
+        # Test that summed initial infectiousness from individuals is non-zero
         for person in self.microcell.persons:
-            summed_inf += person.infectiousness
+            summed_inf += person.initial_infectiousness
         self.assertGreater(summed_inf, 0)
 
         # Test that trying to infect a population without enough
