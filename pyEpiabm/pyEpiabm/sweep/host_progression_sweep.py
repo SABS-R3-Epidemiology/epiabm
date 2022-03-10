@@ -181,7 +181,8 @@ class HostProgressionSweep(AbstractSweep):
 
     def _infectiousness_progression(self):
         """Defines an array to scale a person's infectiousness that depends on
-        time since the start of the infection, measured in timesteps.
+        time since the start of the infection, measured in timesteps. This
+        follows what is done in Covidsim.
 
         Returns
         -------
@@ -192,10 +193,10 @@ class HostProgressionSweep(AbstractSweep):
         """
         # Extreme case where model time step would be too small
         max_inf_steps = 2550
+        # k is number of time steps a person is infectious
         k = int(np.ceil(self.infectious_period / self.model_time_step))
         if k >= max_inf_steps:
-            raise AssertionError('The number of infectious steps exceeds set\
-                                  limit')
+            raise AssertionError('Number of infect timesteps exceeds limit')
         # Initialisation
         self.infectious_profile[self.inf_prof_res] = 0
         infectiousness_prog = np.zeros(max_inf_steps)

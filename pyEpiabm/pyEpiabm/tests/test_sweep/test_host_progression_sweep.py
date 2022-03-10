@@ -180,13 +180,36 @@ class TestHostProgressionSweep(unittest.TestCase):
             test_sweep._update_time_status_change(self.people[0], 1.0)
 
     def test_infectiousness_progression(self):
+        """Tests that the output is a numpy ndarray and that the tail of the
+        array is 0, starting at the element k.
+        """
+        # Parameters
+        infectious_period = pe.Parameters.instance().asympt_infect_period
+        model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
+        k = int(np.ceil(infectious_period / model_time_step))
+        # Initialisation
         test_sweep = pe.sweep.HostProgressionSweep()
         infect_prog = test_sweep._infectiousness_progression()
-        print(len(infect_prog))
         # Checks output type is numpy array
         self.assertIsInstance(infect_prog, np.ndarray)
-        # Checks limit elements are 0 after k
-        self.assertLessEqual(len(infect_prog), 2550)
+        # Checks elements are 0 after k
+        tail = infect_prog[k:2550]
+        zeros = np.zeros(2550-k)
+        self.assertTrue((tail == zeros).all())
+
+    def test_limit_infectiousness_progression(self):
+        """Tests that an assertion error is raised if the model time steps
+        length is too small (ie the time steps per day is too big).
+        """
+        # Stock the real time steps per day value
+        real = pe.Parameters.instance().time_steps_per_day
+        # Assigns temporarily a new value for time steps per day
+        pe.Parameters.instance().time_steps_per_day = 10000
+        with self.assertRaises(AssertionError):
+            test_sweep = pe.sweep.HostProgressionSweep()
+            test_sweep._infectiousness_progression()
+        # Reset the value of time steps per day
+        pe.Parameters.instance().time_steps_per_day = real
 
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
     def test_call_main(self, mock_next_time):
