@@ -177,8 +177,6 @@ class Parameters:
                           0.001105933, 0.00091683, 0.000759816, 0.000629496,
                           0.000521372, 0.000431695, 0.000357344, 0.000295719,
                           0.000244659])
-            self.infectious_period = self.asympt_infect_period
-            self.max_infectious_steps = 2550
             self.infprof_res = 56
 
             # Set Infection Parameters
