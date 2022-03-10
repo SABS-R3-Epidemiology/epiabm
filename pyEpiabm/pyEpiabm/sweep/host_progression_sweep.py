@@ -8,7 +8,6 @@ import numpy as np
 import pyEpiabm as pe
 from pyEpiabm.core import Person
 from pyEpiabm.property import InfectionStatus
-
 from pyEpiabm.utility import StateTransitionMatrix, TransitionTimeMatrix
 
 from .abstract_sweep import AbstractSweep
@@ -36,7 +35,7 @@ class HostProgressionSweep(AbstractSweep):
         self.state_transition_matrix =\
             matrix_object.create_state_transition_matrix()
         self.number_of_states = len(InfectionStatus)
-        assert self.state_transition_matrix.shape ==\
+        assert self.state_transition_matrix.shape == \
             (self.number_of_states, self.number_of_states),\
             'Matrix dimensions must match number of infection states'
 
@@ -50,8 +49,8 @@ class HostProgressionSweep(AbstractSweep):
         self.latent_to_symptom_delay =\
             pe.Parameters.instance().latent_to_sympt_delay
         self.model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
-        self.delay = np.floor(self.latent_to_symptom_delay /
-                              self.model_time_step)
+        self.delay = np.floor(self.latent_to_symptom_delay
+                              / self.model_time_step)
 
     @staticmethod
     def set_infectiousness(person: Person):
@@ -76,12 +75,12 @@ class HostProgressionSweep(AbstractSweep):
         """
         init_infectiousness = np.random.gamma(1, 1)
         if person.infection_status == InfectionStatus.InfectASympt:
-            infectiousness = init_infectiousness *\
-                             pe.Parameters.instance().asympt_infectiousness
+            infectiousness = (init_infectiousness
+                              * pe.Parameters.instance().asympt_infectiousness)
         elif (person.infection_status == InfectionStatus.InfectMild or
               person.infection_status == InfectionStatus.InfectGP):
-            infectiousness = init_infectiousness *\
-                             pe.Parameters.instance().sympt_infectiousness
+            infectiousness = (init_infectiousness
+                              * pe.Parameters.instance().sympt_infectiousness)
         person.infectiousness = infectiousness
 
     def _update_next_infection_status(self, person: Person):
@@ -135,8 +134,8 @@ class HostProgressionSweep(AbstractSweep):
         # the transition time is set to infinity. Else, the transition time is
         # defined using the TransitionTimeMatrix class, with the method
         # `choose` from the InverseCdf class.
-        if (person.infection_status == InfectionStatus.Recovered or
-                person.infection_status == InfectionStatus.Dead):
+        if person.infection_status in [InfectionStatus.Recovered,
+                                       InfectionStatus.Dead]:
             transition_time = np.inf
         else:
             row_index = person.infection_status.name
@@ -154,15 +153,15 @@ class HostProgressionSweep(AbstractSweep):
                     assert isinstance(
                         transition_time_icdf_object,
                         (float, int)), \
-                        ("Entries of transition time matrix \
-                        must either be ICDF" + " objects or numbers")
+                        ("Entries of transition time matrix" +
+                         "must either be ICDF" + " objects or numbers")
                 else:
                     raise
 
         # Adds delay to transition time for first level symptomatic infection
         # statuses (InfectMild or InfectGP), as is done in CovidSim.
-        if (person.infection_status == InfectionStatus.InfectMild) or \
-                (person.infection_status == InfectionStatus.InfectGP):
+        if person.infection_status in [InfectionStatus.InfectMild,
+                                       InfectionStatus.InfectGP]:
             time += self.delay
         # Assigns the time of status change using current time and transition
         # time:

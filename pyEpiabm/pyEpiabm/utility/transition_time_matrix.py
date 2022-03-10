@@ -1,7 +1,7 @@
 #
 # Generate matrix with transition times
 #
-import enum
+
 import numpy as np
 import pandas as pd
 
@@ -85,8 +85,8 @@ class TransitionTimeMatrix:
 
     def update_transition_time_with_float(
                         self,
-                        current_infection_status_row: enum,
-                        next_infection_status_column: enum,
+                        current_infection_status_row: InfectionStatus,
+                        next_infection_status_column: InfectionStatus,
                         matrix: pd.DataFrame,
                         new_transition_time: float):
         """Method to manually update a transition time in the
@@ -94,10 +94,10 @@ class TransitionTimeMatrix:
 
         Parameters
         ----------
-        current_infection_status_row : enum
+        current_infection_status_row : InfectionStatus
             Infection status corresponding to
             the row where the probability will be updated
-        next_infection_status_column : enum
+        next_infection_status_column : InfectionStatus
             Infection status corresponding to
             the column where the probability will be updated
         matrix : pd.Dataframe
@@ -110,15 +110,15 @@ class TransitionTimeMatrix:
         try:
             if (current_infection_status_row not in InfectionStatus) or \
                     (next_infection_status_column not in InfectionStatus):
-                raise ValueError('Row and column inputs must be contained in\
-                                the InfectionStatus enum')
+                raise ValueError('Row and column inputs must be contained in' +
+                                 'the InfectionStatus enum')
         except TypeError:
-            raise ValueError('Row and column inputs must be contained in\
-                                the InfectionStatus enum')
+            raise ValueError('Row and column inputs must be contained in' +
+                             'the InfectionStatus enum')
 
         if new_transition_time < 0:
-            raise ValueError('New transition time must be larger than or equal \
-                              to 0')
+            raise ValueError('New transition time must be larger than' +
+                             'or equal to 0')
 
         # Extract row and column names from enum and update
         # transition time matrix with single value
@@ -128,8 +128,8 @@ class TransitionTimeMatrix:
 
     def update_transition_time_with_icdf(
                            self,
-                           current_infection_status_row: enum,
-                           next_infection_status_column: enum,
+                           current_infection_status_row: InfectionStatus,
+                           next_infection_status_column: InfectionStatus,
                            matrix: pd.DataFrame,
                            new_transition_time_icdf: np.ndarray,
                            new_transition_time_icdf_mean: float):
@@ -138,10 +138,10 @@ class TransitionTimeMatrix:
 
         Parameters
         ----------
-        current_infection_status_row : enum
+        current_infection_status_row : InfectionStatus
             Infection status corresponding to
             the row where the probability will be updated
-        next_infection_status_column : enum
+        next_infection_status_column : InfectionStatus
             Infection status corresponding to
             the column where the probability will be updated
         matrix : pd.Dataframe
@@ -158,24 +158,24 @@ class TransitionTimeMatrix:
         try:
             if (current_infection_status_row not in InfectionStatus) or \
                     (next_infection_status_column not in InfectionStatus):
-                raise ValueError('Row and column inputs must be contained in\
-                                the InfectionStatus enum')
+                raise ValueError('Row and column inputs must be contained in' +
+                                 'the InfectionStatus enum')
         except TypeError:
-            raise ValueError('Row and column inputs must be contained in\
-                                the InfectionStatus enum')
+            raise ValueError('Row and column inputs must be contained in' +
+                             'the InfectionStatus enum')
 
         if new_transition_time_icdf_mean < 0:
-            raise ValueError('New transition time mean must be larger than\
-                                or equal to 0')
+            raise ValueError('New transition time mean must be larger than' +
+                             'or equal to 0')
 
         if len(new_transition_time_icdf) in [0, 1]:
-            raise ValueError('List of icdf values must have at least two\
-                              elements')
+            raise ValueError('List of icdf values must have at least two' +
+                             'elements')
 
         for elem in new_transition_time_icdf:
             if elem < 0:
-                raise ValueError('List of icdf values must only contain non-negative\
-                                  numbers')
+                raise ValueError('List of icdf values must only contain' +
+                                 'non-negative numbers')
 
         # Extract row and column names from enum and update
         # transition time matrix with :class: `InverseCdf`
