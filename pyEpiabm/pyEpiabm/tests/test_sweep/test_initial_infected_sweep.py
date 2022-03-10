@@ -30,12 +30,23 @@ class TestInitialInfectedSweep(unittest.TestCase):
         params = {"initial_infected_number": 4}
         self.assertRaises(ValueError, test_sweep, params)
 
+        # Test that summed infectiousness from individuals is zero before call
+        summed_inf = 0
+        for person in self.microcell.persons:
+            summed_inf += person.infectiousness
+        self.assertEqual(summed_inf, 0)
+
         # Test that call assigns correct number of infectious people.
         params = {"initial_infected_number": 1}
         test_sweep(params)
         status = pe.property.InfectionStatus.InfectMild
         num_infectious = self.cell.compartment_counter.retrieve()[status]
         self.assertEqual(num_infectious, 1)
+
+        # Test that summed infectiousness from individuals is non-zero
+        for person in self.microcell.persons:
+            summed_inf += person.infectiousness
+        self.assertGreater(summed_inf, 0)
 
         # Test that trying to infect a population without enough
         # susceptible people raises an error.

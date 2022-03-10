@@ -23,6 +23,7 @@ class TestSpatialSweep(TestMockedLogs):
 
         self.microcell_inf.add_people(100)
         self.infector = self.microcell_inf.persons[0]
+        self.infector.infectiousness = 1.0
         Parameters.instance().time_steps_per_day = 1
         Parameters.instance().do_CovidSim = False
 
@@ -109,8 +110,8 @@ class TestSpatialSweep(TestMockedLogs):
     @mock.patch("pyEpiabm.sweep.SpatialSweep.find_infectees_Covidsim")
     @mock.patch("pyEpiabm.sweep.SpatialSweep.find_infectees")
     @mock.patch("numpy.random.poisson")
-    @mock.patch("pyEpiabm.routine.SpatialInfection.space_foi")
-    @mock.patch("pyEpiabm.routine.SpatialInfection.cell_inf")
+    @mock.patch("pyEpiabm.property.SpatialInfection.space_foi")
+    @mock.patch("pyEpiabm.property.SpatialInfection.cell_inf")
     def test__call__(self, mock_inf, mock_foi, mock_poisson, mock_inf_list,
                      mock_list_covid):
         """Test whether the spatial sweep function correctly
