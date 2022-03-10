@@ -66,7 +66,7 @@ class Place:
         self.max_capacity = max_capacity
 
     def set_mean_cap(self, mean_capacity: float):
-        """Sets the maximum capacity of a place.
+        """Sets the mean capacity of a place.
 
         :param mean_capacity: Mean capacity of place type
         :type mean_capacity: float

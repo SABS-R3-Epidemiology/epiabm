@@ -163,10 +163,10 @@ class Parameters:
             self.latent_to_sympt_delay = 0.5
 
             # PLACE PARAMS
-            # Copied striaght from Covidsim so for four placetypes:
+            # Copied straight from Covidsim so for four placetypes:
             # Three school systems (primary, secondary, sixth form)
             # and a workplace option, hence array size four.
-            # any single values apply to each place type
+            # any single values apply to all place types
             self.place_params = {"age_group1_min_age": [5, 11, 18, 16],
                                  "age_group1_max_age": [11, 16, 65, 18],
                                  "age_group1_prop": [0.976396125, .98390173, 0,
