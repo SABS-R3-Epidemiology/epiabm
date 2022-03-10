@@ -150,6 +150,7 @@ class TestPopConfig(unittest.TestCase):
         toy_pop = ToyPopulationFactory.make_pop(pop_params)
 
         places = []
+        print(toy_pop)
         for cell in toy_pop.cells:
             for microcell in cell.microcells:
                 places += microcell.places

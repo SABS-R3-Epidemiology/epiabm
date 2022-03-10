@@ -11,6 +11,7 @@ import math
 from pyEpiabm.core import Household, Population
 from pyEpiabm.property import PlaceType
 from pyEpiabm.utility import log_exceptions
+from sklearn.neighbors import DistanceMetric
 
 from .abstract_population_config import AbstractPopulationFactory
 
@@ -168,12 +169,23 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             if method == "random":
                 for cell in population.cells:
                     cell.set_location(tuple(np.random.rand(2)))
+                for cell in population.cells:
+                    for j, microcell in enumerate(cell.microcells):
+                        inter_dist = []
+                        while np.argmin(inter_dist != cell):
+                            microcell.set_location(tuple(np.random.rand(2)))
+                            inter_dist = [DistanceMetric.dist(microcell.
+                                          location, cell2.location) for cell2
+                                          in population.cells]
 
             elif method == "uniform_x":
                 cell_number = len(population.cells)
                 x_pos = np.linspace(0, 1, cell_number)
+                y_pos = np.linspace(0, 1, cell_number)
                 for i, cell in enumerate(population.cells):
                     cell.set_location((x_pos[i], 0))
+                    for j, microcell in enumerate(cell.microcells):
+                        microcell.set_location((x_pos[i], y_pos[j]))
 
             elif method == "grid":
                 cell_number = len(population.cells)
@@ -182,6 +194,13 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                 for i, cell in enumerate(population.cells):
                     cell.set_location((pos[i % grid_len],
                                        pos[i // grid_len]))
+                    mcell_num = len(cell.microcells)
+                    mcell_len = math.ceil(math.sqrt(mcell_num))
+                    for j, microcell in enumerate(cell.microcells):
+                        microcell.set_location((pos[i % grid_len] +
+                                                pos[j % mcell_len],
+                                                pos[i // grid_len] +
+                                                pos[j // mcell_len]))
 
             else:
                 raise ValueError(f"Unknown method: '{method}' not recognised")
