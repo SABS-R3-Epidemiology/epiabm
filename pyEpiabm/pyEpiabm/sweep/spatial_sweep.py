@@ -207,7 +207,7 @@ class SpatialSweep(AbstractSweep):
             infectee = random.sample(infectee_cell.persons, 1)[0]
             # Covidsim tested each infection event by testing the ratio
             # of the spatial kernel applied to the distance between people
-            # to the spatial kernel of the shorted distance between
+            # to the spatial kernel of the shortest distance between
             # their cells.
             infection_distance = DistanceFunctions.dist(
                 infector.microcell.cell.location, infectee_cell.location)
