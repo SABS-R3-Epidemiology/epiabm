@@ -23,6 +23,7 @@ class TestSpatialSweep(TestMockedLogs):
 
         self.microcell_inf.add_people(100)
         self.infector = self.microcell_inf.persons[0]
+        self.infector.infectiousness = 1.0
         Parameters.instance().time_steps_per_day = 1
         Parameters.instance().do_CovidSim = False
 

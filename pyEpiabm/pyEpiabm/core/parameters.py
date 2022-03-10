@@ -164,8 +164,9 @@ class Parameters:
             self.household_transmission = 0.1  # Household Attack Rate
             self.false_positive_rate = 0
 
-            pass
+            self.place_transmission = 0.1
 
+            pass
     _instance = None  # Singleton instance
 
     @staticmethod
