@@ -61,7 +61,7 @@ class HostProgressionSweep(AbstractSweep):
 
     @staticmethod
     def set_infectiousness(person: Person, time: float):
-        """Assigns the infectiousness of a person for when they go from
+        """Assigns the initial infectiousness of a person for when they go from
         the exposed infection state to the next state, either InfectAsympt,
         InfectMild or InfectGP. Also assigns the infection start time and
         stores it in the person's attribute.
@@ -81,7 +81,7 @@ class HostProgressionSweep(AbstractSweep):
         Returns
         -------
         float
-            Infectiousness of a person
+            Initial infectiousness of a person
         float
             Infection start time of a person
 
@@ -90,11 +90,12 @@ class HostProgressionSweep(AbstractSweep):
         if person.infection_status == InfectionStatus.InfectASympt:
             infectiousness = init_infectiousness *\
                              pe.Parameters.instance().asympt_infectiousness
+            person.initial_infectiousness = infectiousness
         elif (person.infection_status == InfectionStatus.InfectMild or
               person.infection_status == InfectionStatus.InfectGP):
             infectiousness = init_infectiousness *\
                              pe.Parameters.instance().sympt_infectiousness
-        person.infectiousness = infectiousness
+            person.initial_infectiousness = infectiousness
         person.infection_start_time = time
         if person.infection_start_time < 0:
             raise AssertionError('The infection start time cannot be negative')
@@ -222,14 +223,17 @@ class HostProgressionSweep(AbstractSweep):
         return infectiousness_prog
 
     def _updates_infectiousness(self, person: Person, time: float):
-        """Updates infectiousness. Scales if the person is in an infectious
-        state, or update it to 0 if the person is just Recovered or Dead.
+        """Updates infectiousness. Scales using the initial infectiousness
+        if the person is in an infectious state. Updates the infectiousness to
+        0 if the person has just been transfered to Recovered or Dead. Doesn't
+        do anything if the person was already in Recovered, Dead, Susceptible,
+        or Exposed (ie if the infectiousness of the person was 0).
 
         Parameters
         ----------
         Person : Person
             Instance of Person class with :class:`InfectionStatus`,
-            infectiousness, and infection start time attributes
+            initial infectiousness, and infection start time attributes
         time : float
             Current simulation time
 
@@ -247,14 +251,15 @@ class HostProgressionSweep(AbstractSweep):
             time_since_infection =\
                 int((time - person.infection_start_time)
                     / self.model_time_step)
-            person.infectiousness *= scale_infectiousness[time_since_infection]
+            person.infectiousness = person.initial_infectiousness *\
+                scale_infectiousness[time_since_infection]
         # Sets infectiousness to 0 if person just became Recovered or Dead, and
         # sets its infection start time to None again.
         elif person.infectiousness != 0:
-            assert person.infection_status in [InfectionStatus.Recovered,
-                                               InfectionStatus.Dead]
-            person.infectiousness = 0
-            person.infection_start_time = None
+            if person.infection_status in [InfectionStatus.Recovered,
+                                           InfectionStatus.Dead]:
+                person.infectiousness = 0
+                person.infection_start_time = None
 
     def __call__(self, time: float):
         """Sweeps through all people in the population, updates

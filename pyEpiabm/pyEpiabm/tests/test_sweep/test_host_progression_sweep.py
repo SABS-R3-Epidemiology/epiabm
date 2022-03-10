@@ -50,21 +50,21 @@ class TestHostProgressionSweep(unittest.TestCase):
         # integer
         self.person1.update_status(InfectionStatus.InfectASympt)
         pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 0)
-        self.assertIsInstance(self.person1.infectiousness, float)
-        self.assertTrue(0 <= self.person1.infectiousness)
+        self.assertIsInstance(self.person1.initial_infectiousness, float)
+        self.assertTrue(0 <= self.person1.initial_infectiousness)
         self.assertEqual(self.person1.infection_start_time, 0)
         # Test with person1 as InfectMild infection status and time a non-zero
         # integer
         self.person1.update_status(InfectionStatus.InfectMild)
         pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 5)
-        self.assertIsInstance(self.person1.infectiousness, float)
-        self.assertTrue(0 <= self.person1.infectiousness)
+        self.assertIsInstance(self.person1.initial_infectiousness, float)
+        self.assertTrue(0 <= self.person1.initial_infectiousness)
         self.assertEqual(self.person1.infection_start_time, 5)
         # Test with person1 as InfectGP and time a float
         self.person1.update_status(InfectionStatus.InfectGP)
         pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 1.5)
-        self.assertIsInstance(self.person1.infectiousness, float)
-        self.assertTrue(0 <= self.person1.infectiousness)
+        self.assertIsInstance(self.person1.initial_infectiousness, float)
+        self.assertTrue(0 <= self.person1.initial_infectiousness)
         self.assertEqual(self.person1.infection_start_time, 1.5)
 
     def test_set_infectiousness_neg_time(self):
@@ -199,17 +199,69 @@ class TestHostProgressionSweep(unittest.TestCase):
 
     def test_limit_infectiousness_progression(self):
         """Tests that an assertion error is raised if the model time steps
-        length is too small (ie the time steps per day is too big).
+        length is too small (ie the time steps per day is too big). Also tests
+        the second case where j would be greater than the length of input
+        infectiousness profile.
         """
         # Stock the real time steps per day value
         real = pe.Parameters.instance().time_steps_per_day
-        # Assigns temporarily a new value for time steps per day
+
+        # Assigns temporarily a new value for time steps per day to raise error
         pe.Parameters.instance().time_steps_per_day = 10000
         with self.assertRaises(AssertionError):
             test_sweep = pe.sweep.HostProgressionSweep()
             test_sweep._infectiousness_progression()
+
         # Reset the value of time steps per day
         pe.Parameters.instance().time_steps_per_day = real
+
+        # Other limit case
+        test_sweep = pe.sweep.HostProgressionSweep()
+
+    @mock.patch('numpy.floor')
+    def test_limit_infectiousness_progression_else(self, mock_floor):
+        """m.
+        """
+        mock_floor.return_value(100000000)
+        # Parameters
+        infectious_period = pe.Parameters.instance().asympt_infect_period
+        model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
+        k = int(np.ceil(infectious_period / model_time_step))
+        # Other limit case
+        test_sweep = pe.sweep.HostProgressionSweep()
+        mock_floor.assert_called_once()
+        infect_prog = test_sweep._infectiousness_progression()
+        # Checks output type is numpy array
+        self.assertIsInstance(infect_prog, np.ndarray)
+        # Checks elements are 0 after k
+        tail = infect_prog[k:2550]
+        zeros = np.zeros(2550-k)
+        self.assertTrue((tail == zeros).all())
+
+    def test_updates_infectiousness(self):
+        """Tests the update infectiousness method. Checks that a person with
+        a Susceptible, Exposed, Recovered or Dead infection status still has
+        an infectiousness of 0. Checks that a person with an infected status
+        gets its infectiousness updated, with a float value.
+        """
+        test_sweep = pe.sweep.HostProgressionSweep()
+        for i in range(len(InfectionStatus)):
+            person = self.people[i]
+            person.update_status(InfectionStatus(i + 1))
+            person.next_infection_status = None
+            person.initial_infectiousness = 1.1
+            person.infection_start_time = 0
+        for person in self.people:
+            test_sweep._updates_infectiousness(person, 1)
+        # Assert that non infectious people have infectiousness of 0
+        self.assertEqual(self.people[0].infectiousness, 0)
+        self.assertEqual(self.people[1].infectiousness, 0)
+        self.assertEqual(self.people[8].infectiousness, 0)
+        self.assertEqual(self.people[9].infectiousness, 0)
+        # Assert that infected people have positive float infectiousness
+        for infected_person in self.people[2:8]:
+            self.assertGreater(infected_person.infectiousness, 0)
+            self.assertIsInstance(infected_person.infectiousness, float)
 
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
     def test_call_main(self, mock_next_time):
@@ -243,6 +295,9 @@ class TestHostProgressionSweep(unittest.TestCase):
                          pe.property.InfectionStatus.Exposed)
         self.assertEqual(self.person3.infection_status,
                          pe.property.InfectionStatus.Susceptible)
+        self.assertEqual(self.person3.infectiousness, 0)
+        self.assertEqual(self.person1.infectiousness, 0)
+        self.assertGreater(self.person2.infectiousness, 0)
         self.assertIsInstance(self.person2.time_of_status_change, float)
         self.assertIsInstance(self.person1.time_of_status_change, float)
         self.assertTrue(2.0 <= self.person2.time_of_status_change <= 11.0)
