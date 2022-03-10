@@ -2,7 +2,6 @@
 # Generate state transmission matrix
 #
 
-import enum
 import pandas as pd
 import numpy as np
 
@@ -40,9 +39,7 @@ class StateTransitionMatrix:
         columns to the next infection status, and the elements are the
         probabilities to go from one state to another. For example, the element
         ij in the matrix is the probability of someone with current infection
-        status associated with the row i to move to the infection status
-        associated with the columns j.
-
+        status associated with the row i to move to the infection enum
         Returns
         -------
         pd.DataFrame
@@ -68,18 +65,18 @@ class StateTransitionMatrix:
         matrix.loc['Dead', 'Dead'] = 1
         return matrix
 
-    def update_probability(self, current_infection_status_row: enum,
-                           next_infection_status_column: enum,
+    def update_probability(self, current_infection_status_row: InfectionStatus,
+                           next_infection_status_column: InfectionStatus,
                            new_probability: float):
         """Method to manually update a transition probability in the
         transition state matrix.
 
         Parameters
         ----------
-        current_infection_status_row : enum
+        current_infection_status_row : InfectionStatus
             Infection status corresponding to
             the row where the probability will be updated
-        next_infection_status_column : enum
+        next_infection_status_column : InfectionStatus
             Infection status corresponding to
             the column where the probability will be updated
         new_probability : float

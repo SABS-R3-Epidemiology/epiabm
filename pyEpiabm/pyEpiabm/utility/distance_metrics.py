@@ -14,7 +14,7 @@ class DistanceFunctions:
     """
     @staticmethod
     def dist(loc1: typing.Tuple[float, float],
-             loc2: typing.Tuple[float, float] = (0, 0)) -> float:
+             loc2: typing.Tuple[float, float] = (0.0, 0.0)) -> float:
         """Calculate distance based on currently configured distance metric
 
         Parameters
@@ -34,7 +34,7 @@ class DistanceFunctions:
 
     @staticmethod
     def dist_euclid(loc1: typing.Tuple[float, float],
-                    loc2: typing.Tuple[float, float] = (0, 0)):
+                    loc2: typing.Tuple[float, float] = (0.0, 0.0)):
         """Calculates distance based on the standard L2, Euclidean
         norm. This assumes the space is approximately planar, and
         so is a good approximation for smaller areas where the curvature
@@ -56,6 +56,7 @@ class DistanceFunctions:
         """
         return np.linalg.norm(np.abs(np.asarray(loc1) - np.asarray(loc2)))
 
+    @staticmethod
     def dist_periodic(loc1: typing.Tuple[int, int],
                       stride: int,
                       scales: typing.Tuple[float, float],
