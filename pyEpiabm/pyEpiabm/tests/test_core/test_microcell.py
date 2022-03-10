@@ -35,7 +35,7 @@ class TestMicrocell(unittest.TestCase):
 
     def test_add_place(self, n=3):
         self.assertEqual(len(self.microcell.places), 0)
-        self.microcell.add_place(n, (1.0, 1.0), pe.property.PlaceType.Hotel)
+        self.microcell.add_place(n, (1.0, 1.0), pe.property.PlaceType.Workplace)
         self.assertEqual(len(self.microcell.places), n)
 
     def test_setup(self, n=5):

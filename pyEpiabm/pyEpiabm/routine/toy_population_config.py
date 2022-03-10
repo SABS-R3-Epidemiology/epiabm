@@ -144,7 +144,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         for cell in population.cells:
             for microcell in cell.microcells:
                 microcell.add_place(place_number, (1.0, 1.0),
-                                    PlaceType.Hotel)
+                                    PlaceType.Workplace)
 
     @staticmethod
     def assign_cell_locations(population: Population, method: str = 'random'):

@@ -7,6 +7,8 @@ import numpy as np
 import logging
 
 from .abstract_sweep import AbstractSweep
+from pyEpiabm.property import PlaceType
+from pyEpiabm.core import Parameters
 
 
 class UpdatePlaceSweep(AbstractSweep):
@@ -28,43 +30,49 @@ class UpdatePlaceSweep(AbstractSweep):
         # of the variable population and refilling them.
 
         # Can call a this line if being called in from file etc.
-        # place_params = Parameters.instance().place_params
+        params = Parameters.instance().place_params
         for cell in self._population.cells:
             for place in cell.places:
-                if place.place_type.value == 1:  # HOTEL
-                    place.empty_place()
-                    self.update_place_group(place)
-                    # not sure how to handle this yet so
-                    # just going to completely update each time
-                    # as in the previous code
-
-                elif place.place_type.value == 3:  # RESTAURANT
+                param_ind = place.place_type.value - 1
+                if param_ind < len(params["mean_size"]):
+                    # Checks whether values are present, otherwise uses
+                    # defaults
+                    mean_cap = params["mean_size"][param_ind]
+                    max_cap = params["max_size"][param_ind]
+                if place.place_type.name == PlaceType.Workplace:
                     # Variable population is people not in the fixed pop.
+                    # Held in the last group of the place.
                     # Changed at each timestep
-                    print('here')
-                    place.empty_place(groups_to_empty=[1])
+                    place.empty_place(groups_to_empty=[-1])
                     candidate_list = [person for person in place.cell.persons
-                                      if person not in place.person_groups[1]]
-                    self.update_place_group(place, group_index=1,
+                                      if person not in place.persons]
+                    self.update_place_group(place, group_index=-1,
+                                            mean_capacity=mean_cap,
+                                            max_capacity=max_cap,
                                             person_list=candidate_list)
 
-                elif place.place_type.value == 4:  # OUTDOORS
+                elif place.place_type.name == PlaceType.OutdoorSpace:
                     place.empty_place()
                     self.update_place_group(place)
 
     def update_place_group(self, place, mean_capacity: float = 25,
                            max_capacity: int = 50,
-                           group_index: int = 0, person_list: list = None):
+                           group_index: int = 0, person_list: list = None,
+                           person_weights: list = None):
         """Specific method to update people in a place or place group.
 
-        :param place: Place to change
-        :type place: Place
-        :param max_capacity: Maximum people of this group in this place
-        :type max_capacity: int
-        :param group_index: Key for the person group dictionary
-        :type group_index: int
-        :param person_list: List of people that may be present in the cell
-        :type person_list: list
+        Parameters
+        ----------
+        place : Place
+            Place to change
+        max_capacity : int
+            Maximum people of this group in this place
+        group_index: int
+            Key for the person group dictionary
+        person_list: list
+            List of people that may be present in the cell
+        person_weights : list
+            Weights for people in list
         """
         # If a specific list of people is not provided, use the whole cell
         if person_list is None:
@@ -79,12 +87,17 @@ class UpdatePlaceSweep(AbstractSweep):
             logging.warning("No people in the person list supplied.")
         count = 0
         while count < new_capacity:
-            i = random.randint(1, len(person_list))
-            person = person_list[i-1]
+            if person_weights is not None:
+                assert len(person_weights) == len(person_list), 'Weights list'
+                'given is a different size to the person list.'
+                person = random.choices(person_list, person_weights, k=1)[0]
+            else:
+                i = random.randint(1, len(person_list))
+                person = person_list[i-1]
             # Checks person is not already in the place, and that they
             # haven't already been assigned to this place type.
             if ((person not in place.persons) and
                     (place.place_type not in person.place_types)):
 
-                place.add_person(person_list[i-1], group_index)
+                place.add_person(person, group_index)
                 count += 1

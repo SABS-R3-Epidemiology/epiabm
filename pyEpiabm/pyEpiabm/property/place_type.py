@@ -9,11 +9,11 @@ class PlaceType(Enum):
     """Enum representing a place"s type.
 
     """
-    Hotel = 1  # specific to travelling persons
-    CareHome = 2  # two groups, workers [0] and residents [1], both remain
-    # unchanged, but interact differently.
-    Restaurant = 3  # two groups, workers [0] and visitors [1], workers remain
-    # unchanged, visitors updated on each timestep
-    OutdoorSpace = 4  # one group, updated each timestep
-    Workplace = 5  # multiple groups represent different groups within the
+    PrimarySchool = 1
+    SecondarySchool = 2
+    SixthForm = 3
+    Workplace = 4  # multiple groups represent different groups within the
     # company, all remain unchanged.
+    CareHome = 5  # two groups, workers [0] and residents [1], both remain
+    # unchanged, but interact differently.
+    OutdoorSpace = 6  # one group, updated each timestep

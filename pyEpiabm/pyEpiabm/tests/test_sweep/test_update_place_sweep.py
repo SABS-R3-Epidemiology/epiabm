@@ -24,7 +24,7 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         self.pop.cells[0].microcells[0].add_people(1)
         self.person = self.pop.cells[0].microcells[0].persons[0]
         self.person.update_status(InfectionStatus.InfectMild)
-        self.microcell.add_place(1, (1, 1), PlaceType.Hotel)
+        self.microcell.add_place(1, (1, 1), PlaceType.Workplace)
         self.place = self.cell.places[0]
         Parameters.instance().time_steps_per_day = 1
         self.time = 1
@@ -37,7 +37,7 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         test_sweep = UpdatePlaceSweep()
         test_sweep.bind_population(test_pop)
         self.assertEqual(test_sweep._population.cells[0].
-                         places[0].place_type, PlaceType.Hotel)
+                         places[0].place_type, PlaceType.Workplace)
 
     @mock.patch('logging.warning')
     def test_update_place(self, log_mock):
@@ -54,6 +54,11 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         self.place.empty_place()
         test_sweep.update_place_group(place, person_list=[person],
                                       group_index=1)
+        self.assertDictEqual(place.person_groups,
+                             {0: [], 1: [person]})
+        self.place.empty_place([1])
+        test_sweep.update_place_group(place, person_list=[person],
+                                      person_weights=[1], group_index=1)
         self.assertDictEqual(place.person_groups,
                              {0: [], 1: [person]})
         self.place.empty_place()
@@ -73,14 +78,12 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         test_sweep = UpdatePlaceSweep()
         test_sweep.bind_population(test_pop)
         self.assertFalse(place.persons)
-        test_sweep(1)
-        mock_update.called_with(place)
 
         place.place_type = PlaceType.OutdoorSpace
         test_sweep(1)
         mock_update.called_with(place)
 
-        place.place_type = PlaceType.Restaurant
+        place.place_type = PlaceType.Workplace
         place.add_person(person, 1)
         place.remove_person(person)
         test_sweep(1)

@@ -167,14 +167,27 @@ class Parameters:
             # Three school systems (primary, secondary, sixth form)
             # and a workplace option, hence array size four.
             # any single values apply to each place type
-            self.minimum_age = [3, 11, 16, 21]
-            self.nearest_places = [3, 3, 6, 0]
-            self.kernel_shape = 3
-            self.kernel_scale = 4000
-            self.mean_size = [230, 1010,  3300,  14.28]
-            self.max_size = [0, 0, 0, 5927]
-            self.size_power = [0, 0, 0, 1.34]
-            self.size_offset = [0, 0, 0, 5.35]
+            self.place_params = {"age_group1_min_age": [5, 11, 18, 16],
+                                 "age_group1_max_age": [11, 16, 65, 18],
+                                 "age_group1_prop": [0.976396125, .98390173, 0,
+                                                     .37097869299999997],
+                                 "age_group2_min_age": [3, 16, 18, 18],
+                                 "age_group2_max_age": [5, 18, 21, 21],
+                                 "age_group2_prop": [1,	0.959727307,
+                                                     0.629021307,
+                                                     .040272693000000026],
+                                 "age_group3_min_age": [21, 21, 21, 21],
+                                 "age_group3_max_age": [65, 65, 65, 65],
+                                 "age_group3_prop": [0.005292966, .006331515,
+                                                     .064144615, 0.742058813],
+                                 "nearest_places": [3, 3, 6, 0],
+                                 "kernel_shape": 3,
+                                 "kernel_scale": 4000,
+                                 "mean_size": [230, 1010,  3300,  14.28],
+                                 "max_size": [0, 0, 0, 5927],
+                                 "size_power": [0, 0, 0, 1.34],
+                                 "size_offset": [0, 0, 0, 5.35],
+                                 "mean_num_groups": [25,  25,  100, 10]}
 
             # Build infection state transition matrix and set as parameter
             matrix_object = StateTransitionMatrix()

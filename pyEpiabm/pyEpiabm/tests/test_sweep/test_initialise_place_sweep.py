@@ -57,11 +57,6 @@ class TestInitialisePlaceSweep(unittest.TestCase):
         test_sweep()
         mock_update.called_with(place)
 
-        place.place_type = PlaceType.Restaurant
-        place.add_person(person, 1)
-        test_sweep()
-        mock_update.called_with(place)
-
 
 if __name__ == "__main__":
     unittest.main()
