@@ -47,7 +47,8 @@ class Microcell:
             String representation of Microcell
 
         """
-        return f"Microcell with {len(self.persons)} people."
+        return f"Microcell with {len(self.persons)} people" + \
+            f" at location {self.location}."
 
     def set_id(self, id):
         """Updates ID of microcell (i.e. for input from file).

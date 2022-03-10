@@ -11,7 +11,7 @@ import math
 from pyEpiabm.core import Household, Population
 from pyEpiabm.property import PlaceType
 from pyEpiabm.utility import log_exceptions
-from sklearn.neighbors import DistanceMetric
+from pyEpiabm.utility import DistanceFunctions
 
 from .abstract_population_config import AbstractPopulationFactory
 
@@ -170,11 +170,17 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                 for cell in population.cells:
                     cell.set_location(tuple(np.random.rand(2)))
                 for cell in population.cells:
-                    for j, microcell in enumerate(cell.microcells):
-                        inter_dist = []
-                        while np.argmin(inter_dist != cell):
+                    for microcell in cell.microcells:
+                        inter_dist = [0]
+                        cell_dist = 100
+                        while min(inter_dist) < cell_dist:
+                            # Will keep random location only if microcell
+                            # is closer to its cell's location than any other.
+                            # Not very efficient.
                             microcell.set_location(tuple(np.random.rand(2)))
-                            inter_dist = [DistanceMetric.dist(microcell.
+                            cell_dist = (DistanceFunctions.dist(microcell.
+                                         location, cell.location))
+                            inter_dist = [DistanceFunctions.dist(microcell.
                                           location, cell2.location) for cell2
                                           in population.cells]
 

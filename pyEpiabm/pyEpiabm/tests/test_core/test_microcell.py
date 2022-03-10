@@ -17,7 +17,7 @@ class TestMicrocell(unittest.TestCase):
 
     def test_repr(self):
         self.assertEqual(repr(self.microcell),
-                         "Microcell with 0 people.")
+                         "Microcell with 0 people at location (0, 0).")
 
     def test_set_id(self):
         self.assertEqual(self.microcell.id, hash(self.microcell))

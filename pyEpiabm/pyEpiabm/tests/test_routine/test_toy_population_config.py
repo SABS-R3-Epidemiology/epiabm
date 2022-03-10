@@ -150,7 +150,6 @@ class TestPopConfig(unittest.TestCase):
         toy_pop = ToyPopulationFactory.make_pop(pop_params)
 
         places = []
-        print(toy_pop)
         for cell in toy_pop.cells:
             for microcell in cell.microcells:
                 places += microcell.places
@@ -162,7 +161,7 @@ class TestPopConfig(unittest.TestCase):
     @patch('logging.exception')
     def test_assign_cell_locations_rand(self, mock_log):
         pop_params = {"population_size": 10, "cell_number": 2,
-                      "microcell_number": 1}
+                      "microcell_number": 2}
         test_pop = ToyPopulationFactory.make_pop(pop_params)
         for cell in test_pop.cells:
             self.assertEqual(cell.location[0], 0)
