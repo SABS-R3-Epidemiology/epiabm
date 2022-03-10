@@ -163,7 +163,8 @@ class TestHostProgressionSweep(unittest.TestCase):
         labels = [status.name for status in InfectionStatus]
         init_matrix = pd.DataFrame(zero_trans_mat,
                                    columns=labels,
-                                   index=labels)
+                                   index=labels,
+                                   dtype=object)
         test_sweep.transition_time_matrix = init_matrix
         test_sweep.transition_time_matrix.\
             loc[row_index, column_index] = mock.Mock()
