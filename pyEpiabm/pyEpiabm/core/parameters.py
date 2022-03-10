@@ -166,6 +166,11 @@ class Parameters:
 
             self.place_transmission = 0.1
 
+            # Set Population Age Dist
+            # Uses 17 age categories (5 year steps and 80+)
+            self.age_proportions = [6.2, 5.6, 5.8, 6.3, 6.8, 6.8, 6.5, 6.6,
+                                    7.3, 7.3, 6.5, 5.7, 6., 4.8, 3.9, 3.2, 4.7]
+
             pass
 
     _instance = None  # Singleton instance
