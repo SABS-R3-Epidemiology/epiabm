@@ -154,8 +154,8 @@ class HostProgressionSweep(AbstractSweep):
                     assert isinstance(
                         transition_time_icdf_object,
                         (float, int)), \
-                        ("Entries of transition time matrix \
-                        must either be ICDF" + " objects or numbers")
+                        ("Entries of transition time matrix"
+                         + " must either be ICDF objects or numbers")
                 else:
                     raise
 
