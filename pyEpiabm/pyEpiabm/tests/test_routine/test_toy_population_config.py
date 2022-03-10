@@ -218,15 +218,24 @@ class TestPopConfig(unittest.TestCase):
 
     def test_assign_cell_locations_known_grid(self):
         pop_params = {"population_size": 100, "cell_number": 4,
-                      "microcell_number": 1}
+                      "microcell_number": 4}
         test_pop = ToyPopulationFactory.make_pop(pop_params)
         ToyPopulationFactory.assign_cell_locations(test_pop, "grid")
         x_pos = [0, 1, 0, 1]
         y_pos = [0, 0, 1, 1]
+        mx_pos0 = [-.25, .25, -.25, .25]
+        my_pos0 = [-.25, -.25, .25, .25]
+        mx_pos1 = [.75, 1.25, .75, 1.25]
+        my_pos1 = [.75, .75, 1.25, 1.25]
         for i, cell in enumerate(test_pop.cells):
             self.assertAlmostEqual(cell.location[0], x_pos[i])
             self.assertAlmostEqual(cell.location[1], y_pos[i])
-
+        for j, mcell in enumerate(test_pop.cells[0].microcells):
+            self.assertAlmostEqual(mcell.location[0], mx_pos0[j])
+            self.assertAlmostEqual(mcell.location[1], my_pos0[j])
+        for j, mcell in enumerate(test_pop.cells[3].microcells):
+            self.assertAlmostEqual(mcell.location[0], mx_pos1[j])
+            self.assertAlmostEqual(mcell.location[1], my_pos1[j])
 
 if __name__ == '__main__':
     unittest.main()
