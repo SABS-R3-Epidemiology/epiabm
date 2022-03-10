@@ -167,7 +167,6 @@ class Parameters:
             self.place_transmission = 0.1
 
             pass
-
     _instance = None  # Singleton instance
 
     @staticmethod

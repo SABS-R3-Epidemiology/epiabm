@@ -15,6 +15,10 @@ Overview:
 - :class:`SpatialKernel`
 - :class:`StateTransitionMatrix`
 
+- :class:`StateTransitionMatrix`
+
+- :class:`TransitionTimeMatrix`
+
 .. autoclass:: DistanceFunctions
     :members:
 
@@ -28,6 +32,9 @@ Overview:
     :members:
 
 .. autoclass:: StateTransitionMatrix
+    :members:
+
+.. autoclass:: TransitionTimeMatrix
     :members:
 
 .. autofunction:: log_exceptions
