@@ -85,7 +85,7 @@ class StateTransitionMatrix:
             Updated transition probability value
         matrix : pd.Dataframe
             Input state transition matrix that will have
-            one of it's probabilities changed
+            one of its probabilities changed
 
         """
         try:
