@@ -1,8 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.property import InfectionStatus
-from pyEpiabm.routine import SpatialInfection
+from pyEpiabm.property import InfectionStatus, SpatialInfection
 
 
 class TestSpatialInfection(unittest.TestCase):
@@ -21,6 +20,7 @@ class TestSpatialInfection(unittest.TestCase):
         cls.microcell = cls.cell.microcells[0]
         cls.microcell.add_people(2)
         cls.infector = cls.microcell.persons[0]
+        cls.infector.infectiousness = 1.0
         cls.infectee = cls.microcell.persons[1]
         cls.time = 1.0
         pe.Parameters.instance().basic_reproduction_num = 2.8
