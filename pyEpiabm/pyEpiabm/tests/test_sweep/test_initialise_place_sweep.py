@@ -47,13 +47,15 @@ class TestInitialisePlaceSweep(unittest.TestCase):
         """
         test_pop = self.pop
         place = test_pop.cells[0].places[0]
+        place.place_type = PlaceType.Workplace
         person = test_pop.cells[0].persons[0]
         mock_update.return_value = None
         mock_weights.return_value = [[person], [1]]
+
         test_sweep = pe.sweep.InitialisePlaceSweep()
         test_sweep.bind_population(test_pop)
         test_sweep()
-        mock_update.called_with(place)
+        mock_update.called_with(place, [person], [1], 14.28, 5927, 0)
         mock_weights.called_with(place, self.params)
 
         place.place_type = PlaceType.SecondarySchool

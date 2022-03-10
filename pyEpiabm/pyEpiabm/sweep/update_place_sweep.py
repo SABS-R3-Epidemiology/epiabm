@@ -7,7 +7,6 @@ import numpy as np
 import logging
 
 from .abstract_sweep import AbstractSweep
-from pyEpiabm.property import PlaceType
 from pyEpiabm.core import Parameters
 
 
@@ -39,7 +38,7 @@ class UpdatePlaceSweep(AbstractSweep):
                     # defaults
                     mean_cap = params["mean_size"][param_ind]
                     max_cap = params["max_size"][param_ind]
-                if place.place_type.name == PlaceType.Workplace:
+                if place.place_type.name == "Workplace":
                     # Variable population is people not in the fixed pop.
                     # Held in the last group of the place.
                     # Changed at each timestep
@@ -51,7 +50,7 @@ class UpdatePlaceSweep(AbstractSweep):
                                             max_capacity=max_cap,
                                             person_list=candidate_list)
 
-                elif place.place_type.name == PlaceType.OutdoorSpace:
+                elif place.place_type.name == "OutdoorSpace":
                     place.empty_place()
                     self.update_place_group(place)
 

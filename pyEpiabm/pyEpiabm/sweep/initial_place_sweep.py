@@ -7,7 +7,6 @@ import numpy as np
 from .abstract_sweep import AbstractSweep
 from .update_place_sweep import UpdatePlaceSweep
 from pyEpiabm.core import Parameters
-from pyEpiabm.property import PlaceType
 
 
 class InitialisePlaceSweep(AbstractSweep):
@@ -30,8 +29,7 @@ class InitialisePlaceSweep(AbstractSweep):
         helper = UpdatePlaceSweep()
         helper.bind_population(self._population)
         params = Parameters.instance().place_params
-        schools = [PlaceType.PrimarySchool, PlaceType.SecondarySchool,
-                   PlaceType.SixthForm]
+        schools = ["PrimarySchool", "SecondarySchool", "SixthForm"]
         for cell in self._population.cells:
             for place in cell.places:
                 param_ind = place.place_type.value - 1
@@ -48,14 +46,13 @@ class InitialisePlaceSweep(AbstractSweep):
 
                 if place.place_type.name in schools:  # schools
                     # Initialise the fixed population
-
                     helper.update_place_group(place, person_list=person_list,
                                               person_weights=weights,
                                               mean_capacity=mean_cap,
                                               max_capacity=max_cap,
                                               group_index=0)
 
-                elif place.place_type.name == PlaceType.Workplace:  # WORKSPACE
+                elif place.place_type.name == "Workplace":  # WORKSPACE
                     # Fixed population is initialised on first run
                     # thinking of making sure people don't have more than one
                     # workplace
@@ -73,7 +70,7 @@ class InitialisePlaceSweep(AbstractSweep):
                                            if person not in
                                            place.person_groups[i]]
 
-                elif place.place_type.name == PlaceType.CareHome:  # CAREHOME
+                elif place.place_type.name == "CareHome":  # CAREHOME
                     # Initialise the fixed population of workers
                     helper.update_place_group(place, group_index=0)
                     # Initialise a fixed population of residents
