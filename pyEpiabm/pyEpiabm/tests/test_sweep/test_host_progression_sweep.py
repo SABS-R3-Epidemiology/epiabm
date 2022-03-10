@@ -218,25 +218,30 @@ class TestHostProgressionSweep(unittest.TestCase):
         # Other limit case
         test_sweep = pe.sweep.HostProgressionSweep()
 
-    @mock.patch('numpy.floor')
-    def test_limit_infectiousness_progression_else(self, mock_floor):
-        """m.
+    def test_limit_infectiousness_progression_else(self):
+        """Describe what else clause represents here.
         """
-        mock_floor.return_value(100000000)
+
         # Parameters
         infectious_period = pe.Parameters.instance().asympt_infect_period
         model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
         k = int(np.ceil(infectious_period / model_time_step))
+
         # Other limit case
         test_sweep = pe.sweep.HostProgressionSweep()
-        mock_floor.assert_called_once()
+
+        np.floor = mock.Mock()  # Create mock to access else clause
+        np.floor.return_value = 59
+
         infect_prog = test_sweep._infectiousness_progression()
+
         # Checks output type is numpy array
         self.assertIsInstance(infect_prog, np.ndarray)
         # Checks elements are 0 after k
         tail = infect_prog[k:2550]
         zeros = np.zeros(2550-k)
         self.assertTrue((tail == zeros).all())
+        self.assertEqual(np.floor.call_count, k)
 
     def test_updates_infectiousness(self):
         """Tests the update infectiousness method. Checks that a person with

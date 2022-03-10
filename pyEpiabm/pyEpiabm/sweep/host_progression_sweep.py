@@ -197,29 +197,30 @@ class HostProgressionSweep(AbstractSweep):
         # k is number of time steps a person is infectious
         k = int(np.ceil(self.infectious_period / self.model_time_step))
         if k >= max_inf_steps:
-            raise AssertionError('Number of infect timesteps exceeds limit')
+            raise ValueError('Number of infect timesteps exceeds limit')
         # Initialisation
         self.infectious_profile[self.inf_prof_res] = 0
         infectiousness_prog = np.zeros(max_inf_steps)
         s = 0
         # Fill infectiousness progression array
         for i in range(k):
-            t = ((i * self.model_time_step) / self.infectious_period)\
-                  * self.inf_prof_res
+            t = (((i * self.model_time_step) / self.infectious_period)
+                 * self.inf_prof_res)
             j = int(np.floor(t))
-            t = t - j
+            t -= j
             if j < self.inf_prof_res:
                 infectiousness_prog[i] = (self.infectious_profile[j] * (1 - t)
                                           + self.infectious_profile[j + 1] * t)
-                s = s + infectiousness_prog[i]
+                s += infectiousness_prog[i]
             else:
                 infectiousness_prog[i] =\
                     self.infectious_profile[self.inf_prof_res]
-                s = s + infectiousness_prog[i]
+                # These both seem to always be zero - KG
+                s += infectiousness_prog[i]
         # Scaling (?)
-        s = s / k
+        s /= k
         for i in range(k+1):
-            infectiousness_prog[i] = infectiousness_prog[i] / s
+            infectiousness_prog[i] /= s
         return infectiousness_prog
 
     def _updates_infectiousness(self, person: Person, time: float):
