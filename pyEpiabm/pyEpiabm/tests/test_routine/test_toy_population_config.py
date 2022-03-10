@@ -237,5 +237,6 @@ class TestPopConfig(unittest.TestCase):
             self.assertAlmostEqual(mcell.location[0], mx_pos1[j])
             self.assertAlmostEqual(mcell.location[1], my_pos1[j])
 
+
 if __name__ == '__main__':
     unittest.main()
