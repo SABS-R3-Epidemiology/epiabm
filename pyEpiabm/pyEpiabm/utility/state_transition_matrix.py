@@ -2,11 +2,9 @@
 # Generate state transmission matrix
 #
 
-import enum
 import pandas as pd
 import numpy as np
 
-import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
 
 
@@ -68,39 +66,43 @@ class StateTransitionMatrix:
         matrix.loc['Dead', 'Dead'] = 1
         return matrix
 
-    def update_probability(self, current_infection_status_row: enum,
-                           next_infection_status_column: enum,
-                           new_probability: float):
+    def update_probability(self, current_infection_status_row: InfectionStatus,
+                           next_infection_status_column: InfectionStatus,
+                           new_probability: float,
+                           matrix: pd.DataFrame):
         """Method to manually update a transition probability in the
         transition state matrix.
 
         Parameters
         ----------
-        current_infection_status_row : enum
+        current_infection_status_row : InfectionStatus
             Infection status corresponding to
             the row where the probability will be updated
-        next_infection_status_column : enum
+        next_infection_status_column : InfectionStatus
             Infection status corresponding to
             the column where the probability will be updated
         new_probability : float
             Updated transition probability value
+        matrix : pd.Dataframe
+            Input state transition matrix that will have
+            one of its probabilities changed
 
         """
         try:
             if (current_infection_status_row not in InfectionStatus) or \
                     (next_infection_status_column not in InfectionStatus):
-                raise ValueError('Row and column inputs must be contained in\
-                                the InfectionStatus enum')
+                raise ValueError('Row and column inputs must be contained in' +
+                                 'the InfectionStatus enum')
         except TypeError:
-            raise ValueError('Row and column inputs must be contained in\
-                                the InfectionStatus enum')
+            raise ValueError('Row and column inputs must be contained in' +
+                             'the InfectionStatus enum')
 
         if (new_probability < 0) or (new_probability > 1):
-            raise ValueError('New probability must be a valid probability larger than\
-                            or equal to 0 and less than or equal to 1')
+            raise ValueError('New probability must be a valid probability' +
+                             'larger than or equal to 0 and less than' +
+                             'or equal to 1')
 
         # Extract row and column names from enum and retrieve trasition matrix
-        matrix = pe.Parameters.instance().state_transition_matrix
         row = current_infection_status_row.name
         column = next_infection_status_column.name
         matrix.loc[row, column] = new_probability
