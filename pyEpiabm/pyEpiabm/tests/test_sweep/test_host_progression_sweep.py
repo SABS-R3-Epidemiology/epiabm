@@ -152,19 +152,28 @@ class TestHostProgressionSweep(unittest.TestCase):
         """Tests exception is raised with incorrect icdf or value in time
         transition matrix.
         """
-        class BadICDF:
-            def icdf_choose_noexp(self):
-                raise AttributeError('test')
 
         test_sweep = pe.sweep.HostProgressionSweep()
         person = self.people[0]
         test_sweep._update_next_infection_status(self.people[0])
         row_index = person.infection_status.name
         column_index = person.next_infection_status.name
-        test_sweep.transition_time_matrix.loc[row_index, column_index] \
-            = BadICDF()
+
+        zero_trans_mat = np.zeros((len(InfectionStatus), len(InfectionStatus)))
+        labels = [status.name for status in InfectionStatus]
+        init_matrix = pd.DataFrame(zero_trans_mat,
+                                   columns=labels,
+                                   index=labels)
+        test_sweep.transition_time_matrix = init_matrix
+        test_sweep.transition_time_matrix.\
+            loc[row_index, column_index] = mock.Mock()
+        test_sweep.transition_time_matrix.loc[row_index, column_index].\
+            icdf_choose_noexp.side_effect = AttributeError
+
         with self.assertRaises(AttributeError):
             test_sweep._update_time_status_change(self.people[0], 1.0)
+        test_sweep.transition_time_matrix.loc[row_index, column_index].\
+            icdf_choose_noexp.assert_called_once()
 
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
     def test_call_main(self, mock_next_time):
