@@ -44,23 +44,36 @@ class TestHostProgressionSweep(unittest.TestCase):
 
     def test_set_infectiousness(self):
         """Tests that the set infectiousness function returns a positive
-        float.
+        float and the correct infection start time.
         """
-        # Test with person1 as InfectASympt infection status
+        # Test with person1 as InfectASympt infection status and time an
+        # integer
         self.person1.update_status(InfectionStatus.InfectASympt)
         pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 0)
         self.assertIsInstance(self.person1.infectiousness, float)
         self.assertTrue(0 <= self.person1.infectiousness)
-        # Test with person1 as InfectMild infection status
+        self.assertEqual(self.person1.infection_start_time, 0)
+        # Test with person1 as InfectMild infection status and time a non-zero
+        # integer
         self.person1.update_status(InfectionStatus.InfectMild)
-        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 0)
+        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 5)
         self.assertIsInstance(self.person1.infectiousness, float)
         self.assertTrue(0 <= self.person1.infectiousness)
-        # Test with person1 as InfectGP
+        self.assertEqual(self.person1.infection_start_time, 5)
+        # Test with person1 as InfectGP and time a float
         self.person1.update_status(InfectionStatus.InfectGP)
-        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 0)
+        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 1.5)
         self.assertIsInstance(self.person1.infectiousness, float)
         self.assertTrue(0 <= self.person1.infectiousness)
+        self.assertEqual(self.person1.infection_start_time, 1.5)
+
+    def test_set_infectiousness_neg_time(self):
+        """Tests that an assertion error is raised if the input time in 'set
+        infectiousness' method is negative.
+        """
+        self.person1.update_status(InfectionStatus.InfectASympt)
+        with self.assertRaises(AssertionError):
+            pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, -2)
 
     def test_update_next_infection_status(self):
         """Tests that an assertion error is raised if length of weights
@@ -165,6 +178,15 @@ class TestHostProgressionSweep(unittest.TestCase):
             = BadICDF()
         with self.assertRaises(AttributeError):
             test_sweep._update_time_status_change(self.people[0], 1.0)
+
+    def test_infectiousness_progression(self):
+        test_sweep = pe.sweep.HostProgressionSweep()
+        infect_prog = test_sweep._infectiousness_progression()
+        print(len(infect_prog))
+        # Checks output type is numpy array
+        self.assertIsInstance(infect_prog, np.ndarray)
+        # Checks limit elements are 0 after k
+        self.assertLessEqual(len(infect_prog), 2550)
 
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
     def test_call_main(self, mock_next_time):
