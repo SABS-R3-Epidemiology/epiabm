@@ -80,6 +80,11 @@ class TestInitialisePlaceSweep(unittest.TestCase):
         self.assertListEqual([person], list)
         self.assertEqual(weights[0], self.params["age_group3_prop"][3])
 
+        place.add_person(person)
+        [list, weights] = test_sweep.create_age_weights(place, self.params)
+        self.assertListEqual([], list)
+        self.assertEqual(weights, [])
+
 
 if __name__ == "__main__":
     unittest.main()

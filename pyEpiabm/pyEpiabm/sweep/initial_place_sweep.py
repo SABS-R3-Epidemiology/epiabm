@@ -119,7 +119,7 @@ class InitialisePlaceSweep(AbstractSweep):
         person_list = []
         weights = []
         for person in place.cell.persons:
-            if (place.place_type.value in person.place_types):
+            if (place.place_type in person.place_types):
                 # People can't have more than one place of each type.
                 continue
             for i in range(3):
