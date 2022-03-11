@@ -87,7 +87,6 @@ class InitialisePlaceSweep(AbstractSweep):
 
         Parameters
         ----------
-
         place : Place
             Place to add people to
         params : dict
@@ -95,7 +94,6 @@ class InitialisePlaceSweep(AbstractSweep):
 
         Returns
         -------
-
         typing.List[Person]
             List of people who may be in the place
         typing.List[float]

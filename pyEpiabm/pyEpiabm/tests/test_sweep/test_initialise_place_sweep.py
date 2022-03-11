@@ -63,12 +63,12 @@ class TestInitialisePlaceSweep(unittest.TestCase):
         place.place_type = PlaceType.SecondarySchool
         mock_update.side_effect = place.add_person(person)
         test_sweep()
-        mock_update.called_with(place)
+        mock_update.assert_called_with(place)
 
         place.place_type = PlaceType.CareHome
         mock_update.side_effect = place.add_person(person)
         test_sweep()
-        mock_update.called_twice
+        self.assertEqual(mock_update.call_count, 2)
 
     def test_weights_func(self):
         test_pop = self.pop

@@ -66,10 +66,10 @@ class UpdatePlaceSweep(AbstractSweep):
         place : Place
             Place to change
         mean_capacity : int
-            Average number people of in this place
+            Average number of people in this place
         power_law_params : list
             Should only be given for workplaces, contains the further
-            parameters used to calculate place_size. List ent,ries should
+            parameters used to calculate place_size. List entries should
             take the order [Maximum size, Offset, Power]
         group_index : int
             If specified, the index of the group to be added to
@@ -92,7 +92,8 @@ class UpdatePlaceSweep(AbstractSweep):
             new_capacity = np.random.poisson(mean_capacity)
         else:
             assert len(power_law_params) == 3, \
-                "Incorrect number of power law parameters given"
+                ("Incorrect number of power law parameters given"
+                + " - should be of the form [maximum, offset, power]")
             [maximum, offset, power] = power_law_params
             s = (offset / (offset + maximum - 1)) ** power
             r = random.random()
