@@ -32,7 +32,6 @@ class InitialisePlaceSweep(AbstractSweep):
         # of the variable population and refilling them.
 
         # May want a param dict to be called in from file etc.
-        # place_params = Parameters.instance().place_params
         helper = UpdatePlaceSweep()
         helper.bind_population(self._population)
         params = Parameters.instance().place_params
@@ -61,8 +60,6 @@ class InitialisePlaceSweep(AbstractSweep):
 
                 elif place.place_type.name == "Workplace":  # WORKSPACE
                     # Fixed population is initialised on first run
-                    # thinking of making sure people don't have more than one
-                    # workplace
                     power_list = [max_size, offset, power]
                     helper.update_place_group(place, group_size=ave_group_size,
                                               person_list=person_list,
@@ -124,4 +121,5 @@ class InitialisePlaceSweep(AbstractSweep):
                     # Assumes age groups are distinct and integers.
                     person_list.append(person)
                     weights.append(prop[i])
+                    break
         return person_list, weights

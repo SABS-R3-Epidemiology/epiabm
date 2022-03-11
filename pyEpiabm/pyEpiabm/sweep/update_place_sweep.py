@@ -108,6 +108,8 @@ class UpdatePlaceSweep(AbstractSweep):
         try:
             num_groups = np.random.poisson(math.ceil(new_capacity/group_size))
         except ZeroDivisionError:
+            # Will occur when no group_size is set, if there are no groups
+            # implemented in this place type
             num_groups = 1
 
         while count < new_capacity:
