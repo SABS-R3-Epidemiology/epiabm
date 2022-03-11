@@ -73,6 +73,7 @@ class UpdatePlaceSweep(AbstractSweep):
             List of people that may be present in the cell
         person_weights : list
             Weights for people in list
+
         """
         # If a specific list of people is not provided, use the whole cell
         if person_list is None:
