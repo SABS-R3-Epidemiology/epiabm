@@ -5,11 +5,11 @@ Thank you for taking to time to contribute to this project!
 The following is a set of guidelines for contributing to epiabm, which is hosted on [GitHub](https://github.com/SABS-R3-Epidemiology/epiabm). These are mostly guidelines, not rules, so do use your best judgement.
 ## About epiabm
 
-Epiabm implements an agent-based [SEIR model](https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology) with added compartments and spatial complexity. It immitates the Imperial [CovidSim](https://github.com/mrc-ide/covid-sim) model, but aims to simplify and clarify the model by using more user friendly software practices. It also provides various sub-models (with elements of the CovidSim model removed) for research and pedagogical investigation into the effect of different aspects of the model.
+Epiabm implements an agent-based [SEIR model](https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology) with added compartments and spatial complexity. It imitates the Imperial [CovidSim](https://github.com/mrc-ide/covid-sim) model, but aims to simplify and clarify the model by using more user friendly software practices. It also provides various sub-models (with elements of the CovidSim model removed) for research and pedagogical investigation into the effect of different aspects of the model.
 
 It's therefore important to us that all new features are grounded in epidemiological research, and based on methods in CovidSim. Any deviations from CovidSim, and further explanation of our model (and the parameters used) can be found in the [wiki](https://github.com/SABS-R3-Epidemiology/epiabm/wiki).
 
-We have two backends for simulation - `pyEpiabm` and `cEpiabm`. The former is written in python, and intended as a user friendly intropduction to the software and pedagogical tool, with complete functionality but limiting performance on larger (~1 million individuals) simulations. `cEpiabm` therefore provides a high performance alternative written in C++, to handle larger and more complex simulations, whle using the same framework as both `pEpiabm` and `CovidSim`.
+We have two backends for simulation - `pyEpiabm` and `cEpiabm`. The former is written in python, and intended as a user friendly intropduction to the software and pedagogical tool, with complete functionality but limiting performance on larger (~1 million individuals) simulations. `cEpiabm` therefore provides a high performance alternative written in C++, to handle larger and more complex simulations, while using the same framework as both `pyEpiabm` and `CovidSim`.
 
 ### Useful Resources
 
@@ -100,7 +100,7 @@ We currently support python 3.6 onwards, and C++ 20.04, so ask that any contribu
 
 ## Coding style Guidelines
 
-We have some general conventions in our `.editorconfig` [file](https://github.com/SABS-R3-Epidemiology/epiabm/blob/main/.editorconfig), and closely follow [PEP8](https://peps.python.org/pep-0008/) conventions in the python code. If you start reading our code and you'll get the hang of it, but here are a few pointers:
+We have some general conventions in our `.editorconfig` [file](https://github.com/SABS-R3-Epidemiology/epiabm/blob/main/.editorconfig), and closely follow [PEP8](https://peps.python.org/pep-0008/) conventions in the python code. If you start reading our code you'll get the hang of it, but here are a few pointers:
 
   * We indent using four spaces
   * We have an empty newline at the end of files
