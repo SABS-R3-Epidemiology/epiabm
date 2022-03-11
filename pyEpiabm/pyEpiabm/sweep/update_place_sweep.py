@@ -82,7 +82,11 @@ class UpdatePlaceSweep(AbstractSweep):
         # is at most its capacity or the total number of
         # people in the cell.
         new_capacity = np.random.lognormal(mean_capacity)
-        new_capacity = min(new_capacity, max_capacity, len(person_list))
+        if max_capacity > 0:
+            new_capacity = min(new_capacity, max_capacity, len(person_list))
+        else:
+            new_capacity = min(new_capacity, len(person_list))
+
         if len(person_list) <= 0:
             logging.warning("No people in the person list supplied.")
         count = 0

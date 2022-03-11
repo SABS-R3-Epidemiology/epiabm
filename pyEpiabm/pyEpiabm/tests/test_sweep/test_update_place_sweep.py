@@ -56,6 +56,11 @@ class TestUpdatePlaceSweep(unittest.TestCase):
                              {0: [], 1: [person]})
         self.place.empty_place([1])
         test_sweep.update_place_group(place, person_list=[person],
+                                      group_index=1, max_capacity=0)
+        self.assertDictEqual(place.person_groups,
+                             {0: [], 1: [person]})
+        self.place.empty_place([1])
+        test_sweep.update_place_group(place, person_list=[person],
                                       person_weights=[1], group_index=1)
         self.assertDictEqual(place.person_groups,
                              {0: [], 1: [person]})
