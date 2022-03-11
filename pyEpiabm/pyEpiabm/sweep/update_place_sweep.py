@@ -6,8 +6,9 @@ import random
 import numpy as np
 import logging
 
-from .abstract_sweep import AbstractSweep
 from pyEpiabm.core import Parameters
+
+from .abstract_sweep import AbstractSweep
 
 
 class UpdatePlaceSweep(AbstractSweep):
@@ -87,8 +88,8 @@ class UpdatePlaceSweep(AbstractSweep):
         count = 0
         while count < new_capacity:
             if person_weights is not None:
-                assert len(person_weights) == len(person_list), 'Weights list'
-                'given is a different size to the person list.'
+                assert len(person_weights) == len(person_list),\
+                    ('Weights given is a different size to the person list.')
                 person = random.choices(person_list, person_weights, k=1)[0]
             else:
                 i = random.randint(1, len(person_list))

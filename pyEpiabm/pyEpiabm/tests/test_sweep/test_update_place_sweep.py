@@ -1,7 +1,6 @@
 import unittest
 from unittest import mock
 
-from pyEpiabm.property.infection_status import InfectionStatus
 from pyEpiabm.property.place_type import PlaceType
 from pyEpiabm.core.population import Population
 from pyEpiabm.core.parameters import Parameters
@@ -23,11 +22,10 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         self.microcell = self.cell.microcells[0]
         self.pop.cells[0].microcells[0].add_people(1)
         self.person = self.pop.cells[0].microcells[0].persons[0]
-        self.person.update_status(InfectionStatus.InfectMild)
         self.microcell.add_place(1, (1, 1), PlaceType.Workplace)
         self.place = self.cell.places[0]
         Parameters.instance().time_steps_per_day = 1
-        self.time = 1
+        self.time = 1.0
 
     def test_bind(self):
         """Tests that the update place sweep correctly binds
@@ -64,6 +62,10 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         self.place.empty_place()
         test_sweep.update_place_group(place, person_list=[])
         log_mock.called
+
+        self.assertRaises(AssertionError, test_sweep.update_place_group, place,
+                          person_list=[person], person_weights=[],
+                          group_index=1)
 
     @mock.patch("pyEpiabm.sweep.UpdatePlaceSweep.update_place_group")
     def test__call__(self, mock_update):

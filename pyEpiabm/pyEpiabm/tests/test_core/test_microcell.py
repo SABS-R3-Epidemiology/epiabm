@@ -1,8 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.property import PlaceType
-from pyEpiabm.property import InfectionStatus
+from pyEpiabm.property import PlaceType, InfectionStatus
 
 
 class TestMicrocell(unittest.TestCase):

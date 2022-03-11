@@ -26,12 +26,11 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(test_place.persons, [])
         self.assertEqual(test_place.place_type, PlaceType.Workplace)
         self.assertDictEqual(test_place.person_groups, {0: []})
-        self.assertEqual(test_place.max_capacity, 50)
         self.assertEqual(test_place.susceptibility, 0)
         self.assertEqual(test_place.infectiousness, 0)
         new_cell = pe.Cell()
         self.assertRaises(KeyError, pe.Place, (1.0, 1.0),
-                          pe.property.PlaceType.Workplace, new_cell,
+                          PlaceType.Workplace, new_cell,
                           self.microcell)
 
         self.assertEqual(len(test_place.persons), 0)
@@ -75,20 +74,6 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(test_place.infectiousness, 0)
         test_place.set_infectiousness(10)
         self.assertEqual(test_place.infectiousness, 10)
-
-    def test_set_max_cap(self):
-        test_place = pe.Place((1.0, 1.0), pe.property.PlaceType.Workplace,
-                              self.cell, self.microcell)
-        self.assertEqual(test_place.max_capacity, 50)
-        test_place.set_max_cap(10)
-        self.assertEqual(test_place.max_capacity, 10)
-
-    def test_set_mean_cap(self):
-        test_place = pe.Place((1.0, 1.0), pe.property.PlaceType.Workplace,
-                              self.cell, self.microcell)
-        self.assertEqual(test_place.mean_capacity, 25)
-        test_place.set_mean_cap(10)
-        self.assertEqual(test_place.mean_capacity, 10)
 
     def test_location_type(self):
         self.assertRaises(ValueError, pe.Place, (1.0, 1.0, 1.0),

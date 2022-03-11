@@ -55,8 +55,11 @@ class TestInitialisePlaceSweep(unittest.TestCase):
         test_sweep = pe.sweep.InitialisePlaceSweep()
         test_sweep.bind_population(test_pop)
         test_sweep()
-        mock_update.called_with(place, [person], [1], 14.28, 5927, 0)
-        mock_weights.called_with(place, self.params)
+        mock_update.assert_called_with(place, group_index=-1,
+                                       mean_capacity=14.28,
+                                       max_capacity=5927,
+                                       person_list=[person])
+        mock_weights.assert_called_with(place, self.params)
 
         place.place_type = PlaceType.SecondarySchool
         mock_update.side_effect = place.add_person(person)

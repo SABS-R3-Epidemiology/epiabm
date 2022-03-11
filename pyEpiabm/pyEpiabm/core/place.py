@@ -38,8 +38,6 @@ class Place:
         self.person_groups = {0: []}
         self.num_person_groups = 1
         self.place_type = place_type
-        self.max_capacity = 50
-        self.mean_capacity = 25
         self.susceptibility = 0
         self.infectiousness = 0
         self.initialised = False
@@ -53,25 +51,6 @@ class Place:
         if not (len(loc) == 2 and isinstance(loc[0], (float, int)) and
                 isinstance(loc[1], (float, int))):
             raise ValueError("Location must be a tuple of float-type")
-
-    def set_max_cap(self, max_capacity: int):
-        """Sets the maximum capacity of a place.
-
-        Parameters
-        ----------
-        max_capacity : int
-            Maximum number of people allowed in place
-
-        """
-        self.max_capacity = max_capacity
-
-    def set_mean_cap(self, mean_capacity: float):
-        """Sets the mean capacity of a place.
-
-        :param mean_capacity: Mean capacity of place type
-        :type mean_capacity: float
-        """
-        self.mean_capacity = mean_capacity
 
     def set_infectiousness(self, infectiousness: float):
         """Sets a baseline infectiousness for the place.
