@@ -179,7 +179,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                             inter_dist = [DistanceFunctions.dist(microcell.
                                           location, cell2.location) for cell2
                                           in population.cells]
-                            if not min(inter_dist) < cell_dist:
+                            if min(inter_dist) == cell_dist:
                                 break
 
             elif method == "uniform_x":
