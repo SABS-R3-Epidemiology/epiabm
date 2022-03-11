@@ -2,8 +2,6 @@
 # Sweep to initialise people present in a place
 #
 
-import numpy as np
-
 from pyEpiabm.core import Parameters
 
 from .abstract_sweep import AbstractSweep
@@ -48,45 +46,31 @@ class InitialisePlaceSweep(AbstractSweep):
                     # nearest_places = params["nearest_places"][param_ind]
                     mean_cap = params["mean_size"][param_ind]
                     max_cap = params["max_size"][param_ind]
-                    ave_group_number = params["mean_num_groups"][param_ind]
-                    group_num = np.random.poisson(ave_group_number) + 1
+                    ave_group_size = params["mean_group_size"][param_ind]
                     [person_list, weights] = self.create_age_weights(place,
                                                                      params)
 
                 if place.place_type.name in schools:  # schools
                     # Initialise the fixed population
-                    helper.update_place_group(place, person_list=person_list,
+                    helper.update_place_group(place, group_size=ave_group_size,
+                                              person_list=person_list,
                                               person_weights=weights,
                                               mean_capacity=mean_cap,
-                                              max_capacity=max_cap,
-                                              group_index=0)
+                                              max_capacity=max_cap)
 
                 elif place.place_type.name == "Workplace":  # WORKSPACE
                     # Fixed population is initialised on first run
                     # thinking of making sure people don't have more than one
                     # workplace
-                    for i in range(group_num):
-                        helper.update_place_group(place,
-                                                  person_list=person_list,
-                                                  person_weights=weights,
-                                                  mean_capacity=mean_cap,
-                                                  max_capacity=max_cap,
-                                                  group_index=0)
-                        # Remove added people from list of possible addees.
-                        # Only if there were sufficient people to add.
-                        if i in place.person_groups.keys():
-                            person_list = [person for person in person_list
-                                           if person not in
-                                           place.person_groups[i]]
+                    helper.update_place_group(place, group_size=ave_group_size,
+                                              person_list=person_list,
+                                              person_weights=weights,
+                                              mean_capacity=mean_cap,
+                                              max_capacity=max_cap)
 
                 elif place.place_type.name == "CareHome":  # CAREHOME
-                    # Initialise the fixed population of workers
-                    helper.update_place_group(place, group_index=0)
-                    # Initialise a fixed population of residents
-                    person_list = [person for person in cell.persons
-                                   if person.age > 65]
-                    helper.update_place_group(place, group_index=1,
-                                              person_list=person_list)
+                    # Kit will add more detail for Carehomes
+                    helper.update_place_group(place)
 
         # Instantiate the temporary population in each place using
         # the update sweep.

@@ -3,6 +3,7 @@
 #
 
 import random
+import math
 import numpy as np
 import logging
 
@@ -57,7 +58,7 @@ class UpdatePlaceSweep(AbstractSweep):
 
     def update_place_group(self, place, mean_capacity: float = 25,
                            max_capacity: int = 50,
-                           group_index: int = 0, person_list: list = None,
+                           group_size: int = 0, person_list: list = None,
                            person_weights: list = None):
         """Specific method to update people in a place or place group.
 
@@ -66,14 +67,13 @@ class UpdatePlaceSweep(AbstractSweep):
         place : Place
             Place to change
         max_capacity : int
-            Maximum people of this group in this place
-        group_index: int
-            Key for the person group dictionary
+            Maximum people of in this place
+        group_size: int
+            Average size of the groups in each place
         person_list: list
-            List of people that may be present in the cell
+            List of people that may be present in the place
         person_weights : list
             Weights for people in list
-
         """
         # If a specific list of people is not provided, use the whole cell
         if person_list is None:
@@ -84,6 +84,7 @@ class UpdatePlaceSweep(AbstractSweep):
         # people in the cell.
         new_capacity = np.random.lognormal(mean_capacity)
         if max_capacity > 0:
+            # Covidsim data has some zeros for max capacity
             new_capacity = min(new_capacity, max_capacity, len(person_list))
         else:
             new_capacity = min(new_capacity, len(person_list))
@@ -91,6 +92,12 @@ class UpdatePlaceSweep(AbstractSweep):
         if len(person_list) <= 0:
             logging.warning("No people in the person list supplied.")
         count = 0
+
+        try:
+            num_groups = np.random.poisson(math.ceil(new_capacity/group_size))
+        except ZeroDivisionError:
+            num_groups = 1
+
         while count < new_capacity:
             if person_weights is not None:
                 assert len(person_weights) == len(person_list),\
@@ -104,5 +111,5 @@ class UpdatePlaceSweep(AbstractSweep):
             if ((person not in place.persons) and
                     (place.place_type not in person.place_types)):
 
-                place.add_person(person, group_index)
+                place.add_person(person, random.randint(0, num_groups - 1))
                 count += 1

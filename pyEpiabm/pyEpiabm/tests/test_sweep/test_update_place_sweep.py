@@ -36,8 +36,9 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         self.assertEqual(test_sweep._population.cells[0].
                          places[0].place_type, PlaceType.Workplace)
 
+    @mock.patch("random.randint")
     @mock.patch('logging.warning')
-    def test_update_place(self, log_mock):
+    def test_update_place(self, log_mock, mock_random):
         """Test explicitly the update place function.
         """
         test_pop = self.pop
@@ -45,22 +46,25 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         person = test_pop.cells[0].persons[0]
         test_sweep = UpdatePlaceSweep()
         test_sweep.bind_population(test_pop)
+        mock_random.return_value = 0
+
         test_sweep.update_place_group(place)
         self.assertTrue(place.persons)
         self.assertDictEqual(place.person_groups, {0: [person]})
         self.place.empty_place()
+        mock_random.return_value = 1
         test_sweep.update_place_group(place, person_list=[person],
-                                      group_index=1)
+                                      group_size=1)
         self.assertDictEqual(place.person_groups,
                              {0: [], 1: [person]})
         self.place.empty_place([1])
         test_sweep.update_place_group(place, person_list=[person],
-                                      group_index=1, max_capacity=0)
+                                      max_capacity=0)
         self.assertDictEqual(place.person_groups,
                              {0: [], 1: [person]})
         self.place.empty_place([1])
         test_sweep.update_place_group(place, person_list=[person],
-                                      person_weights=[1], group_index=1)
+                                      person_weights=[1])
         self.assertDictEqual(place.person_groups,
                              {0: [], 1: [person]})
         self.place.empty_place()
@@ -68,8 +72,7 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         log_mock.assert_called
 
         self.assertRaises(AssertionError, test_sweep.update_place_group, place,
-                          person_list=[person], person_weights=[],
-                          group_index=1)
+                          person_list=[person], person_weights=[])
 
     @mock.patch("pyEpiabm.sweep.UpdatePlaceSweep.update_place_group")
     def test__call__(self, mock_update):
