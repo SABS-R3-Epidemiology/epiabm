@@ -199,7 +199,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         k = int(np.ceil(infectious_period / model_time_step))
         # Initialisation
         test_sweep = pe.sweep.HostProgressionSweep()
-        infect_prog = test_sweep._infectiousness_progression()
+        infect_prog = test_sweep.infectiousness_progression
         # Checks output type is numpy array
         self.assertIsInstance(infect_prog, np.ndarray)
         # Checks elements are 0 after k
@@ -217,8 +217,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         # Assigns temporarily a new value for time steps per day to raise error
         pe.Parameters.instance().time_steps_per_day = 10000
         with self.assertRaises(ValueError):
-            test_sweep = pe.sweep.HostProgressionSweep()
-            test_sweep._infectiousness_progression()
+            pe.sweep.HostProgressionSweep()
 
         # Resets the value of time steps per day
         pe.Parameters.instance().time_steps_per_day = real
@@ -229,13 +228,13 @@ class TestHostProgressionSweep(unittest.TestCase):
         resolution. In that case, the elements of the array infectiousness
         progression are simply set to 0.
         """
-        test_sweep = pe.sweep.HostProgressionSweep()
 
         with mock.patch('numpy.floor') as mock_floor:
             # We need to mock the np.floor function to have j greater or equal
             # to the infectiousness profile resolution
             mock_floor.return_value = 57
-            infect_prog = test_sweep._infectiousness_progression()
+            test_sweep = pe.sweep.HostProgressionSweep()
+            infect_prog = test_sweep.infectiousness_progression
             # Checks that the output is a numpy array
             self.assertIsInstance(infect_prog, np.ndarray)
             # Checks that all elements are equal to 0
