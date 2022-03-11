@@ -204,9 +204,9 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                     m_pos = np.linspace(0, 1, mcell_len)
                     for j, microcell in enumerate(cell.microcells):
                         x = pos[i % grid_len] + \
-                            (m_pos[j % mcell_len]-0.5)/grid_len
+                            (m_pos[j % mcell_len] - 0.5) / grid_len
                         y = pos[i // grid_len] + \
-                            (m_pos[j // mcell_len]-0.5)/grid_len
+                            (m_pos[j // mcell_len] - 0.5) / grid_len
                         microcell.set_location((x, y))
 
             else:
