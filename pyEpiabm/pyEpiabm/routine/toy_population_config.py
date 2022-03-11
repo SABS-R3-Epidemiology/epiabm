@@ -169,9 +169,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                 for cell in population.cells:
                     cell.set_location(tuple(np.random.rand(2)))
                     for microcell in cell.microcells:
-                        inter_dist = [0]
-                        cell_dist = 100
-                        while min(inter_dist) < cell_dist:
+                        while True:
                             # Will keep random location only if microcell
                             # is closer to its cell's location than any other.
                             # Not very efficient.
@@ -181,6 +179,8 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                             inter_dist = [DistanceFunctions.dist(microcell.
                                           location, cell2.location) for cell2
                                           in population.cells]
+                            if not min(inter_dist) < cell_dist:
+                                break
 
             elif method == "uniform_x":
                 cell_number = len(population.cells)
