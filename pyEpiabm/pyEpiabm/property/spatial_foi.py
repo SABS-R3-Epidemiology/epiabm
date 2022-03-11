@@ -2,7 +2,7 @@
 # Calculate spatial force of infection based on Covidsim code
 #
 
-from pyEpiabm.core import Parameters
+import pyEpiabm.core
 
 
 class SpatialInfection:
@@ -29,7 +29,7 @@ class SpatialInfection:
             Average number of infection events from the cell
 
         """
-        R_0 = Parameters.instance().basic_reproduction_num
+        R_0 = pyEpiabm.core.Parameters.instance().basic_reproduction_num
         total_infectors = inf_cell.number_infectious()
 
         average_number_to_infect = total_infectors * R_0
