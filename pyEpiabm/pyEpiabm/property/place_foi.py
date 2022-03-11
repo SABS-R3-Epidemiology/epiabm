@@ -38,7 +38,7 @@ class PlaceInfection:
         """
         transmission = PlaceInfection.params["place_transmission"]
         place_ind = place.place_type.value - 1
-        num_groups = PlaceInfection.params["mean_num_groups"][place_ind]
+        num_groups = PlaceInfection.params["mean_group_size"][place_ind]
         # Use group-wise capacity not max_capacity once implemented
         return (transmission / num_groups
                 * PersonalInfection.person_inf(infector, time))

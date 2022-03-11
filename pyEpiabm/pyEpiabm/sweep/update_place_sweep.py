@@ -57,7 +57,7 @@ class UpdatePlaceSweep(AbstractSweep):
                     self.update_place_group(place)
 
     def update_place_group(self, place, mean_capacity: float = 25,
-                           max_capacity: int = 50,
+                           max_capacity: int = 50, group_index: int = None,
                            group_size: int = 0, person_list: list = None,
                            person_weights: list = None):
         """Specific method to update people in a place or place group.
@@ -68,6 +68,8 @@ class UpdatePlaceSweep(AbstractSweep):
             Place to change
         max_capacity : int
             Maximum people of in this place
+        group_index : int
+            If specified, the index of the group to be added to
         group_size: int
             Average size of the groups in each place
         person_list: list
@@ -110,6 +112,10 @@ class UpdatePlaceSweep(AbstractSweep):
             # haven't already been assigned to this place type.
             if ((person not in place.persons) and
                     (place.place_type not in person.place_types)):
-
-                place.add_person(person, random.randint(0, num_groups - 1))
+                if group_index is not None:
+                    # If the index is specified
+                    place.add_person(person, group_index)
+                else:
+                    # Add people randomly to any group within the place
+                    place.add_person(person, random.randint(0, num_groups - 1))
                 count += 1

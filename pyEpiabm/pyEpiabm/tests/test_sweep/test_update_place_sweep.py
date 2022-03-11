@@ -57,11 +57,22 @@ class TestUpdatePlaceSweep(unittest.TestCase):
                                       group_size=1)
         self.assertDictEqual(place.person_groups,
                              {0: [], 1: [person]})
+
+        # Test when max capacity not set
         self.place.empty_place([1])
         test_sweep.update_place_group(place, person_list=[person],
                                       max_capacity=0)
         self.assertDictEqual(place.person_groups,
                              {0: [], 1: [person]})
+
+        # Test when group index set
+        self.place.empty_place([1])
+        test_sweep.update_place_group(place, person_list=[person],
+                                      group_index=1)
+        self.assertDictEqual(place.person_groups,
+                             {0: [], 1: [person]})
+
+        # Test with weights
         self.place.empty_place([1])
         test_sweep.update_place_group(place, person_list=[person],
                                       person_weights=[1])
@@ -71,6 +82,7 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         test_sweep.update_place_group(place, person_list=[])
         log_mock.assert_called
 
+        # Test when weigts are the wrong size
         self.assertRaises(AssertionError, test_sweep.update_place_group, place,
                           person_list=[person], person_weights=[])
 

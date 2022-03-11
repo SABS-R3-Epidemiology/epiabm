@@ -185,7 +185,7 @@ class Parameters:
                                  "max_size": [0, 0, 0, 5927],
                                  "size_power": [0, 0, 0, 1.34],
                                  "size_offset": [0, 0, 0, 5.35],
-                                 "mean_num_groups": [25,  25,  100, 10],
+                                 "mean_group_size": [25,  25,  100, 10],
                                  "place_transmission": 0.1}
 
             # Set Infection Parameters
