@@ -2,7 +2,7 @@
 # Calculate place force of infection based on Covidsim code
 #
 
-import pyEpiabm.core
+from pyEpiabm.core import Parameters
 
 from .personal_foi import PersonalInfection
 
@@ -11,6 +11,7 @@ class PlaceInfection:
     """Class to calculate the infectiousness and susceptibility
     parameters for the force of infection parameter, within places.
     """
+    params = Parameters.instance().place_params
 
     @staticmethod
     def place_inf(place, infector, time: float):
@@ -35,9 +36,11 @@ class PlaceInfection:
             Infectiousness parameter of place
 
         """
+        transmission = PlaceInfection.params["place_transmission"]
+        place_idx = place.place_type.value - 1
+        num_groups = PlaceInfection.params["mean_group_size"][place_idx]
         # Use group-wise capacity not max_capacity once implemented
-        return (pyEpiabm.core.Parameters.instance().place_transmission
-                / place.max_capacity
+        return (transmission / num_groups
                 * PersonalInfection.person_inf(infector, time))
 
     @staticmethod

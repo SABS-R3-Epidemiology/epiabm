@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 from parameterized import parameterized
 
-from pyEpiabm.utility.covidsim_kernel import SpatialKernel
+from pyEpiabm.utility import SpatialKernel
 
 numReps = 5
 

@@ -1,6 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
+from pyEpiabm.property import PlaceType, InfectionStatus
 
 
 class TestMicrocell(unittest.TestCase):
@@ -17,7 +18,7 @@ class TestMicrocell(unittest.TestCase):
 
     def test_repr(self):
         self.assertEqual(repr(self.microcell),
-                         "Microcell with 0 people.")
+                         "Microcell with 0 people at location (0, 0).")
 
     def test_set_id(self):
         self.assertEqual(self.microcell.id, hash(self.microcell))
@@ -29,13 +30,13 @@ class TestMicrocell(unittest.TestCase):
         self.microcell.add_people(n)
         self.assertEqual(len(self.microcell.persons), n)
         self.microcell.add_people(n + 1,
-                                  pe.property.InfectionStatus.InfectASympt)
+                                  InfectionStatus.InfectASympt)
         self.assertEqual(len(self.microcell.persons), 2 * n + 1)
         self.assertEqual(self.cell.number_infectious(), n + 1)
 
     def test_add_place(self, n=3):
         self.assertEqual(len(self.microcell.places), 0)
-        self.microcell.add_place(n, (1.0, 1.0), pe.property.PlaceType.Hotel)
+        self.microcell.add_place(n, (1.0, 1.0), PlaceType.Workplace)
         self.assertEqual(len(self.microcell.places), n)
 
     def test_setup(self, n=5):

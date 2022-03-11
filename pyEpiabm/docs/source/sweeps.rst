@@ -29,6 +29,10 @@ Overview:
     :members:
     :special-members: __call__
 
+.. autoclass:: InitialisePlaceSweep
+    :members:
+    :special-members: __call__
+
 .. autoclass:: InitialInfectedSweep
     :members:
     :special-members: __call__

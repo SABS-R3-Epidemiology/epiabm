@@ -10,7 +10,7 @@ import math
 
 from pyEpiabm.core import Household, Population
 from pyEpiabm.property import PlaceType
-from pyEpiabm.utility import log_exceptions
+from pyEpiabm.utility import DistanceFunctions, log_exceptions
 
 from .abstract_population_config import AbstractPopulationFactory
 
@@ -144,7 +144,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         for cell in population.cells:
             for microcell in cell.microcells:
                 microcell.add_place(place_number, (1.0, 1.0),
-                                    PlaceType.Hotel)
+                                    PlaceType.Workplace)
 
     @staticmethod
     def assign_cell_locations(population: Population, method: str = 'random'):
@@ -168,12 +168,29 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             if method == "random":
                 for cell in population.cells:
                     cell.set_location(tuple(np.random.rand(2)))
+                    for microcell in cell.microcells:
+                        while True:
+                            # Will keep random location only if microcell
+                            # is closer to its cell's location than any other.
+                            # Not very efficient.
+                            microcell.set_location(tuple(np.random.rand(2)))
+                            cell_dist = (DistanceFunctions.dist(microcell.
+                                         location, cell.location))
+                            inter_dist = [DistanceFunctions.dist(microcell.
+                                          location, cell2.location) for cell2
+                                          in population.cells]
+                            if min(inter_dist) == cell_dist:
+                                break
 
             elif method == "uniform_x":
                 cell_number = len(population.cells)
                 x_pos = np.linspace(0, 1, cell_number)
                 for i, cell in enumerate(population.cells):
                     cell.set_location((x_pos[i], 0))
+                    mcell_number = len(cell.microcells)
+                    y_pos = np.linspace(0, 1, mcell_number)
+                    for j, microcell in enumerate(cell.microcells):
+                        microcell.set_location((x_pos[i], y_pos[j]))
 
             elif method == "grid":
                 cell_number = len(population.cells)
@@ -182,6 +199,15 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                 for i, cell in enumerate(population.cells):
                     cell.set_location((pos[i % grid_len],
                                        pos[i // grid_len]))
+                    mcell_num = len(cell.microcells)
+                    mcell_len = math.ceil(math.sqrt(mcell_num))
+                    m_pos = np.linspace(0, 1, mcell_len)
+                    for j, microcell in enumerate(cell.microcells):
+                        x = pos[i % grid_len] + \
+                            (m_pos[j % mcell_len] - 0.5) / grid_len
+                        y = pos[i // grid_len] + \
+                            (m_pos[j // mcell_len] - 0.5) / grid_len
+                        microcell.set_location((x, y))
 
             else:
                 raise ValueError(f"Unknown method: '{method}' not recognised")

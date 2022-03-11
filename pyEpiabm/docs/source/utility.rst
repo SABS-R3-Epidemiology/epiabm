@@ -9,19 +9,12 @@ Utilites provides various methods that don't act on a population directly.
 Overview:
 
 - :class:`DistanceFunctions`
-
 - :class:`InverseCdf`
-
 - :class:`RandomMethods`
-- :class:`StateTransitionMatrix`
-
+- :class:`SpatialKernel`
 - :class:`StateTransitionMatrix`
 
 - :class:`TransitionTimeMatrix`
-
-- :class:`SpatialKernel`
-
-- :class:`StateTransitionMatrix`
 
 .. autoclass:: DistanceFunctions
     :members:
@@ -42,4 +35,3 @@ Overview:
     :members:
 
 .. autofunction:: log_exceptions
-

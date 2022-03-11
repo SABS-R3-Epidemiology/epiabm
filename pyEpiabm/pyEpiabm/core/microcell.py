@@ -47,7 +47,8 @@ class Microcell:
             String representation of Microcell
 
         """
-        return f"Microcell with {len(self.persons)} people."
+        return f"Microcell with {len(self.persons)} people" + \
+            f" at location {self.location}."
 
     def set_id(self, id):
         """Updates ID of microcell (i.e. for input from file).
@@ -112,12 +113,12 @@ class Microcell:
         self.cell.notify_person_status_change(old_status, new_status)
 
     def set_location(self, loc: typing.Tuple[float, float]):
-        """Method to set or change the location of a cell.
+        """Method to set or change the location of a microcell.
 
         Parameters
         ----------
         loc : Tuple[float, float]
-            (x,y) coordinates of the place
+            (x,y) coordinates of the microcell
 
         """
         if not (len(loc) == 2 and isinstance(loc[0], (float, int)) and

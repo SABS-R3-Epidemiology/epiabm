@@ -160,11 +160,35 @@ class Parameters:
             self.asympt_infectiousness = 1
             self.latent_to_sympt_delay = 0.5
 
+            # PLACE PARAMS
+            # Copied straight from Covidsim so for four placetypes:
+            # Three school systems (primary, secondary, sixth form)
+            # and a workplace option, hence array size four.
+            # any single values apply to all place types
+            self.place_params = {"age_group1_min_age": [5, 11, 18, 16],
+                                 "age_group1_max_age": [11, 16, 65, 18],
+                                 "age_group1_prop": [0.976396125, .98390173, 0,
+                                                     .37097869299999997],
+                                 "age_group2_min_age": [3, 16, 18, 18],
+                                 "age_group2_max_age": [5, 18, 21, 21],
+                                 "age_group2_prop": [1,	0.959727307,
+                                                     0.629021307,
+                                                     .040272693000000026],
+                                 "age_group3_min_age": [21, 21, 21, 21],
+                                 "age_group3_max_age": [65, 65, 65, 65],
+                                 "age_group3_prop": [0.005292966, .006331515,
+                                                     .064144615, 0.742058813],
+                                 "nearest_places": [3, 3, 6, 0],
+                                 "mean_size": [230, 1010, 3300, 14.28],
+                                 "max_size": [0, 0, 0, 5927],
+                                 "size_power": [0, 0, 0, 1.34],
+                                 "size_offset": [0, 0, 0, 5.35],
+                                 "mean_group_size": [25, 25, 100, 10],
+                                 "place_transmission": 0.1}
+
             # Set Infection Parameters
             self.household_transmission = 0.1  # Household Attack Rate
             self.false_positive_rate = 0
-
-            self.place_transmission = 0.1
 
             pass
     _instance = None  # Singleton instance
