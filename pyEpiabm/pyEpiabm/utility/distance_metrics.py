@@ -99,7 +99,7 @@ class DistanceFunctions:
         # If the distance between points is more than half the total length,
         # it would be quicker to "go round the back" of the Earth
         for index in range(1):
-            if diff[index] > 0.5*scales[index]:
+            if diff[index] > 0.5 * scales[index]:
                 diff[index] = scales[index] - diff[index]
         return np.linalg.norm(diff)
 

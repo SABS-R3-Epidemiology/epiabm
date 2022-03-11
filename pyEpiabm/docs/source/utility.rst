@@ -11,7 +11,6 @@ Overview:
 - :class:`DistanceFunctions`
 - :class:`InverseCdf`
 - :class:`RandomMethods`
-- :class:`StateTransitionMatrix`
 - :class:`SpatialKernel`
 - :class:`StateTransitionMatrix`
 
