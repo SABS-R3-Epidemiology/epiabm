@@ -51,7 +51,7 @@ class TestPerson(unittest.TestCase):
                               self.cell, self.microcell)
         self.person.add_place(test_place)
         self.assertTrue(len(self.person.places) > 0)
-        test_cell = pe.Cell
+        test_cell = pe.Cell()
         test_place_2 = pe.Place((1.0, 1.0), pe.property.PlaceType.Hotel,
                                 test_cell, pe.Microcell(test_cell))
         self.assertRaises(AttributeError, self.person.add_place, test_place_2)

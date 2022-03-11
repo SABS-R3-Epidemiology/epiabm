@@ -17,7 +17,7 @@ class TestMicrocell(unittest.TestCase):
 
     def test_repr(self):
         self.assertEqual(repr(self.microcell),
-                         "Microcell with 0 people.")
+                         "Microcell with 0 people at location (0, 0).")
 
     def test_set_id(self):
         self.assertEqual(self.microcell.id, hash(self.microcell))
@@ -48,6 +48,15 @@ class TestMicrocell(unittest.TestCase):
         self.microcell.notify_person_status_change(
             pe.property.InfectionStatus.Susceptible,
             pe.property.InfectionStatus.Recovered)
+
+    def test_set_location(self):
+        local_cell = pe.Cell(loc=(-2, 3.2))
+        microcell = pe.Microcell(local_cell)
+        self.assertEqual(microcell.location[0], -2)
+        self.assertEqual(microcell.location[1], 3.2)
+        self.assertRaises(ValueError, microcell.set_location, (1, 1, 1))
+        self.assertRaises(ValueError, microcell.set_location, (1, (8, 6)))
+        self.assertRaises(ValueError, microcell.set_location, ('1', 1))
 
 
 if __name__ == '__main__':
