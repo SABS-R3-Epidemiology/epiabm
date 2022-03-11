@@ -54,6 +54,8 @@ Tests for `pyEpiabm` use the `unittest` framework, while those in `cEpiabm` use 
 
 All python tests are ran from the `pyEpiabm/run_tests` directory, which also contains comprehensive documentation tests, to ensure all new modules are also included in the documentation. Further information on how to run those tests is availiable in that file, while the github workflows describe how to run the C++ tests.
 
+We currently support python 3.6 onwards, and C++ 20.04, so ask that any contributions are also compatible with these versions.
+
 ## Submitting changes
 
 Please send a [GitHub Pull Request to epiabm](https://github.com/SABS-R3-Epidemiology/epiabm/pull/new/master) with a clear list of what you've done (read more about [pull requests](http://help.github.com/pull-requests/)). Please follow our coding conventions (below) and make sure all of your commits are atomic (one feature per commit).
@@ -73,6 +75,8 @@ We have some general conventions in our `.editorconfig` [file](https://github.co
   * We have 79 characters per line, and avoid backslashes as far as possible when trying to achieve this.
   * We put spaces after list items (`[1, 2, 3]`, not `[1,2,3]`) and around operators (`x += 1`, not `x+=1`).
   * This is open source software. Consider the people who will read your code, and make it look nice for them.
+
+We use [flake8](https://flake8.pycqa.org/en/latest/) style guide enforcement, so recommend using this to lint your code.
 
 Thanks,
 The epiabm team
