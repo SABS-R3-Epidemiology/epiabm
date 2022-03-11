@@ -53,7 +53,7 @@ git commit -m "Change installation directory (#94)"
 ### Merging your changes
 
 6. [Test your code!](#testing)
-7. Make sure any new methods or classes you added are documented, and show up on our online docs, please read the [documentation](#documentation) section for more info.
+7. Make sure any new methods or classes you added are documented, and this builds locally, please read the [documentation](#documentation) section for more info.
 8. When you feel your code is finished, run syle, docs and unit tests and then create a [pull request](https://help.github.com/articles/about-pull-requests/) (PR) on [epiabm GitHub page](https://github.com/SABS-R3-Epidemiology/epiabm/pulls).
 9. Once a PR has been created, it will be reviewed by any member of the community. Changes might be suggested which you can make by simply adding new commits to the branch. When everything's finished, someone with the right GitHub permissions will merge your changes into epiabm master repository.
 

@@ -9,7 +9,7 @@ If relevant, add in what needs to be done next on this area (and whether you wil
 ## Checklist
 
 - [ ] All new functions have docstrings in the correct style
-- [ ] I've verified the docs load proerly online
+- [ ] I've verified the complete docs build locally without errors
 - [ ] I've maintained 100% coverage (please mention any 'no cover' annotations explicitly)
 - [ ] I've unit-tested all new methods directly
 
