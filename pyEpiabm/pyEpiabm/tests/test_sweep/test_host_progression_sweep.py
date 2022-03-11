@@ -105,7 +105,7 @@ class TestHostProgressionSweep(unittest.TestCase):
 
         matrix = np.zeros([len(InfectionStatus), len(InfectionStatus)])
         # Set ICU recovery infection status column values to 1. This way
-        # everyone who is not recovered or dead wiil have their next
+        # everyone who is not recovered or dead will have their next
         # infection status set as ICURecov
         matrix[:, -3] = 1
         matrix = pd.DataFrame(matrix,
@@ -165,19 +165,29 @@ class TestHostProgressionSweep(unittest.TestCase):
         """Tests exception is raised with incorrect icdf or value in time
         transition matrix.
         """
-        class BadICDF:
-            def icdf_choose_noexp(self):
-                raise AttributeError('test')
 
         test_sweep = pe.sweep.HostProgressionSweep()
         person = self.people[0]
         test_sweep._update_next_infection_status(self.people[0])
         row_index = person.infection_status.name
         column_index = person.next_infection_status.name
-        test_sweep.transition_time_matrix.loc[row_index, column_index] \
-            = BadICDF()
+
+        zero_trans_mat = np.zeros((len(InfectionStatus), len(InfectionStatus)))
+        labels = [status.name for status in InfectionStatus]
+        init_matrix = pd.DataFrame(zero_trans_mat,
+                                   columns=labels,
+                                   index=labels,
+                                   dtype=object)
+        test_sweep.transition_time_matrix = init_matrix
+        test_sweep.transition_time_matrix.\
+            loc[row_index, column_index] = mock.Mock()
+        test_sweep.transition_time_matrix.loc[row_index, column_index].\
+            icdf_choose_noexp.side_effect = AttributeError
+
         with self.assertRaises(AttributeError):
             test_sweep._update_time_status_change(self.people[0], 1.0)
+        test_sweep.transition_time_matrix.loc[row_index, column_index].\
+            icdf_choose_noexp.assert_called_once()
 
     def test_infectiousness_progression(self):
         """Tests that the output is a numpy ndarray and that the tail of the
@@ -346,7 +356,7 @@ class TestHostProgressionSweep(unittest.TestCase):
     def test_multiple_transitions_in_one_time_step(self, mock_next_time):
         """Reconfigure population and check that a person is able to progress
         infection status multiple times in the same time step. This will be
-        checked by setting the time transition time as 0 so Person 1 should
+        checked by setting the time transition time to 0 so Person 1 should
         progress from susceptible through the whole infection timeline ending
         up as either recovered or dead in one time step.
         """

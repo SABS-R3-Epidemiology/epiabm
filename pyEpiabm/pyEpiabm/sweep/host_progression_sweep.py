@@ -8,9 +8,7 @@ import numpy as np
 import pyEpiabm as pe
 from pyEpiabm.core import Person
 from pyEpiabm.property import InfectionStatus
-
-from pyEpiabm.utility import StateTransitionMatrix
-from pyEpiabm.utility import TransitionTimeMatrix
+from pyEpiabm.utility import StateTransitionMatrix, TransitionTimeMatrix
 
 from .abstract_sweep import AbstractSweep
 
@@ -37,7 +35,7 @@ class HostProgressionSweep(AbstractSweep):
         self.state_transition_matrix =\
             matrix_object.create_state_transition_matrix()
         self.number_of_states = len(InfectionStatus)
-        assert self.state_transition_matrix.shape ==\
+        assert self.state_transition_matrix.shape == \
             (self.number_of_states, self.number_of_states),\
             'Matrix dimensions must match number of infection states'
 
@@ -51,8 +49,8 @@ class HostProgressionSweep(AbstractSweep):
         self.latent_to_symptom_delay =\
             pe.Parameters.instance().latent_to_sympt_delay
         self.model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
-        self.delay = np.floor(self.latent_to_symptom_delay /
-                              self.model_time_step)
+        self.delay = np.floor(self.latent_to_symptom_delay
+                              / self.model_time_step)
 
         # Instantiate parameters to be used in update infectiousness
         self.infectious_profile = pe.Parameters.instance().infectiousness_prof
@@ -122,9 +120,9 @@ class HostProgressionSweep(AbstractSweep):
             outcomes = range(1, self.number_of_states + 1)
 
             if len(weights) != len(outcomes):
-                raise AssertionError('The number of infection statuses must \
-                                    match the number of transition \
-                                    probabilities')
+                raise AssertionError('The number of infection statuses must' +
+                                     'match the number of transition' +
+                                     'probabilities')
 
             next_infection_status_number = random.choices(outcomes, weights)[0]
             next_infection_status =\
@@ -149,10 +147,10 @@ class HostProgressionSweep(AbstractSweep):
         """
         # Defines the transition time. If the person will not transition again,
         # the transition time is set to infinity. Else, the transition time is
-        # defined using the TransitionTimeMatrix class, with a method choose
-        # from the InverseCdf class.
-        if (person.infection_status == InfectionStatus.Recovered or
-                person.infection_status == InfectionStatus.Dead):
+        # defined using the TransitionTimeMatrix class, with the method
+        # `choose` from the InverseCdf class.
+        if person.infection_status in [InfectionStatus.Recovered,
+                                       InfectionStatus.Dead]:
             transition_time = np.inf
         else:
             row_index = person.infection_status.name
@@ -160,21 +158,25 @@ class HostProgressionSweep(AbstractSweep):
             transition_time_icdf_object =\
                 self.transition_time_matrix.loc[row_index, column_index]
             # Checks for susceptible to exposed case
-            #  where transition time is zero
+            # where transition time is zero
             try:
                 transition_time =\
                     transition_time_icdf_object.icdf_choose_noexp()
             except AttributeError as e:
                 if "object has no attribute 'icdf_choose_noexp'" in str(e):
                     transition_time = transition_time_icdf_object
+                    assert isinstance(
+                        transition_time_icdf_object,
+                        (float, int)), \
+                        ("Entries of transition time matrix" +
+                         "must either be ICDF" + " objects or numbers")
                 else:
-                    print('a')
                     raise
 
         # Adds delay to transition time for first level symptomatic infection
         # statuses (InfectMild or InfectGP), as is done in CovidSim.
-        if (person.infection_status == InfectionStatus.InfectMild or
-                person.infection_status == InfectionStatus.InfectGP):
+        if person.infection_status in [InfectionStatus.InfectMild,
+                                       InfectionStatus.InfectGP]:
             time += self.delay
         # Assigns the time of status change using current time and transition
         # time:

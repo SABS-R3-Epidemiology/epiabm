@@ -86,11 +86,8 @@ class TestTransitionTimeMatrix(unittest.TestCase):
         transition_time_icdf_mean = 10.0
         transition_matrix = matrix_object.create_transition_time_matrix()
         matrix_object.update_transition_time_with_icdf(
-            row_status,
-            column_status,
-            transition_matrix,
-            transition_time_icdf,
-            transition_time_icdf_mean)
+            row_status, column_status, transition_matrix,
+            transition_time_icdf, transition_time_icdf_mean)
         test_updated_icdf = transition_matrix.loc['Susceptible', 'Exposed']
         self.assertEqual(10.0,
                          test_updated_icdf.mean)
@@ -107,11 +104,8 @@ class TestTransitionTimeMatrix(unittest.TestCase):
             test_mean = 1.0
             test_icdf = np.ones(10)
             matrix_object.update_transition_time_with_icdf(
-                row,
-                column,
-                transition_matrix,
-                test_icdf,
-                test_mean)
+                row, column, transition_matrix,
+                test_icdf, test_mean)
 
         with self.assertRaises(ValueError):
             row = None
@@ -119,11 +113,8 @@ class TestTransitionTimeMatrix(unittest.TestCase):
             test_mean = 1.0
             test_icdf = np.ones(10)
             matrix_object.update_transition_time_with_icdf(
-                row,
-                column,
-                transition_matrix,
-                test_icdf,
-                test_mean)
+                row, column, transition_matrix,
+                test_icdf, test_mean)
 
         # Test error for incorrect icdf mean is raised
         with self.assertRaises(ValueError):
@@ -132,11 +123,8 @@ class TestTransitionTimeMatrix(unittest.TestCase):
             test_mean = -5.0
             test_icdf = np.ones(10)
             matrix_object.update_transition_time_with_icdf(
-                row,
-                column,
-                transition_matrix,
-                test_icdf,
-                test_mean)
+                row, column, transition_matrix,
+                test_icdf, test_mean)
 
         # Test error for incorrect size icdf array is raised
         with self.assertRaises(ValueError):
@@ -145,11 +133,8 @@ class TestTransitionTimeMatrix(unittest.TestCase):
             test_mean = 1.0
             test_icdf = np.ones(1)
             matrix_object.update_transition_time_with_icdf(
-                row,
-                column,
-                transition_matrix,
-                test_icdf,
-                test_mean)
+                row, column, transition_matrix,
+                test_icdf, test_mean)
 
         # Test error for negative icdf array valuesis raised
         with self.assertRaises(ValueError):
