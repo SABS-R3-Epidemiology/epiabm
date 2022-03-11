@@ -59,38 +59,42 @@ class HostProgressionSweep(AbstractSweep):
         # Infectiousness progression
         # Instantiate parameters to be used in update infectiousness
         infectious_profile = pe.Parameters.instance().infectiousness_prof
-        inf_prof_res = len(infectious_profile) - 1
+        inf_prof_resolution = len(infectious_profile) - 1
         infectious_period = pe.Parameters.instance().asympt_infect_period
         # Extreme case where model time step would be too small
         max_inf_steps = 2550
-        # k is number of time steps a person is infectious
-        k = int(np.ceil(infectious_period / self.model_time_step))
-        if k >= max_inf_steps:
+        # Define number of time steps a person is infectious:
+        num_infectious_ts =\
+            int(np.ceil(infectious_period / self.model_time_step))
+        if num_infectious_ts >= max_inf_steps:
             raise ValueError('Number of infect timesteps exceeds limit')
         # Initialisation
-        infectious_profile[inf_prof_res] = 0
+        infectious_profile[inf_prof_resolution] = 0
         infectiousness_prog = np.zeros(max_inf_steps)
-        s = 0
+        sum_for_scaling = 0
         # Fill infectiousness progression array
-        for i in range(k):
+        for i in range(num_infectious_ts):
             t = (((i * self.model_time_step) / infectious_period)
-                 * inf_prof_res)
-            j = int(np.floor(t))
-            t -= j
-            if j < inf_prof_res:
-                infectiousness_prog[i] = (infectious_profile[j] * (1 - t)
-                                          + infectious_profile[j + 1] * t)
-                s += infectiousness_prog[i]
+                 * inf_prof_resolution)
+            # Infectiousness value associated to infectiousness profile:
+            associated_inf_value = int(np.floor(t))
+            t -= associated_inf_value
+            if associated_inf_value < inf_prof_resolution:
+                infectiousness_prog[i] =\
+                    (infectious_profile[associated_inf_value] * (1 - t)
+                     + infectious_profile[associated_inf_value + 1] * t)
+                sum_for_scaling += infectiousness_prog[i]
             else:  # limit case where we define infectiousness to 0
-                infectiousness_prog[i] = infectious_profile[inf_prof_res]
-                s += infectiousness_prog[i]
+                infectiousness_prog[i] =\
+                    infectious_profile[inf_prof_resolution]
+                sum_for_scaling += infectiousness_prog[i]
         # Scaling
-        s /= k
+        scaling_param = sum_for_scaling / num_infectious_ts
         # Removes artificial case of division by 0, would only happen if every
         # infectiousness element is 0, in which case we do not need to scale.
-        if s != 0:
-            for i in range(k+1):
-                infectiousness_prog[i] /= s
+        if scaling_param != 0:
+            for i in range(num_infectious_ts + 1):
+                infectiousness_prog[i] /= scaling_param
         self.infectiousness_progression = infectiousness_prog
 
     @staticmethod
@@ -111,13 +115,6 @@ class HostProgressionSweep(AbstractSweep):
             Instance of person class with infection status attributes
         time : float
             Current simulation time
-
-        Returns
-        -------
-        float
-            Initial infectiousness of a person
-        float
-            Infection start time of a person
 
         """
         init_infectiousness = np.random.gamma(1, 1)
@@ -284,5 +281,4 @@ class HostProgressionSweep(AbstractSweep):
                         self.set_infectiousness(person, time)
                     self._update_next_infection_status(person)
                     self._update_time_status_change(person, time)
-                    continue
                 self._updates_infectiousness(person, time)
