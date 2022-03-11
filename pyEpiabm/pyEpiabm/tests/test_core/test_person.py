@@ -67,12 +67,13 @@ class TestPerson(unittest.TestCase):
     def test_configure_place(self):
         # Tests both the add and remove functions
         self.assertEqual(len(self.person.places), 0)
-        test_place = pe.Place((1.0, 1.0), pe.property.PlaceType.Hotel,
+        test_place = pe.Place((1.0, 1.0), pe.property.PlaceType.Workplace,
                               self.cell, self.microcell)
         self.person.add_place(test_place)
         self.assertTrue(len(self.person.places) > 0)
-        test_cell = pe.Cell
-        test_place_2 = pe.Place((1.0, 1.0), pe.property.PlaceType.Hotel,
+        test_cell = pe.Cell()
+        test_place_2 = pe.Place((1.0, 1.0), pe.property.PlaceType.Workplace,
+
                                 test_cell, pe.Microcell(test_cell))
         self.assertRaises(AttributeError, self.person.add_place, test_place_2)
 

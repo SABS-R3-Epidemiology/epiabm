@@ -1,5 +1,7 @@
 import unittest
+import numpy as np
 
+import pyEpiabm as pe
 from pyEpiabm.utility import DistanceFunctions
 
 
@@ -36,6 +38,17 @@ class TestDistanceFunctions(unittest.TestCase):
         self.assertAlmostEqual(f((-3, 0), stride, scales), 4)
         self.assertAlmostEqual(f((-3, 0), stride, scales, (3, 0)), 2)
         self.assertAlmostEqual(f((1, -3), stride, scales, (1, 4)), 4)
+
+    def test_minimum_distance(self):
+        f = DistanceFunctions.minimum_between_cells
+        cell1 = pe.Cell()
+        cell2 = pe.Cell((1, 1))
+        for cell in [cell1, cell2]:
+            cell.add_microcells(1)
+        self.assertAlmostEqual(f(cell1, cell2), np.sqrt(2))
+        cell2.microcells[0].set_location((1.0, 0.5))
+        cell1.microcells[0].set_location((0.0, 0.5))
+        self.assertAlmostEqual(f(cell1, cell2), 1)
 
 
 if __name__ == '__main__':

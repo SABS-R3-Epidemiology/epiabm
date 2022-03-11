@@ -12,6 +12,7 @@ Overview:
 - :class:`HostProgressionSweep`
 - :class:`HouseholdSweep`
 - :class:`InitialInfectedSweep`
+- :class:`InitialisePlaceSweep`
 - :class:`PlaceSweep`
 - :class:`QueueSweep`
 - :class:`SpatialSweep`
@@ -26,6 +27,10 @@ Overview:
     :special-members: __call__
 
 .. autoclass:: HouseholdSweep
+    :members:
+    :special-members: __call__
+
+.. autoclass:: InitialisePlaceSweep
     :members:
     :special-members: __call__
 

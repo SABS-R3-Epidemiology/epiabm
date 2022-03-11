@@ -42,6 +42,7 @@ class Person:
         self.infection_status = InfectionStatus.Susceptible
         self.household = None
         self.places = []
+        self.place_types = []
         self.next_infection_status = None
         self.time_of_status_change = None
 
@@ -127,15 +128,25 @@ class Person:
         new_time = random.randint(1, 10)
         self.time_of_status_change = new_time
 
-    def add_place(self, place):
+    def add_place(self, place, person_group: int = 0):
         """Method adds a place to the place list if the person visits
-        or is associated with this place.
+        or is associated with this place. Places are saved as a tuple
+        with the place as the first entry and the group the person is
+        associated with as the second.
+
+        Parameters
+        ----------
+        place: Place
+            Place person should be added to
+        person_group : int
+            Key for the person group dictionary
 
         """
         if place.cell != self.microcell.cell:
             raise AttributeError("Place and person are not in the same\
                                  cell")
-        self.places.append(place)
+        self.places.append((place, person_group))
+        self.place_types.append(place.place_type)
 
     def remove_place(self, place):
         """Method to remove person for each associated place, to be
@@ -147,7 +158,10 @@ class Person:
             Place person should be removed from
 
         """
-        if place not in self.places:
+        place_list = [i[0] for i in self.places]
+        if place not in place_list:
             raise KeyError("Person not found in this place")
         else:
-            self.places.remove(place)
+            ind = place_list.index(place)
+            self.places.pop(ind)
+            self.place_types.remove(place.place_type)
