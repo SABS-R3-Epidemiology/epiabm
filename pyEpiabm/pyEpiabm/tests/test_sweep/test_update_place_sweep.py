@@ -66,7 +66,7 @@ class TestUpdatePlaceSweep(unittest.TestCase):
                              {0: [], 1: [person]})
         self.place.empty_place()
         test_sweep.update_place_group(place, person_list=[])
-        log_mock.called
+        log_mock.assert_called
 
         self.assertRaises(AssertionError, test_sweep.update_place_group, place,
                           person_list=[person], person_weights=[],
@@ -88,13 +88,13 @@ class TestUpdatePlaceSweep(unittest.TestCase):
 
         place.place_type = PlaceType.OutdoorSpace
         test_sweep(1)
-        mock_update.called_with(place)
+        mock_update.assert_called_with(place)
 
         place.place_type = PlaceType.Workplace
         place.add_person(person, 1)
         place.remove_person(person)
         test_sweep(1)
-        mock_update.called_with(place)
+        mock_update.assert_called
 
 
 if __name__ == "__main__":

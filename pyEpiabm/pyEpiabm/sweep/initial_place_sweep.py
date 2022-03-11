@@ -15,7 +15,12 @@ class InitialisePlaceSweep(AbstractSweep):
     """
     def __call__(self):
         """Given a population structure, updates the people
-        present in each place at a specific timepoint.
+        present in each place at a specific timepoint. The
+        explicit code handles the fixed population which are
+        not changed later on in the simulation. To initialise
+        the variable population (for example OutdoorSpace only
+        has a variable population) one instance of
+        UpdatePlaceSweep is called at the end to instantiate that.
 
         :param time: Current simulation time
         :type time: int
@@ -79,7 +84,8 @@ class InitialisePlaceSweep(AbstractSweep):
                     helper.update_place_group(place, group_index=1,
                                               person_list=person_list)
 
-        # Add temporary population via the update sweep
+        # Instantiate the temporary population in each place using
+        # the update sweep.
         add_temporary_population = UpdatePlaceSweep()
         add_temporary_population.bind_population(self._population)
         add_temporary_population(0)
