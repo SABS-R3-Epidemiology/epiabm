@@ -11,8 +11,7 @@ Overview:
 - :class:`DistanceFunctions`
 - :class:`InverseCdf`
 - :class:`RandomMethods`
-- :class:`StateTransitionMatrix`
-
+- :class:`SpatialKernel`
 - :class:`StateTransitionMatrix`
 
 - :class:`TransitionTimeMatrix`
@@ -24,6 +23,9 @@ Overview:
     :members:
 
 .. autoclass:: RandomMethods
+    :members:
+
+.. autoclass:: SpatialKernel
     :members:
 
 .. autoclass:: StateTransitionMatrix
