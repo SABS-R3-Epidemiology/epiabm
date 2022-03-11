@@ -59,7 +59,8 @@ class SpatialInfection:
             Infectiousness parameter of cell
 
         """
-        age_scaling = Parameters.instance().age_proportions[infector.age_group]
+        age_scaling = pyEpiabm.core.Parameters.instance().\
+            age_proportions[infector.age_group]
         return infector.infectiousness * age_scaling
 
     @staticmethod
@@ -84,7 +85,8 @@ class SpatialInfection:
             Susceptibility parameter of cell
 
         """
-        return Parameters.instance().age_proportions[infectee.age_group]
+        return pyEpiabm.core.Parameters.instance().\
+            age_proportions[infectee.age_group]
 
     @staticmethod
     def space_foi(inf_cell, susc_cell, infector,
