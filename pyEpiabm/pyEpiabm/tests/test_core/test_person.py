@@ -31,6 +31,12 @@ class TestPerson(unittest.TestCase):
         mock_int.assert_called_once()
         self.assertEqual(self.person.age, 22)
 
+        with patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.use_ages = False
+            self.person.set_random_age()
+            mock_param.assert_called_once()
+            self.assertEqual(self.person.age, 40)
+
     def test_repr(self):
         self.assertEqual(repr(self.person),
                          f"Person, Age = {self.person.age}.")
