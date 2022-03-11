@@ -179,8 +179,6 @@ class Parameters:
                                  "age_group3_prop": [0.005292966, .006331515,
                                                      .064144615, 0.742058813],
                                  "nearest_places": [3, 3, 6, 0],
-                                 "kernel_shape": 3,
-                                 "kernel_scale": 4000,
                                  "mean_size": [230, 1010,  3300, 14.28],
                                  "max_size": [0, 0, 0, 5927],
                                  "size_power": [0, 0, 0, 1.34],
