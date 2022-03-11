@@ -93,7 +93,7 @@ class UpdatePlaceSweep(AbstractSweep):
         else:
             assert len(power_law_params) == 3, \
                 ("Incorrect number of power law parameters given"
-                + " - should be of the form [maximum, offset, power]")
+                 + " - should be of the form [maximum, offset, power]")
             [maximum, offset, power] = power_law_params
             s = (offset / (offset + maximum - 1)) ** power
             r = random.random()
