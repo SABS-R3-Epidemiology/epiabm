@@ -61,9 +61,11 @@ class TestUpdatePlaceSweep(unittest.TestCase):
         # Test when max capacity not set
         self.place.empty_place([1])
         test_sweep.update_place_group(place, person_list=[person],
-                                      max_capacity=0)
+                                      power_law_params=[3, 1, 4])
         self.assertDictEqual(place.person_groups,
                              {0: [], 1: [person]})
+        self.assertRaises(AssertionError, test_sweep.update_place_group,
+                          place, person_list=[person], power_law_params=[3])
 
         # Test when group index set
         self.place.empty_place([1])

@@ -39,7 +39,6 @@ class UpdatePlaceSweep(AbstractSweep):
                     # Checks whether values are present, otherwise uses
                     # defaults
                     mean_cap = params["mean_size"][param_ind]
-                    max_cap = params["max_size"][param_ind]
                 if place.place_type.name == "Workplace":
                     # Variable population is people not in the fixed pop.
                     # Held in the last group of the place.
@@ -49,7 +48,6 @@ class UpdatePlaceSweep(AbstractSweep):
                                       if person not in place.persons]
                     self.update_place_group(place, group_index=-1,
                                             mean_capacity=mean_cap,
-                                            max_capacity=max_cap,
                                             person_list=candidate_list)
 
                 elif place.place_type.name == "OutdoorSpace":
@@ -57,7 +55,8 @@ class UpdatePlaceSweep(AbstractSweep):
                     self.update_place_group(place)
 
     def update_place_group(self, place, mean_capacity: float = 25,
-                           max_capacity: int = 50, group_index: int = None,
+                           power_law_params: list = None,
+                           group_index: int = None,
                            group_size: int = 0, person_list: list = None,
                            person_weights: list = None):
         """Specific method to update people in a place or place group.
@@ -66,8 +65,12 @@ class UpdatePlaceSweep(AbstractSweep):
         ----------
         place : Place
             Place to change
-        max_capacity : int
-            Maximum people of in this place
+        mean_capacity : int
+            Average number people of in this place
+        power_law_params : list
+            Should only be given for workplaces, contains the further
+            parameters used to calculate place_size. List ent,ries should
+            take the order [Maximum size, Offset, Power]
         group_index : int
             If specified, the index of the group to be added to
         group_size: int
@@ -83,13 +86,20 @@ class UpdatePlaceSweep(AbstractSweep):
 
         # Ensure that the number of people put in the place
         # is at most its capacity or the total number of
-        # people in the cell.
-        new_capacity = np.random.lognormal(mean_capacity)
-        if max_capacity > 0:
-            # Covidsim data has some zeros for max capacity
-            new_capacity = min(new_capacity, max_capacity, len(person_list))
+        # people in the cell. Will use a power law calculation if
+        # parameters are provided, and a Poisson distribution is not.
+        if power_law_params is None:
+            new_capacity = np.random.poisson(mean_capacity)
         else:
-            new_capacity = min(new_capacity, len(person_list))
+            assert len(power_law_params) == 3, \
+                "Incorrect number of power law parameters given"
+            [maximum, offset, power] = power_law_params
+            s = (offset / (offset + maximum - 1)) ** power
+            r = random.random()
+            num = offset * ((1 - s) * r + s) ** (-1 / power) + 1 - offset
+            new_capacity = math.floor(num)
+
+        new_capacity = min(new_capacity, len(person_list))
 
         if len(person_list) <= 0:
             logging.warning("No people in the person list supplied.")

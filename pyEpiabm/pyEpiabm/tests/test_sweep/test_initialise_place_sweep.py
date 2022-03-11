@@ -57,7 +57,6 @@ class TestInitialisePlaceSweep(unittest.TestCase):
         test_sweep()
         mock_update.assert_called_with(place, group_index=-1,
                                        mean_capacity=14.28,
-                                       max_capacity=5927,
                                        person_list=[person])
         mock_weights.assert_called_with(place, self.params)
 

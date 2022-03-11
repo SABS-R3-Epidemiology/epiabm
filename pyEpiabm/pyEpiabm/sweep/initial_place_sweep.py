@@ -45,7 +45,9 @@ class InitialisePlaceSweep(AbstractSweep):
                     # defaults
                     # nearest_places = params["nearest_places"][param_ind]
                     mean_cap = params["mean_size"][param_ind]
-                    max_cap = params["max_size"][param_ind]
+                    max_size = params["max_size"][param_ind]
+                    offset = params["size_offset"][param_ind]
+                    power = params["size_power"][param_ind]
                     ave_group_size = params["mean_group_size"][param_ind]
                     [person_list, weights] = self.create_age_weights(place,
                                                                      params)
@@ -55,18 +57,18 @@ class InitialisePlaceSweep(AbstractSweep):
                     helper.update_place_group(place, group_size=ave_group_size,
                                               person_list=person_list,
                                               person_weights=weights,
-                                              mean_capacity=mean_cap,
-                                              max_capacity=max_cap)
+                                              mean_capacity=mean_cap)
 
                 elif place.place_type.name == "Workplace":  # WORKSPACE
                     # Fixed population is initialised on first run
                     # thinking of making sure people don't have more than one
                     # workplace
+                    power_list = [max_size, offset, power]
                     helper.update_place_group(place, group_size=ave_group_size,
                                               person_list=person_list,
                                               person_weights=weights,
                                               mean_capacity=mean_cap,
-                                              max_capacity=max_cap)
+                                              power_law_params=power_list)
 
                 elif place.place_type.name == "CareHome":  # CAREHOME
                     # Kit will add more detail for Carehomes
