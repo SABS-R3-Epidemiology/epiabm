@@ -10,7 +10,7 @@ import typing
 
 from pyEpiabm.core import Cell, Parameters, Person
 from pyEpiabm.property import InfectionStatus, SpatialInfection
-from pyEpiabm.utility import DistanceFunctions
+from pyEpiabm.utility import DistanceFunctions, SpatialKernel
 
 from .abstract_sweep import AbstractSweep
 
@@ -192,8 +192,9 @@ class SpatialSweep(AbstractSweep):
         while number_to_infect > 0 and count < self._population.total_people():
             count += 1
             # Weighting for cell choice in Covidsim uses cum_trans and
-            # invCDF arrays, but really can't see how these are
-            # initialised. Have used the number of susceptible for now.
+            # invCDF arrays, which are equivalent to weighting by total
+            # susceptibles*max_transmission. May want to add transmission
+            # parameter later.
             weights = [cell2.compartment_counter.retrieve()
                        [InfectionStatus.Susceptible]
                        for cell2 in possible_infectee_cells]
@@ -202,10 +203,17 @@ class SpatialSweep(AbstractSweep):
             # Sample at random from the infectee cell to find
             # an infectee
             infectee = random.sample(infectee_cell.persons, 1)[0]
-            infection_distance = (DistanceFunctions.dist(
-                infector.microcell.cell.location, infectee_cell.location) /
-                Parameters.instance().infection_radius)
-            if (infection_distance < random.random()):
+            # Covidsim tested each infection event by testing the ratio
+            # of the spatial kernel applied to the distance between people
+            # to the spatial kernel of the shortest distance between
+            # their cells.
+            infection_distance = DistanceFunctions.dist(
+                infector.microcell.cell.location, infectee_cell.location)
+            minimum_dist = DistanceFunctions.minimum_between_cells(
+                infectee_cell, infector.microcell.cell)
+            infection_kernel = (SpatialKernel.weighting(infection_distance) /
+                                SpatialKernel.weighting(minimum_dist))
+            if (infection_kernel > random.random()):
                 # Covidsim rejects the infection event if the distance
                 # between infector/infectee is too large.
                 infectee_list.append(infectee)
