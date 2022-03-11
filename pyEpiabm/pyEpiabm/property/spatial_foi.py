@@ -42,8 +42,7 @@ class SpatialInfection:
                   time: float):
         """Calculate the infectiousness between cells, dependent on the
         infectious people in it. Does not include interventions such as
-        isolation, whether individual is a carehome resident, or age
-        dependance on spatial contact.
+        isolation, whether individual is a carehome resident.
 
         Parameters
         ----------
@@ -60,13 +59,14 @@ class SpatialInfection:
             Infectiousness parameter of cell
 
         """
-        return infector.infectiousness
+        age_scaling = Parameters.instance().age_proportions[infector.age_group]
+        return infector.infectiousness * age_scaling
 
     @staticmethod
     def space_susc(susc_cell, infectee,
                    time: float):
         """Calculate the susceptibility of one cell towards its neighbouring cells.
-        Does not include interventions such as isolation, age of individual
+        Does not include interventions such as isolation,
         or whether individual is a carehome resident.
 
         Parameters
@@ -84,7 +84,7 @@ class SpatialInfection:
             Susceptibility parameter of cell
 
         """
-        return 1.0
+        return Parameters.instance().age_proportions[infectee.age_group]
 
     @staticmethod
     def space_foi(inf_cell, susc_cell, infector,
