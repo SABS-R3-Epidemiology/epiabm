@@ -4,9 +4,10 @@
 
 import numpy as np
 
+from pyEpiabm.core import Parameters
+
 from .abstract_sweep import AbstractSweep
 from .update_place_sweep import UpdatePlaceSweep
-from pyEpiabm.core import Parameters
 
 
 class InitialisePlaceSweep(AbstractSweep):
@@ -17,8 +18,11 @@ class InitialisePlaceSweep(AbstractSweep):
         """Given a population structure, updates the people
         present in each place at a specific timepoint.
 
-        :param time: Current simulation time
-        :type time: int
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+
         """
 
         # Double loop over the whole population, clearing places
@@ -100,10 +104,11 @@ class InitialisePlaceSweep(AbstractSweep):
         Returns
         -------
 
-        person_list : list
+        typing.List[Person]
             List of people who may be in the place
-        weights : list
+        typing.List[float]
             Corresponding weights for the person list
+
         """
         param_ind = place.place_type.value - 1
         min_age = [params["age_group1_min_age"][param_ind],
