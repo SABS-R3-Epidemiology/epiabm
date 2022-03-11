@@ -189,7 +189,8 @@ class HostProgressionSweep(AbstractSweep):
         -------
         infectiousness_prog : np.array
             Infectiousness progression for each time step since start of
-            infection, used to scale infectiousness of an infected person.
+            infection, used to scale the initial infectiousness of an infected
+            person.
 
         """
         # Extreme case where model time step would be too small
@@ -212,15 +213,17 @@ class HostProgressionSweep(AbstractSweep):
                 infectiousness_prog[i] = (self.infectious_profile[j] * (1 - t)
                                           + self.infectious_profile[j + 1] * t)
                 s += infectiousness_prog[i]
-            else:
+            else:  # limit case where we define infectiousness to 0
                 infectiousness_prog[i] =\
                     self.infectious_profile[self.inf_prof_res]
-                # These both seem to always be zero - KG
                 s += infectiousness_prog[i]
-        # Scaling (?)
+        # Scaling
         s /= k
-        for i in range(k+1):
-            infectiousness_prog[i] /= s
+        # Removes artificial case of division by 0, would only happen if every
+        # infectiousness element is 0, in which case we do not need to scale.
+        if s != 0:
+            for i in range(k+1):
+                infectiousness_prog[i] /= s
         return infectiousness_prog
 
     def _updates_infectiousness(self, person: Person, time: float):
@@ -263,9 +266,10 @@ class HostProgressionSweep(AbstractSweep):
                 person.infection_start_time = None
 
     def __call__(self, time: float):
-        """Sweeps through all people in the population, updates
-        their infection status if it is time and assigns them their
-        next infection status and the time of their next status change.
+        """Sweeps through all people in the population, updates their
+        infection status if it is time and assigns them their next infection
+        status and the time of their next status change. Also updates their
+        infectiousness.
 
         Parameters
         ----------
