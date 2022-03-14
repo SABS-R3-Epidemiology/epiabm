@@ -4,6 +4,7 @@
 
 import random
 
+from pyEpiabm.core import Person
 from pyEpiabm.core import Parameters
 from .abstract_sweep import AbstractSweep
 
@@ -55,7 +56,7 @@ class AssignHouseholdAges(AbstractSweep):
             Parameters.instance().three_child_five_pers_prob
         self.older_gen_gap = Parameters.instance().older_gen_gap
 
-    def one_person_household_age(self, person):
+    def one_person_household_age(self, person: Person):
         """ Method that assigns an age to the person
         belonging to a one person household. A random number is first drawn
         that decides which set of conditions the person's age
@@ -71,35 +72,108 @@ class AssignHouseholdAges(AbstractSweep):
 
         """
 
-        r = random.random
+        r = random.random()
 
         if r < self.one_pers_house_prob_old:
             while True:
                 person.set_random_age()
-                if person.age >= self.no_child_pers_age:
-                    break
                 break_ratio = ((person.age - self.no_child_pers_age + 1)
                                / (self.old_pers_age - self.no_child_pers_age
                                + 1))
-                if random.random <= break_ratio:
+                if (person.age >= self.no_child_pers_age) and\
+                   (random.random() <= break_ratio):
                     break
         elif (self.one_pers_house_prob_young > 0) and \
             (r < (self.one_pers_house_prob_young
              / (1 - self.one_pers_house_prob_old))):
             while True:
                 person.set_random_age()
-                if (person.age <= self.young_and_single):
-                    break
-                if (person.age >= self.min_adult_age):
-                    break
                 break_ratio = (
                     1 - self.young_and_single_slope
                     * ((person.age - self.min_adult_age)
                         / (self.young_and_single - self.min_adult_age)))
-                if random.random <= break_ratio:
+                if (person.age <= self.young_and_single) and\
+                   (person.age >= self.min_adult_age) and\
+                   (random.random() <= break_ratio):
                     break
         else:
             while True:
                 person.set_random_age()
                 if person.age >= self.min_adult_age:
+                    break
+
+    def two_person_household_ages(self, people):
+
+        r = random.random()
+        person1 = people[0]
+        person2 = people[1]
+        assert len(people) == 2,\
+               'Only a list of two people should be passed to this method'
+
+        if r < self.two_pers_house_prob_old:
+            while True:
+                person1.set_random_age()
+                break_ratio = ((person1.age - self.no_child_pers_age + 1)
+                               / (self.old_pers_age
+                               - self.no_child_pers_age + 1))
+                if (person1.age >= self.no_child_pers_age) and\
+                   (random.random() <= break_ratio):
+                    break
+            while True:
+                person2.set_random_age()
+                break_ratio = ((person2.age - self.no_child_pers_age + 1)
+                               / (self.old_pers_age
+                               - self.no_child_pers_age + 1))
+                if (person2.age <= person1.age
+                   + self.max_MF_partner_age_gap) and\
+                   (person2.age >= person1.age
+                   - self.max_FM_partner_age_gap) and\
+                   (person2.age >= self.no_child_pers_age) and\
+                   (random.random <= break_ratio):
+                    break
+        elif r < (self.one_child_two_pers_prob
+                  / (1 - self.two_pers_house_prob_old)):
+            person1.set_random_age()
+            # unsure about this
+            while person1.age > self.max_child_age:
+                person2.set_random_age()
+                if (person2.age <= person1.age + self.max_parent_age_gap) and\
+                   (person2.age >= person1.age + self.min_parent_age_gap) and\
+                   (person2.age >= self.min_adult_age):
+                    break
+                person1.set_random_age()
+        elif (self.two_pers_house_prob_young > 0) and\
+             (r < (self.two_pers_house_prob_young
+              / (1 - self.two_pers_house_prob_old
+                 - self.one_child_two_pers_prob))):
+            while True:
+                person1.set_random_age()
+                break_ratio = 1 - (self.young_and_single_slope
+                                   * ((person1.age - self.min_adult_age)
+                                      / (self.young_and_single
+                                      - self.min_adult_age)))
+                if (person1.age >= self.min_adult_age) and\
+                   (person1.age <= self.young_and_single) and\
+                   (random.random() <= break_ratio):
+                    break
+            while True:
+                person2.set_random_age()
+                if (person2.age <= person1.age
+                   + self.max_MF_partner_age_gap) and\
+                   (person2.age >= person1.age
+                   - self.max_FM_partner_age_gap) and\
+                   (person2.age >= self.min_adult_age):
+                    break
+        else:
+            while True:
+                person1.set_random_age()
+                if person1.age >= self.min_adult_age:
+                    break
+            while True:
+                person2.set_random_age()
+                if (person2.age <= person1.age
+                   + self.max_MF_partner_age_gap) and\
+                   (person2.age >= person1.age
+                    - self.max_FM_partner_age_gap) and\
+                   (person2.age >= self.min_adult_age):
                     break
