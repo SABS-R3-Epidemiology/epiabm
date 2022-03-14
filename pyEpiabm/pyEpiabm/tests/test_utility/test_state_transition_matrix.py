@@ -1,9 +1,10 @@
 from collections import defaultdict
-import unittest
 from enum import Enum
-import pandas as pd
 import numpy as np
+import pandas as pd
 from pandas.testing import assert_frame_equal
+import unittest
+from unittest import mock
 
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import StateTransitionMatrix
@@ -29,6 +30,14 @@ class TestStateTransitionMatrix(unittest.TestCase):
             "prob_icu_to_death": 0.5
         }
 
+        self.list_coefficients = defaultdict(
+            int, {
+                "prob_exposed_to_asympt": [0.8, 0.2],
+                "prob_exposed_to_mild": [0.2, 0.8],
+            }
+        )
+        self.age_prop = [0.1, 0.9]
+
     def test_init(self):
         self.assertIsInstance(self.matrix_object.matrix, pd.DataFrame)
         self.assertFalse(self.matrix_object.age_dependent)
@@ -44,7 +53,8 @@ class TestStateTransitionMatrix(unittest.TestCase):
         labels = [status.name for status in InfectionStatus]
         zero_filled_dataframe = pd.DataFrame(np.zeros((len(InfectionStatus),
                                                        len(InfectionStatus))),
-                                             columns=labels, index=labels)
+                                             columns=labels, index=labels,
+                                             dtype='object')
         assert_frame_equal(empty_mat, zero_filled_dataframe)
 
     def test_create_state_transition_matrix(self):
@@ -87,6 +97,27 @@ class TestStateTransitionMatrix(unittest.TestCase):
             row = InfectionStatus.Susceptible
             column = InfectionStatus.Susceptible
             self.matrix_object.update_probability(row, column, 10.0)
+
+    def test_age_dependance(self):
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.age_proportions = self.age_prop
+            matrix_object = StateTransitionMatrix(self.list_coefficients,
+                                                  use_ages=True)
+            mock_param.assert_not_called
+            output = matrix_object.matrix
+            self.assertListEqual([0.8, 0.2], output.loc['Exposed',
+                                                        'InfectASympt'])
+            self.assertEqual([0.2, 0.8], output.loc['Exposed', 'InfectMild'])
+
+    def test_remove_age_dependance(self):
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.age_proportions = self.age_prop
+            matrix_object = StateTransitionMatrix(self.list_coefficients,
+                                                  use_ages=False)
+            mock_param.assert_called_once
+            output = matrix_object.matrix
+            self.assertAlmostEqual(0.26, output.loc['Exposed', 'InfectASympt'])
+            self.assertAlmostEqual(0.74, output.loc['Exposed', 'InfectMild'])
 
 
 if __name__ == '__main__':

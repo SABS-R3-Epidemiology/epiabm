@@ -14,6 +14,21 @@ class TestHostProgressionSweep(unittest.TestCase):
         """Sets up two populations we can use throughout the test.
         3 people are located in one microcell.
         """
+        # Example coefficients for StateTransition<atrix
+
+        self.coefficients = {
+            "prob_exposed_to_asympt": 0.4,
+            "prob_exposed_to_mild": 0.4,
+            "prob_exposed_to_gp": 0.2,
+            "prob_gp_to_recov": 0.9,
+            "prob_gp_to_hosp": 0.1,
+            "prob_hosp_to_recov": 0.6,
+            "prob_hosp_to_icu": 0.2,
+            "prob_hosp_to_death": 0.2,
+            "prob_icu_to_icurecov": 0.5,
+            "prob_icu_to_death": 0.5
+        }
+
         # Create population that will be used to test all
         #  methods except update status
         self.test_population1 = pe.Population()
@@ -127,7 +142,7 @@ class TestHostProgressionSweep(unittest.TestCase):
                 next_enum_value = person.next_infection_status.value
                 self.assertTrue(current_enum_value <= next_enum_value)
 
-    def test_update_time_status_change(self, current_time=100.0):
+    def test_update_time_status_change_no_age(self, current_time=100.0):
         """Tests that people who have their time to status change set correctly
         depending on their current infection status.
         """
@@ -176,8 +191,9 @@ class TestHostProgressionSweep(unittest.TestCase):
         test_sweep.transition_time_matrix.loc[row_index, column_index].\
             icdf_choose_noexp.assert_called_once()
 
+    @mock.patch('pyEpiabm.Parameters.instance')
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
-    def test_call_main(self, mock_next_time):
+    def test_call_main(self, mock_next_time, mock_param):
         """Tests the main function of the Host Progression Sweep.
         Person 1 is set to susceptible and becoming exposed. Person 2 is set to
         exposed and becoming infectious in one time step. Checks the
@@ -185,6 +201,10 @@ class TestHostProgressionSweep(unittest.TestCase):
         susceptible.
         """
         mock_next_time.return_value = 1.0
+        mock_param.return_value.host_progression_lists = self.coefficients
+        mock_param.return_value.latent_to_sympt_delay = 1
+        mock_param.return_value.time_steps_per_day = 1
+        mock_param.return_value.model_time_step = 1
         # First check that people progress through the
         # infection stages correctly.
         self.person2.update_status(pe.property.InfectionStatus.Exposed)

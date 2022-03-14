@@ -104,6 +104,8 @@ class HostProgressionSweep(AbstractSweep):
         else:
             row_index = person.infection_status.name
             weights = self.state_transition_matrix.loc[row_index].to_numpy()
+            weights = [w[person.age_group] if isinstance(w, list) else w
+                       for w in weights]
             outcomes = range(1, self.number_of_states + 1)
 
             if len(weights) != len(outcomes):

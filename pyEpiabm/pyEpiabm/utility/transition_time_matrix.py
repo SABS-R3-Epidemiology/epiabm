@@ -21,7 +21,7 @@ class TransitionTimeMatrix:
 
         """
         self.initial_matrix =\
-            StateTransitionMatrix().create_empty_state_transition_matrix()
+            StateTransitionMatrix.create_empty_state_transition_matrix()
 
     def create_transition_time_matrix(self):
         """Fills the transition time matrix with :class:`InverseCdf` objects,

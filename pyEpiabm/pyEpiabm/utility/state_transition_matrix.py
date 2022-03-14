@@ -26,10 +26,11 @@ class StateTransitionMatrix:
         """
         self.matrix = self.create_state_transition_matrix(coefficients)
         self.age_dependent = use_ages
-        if not use_ages:
+        if not self.age_dependent:
             self.remove_age_dependence()
 
-    def create_empty_state_transition_matrix(self):
+    @staticmethod
+    def create_empty_state_transition_matrix():
         """Builds the structure of the state transition matrix that is used in
         the host progression sweep. Labels the rows and the columns with the
         infection status. Fill the rest of the dataframe with zero
@@ -41,13 +42,13 @@ class StateTransitionMatrix:
             Symmetric matrix in the form of a dataframe
 
         """
-        # Currently, method very rigid. Can add flexibility later.
         nb_states = len(InfectionStatus)
         zero_trans = np.zeros((nb_states, nb_states))
         labels = [status.name for status in InfectionStatus]
         init_matrix = pd.DataFrame(zero_trans,
                                    columns=labels,
-                                   index=labels)
+                                   index=labels,
+                                   dtype='object')
         return init_matrix
 
     def create_state_transition_matrix(self, coeff: typing.
@@ -70,7 +71,7 @@ class StateTransitionMatrix:
             Matrix in the form of a dataframe
 
         """
-        matrix = self.create_empty_state_transition_matrix()
+        matrix = StateTransitionMatrix.create_empty_state_transition_matrix()
 
         matrix.loc['Susceptible', 'Exposed'] = 1
         matrix.loc['Exposed', 'InfectASympt'] = coeff["prob_exposed_to_asympt"]
@@ -134,6 +135,6 @@ class StateTransitionMatrix:
 
         """
         weights = pyEpiabm.core.Parameters.instance().age_proportions
-        for i in self.matrix:
-            if isinstance(i, list):
-                return np.average(i, weights)
+        self.matrix = self.matrix.applymap(
+            lambda x: np.average(x, weights=weights)
+            if isinstance(x, list) else x)

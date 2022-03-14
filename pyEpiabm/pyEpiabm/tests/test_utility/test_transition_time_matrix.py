@@ -21,7 +21,8 @@ class TestTransitionTimeMatrix(unittest.TestCase):
         labels = [status.name for status in InfectionStatus]
         zero_filled_dataframe = pd.DataFrame(np.zeros((len(InfectionStatus),
                                              len(InfectionStatus))),
-                                             columns=labels, index=labels)
+                                             columns=labels, index=labels,
+                                             dtype='object')
         assert_frame_equal(init_matrix, zero_filled_dataframe)
 
     def test_create__transition_time_matrix(self):
