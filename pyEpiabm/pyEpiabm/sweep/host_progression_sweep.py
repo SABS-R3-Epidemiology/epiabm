@@ -29,9 +29,9 @@ class HostProgressionSweep(AbstractSweep):
         is also initialised and associated parameters are called from the
         parameters class.
 
-        Infectiousness progression defines an array to scale a person's
-        infectiousness that depends on time since the start of the infection,
-        measured in timesteps (following what is done in Covidsim).
+        Infectiousness progression defines an array used to scale a person's
+        infectiousness and which depends on time since the start of the
+        infection, measured in timesteps (following what is done in Covidsim).
 
         """
         # Instantiate state transition matrix
