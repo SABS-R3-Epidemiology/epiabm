@@ -1,3 +1,4 @@
+from collections import defaultdict
 import unittest
 from enum import Enum
 import pandas as pd
@@ -12,12 +13,27 @@ class TestStateTransitionMatrix(unittest.TestCase):
     """Test the 'StateTransitionMatrix' class.
     """
     def setUp(self) -> None:
-        self.matrix_object = StateTransitionMatrix()
+        self.empty_coefficients = defaultdict(int)
+        self.matrix_object = StateTransitionMatrix(self.empty_coefficients)
+
+        self.real_coefficients = {
+            "prob_exposed_to_asympt": 0.4,
+            "prob_exposed_to_mild": 0.4,
+            "prob_exposed_to_gp": 0.2,
+            "prob_gp_to_recov": 0.9,
+            "prob_gp_to_hosp": 0.1,
+            "prob_hosp_to_recov": 0.6,
+            "prob_hosp_to_icu": 0.2,
+            "prob_hosp_to_death": 0.2,
+            "prob_icu_to_icurecov": 0.5,
+            "prob_icu_to_death": 0.5
+        }
 
     def test_init(self):
         self.assertIsInstance(self.matrix_object.matrix, pd.DataFrame)
         self.assertFalse(self.matrix_object.age_dependent)
-        self.matrix_object_ad = StateTransitionMatrix(use_ages=True)
+        self.matrix_object_ad = StateTransitionMatrix(self.empty_coefficients,
+                                                      use_ages=True)
         self.assertTrue(self.matrix_object_ad.age_dependent)
 
     def test_create_empty_transition_matrix(self):
@@ -36,9 +52,9 @@ class TestStateTransitionMatrix(unittest.TestCase):
         sums to 1 (ie that the transition probabilities for each current
         infection status sum to 1).
         """
-        filled_matrix = self.matrix_object.matrix
-        filled_matrix['sum'] = filled_matrix.sum(axis=1)
-        for i in filled_matrix['sum']:
+        filled_matrix = StateTransitionMatrix(self.real_coefficients)
+        row_sums = filled_matrix.matrix.sum(axis=1)
+        for i in row_sums:
             self.assertAlmostEqual(i, 1)
 
     def test_update_probability(self):
