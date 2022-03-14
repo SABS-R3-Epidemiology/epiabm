@@ -11,6 +11,19 @@ from pyEpiabm.property import InfectionStatus
 class StateTransitionMatrix:
     """Class to generate and edit the state transition matrix
     """
+    def __init__(self, use_ages=False):
+        """Generate age independant transition matrix.
+
+        Parameters
+        ----------
+        use_ages : bool
+            Whether to include age dependant lists in matrix
+        """
+        self.matrix = self.create_state_transition_matrix()
+        self.age_dependent = use_ages
+        if use_ages:
+            self.add_age_dependence()
+
     def create_empty_state_transition_matrix(self):
         """Builds the structure of the state transition matrix that is used in
         the host progression sweep. Labels the rows and the columns with the
@@ -67,8 +80,7 @@ class StateTransitionMatrix:
 
     def update_probability(self, current_infection_status_row: InfectionStatus,
                            next_infection_status_column: InfectionStatus,
-                           new_probability: float,
-                           matrix: pd.DataFrame):
+                           new_probability: float):
         """Method to manually update a transition probability in the
         transition state matrix.
 
@@ -82,9 +94,6 @@ class StateTransitionMatrix:
             the column where the probability will be updated
         new_probability : float
             Updated transition probability value
-        matrix : pd.Dataframe
-            Input state transition matrix that will have
-            one of its probabilities changed
 
         """
         try:
@@ -104,21 +113,11 @@ class StateTransitionMatrix:
         # Extract row and column names from enum and retrieve trasition matrix
         row = current_infection_status_row.name
         column = next_infection_status_column.name
-        matrix.loc[row, column] = new_probability
+        self.matrix.loc[row, column] = new_probability
 
-    def add_age_dependence(self, matrix):
+    def add_age_dependence(self):
         """Adds age dependant lists to relevant entries in the state
         transition matrix.
 
-        Parameters
-        ----------
-        matrix : pd.DataFrame
-            State transition matrix with no age dependence
-
-        Returns
-        -------
-        pd.DataFrame
-            State transition matrix with age dependent list entries
-
         """
-        return matrix
+        self.matrix = self.matrix

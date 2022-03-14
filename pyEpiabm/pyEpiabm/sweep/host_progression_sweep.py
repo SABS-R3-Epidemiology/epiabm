@@ -31,12 +31,9 @@ class HostProgressionSweep(AbstractSweep):
 
         """
         # Instantiate state transition matrix
-        matrix_object = StateTransitionMatrix()
-        self.state_transition_matrix =\
-            matrix_object.create_state_transition_matrix()
-        if Parameters.instance().use_ages:
-            self.state_transition_matrix =\
-                matrix_object.add_age_dependence(self.state_transition_matrix)
+        use_ages = Parameters.instance().use_ages
+        matrix_object = StateTransitionMatrix(use_ages)
+        self.state_transition_matrix = matrix_object.matrix
 
         self.number_of_states = len(InfectionStatus)
         assert self.state_transition_matrix.shape == \
