@@ -52,6 +52,8 @@ class HostProgressionSweep(AbstractSweep):
         # method
         self.latent_to_symptom_delay =\
             pe.Parameters.instance().latent_to_sympt_delay
+        # Defining the length of the model time step (in days, can be a
+        # fraction of day as well).
         self.model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
         self.delay = np.floor(self.latent_to_symptom_delay
                               / self.model_time_step)

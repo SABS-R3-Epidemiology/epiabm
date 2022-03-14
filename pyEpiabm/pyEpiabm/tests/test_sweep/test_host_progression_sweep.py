@@ -192,37 +192,41 @@ class TestHostProgressionSweep(unittest.TestCase):
     def test_infectiousness_progression(self):
         """Tests that the output is a numpy ndarray and that the tail of the
         array is 0, starting at the first element after the last infectious
-        time step.
+        time step, when the number of time steps per day is 1 and the
+        infectious period is 14 days.
         """
-        # Parameters to determine where the tail starts, has to be the same
-        # as for the parameters called in HostProgressionSweep.
-        infectious_period = pe.Parameters.instance().asympt_infect_period
-        model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
-        num_infectious_ts = int(np.ceil(infectious_period / model_time_step))
-        # Initialisation
-        test_sweep = pe.sweep.HostProgressionSweep()
-        infect_prog = test_sweep.infectiousness_progression
-        # Checks output type is numpy array
-        self.assertIsInstance(infect_prog, np.ndarray)
-        # Checks elements are 0 after k and greater than 0 before
-        tail = infect_prog[num_infectious_ts:2550]
-        zeros = np.zeros(2550-num_infectious_ts)
-        self.assertTrue((tail == zeros).all())
-        self.assertTrue((infect_prog[0:num_infectious_ts] >
-                         np.zeros(num_infectious_ts)).all())
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.time_steps_per_day = 1
+            mock_param.return_value.asympt_infect_period = 14
+            # Parameters to determine where the tail starts, has to be the same
+            # as for the parameters called in HostProgressionSweep.
+            infectious_period = pe.Parameters.instance().asympt_infect_period
+            model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
+            num_infectious_ts = int(np.ceil(infectious_period /
+                                            model_time_step))
+            # Initialisation
+            test_sweep = pe.sweep.HostProgressionSweep()
+            infect_prog = test_sweep.infectiousness_progression
+            # Checks output type is numpy array
+            self.assertIsInstance(infect_prog, np.ndarray)
+            # Checks elements are 0 after k and greater than 0 before
+            tail = infect_prog[num_infectious_ts:2550]
+            zeros = np.zeros(2550-num_infectious_ts)
+            self.assertTrue((tail == zeros).all())
+            self.assertTrue((infect_prog[0:num_infectious_ts] >
+                            np.zeros(num_infectious_ts)).all())
 
     def test_infectiousness_progression_small_time_steps(self):
-        """Tests that an assertion error is raised if the model time steps
-        length is too small (ie the time steps per day is too big).
+        """Tests that the method workd when there are more than 1 time step
+        per day. Also tests that an assertion error is raised if the model
+        time steps length is too small (ie the number of time steps per day is
+        too big).
         """
-        try:
-            # Stocks the real time steps per day value
-            real = pe.Parameters.instance().time_steps_per_day
-
-            # Assigns temporarily a new value for time steps per day to test
-            # multiple time steps per day case
-            pe.Parameters.instance().time_steps_per_day = 100
-            # Same test as test_infectiousness_progression:
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            # Same test as test_infectiousness_progression, but with 100 time
+            # steps per day:
+            mock_param.return_value.time_steps_per_day = 100
+            mock_param.return_value.asympt_infect_period = 14
             infectious_period = pe.Parameters.instance().asympt_infect_period
             model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
             num_infectious_ts = int(np.ceil(infectious_period /
@@ -238,39 +242,59 @@ class TestHostProgressionSweep(unittest.TestCase):
             self.assertTrue((infect_prog[0:num_infectious_ts] >
                             np.zeros(num_infectious_ts)).all())
 
-            # Assigns temporarily a new value for time steps per day to raise
-            # error
-            pe.Parameters.instance().time_steps_per_day = 10000
+            # Very small value for time steps to raise error:
+            mock_param.return_value.time_steps_per_day = 10000
             with self.assertRaises(ValueError):
                 pe.sweep.HostProgressionSweep()
 
-            # Resets the value of time steps per day
-            pe.Parameters.instance().time_steps_per_day = real
-        except Exception as e:
-            raise e
-
     def test_limit_case_infectiousness_progression(self):
         """Tests the case in the infectiousness progression method where the
-        parameter j would be greater or equal to the infectiousness profile
-        resolution. In that case, the elements of the array infectiousness
-        progression are simply set to 0.
+        parameter associated infectiousness value would be greater or equal to
+        the infectiousness profile resolution. In that case, the elements of
+        the array infectiousness progression are simply set to 0.
         """
-        num_infectious_ts =\
-            int(np.ceil(pe.Parameters.instance().asympt_infect_period
-                        * pe.Parameters.instance().time_steps_per_day))
         with mock.patch('numpy.floor') as mock_floor:
-            # We need to mock the np.floor function to have j greater or equal
-            # to the infectiousness profile resolution
-            mock_floor.return_value = 57
-            test_sweep = pe.sweep.HostProgressionSweep()
-            infect_prog = test_sweep.infectiousness_progression
-            # Checks that the output is a numpy array
-            self.assertIsInstance(infect_prog, np.ndarray)
-            # Checks that all elements are equal to 0
-            zeros = np.zeros(2550)
-            self.assertTrue((infect_prog == zeros).all())
-            # Checks that it is called the right number of times
-            self.assertEqual(mock_floor.call_count, num_infectious_ts + 1)
+            with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+                mock_param.return_value.time_steps_per_day = 1
+                mock_param.return_value.asympt_infect_period = 14
+                mock_param.return_value.infectiousness_prof =\
+                    np.array([0.487464241, 1, 1.229764827, 1.312453175,
+                              1.307955665, 1.251658756, 1.166040358,
+                              1.065716869, 0.960199498, 0.855580145,
+                              0.755628835, 0.662534099, 0.577412896,
+                              0.500665739, 0.432225141, 0.371729322,
+                              0.318643018, 0.272340645, 0.232162632,
+                              0.19745264, 0.167581252, 0.141960133,
+                              0.120049578, 0.101361532, 0.085459603,
+                              0.071957123, 0.060514046, 0.050833195,
+                              0.04265624, 0.035759641, 0.029950735,
+                              0.025064045, 0.02095788, 0.017511251,
+                              0.014621091, 0.012199802, 0.010173075,
+                              0.008477992, 0.007061366, 0.005878301,
+                              0.00489096, 0.004067488, 0.003381102,
+                              0.00280931, 0.002333237, 0.001937064,
+                              0.001607543, 0.001333589, 0.001105933,
+                              0.00091683, 0.000759816, 0.000629496,
+                              0.000521372, 0.000431695, 0.000357344,
+                              0.000295719, 0.000244659])
+                num_infectious_ts =\
+                    int(np.ceil(pe.Parameters.instance().asympt_infect_period
+                        * pe.Parameters.instance().time_steps_per_day))
+                # We need to mock the np.floor function to have j greater or
+                # equal to the infectiousness profile resolution
+                mock_floor.return_value = 57
+                test_sweep = pe.sweep.HostProgressionSweep()
+                infect_prog = test_sweep.infectiousness_progression
+                # Checks that the output is a numpy array
+                self.assertIsInstance(infect_prog, np.ndarray)
+                # Checks that all elements are equal to 0
+                zeros = np.zeros(2550)
+                self.assertTrue((infect_prog == zeros).all())
+                # Checks that it is called the right number of times (the right
+                # number of times is the number of infectious time steps plus
+                # 1, as the floor function is called once in the
+                # initialisation for the definition of the delay.)
+                self.assertEqual(mock_floor.call_count, num_infectious_ts + 1)
 
     def test_updates_infectiousness(self):
         """Tests the update infectiousness method. Checks that a person with
@@ -290,10 +314,8 @@ class TestHostProgressionSweep(unittest.TestCase):
         for person in self.people:
             test_sweep._updates_infectiousness(person, 1)
         # Assert that non infectious people have infectiousness of 0
-        self.assertEqual(self.people[0].infectiousness, 0)
-        self.assertEqual(self.people[1].infectiousness, 0)
-        self.assertEqual(self.people[8].infectiousness, 0)
-        self.assertEqual(self.people[9].infectiousness, 0)
+        for i in [0, 1, 8, 9]:
+            self.assertEqual(self.people[i].infectiousness, 0)
         # Assert that infected people have positive float infectiousness
         for infected_person in self.people[2:8]:
             self.assertGreater(infected_person.infectiousness, 0)
