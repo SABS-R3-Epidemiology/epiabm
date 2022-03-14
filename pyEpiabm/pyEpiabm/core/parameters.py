@@ -200,6 +200,33 @@ class Parameters:
             self.age_contact = [0.6, 0.7, 0.75, 1, 1, 1, 1, 1,
                                 1, 1, 1, 1, 1, 1, 1, 0.75, 0.5]
 
+            # Parameters used in the age distribution of people within a
+            # household model
+            self.mean_child_age_gap = 2
+            self.min_adult_age = 19
+            self.max_MF_partner_age_gap = 5
+            self.max_FM_partner_age_gap = 5
+            self.min_parent_age_gap = 19
+            self.max_parent_age_gap = 44
+            self.max_child_age = 20
+            self.one_child_two_pers_prob = 0.08
+            self.two_child_three_pers_prob = 0.11
+            self.one_pers_house_prob_old = 0.5
+            self.two_pers_house_prob_old = 0.5
+            self.one_pers_house_prob_young = 0.23
+            self.two_pers_house_prob_young = 0.23
+            self.one_child_prob_youngest_child_under_five = 0.5
+            self.two_children_prob_youngest_under_five = 0.0
+            self.prob_youngest_child_under_five = 0.0
+            self.zero_child_three_pers_prob = 0.25
+            self.one_child_four_pers_prob = 0.2
+            self.young_and_single_slope = 0.7
+            self.young_and_single = 36
+            self.no_child_pers_age = 44
+            self.old_pers_age = 60
+            self.three_child_five_pers_prob = 0.5
+            self.older_gen_gap = 19
+
             pass
     _instance = None  # Singleton instance
 
