@@ -38,12 +38,19 @@ class PlaceSweep(AbstractSweep):
             for infector in cell.persons:
                 if not infector.is_infectious():
                     continue
-                for place in infector.places:
+                place_list = [i[0] for i in infector.places]
+                for place in place_list:
+                    infector_group = place.get_group_index(infector)
                     infectiousness = PlaceInfection.place_inf(place, time)
+                    # Covidsim only considers infectees in
+                    # the group with the infector. I suggest we use this line
+                    # to easily change the list of possible infectees.
+                    possible_infectees = place.person_groups[infector_group]
+
                     # High infectiousness (>= 1) means all susceptible
                     # occupants become infected.
                     if infectiousness > 1:
-                        for infectee in place.persons:
+                        for infectee in possible_infectees:
                             if not infectee.is_susceptible():
                                 continue
                             cell.enqueue_person(infectee)
@@ -54,13 +61,13 @@ class PlaceSweep(AbstractSweep):
                     # all possible occupants, and leave it to chance whether
                     # they are susceptible.
                     else:
-                        num_infectees = np.random.binomial(len(place.persons),
-                                                           infectiousness)
+                        num_infectees = np.random.binomial(
+                            len(possible_infectees), infectiousness)
 
                         # Pick that number of potential infectees from place
                         # members.
-                        potential_infectees = random.sample(place.persons,
-                                                            num_infectees)
+                        potential_infectees = random.sample(
+                            possible_infectees, num_infectees)
 
                         # Check to see whether a place member is susceptible.
                         for infectee in potential_infectees:

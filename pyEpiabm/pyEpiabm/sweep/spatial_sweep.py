@@ -187,6 +187,7 @@ class SpatialSweep(AbstractSweep):
             List of people to infect
 
         """
+        current_cell = infector.microcell.cell
         infectee_list = []
         count = 0
         while number_to_infect > 0 and count < self._population.total_people():
@@ -196,7 +197,8 @@ class SpatialSweep(AbstractSweep):
             # susceptibles*max_transmission. May want to add transmission
             # parameter later.
             weights = [cell2.compartment_counter.retrieve()
-                       [InfectionStatus.Susceptible]
+                       [InfectionStatus.Susceptible] * SpatialKernel.weighting(
+                           DistanceFunctions.dist(cell2, current_cell))
                        for cell2 in possible_infectee_cells]
             infectee_cell = random.choices(possible_infectee_cells,
                                            weights=weights, k=1)[0]
@@ -210,7 +212,7 @@ class SpatialSweep(AbstractSweep):
             infection_distance = DistanceFunctions.dist(
                 infector.microcell.cell.location, infectee_cell.location)
             minimum_dist = DistanceFunctions.minimum_between_cells(
-                infectee_cell, infector.microcell.cell)
+                infectee_cell, current_cell)
             infection_kernel = (SpatialKernel.weighting(infection_distance) /
                                 SpatialKernel.weighting(minimum_dist))
             if (infection_kernel > random.random()):
