@@ -9,9 +9,9 @@ class TestPLaceType(unittest.TestCase):
 
     def test_construct(self):
         statuses = [ # noqa
-           pe.property.PlaceType.Hotel,
+           pe.property.PlaceType.Workplace,
            pe.property.PlaceType.CareHome,
-           pe.property.PlaceType.Restaurant,
+           pe.property.PlaceType.SecondarySchool,
            pe.property.PlaceType.OutdoorSpace]
 
 
