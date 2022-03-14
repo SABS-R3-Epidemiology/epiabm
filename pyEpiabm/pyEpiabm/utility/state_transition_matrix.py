@@ -38,7 +38,8 @@ class StateTransitionMatrix:
         columns to the next infection status, and the elements are the
         probabilities to go from one state to another. For example, the element
         ij in the matrix is the probability of someone with current infection
-        status associated with the row i to move to the infection enum
+        status associated with the row i to move to the infection enum.
+
         Returns
         -------
         pd.DataFrame
@@ -90,17 +91,34 @@ class StateTransitionMatrix:
             if (current_infection_status_row not in InfectionStatus) or \
                     (next_infection_status_column not in InfectionStatus):
                 raise ValueError('Row and column inputs must be contained in' +
-                                 'the InfectionStatus enum')
+                                 ' the InfectionStatus enum')
         except TypeError:
             raise ValueError('Row and column inputs must be contained in' +
-                             'the InfectionStatus enum')
+                             ' the InfectionStatus enum')
 
         if (new_probability < 0) or (new_probability > 1):
             raise ValueError('New probability must be a valid probability' +
-                             'larger than or equal to 0 and less than' +
-                             'or equal to 1')
+                             ' larger than or equal to 0 and less than' +
+                             ' or equal to 1')
 
         # Extract row and column names from enum and retrieve trasition matrix
         row = current_infection_status_row.name
         column = next_infection_status_column.name
         matrix.loc[row, column] = new_probability
+
+    def add_age_dependence(self, matrix):
+        """Adds age dependant lists to relevant entries in the state
+        transition matrix.
+
+        Parameters
+        ----------
+        matrix : pd.DataFrame
+            State transition matrix with no age dependence
+
+        Returns
+        -------
+        pd.DataFrame
+            State transition matrix with age dependent list entries
+
+        """
+        return matrix
