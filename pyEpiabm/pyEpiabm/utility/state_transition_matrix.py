@@ -4,25 +4,30 @@
 
 import pandas as pd
 import numpy as np
+import typing
 
+import pyEpiabm.core
 from pyEpiabm.property import InfectionStatus
 
 
 class StateTransitionMatrix:
     """Class to generate and edit the state transition matrix
     """
-    def __init__(self, use_ages=False):
+    def __init__(self, coefficients: typing.Dict[str, typing.List[float]],
+                 use_ages=False):
         """Generate age independant transition matrix.
 
         Parameters
         ----------
+        coefficients : typing.Dict[str, typing.List[float]]
+            Dictionary of age-dependent lists for matrix coefficients
         use_ages : bool
             Whether to include age dependant lists in matrix
         """
-        self.matrix = self.create_state_transition_matrix()
+        self.matrix = self.create_state_transition_matrix(coefficients)
         self.age_dependent = use_ages
-        if use_ages:
-            self.add_age_dependence()
+        if not use_ages:
+            self.remove_age_dependence()
 
     def create_empty_state_transition_matrix(self):
         """Builds the structure of the state transition matrix that is used in
@@ -45,13 +50,19 @@ class StateTransitionMatrix:
                                    index=labels)
         return init_matrix
 
-    def create_state_transition_matrix(self):
+    def create_state_transition_matrix(self, coeff: typing.
+                                       Dict[str, typing.List[float]]):
         """Fill the state transition matrix with the non-zeros probabilities.
         The rows are associated to the current infection status, the
         columns to the next infection status, and the elements are the
         probabilities to go from one state to another. For example, the element
         ij in the matrix is the probability of someone with current infection
         status associated with the row i to move to the infection enum.
+
+        Parameters
+        ----------
+        coefficients : typing.Dict[str, typing.List[float]]
+            Dictionary of age-dependent lists for matrix coefficients
 
         Returns
         -------
@@ -60,19 +71,21 @@ class StateTransitionMatrix:
 
         """
         matrix = self.create_empty_state_transition_matrix()
+
         matrix.loc['Susceptible', 'Exposed'] = 1
-        matrix.loc['Exposed', 'InfectASympt'] = 0.34
-        matrix.loc['Exposed', 'InfectMild'] = 0.42193467146028
-        matrix.loc['Exposed', 'InfectGP'] = 0.23806532859080398
+        matrix.loc['Exposed', 'InfectASympt'] = coeff["prob_exposed_to_asympt"]
+        matrix.loc['Exposed', 'InfectMild'] = coeff["prob_exposed_to_mild"]
+        matrix.loc['Exposed', 'InfectGP'] = coeff["prob_exposed_to_gp"]
         matrix.loc['InfectASympt', 'Recovered'] = 1
         matrix.loc['InfectMild', 'Recovered'] = 1
-        matrix.loc['InfectGP', 'Recovered'] = 0.8957406726555377
-        matrix.loc['InfectGP', 'InfectHosp'] = 0.10425932734446226
-        matrix.loc['InfectHosp', 'Recovered'] = 0.6078534557805789
-        matrix.loc['InfectHosp', 'InfectICU'] = 0.19555352565087258
-        matrix.loc['InfectHosp', 'Dead'] = 0.1965930185685483
-        matrix.loc['InfectICU', 'InfectICURecov'] = 0.4765104
-        matrix.loc['InfectICU', 'Dead'] = 0.5234896
+        matrix.loc['InfectGP', 'Recovered'] = coeff["prob_gp_to_recov"]
+        matrix.loc['InfectGP', 'InfectHosp'] = coeff["prob_gp_to_hosp"]
+        matrix.loc['InfectHosp', 'Recovered'] = coeff["prob_hosp_to_recov"]
+        matrix.loc['InfectHosp', 'InfectICU'] = coeff["prob_hosp_to_icu"]
+        matrix.loc['InfectHosp', 'Dead'] = coeff["prob_hosp_to_death"]
+        matrix.loc['InfectICU', 'InfectICURecov'] = coeff["prob_icu_" +
+                                                          "to_icurecov"]
+        matrix.loc['InfectICU', 'Dead'] = coeff["prob_icu_to_death"]
         matrix.loc['InfectICURecov', 'Recovered'] = 1
         matrix.loc['Recovered', 'Recovered'] = 1
         matrix.loc['Dead', 'Dead'] = 1
@@ -115,9 +128,12 @@ class StateTransitionMatrix:
         column = next_infection_status_column.name
         self.matrix.loc[row, column] = new_probability
 
-    def add_age_dependence(self):
-        """Adds age dependant lists to relevant entries in the state
-        transition matrix.
+    def remove_age_dependence(self):
+        """Conducts weighted average over age groups to remove age dependence
+        in the state transition matrix.
 
         """
-        self.matrix = self.matrix
+        weights = pyEpiabm.core.Parameters.instance().age_proportions
+        for i in self.matrix:
+            if isinstance(i, list):
+                return np.average(i, weights)
