@@ -30,7 +30,6 @@ pe.Parameters.instance().base_reproduction_num = 2.8
 
 # Create a population based on the parameters given.
 population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
-cell = population.cells[0]
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.

@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 import pyEpiabm as pe
 
@@ -14,12 +15,31 @@ class TestPerson(unittest.TestCase):
         self.person = self.microcell.persons[0]
 
     def test__init__(self):
-        self.assertEqual(self.person.age, 0)
+        self.assertGreaterEqual(self.person.age, 0)
+        self.assertTrue(0 <= self.person.age < 85)
+        self.assertTrue(0 <= self.person.age_group < 17)
         self.assertEqual(self.person.infectiousness, 0)
         self.assertEqual(self.person.microcell, self.microcell)
 
+    @patch("random.randint")
+    @patch("random.choices")
+    def test_set_random_age(self, mock_choices, mock_int):
+        mock_choices.return_value = [4]
+        mock_int.return_value = 2
+        self.person.set_random_age()
+        mock_choices.assert_called_once()
+        mock_int.assert_called_once()
+        self.assertEqual(self.person.age, 22)
+
+        with patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.use_ages = False
+            self.person.set_random_age()
+            mock_param.assert_called_once()
+            self.assertEqual(self.person.age, 40)
+
     def test_repr(self):
-        self.assertEqual(repr(self.person), "Person, Age = 0.")
+        self.assertEqual(repr(self.person),
+                         f"Person, Age = {self.person.age}.")
 
     def test_is_infectious(self):
         self.assertFalse(self.person.is_infectious())

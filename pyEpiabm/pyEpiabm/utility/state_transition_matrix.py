@@ -39,7 +39,7 @@ class StateTransitionMatrix:
         probabilities to go from one state to another. For example, the element
         ij in the matrix is the probability of someone with current infection
         status associated with the row i to move to the infection status
-        associated with the columns j.
+        associated with the column j.
 
         Returns
         -------
