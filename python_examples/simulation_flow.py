@@ -15,7 +15,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
                             + '- %(levelname)s - %(message)s'))
 
 # Set config file for Parameters
-pe.Parameters.set_file("parameters.json")
+pe.Parameters.set_file("python_examples/simple_parameters.json")
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
@@ -25,7 +25,7 @@ pe.routine.Simulation.set_random_seed(seed=42)
 # simulation.
 
 pop_params = {"population_size": 100, "cell_number": 1,
-              "microcell_number": 1, "household_number": 20,
+              "microcell_number": 1, "household_number": 5,
               "place_number": 2}
 
 pe.Parameters.instance().time_steps_per_day = 1
@@ -37,7 +37,7 @@ population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
-              "initial_infected_number": 5}
+              "initial_infected_number": 10}
 
 file_params = {"output_file": "output.csv",
                "output_dir": "python_examples/simulation_outputs",
@@ -49,8 +49,7 @@ sim = pe.routine.Simulation()
 sim.configure(
     population,
     [pe.sweep.InitialInfectedSweep()],
-    [pe.sweep.UpdatePlaceSweep(), pe.sweep.HouseholdSweep(),
-     pe.sweep.PlaceSweep(), pe.sweep.QueueSweep(),
+    [pe.sweep.HouseholdSweep(), pe.sweep.QueueSweep(),
      pe.sweep.HostProgressionSweep()],
     sim_params,
     file_params)
