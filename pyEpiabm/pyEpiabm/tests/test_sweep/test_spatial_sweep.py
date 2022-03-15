@@ -99,6 +99,8 @@ class TestSpatialSweep(TestMockedLogs):
         test_list = test_sweep.find_infectees_Covidsim(self.infector,
                                                        [cell_susc], 1)
         self.assertEqual(test_list, [infectee])
+        mock_dist.assert_called_with(self.cell_inf.location,
+                                     cell_susc.location)
         # If distance is large infectee not listed
         # Only this doesn't work now becuase Covidsim is weird
 
