@@ -92,7 +92,7 @@ class HostProgressionSweep(AbstractSweep):
                 sum_for_scaling += infectiousness_prog[i]
         # Scaling
         scaling_param = sum_for_scaling / num_infectious_ts
-        # Removes artificial case of division by 0, would only happen if every
+        # Avoids artificial case of division by 0, would only happen if every
         # infectiousness element is 0, in which case we do not need to scale.
         if scaling_param != 0:
             for i in range(num_infectious_ts + 1):
