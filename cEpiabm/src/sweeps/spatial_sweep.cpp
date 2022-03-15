@@ -11,8 +11,11 @@
 
 namespace epiabm
 {
-
     SpatialSweep::SpatialSweep() {}
+
+    SpatialSweep::SpatialSweep(SimulationConfigPtr cfg) :
+        SweepInterface(cfg)
+    {}
 
     void SpatialSweep::operator()(const unsigned short timestep)
     {

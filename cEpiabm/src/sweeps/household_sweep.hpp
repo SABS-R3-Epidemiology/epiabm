@@ -18,7 +18,7 @@ namespace epiabm
     {
     private:
     public:
-        HouseholdSweep();
+        HouseholdSweep(SimulationConfigPtr cfg);
         ~HouseholdSweep() = default;
 
         /**

@@ -3,25 +3,21 @@
 
 #include "sweep_interface.hpp"
 
-#include <map>
 #include <memory>
-#include <stack>
+#include <map>
+
 
 namespace epiabm
 {
 
-    /**
-     * @brief Replication of Covid-sim's host progression sweep without Severity
-     * Checks Person's time to next state.
-     * If the time is past, choose next state and update person.
-     * Also decides duration to remain in next state.
-     */
-    class BasicHostProgressionSweep : public SweepInterface
+    class HostProgressionSweep : SweepInterface
     {
     private:
+        
+
     public:
-        BasicHostProgressionSweep(SimulationConfigPtr cfg);
-        ~BasicHostProgressionSweep() = default;
+        HostProgressionSweep(SimulationConfigPtr cfg);
+        ~HostProgressionSweep() = default;
 
         /**
          * @brief Perform Host Progression Sweep
@@ -30,7 +26,6 @@ namespace epiabm
          */
         void operator()(const unsigned short timestep) override;
 
-    private:
         bool cellCallback(
             const unsigned short timestep,
             Cell* cell);
@@ -57,13 +52,10 @@ namespace epiabm
 
         InfectionStatus next_status(
             Person* person);
+    }; // class HostProgressionSweep
 
-    private:
-    };
-
-    typedef std::shared_ptr<BasicHostProgressionSweep> BasicHostProgressionSweepPtr;
+    typedef std::shared_ptr<HostProgressionSweep> HostProgressionSweepPtr;
 
 } // namespace epiabm
-
 
 #endif // EPIABM_SWEEPS_HOST_PROGRESSION_SWEEP_HPP

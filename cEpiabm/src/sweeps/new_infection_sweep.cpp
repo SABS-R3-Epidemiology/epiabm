@@ -6,7 +6,9 @@ namespace epiabm
 {
 
 
-    NewInfectionSweep::NewInfectionSweep() {}
+    NewInfectionSweep::NewInfectionSweep(SimulationConfigPtr cfg) :
+        SweepInterface(cfg)
+    {}
 
 
     void NewInfectionSweep::operator()(const unsigned short timestep)

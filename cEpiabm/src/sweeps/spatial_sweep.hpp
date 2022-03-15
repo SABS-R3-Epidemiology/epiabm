@@ -19,6 +19,7 @@ namespace epiabm
     private:
     public:
         SpatialSweep();
+        SpatialSweep(SimulationConfigPtr cfg);
         ~SpatialSweep() = default;
 
         /**

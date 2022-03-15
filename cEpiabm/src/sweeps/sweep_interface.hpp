@@ -2,9 +2,10 @@
 #define EPIABM_SWEEPS_SWEEP_INTERFACE_HPP
 
 #include "../dataclasses/population.hpp"
+#include "../configuration/simulation_config.hpp"
 
 #include <memory>
-
+#include <optional>
 
 namespace epiabm
 {
@@ -17,9 +18,11 @@ namespace epiabm
     {
     protected:
         PopulationPtr m_population;
+        std::optional<SimulationConfigPtr> m_cfg;
 
     public:
-        SweepInterface(){};
+        SweepInterface();
+        SweepInterface(SimulationConfigPtr cfg);
         virtual ~SweepInterface() = default;
 
         /**

@@ -26,6 +26,8 @@ set(
     reporters/cell_compartment_reporter.cpp
     reporters/percell_compartment_reporter.cpp
     reporters/population_compartment_reporter.cpp
+    configuration/json_factory.cpp
+    utilities/inverse_cdf.cpp
     simulations/basic_simulation.cpp
 )
 
@@ -55,6 +57,12 @@ set(
     reporters/cell_compartment_reporter.hpp
     reporters/percell_compartment_reporter.hpp
     reporters/population_compartment_reporter.hpp
+    configuration/simulation_config.hpp
+    configuration/infection_config.hpp
+    configuration/host_progression_config.hpp
+    configuration/config_factory_interface.hpp
+    configuration/json_factory.hpp
+    utilities/inverse_cdf.hpp
     simulations/basic_simulation.hpp
 )
 

@@ -5,7 +5,9 @@
 namespace epiabm
 {
 
-    BasicHostProgressionSweep::BasicHostProgressionSweep() {}
+    BasicHostProgressionSweep::BasicHostProgressionSweep(SimulationConfigPtr cfg) :
+        SweepInterface(cfg)
+    {}
 
     void BasicHostProgressionSweep::operator()(const unsigned short timestep)
     {

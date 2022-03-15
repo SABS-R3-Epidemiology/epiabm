@@ -9,7 +9,9 @@
 namespace epiabm
 {
 
-    HouseholdSweep::HouseholdSweep() {}
+    HouseholdSweep::HouseholdSweep(SimulationConfigPtr cfg) :
+        SweepInterface(cfg)
+    {}
 
     void HouseholdSweep::operator()(const unsigned short timestep)
     {

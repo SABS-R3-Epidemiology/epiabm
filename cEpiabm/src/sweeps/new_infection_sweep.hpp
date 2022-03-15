@@ -21,7 +21,7 @@ namespace epiabm
     {
         private:
         public:
-            NewInfectionSweep();
+            NewInfectionSweep(SimulationConfigPtr cfg);
             ~NewInfectionSweep() = default;
 
             /**
