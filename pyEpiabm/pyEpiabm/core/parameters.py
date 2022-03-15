@@ -2,8 +2,8 @@
 # Parameters
 #
 
-import numpy as np
 import json
+
 
 class Parameters:
     """Class for global parameters.
