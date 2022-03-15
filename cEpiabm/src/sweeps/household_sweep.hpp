@@ -43,6 +43,20 @@ namespace epiabm
             Cell* cell, HouseholdPtr household,
             Person* infector, Person* infectee);
 
+        double calcHouseInf(
+            Person* infector,
+            unsigned short int timestep);
+
+        double calcHouseSusc(
+            Person* infector,
+            Person* infectee,
+            unsigned short int timestep);
+
+        double calcPersonSusc(
+            Person* infector,
+            Person* infectee,
+            unsigned short int timestep);
+
     }; // class HouseholdSweep
 
     typedef std::shared_ptr<HouseholdSweep> HouseholdSweepPtr;

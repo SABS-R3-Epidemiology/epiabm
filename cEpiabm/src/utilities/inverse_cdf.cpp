@@ -5,7 +5,9 @@
 namespace epiabm
 {
 
-    InverseCDF::InverseCDF() {}
+    InverseCDF::InverseCDF(double mean) :
+        m_mean(mean)
+    {}
 
     void InverseCDF::setNegLog(double startValue)
     {
@@ -32,13 +34,13 @@ namespace epiabm
         }
     }
 
-    unsigned short InverseCDF::choose(double mean, double timestepsPerDay)
+    unsigned short InverseCDF::choose(double timestepsPerDay)
     {
         double q;
         size_t i = static_cast<size_t>(floor(q = static_cast<double>(std::rand())/static_cast<double>(RAND_MAX)*static_cast<double>(InverseCDF::RES)));
         q -= static_cast<double>(i);
 
-        double ti = -mean * log(q * m_values[i+1] + (1-q)*m_values[i]);
+        double ti = -m_mean * log(q * m_values[i+1] + (1-q)*m_values[i]);
         return static_cast<unsigned short>(floor(0.5 + (ti * timestepsPerDay)));
     }
 

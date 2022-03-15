@@ -21,6 +21,7 @@ namespace epiabm
         float susceptibility = 0, infectiousness = 0;
         
         unsigned short next_status_time = 0;
+        InfectionStatus next_status = InfectionStatus::Susceptible;
     };
 
     class Person

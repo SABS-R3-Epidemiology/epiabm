@@ -44,7 +44,10 @@ namespace epiabm
             template <typename T>
             const T retrieve(const json::json& j, const std::string& paramName, const T& def);
 
-            InverseCDF retrieveICDF(const json::json& j, const std::string& paramName); 
+            InverseCDF retrieveICDF(
+                const json::json& j,
+                const std::string& meanParamName,
+                const std::string& icdfParamName); 
 
     };
 

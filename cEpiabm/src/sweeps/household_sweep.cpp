@@ -81,8 +81,8 @@ namespace epiabm
         // Each interaction between an infector and infectee
         if (infectee->status() != InfectionStatus::Susceptible) return true;
 
-        double infectiousness = Covidsim::CalcHouseInf(infector, timestep);
-        double susceptibility = Covidsim::CalcHouseSusc(infector, infectee, timestep);
+        double infectiousness = calcHouseInf(infector, timestep);
+        double susceptibility = calcHouseSusc(infector, infectee, timestep);
         double foi = infectiousness * susceptibility * 0.5;
 
         if (static_cast<double>(std::rand() % 1000000) / static_cast<double>(1000000) < foi)
@@ -93,6 +93,29 @@ namespace epiabm
             cell->enqueuePerson(infectee->cellPos());
         }
         return true;
+    }
+
+    double HouseholdSweep::calcHouseInf(
+        Person* /*infector*/,
+        unsigned short int )
+    {
+        return 1.0;
+    }
+
+    double HouseholdSweep::calcHouseSusc(
+        Person* infector,
+        Person* infectee,
+        unsigned short int timestep)
+    {
+        return calcPersonSusc(infector, infectee, timestep);
+    }
+
+    double HouseholdSweep::calcPersonSusc(
+        Person* /*infector*/,
+        Person* /*infectee*/,
+        unsigned short int )
+    {
+        return 1.0;
     }
 
 } // namespace epiabm

@@ -16,8 +16,6 @@ namespace epiabm
 
             double basicReproductionNum;
             double infectionRadius;
-            double latentPeriod;
-            double asymptInfectPeriod;
             double probSymptomatic;
             double symptInfectiousness;
             double asymptInfectiousness;

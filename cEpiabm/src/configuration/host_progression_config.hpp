@@ -12,19 +12,8 @@ namespace epiabm
     {
     private:
     public:
-        double meanMildToRecov;
-        double meanGPToRecov;
-        double meanGPToHosp;
-        double meanGPToDeath;
-        double meanHospToRecov;
-        double meanHospToIcu;
-        double meanHospToDeath;
-        double meanICUToICURecov;
-        double meanICUToDeath;
-        double meanICURecovToRecov;
-
         InverseCDF latentPeriodICDF;
-        InverseCDF asymptInfectICDF;
+        InverseCDF asymptToRecovICDF;
         InverseCDF mildToRecovICDF;
         InverseCDF gpToRecovICDF;
         InverseCDF gpToHospICDF;
@@ -34,7 +23,7 @@ namespace epiabm
         InverseCDF hospToDeathICDF;
         InverseCDF icuToICURecovICDF;
         InverseCDF icuToDeathICDF;
-        InverseCDF icuRecovToRecov;
+        InverseCDF icuRecovToRecovICDF;
 
     private:
     }; // class InfectionProgressionConfig

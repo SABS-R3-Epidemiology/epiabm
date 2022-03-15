@@ -3,8 +3,6 @@
     "infection_config": {
         "infection_radius": 1,
         "basic_reproduction_num": 2,
-        "latent_period": 4.59,
-        "asympt_infect_period": 14,
         "prob_symptomatic": 0.66,
         "sympt_infectiousness": 1.5,
         "asympt_infectiousness": 1,
@@ -13,6 +11,8 @@
         "household_transmission": 0.1,
         "place_transmission": 0.1,
         "host_progression_config": {
+            "latent_period": 4.59,
+            "asympt_infect_period": 14,
             "mean_mild_to_recov": 7,
             "mean_gp_to_recov": 7,
             "mean_gp_to_hosp": 5,

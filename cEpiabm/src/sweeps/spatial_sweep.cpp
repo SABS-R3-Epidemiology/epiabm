@@ -15,7 +15,9 @@ namespace epiabm
 
     SpatialSweep::SpatialSweep(SimulationConfigPtr cfg) :
         SweepInterface(cfg)
-    {}
+    {
+        m_generator = std::mt19937{std::random_device{}()};
+    }
 
     void SpatialSweep::operator()(const unsigned short timestep)
     {
@@ -28,7 +30,7 @@ namespace epiabm
         LOG << LOG_LEVEL_DEBUG << "Finished Spatial Sweep " << timestep;
     }
 
-    inline std::vector<Cell*> getCellsToInfect(std::vector<Cell>& cells, Cell* currentCell, size_t n)
+    inline std::vector<Cell*> SpatialSweep::getCellsToInfect(std::vector<Cell>& cells, Cell* currentCell, size_t n)
     {
         std::vector<size_t> allCells = std::vector<size_t>();
         allCells.reserve(cells.size()-1);
@@ -38,7 +40,7 @@ namespace epiabm
         std::vector<size_t> chosenCellIndices = std::vector<size_t>();
         std::sample(allCells.begin(), allCells.end(),
             std::back_inserter(chosenCellIndices), n,
-            std::mt19937{std::random_device{}()});
+            m_generator);
         
         std::vector<Cell*> chosen = std::vector<Cell*>();
         chosen.reserve(n);
@@ -59,7 +61,7 @@ namespace epiabm
         if (cell->numInfectious() <= 0){
             return true;  // Break out as there are no infectors in cell
         }
-        double ave_num_of_infections = Covidsim::CalcCellInf(cell, timestep);
+        double ave_num_of_infections = calcCellInf(cell, timestep);
 
         std::default_random_engine generator;
         std::poisson_distribution<int> distribution(ave_num_of_infections);
@@ -81,8 +83,8 @@ namespace epiabm
                 continue;
             }
 
-            double infectiousness = Covidsim::CalcSpaceInf(cell, infector, timestep);
-            double susceptibility = Covidsim::CalcSpaceSusc(cell, infectee, timestep);
+            double infectiousness = calcSpaceInf(cell, infector, timestep);
+            double susceptibility = calcSpaceSusc(cell, infectee, timestep);
             double foi = infectiousness * susceptibility;
 
             if ((static_cast<double>(std::rand() % 1000000) / static_cast<double>(1000000)) < foi)
@@ -95,6 +97,29 @@ namespace epiabm
             }
         }
         return true;
+    }
+
+    double SpatialSweep::calcCellInf(
+        Cell* cell,
+        unsigned short int )
+    {
+        return static_cast<double>(m_cfg->infectionConfig->basicReproductionNum * cell->numInfectious());
+    }
+
+    double SpatialSweep::calcSpaceInf(
+        Cell* /*cell*/,
+        Person* /*infector*/,
+        unsigned short int )
+    {
+        return 0.5;
+    }
+
+    double SpatialSweep::calcSpaceSusc(
+        Cell* /*cell*/,
+        Person* /*infectee*/,
+        unsigned short int )
+    {
+        return 0.2;
     }
 
 } // namespace epiabm

@@ -4,6 +4,7 @@
 #include "sweep_interface.hpp"
 
 #include <memory>
+#include <random>
 
 
 namespace epiabm
@@ -17,6 +18,8 @@ namespace epiabm
     class SpatialSweep : public SweepInterface
     {
     private:
+        std::mt19937 m_generator;
+
     public:
         SpatialSweep();
         SpatialSweep(SimulationConfigPtr cfg);
@@ -43,6 +46,24 @@ namespace epiabm
             const unsigned short timestep,
             Cell* cell,
             Person* infector, Person* infectee);
+
+        inline std::vector<Cell*> getCellsToInfect(
+            std::vector<Cell>& cells, Cell* currentCell, size_t n);
+
+        double calcCellInf(
+            Cell* cell,
+            unsigned short int timestep);
+
+        double calcSpaceInf(
+            Cell* inf_cell,
+            Person* infector,
+            unsigned short int timestep);
+        
+        double calcSpaceSusc(
+            Cell* cell,
+            Person* infectee,
+            unsigned short int timestep);
+    
 
     }; // class SpatialSweep
 

@@ -2,10 +2,12 @@
 #define EPIABM_SWEEPS_HOST_PROGRESSION_SWEEP_HPP
 
 #include "sweep_interface.hpp"
+#include "../utilities/inverse_cdf.hpp"
 
 #include <memory>
-#include <map>
-
+#include <vector>
+#include <array>
+#include <random>
 
 namespace epiabm
 {
@@ -13,7 +15,10 @@ namespace epiabm
     class HostProgressionSweep : SweepInterface
     {
     private:
-        
+        std::array<std::array<double, N_INFECTION_STATES>, N_INFECTION_STATES> m_transitionMatrix;
+        std::array<std::array<InverseCDF*, N_INFECTION_STATES>, N_INFECTION_STATES> m_transitionTimeMatrix;
+
+        std::mt19937 m_generator;
 
     public:
         HostProgressionSweep(SimulationConfigPtr cfg);
@@ -43,15 +48,21 @@ namespace epiabm
             Person* person);
 
     private:
-        unsigned short time_to_next_status(
+        unsigned short timeToNextStatus(
             Person* person,
             InfectionStatus status);
 
-        InfectionStatus first_infectious_status(
+        InfectionStatus firstInfectionStatus(
             Person* person);
 
-        InfectionStatus next_status(
-            Person* person);
+        InfectionStatus chooseNextStatus(
+            InfectionStatus prev);
+
+        unsigned short chooseNextTransitionTime(
+            InfectionStatus current, InfectionStatus next);
+
+        void loadTransitionMatrix();
+        void loadTransitionTimeMatrix();
     }; // class HostProgressionSweep
 
     typedef std::shared_ptr<HostProgressionSweep> HostProgressionSweepPtr;

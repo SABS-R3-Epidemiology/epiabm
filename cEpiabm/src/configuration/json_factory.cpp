@@ -47,8 +47,6 @@ namespace epiabm
         json::json j = input.at("infection_config");
         cfg->infectionRadius = retrieve<double>(j, "infection_radius");
         cfg->basicReproductionNum = retrieve<double>(j, "basic_reproduction_num");
-        cfg->latentPeriod = retrieve<double>(j, "latent_period");
-        cfg->asymptInfectPeriod = retrieve<double>(j, "asympt_infect_period");
         cfg->probSymptomatic = retrieve<double>(j, "prob_symptomatic");
         cfg->symptInfectiousness = retrieve<double>(j, "sympt_infectiousness");
         cfg->asymptInfectiousness = retrieve<double>(j, "asympt_infectiousness");
@@ -70,29 +68,18 @@ namespace epiabm
             return false;
         }
         json::json j = input["infection_config"].at("host_progression_config");
-        cfg->meanMildToRecov = retrieve<double>(j, "mean_mild_to_recov");
-        cfg->meanGPToRecov = retrieve<double>(j, "mean_gp_to_recov");
-        cfg->meanGPToHosp = retrieve<double>(j, "mean_gp_to_hosp");
-        cfg->meanGPToDeath = retrieve<double>(j, "mean_gp_to_death");
-        cfg->meanHospToRecov = retrieve<double>(j, "mean_hosp_to_recov");
-        cfg->meanHospToIcu = retrieve<double>(j, "mean_hosp_to_icu");
-        cfg->meanHospToDeath = retrieve<double>(j, "mean_hosp_to_death");
-        cfg->meanICUToICURecov = retrieve<double>(j, "mean_icu_to_icurecov");
-        cfg->meanICUToDeath = retrieve<double>(j, "mean_icu_to_death");
-        cfg->meanICURecovToRecov = retrieve<double>(j, "mean_icurecov_to_recov");
-
-        cfg->latentPeriodICDF = retrieveICDF(j, "latent_period_icdf");
-        cfg->asymptInfectICDF = retrieveICDF(j, "asympt_infect_icdf");
-        cfg->mildToRecovICDF = retrieveICDF(j, "mild_to_recov_icdf");
-        cfg->gpToRecovICDF = retrieveICDF(j, "gp_to_recov_icdf");
-        cfg->gpToHospICDF = retrieveICDF(j, "gp_to_hosp_icdf");
-        cfg->gpToDeathICDF = retrieveICDF(j, "gp_to_death_icdf");
-        cfg->hospToRecovICDF = retrieveICDF(j, "hosp_to_recov_icdf");
-        cfg->hospToICUICDF = retrieveICDF(j, "hosp_to_icu_icdf");
-        cfg->hospToDeathICDF = retrieveICDF(j, "hosp_to_death_icdf");
-        cfg->icuToICURecovICDF = retrieveICDF(j, "icu_to_icurecov_icdf");
-        cfg->icuToDeathICDF = retrieveICDF(j, "icu_to_death_icdf");
-        cfg->icuRecovToRecov = retrieveICDF(j, "icurecov_to_recov_icdf");
+        cfg->latentPeriodICDF = retrieveICDF(j, "latent_period", "latent_period_icdf");
+        cfg->asymptToRecovICDF = retrieveICDF(j, "asympt_infect_period", "asympt_infect_icdf");
+        cfg->mildToRecovICDF = retrieveICDF(j, "mean_mild_to_recov", "mild_to_recov_icdf");
+        cfg->gpToRecovICDF = retrieveICDF(j, "mean_gp_to_recov", "gp_to_recov_icdf");
+        cfg->gpToHospICDF = retrieveICDF(j, "mean_gp_to_hosp", "gp_to_hosp_icdf");
+        cfg->gpToDeathICDF = retrieveICDF(j, "mean_gp_to_death", "gp_to_death_icdf");
+        cfg->hospToRecovICDF = retrieveICDF(j, "mean_hosp_to_recov", "hosp_to_recov_icdf");
+        cfg->hospToICUICDF = retrieveICDF(j, "mean_hosp_to_icu", "hosp_to_icu_icdf");
+        cfg->hospToDeathICDF = retrieveICDF(j, "mean_hosp_to_death", "hosp_to_death_icdf");
+        cfg->icuToICURecovICDF = retrieveICDF(j, "mean_icu_to_icurecov", "icu_to_icurecov_icdf");
+        cfg->icuToDeathICDF = retrieveICDF(j, "mean_icu_to_death", "icu_to_death_icdf");
+        cfg->icuRecovToRecovICDF = retrieveICDF(j, "mean_icurecov_to_recov", "icurecov_to_recov_icdf");
         return true;
     }
 
@@ -118,16 +105,20 @@ namespace epiabm
         return input.at(paramName).get<T>();
     }
 
-    InverseCDF JsonFactory::retrieveICDF(const json::json &input, const std::string &paramName)
+    InverseCDF JsonFactory::retrieveICDF(
+        const json::json &input,
+        const std::string& meanParamName,
+        const std::string &icdfParamName)
     {
-        std::vector<double> values = input.at(paramName).get<std::vector<double>>();
+        std::vector<double> values = input.at(icdfParamName).get<std::vector<double>>();
         if (values.size() != InverseCDF::RES + 1)
         {
-            LOG << LOG_LEVEL_ERROR << "Invalid number of values in " << paramName;
+            LOG << LOG_LEVEL_ERROR << "Invalid number of values in " << icdfParamName;
             std::throw_with_nested(std::runtime_error("Error loading ICDF"));
         }
 
-        InverseCDF icdf = InverseCDF();
+        InverseCDF icdf = InverseCDF(
+            retrieve<double>(input, meanParamName));
         for (size_t i = 0; i < InverseCDF::RES + 1; i++)
         {
             icdf[i] = values[i];

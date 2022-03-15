@@ -18,7 +18,7 @@ namespace epiabm
     {
     protected:
         PopulationPtr m_population;
-        std::optional<SimulationConfigPtr> m_cfg;
+        SimulationConfigPtr m_cfg;
 
     public:
         SweepInterface();
