@@ -3,7 +3,7 @@
 #
 
 import json
-import numpy as np
+import numpy as np  # noqa
 
 
 class Parameters:
@@ -16,13 +16,13 @@ class Parameters:
         """Singleton Parameters Object.
 
         """
-        def __init__(self):
+        def __init__(self, config_file_path):
             """Detailed description of parameters is given
             in github wiki:
             https://github.com/SABS-R3-Epidemiology/epiabm/wiki
 
             """
-            parameters_file = "parameters.json"
+            parameters_file = config_file_path
             parameters_str = open(parameters_file, "r").read()
             parameters = json.loads(parameters_str)
             for key, value in parameters.items():
@@ -44,5 +44,10 @@ class Parameters:
 
         """
         if not Parameters._instance:
-            Parameters._instance = Parameters.__Parameters()
+            raise RuntimeError("Config file hasn't been set")
         return Parameters._instance
+
+    @staticmethod
+    def set_file(file_path):
+        """Loads file"""
+        Parameters._instance = Parameters.__Parameters(file_path)
