@@ -20,6 +20,7 @@ set(
     sweeps/household_sweep.cpp
     sweeps/new_infection_sweep.cpp
     sweeps/basic_host_progression_sweep.cpp
+    sweeps/host_progression_sweep.cpp
     sweeps/random_seed_sweep.cpp
     sweeps/spatial_sweep.cpp
     reporters/timestep_reporter_interface.cpp
@@ -51,6 +52,7 @@ set(
     sweeps/household_sweep.hpp
     sweeps/new_infection_sweep.hpp
     sweeps/basic_host_progression_sweep.hpp
+    sweeps/host_progression_sweep.hpp
     sweeps/random_seed_sweep.hpp
     sweeps/spatial_sweep.hpp
     reporters/timestep_reporter_interface.hpp

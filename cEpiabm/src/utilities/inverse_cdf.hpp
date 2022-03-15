@@ -14,6 +14,7 @@ namespace epiabm
         double m_mean;
 
     public:
+        InverseCDF();
         InverseCDF(double mean);
 
         void setNegLog(double startValue);

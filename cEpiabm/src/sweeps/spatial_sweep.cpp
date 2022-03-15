@@ -103,7 +103,7 @@ namespace epiabm
         Cell* cell,
         unsigned short int )
     {
-        return static_cast<double>(m_cfg->infectionConfig->basicReproductionNum * cell->numInfectious());
+        return m_cfg->infectionConfig->basicReproductionNum * static_cast<double>(cell->numInfectious());
     }
 
     double SpatialSweep::calcSpaceInf(

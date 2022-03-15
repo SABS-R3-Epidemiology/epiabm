@@ -49,8 +49,8 @@ namespace epiabm
 
         // Chose the person's next status and next status time
         person->params().next_status = chooseNextStatus(firstStatus);
-        person->params().next_status_time = timestep +
-            chooseNextTransitionTime(person->status(), person->params().next_status);
+        person->params().next_status_time = static_cast<unsigned short>(timestep +
+            chooseNextTransitionTime(person->status(), person->params().next_status));
         
         // Move person from exposed to infectious
         cell->markInfectious(person->cellPos());
@@ -77,8 +77,8 @@ namespace epiabm
 
             // Choose the next state and next time
             person->params().next_status = chooseNextStatus(person->status());
-            person->params().next_status_time = timestep +
-                chooseNextTransitionTime(person->status(), person->params().next_status);
+            person->params().next_status_time = static_cast<unsigned short>(timestep +
+                chooseNextTransitionTime(person->status(), person->params().next_status));
         }
         return true;
     }

@@ -5,6 +5,9 @@
 namespace epiabm
 {
 
+    InverseCDF::InverseCDF() :
+        m_mean(0)
+    {}
     InverseCDF::InverseCDF(double mean) :
         m_mean(mean)
     {}

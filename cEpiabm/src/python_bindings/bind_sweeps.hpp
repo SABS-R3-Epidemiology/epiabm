@@ -4,6 +4,7 @@
 #include "sweeps/sweep_interface.hpp"
 #include "sweeps/household_sweep.hpp"
 #include "sweeps/basic_host_progression_sweep.hpp"
+#include "sweeps/host_progression_sweep.hpp"
 #include "sweeps/new_infection_sweep.hpp"
 #include "sweeps/random_seed_sweep.hpp"
 #include "sweeps/spatial_sweep.hpp"
@@ -24,6 +25,10 @@ void bind_sweeps(py::module &m)
         .def(py::init<>());
         
     py::class_<BasicHostProgressionSweep, BasicHostProgressionSweepPtr>(m, "BasicHostProgressionSweep",
+        py::base<SweepInterface>())
+        .def(py::init<>());
+
+    py::class_<HostProgressionSweep, HostProgressionSweepPtr>(m, "HostProgressionSweep",
         py::base<SweepInterface>())
         .def(py::init<>());
     
