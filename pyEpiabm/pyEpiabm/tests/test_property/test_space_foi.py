@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus, SpatialInfection
@@ -33,11 +34,27 @@ class TestSpatialInfection(TestPyEpiabm):
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
+    @patch('pyEpiabm.core.Parameters.instance')
+    def test_space_susc_no_age(self, mock_params):
+        mock_params.return_value.use_ages = False
+        result = SpatialInfection.space_susc(self.cell, self.infectee,
+                                             self.time)
+        self.assertIsInstance(result, float)
+        self.assertEqual(result, 1)
+
     def test_space_inf(self):
         result = SpatialInfection.space_inf(self.cell, self.infector,
                                             self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
+
+    @patch('pyEpiabm.core.Parameters.instance')
+    def test_space_inf_no_age(self, mock_params):
+        mock_params.return_value.use_ages = False
+        result = SpatialInfection.space_inf(self.cell, self.infector,
+                                            self.time)
+        self.assertIsInstance(result, float)
+        self.assertEqual(result, self.infector.infectiousness)
 
     def test_space_foi(self):
         result = SpatialInfection.space_foi(self.cell, self.cell,

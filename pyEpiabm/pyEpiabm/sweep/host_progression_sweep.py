@@ -6,7 +6,7 @@ import random
 import numpy as np
 
 import pyEpiabm as pe
-from pyEpiabm.core import Person
+from pyEpiabm.core import Parameters, Person
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import StateTransitionMatrix, TransitionTimeMatrix
 
@@ -31,9 +31,11 @@ class HostProgressionSweep(AbstractSweep):
 
         """
         # Instantiate state transition matrix
-        matrix_object = StateTransitionMatrix()
-        self.state_transition_matrix =\
-            matrix_object.create_state_transition_matrix()
+        use_ages = Parameters.instance().use_ages
+        coefficients = Parameters.instance().host_progression_lists
+        matrix_object = StateTransitionMatrix(coefficients, use_ages)
+        self.state_transition_matrix = matrix_object.matrix
+
         self.number_of_states = len(InfectionStatus)
         assert self.state_transition_matrix.shape == \
             (self.number_of_states, self.number_of_states),\
@@ -102,6 +104,8 @@ class HostProgressionSweep(AbstractSweep):
         else:
             row_index = person.infection_status.name
             weights = self.state_transition_matrix.loc[row_index].to_numpy()
+            weights = [w[person.age_group] if isinstance(w, list) else w
+                       for w in weights]
             outcomes = range(1, self.number_of_states + 1)
 
             if len(weights) != len(outcomes):

@@ -31,6 +31,8 @@ class Parameters:
                 exec(f"self.{key} = {value}")
             parameters_file.close()
 
+            pass
+
     _instance = None  # Singleton instance
 
     @staticmethod
