@@ -1,3 +1,4 @@
+from collections import defaultdict
 import unittest
 from unittest.mock import patch
 
@@ -22,6 +23,7 @@ class TestParameters(TestPyEpiabm):
     def test_default_dict(self):
         my_dict = pe.Parameters.instance().host_progression_lists
         self.assertIsInstance(my_dict["prob_gp_to_hosp"], list)
+        my_dict = defaultdict(int, my_dict)
         self.assertEqual(my_dict["false_key"], 0)
 
 
