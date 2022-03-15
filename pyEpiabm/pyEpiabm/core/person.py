@@ -6,6 +6,8 @@ import random
 
 from pyEpiabm.property import InfectionStatus
 
+from .parameters import Parameters
+
 
 class Person:
     """Class to represent each person in a population.
@@ -26,22 +28,16 @@ class Person:
 
     """
 
-    def __init__(self, microcell,
-                 age=0, infectiousness=0):
+    def __init__(self, microcell):
         """Constructor Method.
 
         Parameters
         ----------
         microcell : Microcell
             Person's parent :class:`Microcell` instance
-        age : float
-            Person's age
-        infectiousness : float
-            Person's infectiousness
 
         """
-        self.age = age
-        self.infectiousness = infectiousness
+        self.infectiousness = 0
         self.microcell = microcell
         self.infection_status = InfectionStatus.Susceptible
         self.household = None
@@ -49,6 +45,24 @@ class Person:
         self.place_types = []
         self.next_infection_status = None
         self.time_of_status_change = None
+
+        self.set_random_age()
+
+    def set_random_age(self):
+        """Set random age of person, and save index of their age group.
+        Note that the max age in the 80+ group is 84 here, however the precise
+        age of 80+ people is never used (exact ages are only used to assign
+        school/workplaces) so this does not cause any issues.
+
+        """
+        if Parameters.instance().use_ages:
+            group_probs = Parameters.instance().age_proportions
+            self.age_group = random.choices(range(len(group_probs)),
+                                            weights=group_probs)[0]
+            self.age = random.randint(0, 4) + 5 * self.age_group
+        else:  # Set everyone to 40 (mean qualities)
+            self.age_group = 8
+            self.age = 40
 
     def is_infectious(self):
         """Query if the person is currently infectious.
