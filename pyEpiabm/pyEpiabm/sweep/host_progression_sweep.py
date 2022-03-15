@@ -69,7 +69,8 @@ class HostProgressionSweep(AbstractSweep):
         num_infectious_ts =\
             int(np.ceil(infectious_period / self.model_time_step))
         if num_infectious_ts >= max_inf_steps:
-            raise ValueError('Number of infect timesteps exceeds limit')
+            raise ValueError('Number of timesteps in infectious period exceeds'
+                             + 'limit')
         # Initialisation
         infectious_profile[inf_prof_resolution] = 0
         infectiousness_prog = np.zeros(max_inf_steps)
@@ -121,17 +122,17 @@ class HostProgressionSweep(AbstractSweep):
         """
         init_infectiousness = np.random.gamma(1, 1)
         if person.infection_status == InfectionStatus.InfectASympt:
-            infectiousness = init_infectiousness *\
-                             pe.Parameters.instance().asympt_infectiousness
+            infectiousness = (init_infectiousness *
+                              pe.Parameters.instance().asympt_infectiousness)
             person.initial_infectiousness = infectiousness
         elif (person.infection_status == InfectionStatus.InfectMild or
               person.infection_status == InfectionStatus.InfectGP):
-            infectiousness = init_infectiousness *\
-                             pe.Parameters.instance().sympt_infectiousness
+            infectiousness = (init_infectiousness *
+                              pe.Parameters.instance().sympt_infectiousness)
             person.initial_infectiousness = infectiousness
         person.infection_start_time = time
         if person.infection_start_time < 0:
-            raise AssertionError('The infection start time cannot be negative')
+            raise ValueError('The infection start time cannot be negative')
 
     def _update_next_infection_status(self, person: Person):
         """Assigns next infection status based on current infection status

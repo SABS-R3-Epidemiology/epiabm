@@ -24,7 +24,6 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.person2 = self.test_population1.cells[0].microcells[0].persons[1]
         self.person3 = self.test_population1.cells[0].microcells[0].persons[2]
 
-        # Create a population with people of all infection statuses to
         # test update status method
         self.test_population2 = pe.Population()
         self.test_population2.add_cells(1)
@@ -68,11 +67,11 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertEqual(self.person1.infection_start_time, 1.5)
 
     def test_set_infectiousness_neg_time(self):
-        """Tests that an assertion error is raised if the input time in 'set
+        """Tests that a value error is raised if the input time in 'set
         infectiousness' method is negative.
         """
         self.person1.update_status(InfectionStatus.InfectASympt)
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, -2)
 
     def test_update_next_infection_status(self):
@@ -235,7 +234,8 @@ class TestHostProgressionSweep(unittest.TestCase):
             infect_prog = test_sweep.infectiousness_progression
             # Checks output type is numpy array
             self.assertIsInstance(infect_prog, np.ndarray)
-            # Checks elements are 0 after k and greater than 0 before
+            # Checks elements are 0 after num_infectious_ts and greater than 0
+            # before
             tail = infect_prog[num_infectious_ts:2550]
             zeros = np.zeros(2550-num_infectious_ts)
             self.assertTrue((tail == zeros).all())
@@ -277,9 +277,10 @@ class TestHostProgressionSweep(unittest.TestCase):
                               0.00091683, 0.000759816, 0.000629496,
                               0.000521372, 0.000431695, 0.000357344,
                               0.000295719, 0.000244659])
-                num_infectious_ts =\
-                    int(np.ceil(pe.Parameters.instance().asympt_infect_period
-                        * pe.Parameters.instance().time_steps_per_day))
+                num_infectious_ts = int(np.ceil(pe.Parameters.instance().
+                                                asympt_infect_period
+                                                * pe.Parameters.instance().
+                                                time_steps_per_day))
                 # We need to mock the np.floor function to have j greater or
                 # equal to the infectiousness profile resolution
                 mock_floor.return_value = 57
