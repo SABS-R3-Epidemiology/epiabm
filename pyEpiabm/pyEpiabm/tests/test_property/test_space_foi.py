@@ -2,9 +2,10 @@ import unittest
 
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus, SpatialInfection
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestSpatialInfection(unittest.TestCase):
+class TestSpatialInfection(TestPyEpiabm):
     """Test the 'PlaceInfection' class, which contains the
     infectiousness and susceptibility calculations that
     determine whether infection events occur within places.
@@ -15,6 +16,7 @@ class TestSpatialInfection(unittest.TestCase):
         """Intialise a population with one infector and one
         infectee, both in the same place and household.
         """
+        super(TestSpatialInfection, cls).setUpClass()  # Sets up parameters
         cls.cell = pe.Cell()
         cls.cell.add_microcells(1)
         cls.microcell = cls.cell.microcells[0]

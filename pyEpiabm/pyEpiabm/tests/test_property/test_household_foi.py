@@ -2,9 +2,10 @@ import unittest
 
 import pyEpiabm as pe
 from pyEpiabm.property import HouseholdInfection
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestHouseholdInfection(unittest.TestCase):
+class TestHouseholdInfection(TestPyEpiabm):
     """Test the 'HouseholdInfection' class, which contains the
     infectiousness and susceptibility calculations that
     determine whether infection events occur within households.
@@ -15,6 +16,7 @@ class TestHouseholdInfection(unittest.TestCase):
         """Intialise a population with one infector and one
         infectee, both in the same place and household.
         """
+        super(TestHouseholdInfection, cls).setUpClass()  # Sets up parameters
         cls.cell = pe.Cell()
         cls.microcell = pe.Microcell(cls.cell)
         cls.infector = pe.Person(cls.microcell)

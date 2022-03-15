@@ -1,9 +1,10 @@
 import unittest
 
 import pyEpiabm as pe
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestParameters(unittest.TestCase):
+class TestParameters(TestPyEpiabm):
     """Test the 'Parameters' class.
     """
     def test_instance(self):

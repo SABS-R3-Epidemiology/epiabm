@@ -22,13 +22,14 @@ class Parameters:
             https://github.com/SABS-R3-Epidemiology/epiabm/wiki
 
             """
-            parameters_file = config_file_path
-            parameters_str = open(parameters_file, "r").read()
+            parameters_file = open(config_file_path, "r")
+            parameters_str = parameters_file.read()
             parameters = json.loads(parameters_str)
             for key, value in parameters.items():
                 if isinstance(value, list):
                     value = f'np.array({value})'
                 exec(f"self.{key} = {value}")
+            parameters_file.close()
 
     _instance = None  # Singleton instance
 

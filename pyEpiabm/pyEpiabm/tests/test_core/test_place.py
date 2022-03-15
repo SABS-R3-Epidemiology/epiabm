@@ -2,13 +2,15 @@ import unittest
 
 import pyEpiabm as pe
 from pyEpiabm.property import PlaceType
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestPlace(unittest.TestCase):
+class TestPlace(TestPyEpiabm):
     """Test the 'Place' class.
     """
     @classmethod
     def setUpClass(cls) -> None:
+        super(TestPlace, cls).setUpClass()  # Sets up parameters
         cls.pop = pe.Population()
         cls.pop.add_cells(1)
         cls.cell = cls.pop.cells[0]
