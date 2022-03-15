@@ -61,8 +61,8 @@ class Person:
                                             weights=group_probs)[0]
             self.age = random.randint(0, 4) + 5 * self.age_group
         else:  # Set everyone to 40 (mean qualities)
-            self.age_group = 8
-            self.age = 40
+            self.age_group = None
+            self.age = None
 
     def is_infectious(self):
         """Query if the person is currently infectious.

@@ -31,7 +31,6 @@ class InitialisePlaceSweep(AbstractSweep):
         # Double loop over the whole population, clearing places
         # of the variable population and refilling them.
 
-        # May want a param dict to be called in from file etc.
         helper = UpdatePlaceSweep()
         helper.bind_population(self._population)
         params = Parameters.instance().place_params
@@ -114,10 +113,17 @@ class InitialisePlaceSweep(AbstractSweep):
             if (place.place_type in person.place_types):
                 # People can't have more than one place of each type.
                 continue
-            for i in range(3):
-                if (person.age > (min_age[i]-1) and person.age < max_age[i]):
-                    # Assumes age groups are distinct and integers.
-                    person_list.append(person)
-                    weights.append(prop[i])
-                    break
+
+            if not Parameters.instance().use_ages:
+                person_list.append(person)
+                weights.append(prop[2])  # Add everyone to adult group
+            else:
+                for i in range(3):
+                    if (person.age > (min_age[i]-1)
+                            and person.age < max_age[i]):
+                        # Assumes age groups are distinct and integers.
+                        person_list.append(person)
+                        weights.append(prop[i])
+                        break
+
         return person_list, weights

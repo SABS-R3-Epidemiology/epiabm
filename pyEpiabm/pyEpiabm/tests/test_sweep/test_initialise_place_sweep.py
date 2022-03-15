@@ -90,6 +90,25 @@ class TestInitialisePlaceSweep(unittest.TestCase):
         self.assertListEqual([], list)
         self.assertEqual(weights, [])
 
+    @mock.patch('pyEpiabm.Parameters.instance')
+    def test_weights_func_noage(self, mock_params):
+        mock_params.return_value.use_ages = False
+        test_pop = self.pop
+        place = test_pop.cells[0].places[0]
+        person = test_pop.cells[0].persons[0]
+        test_sweep = pe.sweep.InitialisePlaceSweep()
+        test_sweep.bind_population(test_pop)
+
+        [list, weights] = test_sweep.create_age_weights(place, self.params)
+        self.assertListEqual([person], list)
+        self.assertEqual(weights[0], self.params["age_group3_prop"][3])
+
+        place.add_person(person)
+        [list, weights] = test_sweep.create_age_weights(place, self.params)
+        self.assertListEqual([], list)
+        self.assertEqual(weights, [])
+        mock_params.assert_called_once()
+
 
 if __name__ == "__main__":
     unittest.main()

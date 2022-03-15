@@ -59,9 +59,11 @@ class SpatialInfection:
             Infectiousness parameter of cell
 
         """
-        age_scaling = pyEpiabm.core.Parameters.instance().\
-            age_proportions[infector.age_group]
-        return infector.infectiousness * age_scaling
+        space_inf = infector.infectiousness
+        if pyEpiabm.core.Parameters.instance().use_ages:
+            space_inf *= pyEpiabm.core.Parameters.instance().\
+                age_proportions[infector.age_group]
+        return space_inf
 
     @staticmethod
     def space_susc(susc_cell, infectee,
@@ -85,8 +87,11 @@ class SpatialInfection:
             Susceptibility parameter of cell
 
         """
-        return pyEpiabm.core.Parameters.instance().\
-            age_proportions[infectee.age_group]
+        if pyEpiabm.core.Parameters.instance().use_ages:
+            return pyEpiabm.core.Parameters.instance().\
+                age_proportions[infectee.age_group]
+        else:
+            return 1.0
 
     @staticmethod
     def space_foi(inf_cell, susc_cell, infector,
