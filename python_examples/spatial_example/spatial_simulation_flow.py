@@ -3,10 +3,16 @@
 #
 
 import os
+import logging
 import pandas as pd
 import matplotlib.pyplot as plt
 
 import pyEpiabm as pe
+
+# Setup output for logging file
+logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
+                    format=('%(asctime)s - %(name)s'
+                            + '- %(levelname)s - %(message)s'))
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
@@ -34,10 +40,14 @@ population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
 # Configure population with input data
 pe.routine.ToyPopulationFactory.assign_cell_locations(population)
 
+
+# pe.routine.FilePopulationFactory.print_population(population, file_loc)
+
+
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 250,
-              "initial_infected_number": 1}
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
+              "initial_infected_number": 1, "initial_infect_cell": True}
 
 file_params = {"output_file": "output.csv",
                "output_dir": "python_examples/spatial_example/spatial_outputs",
@@ -61,6 +71,7 @@ del(sim.writer)
 del(sim)
 
 # Creation of a plot of results
+logging.getLogger("matplotlib").setLevel(logging.WARNING)
 filename = os.path.join(os.path.dirname(__file__), "spatial_outputs",
                         "output.csv")
 df = pd.read_csv(filename)

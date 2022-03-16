@@ -28,6 +28,8 @@ class FilePopulationFactory:
         within each microcell. A random seed may be specified for reproducible
         populations.
 
+        Currently this function can only read in
+
         Input file contains columns:
             * `cell`: ID code for cell
             * `microcell`: ID code for microcell
@@ -59,6 +61,7 @@ class FilePopulationFactory:
 
         # Read file into pandas dataframe
         input = pd.read_csv(input_file)
+        print(input)
         loc_given = ("location_x" and "location_y" in input.columns.values)
 
         # Validate all column names in input
