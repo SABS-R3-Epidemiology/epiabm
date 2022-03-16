@@ -151,7 +151,7 @@ class TestHostProgressionSweep(unittest.TestCase):
 
         for person in self.people:
             test_sweep._update_next_infection_status(person)
-            test_sweep._update_time_status_change(person, current_time)
+            test_sweep.update_time_status_change(person, current_time)
             if person.infection_status.name in ['Recovered', 'Dead']:
                 self.assertEqual(person.time_of_status_change, np.inf)
             elif person.infection_status.name in ['InfectMild', 'InfectGP']:
@@ -164,7 +164,6 @@ class TestHostProgressionSweep(unittest.TestCase):
         """Tests exception is raised with incorrect icdf or value in time
         transition matrix.
         """
-
         test_sweep = pe.sweep.HostProgressionSweep()
         person = self.people[0]
         test_sweep._update_next_infection_status(self.people[0])
@@ -182,9 +181,9 @@ class TestHostProgressionSweep(unittest.TestCase):
             loc[row_index, column_index] = mock.Mock()
         test_sweep.transition_time_matrix.loc[row_index, column_index].\
             icdf_choose_noexp.side_effect = AttributeError
-
         with self.assertRaises(AttributeError):
-            test_sweep._update_time_status_change(self.people[0], 1.0)
+            test_sweep.update_time_status_change(self.people[0], 1.0)
+            print(self.people[0].time_of_status_change)
         test_sweep.transition_time_matrix.loc[row_index, column_index].\
             icdf_choose_noexp.assert_called_once()
 
@@ -341,8 +340,7 @@ class TestHostProgressionSweep(unittest.TestCase):
                 self.assertTrue((infect_prog == zeros).all())
                 # Checks that it is called the right number of times (the right
                 # number of times is the number of infectious time steps plus
-                # 1, as the floor function is called once in the
-                # initialisation for the definition of the delay.)
+                # one because it is used in the delay calculation)
                 self.assertEqual(mock_floor.call_count, num_infectious_ts + 1)
                 # Checks that the mocked parameters are called the right
                 # number of times, ie 46 times in

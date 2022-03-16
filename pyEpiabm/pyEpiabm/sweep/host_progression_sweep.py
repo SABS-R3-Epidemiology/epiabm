@@ -55,8 +55,8 @@ class HostProgressionSweep(AbstractSweep):
         # Defining the length of the model time step (in days, can be a
         # fraction of day as well).
         self.model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
-        self.delay = np.floor(self.latent_to_symptom_delay
-                              / self.model_time_step)
+        self.delay = np.floor(self.latent_to_symptom_delay /
+                              self.model_time_step)
 
         # Infectiousness progression
         # Instantiate parameters to be used in update infectiousness
@@ -160,7 +160,7 @@ class HostProgressionSweep(AbstractSweep):
                 InfectionStatus(next_infection_status_number)
             person.next_infection_status = next_infection_status
 
-    def _update_time_status_change(self, person: Person, time: float):
+    def update_time_status_change(self, person: Person, time: float):
         """Calculates transition time as calculated in CovidSim,
         and updates the time_of_status_change for the given
         Person, given as the time until next infection status
@@ -208,7 +208,7 @@ class HostProgressionSweep(AbstractSweep):
         # statuses (InfectMild or InfectGP), as is done in CovidSim.
         if person.infection_status in [InfectionStatus.InfectMild,
                                        InfectionStatus.InfectGP]:
-            time += self.delay
+            time += HostProgressionSweep().delay
         # Assigns the time of status change using current time and transition
         # time:
         person.time_of_status_change = time + transition_time
@@ -273,5 +273,5 @@ class HostProgressionSweep(AbstractSweep):
                              InfectionStatus.InfectGP]:
                         self.set_infectiousness(person, time)
                     self._update_next_infection_status(person)
-                    self._update_time_status_change(person, time)
+                    self.update_time_status_change(person, time)
                 self._updates_infectiousness(person, time)
