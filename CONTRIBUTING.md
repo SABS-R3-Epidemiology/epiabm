@@ -110,5 +110,31 @@ We have some general conventions in our `.editorconfig` [file](https://github.co
 
 We use [flake8](https://flake8.pycqa.org/en/latest/) style guide enforcement, so recommend using this to lint your code.
 
+## Profiling
+
+We currently have no speed/run time requirements in our tests, however we do ask that you bear run-time in mind when adding new functionality (and state in your PR if your changes increase the runtime of any example workflows by more than 20%). We recommend the use of [kernprof](https://github.com/pyutils/line_profiler) for profiling. This requires the `kernprof.py` file stored in the top-level directory, and the package `line-profiler`, which is pip installable. Decorate all functions you wish to profile with the following decorator:
+
+```python
+@profile
+def slow_function(a, b, c):
+    ...
+```
+
+Note that this decorator should be applied directly to the relevant function - this is particularly relevant where the `@log_exceptions()` decorator is also used, to prevent the output file just showing the runtime of each line in the decorator.
+
+Then, to run profiling on the basic `simulation_flow.py` example:
+
+```console
+python3 kernprof.py -l python_examples/simulation_flow.py
+```
+
+This will create an output file in the current working directory with the same name as the file you have profiled, but an added `.lprof` extension. To view this, use:
+
+```console
+python3 -m line_profiler simulation_flow.py.lprof 
+```
+
+In this way you can identify bottlenecks in performance, or compare the time spent running your functions to the overall simulation time. Note there is a small performance cost in profiling (and the `@profile` decorator will throw errors for users who don't have this module installed), so all references to profiling in the code should be removed before submission.
+
 Thanks,  
-The epiabm team
+The [epiabm](https://github.com/SABS-R3-Epidemiology/epiabm) team
