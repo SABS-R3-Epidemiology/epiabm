@@ -62,7 +62,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         float and the correct infection start time.
         """
         # Test with person1 as InfectASympt infection status and time an
-        # integer
+        # integer.
         self.person1.update_status(InfectionStatus.InfectASympt)
         pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 0)
         self.assertIsInstance(self.person1.initial_infectiousness, float)
