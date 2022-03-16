@@ -57,5 +57,5 @@ class InitialInfectedSweep(AbstractSweep):
         for person in pers_to_infect:
             person.update_status(InfectionStatus.InfectMild)
             person.next_infection_status = InfectionStatus.Recovered
-            person.update_time_to_status_change()
+            HostProgressionSweep.update_time_status_change(person, start_time)
             HostProgressionSweep.set_infectiousness(person, start_time)
