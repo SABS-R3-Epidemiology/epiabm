@@ -228,10 +228,6 @@ class HostProgressionSweep(AbstractSweep):
         time : float
             Current simulation time
 
-        Returns
-        -------
-        float
-            Infectiousness of a person
         """
         # Updates infectiousness with scaling if person is infectious:
         if person.infection_status in \
@@ -239,9 +235,8 @@ class HostProgressionSweep(AbstractSweep):
              InfectionStatus.InfectGP, InfectionStatus.InfectHosp,
              InfectionStatus.InfectICU, InfectionStatus.InfectICURecov]:
             scale_infectiousness = self.infectiousness_progression
-            time_since_infection =\
-                int((time - person.infection_start_time)
-                    / self.model_time_step)
+            time_since_infection = (int((time - person.infection_start_time)
+                                        / self.model_time_step))
             person.infectiousness = person.initial_infectiousness *\
                 scale_infectiousness[time_since_infection]
         # Sets infectiousness to 0 if person just became Recovered or Dead, and

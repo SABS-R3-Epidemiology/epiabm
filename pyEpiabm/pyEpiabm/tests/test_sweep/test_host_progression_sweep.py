@@ -197,6 +197,26 @@ class TestHostProgressionSweep(unittest.TestCase):
         with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
             mock_param.return_value.time_steps_per_day = 1
             mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.infectiousness_prof =\
+                np.array([0.487464241, 1, 1.229764827, 1.312453175,
+                          1.307955665, 1.251658756, 1.166040358,
+                          1.065716869, 0.960199498, 0.855580145,
+                          0.755628835, 0.662534099, 0.577412896,
+                          0.500665739, 0.432225141, 0.371729322,
+                          0.318643018, 0.272340645, 0.232162632,
+                          0.19745264, 0.167581252, 0.141960133,
+                          0.120049578, 0.101361532, 0.085459603,
+                          0.071957123, 0.060514046, 0.050833195,
+                          0.04265624, 0.035759641, 0.029950735,
+                          0.025064045, 0.02095788, 0.017511251,
+                          0.014621091, 0.012199802, 0.010173075,
+                          0.008477992, 0.007061366, 0.005878301,
+                          0.00489096, 0.004067488, 0.003381102,
+                          0.00280931, 0.002333237, 0.001937064,
+                          0.001607543, 0.001333589, 0.001105933,
+                          0.00091683, 0.000759816, 0.000629496,
+                          0.000521372, 0.000431695, 0.000357344,
+                          0.000295719, 0.000244659])
             # Parameters to determine where the tail starts, has to be the same
             # as for the parameters called in HostProgressionSweep.
             infectious_period = pe.Parameters.instance().asympt_infect_period
@@ -217,8 +237,8 @@ class TestHostProgressionSweep(unittest.TestCase):
 
     def test_infectiousness_progression_small_time_steps(self):
         """Tests that the method workd when there are more than 1 time step
-        per day. Also tests that an assertion error is raised if the model
-        time steps length is too small (ie the number of time steps per day is
+        per day. Also tests that a value error is raised if the model time
+        steps length is too small (ie the number of time steps per day is
         too big).
         """
         with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
@@ -226,6 +246,26 @@ class TestHostProgressionSweep(unittest.TestCase):
             # steps per day:
             mock_param.return_value.time_steps_per_day = 100
             mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.infectiousness_prof =\
+                np.array([0.487464241, 1, 1.229764827, 1.312453175,
+                          1.307955665, 1.251658756, 1.166040358,
+                          1.065716869, 0.960199498, 0.855580145,
+                          0.755628835, 0.662534099, 0.577412896,
+                          0.500665739, 0.432225141, 0.371729322,
+                          0.318643018, 0.272340645, 0.232162632,
+                          0.19745264, 0.167581252, 0.141960133,
+                          0.120049578, 0.101361532, 0.085459603,
+                          0.071957123, 0.060514046, 0.050833195,
+                          0.04265624, 0.035759641, 0.029950735,
+                          0.025064045, 0.02095788, 0.017511251,
+                          0.014621091, 0.012199802, 0.010173075,
+                          0.008477992, 0.007061366, 0.005878301,
+                          0.00489096, 0.004067488, 0.003381102,
+                          0.00280931, 0.002333237, 0.001937064,
+                          0.001607543, 0.001333589, 0.001105933,
+                          0.00091683, 0.000759816, 0.000629496,
+                          0.000521372, 0.000431695, 0.000357344,
+                          0.000295719, 0.000244659])
             infectious_period = pe.Parameters.instance().asympt_infect_period
             model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
             num_infectious_ts = int(np.ceil(infectious_period /
@@ -297,7 +337,7 @@ class TestHostProgressionSweep(unittest.TestCase):
                 # initialisation for the definition of the delay.)
                 self.assertEqual(mock_floor.call_count, num_infectious_ts + 1)
 
-    def test_updates_infectiousness(self):
+    def test_update_infectiousness(self):
         """Tests the update infectiousness method. Checks that a person with
         a Susceptible, Exposed, Recovered or Dead infection status still has
         an infectiousness of 0. Checks that a person with an infected status
@@ -321,6 +361,89 @@ class TestHostProgressionSweep(unittest.TestCase):
         for infected_person in self.people[2:8]:
             self.assertGreater(infected_person.infectiousness, 0)
             self.assertIsInstance(infected_person.infectiousness, float)
+
+    def test_compare_value_update_infectiousness(self):
+        """Tests that a person's infectiousness is correctly updated by comparing
+        the infectiousness of a person at the same simulation time in
+        simulations with two different time steps lengths.
+        """
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            # Parameters used in update infectiousness for both time steps
+            # length:
+            mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.infectiousness_prof =\
+                np.array([0.487464241, 1, 1.229764827, 1.312453175,
+                          1.307955665, 1.251658756, 1.166040358,
+                          1.065716869, 0.960199498, 0.855580145,
+                          0.755628835, 0.662534099, 0.577412896,
+                          0.500665739, 0.432225141, 0.371729322,
+                          0.318643018, 0.272340645, 0.232162632,
+                          0.19745264, 0.167581252, 0.141960133,
+                          0.120049578, 0.101361532, 0.085459603,
+                          0.071957123, 0.060514046, 0.050833195,
+                          0.04265624, 0.035759641, 0.029950735,
+                          0.025064045, 0.02095788, 0.017511251,
+                          0.014621091, 0.012199802, 0.010173075,
+                          0.008477992, 0.007061366, 0.005878301,
+                          0.00489096, 0.004067488, 0.003381102,
+                          0.00280931, 0.002333237, 0.001937064,
+                          0.001607543, 0.001333589, 0.001105933,
+                          0.00091683, 0.000759816, 0.000629496,
+                          0.000521372, 0.000431695, 0.000357344,
+                          0.000295719, 0.000244659])
+            infectious_period = pe.Parameters.instance().asympt_infect_period
+
+            # Generating the list of infectiousness values for when we have 1
+            # time step per day
+            mock_param.return_value.time_steps_per_day = 1
+            model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
+            num_infectious_ts = int(np.ceil(infectious_period /
+                                            model_time_step))
+            test_sweep_ts1 = pe.sweep.HostProgressionSweep()
+            # We generate an array containing the times of the simulation
+            time_steps_1 = np.zeros(num_infectious_ts)
+            time_steps_1[0] = model_time_step
+            for i in range(num_infectious_ts):
+                time_steps_1[i] = time_steps_1[i-1] + model_time_step
+
+            # Generating the list of infectiousness values for when we have 2
+            # time steps per day
+            mock_param.return_value.time_steps_per_day = 2
+            model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
+            num_infectious_ts = int(np.ceil(infectious_period /
+                                            model_time_step))
+            test_sweep_ts2 = pe.sweep.HostProgressionSweep()
+            # We generate an array containing the times of the simulation
+            time_steps_2 = np.zeros(num_infectious_ts)
+            time_steps_2[0] = model_time_step
+            for i in range(num_infectious_ts):
+                time_steps_2[i] = time_steps_2[i-1] + model_time_step
+
+            # We set an asymptotically infected person with infectiousness 1
+            # for each time simulation time step length
+            person_1, person_2 = self.people[1:3]
+            for person in [person_1, person_2]:
+                person.update_status(InfectionStatus(3))
+                person.initial_infectiousness = 1
+                person.infection_start_time = 0
+            # We generate a list containing the infectiousness values of the
+            # person for each simulation time step length
+            person_infectiousness_ts1 = list()
+            person_infectiousness_ts2 = list()
+            for t in time_steps_1:
+                test_sweep_ts1._updates_infectiousness(person_1, t)
+                person_infectiousness_ts1.append(person_1.infectiousness)
+            for t in time_steps_2:
+                test_sweep_ts2._updates_infectiousness(person_2, t)
+                person_infectiousness_ts2.append(person_2.infectiousness)
+
+            # We truncate this list to only keep infectiousness values on
+            # whole days to compare with case where we have 1 time step per day
+            person_infectiousness_ts2 = person_infectiousness_ts2[1::2]
+            # Now we compare both arrays to confirm that any difference is
+            # smaller than 1e-4
+            np.testing.assert_almost_equal(person_infectiousness_ts1,
+                                           person_infectiousness_ts2, 4)
 
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
     def test_call_main(self, mock_next_time):
