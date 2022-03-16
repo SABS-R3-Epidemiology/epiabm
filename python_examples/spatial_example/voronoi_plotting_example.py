@@ -267,7 +267,8 @@ def generate_animation(df: pd.DataFrame, vor: Voronoi, name: str,
         writer = matplotlib.animation.PillowWriter(fps=10)
         ani.save((save_path + str("voronoi_animation.gif")), writer=writer)
     else:
-        for t in times:
+        file_names = []
+        for i, t in enumerate(times):
             t_fig, t_ax = plot_time_point(df, vor, name, t, grid_lim, ax,
                                           mapper)
             if t == times[0]:
@@ -275,7 +276,9 @@ def generate_animation(df: pd.DataFrame, vor: Voronoi, name: str,
                 cbar.set_label("Number of " + str(name))
             t_ax.set_xlim(grid_lim[0][0], grid_lim[0][1])
             t_ax.set_ylim(grid_lim[1][0], grid_lim[1][1])
-            t_fig.savefig(save_path + "image" + f'{t:03d}' + "d.png")
+            file_name = ("image" + f'{i:03d}' + "d.png")
+            file_names.append(file_name)
+            t_fig.savefig(save_path + file_name)
             plt.close(t_fig)
 
         fp_in = save_path + "image" + "*d.png"
@@ -286,7 +289,7 @@ def generate_animation(df: pd.DataFrame, vor: Voronoi, name: str,
                  save_all=True, duration=20, loop=0,
                  optimise=True)
         for file in os.listdir(save_path):  # Delete images after use
-            if file.endswith('d.png'):
+            if file in file_names:
                 os.remove(os.path.join(save_path, file))
 
 
@@ -317,8 +320,8 @@ fig_loc = ("python_examples/spatial_example/spatial_outputs/"
 plot_time_grid(df, vor, name="InfectionStatus.InfectMild",
                grid_dim=(2, 3), grid_lim=grid_limits, save_loc=fig_loc)
 
-# # Plot animation of simulation
-# animation_path = ("python_examples/spatial_example/spatial_outputs/")
-# anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
-#                           grid_lim=grid_limits, save_path=animation_path,
-#                           use_pillow=False)
+# Plot animation of simulation
+animation_path = ("python_examples/spatial_example/spatial_outputs/")
+anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
+                          grid_lim=grid_limits, save_path=animation_path,
+                          use_pillow=False)

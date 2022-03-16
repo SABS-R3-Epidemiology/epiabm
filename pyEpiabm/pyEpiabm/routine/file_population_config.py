@@ -61,7 +61,6 @@ class FilePopulationFactory:
 
         # Read file into pandas dataframe
         input = pd.read_csv(input_file)
-        print(input)
         loc_given = ("location_x" and "location_y" in input.columns.values)
 
         # Validate all column names in input
