@@ -31,7 +31,7 @@ class InitialInfectedSweep(AbstractSweep):
         if pop_size < \
                 sim_params["initial_infected_number"]:
             raise ValueError('Initial number of infected people needs to be'
-                             + 'less than the total population')
+                             + ' less than the total population')
 
         start_time = sim_params["simulation_start_time"]
         if start_time < 0:
