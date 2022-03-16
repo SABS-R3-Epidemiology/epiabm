@@ -360,7 +360,7 @@ class TestHostProgressionSweep(unittest.TestCase):
                 # Checks that the mocked parameters are called the right
                 # number of times, ie 46 times in
                 # pe.sweep.HostProgressionSweep() plus the number of times
-                # specifically called in this test
+                # specifically called in this test.
                 self.assertEqual(mock_param.call_count, 46 + 2)
 
     def test_update_infectiousness(self):
