@@ -234,6 +234,10 @@ class TestHostProgressionSweep(unittest.TestCase):
             self.assertTrue((tail == zeros).all())
             self.assertTrue((infect_prog[0:num_infectious_ts] >
                             np.zeros(num_infectious_ts)).all())
+            # Checks that the mocked parameters are called the right number of
+            # times, ie 46 times in pe.sweep.HostProgressionSweep() plus the
+            # number of times specifically called in this test
+            self.assertEqual(mock_param.call_count, 46 + 2)
 
     def test_infectiousness_progression_small_time_steps(self):
         """Tests that the method workd when there are more than 1 time step
@@ -281,6 +285,10 @@ class TestHostProgressionSweep(unittest.TestCase):
             self.assertTrue((tail == zeros).all())
             self.assertTrue((infect_prog[0:num_infectious_ts] >
                             np.zeros(num_infectious_ts)).all())
+            # Checks that the mocked parameters are called the right number of
+            # times, ie 46 times in pe.sweep.HostProgressionSweep() plus the
+            # number of times specifically called in this test
+            self.assertEqual(mock_param.call_count, 46 + 2)
 
             # Very small value for time steps to raise error:
             mock_param.return_value.time_steps_per_day = 10000
@@ -336,6 +344,11 @@ class TestHostProgressionSweep(unittest.TestCase):
                 # 1, as the floor function is called once in the
                 # initialisation for the definition of the delay.)
                 self.assertEqual(mock_floor.call_count, num_infectious_ts + 1)
+                # Checks that the mocked parameters are called the right
+                # number of times, ie 46 times in
+                # pe.sweep.HostProgressionSweep() plus the number of times
+                # specifically called in this test
+                self.assertEqual(mock_param.call_count, 46 + 2)
 
     def test_update_infectiousness(self):
         """Tests the update infectiousness method. Checks that a person with
@@ -444,6 +457,10 @@ class TestHostProgressionSweep(unittest.TestCase):
             # smaller than 1e-4
             np.testing.assert_almost_equal(person_infectiousness_ts1,
                                            person_infectiousness_ts2, 4)
+            # Checks that the mocked parameters are called the right number of
+            # times, ie 46 times in pe.sweep.HostProgressionSweep() plus the
+            # number of times specifically called in this test
+            self.assertEqual(mock_param.call_count, 2*46 + 3)
 
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
     def test_call_main(self, mock_next_time):
