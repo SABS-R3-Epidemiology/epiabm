@@ -198,7 +198,8 @@ class SpatialSweep(AbstractSweep):
             # parameter later.
             weights = [cell2.compartment_counter.retrieve()
                        [InfectionStatus.Susceptible] * SpatialKernel.weighting(
-                           DistanceFunctions.dist(cell2, current_cell))
+                           DistanceFunctions.dist(cell2.location,
+                                                  current_cell.location))
                        for cell2 in possible_infectee_cells]
             infectee_cell = random.choices(possible_infectee_cells,
                                            weights=weights, k=1)[0]

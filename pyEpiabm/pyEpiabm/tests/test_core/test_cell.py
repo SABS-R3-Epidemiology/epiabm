@@ -3,9 +3,10 @@ from queue import Queue
 
 import pyEpiabm as pe
 from pyEpiabm.property.infection_status import InfectionStatus
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestCell(unittest.TestCase):
+class TestCell(TestPyEpiabm):
     """Test the 'Cell' class.
     """
     def setUp(self) -> None:

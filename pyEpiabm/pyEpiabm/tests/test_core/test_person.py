@@ -2,9 +2,10 @@ import unittest
 from unittest.mock import patch
 
 import pyEpiabm as pe
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestPerson(unittest.TestCase):
+class TestPerson(TestPyEpiabm):
     """Test the 'Person' class.
     """
     def setUp(self) -> None:
