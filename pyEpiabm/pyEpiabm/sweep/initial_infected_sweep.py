@@ -36,7 +36,7 @@ class InitialInfectedSweep(AbstractSweep):
         start_time = sim_params["simulation_start_time"]
         if start_time < 0:
             raise ValueError('Simulation start time needs to be greater or'
-                             + 'equal to 0')
+                             + ' equal to 0')
 
         # Checks whether there are enough susceptible people to infect.
         status = InfectionStatus.Susceptible
