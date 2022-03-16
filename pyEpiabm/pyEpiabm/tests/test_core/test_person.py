@@ -35,7 +35,7 @@ class TestPerson(unittest.TestCase):
             mock_param.return_value.use_ages = False
             self.person.set_random_age()
             mock_param.assert_called_once()
-            self.assertEqual(self.person.age, 40)
+            self.assertEqual(self.person.age, None)
 
     def test_repr(self):
         self.assertEqual(repr(self.person),
