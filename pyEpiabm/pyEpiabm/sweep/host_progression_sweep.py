@@ -62,6 +62,7 @@ class HostProgressionSweep(AbstractSweep):
         # Instantiate parameters to be used in update infectiousness
         infectious_profile = pe.Parameters.instance().infectiousness_prof
         inf_prof_resolution = len(infectious_profile) - 1
+        inf_prof_average = np.average(infectious_profile)
         infectious_period = pe.Parameters.instance().asympt_infect_period
         # Extreme case where model time step would be too small
         max_inf_steps = 2550
@@ -70,11 +71,10 @@ class HostProgressionSweep(AbstractSweep):
             int(np.ceil(infectious_period / self.model_time_step))
         if num_infectious_ts >= max_inf_steps:
             raise ValueError('Number of timesteps in infectious period exceeds'
-                             + 'limit')
+                             + ' limit')
         # Initialisation
         infectious_profile[inf_prof_resolution] = 0
         infectiousness_prog = np.zeros(max_inf_steps)
-        sum_for_scaling = 0
         # Fill infectiousness progression array
         for i in range(num_infectious_ts):
             t = (((i * self.model_time_step) / infectious_period)
@@ -86,18 +86,13 @@ class HostProgressionSweep(AbstractSweep):
                 infectiousness_prog[i] =\
                     (infectious_profile[associated_inf_value] * (1 - t)
                      + infectious_profile[associated_inf_value + 1] * t)
-                sum_for_scaling += infectiousness_prog[i]
             else:  # limit case where we define infectiousness to 0
                 infectiousness_prog[i] =\
                     infectious_profile[inf_prof_resolution]
-                sum_for_scaling += infectiousness_prog[i]
         # Scaling
-        scaling_param = sum_for_scaling / num_infectious_ts
-        # Avoids artificial case of division by 0, would only happen if every
-        # infectiousness element is 0, in which case we do not need to scale.
-        if scaling_param != 0:
-            for i in range(num_infectious_ts + 1):
-                infectiousness_prog[i] /= scaling_param
+        scaling_param = inf_prof_average
+        for i in range(num_infectious_ts + 1):
+            infectiousness_prog[i] /= scaling_param
         self.infectiousness_progression = infectiousness_prog
 
     @staticmethod
