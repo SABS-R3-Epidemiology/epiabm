@@ -3,7 +3,7 @@
 #
 
 import json
-import numpy as np  # noqa
+import numpy as np
 
 
 class Parameters:
@@ -22,16 +22,13 @@ class Parameters:
             https://github.com/SABS-R3-Epidemiology/epiabm/wiki
 
             """
-            parameters_file = open(config_file_path, "r")
-            parameters_str = parameters_file.read()
-            parameters = json.loads(parameters_str)
-            for key, value in parameters.items():
-                if isinstance(value, list):
-                    value = f'np.array({value})'
-                exec(f"self.{key} = {value}")
-            parameters_file.close()
-
-            pass
+            with open(config_file_path, "r") as parameters_file:
+                parameters_str = parameters_file.read()
+                parameters = json.loads(parameters_str)
+                for key, value in parameters.items():
+                    if isinstance(value, list):
+                        value = np.array(value)
+                    setattr(self, key, value)
 
     _instance = None  # Singleton instance
 
