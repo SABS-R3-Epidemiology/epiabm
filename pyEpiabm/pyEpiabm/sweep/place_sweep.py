@@ -41,7 +41,8 @@ class PlaceSweep(AbstractSweep):
                 place_list = [i[0] for i in infector.places]
                 for place in place_list:
                     infector_group = place.get_group_index(infector)
-                    infectiousness = PlaceInfection.place_inf(place, time)
+                    infectiousness = PlaceInfection.place_inf(place, infector,
+                                                              time)
                     # Covidsim only considers infectees in
                     # the group with the infector. I suggest we use this line
                     # to easily change the list of possible infectees.
