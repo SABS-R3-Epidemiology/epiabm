@@ -1,9 +1,10 @@
 import unittest
 
 import pyEpiabm as pe
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestInitialInfectedSweep(unittest.TestCase):
+class TestInitialInfectedSweep(TestPyEpiabm):
     """Test the 'InitialInfectedSweep' class.
     """
     @classmethod
@@ -11,6 +12,7 @@ class TestInitialInfectedSweep(unittest.TestCase):
         """Sets up a population we can use throughout the test.
         2 people are located in one microcell.
         """
+        super(TestInitialInfectedSweep, cls).setUpClass()
         cls.pop_factory = pe.routine.ToyPopulationFactory()
         cls.pop_params = {"population_size": 2, "cell_number": 1,
                           "microcell_number": 1, "household_number": 1}

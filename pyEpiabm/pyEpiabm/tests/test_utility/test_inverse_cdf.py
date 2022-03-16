@@ -3,11 +3,12 @@ import numpy as np
 from parameterized import parameterized
 
 from pyEpiabm.utility import InverseCdf
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 numReps = 1
 
 
-class TestInverseCdf(unittest.TestCase):
+class TestInverseCdf(TestPyEpiabm):
     """Test the 'InverseCDF' class.
     """
     def test_construct(self):

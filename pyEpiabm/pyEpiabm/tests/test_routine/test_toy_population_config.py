@@ -6,12 +6,13 @@ from parameterized import parameterized
 
 import pyEpiabm as pe
 from pyEpiabm.routine import ToyPopulationFactory
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
 numReps = 1
 
 
-class TestPopConfig(unittest.TestCase):
+class TestPopConfig(TestPyEpiabm):
     """Test the 'ToyPopConfig' class.
     """
     @parameterized.expand([(random.randint(1000, 10000),

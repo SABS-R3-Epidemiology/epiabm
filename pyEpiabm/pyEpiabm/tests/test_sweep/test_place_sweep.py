@@ -3,9 +3,10 @@ from unittest import mock
 from queue import Queue
 
 import pyEpiabm as pe
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestPlaceSweep(unittest.TestCase):
+class TestPlaceSweep(TestPyEpiabm):
     """Test the "PlaceSweep" class.
     """
 
@@ -14,6 +15,7 @@ class TestPlaceSweep(unittest.TestCase):
         """Initialises a population with two people. Sets up a
         single place containing (initially) only one of these people.
         """
+        super(TestPlaceSweep, cls).setUpClass()
         cls.pop_factory = pe.routine.ToyPopulationFactory()
         cls.pop_params = {"population_size": 2, "cell_number": 1,
                           "microcell_number": 1, "household_number": 1,

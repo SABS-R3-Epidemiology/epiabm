@@ -5,9 +5,10 @@ import pandas as pd
 
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestHostProgressionSweep(unittest.TestCase):
+class TestHostProgressionSweep(TestPyEpiabm):
     """Tests the 'HostProgressionSweep' class.
     """
     def setUp(self) -> None:
@@ -198,7 +199,6 @@ class TestHostProgressionSweep(unittest.TestCase):
             icdf_choose_noexp.side_effect = AttributeError
         with self.assertRaises(AttributeError):
             test_sweep.update_time_status_change(self.people[0], 1.0)
-            print(self.people[0].time_of_status_change)
         test_sweep.transition_time_matrix.loc[row_index, column_index].\
             icdf_choose_noexp.assert_called_once()
 
@@ -522,7 +522,6 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertEqual(self.person3.infection_start_time, None)
         self.assertEqual(self.person1.infectiousness, 0)
         self.assertEqual(self.person1.infection_start_time, None)
-        print(self.person2.infectiousness)
         self.assertGreater(self.person2.infectiousness, 0)
         self.assertIsInstance(self.person2.infection_start_time, float)
         # Checks time of status change

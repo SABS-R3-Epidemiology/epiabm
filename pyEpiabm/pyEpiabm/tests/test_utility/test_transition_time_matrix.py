@@ -5,9 +5,10 @@ from enum import Enum
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import TransitionTimeMatrix
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestTransitionTimeMatrix(unittest.TestCase):
+class TestTransitionTimeMatrix(TestPyEpiabm):
     """Test the 'StateTransitionMatrix' class.
     """
     def test_create__transition_time_matrix(self):
