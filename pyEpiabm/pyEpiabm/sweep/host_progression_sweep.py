@@ -4,6 +4,7 @@
 
 import random
 import numpy as np
+from collections import defaultdict
 
 import pyEpiabm as pe
 from pyEpiabm.core import Parameters, Person
@@ -36,7 +37,8 @@ class HostProgressionSweep(AbstractSweep):
         """
         # Instantiate state transition matrix
         use_ages = Parameters.instance().use_ages
-        coefficients = Parameters.instance().host_progression_lists
+        coefficients = defaultdict(int, Parameters.instance()
+                                   .host_progression_lists)
         matrix_object = StateTransitionMatrix(coefficients, use_ages)
         self.state_transition_matrix = matrix_object.matrix
 
