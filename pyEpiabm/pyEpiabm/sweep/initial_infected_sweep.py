@@ -44,9 +44,16 @@ class InitialInfectedSweep(AbstractSweep):
             raise ValueError('There are not enough susceptible people in the \
                                         population to infect')
 
-        all_persons = [pers for cell in self._population.cells
-                       for pers in cell.persons
-                       if pers.infection_status == InfectionStatus.Susceptible]
+        if ("initial_infected_cell" not in sim_params
+                or not sim_params["initial_infected_cell"]):
+            all_persons = [pers for cell in self._population.cells for pers
+                           in cell.persons if pers.infection_status
+                           == InfectionStatus.Susceptible]
+        else:
+            cell = random.choice(self._population.cells)
+            all_persons = [pers for pers in cell.persons if pers
+                           .infection_status == InfectionStatus.Susceptible]
+
         pers_to_infect = random.sample(all_persons,
                                        sim_params["initial_infected_number"])
         for person in pers_to_infect:
