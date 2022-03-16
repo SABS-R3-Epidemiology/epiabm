@@ -134,7 +134,7 @@ This will create an output file in the current working directory with the same n
 python3 -m line_profiler simulation_flow.py.lprof 
 ```
 
-In this way you can indentify bottlenecks in performance, or compare the time spent running your functions to the overall simulation time. Note these is a small performance cost in profiling (and the `@profile` decorator will throw errors for users who don't have this module installed), so all references to profiling in the code should be removed before submission.
+In this way you can identify bottlenecks in performance, or compare the time spent running your functions to the overall simulation time. Note there is a small performance cost in profiling (and the `@profile` decorator will throw errors for users who don't have this module installed), so all references to profiling in the code should be removed before submission.
 
 Thanks,  
 The [epiabm](https://github.com/SABS-R3-Epidemiology/epiabm) team
