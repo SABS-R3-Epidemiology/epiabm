@@ -248,10 +248,6 @@ class TestHostProgressionSweep(unittest.TestCase):
             self.assertTrue((tail == zeros).all())
             self.assertTrue((infect_prog[0:num_infectious_ts] >
                             np.zeros(num_infectious_ts)).all())
-            # Checks that the mocked parameters are called the right number of
-            # times, ie 46 times in pe.sweep.HostProgressionSweep() plus the
-            # number of times specifically called in this test
-            self.assertEqual(mock_param.call_count, 46 + 2)
 
     def test_infectiousness_progression_small_time_steps(self):
         """Tests that the method workd when there are more than 1 time step
@@ -299,10 +295,6 @@ class TestHostProgressionSweep(unittest.TestCase):
             self.assertTrue((tail == zeros).all())
             self.assertTrue((infect_prog[0:num_infectious_ts] >
                             np.zeros(num_infectious_ts)).all())
-            # Checks that the mocked parameters are called the right number of
-            # times, ie 46 times in pe.sweep.HostProgressionSweep() plus the
-            # number of times specifically called in this test
-            self.assertEqual(mock_param.call_count, 46 + 2)
 
             # Very small value for time steps to raise error:
             mock_param.return_value.time_steps_per_day = 10000
@@ -357,11 +349,6 @@ class TestHostProgressionSweep(unittest.TestCase):
                 # number of times is the number of infectious time steps plus
                 # one because it is used in the delay calculation)
                 self.assertEqual(mock_floor.call_count, num_infectious_ts + 1)
-                # Checks that the mocked parameters are called the right
-                # number of times, ie 46 times in
-                # pe.sweep.HostProgressionSweep() plus the number of times
-                # specifically called in this test.
-                self.assertEqual(mock_param.call_count, 46 + 2)
 
     def test_update_infectiousness(self):
         """Tests the update infectiousness method. Checks that a person with
@@ -470,10 +457,6 @@ class TestHostProgressionSweep(unittest.TestCase):
             # smaller than 1e-4
             np.testing.assert_almost_equal(person_infectiousness_ts1,
                                            person_infectiousness_ts2, 4)
-            # Checks that the mocked parameters are called the right number of
-            # times, ie 46 times in pe.sweep.HostProgressionSweep() plus the
-            # number of times specifically called in this test
-            self.assertEqual(mock_param.call_count, 2*46 + 3)
 
     @mock.patch('pyEpiabm.Parameters.instance')
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
@@ -489,6 +472,28 @@ class TestHostProgressionSweep(unittest.TestCase):
         mock_param.return_value.latent_to_sympt_delay = 1
         mock_param.return_value.time_steps_per_day = 1
         mock_param.return_value.model_time_step = 1
+        mock_param.return_value.asympt_infect_period = 14
+        mock_param.return_value.sympt_infectiousness = 1.5
+        mock_param.return_value.infectiousness_prof =\
+            np.array([0.487464241, 1, 1.229764827, 1.312453175,
+                      1.307955665, 1.251658756, 1.166040358,
+                      1.065716869, 0.960199498, 0.855580145,
+                      0.755628835, 0.662534099, 0.577412896,
+                      0.500665739, 0.432225141, 0.371729322,
+                      0.318643018, 0.272340645, 0.232162632,
+                      0.19745264, 0.167581252, 0.141960133,
+                      0.120049578, 0.101361532, 0.085459603,
+                      0.071957123, 0.060514046, 0.050833195,
+                      0.04265624, 0.035759641, 0.029950735,
+                      0.025064045, 0.02095788, 0.017511251,
+                      0.014621091, 0.012199802, 0.010173075,
+                      0.008477992, 0.007061366, 0.005878301,
+                      0.00489096, 0.004067488, 0.003381102,
+                      0.00280931, 0.002333237, 0.001937064,
+                      0.001607543, 0.001333589, 0.001105933,
+                      0.00091683, 0.000759816, 0.000629496,
+                      0.000521372, 0.000431695, 0.000357344,
+                      0.000295719, 0.000244659])
         # First check that people progress through the
         # infection stages correctly.
         self.person2.update_status(pe.property.InfectionStatus.Exposed)
@@ -517,6 +522,7 @@ class TestHostProgressionSweep(unittest.TestCase):
         self.assertEqual(self.person3.infection_start_time, None)
         self.assertEqual(self.person1.infectiousness, 0)
         self.assertEqual(self.person1.infection_start_time, None)
+        print(self.person2.infectiousness)
         self.assertGreater(self.person2.infectiousness, 0)
         self.assertIsInstance(self.person2.infection_start_time, float)
         # Checks time of status change
