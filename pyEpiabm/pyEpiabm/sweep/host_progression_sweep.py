@@ -79,7 +79,8 @@ class HostProgressionSweep(AbstractSweep):
         # Initialisation
         infectious_profile[inf_prof_resolution] = 0
         infectiousness_prog = np.zeros(max_inf_steps)
-        # Fill infectiousness progression array
+        # Fill infectiousness progression array by doing linear interpolation
+        # of infectious_profile
         for i in range(num_infectious_ts):
             t = (((i * self.model_time_step) / infectious_period)
                  * inf_prof_resolution)
@@ -104,7 +105,7 @@ class HostProgressionSweep(AbstractSweep):
         """Assigns the initial infectiousness of a person for when they go from
         the exposed infection state to the next state, either InfectAsympt,
         InfectMild or InfectGP. Also assigns the infection start time and
-        stores it in the person's attribute.
+        stores it as an attribute of the person.
 
         Called right after an exposed person has been given its
         new infection status in the call method below.
