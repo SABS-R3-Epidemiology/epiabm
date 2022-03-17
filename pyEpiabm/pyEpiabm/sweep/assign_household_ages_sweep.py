@@ -26,7 +26,7 @@ class AssignHouseholdAgesSweep(AbstractSweep):
         self.age_group_width = 5
 
     def one_person_household_age(self, person: Person):
-        """ Method that assigns an age to the person
+        """Method that assigns an age to the person
         in a one person household. A random number is first drawn
         that decides which set of conditions the person's age
         should satisfy, e.g. if they are old or young and single etc. The
