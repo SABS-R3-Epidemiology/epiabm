@@ -80,7 +80,7 @@ class AssignHouseholdAgesSweep(AbstractSweep):
                     break
 
     def two_person_household_ages(self, people):
-        """ Method that assigns ages to the people
+        """Method that assigns ages to the people
         in a two person household. A random number is first drawn
         that decides which set of conditions the people's ages
         should satisfy, e.g. if they are both old or it is one parent
