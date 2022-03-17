@@ -62,8 +62,7 @@ class Microcell:
         self.id = id
 
     def add_person(self, person):
-        """Adds :class:`Person` with given :class:`InfectionStatus` 
-        
+        """Adds :class:`Person` with given :class:`InfectionStatus`
         to Microcell.
 
         Parameters
