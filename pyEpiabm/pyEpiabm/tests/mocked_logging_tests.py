@@ -2,13 +2,17 @@
 # Custom testing class to patching logging
 #
 
-import unittest
 from unittest.mock import patch
 
+from .parameter_config_tests import TestPyEpiabm
 
-class TestMockedLogs(unittest.TestCase):
-    """Inherits from the default unittest class, but
-    with mocked logging functions to prevent printing"""
+
+class TestMockedLogs(TestPyEpiabm):
+    """Inherits from the custom testing function, which is
+    the unittest.TestCase class with a parameters file bolted
+    on, but with mocked logging functions to prevent printing
+
+    """
     @classmethod
     def setUpClass(cls):
         """Inherits from the unittest setup, and patches the warning

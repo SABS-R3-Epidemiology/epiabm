@@ -1,35 +1,22 @@
 import unittest
-import pandas as pd
 import numpy as np
 from enum import Enum
 
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import TransitionTimeMatrix
-from pandas.testing import assert_frame_equal
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestTransitionTimeMatrix(unittest.TestCase):
+class TestTransitionTimeMatrix(TestPyEpiabm):
     """Test the 'StateTransitionMatrix' class.
     """
-    def test_build_initial_matrix(self):
-        """Tests the __init__ method by asserting that the initial matrix that is
-        built is equal to the initial matrix expected.
-        """
-        matrix_object = TransitionTimeMatrix()
-        init_matrix = matrix_object.initial_matrix
-        labels = [status.name for status in InfectionStatus]
-        zero_filled_dataframe = pd.DataFrame(np.zeros((len(InfectionStatus),
-                                             len(InfectionStatus))),
-                                             columns=labels, index=labels)
-        assert_frame_equal(init_matrix, zero_filled_dataframe)
-
     def test_create__transition_time_matrix(self):
         """Tests the create_transition_time_matrix method by asserting that the matrix
         is of the right size and that the non-zero elements are of type
         InverseCdf."""
         matrix_object = TransitionTimeMatrix()
-        matrix = matrix_object.create_transition_time_matrix()
+        matrix = matrix_object.matrix
         self.assertEqual(matrix.size, len(InfectionStatus)**2)
         for row in matrix.to_numpy():
             for element in row:
@@ -43,10 +30,9 @@ class TestTransitionTimeMatrix(unittest.TestCase):
         row_status = InfectionStatus.Susceptible
         column_status = InfectionStatus.Exposed
         new_transition_time = 10.0
-        transition_matrix = matrix_object.create_transition_time_matrix()
+        transition_matrix = matrix_object.matrix
         matrix_object.update_transition_time_with_float(row_status,
                                                         column_status,
-                                                        transition_matrix,
                                                         new_transition_time)
         self.assertEqual(10.0,
                          transition_matrix.loc['Susceptible', 'Exposed'])
@@ -58,24 +44,18 @@ class TestTransitionTimeMatrix(unittest.TestCase):
         with self.assertRaises(ValueError):
             row = TestInfectionStatus.Susceptiblesssss
             column = TestInfectionStatus.Susceptiblesssss
-            matrix_object.update_transition_time_with_float(row, column,
-                                                            transition_matrix,
-                                                            1.0)
+            matrix_object.update_transition_time_with_float(row, column, 1.0)
 
         with self.assertRaises(ValueError):
             row = None
             column = None
-            matrix_object.update_transition_time_with_float(row, column,
-                                                            transition_matrix,
-                                                            1.0)
+            matrix_object.update_transition_time_with_float(row, column, 1.0)
 
         # Test error for incorrect transition time is raised
         with self.assertRaises(ValueError):
             row = InfectionStatus.Susceptible
             column = InfectionStatus.Susceptible
-            matrix_object.update_transition_time_with_float(row, column,
-                                                            transition_matrix,
-                                                            -5.0)
+            matrix_object.update_transition_time_with_float(row, column, -5.0)
 
     def test_update_transition_time_with_icdf(self):
         # Test method updates transition time as expected
@@ -84,10 +64,10 @@ class TestTransitionTimeMatrix(unittest.TestCase):
         column_status = InfectionStatus.Exposed
         transition_time_icdf = np.ones(10)
         transition_time_icdf_mean = 10.0
-        transition_matrix = matrix_object.create_transition_time_matrix()
+        transition_matrix = matrix_object.matrix
         matrix_object.update_transition_time_with_icdf(
-            row_status, column_status, transition_matrix,
-            transition_time_icdf, transition_time_icdf_mean)
+            row_status, column_status, transition_time_icdf,
+            transition_time_icdf_mean)
         test_updated_icdf = transition_matrix.loc['Susceptible', 'Exposed']
         self.assertEqual(10.0,
                          test_updated_icdf.mean)
@@ -98,56 +78,40 @@ class TestTransitionTimeMatrix(unittest.TestCase):
         class TestInfectionStatus(Enum):
             Susceptiblesssss = 1
 
-        with self.assertRaises(ValueError):
-            row = TestInfectionStatus.Susceptiblesssss
-            column = TestInfectionStatus.Susceptiblesssss
-            test_mean = 1.0
-            test_icdf = np.ones(10)
-            matrix_object.update_transition_time_with_icdf(
-                row, column, transition_matrix,
-                test_icdf, test_mean)
+        row = InfectionStatus.Susceptible
+        column = InfectionStatus.Susceptible
+        test_mean = 1.0
+        test_icdf = np.ones(10)
 
         with self.assertRaises(ValueError):
-            row = None
-            column = None
-            test_mean = 1.0
-            test_icdf = np.ones(10)
+            fake_row = TestInfectionStatus.Susceptiblesssss
+            fake_column = TestInfectionStatus.Susceptiblesssss
             matrix_object.update_transition_time_with_icdf(
-                row, column, transition_matrix,
-                test_icdf, test_mean)
+                fake_row, fake_column, test_icdf, test_mean)
+
+        with self.assertRaises(ValueError):
+            no_row = None
+            no_column = None
+            matrix_object.update_transition_time_with_icdf(
+                no_row, no_column, test_icdf, test_mean)
 
         # Test error for incorrect icdf mean is raised
         with self.assertRaises(ValueError):
-            row = InfectionStatus.Susceptible
-            column = InfectionStatus.Susceptible
-            test_mean = -5.0
-            test_icdf = np.ones(10)
+            negative_mean = -5.0
             matrix_object.update_transition_time_with_icdf(
-                row, column, transition_matrix,
-                test_icdf, test_mean)
+                row, column, test_icdf, negative_mean)
 
         # Test error for incorrect size icdf array is raised
         with self.assertRaises(ValueError):
-            row = InfectionStatus.Susceptible
-            column = InfectionStatus.Susceptible
-            test_mean = 1.0
-            test_icdf = np.ones(1)
+            short_icdf = np.ones(1)
             matrix_object.update_transition_time_with_icdf(
-                row, column, transition_matrix,
-                test_icdf, test_mean)
+                row, column, short_icdf, test_mean)
 
         # Test error for negative icdf array valuesis raised
         with self.assertRaises(ValueError):
-            row = InfectionStatus.Susceptible
-            column = InfectionStatus.Susceptible
-            test_mean = 1.0
-            test_icdf = -1 * np.ones(10)
+            neg_icdf = -1 * np.ones(10)
             matrix_object.update_transition_time_with_icdf(
-                row,
-                column,
-                transition_matrix,
-                test_icdf,
-                test_mean)
+                row, column, neg_icdf, test_mean)
 
 
 if __name__ == '__main__':

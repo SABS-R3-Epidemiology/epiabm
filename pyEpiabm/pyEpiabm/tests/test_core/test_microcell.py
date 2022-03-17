@@ -2,9 +2,10 @@ import unittest
 
 import pyEpiabm as pe
 from pyEpiabm.property import PlaceType, InfectionStatus
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestMicrocell(unittest.TestCase):
+class TestMicrocell(TestPyEpiabm):
     """Test the 'Microcell' class.
     """
     def setUp(self) -> None:

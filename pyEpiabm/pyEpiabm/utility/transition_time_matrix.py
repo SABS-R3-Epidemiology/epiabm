@@ -3,12 +3,10 @@
 #
 
 import numpy as np
-import pandas as pd
 
 import pyEpiabm as pe
-from pyEpiabm.utility import InverseCdf
-from pyEpiabm.utility import StateTransitionMatrix
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.utility import InverseCdf, StateTransitionMatrix
 
 
 class TransitionTimeMatrix:
@@ -20,8 +18,7 @@ class TransitionTimeMatrix:
         the rows and the columns and zeros as elements.
 
         """
-        self.initial_matrix =\
-            StateTransitionMatrix().create_empty_state_transition_matrix()
+        self.matrix = self.create_transition_time_matrix()
 
     def create_transition_time_matrix(self):
         """Fills the transition time matrix with :class:`InverseCdf` objects,
@@ -38,7 +35,7 @@ class TransitionTimeMatrix:
             Matrix in the form of a dataframe
 
         """
-        matrix = self.initial_matrix
+        matrix = StateTransitionMatrix.create_empty_state_transition_matrix()
         matrix.loc['Exposed', 'InfectASympt'] =\
             InverseCdf(pe.Parameters.instance().latent_period,
                        pe.Parameters.instance().latent_period_iCDF)
@@ -87,7 +84,6 @@ class TransitionTimeMatrix:
                         self,
                         current_infection_status_row: InfectionStatus,
                         next_infection_status_column: InfectionStatus,
-                        matrix: pd.DataFrame,
                         new_transition_time: float):
         """Method to manually update a transition time in the
         transition time matrix.
@@ -100,9 +96,6 @@ class TransitionTimeMatrix:
         next_infection_status_column : InfectionStatus
             Infection status corresponding to
             the column where the probability will be updated
-        matrix : pd.Dataframe
-            Transition time matrix that will have one of it's
-            entries changed
         new_transition_time : float
             Updated transition time value
 
@@ -124,13 +117,12 @@ class TransitionTimeMatrix:
         # transition time matrix with single value
         row = current_infection_status_row.name
         column = next_infection_status_column.name
-        matrix.loc[row, column] = new_transition_time
+        self.matrix.loc[row, column] = new_transition_time
 
     def update_transition_time_with_icdf(
                            self,
                            current_infection_status_row: InfectionStatus,
                            next_infection_status_column: InfectionStatus,
-                           matrix: pd.DataFrame,
                            new_transition_time_icdf: np.ndarray,
                            new_transition_time_icdf_mean: float):
         """Method to manually update a transition time in the
@@ -144,9 +136,6 @@ class TransitionTimeMatrix:
         next_infection_status_column : InfectionStatus
             Infection status corresponding to
             the column where the probability will be updated
-        matrix : pd.Dataframe
-            Transition time matrix that will have one of it's
-            entries changed
         new_transition_time_icdf : list
             The associated list of icdf values if wanting to
             specify a new distribution for a transition time
@@ -185,4 +174,4 @@ class TransitionTimeMatrix:
         icdf = InverseCdf(
             new_transition_time_icdf_mean,
             new_transition_time_icdf)
-        matrix.loc[row, column] = icdf
+        self.matrix.loc[row, column] = icdf

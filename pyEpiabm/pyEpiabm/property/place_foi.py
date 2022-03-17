@@ -11,7 +11,6 @@ class PlaceInfection:
     """Class to calculate the infectiousness and susceptibility
     parameters for the force of infection parameter, within places.
     """
-    params = Parameters.instance().place_params
 
     @staticmethod
     def place_inf(place, infector, time: float):
@@ -36,9 +35,10 @@ class PlaceInfection:
             Infectiousness parameter of place
 
         """
-        transmission = PlaceInfection.params["place_transmission"]
+        params = Parameters.instance().place_params
+        transmission = params["place_transmission"]
         place_idx = place.place_type.value - 1
-        num_groups = PlaceInfection.params["mean_group_size"][place_idx]
+        num_groups = params["mean_group_size"][place_idx]
         # Use group-wise capacity not max_capacity once implemented
         return (transmission / num_groups
                 * PersonalInfection.person_inf(infector, time))

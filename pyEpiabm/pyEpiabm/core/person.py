@@ -37,6 +37,7 @@ class Person:
             Person's parent :class:`Microcell` instance
 
         """
+        self.initial_infectiousness = 0
         self.infectiousness = 0
         self.microcell = microcell
         self.infection_status = InfectionStatus.Susceptible
@@ -45,6 +46,7 @@ class Person:
         self.place_types = []
         self.next_infection_status = None
         self.time_of_status_change = None
+        self.infection_start_time = None
 
         self.set_random_age()
 
@@ -61,8 +63,8 @@ class Person:
                                             weights=group_probs)[0]
             self.age = random.randint(0, 4) + 5 * self.age_group
         else:  # Set everyone to 40 (mean qualities)
-            self.age_group = 8
-            self.age = 40
+            self.age_group = None
+            self.age = None
 
     def is_infectious(self):
         """Query if the person is currently infectious.
@@ -117,16 +119,6 @@ class Person:
         self.microcell.notify_person_status_change(
             self.infection_status, new_status)
         self.infection_status = new_status
-
-    def update_time_to_status_change(self) -> None:
-        """Method that assigns time until next infection status update,
-         given as a random integer between 1 and 10.
-
-        """
-        # This is left as a random integer for now but will be made more
-        # complex later.
-        new_time = random.randint(1, 10)
-        self.time_of_status_change = new_time
 
     def add_place(self, place, person_group: int = 0):
         """Method adds a place to the place list if the person visits

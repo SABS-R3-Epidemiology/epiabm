@@ -1,10 +1,12 @@
 import unittest
+from unittest.mock import patch
 
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus, SpatialInfection
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestSpatialInfection(unittest.TestCase):
+class TestSpatialInfection(TestPyEpiabm):
     """Test the 'PlaceInfection' class, which contains the
     infectiousness and susceptibility calculations that
     determine whether infection events occur within places.
@@ -15,6 +17,7 @@ class TestSpatialInfection(unittest.TestCase):
         """Intialise a population with one infector and one
         infectee, both in the same place and household.
         """
+        super(TestSpatialInfection, cls).setUpClass()  # Sets up parameters
         cls.cell = pe.Cell()
         cls.cell.add_microcells(1)
         cls.microcell = cls.cell.microcells[0]
@@ -31,11 +34,27 @@ class TestSpatialInfection(unittest.TestCase):
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
+    @patch('pyEpiabm.core.Parameters.instance')
+    def test_space_susc_no_age(self, mock_params):
+        mock_params.return_value.use_ages = False
+        result = SpatialInfection.space_susc(self.cell, self.infectee,
+                                             self.time)
+        self.assertIsInstance(result, float)
+        self.assertEqual(result, 1)
+
     def test_space_inf(self):
         result = SpatialInfection.space_inf(self.cell, self.infector,
                                             self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
+
+    @patch('pyEpiabm.core.Parameters.instance')
+    def test_space_inf_no_age(self, mock_params):
+        mock_params.return_value.use_ages = False
+        result = SpatialInfection.space_inf(self.cell, self.infector,
+                                            self.time)
+        self.assertIsInstance(result, float)
+        self.assertEqual(result, self.infector.infectiousness)
 
     def test_space_foi(self):
         result = SpatialInfection.space_foi(self.cell, self.cell,
