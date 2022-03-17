@@ -61,6 +61,22 @@ class Microcell:
         """
         self.id = id
 
+    def add_person(self, person):
+        """Adds :class:`Person` with given :class:`InfectionStatus` ,
+        to Microcell.
+
+        Parameters
+        ----------
+        person: Person
+            Newly instantiated person with InfectionStatus
+
+        """
+        status = person.infection_status
+        self.compartment_counter._increment_compartment(1, status)
+        self.cell.compartment_counter._increment_compartment(1, status)
+        self.cell.persons.append(person)
+        self.persons.append(person)
+
     def add_people(self, n, status=InfectionStatus.Susceptible):
         """Adds n default :class:`Person` of given status to Microcell.
 

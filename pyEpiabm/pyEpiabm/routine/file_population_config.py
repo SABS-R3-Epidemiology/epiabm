@@ -9,9 +9,9 @@ import copy
 import logging
 from packaging import version
 
-from pyEpiabm.core import Household, Population, Cell
-from pyEpiabm.core.microcell import Microcell
+from pyEpiabm.core import Cell, Household, Microcell, Person, Population
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.sweep import HostProgressionSweep
 from pyEpiabm.utility import log_exceptions
 
 
@@ -73,6 +73,9 @@ class FilePopulationFactory:
         # Initialise a population class
         new_pop = Population()
 
+        # Initilaise sweep to assign new people their next infection status
+        host_sweep = HostProgressionSweep()
+
         # Iterate through lines (one per microcell)
         for _, line in input.iterrows():
             # Check if cell exists, or create it
@@ -95,8 +98,12 @@ class FilePopulationFactory:
             for column in input.columns.values:
                 if hasattr(InfectionStatus, column):
                     value = getattr(InfectionStatus, column)
-                    new_microcell.add_people(int(line[column]),
-                                             InfectionStatus(value))
+                    for i in range(int(line[column])):
+                        person = Person(new_microcell)
+                        person.infection_status = InfectionStatus(value)
+                        new_microcell.add_person(person)
+                        host_sweep.update_next_infection_status(person)
+                        host_sweep.update_time_status_change(person, 0)
 
             # Add households to microcell
             if line["household_number"] > 0:

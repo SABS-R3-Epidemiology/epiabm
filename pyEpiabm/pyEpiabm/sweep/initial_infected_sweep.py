@@ -12,7 +12,8 @@ from .abstract_sweep import AbstractSweep
 
 class InitialInfectedSweep(AbstractSweep):
     """Class for sweeping through population at start
-    of simulation and setting an initial number of infected people.
+    of simulation and setting an initial number of infected people,
+    with status InfectMild.
 
     """
 
