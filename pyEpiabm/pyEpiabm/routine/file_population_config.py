@@ -71,7 +71,7 @@ class FilePopulationFactory:
         # Initialise a population class
         new_pop = Population()
 
-        # Initilaise sweep to assign new people their next infection status
+        # Initialise sweep to assign new people their next infection status
         host_sweep = HostProgressionSweep()
 
         # Iterate through lines (one per microcell)
