@@ -74,7 +74,8 @@ class TestInitialInfectedSweep(TestPyEpiabm):
 
         # Test that call assigns correct number of infectious people,
         # with all infectious people in one cell
-        params = {"initial_infected_number": 4,
+        params = {"simulation_start_time": 0,
+                  "initial_infected_number": 4,
                   "initial_infected_cell": True}
         test_sweep(params)
         status = pe.property.InfectionStatus.InfectMild
