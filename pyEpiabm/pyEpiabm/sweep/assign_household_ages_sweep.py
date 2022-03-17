@@ -11,7 +11,7 @@ from pyEpiabm.core import Parameters
 from .abstract_sweep import AbstractSweep
 
 
-class AssignHouseholdAges(AbstractSweep):
+class AssignHouseholdAgesSweep(AbstractSweep):
     """Class to assign ages to people in
     households using the same age distribution
     model as covid-sim.
@@ -21,7 +21,8 @@ class AssignHouseholdAges(AbstractSweep):
         """Call in variables from the parameters file.
         """
         self.age_params = Parameters.instance().household_age_params
-        self.num_age_groups = len(Parameters.instance().age_proportions)
+        self.age_proportions = Parameters.instance().age_proportions
+        self.num_age_groups = len(self.age_proportions)
         self.age_group_width = 5
 
     def one_person_household_age(self, person: Person):
@@ -123,7 +124,7 @@ class AssignHouseholdAges(AbstractSweep):
                    (person2.age >= person1.age
                    - self.age_params["max_FM_partner_age_gap"]) and
                    (person2.age >= self.age_params["no_child_pers_age"]) and
-                   (random.random <= break_ratio)):
+                   (random.random() <= break_ratio)):
                     break
 
         # case where one child and one adult live together
@@ -207,33 +208,35 @@ class AssignHouseholdAges(AbstractSweep):
                     (self.age_params["two_child_three_pers_prob"] > 0)):
                 if (random.random()
                    < self.age_params["zero_child_three_pers_prob"]):
-                    nc = 0
+                    num_childs = 0
                 else:
                     if (random.random()
                             < self.age_params["two_child_three_pers_prob"]):
-                        nc = 2
+                        num_childs = 2
                     else:
-                        nc = 1
+                        num_childs = 1
             else:
-                nc = 1
+                num_childs = 1
 
         # calculate number of children in a 4 person household
         if n == 4:
-            nc = 1 if (random.random()
-                       < self.age_params["one_child_four_pers_prob"]) else 2
+            num_childs = 1 if (random.random()
+                               < self.age_params
+                               ["one_child_four_pers_prob"]) else 2
 
         # calculate number of children in a 5 person household
         if n == 5:
-            nc = 3 if (random.random()
-                       < self.age_params["three_child_five_pers_prob"]) else 2
+            num_childs = 3 if (random.random()
+                               < self.age_params
+                               ["three_child_five_pers_prob"]) else 2
 
         # calculate the number of children in a household with more than
         # 5 people
         if n > 5:
-            nc = n - 2 - np.floor(3 * random.random())
+            num_childs = n - 2 - np.floor(3 * random.random())
 
         # return number of children
-        return nc
+        return num_childs
 
     def three_or_more_person_household_ages(self, people: list):
         """ Method that assigns ages to the people
@@ -253,20 +256,20 @@ class AssignHouseholdAges(AbstractSweep):
         """
 
         n = len(people)
-        nc = self.calc_number_of_children(n)
+        num_childs = self.calc_number_of_children(n)
 
         # case of zero children in a household, only possible
         # in a household of size three
-        if nc == 0:
+        if num_childs == 0:
             while True:
                 people[0].set_random_age()
                 people[1].set_random_age()
                 if ((people[1].age >= self.age_params["min_adult_age"]) and
-                        (people[0] >= self.age_params["min_adult_age"])):
+                        (people[0].age >= self.age_params["min_adult_age"])):
                     break
             while True:
                 people[2].set_random_age()
-                if ((people[2].age < people[1].age
+                if ((people[2].age <= people[1].age
                      + self.age_params["max_MF_partner_age_gap"]) and
                         (people[2].age >= people[1].age
                          - self.age_params["max_FM_partner_age_gap"])):
@@ -278,88 +281,95 @@ class AssignHouseholdAges(AbstractSweep):
                 people[0].age = 0
                 # set ages of children, increasing the ages between them if
                 # there are multiple children in the house
-                for i in range(1, nc):
-                    people[i].age = people[i-1].age + 1
-                    + poisson((self.age_params["mean_child_age_gap"] - 1))
-                random_child_index = np.floor(random.random() * nc)
-                people[0].set_random_age()
-                age = people[0].age
+                for i in range(1, num_childs):
+                    people[i].age = (people[i-1].age + 1
+                                     + poisson.rvs((self.age_params
+                                                   ["mean_child_age_gap"]
+                                                   - 1)))
+                random_child_index = int(np.floor(
+                                         random.random() * num_childs))
+                age_group = random.choices(range(self.num_age_groups),
+                                           weights=self.age_proportions)[0]
+                age = random.randint(0, 4) + 5 * age_group
                 people[0].age = age - people[random_child_index].age
-                # increase base age of children
-                for i in range(1, nc):
-                    people.age[i] += people[0].age
-                # set age of youngest child
-                k = 5 if \
-                    (((nc == 1) and
+                # increase base age of children relative to youngest child
+                for i in range(1, num_childs):
+                    people[i].age += people[0].age
+                # set max age of youngest child
+                youngest_age = 5 if \
+                    (((num_childs == 1) and
                         (random.random()
                          < self.age_params
                          ["one_child_prob_youngest_child_under_five"])) or
-                     ((nc == 2) and
+                     ((num_childs == 2) and
                         (random.random()
                             < self.age_params
-                            ["two_children_prob_youngest_under_five"])) or
-                     ((nc == 2) and
-                        (random.random()
-                            < self.age_params
-                            ["prob_youngest_child_under_five"]))) else \
+                            ["two_children_prob_youngest_under_five"]))) else \
                     self.age_params["max_child_age"]
+                print('people[0]age', people[0].age)
+                print('peoplenc-1age', people[num_childs-1].age)
                 if ((people[0].age >= 0) and
-                        (people[0].age <= k) and
-                        (people[nc - 1].age
+                        (people[0].age <= youngest_age) and
+                        (people[num_childs - 1].age
                          <= self.age_params["max_child_age"])):
                     break
 
             # sets age difference of parents and children
-            j = (people[nc - 1].age - people[0].age
-                 - (self.age_params["max_parent_age_gap"]
-                    - self.age_params["min_parent_age_gap"]))
-            if j > 0:
-                j += self.age_params["max_parent_age_gap"]
+            parent_age_gap = (people[num_childs - 1].age - people[0].age
+                              - (self.age_params["max_parent_age_gap"]
+                              - self.age_params["min_parent_age_gap"]))
+            if parent_age_gap > 0:
+                parent_age_gap += \
+                    self.age_params["max_parent_age_gap"]  # pragma: no cover
             else:
-                j = self.age_params["max_parent_age_gap"]
+                parent_age_gap = self.age_params["max_parent_age_gap"]
             while True:
-                people[nc].set_random_age()
-                k = people[nc - 1].age
-                # makes sure age of parent is appropriate for their children
-                if ((people[nc].age <= people[0].age + j) and
-                        (people[nc].age
-                         >= k + self.age_params["min_parent_age_gap"]) and
-                        (people[nc].age
+                people[num_childs].set_random_age()
+                youngest_age = people[num_childs - 1].age
+                # makes sure age of first parent is appropriate
+                # for their children
+                if ((people[num_childs].age <= people[0].age + parent_age_gap)
+                    and (people[num_childs].age
+                         >= youngest_age
+                         + self.age_params["min_parent_age_gap"]) and
+                        (people[num_childs].age
                          >= self.age_params["min_adult_age"])):
                     break
 
             # makes sure if both parents are in the same household their age
             # makes sense
-            if ((n > nc + 1) and
+            if ((n > num_childs + 1) and
                     (random.random()
                      > self.age_params["prop_other_parent_away"])):
                 while True:
-                    people[nc + 1].set_random_age()
-                    if ((people[nc + 1].age
-                        <= people[nc]
+                    people[num_childs + 1].set_random_age()
+                    if ((people[num_childs + 1].age
+                        <= people[num_childs].age
                         + self.age_params["max_MF_partner_age_gap"]) and
-                        (people[nc + 1].age
-                        >= people[nc].age
+                        (people[num_childs + 1].age
+                        >= people[num_childs].age
                         - self.age_params["max_FM_partner_age_gap"]) and
-                        (people[nc + 1].age
-                        <= people[0].age + j) and
-                        (people[nc + 1].age
-                        >= k + self.age_params["min_parent_age_gap"]) and
-                            (people[nc + 1].age
+                        (people[num_childs + 1].age
+                        <= people[0].age + parent_age_gap) and
+                        (people[num_childs + 1].age
+                        >= youngest_age
+                        + self.age_params["min_parent_age_gap"]) and
+                            (people[num_childs + 1].age
                              >= self.age_params["min_adult_age"])):
                         break
 
-            # considers case of multiple adults in house such as parents
+            # considers case of more than 2 adults in house such as parents
             # and grandparents
-            if n > nc + 2:
-                j = people[nc + 1].age if\
-                    people[nc + 1].age > people[nc].age else people[nc].age
+            if n > num_childs + 2:
+                j = (people[num_childs + 1].age if
+                     people[num_childs + 1].age
+                     > people[num_childs].age else people[num_childs].age)
                 j += self.age_params["older_gen_gap"]
                 if j >= self.num_age_groups * self.age_group_width:
                     j = self.num_age_groups * self.age_group_width - 1
                 if j < self.age_params["no_child_pers_age"]:
                     j = self.age_params["no_child_pers_age"]
-                for i in range(nc + 2, n):
+                for i in range(num_childs + 2, n):
                     while True:
                         people[i].set_random_age()
                         if people[i].age >= j:
@@ -379,8 +389,8 @@ class AssignHouseholdAges(AbstractSweep):
                     if len(household.persons) == 1:
                         self.one_person_household_age(household.persons[0])
                     elif len(household.persons) == 2:
-                        self.two_person_household_ages(household.people)
+                        self.two_person_household_ages(household.persons)
                     else:
                         self.three_or_more_person_household_ages(
-                            household.people)
+                            household.persons)
                     households_list.append(household)

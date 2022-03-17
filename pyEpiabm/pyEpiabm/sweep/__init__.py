@@ -7,6 +7,7 @@
 """
 
 from .abstract_sweep import AbstractSweep
+from .assign_household_ages_sweep import AssignHouseholdAgesSweep
 from .host_progression_sweep import HostProgressionSweep
 from .household_sweep import HouseholdSweep
 from .initial_infected_sweep import InitialInfectedSweep
