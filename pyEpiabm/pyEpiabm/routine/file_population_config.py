@@ -104,6 +104,8 @@ class FilePopulationFactory:
                         new_microcell.add_person(person)
                         host_sweep.update_next_infection_status(person)
                         host_sweep.update_time_status_change(person, 0)
+                        if str(person.infection_status).startswith('Infect'):
+                            HostProgressionSweep.set_infectiousness(person, 0)
 
             # Add households to microcell
             if line["household_number"] > 0:
