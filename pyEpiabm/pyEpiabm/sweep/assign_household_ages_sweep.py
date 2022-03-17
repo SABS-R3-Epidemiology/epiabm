@@ -306,8 +306,6 @@ class AssignHouseholdAgesSweep(AbstractSweep):
                             < self.age_params
                             ["two_children_prob_youngest_under_five"]))) else \
                     self.age_params["max_child_age"]
-                print('people[0]age', people[0].age)
-                print('peoplenc-1age', people[num_childs-1].age)
                 if ((people[0].age >= 0) and
                         (people[0].age <= youngest_age) and
                         (people[num_childs - 1].age

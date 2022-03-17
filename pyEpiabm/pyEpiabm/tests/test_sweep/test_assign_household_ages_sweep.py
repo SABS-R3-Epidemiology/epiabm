@@ -3,9 +3,10 @@ from unittest import mock
 
 import pyEpiabm as pe
 from pyEpiabm.core import Parameters
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestAssignHouseholdAgesSweep(unittest.TestCase):
+class TestAssignHouseholdAgesSweep(TestPyEpiabm):
     """Tests the 'AssignHouseholdAgesSweep' class.
     """
 
@@ -287,7 +288,7 @@ class TestAssignHouseholdAgesSweep(unittest.TestCase):
                         + self.person1.age)
         self.assertTrue(self.person2.age
                         >= self.age_params["min_parent_age_gap"])
-        self.assertTrue(self.person2.age >= self.age_params["mind_adult_age"])
+        self.assertTrue(self.person2.age >= self.age_params["min_adult_age"])
         self.assertTrue(self.person3.age <= self.person2.age
                         + self.age_params["max_MF_partner_age_gap"])
         self.assertTrue(self.person3.age >= self.person2.age
@@ -375,7 +376,6 @@ class TestAssignHouseholdAgesSweep(unittest.TestCase):
         for person in two_pers_household.persons:
             self.assertTrue(0 <= person.age <= 100)
         for person in three_pers_household.persons:
-            print(person.age)
             self.assertTrue(0 <= person.age <= 100)
 
 
