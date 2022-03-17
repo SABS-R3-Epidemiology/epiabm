@@ -241,7 +241,7 @@ class AssignHouseholdAgesSweep(AbstractSweep):
     def three_or_more_person_household_ages(self, people: list):
         """ Method that assigns ages to the people
         in a three person or larger sized household.
-        The number of children is first calculate, this then decides which
+        The number of children is first calculated, this then decides which
         set of conditions the people's ages should satisfy, e.g. if they
         are both old or it is one parent and one child etc. The people's
         ages are then repeatedly set until it makes realsitic sense e.g
