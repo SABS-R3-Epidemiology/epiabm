@@ -282,8 +282,8 @@ def generate_animation(
         ani = matplotlib.animation.FuncAnimation(
             fig, animate, frames=times, init_func=lambda *args: None
         )
-        writer = matplotlib.animation.PillowWriter(fps=10)
-        ani.save((save_path + str("voronoi_animation.gif")), writer=writer)
+        writer = matplotlib.animation.PillowWriter(fps=30)
+        ani.save((save_path + str("voronoi_animation.gif")), writer=writer, dpi=200)
     else:
         for i, t in enumerate(times):
             t_fig, t_ax = plot_time_point(df, vor, name, t, grid_lim, ax, mapper)
@@ -346,14 +346,14 @@ plot_time_grid(
     save_loc=fig_loc,
 )
 
-# # # Plot animation of simulation
-# animation_path = "python_examples/spatial_example/spatial_outputs/"
-# anim = generate_animation(
-#     df,
-#     vor,
-#     name="InfectionStatus.InfectMild",
-#     grid_lim=grid_limits,
-#     save_path=animation_path,
-#     use_pillow=False,
-# )
+# # Plot animation of simulation
+animation_path = "python_examples/spatial_example/spatial_outputs/"
+anim = generate_animation(
+    df,
+    vor,
+    name="InfectionStatus.InfectMild",
+    grid_lim=grid_limits,
+    save_path=animation_path,
+    use_pillow=True,
+)
 
