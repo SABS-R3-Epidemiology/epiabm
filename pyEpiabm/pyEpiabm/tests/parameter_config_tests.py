@@ -18,3 +18,8 @@ class TestPyEpiabm(unittest.TestCase):
         super(TestPyEpiabm, cls).setUpClass()
         pe.Parameters.set_file("pyEpiabm/pyEpiabm/tests/"
                                + "testing_parameters.json")
+
+    @classmethod
+    def tearDownClass(cls):
+        if pe.Parameters._instance:
+            pe.Parameters._instance = None

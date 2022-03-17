@@ -8,9 +8,10 @@ from unittest import mock
 
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import StateTransitionMatrix
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestStateTransitionMatrix(unittest.TestCase):
+class TestStateTransitionMatrix(TestPyEpiabm):
     """Test the 'StateTransitionMatrix' class.
     """
     def setUp(self) -> None:

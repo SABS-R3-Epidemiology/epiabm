@@ -1,9 +1,10 @@
 import unittest
 
 import pyEpiabm as pe
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestQueueSweep(unittest.TestCase):
+class TestQueueSweep(TestPyEpiabm):
     """Test the 'QueueSweep' class.
     """
     def setUp(self) -> None:
