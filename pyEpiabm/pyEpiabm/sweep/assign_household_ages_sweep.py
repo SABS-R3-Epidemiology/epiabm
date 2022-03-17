@@ -168,7 +168,7 @@ class AssignHouseholdAgesSweep(AbstractSweep):
                    (person2.age >= self.age_params["min_adult_age"])):
                     break
 
-        # case where two adults of any appropraite age live together
+        # case where two adults of any appropriate age live together
         else:
             while True:
                 person1.set_random_age()
