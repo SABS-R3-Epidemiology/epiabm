@@ -2,11 +2,12 @@ import unittest
 from unittest import mock
 
 import pyEpiabm as pe
-from pyEpiabm.property.infection_status import InfectionStatus
-from pyEpiabm.property.place_type import PlaceType
+from pyEpiabm.property import InfectionStatus
+from pyEpiabm.property import PlaceType
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestInitialisePlaceSweep(unittest.TestCase):
+class TestInitialisePlaceSweep(TestPyEpiabm):
     """Test the 'UpdatePlaceSweep' class.
     """
 

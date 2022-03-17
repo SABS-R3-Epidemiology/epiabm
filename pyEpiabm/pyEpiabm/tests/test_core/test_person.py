@@ -2,9 +2,10 @@ import unittest
 from unittest.mock import patch
 
 import pyEpiabm as pe
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestPerson(unittest.TestCase):
+class TestPerson(TestPyEpiabm):
     """Test the 'Person' class.
     """
     def setUp(self) -> None:
@@ -57,12 +58,6 @@ class TestPerson(unittest.TestCase):
         self.assertEqual(
             self.person.infection_status,
             pe.property.InfectionStatus.InfectMild)
-
-    def test_update_time(self):
-        self.assertIsNone(self.person.time_of_status_change)
-        self.person.update_time_to_status_change()
-        self.assertTrue(1 <= self.person.time_of_status_change
-                        <= 10)
 
     def test_configure_place(self):
         # Tests both the add and remove functions

@@ -4,11 +4,12 @@ import pandas as pd
 from packaging import version
 
 import pyEpiabm as pe
-from pyEpiabm.core.population import Population
+from pyEpiabm.core import Population
 from pyEpiabm.routine import FilePopulationFactory
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestPopConfig(unittest.TestCase):
+class TestPopConfig(TestPyEpiabm):
     """Test the 'ToyPopConfig' class.
     """
 

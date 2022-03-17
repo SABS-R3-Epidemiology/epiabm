@@ -14,6 +14,10 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
                     format=('%(asctime)s - %(name)s'
                             + '- %(levelname)s - %(message)s'))
 
+# Set config file for Parameters
+pe.Parameters.set_file("python_examples/spatial_example/"
+                       + "spatial_parameters.json")
+
 # Method to set the seed at the start of the simulation, for reproducibility
 
 pe.routine.Simulation.set_random_seed(seed=30)

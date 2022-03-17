@@ -162,3 +162,8 @@ dmypy.json
 
 # Epiabm log files
 *.log
+
+# Profiling script
+kernprof.py
+*.prof
+*.lprof
