@@ -17,7 +17,8 @@ import glob
 from PIL import Image
 
 
-def point_in_region(point: np.ndarray, grid_lim: typing.List[typing.List[float]]):
+def point_in_region(point: np.ndarray,
+                    grid_lim: typing.List[typing.List[float]]):
     """Checks whether point is within grid limits specified.
     Used to exclude distant points from colouring.
 
@@ -62,7 +63,8 @@ def find_value_for_region(
 
     """
     row = current_df.loc[
-        (current_df["location_x"] == point[0]) & (current_df["location_y"] == point[1])
+        (current_df["location_x"] == point[0])
+        & (current_df["location_y"] == point[1])
     ]
     assert len(row[name]) > 0, "No value found for point"
     assert len(row[name]) == 1, "Multiple values found at point"
@@ -268,11 +270,13 @@ def generate_animation(
 
     fig = plt.figure()
     ax = plt.axes(
-        xlim=(grid_lim[0][0], grid_lim[0][1]), ylim=(grid_lim[1][0], grid_lim[1][1])
+        xlim=(grid_lim[0][0], grid_lim[0][1]),
+        ylim=(grid_lim[1][0], grid_lim[1][1])
     )
 
     def animate(i):
-        temp_fig, temp_ax = plot_time_point(df, vor, name, i, grid_lim, ax, mapper)
+        temp_fig, temp_ax = plot_time_point(df, vor, name, i, grid_lim, ax,
+                                            mapper)
         if i == 0:
             cbar = temp_fig.colorbar(mapper)
             cbar.set_label("Number of " + str(name))
@@ -283,10 +287,12 @@ def generate_animation(
             fig, animate, frames=times, init_func=lambda *args: None
         )
         writer = matplotlib.animation.PillowWriter(fps=30)
-        ani.save((save_path + str("voronoi_animation.gif")), writer=writer, dpi=200)
+        ani.save((save_path + str("voronoi_animation.gif")), writer=writer,
+                 dpi=200)
     else:
         for i, t in enumerate(times):
-            t_fig, t_ax = plot_time_point(df, vor, name, t, grid_lim, ax, mapper)
+            t_fig, t_ax = plot_time_point(df, vor, name, t, grid_lim, ax,
+                                          mapper)
             if t == times[0]:
                 cbar = t_fig.colorbar(mapper)
                 cbar.set_label("Number of " + str(name))
@@ -299,7 +305,8 @@ def generate_animation(
 
         fp_in = save_path + "image" + "*d.png"
         fp_out = save_path + "voronoi_animation.gif"
-        img, *imgs = [Image.open(f).convert("RGB") for f in sorted(glob.glob(fp_in))]
+        img, *imgs = [Image.open(f).convert("RGB")
+                      for f in sorted(glob.glob(fp_in))]
         img.save(
             fp=fp_out,
             format="GIF",
@@ -315,7 +322,8 @@ def generate_animation(
 
 
 # Read in the data from simulation output
-filename = os.path.join(os.path.dirname(__file__), "spatial_outputs", "output.csv")
+filename = os.path.join(os.path.dirname(__file__), "spatial_outputs",
+                        "output.csv")
 df = pd.read_csv(filename)
 
 locations = np.unique(
@@ -336,7 +344,8 @@ locations = np.append(
 vor = Voronoi(locations)
 
 # Plot grid of time points
-fig_loc = "python_examples/spatial_example/spatial_outputs/" + "voronoi_grid_img.png"
+fig_loc = ("python_examples/spatial_example/spatial_outputs/"
+           + "voronoi_grid_img.png")
 plot_time_grid(
     df,
     vor,
@@ -356,4 +365,3 @@ anim = generate_animation(
     save_path=animation_path,
     use_pillow=True,
 )
-

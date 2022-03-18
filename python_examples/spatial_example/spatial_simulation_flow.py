@@ -9,7 +9,8 @@ import matplotlib.pyplot as plt
 import pyEpiabm as pe
 
 # Set config file for Parameters
-pe.Parameters.set_file("python_examples\spatial_example\spatial_parameters.json")
+pe.Parameters.set_file("python_examples/spatial_example/"
+                       + "spatial_parameters.json")
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
@@ -52,7 +53,7 @@ sim_params = {
 
 file_params = {
     "output_file": "output.csv",
-    "output_dir": "python_examples\spatial_example\spatial_outputs",
+    "output_dir": "python_examples/spatial_example/spatial_outputs",
     "spatial_output": True,
 }
 
@@ -79,16 +80,19 @@ del sim.writer
 del sim
 
 # Creation of a plot of results
-filename = os.path.join(os.path.dirname(__file__), "spatial_outputs", "output.csv")
+filename = os.path.join(os.path.dirname(__file__),
+                        "spatial_outputs", "output.csv")
 df = pd.read_csv(filename)
 
 
-df = df.pivot(index="time", columns="cell", values="InfectionStatus.InfectMild")
+df = df.pivot(index="time", columns="cell",
+              values="InfectionStatus.InfectMild")
 df.plot()
 
 plt.legend(labels=(range(len(df.columns))), title="Cell")
 plt.title("Infection curves for multiple cells")
 plt.ylabel("Infected Population")
 plt.savefig(
-    "python_examples\spatial_example\spatial_outputs\spatial_flow_Icurve_plot.png"
+    "python_examples/spatial_example/spatial_outputs"
+    + "/spatial_flow_Icurve_plot.png"
 )
