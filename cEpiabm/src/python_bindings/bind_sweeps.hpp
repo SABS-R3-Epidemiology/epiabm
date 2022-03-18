@@ -22,19 +22,19 @@ void bind_sweeps(py::module &m)
 
     py::class_<HouseholdSweep, HouseholdSweepPtr>(m, "HouseholdSweep",
         py::base<SweepInterface>())
-        .def(py::init<>());
+        .def(py::init<SimulationConfigPtr>());
         
     py::class_<BasicHostProgressionSweep, BasicHostProgressionSweepPtr>(m, "BasicHostProgressionSweep",
         py::base<SweepInterface>())
-        .def(py::init<>());
+        .def(py::init<SimulationConfigPtr>());
 
     py::class_<HostProgressionSweep, HostProgressionSweepPtr>(m, "HostProgressionSweep",
         py::base<SweepInterface>())
-        .def(py::init<>());
+        .def(py::init<SimulationConfigPtr>());
     
     py::class_<NewInfectionSweep, NewInfectionSweepPtr>(m, "NewInfectionSweep",
         py::base<SweepInterface>())
-        .def(py::init<>());
+        .def(py::init<SimulationConfigPtr>());
 
     py::class_<RandomSeedSweep, RandomSeedSweepPtr>(m, "RandomSeedSweep",
         py::base<SweepInterface>())
@@ -42,6 +42,6 @@ void bind_sweeps(py::module &m)
     
     py::class_<SpatialSweep, SpatialSweepPtr>(m, "SpatialSweep",
         py::base<SweepInterface>())
-        .def(py::init<>());
+        .def(py::init<SimulationConfigPtr>());
 }
 

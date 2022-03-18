@@ -12,7 +12,7 @@
 namespace epiabm
 {
 
-    class HostProgressionSweep : SweepInterface
+    class HostProgressionSweep : public SweepInterface
     {
     private:
         std::array<std::array<double, N_INFECTION_STATES>, N_INFECTION_STATES> m_transitionMatrix;

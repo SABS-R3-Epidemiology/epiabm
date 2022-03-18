@@ -9,7 +9,9 @@
 #include "sweeps/new_infection_sweep.hpp"
 #include "sweeps/spatial_sweep.hpp"
 #include "sweeps/basic_host_progression_sweep.hpp"
+#include "sweeps/host_progression_sweep.hpp"
 #include "sweeps/random_seed_sweep.hpp"
+#include "configuration/json_factory.hpp"
 #include "reporters/cell_compartment_reporter.hpp"
 #include "reporters/percell_compartment_reporter.hpp"
 #include "reporters/population_compartment_reporter.hpp"
@@ -24,6 +26,8 @@ void run()
 
     // Setup Logfile
     LogFile::Instance()->configure(2, std::filesystem::path("output/log.log"));
+
+    SimulationConfigPtr cfg = JsonFactory().loadConfig(std::filesystem::path("parameters.json"));
 
     // Make Population and Link Households
     PopulationPtr population = ToyPopulationFactory().makePopulation(5000, 200, 1, 0, 0);
@@ -44,18 +48,18 @@ void run()
     BasicSimulation simulation = BasicSimulation(population);
 
     // Add Sweeps
-    simulation.addSweep(std::make_shared<HouseholdSweep>());
-    simulation.addSweep(std::make_shared<SpatialSweep>());
-    simulation.addSweep(std::make_shared<NewInfectionSweep>());
-    simulation.addSweep(std::make_shared<BasicHostProgressionSweep>());
+    simulation.addSweep(std::make_shared<HouseholdSweep>(cfg));
+    simulation.addSweep(std::make_shared<SpatialSweep>(cfg));
+    simulation.addSweep(std::make_shared<NewInfectionSweep>(cfg));
+    simulation.addSweep(std::make_shared<HostProgressionSweep>(cfg));
 
     // Set which reporters to use
+    simulation.addTimestepReporter(
+        std::make_shared<PopulationCompartmentReporter>("output/population_results.csv"));
     simulation.addTimestepReporter(
         std::make_shared<CellCompartmentReporter>("output/results_pertimestep"));
     simulation.addTimestepReporter(
         std::make_shared<PerCellCompartmentReporter>("output/results_percell"));
-    simulation.addTimestepReporter(
-        std::make_shared<PopulationCompartmentReporter>("output/population_results.csv"));
 
     std::cout << "Beginning Simulation" << std::endl;
     simulation.simulate(100); // Run Simulation for 100 steps

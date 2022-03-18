@@ -3,6 +3,7 @@
 
 #include "sweep_interface.hpp"
 #include "../dataclasses/person.hpp"
+#include "../configuration/simulation_config.hpp"
 
 #include <memory>
 
@@ -20,6 +21,7 @@ namespace epiabm
     class NewInfectionSweep : public SweepInterface
     {
         private:
+
         public:
             NewInfectionSweep(SimulationConfigPtr cfg);
             ~NewInfectionSweep() = default;

@@ -41,19 +41,22 @@ namespace epiabm
     bool HostProgressionSweep::cellExposedCallback(
         const unsigned short timestep, Cell *cell, Person *person)
     {
-        if (person->status() != InfectionStatus::Exposed)
-            LOG << LOG_LEVEL_ERROR << "Person " << person->cellPos() << " in cell " << cell->index() << " marked as exposed, but status was " << status_string(person->status());
-        // Choose the person's first infectious status and update
-        InfectionStatus firstStatus = chooseNextStatus(InfectionStatus::Exposed);
-        person->updateStatus(cell, firstStatus, timestep);
+        if (timestep >= person->params().next_status_time)
+        {
+            if (person->status() != InfectionStatus::Exposed)
+                LOG << LOG_LEVEL_ERROR << "Person " << person->cellPos() << " in cell " << cell->index() << " marked as exposed, but status was " << status_string(person->status());
+            // Choose the person's first infectious status and update
+            InfectionStatus firstStatus = chooseNextStatus(InfectionStatus::Exposed);
+            person->updateStatus(cell, firstStatus, timestep);
 
-        // Chose the person's next status and next status time
-        person->params().next_status = chooseNextStatus(firstStatus);
-        person->params().next_status_time = static_cast<unsigned short>(timestep +
-            chooseNextTransitionTime(person->status(), person->params().next_status));
-        
-        // Move person from exposed to infectious
-        cell->markInfectious(person->cellPos());
+            // Chose the person's next status and next status time
+            person->params().next_status = chooseNextStatus(firstStatus);
+            person->params().next_status_time = static_cast<unsigned short>(timestep +
+                                                                            chooseNextTransitionTime(person->status(), person->params().next_status));
+
+            // Move person from exposed to infectious
+            cell->markInfectious(person->cellPos());
+        }
         return true;
     }
 
@@ -78,7 +81,7 @@ namespace epiabm
             // Choose the next state and next time
             person->params().next_status = chooseNextStatus(person->status());
             person->params().next_status_time = static_cast<unsigned short>(timestep +
-                chooseNextTransitionTime(person->status(), person->params().next_status));
+                                                                            chooseNextTransitionTime(person->status(), person->params().next_status));
         }
         return true;
     }

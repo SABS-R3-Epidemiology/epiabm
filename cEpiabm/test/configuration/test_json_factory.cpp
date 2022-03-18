@@ -13,7 +13,7 @@ using namespace epiabm;
 
 inline const json::json getConfig()
 {
-    std::ifstream ifs("testdata/test_config.json");
+    std::ifstream ifs("../testdata/test_config.json");
     json::json j;
     ifs >> j;
     return j;
@@ -22,7 +22,7 @@ inline const json::json getConfig()
 TEST_CASE("json_factory: test loadConfig", "[JsonFactory]")
 {
     ConfigurationFactoryPtr f = std::make_shared<JsonFactory>();
-    CHECK_NOTHROW(f->loadConfig("testdata/test_config.json"));
+    CHECK_NOTHROW(f->loadConfig("../testdata/test_config.json"));
 }
 
 TEST_CASE("json_factory: test errors", "[JsonFactory]")
@@ -50,7 +50,7 @@ TEST_CASE("json_factory: test errors", "[JsonFactory]")
 
     {
         json::json j = getConfig();
-        j["infection_config"].erase("latent_period");
+        j["infection_config"].erase("infection_radius");
         REQUIRE_THROWS(f->loadConfig(j));
     }
     

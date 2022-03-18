@@ -56,7 +56,7 @@ namespace epiabm
 
     unsigned short NewInfectionSweep::latent_time(Person* /*person*/)
     {
-        return static_cast<unsigned short>(std::rand() % 10 + 1);
+        return m_cfg->infectionConfig->hostProgressionConfig->latentPeriodICDF.choose(m_cfg->timestepsPerDay);
     }
 
 
