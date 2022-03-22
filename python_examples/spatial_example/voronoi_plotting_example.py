@@ -300,8 +300,6 @@ def generate_animation(
             t_ax.set_ylim(grid_lim[1][0], grid_lim[1][1])
             t_fig.savefig(save_path + "image" + f"{i:03d}" + "d.png")
             plt.close(t_fig)
-            if t > 80:
-                break
 
         fp_in = save_path + "image" + "*d.png"
         fp_out = save_path + "voronoi_animation.gif"
