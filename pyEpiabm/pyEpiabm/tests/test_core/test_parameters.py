@@ -53,7 +53,7 @@ class TestNoConfigParameters(unittest.TestCase):
     @patch('json.loads')
     def test_read_numbers(self, mock_load):
         param_loc = os.path.join(os.path.dirname(__file__),
-                                 '..', 'testing_parameters.json')
+                                 os.pardir, 'testing_parameters.json')
         mock_load.return_value = {
             'val1': 1,
             'val2': 2.0}
@@ -66,7 +66,7 @@ class TestNoConfigParameters(unittest.TestCase):
     @patch('json.loads')
     def test_read_lists(self, mock_load):
         param_loc = os.path.join(os.path.dirname(__file__),
-                                 '..', 'testing_parameters.json')
+                                 os.pardir, 'testing_parameters.json')
         list_val = [0, 0.33, 0.66, 1]
         mock_load.return_value = {
             'list1': list_val}
