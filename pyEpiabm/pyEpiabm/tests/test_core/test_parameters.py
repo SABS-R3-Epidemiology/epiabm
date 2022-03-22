@@ -67,7 +67,6 @@ class TestNoConfigParameters(unittest.TestCase):
     def test_read_lists(self, mock_load):
         param_loc = os.path.join(os.path.dirname(__file__),
                                  '..', 'testing_parameters.json')
-        
         list_val = [0, 0.33, 0.66, 1]
         mock_load.return_value = {
             'list1': list_val}
