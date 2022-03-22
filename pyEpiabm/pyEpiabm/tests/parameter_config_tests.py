@@ -20,7 +20,6 @@ class TestPyEpiabm(unittest.TestCase):
         filepath = os.path.join(os.path.dirname(__file__),
                      'testing_parameters.json')
         pe.Parameters.set_file(filepath)
-        
 
     @classmethod
     def tearDownClass(cls):
