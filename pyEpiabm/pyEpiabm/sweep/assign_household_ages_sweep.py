@@ -13,7 +13,7 @@ from .abstract_sweep import AbstractSweep
 class AssignHouseholdAgesSweep(AbstractSweep):
     """Class to assign ages to people in
     households using the same age distribution
-    model as covid-sim.
+    model as CovidSim.
     """
 
     def __init__(self):
@@ -29,12 +29,11 @@ class AssignHouseholdAgesSweep(AbstractSweep):
         in a one person household. A random number is first drawn
         that decides which set of conditions the person's age
         should satisfy, e.g. if they are old or young and single etc. The
-        person's age is then repeatedly set until it makes realsitic sense
+        person's age is then repeatedly set until it is realistic 
         e.g they are not a child living alone.
 
         Parameters
         ----------
-
         Person : Person
             Instance of Person class
 
@@ -71,7 +70,8 @@ class AssignHouseholdAgesSweep(AbstractSweep):
                    (random.random() <= break_ratio)):
                     break
 
-        # case where it is just one adult living alone
+        # case where it is just one adult living alone of any age
+        # older than minimum adult age
         else:
             while True:
                 person.set_random_age()
@@ -84,14 +84,13 @@ class AssignHouseholdAgesSweep(AbstractSweep):
         that decides which set of conditions the people's ages
         should satisfy, e.g. if they are both old or it is one parent
         and one child etc. The people's ages are then repeatedly set
-        until it makes realsitic sense e.g their ages are compatible
+        until they are realistic e.g their ages are compatible
         if they are a couple.
 
         Parameters
         ----------
-
         People : list
-            List of two Instances of Person class
+            List of two instances of Person class
 
         """
 
@@ -188,7 +187,6 @@ class AssignHouseholdAgesSweep(AbstractSweep):
 
         Parameters
         ----------
-
         household_size : int
             Number of people in a household
 
@@ -243,14 +241,13 @@ class AssignHouseholdAgesSweep(AbstractSweep):
         The number of children is first calculated, this then decides which
         set of conditions the people's ages should satisfy, e.g. if they
         are both old or it is one parent and one child etc. The people's
-        ages are then repeatedly set until it makes realsitic sense e.g
+        ages are then repeatedly set until they are realistic e.g
         their ages are compatible if they are a couple.
 
         Parameters
         ----------
-
         People : list
-            List of three or more Instances of Person class
+            List of three or more instances of Person class
 
         """
 
