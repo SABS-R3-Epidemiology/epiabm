@@ -48,6 +48,7 @@ class TestMicrocell(TestPyEpiabm):
         self.assertEqual(len(self.cell.persons), 0)
         self.microcell.add_people(n)
         self.assertEqual(len(self.microcell.persons), n)
+        self.assertEqual(self.cell.number_infectious(), 0)
         self.assertEqual(len(self.cell.persons), n)
         self.microcell.add_people(n + 1,
                                   InfectionStatus.InfectASympt)
