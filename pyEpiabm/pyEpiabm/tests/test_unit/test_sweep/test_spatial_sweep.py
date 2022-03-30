@@ -6,7 +6,7 @@ import numpy as np
 from pyEpiabm.core import Population, Parameters
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import SpatialSweep
-from pyEpiabm.tests.mocked_logging_tests import TestMockedLogs
+from pyEpiabm.tests.test_unit.mocked_logging_tests import TestMockedLogs
 
 
 class TestSpatialSweep(TestMockedLogs):

@@ -6,7 +6,7 @@ from packaging import version
 import pyEpiabm as pe
 from pyEpiabm.core import Population
 from pyEpiabm.routine import FilePopulationFactory
-from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
+from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
 class TestPopConfig(TestPyEpiabm):

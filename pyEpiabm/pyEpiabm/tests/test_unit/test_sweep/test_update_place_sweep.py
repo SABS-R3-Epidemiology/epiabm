@@ -4,7 +4,7 @@ from unittest import mock
 from pyEpiabm.property import PlaceType
 from pyEpiabm.core import Parameters, Population
 from pyEpiabm.sweep import UpdatePlaceSweep
-from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
+from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
 class TestUpdatePlaceSweep(TestPyEpiabm):

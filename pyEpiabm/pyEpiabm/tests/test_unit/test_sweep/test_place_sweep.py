@@ -3,7 +3,7 @@ from unittest import mock
 from queue import Queue
 
 import pyEpiabm as pe
-from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
+from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
 class TestPlaceSweep(TestPyEpiabm):

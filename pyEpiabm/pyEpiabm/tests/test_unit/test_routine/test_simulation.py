@@ -6,7 +6,7 @@ from unittest.mock import patch, mock_open
 
 import pyEpiabm as pe
 
-from pyEpiabm.tests.mocked_logging_tests import TestMockedLogs
+from pyEpiabm.tests.test_unit.mocked_logging_tests import TestMockedLogs
 
 
 class TestSimulation(TestMockedLogs):

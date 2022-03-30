@@ -6,7 +6,7 @@ from parameterized import parameterized
 
 import pyEpiabm as pe
 from pyEpiabm.routine import ToyPopulationFactory
-from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
+from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
 numReps = 1

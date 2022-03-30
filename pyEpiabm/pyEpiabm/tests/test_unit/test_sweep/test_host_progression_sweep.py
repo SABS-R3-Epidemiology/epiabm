@@ -5,7 +5,7 @@ import pandas as pd
 
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
+from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
 class TestHostProgressionSweep(TestPyEpiabm):

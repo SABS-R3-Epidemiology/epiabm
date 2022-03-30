@@ -1,7 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
+from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
 class TestQueueSweep(TestPyEpiabm):

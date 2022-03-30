@@ -2,7 +2,7 @@ import unittest
 
 import pyEpiabm as pe
 from pyEpiabm.property import PersonalInfection
-from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
+from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
 class TestPersonalInfection(TestPyEpiabm):
