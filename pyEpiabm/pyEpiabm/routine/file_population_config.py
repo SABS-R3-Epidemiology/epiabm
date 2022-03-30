@@ -21,7 +21,7 @@ class FilePopulationFactory:
     """
     @staticmethod
     @log_exceptions()
-    def make_pop(input_file: str, random_seed: int = None):
+    def make_pop(input_file: str, random_seed: int = None, time: float = 0):
         """Initialize a population object from an input csv file, with one
         row per microcell. A uniform multinomial distribution is
         used to distribute the number of people into the different households
@@ -44,6 +44,8 @@ class FilePopulationFactory:
             Path to input file
         random_seed : int
             Seed for reproducible household distribution
+        time : float
+            Start time of simulation where this population is used (default 0)
 
         Returns
         -------
@@ -101,10 +103,10 @@ class FilePopulationFactory:
                         new_microcell.add_person(person)
                         person.update_status(InfectionStatus(value))
                         host_sweep.update_next_infection_status(person)
-                        host_sweep.update_time_status_change(person, 0)
+                        host_sweep.update_time_status_change(person, time)
                         if str(person.infection_status).startswith('Infect'):
                             HostProgressionSweep.set_infectiousness(person,
-                                                                    time=0)
+                                                                    time)
 
             # Add households to microcell
             if line["household_number"] > 0:
