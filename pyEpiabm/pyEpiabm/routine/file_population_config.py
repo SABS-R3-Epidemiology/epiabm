@@ -98,12 +98,13 @@ class FilePopulationFactory:
                     value = getattr(InfectionStatus, column)
                     for i in range(int(line[column])):
                         person = Person(new_microcell)
-                        person.infection_status = InfectionStatus(value)
                         new_microcell.add_person(person)
+                        person.update_status(InfectionStatus(value))
                         host_sweep.update_next_infection_status(person)
                         host_sweep.update_time_status_change(person, 0)
                         if str(person.infection_status).startswith('Infect'):
-                            HostProgressionSweep.set_infectiousness(person, 0)
+                            HostProgressionSweep.set_infectiousness(person,
+                                                                    time=0)
 
             # Add households to microcell
             if line["household_number"] > 0:
