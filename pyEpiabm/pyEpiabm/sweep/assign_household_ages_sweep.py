@@ -29,7 +29,7 @@ class AssignHouseholdAgesSweep(AbstractSweep):
         in a one person household. A random number is first drawn
         that decides which set of conditions the person's age
         should satisfy, e.g. if they are old or young and single etc. The
-        person's age is then repeatedly set until it is realistic 
+        person's age is then repeatedly set until it is realistic
         e.g they are not a child living alone.
 
         Parameters
