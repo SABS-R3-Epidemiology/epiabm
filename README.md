@@ -81,7 +81,7 @@ Configure a simulation with a number of parameters. These are split into two cat
 * `simulation_start_time`: The initial time at the start of the simulation
 * `simulation_end_time`: The final time at which to stop the simulation
 * `initial_infected_number`: The initial number of infected individuals in the population
-* `initial_infect_cell`: Whether to choose initial infectied indivudals from a single cell
+* `initial_infect_cell`: Whether to choose initial infected individuals from a single cell
 * `simulation_seed`:  Random seed for reproducible simulations - see above _(Optional)_
 
 *`file_params`* _(For controlling output location)_

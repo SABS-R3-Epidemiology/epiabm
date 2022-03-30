@@ -67,7 +67,7 @@ class Microcell:
 
         Parameters
         ----------
-        person: Person
+        person : Person
             Newly instantiated person with InfectionStatus
 
         """
