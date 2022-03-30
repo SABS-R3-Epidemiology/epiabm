@@ -6,8 +6,7 @@ import random
 from scipy.stats import poisson
 import numpy as np
 
-from pyEpiabm.core import Person
-from pyEpiabm.core import Parameters
+from pyEpiabm.core import Person, Parameters
 from .abstract_sweep import AbstractSweep
 
 
