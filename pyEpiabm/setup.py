@@ -67,8 +67,7 @@ setup(
         'parameterized',
         'pandas',
         'pandas>=1.4;python_version>="3.8"',  # noqa
-        'tqdm',
-        'scipy'
+        'tqdm'
     ],
     extras_require={
         'docs': [

@@ -3,7 +3,6 @@
 #
 
 import random
-from scipy.stats import poisson
 import numpy as np
 
 from pyEpiabm.core import Person, Parameters
@@ -278,10 +277,10 @@ class AssignHouseholdAgesSweep(AbstractSweep):
                 # set ages of children, increasing the ages between them if
                 # there are multiple children in the house
                 for i in range(1, num_childs):
-                    people[i].age = (people[i-1].age + 1
-                                     + poisson.rvs((self.age_params
-                                                   ["mean_child_age_gap"]
-                                                   - 1)))
+                    people[i].age = (
+                        people[i-1].age + 1
+                        + np.random.poisson((self.age_params
+                                            ["mean_child_age_gap"] - 1)))
                 random_child_index = int(np.floor(
                                          random.random() * num_childs))
                 age_group = random.choices(range(self.num_age_groups),
