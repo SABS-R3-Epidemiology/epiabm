@@ -6,12 +6,13 @@ from parameterized import parameterized
 
 import pyEpiabm as pe
 from pyEpiabm.routine import ToyPopulationFactory
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
 numReps = 1
 
 
-class TestPopConfig(unittest.TestCase):
+class TestPopConfig(TestPyEpiabm):
     """Test the 'ToyPopConfig' class.
     """
     @parameterized.expand([(random.randint(1000, 10000),
@@ -161,7 +162,7 @@ class TestPopConfig(unittest.TestCase):
     @patch('logging.exception')
     def test_assign_cell_locations_rand(self, mock_log):
         pop_params = {"population_size": 10, "cell_number": 2,
-                      "microcell_number": 1}
+                      "microcell_number": 2}
         test_pop = ToyPopulationFactory.make_pop(pop_params)
         for cell in test_pop.cells:
             self.assertEqual(cell.location[0], 0)
@@ -176,22 +177,27 @@ class TestPopConfig(unittest.TestCase):
         mock_log.assert_called_once_with("ValueError in ToyPopulationFactory"
                                          + ".assign_cell_locations()")
 
-    @parameterized.expand([(random.randint(2, 20) * numReps,)
+    @parameterized.expand([(random.randint(2, 20) * numReps,
+                            random.randint(2, 20) * numReps)
                            for _ in range(numReps)])
-    def test_assign_cell_locations_unix(self, cell_num):
+    def test_assign_cell_locations_unix(self, cell_num, mcell_num):
         pop_params = {"population_size": 100, "cell_number": cell_num,
-                      "microcell_number": 1}
+                      "microcell_number": mcell_num}
         test_pop = ToyPopulationFactory.make_pop(pop_params)
         ToyPopulationFactory.assign_cell_locations(test_pop, "uniform_x")
         for i, cell in enumerate(test_pop.cells):
             self.assertAlmostEqual(cell.location[0], i / (cell_num - 1))
             self.assertAlmostEqual(cell.location[1], 0)
+            for j, mcell in enumerate(cell.microcells):
+                self.assertAlmostEqual(mcell.location[0], cell.location[0])
+                self.assertAlmostEqual(mcell.location[1], j / (mcell_num - 1))
 
-    @parameterized.expand([(random.randint(2, 20) * numReps,)
+    @parameterized.expand([(random.randint(2, 20) * numReps,
+                            random.randint(2, 20) * numReps)
                           for _ in range(numReps)])
-    def test_assign_cell_locations_grid(self, cell_num):
+    def test_assign_cell_locations_grid(self, cell_num, mcell_num):
         pop_params = {"population_size": 100, "cell_number": cell_num,
-                      "microcell_number": 1}
+                      "microcell_number": mcell_num}
         test_pop = ToyPopulationFactory.make_pop(pop_params)
         ToyPopulationFactory.assign_cell_locations(test_pop, "grid")
         grid_len = math.ceil(math.sqrt(cell_num))
@@ -200,17 +206,37 @@ class TestPopConfig(unittest.TestCase):
                                    (i % grid_len) / (grid_len - 1))
             self.assertAlmostEqual(cell.location[1],
                                    (i // grid_len) / (grid_len - 1))
+            mcell_len = math.ceil(math.sqrt(len(cell.microcells)))
+            for j, mcell in enumerate(cell.microcells):
+                test_x = (cell.location[0] +
+                          (j % mcell_len - .5 * (mcell_len - 1)) /
+                          (grid_len * (mcell_len - 1)))
+                test_y = (cell.location[1] +
+                          (j // mcell_len - .5 * (mcell_len - 1)) /
+                          (grid_len * (mcell_len - 1)))
+                self.assertAlmostEqual(mcell.location[0], test_x)
+                self.assertAlmostEqual(mcell.location[1], test_y)
 
     def test_assign_cell_locations_known_grid(self):
         pop_params = {"population_size": 100, "cell_number": 4,
-                      "microcell_number": 1}
+                      "microcell_number": 4}
         test_pop = ToyPopulationFactory.make_pop(pop_params)
         ToyPopulationFactory.assign_cell_locations(test_pop, "grid")
         x_pos = [0, 1, 0, 1]
         y_pos = [0, 0, 1, 1]
+        mx_pos0 = [-.25, .25, -.25, .25]
+        my_pos0 = [-.25, -.25, .25, .25]
+        mx_pos1 = [.75, 1.25, .75, 1.25]
+        my_pos1 = [.75, .75, 1.25, 1.25]
         for i, cell in enumerate(test_pop.cells):
             self.assertAlmostEqual(cell.location[0], x_pos[i])
             self.assertAlmostEqual(cell.location[1], y_pos[i])
+        for j, mcell in enumerate(test_pop.cells[0].microcells):
+            self.assertAlmostEqual(mcell.location[0], mx_pos0[j])
+            self.assertAlmostEqual(mcell.location[1], my_pos0[j])
+        for j, mcell in enumerate(test_pop.cells[3].microcells):
+            self.assertAlmostEqual(mcell.location[0], mx_pos1[j])
+            self.assertAlmostEqual(mcell.location[1], my_pos1[j])
 
 
 if __name__ == '__main__':

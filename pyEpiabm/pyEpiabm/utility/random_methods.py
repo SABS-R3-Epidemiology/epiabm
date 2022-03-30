@@ -3,13 +3,16 @@
 #
 
 class RandomMethods:
-    """Class to calculate methods in a style similar to CovidSim
+    """Class to calculate methods in a style similar to CovidSim.
+
     """
     def __init__(self):
         """s1 and s2 are integers in the range [1, 21474835621]. Covid-sim
         initialises these using 32-bit integer memory location information.
         We just choose random integers by hand instead. See the wiki for
-        more info on this and the following random algorithm."""
+        more info on this and the following random algorithm.
+
+        """
         self.prev_s1 = 163858
         self.prev_s2 = 6573920043
 
@@ -17,8 +20,11 @@ class RandomMethods:
         """Reproduction of the ranf_mt method in the Rand.cpp class of covid-sim.
         In covid-sim, they would use the thread number to generate the output.
 
-        :returns: Returns random number between 0 and 1
-        :rtype: float
+        Returns
+        -------
+        float
+            Returns random number between 0 and 1
+
         """
         # Set parameters:
         Xm1 = 2147483563

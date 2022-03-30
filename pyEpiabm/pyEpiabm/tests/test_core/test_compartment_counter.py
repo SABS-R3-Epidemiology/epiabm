@@ -3,9 +3,10 @@ import random
 
 import pyEpiabm as pe
 from pyEpiabm.property.infection_status import InfectionStatus
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestCompartmentCounter(unittest.TestCase):
+class TestCompartmentCounter(TestPyEpiabm):
     """Test the _CompartmentCounter class
     """
     @classmethod
@@ -13,6 +14,7 @@ class TestCompartmentCounter(unittest.TestCase):
         """Initialises a population with one cell and one person in
         the cell.
         """
+        super(TestCompartmentCounter, cls).setUpClass()  # Sets up parameters
         cls.cell = pe.Cell()
         cls.cell.add_microcells(1)
         cls.microcell = cls.cell.microcells[0]

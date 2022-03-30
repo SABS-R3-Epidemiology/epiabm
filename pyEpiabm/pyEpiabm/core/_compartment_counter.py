@@ -9,13 +9,17 @@ from pyEpiabm.property import InfectionStatus
 
 class _CompartmentCounter:
     """Class Component which maintains count of people in each compartment.
+
     """
 
     def __init__(self, identifier: str):
         """Constructor Method.
 
-        :param identifier: Identifier for this counter
-        :type identifier: str
+        Parameters
+        ----------
+        identifier : str
+            Identifier for this counter
+
         """
         # Identifier
         self._identifier = identifier
@@ -25,6 +29,7 @@ class _CompartmentCounter:
     @property
     def identifier(self):
         """Get identifier.
+
         """
         return self._identifier
 
@@ -33,10 +38,13 @@ class _CompartmentCounter:
         """Report Person has changed state.
         Update internal compartments state.
 
-        :param old_status: Person's previous infection state
-        :type old_status: InfectionStatus
-        :param new_status: Person's new infection state
-        :type new_status: InfectionStatus
+        Parameters
+        ----------
+        old_status : InfectionStatus
+            Person's previous infection state
+        new_status : InfectionStatus
+            Person's new infection state
+
         """
         if self._compartments[old_status] <= 0:
             raise ValueError("No people of this status in this cell.")
@@ -48,10 +56,13 @@ class _CompartmentCounter:
         """Funtion to add a block of people with the same infection status
         to a compartment.
 
-        :param n_person: number of people being added to cell or microcell
-        :type n_person: int
-        :param infection_status: status of people being added
-        :type infection_status: InfectionStatus
+        Parameters
+        ----------
+        n_person : int
+            Number of people being added to cell or microcell
+        infection_status : InfectionStatus
+            Status of people being added
+
         """
         self._compartments[infection_status] += n_persons
 
@@ -59,7 +70,10 @@ class _CompartmentCounter:
         """Get Compartment Counts.
         Returns dictionary of compartment counts.
 
-        :return: Dictionary of compartments
-        :rtype: dict
+        Returns
+        -------
+        dict
+            Dictionary of compartments
+
         """
         return self._compartments

@@ -10,7 +10,7 @@ import math
 
 from pyEpiabm.core import Household, Population
 from pyEpiabm.property import PlaceType
-from pyEpiabm.utility import log_exceptions
+from pyEpiabm.utility import DistanceFunctions, log_exceptions
 
 from .abstract_population_config import AbstractPopulationFactory
 
@@ -18,6 +18,7 @@ from .abstract_population_config import AbstractPopulationFactory
 class ToyPopulationFactory(AbstractPopulationFactory):
     """ Class that creates a toy population for use in the simple
     python model.
+
     """
     @staticmethod
     @log_exceptions()
@@ -35,12 +36,16 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             * `place_number`: Number of places in each microcell (*)
             * `population_seed`: Random seed for reproducible populations (*)
 
-        :param file_params: Dictionary of parameters for generating a
-            population
-        :type file_params: dict
-        :return: Population object with individuals distributed into
-            households
-        :rtype: Population
+        Parameters
+        ----------
+        file_params : dict
+            Dictionary of parameters for generating a population
+
+        Returns
+        -------
+        Population
+            Population object with individuals distributed into households
+
         """
         # Unpack variables from input dictionary
         population_size = pop_params["population_size"]
@@ -93,11 +98,14 @@ class ToyPopulationFactory(AbstractPopulationFactory):
     def add_households(population: Population, household_number: int):
         """Groups people in a microcell into households together.
 
-        :param population: Population containing all person objects to be
-            considered for grouping
-        :type population: Population
-        :param household_number: Number of households to form
-        :type household_number: int
+        Parameters
+        ----------
+        population : Population
+            Population containing all person objects to be considered for
+            grouping
+        household_number : int
+            Number of households to form
+
         """
         # Initialises another multinomial distribution
         q = [1 / household_number] * household_number
@@ -117,13 +125,15 @@ class ToyPopulationFactory(AbstractPopulationFactory):
 
     @staticmethod
     def add_places(population: Population, place_number: int):
-        """Groups people in a microcell into households together.
+        """Generates places within a Population.
 
-        :param population: Population containing all person objects to be
-            considered for grouping
-        :type population: Population
-        :param place_number: Number of places to form
-        :type place_number: int
+        Parameters
+        ----------
+        population : Population
+            Population where :class:`Place` s will be added
+        place_number : int
+            Number of places to generate per :class:`Microcell`
+
         """
         # Further consideration of whether we initialise place types
         # at this step is needed.
@@ -134,7 +144,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         for cell in population.cells:
             for microcell in cell.microcells:
                 microcell.add_place(place_number, (1.0, 1.0),
-                                    PlaceType.Hotel)
+                                    PlaceType.Workplace)
 
     @staticmethod
     def assign_cell_locations(population: Population, method: str = 'random'):
@@ -142,26 +152,45 @@ class ToyPopulationFactory(AbstractPopulationFactory):
 
             * 'random': Assigns all locations randomly within unit square
             * 'uniform_x': Spreads points evenly along x axis in range (0, 1)
-            * 'grid': Distributes points according to a square grid within a
-                unit square. There will be cells missing in the last row if
-                the input is not a square number
+            * 'grid': Distributes points according to a square grid within a \
+               unit square. There will be cells missing in the last row \
+               if the input is not a square number
 
-        :param population: Population containing all person objects to be
-            considered for grouping
-        :type population: Population
-        :param method: Method of determining cell locations
-        :type method: str
+        Parameters
+        ----------
+        population : Population
+            Population containing all cells to be assigned locations
+        method : str
+            Method of determining cell locations
+
         """
         try:
             if method == "random":
                 for cell in population.cells:
                     cell.set_location(tuple(np.random.rand(2)))
+                    for microcell in cell.microcells:
+                        while True:
+                            # Will keep random location only if microcell
+                            # is closer to its cell's location than any other.
+                            # Not very efficient.
+                            microcell.set_location(tuple(np.random.rand(2)))
+                            cell_dist = (DistanceFunctions.dist(microcell.
+                                         location, cell.location))
+                            inter_dist = [DistanceFunctions.dist(microcell.
+                                          location, cell2.location) for cell2
+                                          in population.cells]
+                            if min(inter_dist) == cell_dist:
+                                break
 
             elif method == "uniform_x":
                 cell_number = len(population.cells)
                 x_pos = np.linspace(0, 1, cell_number)
                 for i, cell in enumerate(population.cells):
                     cell.set_location((x_pos[i], 0))
+                    mcell_number = len(cell.microcells)
+                    y_pos = np.linspace(0, 1, mcell_number)
+                    for j, microcell in enumerate(cell.microcells):
+                        microcell.set_location((x_pos[i], y_pos[j]))
 
             elif method == "grid":
                 cell_number = len(population.cells)
@@ -170,6 +199,15 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                 for i, cell in enumerate(population.cells):
                     cell.set_location((pos[i % grid_len],
                                        pos[i // grid_len]))
+                    mcell_num = len(cell.microcells)
+                    mcell_len = math.ceil(math.sqrt(mcell_num))
+                    m_pos = np.linspace(0, 1, mcell_len)
+                    for j, microcell in enumerate(cell.microcells):
+                        x = pos[i % grid_len] + \
+                            (m_pos[j % mcell_len] - 0.5) / grid_len
+                        y = pos[i // grid_len] + \
+                            (m_pos[j // mcell_len] - 0.5) / grid_len
+                        microcell.set_location((x, y))
 
             else:
                 raise ValueError(f"Unknown method: '{method}' not recognised")

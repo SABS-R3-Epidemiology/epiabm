@@ -9,7 +9,7 @@ import typing
 import numpy as np
 from tqdm import tqdm
 
-from pyEpiabm.core import Population
+from pyEpiabm.core import Parameters, Population
 from pyEpiabm.output import _CsvDictWriter
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import AbstractSweep
@@ -18,6 +18,7 @@ from pyEpiabm.utility import log_exceptions
 
 class Simulation:
     """Class to run a full simulation.
+
     """
     @log_exceptions()
     def configure(self,
@@ -31,34 +32,33 @@ class Simulation:
         sim_params Contains:
             * `simulation_start_time`: The initial time for the simulation
             * `simulation_end_time`: The final time to stop the simulation
-            * `initial_infected_number`: The initial number of infected
-                individuals in the population
+            * `initial_infected_number`: The initial number of infected \
+               individuals in the population
             * `simulation_seed`:  Random seed for reproducible simulations
 
         file_params Contains:
             * `output_file`: String for the name of the output .csv file
-            * `output_dir`: String for the location of the output file,
-                 as a relative path
-            * `spatial_output`: Boolean to determine whether a spatial output
-                should be used
+            * `output_dir`: String for the location of the output file, \
+               as a relative path
+            * `spatial_output`: Boolean to determine whether a spatial output \
+               should be used
 
-        :param population: Population structure for the model
-        :type population: Population
-        :param pop_params: Dictionary of parameter specific to the population
-        :type pop_params: dict
-        :param initial_sweeps: List of sweeps used to initialise the
-            simulation
-        :type initial_sweeps: list
-        :param sweeps: List of sweeps used in the simulation. Queue
-            sweep and host progression sweep should appear at the end of the
-            list
-        :type sweeps: list
-        :param sim_params: Dictionary of parameters specific to the simulation
-            used and used as input for call method of initial sweeps
-        :type sim_params: dict
-        :param file_params: Dictionary of parameters specific to the output
-            file
-        :type file_params: dict
+        Parameters
+        ----------
+        population : Population
+            Population structure for the model
+        pop_params : dict
+            Dictionary of parameter specific to the population
+        initial_sweeps : typing.List
+            List of sweeps used to initialise the simulation
+        sweeps : typing.List
+            List of sweeps used in the simulation. Queue sweep and host
+            progression sweep should appear at the end of the list
+        sim_params : dict
+            Dictionary of parameters specific to the simulation used and used
+            as input for call method of initial sweeps
+        file_params : dict
+            Dictionary of parameters specific to the output file
 
         """
         self.sim_params = sim_params
@@ -110,31 +110,40 @@ class Simulation:
         that the elements of intial sweeps take the sim_params dict as an
         argument for their call method but the elements of sweeps take time
         as an argument for their call method.
+
         """
+        # Define time step between sweeps
+        ts = 1 / Parameters.instance().time_steps_per_day
+
         # Initialise on the time step before starting.
         for sweep in self.initial_sweeps:
             sweep(self.sim_params)
 
-        logging.info("Initial Sweeps Completed")
+        logging.info("Initial Sweeps Completed at time "
+                     + f"{self.sim_params['simulation_start_time']} days")
 
         # First entry of the data file is the initial state
         self.write_to_file(self.sim_params["simulation_start_time"])
 
-        for t in tqdm(range(self.sim_params["simulation_start_time"] + 1,
-                            self.sim_params["simulation_end_time"])):
+        for t in tqdm(np.arange(self.sim_params["simulation_start_time"] + ts,
+                                self.sim_params["simulation_end_time"] + ts,
+                                ts)):
             for sweep in self.sweeps:
                 sweep(t)
             self.write_to_file(t)
-            logging.debug(f'Iteration {t} completed')
+            logging.debug(f'Iteration at time {t} days completed')
 
-        logging.info(f"Final time {t} reached")
+        logging.info(f"Final time {t} days reached")
 
     def write_to_file(self, time):
         """Records the count number of a given list of infection statuses
         and writes these to file.
 
-        :param time: Time of output data
-        :type file_params: float
+        Parameters
+        ----------
+        time : float
+            Time of output data
+
         """
 
         if self.spatial_output:  # Separate output line for each cell
@@ -160,8 +169,11 @@ class Simulation:
         """ Set random seed for all subsequent operations. Should be used
         before population configuration to control this process as well.
 
-        :param seed: Seed for RandomState
-        :type seed: int
+        Parameters
+        ----------
+        seed : int
+            Seed for RandomState
+
         """
         random.seed(seed)
         np.random.seed(seed)
