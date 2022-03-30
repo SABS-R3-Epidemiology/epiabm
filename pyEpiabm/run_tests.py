@@ -3,7 +3,7 @@
 # Run from epiabm directory with coverage using:
 #   `coverage run pyEpiabm/run_tests.py --unit`
 # Report coverage with `coverage report -m`, or build html with `coverage html`
-# Doc tests can be ran from pyEpiabm with `python3 run_tests.py --doctest`
+# Doc tests can be ran from pyEpiabm with `python3 run_tests.py --docs`
 #
 
 from __future__ import absolute_import, division
@@ -264,9 +264,9 @@ if __name__ == '__main__':
     )
     # Doctests
     parser.add_argument(
-        '--doctest',
+        '--docs',
         action='store_true',
-        help='Run any doctests, check if docs can be built',
+        help='Run documentation tests, check if docs can be built',
     )
 
     # Parse!
@@ -281,7 +281,7 @@ if __name__ == '__main__':
         run_unit_tests()
 
     # Doctests
-    if args.doctest:
+    if args.docs:
         has_run = True
         run_doctests()
 
