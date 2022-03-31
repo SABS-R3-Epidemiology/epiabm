@@ -62,6 +62,29 @@ class TestInitialInfectedSweep(TestPyEpiabm):
         params = {"initial_infected_number": 1, "simulation_start_time": 0}
         self.assertRaises(ValueError, test_sweep, params)
 
+    def test_cell_distribution(self):
+        """Test the main function of the Initial Infected Sweep.
+        """
+        pop_factory = pe.routine.ToyPopulationFactory()
+        pop_params = {"population_size": 100, "cell_number": 5,
+                      "microcell_number": 1, "household_number": 1}
+        test_population = pop_factory.make_pop(pop_params)
+        test_sweep = pe.sweep.InitialInfectedSweep()
+        test_sweep.bind_population(test_population)
+
+        # Test that call assigns correct number of infectious people,
+        # with all infectious people in one cell
+        params = {"simulation_start_time": 0,
+                  "initial_infected_number": 4,
+                  "initial_infected_cell": True}
+        test_sweep(params)
+        status = pe.property.InfectionStatus.InfectMild
+        num_infectious = []
+        for cell in test_population.cells:
+            num_infectious.append(cell.compartment_counter
+                                  .retrieve()[status])
+        self.assertCountEqual(num_infectious, [4, 0, 0, 0, 0])
+
 
 if __name__ == '__main__':
     unittest.main()

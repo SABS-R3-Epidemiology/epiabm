@@ -52,6 +52,10 @@ class TestCell(TestPyEpiabm):
         self.assertEqual(self.cell.number_infectious(), 0)
         person.update_status(InfectionStatus.InfectMild)
         self.assertEqual(self.cell.number_infectious(), 1)
+        person.update_status(InfectionStatus.InfectICU)
+        self.assertEqual(self.cell.number_infectious(), 1)
+        person.update_status(InfectionStatus.Recovered)
+        self.assertEqual(self.cell.number_infectious(), 0)
 
     def test_set_loc(self):
         self.assertEqual(self.cell.location, (0, 0))
