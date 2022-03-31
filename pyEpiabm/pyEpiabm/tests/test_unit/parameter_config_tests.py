@@ -18,7 +18,7 @@ class TestPyEpiabm(unittest.TestCase):
         """
         super(TestPyEpiabm, cls).setUpClass()
         filepath = os.path.join(os.path.dirname(__file__),
-                                'testing_parameters.json')
+                                os.pardir, 'testing_parameters.json')
         pe.Parameters.set_file(filepath)
 
     @classmethod
