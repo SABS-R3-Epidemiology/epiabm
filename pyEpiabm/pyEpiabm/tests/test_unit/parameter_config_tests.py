@@ -3,6 +3,7 @@
 #
 
 import unittest
+import os
 
 import pyEpiabm as pe
 
@@ -16,8 +17,9 @@ class TestPyEpiabm(unittest.TestCase):
         and error logging classes, that otherwise print to terminal
         """
         super(TestPyEpiabm, cls).setUpClass()
-        pe.Parameters.set_file("pyEpiabm/pyEpiabm/tests/"
-                               + "testing_parameters.json")
+        filepath = os.path.join(os.path.dirname(__file__),
+                                'testing_parameters.json')
+        pe.Parameters.set_file(filepath)
 
     @classmethod
     def tearDownClass(cls):

@@ -134,7 +134,7 @@ class HostProgressionSweep(AbstractSweep):
         if person.infection_start_time < 0:
             raise ValueError('The infection start time cannot be negative')
 
-    def _update_next_infection_status(self, person: Person):
+    def update_next_infection_status(self, person: Person):
         """Assigns next infection status based on current infection status
         and on probabilities of transition to different statuses. Weights
         are taken from row in state transition matrix that corresponds to
@@ -279,6 +279,6 @@ class HostProgressionSweep(AbstractSweep):
                              InfectionStatus.InfectMild,
                              InfectionStatus.InfectGP]:
                         self.set_infectiousness(person, time)
-                    self._update_next_infection_status(person)
+                    self.update_next_infection_status(person)
                     self.update_time_status_change(person, time)
                 self._updates_infectiousness(person, time)

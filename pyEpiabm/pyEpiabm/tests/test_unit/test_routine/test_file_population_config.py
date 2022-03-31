@@ -57,6 +57,19 @@ class TestPopConfig(TestPyEpiabm):
         # Test a population class object is returned
         self.assertIsInstance(test_pop, pe.Population)
 
+        # Test cell_wise values
+        for i in range(2):
+            self.assertEqual(test_pop.cells[i].id,
+                             self.input.get('cell')[i])
+            self.assertEqual(test_pop.cells[i].microcells[0].id,
+                             self.input.get('microcell')[i])
+            self.assertEqual(test_pop.cells[i].location[0],
+                             self.input.get('location_x')[i])
+            self.assertEqual(test_pop.cells[i].location[1],
+                             self.input.get('location_y')[i])
+            self.assertEqual(test_pop.cells[i].number_infectious(),
+                             self.input.get('InfectMild')[i])
+
     @patch('logging.exception')
     @patch("pandas.read_csv")
     def test_make_pop_exception(self, mock_read, mock_log):

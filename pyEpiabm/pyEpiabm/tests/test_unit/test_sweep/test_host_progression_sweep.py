@@ -102,7 +102,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
 
         test_sweep.state_transition_matrix['Test col'] = ""
         with self.assertRaises(AssertionError):
-            test_sweep._update_next_infection_status(self.people[0])
+            test_sweep.update_next_infection_status(self.people[0])
 
         identity_matrix = pd.DataFrame(np.identity(len(InfectionStatus)),
                                        columns=[status.name for
@@ -111,7 +111,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
                                        status in InfectionStatus])
         test_sweep.state_transition_matrix = identity_matrix
         for person in self.people:
-            test_sweep._update_next_infection_status(person)
+            test_sweep.update_next_infection_status(person)
             if person.infection_status.name in ['Recovered', 'Dead']:
                 self.assertEqual(person.next_infection_status, None)
             else:
@@ -130,7 +130,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
                                      status in InfectionStatus])
         test_sweep.state_transition_matrix = matrix
         for person in self.people:
-            test_sweep._update_next_infection_status(person)
+            test_sweep.update_next_infection_status(person)
             if person.infection_status.name in ['Recovered', 'Dead']:
                 self.assertEqual(person.next_infection_status, None)
             else:
@@ -147,7 +147,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
                                             status in InfectionStatus])
         test_sweep.state_transition_matrix = random_matrix
         for person in self.people:
-            test_sweep._update_next_infection_status(person)
+            test_sweep.update_next_infection_status(person)
             if person.infection_status.name in ['Recovered', 'Dead']:
                 self.assertEqual(person.next_infection_status, None)
             else:
@@ -166,7 +166,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             person.next_infection_status = None
 
         for person in self.people:
-            test_sweep._update_next_infection_status(person)
+            test_sweep.update_next_infection_status(person)
             test_sweep.update_time_status_change(person, current_time)
             if person.infection_status.name in ['Recovered', 'Dead']:
                 self.assertEqual(person.time_of_status_change, np.inf)
@@ -182,7 +182,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         """
         test_sweep = pe.sweep.HostProgressionSweep()
         person = self.people[0]
-        test_sweep._update_next_infection_status(self.people[0])
+        test_sweep.update_next_infection_status(self.people[0])
         row_index = person.infection_status.name
         column_index = person.next_infection_status.name
 

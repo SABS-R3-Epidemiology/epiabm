@@ -9,9 +9,9 @@ import copy
 import logging
 from packaging import version
 
-from pyEpiabm.core import Household, Population, Cell
-from pyEpiabm.core.microcell import Microcell
+from pyEpiabm.core import Cell, Household, Microcell, Person, Population
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.sweep import HostProgressionSweep
 from pyEpiabm.utility import log_exceptions
 
 
@@ -21,7 +21,7 @@ class FilePopulationFactory:
     """
     @staticmethod
     @log_exceptions()
-    def make_pop(input_file: str, random_seed: int = None):
+    def make_pop(input_file: str, random_seed: int = None, time: float = 0):
         """Initialize a population object from an input csv file, with one
         row per microcell. A uniform multinomial distribution is
         used to distribute the number of people into the different households
@@ -44,6 +44,8 @@ class FilePopulationFactory:
             Path to input file
         random_seed : int
             Seed for reproducible household distribution
+        time : float
+            Start time of simulation where this population is used (default 0)
 
         Returns
         -------
@@ -71,6 +73,9 @@ class FilePopulationFactory:
         # Initialise a population class
         new_pop = Population()
 
+        # Initialise sweep to assign new people their next infection status
+        host_sweep = HostProgressionSweep()
+
         # Iterate through lines (one per microcell)
         for _, line in input.iterrows():
             # Check if cell exists, or create it
@@ -93,8 +98,15 @@ class FilePopulationFactory:
             for column in input.columns.values:
                 if hasattr(InfectionStatus, column):
                     value = getattr(InfectionStatus, column)
-                    new_microcell.add_people(int(line[column]),
-                                             InfectionStatus(value))
+                    for i in range(int(line[column])):
+                        person = Person(new_microcell)
+                        new_microcell.add_person(person)
+                        person.update_status(InfectionStatus(value))
+                        host_sweep.update_next_infection_status(person)
+                        host_sweep.update_time_status_change(person, time)
+                        if str(person.infection_status).startswith('Infect'):
+                            HostProgressionSweep.set_infectiousness(person,
+                                                                    time)
 
             # Add households to microcell
             if line["household_number"] > 0:
