@@ -26,13 +26,34 @@ class TestMicrocell(TestPyEpiabm):
         self.microcell.set_id(2.0)
         self.assertEqual(self.microcell.id, 2.0)
 
+    def test_add_person(self):
+        self.assertEqual(len(self.microcell.persons), 0)
+        self.assertEqual(len(self.cell.persons), 0)
+
+        sus_person = pe.Person(self.microcell)
+        self.microcell.add_person(sus_person)
+        self.assertEqual(len(self.microcell.persons), 1)
+        self.assertEqual(len(self.cell.persons), 1)
+        self.assertEqual(self.cell.number_infectious(), 0)
+
+        inf_person = pe.Person(self.microcell)
+        inf_person.infection_status = InfectionStatus.InfectASympt
+        self.microcell.add_person(inf_person)
+        self.assertEqual(len(self.microcell.persons), 2)
+        self.assertEqual(len(self.cell.persons), 2)
+        self.assertEqual(self.cell.number_infectious(), 1)
+
     def test_add_people(self, n=4):
         self.assertEqual(len(self.microcell.persons), 0)
+        self.assertEqual(len(self.cell.persons), 0)
         self.microcell.add_people(n)
         self.assertEqual(len(self.microcell.persons), n)
+        self.assertEqual(self.cell.number_infectious(), 0)
+        self.assertEqual(len(self.cell.persons), n)
         self.microcell.add_people(n + 1,
                                   InfectionStatus.InfectASympt)
         self.assertEqual(len(self.microcell.persons), 2 * n + 1)
+        self.assertEqual(len(self.cell.persons), 2 * n + 1)
         self.assertEqual(self.cell.number_infectious(), n + 1)
 
     def test_add_place(self, n=3):
