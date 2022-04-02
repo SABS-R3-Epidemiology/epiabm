@@ -164,55 +164,18 @@ class TestSimulation(TestMockedLogs):
         self.assertAlmostEqual(np_value, 0.548814, places=5)
         # Values taken from known seed sequence
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write')
-    def test_random_seed(self, mock_write):
-        pop_params = {"population_size": 250, "cell_number": 1,
-                      "microcell_number": 1, "household_number": 5,
-                      "population_seed": 42}
-        pe.Parameters.instance().time_steps_per_day = 1
-        sim_params = {"simulation_start_time": 0,
-                      "simulation_end_time": 10,
-                      "initial_infected_number": 20,
-                      "simulation_seed": 42}
-
-        # Care has been taken in setting the end time of the simulation
-        # to ensure that partial infection is achieved across the population,
-        # so that different seeds will result in a unique final state
-
-        initial_sweeps = [pe.sweep.InitialInfectedSweep()]
-        sim_sweeps = [pe.sweep.UpdatePlaceSweep(), pe.sweep.HouseholdSweep(),
-                      pe.sweep.PlaceSweep(), pe.sweep.QueueSweep(),
-                      pe.sweep.HostProgressionSweep()]
-
+    @patch("numpy.random.seed")
+    @patch("random.seed")
+    def test_random_seed_param(self, mock_random, mock_np_random, n=42):
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-            seed_pop = self.pop_factory.make_pop(pop_params)
-            seed_sim = pe.routine.Simulation()
-            seed_sim.configure(seed_pop, initial_sweeps, sim_sweeps,
-                               sim_params, self.file_params)
-            seed_sim.run_sweeps()
-        seed_output = mock_write.call_args
-
-        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-            comp_pop = self.pop_factory.make_pop(pop_params)
-            comp_sim = pe.routine.Simulation()
-            comp_sim.configure(comp_pop, initial_sweeps, sim_sweeps,
-                               sim_params, self.file_params)
-            comp_sim.run_sweeps()
-        comp_output = mock_write.call_args
-
-        sim_params["simulation_seed"] = 43  # Change seed of population
-        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-            diff_pop = self.pop_factory.make_pop(pop_params)
-            diff_sim = pe.routine.Simulation()
-            diff_sim.configure(diff_pop, initial_sweeps, sim_sweeps,
-                               sim_params, self.file_params)
-            diff_sim.run_sweeps()
-        diff_output = mock_write.call_args
-
-        self.assertEqual(seed_output, comp_output)
-        self.assertNotEqual(seed_output, diff_output)
+            test_sim = pe.routine.Simulation()
+            test_sim_params = self.sim_params.copy()
+            test_sim_params["simulation_seed"] = n
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, test_sim_params, self.file_params)
+        mock_random.assert_called_once_with(n)
+        mock_np_random.assert_called_once_with(n)
 
 
 if __name__ == '__main__':

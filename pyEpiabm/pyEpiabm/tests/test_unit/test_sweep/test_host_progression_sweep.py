@@ -375,6 +375,18 @@ class TestHostProgressionSweep(TestPyEpiabm):
             self.assertGreater(infected_person.infectiousness, 0)
             self.assertIsInstance(infected_person.infectiousness, float)
 
+    def test_invalid_update_infectiousness(self):
+        test_sweep = pe.sweep.HostProgressionSweep()
+        self.person1.infectiousness = 1
+        self.person1.infection_start_time = 0
+        self.person1.update_status(InfectionStatus.Dead)
+
+        self.assertEqual(self.person1.infection_start_time, 0)
+        self.assertEqual(self.person1.infectiousness, 1)
+        test_sweep._updates_infectiousness(self.person1, 1)
+        self.assertEqual(self.person1.infectiousness, 0)
+        self.assertIsNone(self.person1.infection_start_time)
+
     def test_compare_value_update_infectiousness(self):
         """Tests that a person's infectiousness is correctly updated by comparing
         the infectiousness of a person at the same simulation time in
