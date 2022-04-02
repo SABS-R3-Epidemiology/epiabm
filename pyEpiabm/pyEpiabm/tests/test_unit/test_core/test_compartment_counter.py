@@ -24,8 +24,9 @@ class TestCompartmentCounter(TestPyEpiabm):
     def test_construct(self):
         self.subject = pe._CompartmentCounter("Cell 1")
         self.assertEqual(self.subject.identifier, "Cell 1")
-        for k in self.subject.retrieve():
-            self.assertEqual(self.subject.retrieve()[k], 0)
+        for status in self.subject.retrieve():
+            with self.subTest(status=status):
+                self.assertEqual(self.subject.retrieve()[status], 0)
 
     def test_reportRetrieve(self):
         self.assertRaises(ValueError, self.subject.report,

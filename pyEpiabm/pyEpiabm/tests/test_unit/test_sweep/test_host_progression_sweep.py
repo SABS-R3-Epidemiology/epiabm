@@ -131,12 +131,13 @@ class TestHostProgressionSweep(TestPyEpiabm):
                                        status in InfectionStatus])
         test_sweep.state_transition_matrix = identity_matrix
         for person in self.people:
-            test_sweep.update_next_infection_status(person)
-            if person.infection_status.name in ['Recovered', 'Dead']:
-                self.assertEqual(person.next_infection_status, None)
-            else:
-                self.assertEqual(person.infection_status,
-                                 person.next_infection_status)
+            with self.subTest(person=person):
+                test_sweep.update_next_infection_status(person)
+                if person.infection_status.name in ['Recovered', 'Dead']:
+                    self.assertEqual(person.next_infection_status, None)
+                else:
+                    self.assertEqual(person.infection_status,
+                                     person.next_infection_status)
 
         matrix = np.zeros([len(InfectionStatus), len(InfectionStatus)])
         # Set ICU recovery infection status column values to 1. This way
@@ -150,12 +151,13 @@ class TestHostProgressionSweep(TestPyEpiabm):
                                      status in InfectionStatus])
         test_sweep.state_transition_matrix = matrix
         for person in self.people:
-            test_sweep.update_next_infection_status(person)
-            if person.infection_status.name in ['Recovered', 'Dead']:
-                self.assertEqual(person.next_infection_status, None)
-            else:
-                self.assertEqual(person.next_infection_status,
-                                 InfectionStatus.InfectICURecov)
+            with self.subTest(person=person):
+                test_sweep.update_next_infection_status(person)
+                if person.infection_status.name in ['Recovered', 'Dead']:
+                    self.assertEqual(person.next_infection_status, None)
+                else:
+                    self.assertEqual(person.next_infection_status,
+                                     InfectionStatus.InfectICURecov)
 
         random_matrix = np.random.rand(len(InfectionStatus),
                                        len(InfectionStatus))
@@ -167,13 +169,14 @@ class TestHostProgressionSweep(TestPyEpiabm):
                                             status in InfectionStatus])
         test_sweep.state_transition_matrix = random_matrix
         for person in self.people:
-            test_sweep.update_next_infection_status(person)
-            if person.infection_status.name in ['Recovered', 'Dead']:
-                self.assertEqual(person.next_infection_status, None)
-            else:
-                current_enum_value = person.infection_status.value
-                next_enum_value = person.next_infection_status.value
-                self.assertTrue(current_enum_value <= next_enum_value)
+            with self.subTest(person=person):
+                test_sweep.update_next_infection_status(person)
+                if person.infection_status.name in ['Recovered', 'Dead']:
+                    self.assertEqual(person.next_infection_status, None)
+                else:
+                    current_enum_value = person.infection_status.value
+                    next_enum_value = person.next_infection_status.value
+                    self.assertTrue(current_enum_value <= next_enum_value)
 
     def test_update_time_status_change_no_age(self, current_time=100.0):
         """Tests that people who have their time to status change set correctly
@@ -186,15 +189,18 @@ class TestHostProgressionSweep(TestPyEpiabm):
             person.next_infection_status = None
 
         for person in self.people:
-            test_sweep.update_next_infection_status(person)
-            test_sweep.update_time_status_change(person, current_time)
-            if person.infection_status.name in ['Recovered', 'Dead']:
-                self.assertEqual(person.time_of_status_change, np.inf)
-            elif person.infection_status.name in ['InfectMild', 'InfectGP']:
-                delayed_time = current_time + test_sweep.delay
-                self.assertTrue(delayed_time <= person.time_of_status_change)
-            else:
-                self.assertTrue(current_time <= person.time_of_status_change)
+            with self.subTest(person=person):
+                test_sweep.update_next_infection_status(person)
+                test_sweep.update_time_status_change(person, current_time)
+                time_of_status_change = person.time_of_status_change
+                if person.infection_status.name in ['Recovered', 'Dead']:
+                    self.assertEqual(time_of_status_change, np.inf)
+                elif person.infection_status.name in ['InfectMild',
+                                                      'InfectGP']:
+                    delayed_time = current_time + test_sweep.delay
+                    self.assertTrue(delayed_time <= time_of_status_change)
+                else:
+                    self.assertTrue(current_time <= time_of_status_change)
 
     def test_icdf_exception_raise(self):
         """Tests exception is raised with incorrect icdf or value in time
@@ -333,11 +339,13 @@ class TestHostProgressionSweep(TestPyEpiabm):
             test_sweep._updates_infectiousness(person, 1)
         # Assert that non infectious people have infectiousness of 0
         for i in [0, 1, 8, 9]:
-            self.assertEqual(self.people[i].infectiousness, 0)
+            with self.subTest(i=i):
+                self.assertEqual(self.people[i].infectiousness, 0)
         # Assert that infected people have positive float infectiousness
         for infected_person in self.people[2:8]:
-            self.assertGreater(infected_person.infectiousness, 0)
-            self.assertIsInstance(infected_person.infectiousness, float)
+            with self.subTest(infected_person=infected_person):
+                self.assertGreater(infected_person.infectiousness, 0)
+                self.assertIsInstance(infected_person.infectiousness, float)
 
     def test_invalid_update_infectiousness(self):
         test_sweep = pe.sweep.HostProgressionSweep()

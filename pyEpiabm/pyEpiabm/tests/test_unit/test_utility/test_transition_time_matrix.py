@@ -20,9 +20,11 @@ class TestTransitionTimeMatrix(TestPyEpiabm):
         self.assertEqual(matrix.size, len(InfectionStatus)**2)
         for row in matrix.to_numpy():
             for element in row:
-                if element != 0:
-                    self.assertIsInstance(element,
-                                          pe.utility.inverse_cdf.InverseCdf)
+                with self.subTest(row=row, element=element):
+                    if element != 0:
+                        self.assertIsInstance(element,
+                                              pe.utility.inverse_cdf.
+                                              InverseCdf)
 
     def test_update_transition_time_with_float(self):
         # Test method updates transition time as expected

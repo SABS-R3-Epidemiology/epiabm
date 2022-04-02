@@ -196,6 +196,8 @@ class TestPopConfig(TestPyEpiabm):
         if version.parse(pd.__version__) >= version.parse("1.4.0"):
             pd.testing.assert_frame_equal(mock_copy.call_args.args[0],
                                           self.df, check_dtype=False)
+        else:
+            self.skipTest("Test requires pandas version 1.4 - skipped")
 
     @patch('logging.exception')
     @patch("pandas.DataFrame.to_csv")

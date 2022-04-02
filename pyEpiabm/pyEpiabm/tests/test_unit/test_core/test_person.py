@@ -40,7 +40,8 @@ class TestPerson(TestPyEpiabm):
 
     def test_repr(self):
         self.assertEqual(repr(self.person),
-                         f"Person, Age = {self.person.age}.")
+                         f"Person, Age = {self.person.age}, "
+                         + f"Status = {self.person.infection_status}.")
 
     def test_is_infectious(self):
         self.assertFalse(self.person.is_infectious())
