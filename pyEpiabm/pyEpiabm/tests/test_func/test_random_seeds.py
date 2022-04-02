@@ -170,7 +170,8 @@ class TestSimulationRandomSeeds(unittest.TestCase):
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write')
-    def test_random_seed(self, mock_write):
+    @patch('os.makedirs')
+    def test_random_seed(self, mock_mkdir, mock_write):
         pop_params = {"population_size": 250, "cell_number": 1,
                       "microcell_number": 1, "household_number": 5,
                       "population_seed": 42}
@@ -214,6 +215,10 @@ class TestSimulationRandomSeeds(unittest.TestCase):
                                sim_params, self.file_params)
             diff_sim.run_sweeps()
         diff_output = mock_write.call_args
+
+        folder = os.path.join(os.getcwd(), self.mock_output_dir)
+        mock_mkdir.assert_called_with(folder)
+        self.assertEqual(mock_mkdir.call_count, 3)
 
         self.assertEqual(seed_output, comp_output)
         self.assertNotEqual(seed_output, diff_output)
