@@ -1,15 +1,123 @@
 import os
+import random
+import pandas as pd
+from parameterized import parameterized
 import unittest
 from unittest.mock import patch, mock_open
 
 import pyEpiabm as pe
 
 
+numReps = 2
+
+
 class TestPopulationRandomSeeds(unittest.TestCase):
     """Test random seed usage in population generation
     """
-    def test_placeholder(self):
-        self.assertEqual(2, 1+1)
+    @classmethod
+    def setUpClass(cls) -> None:
+        super(TestPopulationRandomSeeds, cls).setUpClass()
+
+        cls.warning_patcher = patch('logging.warning')
+        cls.error_patcher = patch('logging.error')
+        cls.warning_patcher.start()
+        cls.error_patcher.start()
+
+        filepath = os.path.join(os.path.dirname(__file__),
+                                os.pardir, 'testing_parameters.json')
+        pe.Parameters.set_file(filepath)
+
+    def setUp(self) -> None:
+        self.input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
+                      'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
+                      'household_number': [1, 1],
+                      'Susceptible': [8, 9], 'InfectMild': [2, 3]}
+        self.df = pd.DataFrame(self.input)
+
+    def summarise_households(self, pop: pe.Population):
+        # Returns lists of cell and microcell wise populations
+        # Not a testing function, but used in test below
+
+        households = []
+        sizes = []
+        for cell in pop.cells:
+            for microcell in cell.microcells:
+                for person in microcell.persons:
+                    if person.household not in households:
+                        households.append(person.household)
+                        sizes.append(len(person.household.persons))
+        return sizes
+
+    @patch("pandas.read_csv")
+    def test_household_seed(self, mock_read):
+        """Tests household allocation is consistent with random seed
+        """
+        input = {'cell': [1, 2], 'microcell': [1, 1],
+                 'household_number': [10, 10],
+                 'Susceptible': [200, 200]}
+        df = pd.DataFrame(input)
+        mock_read.return_value = df
+
+        # Create two identical populations with the same seed
+        seed_pop = pe.routine.FilePopulationFactory.make_pop('mock_file', 42)
+        comp_pop = pe.routine.FilePopulationFactory.make_pop('mock_file', 42)
+
+        self.assertEqual(str(seed_pop), str(comp_pop))
+
+        seed_households = self.summarise_households(seed_pop)
+        comp_households = self.summarise_households(comp_pop)
+        self.assertEqual(seed_households, comp_households)
+
+        # Also compare to a population with a different seed
+        diff_pop = pe.routine.FilePopulationFactory().make_pop('mock_file', 43)
+
+        diff_households = self.summarise_households(diff_pop)
+        self.assertNotEqual(seed_households, diff_households)
+
+    def summarise_pop(self, pop):
+        # Returns lists of cell and microcell wise populations
+        # Not a testing function, but used in test below
+
+        pop_cells = []  # List of populations in each cell of population
+        pop_microcells = []  # List of populations in each microcell
+        for cell in pop.cells:
+            pop_cells.append(len(cell.persons))
+            for microcell in cell.microcells:
+                pop_microcells.append(len(microcell.persons))
+        return pop_cells, pop_microcells
+
+    @parameterized.expand([(random.randint(1000, 10000),
+                            random.randint(5, 10),
+                            random.randint(2, 10),
+                            random.randint(1, 100))
+                          for _ in range(numReps)])
+    def test_pop_seed(self, pop_size, cell_number, microcell_number, seed):
+        """Tests for when the population is implemented by default with
+        no households. Parameters are assigned at random.
+        """
+        # Define parameters for population generation
+        pop_params = {"population_size": pop_size, "cell_number": cell_number,
+                      "microcell_number": microcell_number,
+                      "population_seed": seed}
+
+        # Create two identical populations with the same seed
+        seed_pop = pe.routine.ToyPopulationFactory.make_pop(pop_params)
+        comp_pop = pe.routine.ToyPopulationFactory.make_pop(pop_params)
+
+        self.assertEqual(str(seed_pop), str(comp_pop))
+
+        seed_cells, seed_microcells = self.summarise_pop(seed_pop)
+        comp_cells, comp_microcells = self.summarise_pop(comp_pop)
+        self.assertEqual(seed_cells, comp_cells)
+        self.assertEqual(seed_microcells, comp_microcells)
+
+        # Also compare to a population with a different seed
+        pop_params["population_seed"] = seed + 1  # Change seed of population
+        diff_pop = pe.routine.ToyPopulationFactory().make_pop(pop_params)
+
+        diff_cells, diff_microcells = self.summarise_pop(diff_pop)
+        self.assertNotEqual(seed_cells, diff_cells)
+        self.assertNotEqual(seed_microcells, diff_microcells)
 
 
 class TestSimulationRandomSeeds(unittest.TestCase):

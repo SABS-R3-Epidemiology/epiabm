@@ -4,7 +4,6 @@ import pandas as pd
 from packaging import version
 
 import pyEpiabm as pe
-from pyEpiabm.core import Population
 from pyEpiabm.routine import FilePopulationFactory
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
@@ -151,45 +150,18 @@ class TestPopConfig(TestPyEpiabm):
         self.assertTrue(len(households) <= 5)
         self.assertTrue(num_empty_households < 5)
 
-    def summarise_households(self, pop: Population):
-        # Returns lists of cell and microcell wise populations
-        # Not a testing function, but used in test below
-
-        households = []
-        sizes = []
-        for cell in pop.cells:
-            for microcell in cell.microcells:
-                for person in microcell.persons:
-                    if person.household not in households:
-                        households.append(person.household)
-                        sizes.append(len(person.household.persons))
-        return sizes
-
+    @patch("numpy.random.seed")
+    @patch("random.seed")
     @patch("pandas.read_csv")
-    def test_household_seed(self, mock_read):
-        """Tests household allocation is consistent with random seed
-        """
-        input = {'cell': [1, 2], 'microcell': [1, 1],
-                 'household_number': [10, 10],
-                 'Susceptible': [200, 200]}
-        df = pd.DataFrame(input)
-        mock_read.return_value = df
+    def test_random_seed_param(self, mock_read, mock_random,
+                               mock_np_random, n=42):
+        # Population is initialised with no households
+        mock_read.return_value = self.df
+        FilePopulationFactory.make_pop('test_input.csv', random_seed=n)
+        mock_read.assert_called_once_with('test_input.csv')
 
-        # Create two identical populations with the same seed
-        seed_pop = FilePopulationFactory.make_pop('mock_file', 42)
-        comp_pop = FilePopulationFactory.make_pop('mock_file', 42)
-
-        self.assertEqual(str(seed_pop), str(comp_pop))
-
-        seed_households = self.summarise_households(seed_pop)
-        comp_households = self.summarise_households(comp_pop)
-        self.assertEqual(seed_households, comp_households)
-
-        # Also compare to a population with a different seed
-        diff_pop = FilePopulationFactory().make_pop('mock_file', 43)
-
-        diff_households = self.summarise_households(diff_pop)
-        self.assertNotEqual(seed_households, diff_households)
+        mock_random.assert_called_once_with(n)
+        mock_np_random.assert_called_once_with(n)
 
     @patch("pandas.read_csv")
     @patch("pandas.DataFrame.to_csv")
