@@ -27,9 +27,6 @@ class TestIntegrationWorkflows(unittest.TestCase):
                       "microcell_number": 1, "household_number": 5,
                       "place_number": 2}
 
-        pe.Parameters.instance().time_steps_per_day = 1
-        pe.Parameters.instance().base_reproduction_num = 2.8
-
         # Create a population based on the parameters given.
         population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
 
@@ -64,11 +61,6 @@ class TestIntegrationWorkflows(unittest.TestCase):
             "microcell_number": 2,
             "household_number": 5,
         }
-
-        pe.Parameters.instance().time_steps_per_day = 1
-        pe.Parameters.instance().do_CovidSim = False
-        pe.Parameters.instance().basic_reproduction_num = 2.0
-        pe.Parameters.instance().infection_radius = 1
 
         if generate_from_file:
             file_loc = os.path.join(os.path.dirname(__file__),
