@@ -237,10 +237,7 @@ class HostProgressionSweep(AbstractSweep):
 
         """
         # Updates infectiousness with scaling if person is infectious:
-        if person.infection_status in \
-            [InfectionStatus.InfectASympt, InfectionStatus.InfectMild,
-             InfectionStatus.InfectGP, InfectionStatus.InfectHosp,
-             InfectionStatus.InfectICU, InfectionStatus.InfectICURecov]:
+        if str(person.infection_status).startswith('InfectionStatus.Infect'):
             scale_infectiousness = self.infectiousness_progression
             time_since_infection = (int((time - person.infection_start_time)
                                         / self.model_time_step))

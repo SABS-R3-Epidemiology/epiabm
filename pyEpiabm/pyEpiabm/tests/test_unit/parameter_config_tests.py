@@ -23,5 +23,6 @@ class TestPyEpiabm(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        super(TestPyEpiabm, cls).tearDownClass()
         if pe.Parameters._instance:
             pe.Parameters._instance = None

@@ -6,7 +6,8 @@ import pyEpiabm as pe
 
 
 class TestIntegrationWorkflows(unittest.TestCase):
-    """Test random seed usage in population generation
+    """Integration tests replicating example workflows
+    with small population sizes (to minimise runtime).
     """
     @classmethod
     def setUpClass(cls) -> None:
@@ -15,6 +16,11 @@ class TestIntegrationWorkflows(unittest.TestCase):
         filepath = os.path.join(os.path.dirname(__file__),
                                 os.pardir, 'testing_parameters.json')
         pe.Parameters.set_file(filepath)
+
+    @classmethod
+    def tearDownClass(cls):
+        if pe.Parameters._instance:
+            pe.Parameters._instance = None
 
     def notqdm(iterable, *args, **kwargs):
         """Replacement for tqdm that just passes back the iterable
