@@ -40,7 +40,8 @@ class TestSimulation(TestMockedLogs):
         """
         return iterable
 
-    def test_configure(self):
+    @patch('os.makedirs')
+    def test_configure(self, mock_mkdir):
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
 
@@ -57,6 +58,8 @@ class TestSimulation(TestMockedLogs):
             self.assertIsInstance(test_sim.population, pe.Population)
             del(test_sim.writer)
         mo.assert_called_with(filename, 'w')
+        mock_mkdir.assert_called_once_with(os.path.join(os.getcwd(),
+                                           self.file_params["output_dir"]))
 
     @patch('logging.exception')
     @patch('os.path.join')
@@ -70,7 +73,8 @@ class TestSimulation(TestMockedLogs):
             mock_log.assert_called_once_with("SyntaxError in"
                                              + " Simulation.configure()")
 
-    def test_spatial_output_bool(self):
+    @patch('os.makedirs')
+    def test_spatial_output_bool(self, mock_mkdir):
         with patch('pyEpiabm.output._csv_dict_writer.open'):
             test_sim = pe.routine.Simulation()
 
@@ -87,12 +91,17 @@ class TestSimulation(TestMockedLogs):
             self.assertTrue(spatial_sim.spatial_output)
 
             del(test_sim.writer)
+            self.assertEqual(mock_mkdir.call_count, 2)
+            mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
+                                          self.file_params["output_dir"]))
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.sweep.PlaceSweep.__call__')
     @patch('pyEpiabm.sweep.InitialInfectedSweep.__call__')
     @patch('pyEpiabm.routine.Simulation.write_to_file')
-    def test_run_sweeps(self, patch_write, patch_initial, patch_sweep):
+    @patch('os.makedirs')
+    def test_run_sweeps(self, mock_mkdir, patch_write, patch_initial,
+                        patch_sweep):
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
 
@@ -105,10 +114,13 @@ class TestSimulation(TestMockedLogs):
             patch_initial.assert_called_with(self.sim_params)
             patch_sweep.assert_called_with(time_sweep)
             patch_write.assert_called_with(time_write)
+        mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
+                                      self.file_params["output_dir"]))
 
+    @patch('os.makedirs')
     @patch('logging.exception')
     @patch('pyEpiabm.sweep.InitialInfectedSweep.__call__')
-    def test_run_sweeps_exception(self, patch_initial, patch_log):
+    def test_run_sweeps_exception(self, patch_initial, patch_log, mock_mkdir):
         patch_initial.side_effect = NotImplementedError
 
         mo = mock_open()
@@ -121,8 +133,11 @@ class TestSimulation(TestMockedLogs):
             broken_sim.run_sweeps()
             patch_log.assert_called_once_with("NotImplementedError in"
                                               + " Simulation.run_sweeps()")
+        mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
+                                      self.file_params["output_dir"]))
 
-    def test_write_to_file(self):
+    @patch('os.makedirs')
+    def test_write_to_file(self, mock_mkdir):
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             time = 1
@@ -135,8 +150,11 @@ class TestSimulation(TestMockedLogs):
             with patch.object(test_sim.writer, 'write') as mock:
                 test_sim.write_to_file(time)
                 mock.assert_called_with(data)
+        mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
+                                      self.file_params["output_dir"]))
 
-    def test_s_write_to_file(self):
+    @patch('os.makedirs')
+    def test_s_write_to_file(self, mock_mkdir):
         # For spatial option to write to file
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
@@ -155,6 +173,8 @@ class TestSimulation(TestMockedLogs):
             with patch.object(spatial_sim.writer, 'write') as mock:
                 spatial_sim.write_to_file(time)
                 mock.assert_called_with(data)
+        mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
+                                      self.file_params["output_dir"]))
 
     def test_set_random_seed(self):
         pe.routine.Simulation.set_random_seed(seed=0)
@@ -166,7 +186,9 @@ class TestSimulation(TestMockedLogs):
 
     @patch("numpy.random.seed")
     @patch("random.seed")
-    def test_random_seed_param(self, mock_random, mock_np_random, n=42):
+    @patch('os.makedirs')
+    def test_random_seed_param(self, mock_mkdir, mock_random,
+                               mock_np_random, n=42):
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             test_sim = pe.routine.Simulation()
@@ -176,6 +198,8 @@ class TestSimulation(TestMockedLogs):
                                self.sweeps, test_sim_params, self.file_params)
         mock_random.assert_called_once_with(n)
         mock_np_random.assert_called_once_with(n)
+        mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
+                                      self.file_params["output_dir"]))
 
 
 if __name__ == '__main__':
