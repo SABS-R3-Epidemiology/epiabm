@@ -190,6 +190,13 @@ class TestHostProgressionSweep(TestPyEpiabm):
 
         for person in self.people:
             with self.subTest(person=person):
+                if person.infection_status == InfectionStatus.Susceptible:
+                    with self.assertRaises(ValueError):
+                        test_sweep.update_next_infection_status(person)
+                        test_sweep.update_time_status_change(person,
+                                                             current_time)
+                    continue  # Method should not be used to infect people
+
                 test_sweep.update_next_infection_status(person)
                 test_sweep.update_time_status_change(person, current_time)
                 time_of_status_change = person.time_of_status_change
@@ -198,17 +205,30 @@ class TestHostProgressionSweep(TestPyEpiabm):
                 elif person.infection_status.name in ['InfectMild',
                                                       'InfectGP']:
                     delayed_time = current_time + test_sweep.delay
-                    self.assertTrue(delayed_time <= time_of_status_change)
+                    self.assertLessEqual(delayed_time, time_of_status_change)
                 else:
-                    self.assertTrue(current_time <= time_of_status_change)
+                    self.assertLessEqual(current_time, time_of_status_change)
+
+    def test_neg_trans_raise(self):
+        """Tests exception is raised with negative transition delta,
+        originating from default value in array that has not been set.
+        """
+        test_sweep = pe.sweep.HostProgressionSweep()
+        person = self.people[1]
+        test_sweep.update_next_infection_status(person)
+
+        test_sweep.transition_time_matrix =\
+            pe.utility.TransitionTimeMatrix().matrix
+        with self.assertRaises(ValueError):
+            test_sweep.update_time_status_change(person, 1.0)
 
     def test_icdf_exception_raise(self):
         """Tests exception is raised with incorrect icdf or value in time
         transition matrix.
         """
         test_sweep = pe.sweep.HostProgressionSweep()
-        person = self.people[0]
-        test_sweep.update_next_infection_status(self.people[0])
+        person = self.people[1]
+        test_sweep.update_next_infection_status(person)
         row_index = person.infection_status.name
         column_index = person.next_infection_status.name
 
@@ -224,7 +244,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         test_sweep.transition_time_matrix.loc[row_index, column_index].\
             icdf_choose_noexp.side_effect = AttributeError
         with self.assertRaises(AttributeError):
-            test_sweep.update_time_status_change(self.people[0], 1.0)
+            test_sweep.update_time_status_change(person, 1.0)
         test_sweep.transition_time_matrix.loc[row_index, column_index].\
             icdf_choose_noexp.assert_called_once()
 

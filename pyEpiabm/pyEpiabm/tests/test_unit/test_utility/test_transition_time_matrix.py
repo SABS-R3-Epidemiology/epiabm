@@ -12,16 +12,16 @@ class TestTransitionTimeMatrix(TestPyEpiabm):
     """Test the 'StateTransitionMatrix' class.
     """
     def test_create__transition_time_matrix(self):
-        """Tests the create_transition_time_matrix method by asserting that the matrix
-        is of the right size and that the non-zero elements are of type
-        InverseCdf."""
+        """Tests the create_transition_time_matrix method by asserting that the
+        matrix is of the right size and that elements are of type InverseCdf
+        (unless they are the default value of -1)."""
         matrix_object = TransitionTimeMatrix()
         matrix = matrix_object.matrix
         self.assertEqual(matrix.size, len(InfectionStatus)**2)
         for row in matrix.to_numpy():
             for element in row:
                 with self.subTest(row=row, element=element):
-                    if element != 0:
+                    if element != -1:
                         self.assertIsInstance(element,
                                               pe.utility.inverse_cdf.
                                               InverseCdf)
