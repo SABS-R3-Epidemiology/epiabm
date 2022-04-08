@@ -104,7 +104,7 @@ class Person:
             String representation of person
 
         """
-        return f"Person, Age = {self.age}."
+        return f"Person, Age = {self.age}, Status = {self.infection_status}."
 
     def update_status(self,
                       new_status: InfectionStatus) -> None:

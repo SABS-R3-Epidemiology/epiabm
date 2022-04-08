@@ -28,9 +28,6 @@ pop_params = {"population_size": 100, "cell_number": 1,
               "microcell_number": 1, "household_number": 5,
               "place_number": 2}
 
-pe.Parameters.instance().time_steps_per_day = 1
-pe.Parameters.instance().base_reproduction_num = 2.8
-
 # Create a population based on the parameters given.
 population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
 

@@ -1,4 +1,4 @@
-name: Doctest
+name: Functional tests (pyEpiabm)
 
 on:
   push:
@@ -11,8 +11,10 @@ on:
 jobs:
 
   build-and-test:
-    name: doctest
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: 3.8
 
     steps:
       - uses: actions/checkout@v1
@@ -28,8 +30,6 @@ jobs:
           python --version
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install pyEpiabm/.
-          python -m pip install pyEpiabm/.[docs]
-      - name: run doctest
+      - name: run func tests
         run: |
-          cd pyEpiabm
-          python run_tests.py --docs
+          python pyEpiabm/run_tests.py --func

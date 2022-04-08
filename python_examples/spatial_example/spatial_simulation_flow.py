@@ -32,11 +32,6 @@ pop_params = {
     "household_number": 5,
 }
 
-pe.Parameters.instance().time_steps_per_day = 1
-pe.Parameters.instance().do_CovidSim = False
-pe.Parameters.instance().basic_reproduction_num = 2.0
-pe.Parameters.instance().infection_radius = 0.1
-
 # Create a population framework based on the parameters given.
 population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
 

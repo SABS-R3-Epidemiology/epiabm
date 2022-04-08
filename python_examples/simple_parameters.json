@@ -1,4 +1,5 @@
 {
+    "basic_reproduction_num": 2.8,
     "latent_period": 4.59,
     "asympt_infect_period": 14,
     "mean_mild_to_recov": 7,

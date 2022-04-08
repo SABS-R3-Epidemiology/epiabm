@@ -3,6 +3,7 @@
 Thank you for taking to time to contribute to this project!
 
 The following is a set of guidelines for contributing to epiabm, which is hosted on [GitHub](https://github.com/SABS-R3-Epidemiology/epiabm). These are mostly guidelines, not rules, so do use your best judgement.
+
 ## About epiabm
 
 Epiabm implements an agent-based [SEIR model](https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology) with added compartments and spatial complexity. It imitates the Imperial [CovidSim](https://github.com/mrc-ide/covid-sim) model, but aims to simplify and clarify the model by using more user friendly software practices. It also provides various sub-models (with elements of the CovidSim model removed) for research and pedagogical investigation into the effect of different aspects of the model.
@@ -19,6 +20,7 @@ We have two backends for simulation - `pyEpiabm` and `cEpiabm`. The former is wr
 ## Workflow
 
 ### Before you start
+
 1. Create an [issue](https://guides.github.com/features/issues/) where new proposals can be discusssed before any coding is done.
 2. Create a [branch](https://help.github.com/articles/creating-and-deleting-branches-within-your-repository/) of this repo (ideally on your own [fork](https://help.github.com/articles/fork-a-repo/)), where all changes will be made
 3. Download the source code onto your local system, by [cloning](https://help.github.com/articles/cloning-a-repository/) the repository (or your fork of the repository).
@@ -27,7 +29,7 @@ We have two backends for simulation - `pyEpiabm` and `cEpiabm`. The former is wr
 
 To install pyEpiabm with all developer options, use:
 
-```
+```console
 $ git clone https://github.com/SABS-R3-Epidemiology/epiabm.git
 $ cd epiabm/pyEpiabm
 $ pip install -e .[dev,docs]
@@ -47,7 +49,7 @@ The installation of cEpiabm is more involved, but documented in our [README](htt
 5. Commit your changes to your branch with useful, descriptive commit messages: these are publically visible and should still make sense a few months ahead in time. If relevant, quote issue numbers in the commit messages as well, e.g.:
 
 ```console
-git commit -m "Change installation directory (#94)"
+$ git commit -m "Change installation directory (#94)"
 ```
 
 ### Merging your changes
@@ -131,7 +133,7 @@ python3 kernprof.py -l python_examples/simulation_flow.py
 This will create an output file in the current working directory with the same name as the file you have profiled, but an added `.lprof` extension. To view this, use:
 
 ```console
-python3 -m line_profiler simulation_flow.py.lprof 
+$ python3 -m line_profiler simulation_flow.py.lprof 
 ```
 
 In this way you can identify bottlenecks in performance, or compare the time spent running your functions to the overall simulation time. Note there is a small performance cost in profiling (and the `@profile` decorator will throw errors for users who don't have this module installed), so all references to profiling in the code should be removed before submission.

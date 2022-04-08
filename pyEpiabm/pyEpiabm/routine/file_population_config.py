@@ -102,6 +102,9 @@ class FilePopulationFactory:
                         person = Person(new_microcell)
                         new_microcell.add_person(person)
                         person.update_status(InfectionStatus(value))
+                        if (person.infection_status
+                                == InfectionStatus.Susceptible):
+                            continue  # Next status set upon infection
                         host_sweep.update_next_infection_status(person)
                         host_sweep.update_time_status_change(person, time)
                         if str(person.infection_status).startswith('Infect'):
@@ -164,7 +167,7 @@ class FilePopulationFactory:
         person_index = 0
         for j in range(household_number):
             people_in_household = household_split[j]
-            new_household = Household()
+            new_household = Household(loc=microcell.location)
             for _ in range(people_in_household):
                 person = microcell.persons[person_index]
                 new_household.add_person(person)
