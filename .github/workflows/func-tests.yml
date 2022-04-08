@@ -11,10 +11,8 @@ on:
 jobs:
 
   build-and-test:
+    name: func test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: 3.8
 
     steps:
       - uses: actions/checkout@v1
