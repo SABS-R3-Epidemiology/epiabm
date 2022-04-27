@@ -5,8 +5,7 @@
 import random
 import numpy as np
 
-from pyEpiabm.core import Parameters
-from pyEpiabm.routine import PlaceInfection
+from pyEpiabm.property import PlaceInfection
 
 from .abstract_sweep import AbstractSweep
 
@@ -17,6 +16,7 @@ class PlaceSweep(AbstractSweep):
     people within a cell and tests a infection event against each
     susceptible member of the place. The resulting
     exposed person is added to an infection queue.
+
     """
 
     def __call__(self, time: float):
@@ -26,23 +26,32 @@ class PlaceSweep(AbstractSweep):
         people present, based on individual and place infectiousness
         and susceptibility.
 
-        :param time: Current simulation time
-        :type time: int
-        """
-        timestep = int(time * Parameters.instance().time_steps_per_day)
+        Parameters
+        ----------
+        time : float
+            Current simulation time
 
+        """
         # Double loop over the whole population, checking infectiousness
         # status, and whether they are absent from their household.
         for cell in self._population.cells:
             for infector in cell.persons:
                 if not infector.is_infectious():
                     continue
-                for place in infector.places:
-                    infectiousness = PlaceInfection.place_inf(place, timestep)
+                place_list = [i[0] for i in infector.places]
+                for place in place_list:
+                    infector_group = place.get_group_index(infector)
+                    infectiousness = PlaceInfection.place_inf(place, infector,
+                                                              time)
+                    # Covidsim only considers infectees in
+                    # the group with the infector. I suggest we use this line
+                    # to easily change the list of possible infectees.
+                    possible_infectees = place.person_groups[infector_group]
+
                     # High infectiousness (>= 1) means all susceptible
                     # occupants become infected.
                     if infectiousness > 1:
-                        for infectee in place.persons:
+                        for infectee in possible_infectees:
                             if not infectee.is_susceptible():
                                 continue
                             cell.enqueue_person(infectee)
@@ -53,13 +62,13 @@ class PlaceSweep(AbstractSweep):
                     # all possible occupants, and leave it to chance whether
                     # they are susceptible.
                     else:
-                        num_infectees = np.random.binomial(len(place.persons),
-                                                           infectiousness)
+                        num_infectees = np.random.binomial(
+                            len(possible_infectees), infectiousness)
 
                         # Pick that number of potential infectees from place
                         # members.
-                        potential_infectees = random.sample(place.persons,
-                                                            num_infectees)
+                        potential_infectees = random.sample(
+                            possible_infectees, num_infectees)
 
                         # Check to see whether a place member is susceptible.
                         for infectee in potential_infectees:
@@ -73,7 +82,7 @@ class PlaceSweep(AbstractSweep):
 
                             force_of_infection = PlaceInfection.\
                                 place_foi(place, infector, infectee,
-                                          timestep)
+                                          time)
 
                             # Compare a uniform random number to the force of
                             # infection to see whether an infection event

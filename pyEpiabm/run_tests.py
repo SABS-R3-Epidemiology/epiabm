@@ -2,7 +2,8 @@
 # Runs all unit tests included in pyEpiabm.
 # Run from epiabm directory with coverage using:
 #   `coverage run pyEpiabm/run_tests.py --unit`
-# Doc tests can also be ran from pyEpiabm with `python3 run_tests.py --doctest`
+# Report coverage with `coverage report -m`, or build html with `coverage html`
+# Doc tests can be ran from pyEpiabm with `python3 run_tests.py --doctest`
 #
 
 from __future__ import absolute_import, division
@@ -94,6 +95,7 @@ def doctest_rst_and_public_interface():
         'pyEpiabm.property',
         'pyEpiabm.routine',
         'pyEpiabm.sweep',
+        'pyEpiabm.utility',
         'pyEpiabm.Cell',
         'pyEpiabm.Household',
         'pyEpiabm.Microcell',
@@ -106,12 +108,18 @@ def doctest_rst_and_public_interface():
     doc_symbols = get_all_documented_symbols()
 
     check_exposed_symbols(pyEpiabm, pyEpiabm_submodules, doc_symbols)
+    check_exposed_symbols(pyEpiabm.output, [], doc_symbols, check_mod=False)
+    check_exposed_symbols(pyEpiabm.property, [], doc_symbols, check_mod=False)
+    check_exposed_symbols(pyEpiabm.routine, [], doc_symbols, check_mod=False)
+    check_exposed_symbols(pyEpiabm.sweep, [], doc_symbols, check_mod=False)
+    check_exposed_symbols(pyEpiabm.utility, [], doc_symbols, check_mod=False)
 
     print('All classes and methods are documented in an RST file, and all '
           'public interfaces are clean.')
 
 
-def check_exposed_symbols(module, submodule_names, doc_symbols):
+def check_exposed_symbols(module, submodule_names, doc_symbols,
+                          check_mod=True):
     """
     Check ``module`` for any classes and methods not contained in
     ``doc_symbols``, and check for any modules not contained in
@@ -123,6 +131,9 @@ def check_exposed_symbols(module, submodule_names, doc_symbols):
         List of submodules expected to be exposed by ``module``
     ``doc_symbols``
         Dictionary containing lists of documented classes and functions
+    ``check_mod``
+        Boolean determining whether to run submodules check - used for
+        subpackages where internal files are not included in submodule list.
     """
 
     import inspect
@@ -133,23 +144,24 @@ def check_exposed_symbols(module, submodule_names, doc_symbols):
     functions = [x for x in symbols if inspect.isfunction(x)]
 
     # Check for modules: these should match perfectly with _submodule_names
-    exposed_modules = [x for x in symbols if inspect.ismodule(x)]
-    unexpected_modules = [m for m in exposed_modules if
-                          m.__name__ not in submodule_names]
+    if check_mod:
+        exposed_modules = [x for x in symbols if inspect.ismodule(x)]
+        unexpected_modules = [m for m in exposed_modules if
+                              m.__name__ not in submodule_names]
 
-    if len(unexpected_modules) > 0:
-        print('The following modules are unexpectedly exposed in the public '
-              'interface of %s:' % module.__name__)
-        for m in unexpected_modules:
-            print('  unexpected module: ' + m.__name__)
+        if len(unexpected_modules) > 0:
+            print('The following modules are unexpectedly exposed in the '
+                  'public interface of %s:' % module.__name__)
+            for m in unexpected_modules:
+                print('  unexpected module: ' + m.__name__)
 
-        print('For python modules such as numpy you may need to confine the '
-              'import to the function scope. If you have created a new '
-              'pyEpiabm submodule, you will need to make %s (doctest) aware '
-              'of this by editing pyEpiabm_submodules in run_tests.py.'
-              % __file__)
-        print('FAILED')
-        sys.exit(1)
+            print('For python modules such as numpy you may need to confine '
+                  'the import to the function scope. If you created a new '
+                  'pyEpiabm submodule, you will need to make %s (doctest) '
+                  'aware by editing pyEpiabm_submodules in run_tests.py.'
+                  % __file__)
+            print('FAILED')
+            sys.exit(1)
 
     # Check that all classes are documented
     undocumented_classes = []

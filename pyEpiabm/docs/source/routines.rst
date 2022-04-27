@@ -8,20 +8,19 @@ Routines provides various methods to act upon or create a population, or members
 
 Overview:
 
-- :class:`HouseholdInfection`
-- :class:`PlaceInfection`
+- :class:`AbstractPopulationFactory`
+- :class:`FilePopulationFactory`
 - :class:`ToyPopulationFactory`
 - :class:`Simulation`
 
-.. autoclass:: HouseholdInfection
+.. autoclass:: AbstractPopulationFactory
     :members:
 
-.. autoclass:: PlaceInfection
+.. autoclass:: FilePopulationFactory
     :members:
-    
+
 .. autoclass:: ToyPopulationFactory
     :members:
 
 .. autoclass:: Simulation
     :members:
-    

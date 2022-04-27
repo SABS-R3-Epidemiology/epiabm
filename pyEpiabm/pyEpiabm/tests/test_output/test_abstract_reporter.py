@@ -26,13 +26,16 @@ class TestAbstractReporter(unittest.TestCase):
         mock_scandir.assert_called_once_with("test_folder")
         self.assertEqual(mock_remove.call_count, 2)  # For two elements in list
 
+    @mock.patch('logging.exception')
     @mock.patch("os.path.exists")
     @mock.patch("os.scandir", return_value=[mock.MagicMock()])
     @mock.patch("os.remove", side_effect=IsADirectoryError)
     def test_construct_empty_clearance(self, mock_remove, mock_scandir,
-                                       mock_pathexists):
-        with self.assertRaises(IsADirectoryError):
-            pe.output.AbstractReporter("test_folder", True)
+                                       mock_pathexists, mock_log):
+        pe.output.AbstractReporter("test_folder", True)
+        mock_log.assert_called_once_with("IsADirectoryError: cannot delete"
+                                         + " folder test_folder as it contains"
+                                         + " subfolders")
 
     @mock.patch("os.path.exists")
     @mock.patch("os.makedirs")

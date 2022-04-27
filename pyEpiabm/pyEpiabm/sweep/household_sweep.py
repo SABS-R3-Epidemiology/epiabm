@@ -4,8 +4,7 @@
 
 import random
 
-from pyEpiabm.core import Parameters
-from pyEpiabm.routine import HouseholdInfection
+from pyEpiabm.property import HouseholdInfection
 
 from .abstract_sweep import AbstractSweep
 
@@ -16,24 +15,30 @@ class HouseholdSweep(AbstractSweep):
     person as input and tests a infection event against each
     susceptible member of their household. The resulting
     exposed person is added to an infection queue.
+
     """
 
-    def __call__(self, time: int):
+    def __call__(self, time: float):
         """Given a population structure, loops over infected members
         and considers whether they infected household members based
         on individual, and spatial infectiousness and susceptibility.
 
-        : param time: Simulation time
-        : type time: int
-        """
-        timestep = int(time * Parameters.instance().time_steps_per_day)
+        Parameters
+        ----------
+        time : float
+            Simulation time
 
+        """
         # Double loop over the whole population, checking infectiousness
         # status, and whether they are absent from their household.
         for cell in self._population.cells:
             for infector in cell.persons:
                 if not infector.is_infectious():
                     continue
+
+                if infector.household is None:
+                    raise AttributeError(f"{infector} is not part of a "
+                                         + "household")
 
                 # Check to see whether a household member is susceptible.
                 for infectee in infector.household.persons:
@@ -43,7 +48,7 @@ class HouseholdSweep(AbstractSweep):
                     # Calculate "force of infection" parameter which will
                     # determine the likelihood of an infection event.
                     force_of_infection = HouseholdInfection.household_foi(
-                        infector, infectee, timestep)
+                        infector, infectee, time)
 
                     # Compare a uniform random number to the force of infection
                     # to see whether an infection event occurs in this timestep

@@ -3,9 +3,10 @@ from unittest import mock
 from queue import Queue
 
 import pyEpiabm as pe
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestHouseholdSweep(unittest.TestCase):
+class TestHouseholdSweep(TestPyEpiabm):
     """Test the 'HouseholdSweep' class.
     """
 
@@ -14,6 +15,7 @@ class TestHouseholdSweep(unittest.TestCase):
         """Initialises a population with one infected person. Sets up a
         single household containing this person.
         """
+        super(TestHouseholdSweep, cls).setUpClass()
         cls.pop = pe.Population()
         cls.house = pe.Household([1.0, 1.0])
         cls.pop.add_cells(1)
@@ -35,7 +37,7 @@ class TestHouseholdSweep(unittest.TestCase):
                          .persons[0].infection_status,
                          pe.property.InfectionStatus.InfectMild)
 
-    @mock.patch('pyEpiabm.routine.HouseholdInfection.household_foi')
+    @mock.patch('pyEpiabm.property.HouseholdInfection.household_foi')
     def test__call__(self, mock_force):
         """Test whether the household sweep function correctly
         adds persons to the queue.
@@ -76,6 +78,20 @@ class TestHouseholdSweep(unittest.TestCase):
         self.test_sweep.bind_population(self.pop)
         self.test_sweep(self.time)
         self.assertTrue(self.cell.person_queue.empty())
+
+    def test_no_households(self):
+        pop_nh = pe.Population()  # Population without households
+        pop_nh.add_cells(1)
+        pop_nh.cells[0].add_microcells(1)
+        pop_nh.cells[0].microcells[0].add_people(2)
+        person_inf = pop_nh.cells[0].microcells[0].persons[0]
+        person_inf.infection_status = pe.property.InfectionStatus.InfectMild
+        pe.Parameters.instance().time_steps_per_day = 1
+
+        false_sweep = pe.sweep.HouseholdSweep()
+        false_sweep.bind_population(pop_nh)
+        with self.assertRaises(AttributeError):
+            false_sweep(1)
 
 
 if __name__ == '__main__':

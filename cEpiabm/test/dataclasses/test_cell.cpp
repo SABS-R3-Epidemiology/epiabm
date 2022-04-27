@@ -379,3 +379,16 @@ TEST_CASE("dataclasses/cell: test compartment counter", "[Cell]")
     REQUIRE(subject.compartmentCount(InfectionStatus::Exposed) == 0);
     REQUIRE(subject.microcells()[0].compartmentCount(InfectionStatus::Exposed) == 0);
 }
+
+TEST_CASE("dataclasses/cell: test set and get location", "[Cell]")
+{
+    Cell subject = Cell(0);
+    auto base_loc = std::make_pair(0.0, 0.0);
+    auto loc = std::make_pair(1.0, 1.0);
+    REQUIRE(subject.location() == base_loc); //should work, might initialise to different values
+
+    subject.setLocation(loc);
+    REQUIRE_FALSE(subject.location() == base_loc);
+    auto retrieve_loc = subject.location();
+    REQUIRE(retrieve_loc == loc);
+}
