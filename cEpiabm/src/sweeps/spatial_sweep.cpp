@@ -31,10 +31,10 @@ namespace epiabm
         std::vector<double> weightVector;
         if (doDistance)
         {
-            std::pair<double, double> current_loc = currentCell->getLocation();
+            std::pair<double, double> current_loc = currentCell->location();
             for (Cell &cell : cells)
             {
-                weightVector.push_back(DistanceMetrics::Dist(cell.getLocation(), current_loc));
+                weightVector.push_back(DistanceMetrics::Dist(cell.location(), current_loc));
             }
         }
         else if (doCovidsim)

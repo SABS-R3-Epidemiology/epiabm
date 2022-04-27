@@ -301,7 +301,7 @@ namespace epiabm
         m_location = loc;
     }
         
-    std::pair<double, double> Cell::getLocation() const
+    std::pair<double, double> Cell::location() const
     {
         return m_location;
     }
