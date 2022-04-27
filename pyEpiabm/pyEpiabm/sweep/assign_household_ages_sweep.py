@@ -142,8 +142,8 @@ class AssignHouseholdAgesSweep(AbstractSweep):
 
         # case where two young adults live together
         elif ((self.age_params["two_pers_house_prob_young"] > 0) and
-             (r < (self.age_params["two_pers_house_prob_young"]
-              / (1 - self.age_params["two_pers_house_prob_old"]
+                (r < (self.age_params["two_pers_house_prob_young"]
+                      / (1 - self.age_params["two_pers_house_prob_old"]
                  - self.age_params["one_child_two_pers_prob"])))):
             while True:
                 person1.set_random_age()
