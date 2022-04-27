@@ -76,6 +76,20 @@ namespace epiabm
         }
     }
 
+    inline void assignCellLocations(PopulationPtr population)
+    {
+        size_t nCells = population->cells().size();
+        size_t gridLength = static_cast<size_t>(ceil(sqrt(static_cast<double>(nCells))));
+        for (size_t ci = 0; ci < nCells; ci++)
+        {
+            Cell& cell = population->cells()[ci];
+            double cx = static_cast<double>(ci%gridLength)/static_cast<double>(gridLength);
+            double cy = static_cast<double>(ci/gridLength)/static_cast<double>(gridLength);
+            cell.setLocation(
+                std::make_pair(cx, cy));
+        }
+    }
+
     PopulationPtr ToyPopulationFactory::makePopulation(
         size_t populationSize, size_t nCells, size_t nMicrocellsPerCell,
         size_t nHouseholds, size_t)
@@ -85,6 +99,8 @@ namespace epiabm
 
         distributePeople(population, nCells, nMicrocellsPerCell, populationSize);
         if (nHouseholds > 0) addHouseholds(population, nHouseholds);
+
+        assignCellLocations(population);
 
         return population;
     }

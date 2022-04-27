@@ -1,5 +1,6 @@
 {
     "timesteps_per_day": 1,
+    "random_seed": 10,
     "infection_config": {
         "infection_radius": 1,
         "basic_reproduction_num": 2.8,

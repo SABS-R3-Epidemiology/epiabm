@@ -53,7 +53,9 @@ void bind_dataclasses(py::module &m)
         .def("persons", &Cell::people,
             py::return_value_policy::reference)
         .def("compartment_count", &Cell::compartmentCount,
-            py::return_value_policy::copy);
+            py::return_value_policy::copy)
+        .def("location", &Cell::location,
+            py::return_value_policy::reference);
 
     py::class_<Population, PopulationPtr>(m, "Population")
         .def("cells", &Population::cells,

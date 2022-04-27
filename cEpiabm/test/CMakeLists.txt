@@ -40,7 +40,6 @@ set(
     reporters/test_cell_compartment_reporter.cpp
     reporters/test_percell_compartment_reporter.cpp
     reporters/test_population_compartment_reporter.cpp
-    utility/test_distance_metrics.cpp
     test_basic_simulation.cpp
 )
 
