@@ -3,7 +3,7 @@ from unittest import mock
 
 import pyEpiabm as pe
 from pyEpiabm.core import Parameters
-from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
+from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
 class TestAssignHouseholdAgesSweep(TestPyEpiabm):

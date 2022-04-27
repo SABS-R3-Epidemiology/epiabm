@@ -94,10 +94,10 @@ class AssignHouseholdAgesSweep(AbstractSweep):
         """
 
         r = random.random()
-        person1 = people[0]
-        person2 = people[1]
         assert len(people) == 2,\
                'Only a list of two people should be passed to this method'
+        person1 = people[0]
+        person2 = people[1]
 
         # case where two elderly people live alone
         if r < self.age_params["two_pers_house_prob_old"]:
@@ -141,10 +141,10 @@ class AssignHouseholdAgesSweep(AbstractSweep):
                     break
 
         # case where two young adults live together
-        elif (self.age_params["two_pers_house_prob_young"] > 0) and\
+        elif ((self.age_params["two_pers_house_prob_young"] > 0) and
              (r < (self.age_params["two_pers_house_prob_young"]
               / (1 - self.age_params["two_pers_house_prob_old"]
-                 - self.age_params["one_child_two_pers_prob"]))):
+                 - self.age_params["one_child_two_pers_prob"])))):
             while True:
                 person1.set_random_age()
                 break_ratio = 1 - (self.age_params["young_and_single_slope"]
