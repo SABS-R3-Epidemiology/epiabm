@@ -83,7 +83,7 @@ namespace epiabm
 
         double infectiousness = calcHouseInf(infector, timestep);
         double susceptibility = calcHouseSusc(infector, infectee, timestep);
-        double foi = infectiousness * susceptibility * 0.5;
+        double foi = infectiousness * susceptibility;
 
         if (m_cfg->randomManager->g().randf<double>() < foi)
         {

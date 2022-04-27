@@ -2,7 +2,7 @@
     "timesteps_per_day": 1,
     "infection_config": {
         "infection_radius": 1,
-        "basic_reproduction_num": 2,
+        "basic_reproduction_num": 2.8,
         "prob_symptomatic": 0.66,
         "sympt_infectiousness": 1.5,
         "asympt_infectiousness": 1,
