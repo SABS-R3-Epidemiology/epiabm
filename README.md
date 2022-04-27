@@ -17,7 +17,7 @@ For each timestep the code loops through the population and records interations 
 
 Once an individual becomes exposed, their progression through the various stages of infection is determined by generating a series of random timesteps to mark their movements between infection categories. The possible paths an individual can take are indicated on the schema below.
 
-![SEIR model conceptualisation](./images/covidsim_schema.png)
+![SEIR model conceptualisation](./images/diagram_covid_transition.jpg)
 
 A more complete overview of our implementation of the Ferguson model is given in [the Wiki](https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Overview-of-the-Ferguson-Model) for this repository.
 
