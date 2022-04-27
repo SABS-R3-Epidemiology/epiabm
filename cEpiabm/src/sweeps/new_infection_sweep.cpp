@@ -56,7 +56,8 @@ namespace epiabm
 
     unsigned short NewInfectionSweep::latent_time(Person* /*person*/)
     {
-        return m_cfg->infectionConfig->hostProgressionConfig->latentPeriodICDF.choose(m_cfg->timestepsPerDay);
+        return m_cfg->infectionConfig->hostProgressionConfig->latentPeriodICDF.choose(
+            m_cfg->timestepsPerDay, m_cfg->randomManager->g().generator());
     }
 
 

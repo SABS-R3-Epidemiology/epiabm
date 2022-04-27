@@ -29,6 +29,7 @@ set(
     reporters/population_compartment_reporter.cpp
     configuration/json_factory.cpp
     utilities/inverse_cdf.cpp
+    utilities/random_manager.cpp
     simulations/basic_simulation.cpp
 )
 
@@ -65,6 +66,8 @@ set(
     configuration/config_factory_interface.hpp
     configuration/json_factory.hpp
     utilities/inverse_cdf.hpp
+    utilities/random_generator.hpp
+    utilities/random_manager.hpp
     simulations/basic_simulation.hpp
 )
 

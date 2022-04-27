@@ -11,8 +11,6 @@ namespace epiabm
 
     HostProgressionSweep::HostProgressionSweep(SimulationConfigPtr cfg) : SweepInterface(cfg)
     {
-        std::random_device rd;
-        m_generator = std::mt19937(rd());
         loadTransitionMatrix();
         loadTransitionTimeMatrix();
     }
@@ -90,7 +88,8 @@ namespace epiabm
     {
         size_t index = static_cast<size_t>(current);
         std::discrete_distribution<size_t> d(m_transitionMatrix[index].begin(), m_transitionMatrix[index].end());
-        return static_cast<InfectionStatus>(d(m_generator));
+        return static_cast<InfectionStatus>(d(
+            m_cfg->randomManager->g().generator()));
     }
 
     unsigned short HostProgressionSweep::chooseNextTransitionTime(InfectionStatus current, InfectionStatus next)
@@ -104,7 +103,8 @@ namespace epiabm
             LOG << LOG_LEVEL_ERROR << "No transition time ICDF for " << status_string(current) << " -> " << status_string(next);
             return 0;
         }
-        return m_transitionTimeMatrix[cindex][nindex]->choose(m_cfg->timestepsPerDay);
+        return m_transitionTimeMatrix[cindex][nindex]->choose(
+            m_cfg->timestepsPerDay, m_cfg->randomManager->g().generator());
     }
 
     void HostProgressionSweep::loadTransitionMatrix()

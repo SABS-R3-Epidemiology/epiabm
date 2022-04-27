@@ -85,7 +85,7 @@ namespace epiabm
         double susceptibility = calcHouseSusc(infector, infectee, timestep);
         double foi = infectiousness * susceptibility * 0.5;
 
-        if (static_cast<double>(std::rand() % 1000000) / static_cast<double>(1000000) < foi)
+        if (m_cfg->randomManager->g().randf<double>() < foi)
         {
             LOG << LOG_LEVEL_INFO << "Household infection in cell " << cell->index()
                 << " between " << infector->cellPos() << " and " << infectee->cellPos();

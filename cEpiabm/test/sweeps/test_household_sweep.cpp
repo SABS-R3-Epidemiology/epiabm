@@ -2,6 +2,8 @@
 
 #include "sweeps/household_sweep.hpp"
 #include "population_factory.hpp"
+#include "configuration/simulation_config.hpp"
+#include "configuration/json_factory.hpp"
 
 #include "../catch/catch.hpp"
 #include "helpers.hpp"
@@ -29,7 +31,7 @@ TEST_CASE("sweeps/household_sweep: test household_sweep bind_population", "[Hous
 TEST_CASE("sweeps/household_sweep: test household_sweep run sweep", "[HouseholdSweep]")
 {
     HouseholdSweepPtr subject = std::make_shared<HouseholdSweep>(
-        std::make_shared<SimulationConfig>());
+        JsonFactory().loadConfig(std::filesystem::path("../testdata/test_config.json")));
     PopulationPtr population = PopulationFactory().makePopulation(5, 5, 1000);
     bind_households(population, 500);
     random_seed(population, 10, InfectionStatus::InfectASympt, 5);

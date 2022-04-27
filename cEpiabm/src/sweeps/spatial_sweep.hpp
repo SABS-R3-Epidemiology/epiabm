@@ -18,7 +18,6 @@ namespace epiabm
     class SpatialSweep : public SweepInterface
     {
     private:
-        std::mt19937 m_generator;
 
     public:
         SpatialSweep();

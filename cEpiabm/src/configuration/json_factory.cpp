@@ -34,6 +34,8 @@ namespace epiabm
         SimulationConfigPtr cfg, const json::json &j)
     {
         cfg->timestepsPerDay = retrieve<unsigned short>(j, "timesteps_per_day", 1);
+        cfg->randomManager = std::make_shared<RandomManager>(
+            retrieve<unsigned int>(j, "random_seed", 0));
     }
 
     bool JsonFactory::loadInfectionConfig(

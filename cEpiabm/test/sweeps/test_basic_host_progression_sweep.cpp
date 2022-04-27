@@ -2,6 +2,7 @@
 
 #include "sweeps/basic_host_progression_sweep.hpp"
 #include "population_factory.hpp"
+#include "configuration/json_factory.hpp"
 
 #include "../catch/catch.hpp"
 #include "helpers.hpp"
@@ -28,7 +29,7 @@ TEST_CASE("sweeps/basic_host_progression_sweep: test basic_host_progression_swee
 TEST_CASE("sweeps/basic_host_progression_sweep: test basic_host_progression_sweep run sweep", "[BasicHostProgressionSweep]")
 {
     BasicHostProgressionSweepPtr subject = std::make_shared<BasicHostProgressionSweep>(
-        std::make_shared<SimulationConfig>());
+        JsonFactory().loadConfig(std::filesystem::path("../testdata/test_config.json")));
     PopulationPtr population = PopulationFactory().makePopulation(5, 5, 1000);
     random_seed(population, 10, InfectionStatus::InfectASympt, 5);
     random_seed(population, 10, InfectionStatus::Exposed, 2);

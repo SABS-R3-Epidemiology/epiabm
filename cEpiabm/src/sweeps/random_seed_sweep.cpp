@@ -6,7 +6,8 @@ namespace epiabm
 {
 
 
-    RandomSeedSweep::RandomSeedSweep(int per_n_people) :
+    RandomSeedSweep::RandomSeedSweep(SimulationConfigPtr simulationConfig, int per_n_people) :
+        SweepInterface(simulationConfig),
         m_infectRate(per_n_people)
     {}
 
@@ -32,7 +33,7 @@ namespace epiabm
         Cell* cell,
         Person* person)
     {
-        if (rand()%m_infectRate < 1)
+        if (m_cfg->randomManager->g().randi<int>(INT32_MAX)%m_infectRate < 1)
         {
             person->updateStatus(cell, InfectionStatus::Exposed, timestep);
             person->params().next_status_time = static_cast<unsigned short>(timestep + 10);

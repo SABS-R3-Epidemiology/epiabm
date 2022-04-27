@@ -17,7 +17,7 @@ namespace epiabm
              * One in every per_n_people is updated to infectious
              * @param infection_rate 
              */
-            RandomSeedSweep(int per_n_people);
+            RandomSeedSweep(SimulationConfigPtr simulationConfig, int per_n_people);
             ~RandomSeedSweep() = default;
 
             /**

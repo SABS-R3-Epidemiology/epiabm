@@ -2,6 +2,7 @@
 #define EPIABM_CONFIGURATION_SIMULATION_CONFIGURATION_HPP
 
 #include "infection_config.hpp"
+#include "../utilities/random_manager.hpp"
 
 #include <memory>
 #include <filesystem>
@@ -16,6 +17,7 @@ namespace epiabm
         InfectionConfigPtr infectionConfig;
 
         unsigned short timestepsPerDay;
+        RandomManagerPtr randomManager;
 
         SimulationConfig()
         {

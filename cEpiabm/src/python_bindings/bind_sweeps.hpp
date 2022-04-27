@@ -38,7 +38,7 @@ void bind_sweeps(py::module &m)
 
     py::class_<RandomSeedSweep, RandomSeedSweepPtr>(m, "RandomSeedSweep",
         py::base<SweepInterface>())
-        .def(py::init<int>());
+        .def(py::init<SimulationConfigPtr, int>());
     
     py::class_<SpatialSweep, SpatialSweepPtr>(m, "SpatialSweep",
         py::base<SweepInterface>())

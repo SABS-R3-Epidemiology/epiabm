@@ -2,6 +2,7 @@
 
 #include "sweeps/new_infection_sweep.hpp"
 #include "population_factory.hpp"
+#include "configuration/json_factory.hpp"
 
 #include "../catch/catch.hpp"
 #include "helpers.hpp"
@@ -46,7 +47,7 @@ TEST_CASE("sweeps/new_infection_sweep: test new_infection_sweep bind_population"
 TEST_CASE("sweeps/new_infection_sweep: test new_infection_sweep run sweep", "[NewInfectionSweep]")
 {
     NewInfectionSweepPtr subject = std::make_shared<NewInfectionSweep>(
-        std::make_shared<SimulationConfig>());
+        JsonFactory().loadConfig(std::filesystem::path("../testdata/test_config.json")));
     PopulationPtr population = PopulationFactory().makePopulation(5, 5, 1000);
     enqueueRandom(population);
     population->initialize();

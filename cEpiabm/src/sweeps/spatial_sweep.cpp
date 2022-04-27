@@ -16,7 +16,6 @@ namespace epiabm
     SpatialSweep::SpatialSweep(SimulationConfigPtr cfg) :
         SweepInterface(cfg)
     {
-        m_generator = std::mt19937{std::random_device{}()};
     }
 
     void SpatialSweep::operator()(const unsigned short timestep)
@@ -40,7 +39,7 @@ namespace epiabm
         std::vector<size_t> chosenCellIndices = std::vector<size_t>();
         std::sample(allCells.begin(), allCells.end(),
             std::back_inserter(chosenCellIndices), n,
-            m_generator);
+            m_cfg->randomManager->g().generator());
         
         std::vector<Cell*> chosen = std::vector<Cell*>();
         chosen.reserve(n);
@@ -65,7 +64,7 @@ namespace epiabm
 
         std::default_random_engine generator;
         std::poisson_distribution<int> distribution(ave_num_of_infections);
-        size_t number_to_infect = static_cast<size_t>(distribution(generator));
+        size_t number_to_infect = static_cast<size_t>(distribution(m_cfg->randomManager->g().generator()));
         
         std::vector<Cell*> inf_cells = getCellsToInfect(m_population->cells(), cell, number_to_infect);
 
@@ -87,7 +86,7 @@ namespace epiabm
             double susceptibility = calcSpaceSusc(cell, infectee, timestep);
             double foi = infectiousness * susceptibility;
 
-            if ((static_cast<double>(std::rand() % 1000000) / static_cast<double>(1000000)) < foi)
+            if (m_cfg->randomManager->g().randf<double>() < foi)
             {
                 // Infection attempt is successful
                 LOG << LOG_LEVEL_INFO << "Spatial infection between ("

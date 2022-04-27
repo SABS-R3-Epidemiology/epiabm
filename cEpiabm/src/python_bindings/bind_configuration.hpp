@@ -15,6 +15,7 @@ void bind_configuration(py::module &m)
 
     py::class_<SimulationConfig, SimulationConfigPtr>(m, "SimulationConfig")
         .def_readwrite("timesteps_per_day", &SimulationConfig::timestepsPerDay, "Number of iterations per day")
+        .def_readonly("random_manager", &SimulationConfig::randomManager, "Manager for Multithreaded Random Number Generation")
         .def_readonly("infection_config", &SimulationConfig::infectionConfig, "Infection config section");
 
     py::class_<InfectionConfig, InfectionConfigPtr>(m, "InfectionConfig")
