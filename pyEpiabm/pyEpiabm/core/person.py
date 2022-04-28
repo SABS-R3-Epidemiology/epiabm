@@ -62,7 +62,7 @@ class Person:
             self.age_group = random.choices(range(len(group_probs)),
                                             weights=group_probs)[0]
             self.age = random.randint(0, 4) + 5 * self.age_group
-        else:  # Set everyone to 40 (mean qualities)
+        else:
             self.age_group = None
             self.age = None
 

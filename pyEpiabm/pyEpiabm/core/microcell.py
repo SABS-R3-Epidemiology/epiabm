@@ -77,7 +77,7 @@ class Microcell:
         self.cell.persons.append(person)
         self.persons.append(person)
 
-    def add_people(self, n, status=InfectionStatus.Susceptible):
+    def add_people(self, n, status=InfectionStatus.Susceptible, age_group=0):
         """Adds n default :class:`Person` of given status to Microcell.
 
         Parameters
@@ -86,10 +86,13 @@ class Microcell:
             Number of default :class:`Person` s to add
         status : InfectionStatus
             Status of persons to add to cell
+        age_group : Age group index
+            Person's associated age group
 
         """
-        self.compartment_counter._increment_compartment(n, status)
-        self.cell.compartment_counter._increment_compartment(n, status)
+        self.compartment_counter._increment_compartment(n, status, age_group)
+        self.cell.compartment_counter._increment_compartment(n, status,
+                                                             age_group)
         for _ in range(n):
             p = Person(self)
             self.cell.persons.append(p)
@@ -114,7 +117,8 @@ class Microcell:
     def notify_person_status_change(
             self,
             old_status: InfectionStatus,
-            new_status: InfectionStatus) -> None:
+            new_status: InfectionStatus,
+            age_group=0) -> None:
         """Notify Microcell that a person's status has changed.
 
         Parameters
@@ -123,9 +127,11 @@ class Microcell:
             Person's old infection status
         new_status : InfectionStatus
             Person's new infection status
+        age_group : Age group index
+            Person's associated age group
 
         """
-        self.compartment_counter.report(old_status, new_status)
+        self.compartment_counter.report(old_status, new_status, age_group)
         self.cell.notify_person_status_change(old_status, new_status)
 
     def set_location(self, loc: typing.Tuple[float, float]):

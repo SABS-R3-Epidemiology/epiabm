@@ -42,6 +42,8 @@ class Simulation:
                as a relative path
             * `spatial_output`: Boolean to determine whether a spatial output \
                should be used
+            * `age_stratified`: Boolean to determine whether the output will \
+                be age stratified
 
         Parameters
         ----------
@@ -68,6 +70,9 @@ class Simulation:
 
         self.spatial_output = file_params["spatial_output"] \
             if "spatial_output" in file_params else False
+
+        self.age_stratified = file_params["age_stratified"] \
+            if "age_stratified" in file_params else False
 
         # If random seed is specified in parameters, set this in numpy
         if "simulation_seed" in self.sim_params:
@@ -96,6 +101,9 @@ class Simulation:
             output_titles.insert(1, "cell")
             output_titles.insert(2, "location_x")
             output_titles.insert(3, "location_y")
+
+        if self.age_stratified:
+            output_titles.insert(1, "age_group")
 
         self.writer = _CsvDictWriter(
             folder, filename,
