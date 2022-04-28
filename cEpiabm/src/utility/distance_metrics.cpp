@@ -16,7 +16,7 @@ namespace epiabm
             
     double DistanceMetrics::DistEuclid(location loc1, location loc2)
     {
-        return pow(loc1.first-loc2.first, 2) + pow(loc1.second-loc2.second, 2);
+        return pow(pow(loc1.first-loc2.first, 2) + pow(loc1.second-loc2.second, 2), 0.5);
     }
             
     double DistanceMetrics::DistCovidsim(location /*loc1*/, location /*loc2*/)

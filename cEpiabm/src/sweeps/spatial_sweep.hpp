@@ -31,9 +31,7 @@ namespace epiabm
     private:
         bool cellCallback(
             const unsigned short timestep,
-            Cell* cell,
-            bool doDistance = true,
-            bool doCovidsim = false);
+            Cell* cell);
 
         bool cellInfectiousCallback(
             const unsigned short timestep,

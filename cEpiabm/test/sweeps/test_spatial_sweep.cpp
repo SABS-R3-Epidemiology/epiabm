@@ -72,38 +72,45 @@ TEST_CASE("sweeps/spatial_sweep: test destructor", "[SpatialSweep]")
 }
 
 TEST_CASE("sweeps/spatial_sweep: test call", "[SpatialSweep]")
-{   //can i test inline functions?
+{   
     {   
+        std::cout << "here";
         SpatialSweepPtr subject = std::make_shared<SpatialSweep>();
-        PopulationPtr population = PopulationFactory().makePopulation(2, 1, 1000);
+        PopulationFactory pop_fact = PopulationFactory();
+        PopulationPtr one_cell_pop = pop_fact.makePopulation(1, 1, 1);
+        one_cell_pop->initialize();
+        subject->bind_population(one_cell_pop);
+        // Only one cell
+        REQUIRE_NOTHROW((*subject)(1));
+
+        // Two cells, one initially empty
+        PopulationPtr two_cell_pop = pop_fact.makePopulation(2, 1, 0);
+        pop_fact.addPeople(&two_cell_pop->cells()[0], 0, 1);
+        two_cell_pop->initialize();
+        subject->bind_population(two_cell_pop);
+        REQUIRE_NOTHROW((*subject)(1));
+
+        // Initially no infectors
+        Cell* cellinf = &two_cell_pop->cells()[0];
+        cellinf->people()[0].updateStatus(cellinf, InfectionStatus::InfectMild, 1);
+        two_cell_pop->initialize();
+        subject->bind_population(two_cell_pop);
+        REQUIRE_NOTHROW((*subject)(1));
+
         // make first person infectious
-        Cell* cell1 = &population->cells()[0];
-        cell1->people()[0].updateStatus(cell1, InfectionStatus::InfectMild, static_cast<unsigned short>(1));
+        // sweep runs normally
+        PopulationPtr normal_pop = pop_fact.makePopulation(2, 1, 1);
+        cellinf = &normal_pop->cells()[0];
+        cellinf->people()[0].updateStatus(cellinf, InfectionStatus::InfectMild, 1);
+        normal_pop->initialize();
+        subject->bind_population(normal_pop);
+        REQUIRE_NOTHROW((*subject)(1));
 
-        population->initialize();
-
-
-
-    }
-}
-
-TEST_CASE("sweeps/spatial_sweep: test cell", "[SpatialSweep]")
-{   //can i even test inline functions?
-    {   
-        Cell cell1 = Cell(0);
-        Cell cell2 = Cell(0);
-        cell1.setLocation(std::make_pair(1.0, 0.0));
-
-        std::vector<Cell> cells = {cell1, cell2};//want a vector of pointers to cells
-        auto weights = getWeightsFromCells(cells, cell1);
-
-        std::vector<double> test_weights = {0, 1};
-        REQUIRE(weights=test_weights);
-
-        // now test with the doCovidsim flag
-        // need to add infectious person to cell2
-        cell2.addMember(1);
-        weights = SpatialSweep::getWeightsFromCells(cells, cell1, false, true);
-        
+        // make all infectious
+        Cell* cellsus = &normal_pop->cells()[0];
+        cellsus->people()[0].updateStatus(cellinf, InfectionStatus::InfectMild, 1);
+        normal_pop->initialize();
+        subject->bind_population(normal_pop);
+        REQUIRE_NOTHROW((*subject)(1));
     }
 }
