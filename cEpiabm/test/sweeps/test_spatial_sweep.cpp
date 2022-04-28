@@ -1,5 +1,6 @@
 
 
+#include "dataclasses/cell.hpp"
 #include "sweeps/spatial_sweep.hpp"
 #include "population_factory.hpp"
 
@@ -67,5 +68,42 @@ TEST_CASE("sweeps/spatial_sweep: test destructor", "[SpatialSweep]")
         i->operator()(0);
         delete i;
         i = nullptr;
+    }
+}
+
+TEST_CASE("sweeps/spatial_sweep: test call", "[SpatialSweep]")
+{   //can i test inline functions?
+    {   
+        SpatialSweepPtr subject = std::make_shared<SpatialSweep>();
+        PopulationPtr population = PopulationFactory().makePopulation(2, 1, 1000);
+        // make first person infectious
+        Cell* cell1 = &population->cells()[0];
+        cell1->people()[0].updateStatus(cell1, InfectionStatus::InfectMild, static_cast<unsigned short>(1));
+
+        population->initialize();
+
+
+
+    }
+}
+
+TEST_CASE("sweeps/spatial_sweep: test cell", "[SpatialSweep]")
+{   //can i even test inline functions?
+    {   
+        Cell cell1 = Cell(0);
+        Cell cell2 = Cell(0);
+        cell1.setLocation(std::make_pair(1.0, 0.0));
+
+        std::vector<Cell> cells = {cell1, cell2};//want a vector of pointers to cells
+        auto weights = getWeightsFromCells(cells, cell1);
+
+        std::vector<double> test_weights = {0, 1};
+        REQUIRE(weights=test_weights);
+
+        // now test with the doCovidsim flag
+        // need to add infectious person to cell2
+        cell2.addMember(1);
+        weights = SpatialSweep::getWeightsFromCells(cells, cell1, false, true);
+        
     }
 }

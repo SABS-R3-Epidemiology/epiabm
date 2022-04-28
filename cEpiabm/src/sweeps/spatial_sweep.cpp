@@ -55,9 +55,10 @@ namespace epiabm
         return weightVector;
     }
 
-    inline std::vector<Cell *> getCellsToInfect(std::vector<Cell> &cells, Cell *currentCell, size_t n)
-    {
-        std::vector<double> weightVector = getWeightsFromCells(cells, currentCell);
+    inline std::vector<Cell *> getCellsToInfect(std::vector<Cell> &cells, Cell *currentCell, size_t n, 
+                                                bool doDistance = true, bool doCovidsim = false)
+    {   
+        std::vector<double> weightVector = getWeightsFromCells(cells, currentCell, doDistance, doCovidsim);
         std::vector<size_t> chosenCellIndices = std::vector<size_t>();
         std::random_device rd;
         std::mt19937 generator(rd());
@@ -80,11 +81,11 @@ namespace epiabm
      * @brief Cell callback
      * Determine number of infections
      * @param timestep
-     * @param cell
+     * @param cell  //number of infections this cell causes in other cells
      * @return true
      * @return false
      */
-    bool SpatialSweep::cellCallback(const unsigned short timestep, Cell *cell)
+    bool SpatialSweep::cellCallback(const unsigned short timestep, Cell *cell, bool doDistance = true, bool doCovidsim = false)
     {
         if (cell->numInfectious() <= 0)
         {
@@ -96,7 +97,7 @@ namespace epiabm
         std::poisson_distribution<int> distribution(ave_num_of_infections);
         size_t number_to_infect = static_cast<size_t>(distribution(generator));
 
-        std::vector<Cell *> inf_cells = getCellsToInfect(m_population->cells(), cell, number_to_infect);
+        std::vector<Cell *> inf_cells = getCellsToInfect(m_population->cells(), cell, number_to_infect, doDistance, doCovidsim);
 
         Person *infector;
         cell->sampleInfectious(1, [&](Person *p)
