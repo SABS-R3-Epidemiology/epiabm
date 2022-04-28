@@ -3,10 +3,11 @@
 #
 
 import numpy as np
+import pandas as pd
 
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.utility import InverseCdf, StateTransitionMatrix
+from pyEpiabm.utility import InverseCdf
 
 
 class TransitionTimeMatrix:
@@ -15,10 +16,16 @@ class TransitionTimeMatrix:
     def __init__(self):
         """Initialises the transition time matrix the same way as for the
         :class:`StateTransitionMatrix`, i.e. with the right labels for
-        the rows and the columns and zeros as elements.
+        the rows and the columns, but with -1 as the default value.
 
         """
-        self.matrix = self.create_transition_time_matrix()
+        nb_states = len(InfectionStatus)
+        zero_trans = np.full((nb_states, nb_states), -1.0)
+        labels = [status.name for status in InfectionStatus]
+        self.matrix = pd.DataFrame(zero_trans,
+                                   columns=labels,
+                                   index=labels,
+                                   dtype='object')
 
     def create_transition_time_matrix(self):
         """Fills the transition time matrix with :class:`InverseCdf` objects,
@@ -27,7 +34,8 @@ class TransitionTimeMatrix:
         object for defining the transition time of someone with current
         infection status associated with the row i to move to the infection
         status associated with the columns j. Transitions that we do not
-        expect to happen are assigned a value of 0.0 in the matrix.
+        expect to happen are assigned a value of -1.0 in the matrix, so it
+        will not pass silently if these are accessed accidently.
 
         Returns
         -------
@@ -35,7 +43,7 @@ class TransitionTimeMatrix:
             Matrix in the form of a dataframe
 
         """
-        matrix = StateTransitionMatrix.create_empty_state_transition_matrix()
+        matrix = TransitionTimeMatrix().matrix
         matrix.loc['Exposed', 'InfectASympt'] =\
             InverseCdf(pe.Parameters.instance().latent_period,
                        pe.Parameters.instance().latent_period_iCDF)
@@ -104,14 +112,14 @@ class TransitionTimeMatrix:
             if (current_infection_status_row not in InfectionStatus) or \
                     (next_infection_status_column not in InfectionStatus):
                 raise ValueError('Row and column inputs must be contained in' +
-                                 'the InfectionStatus enum')
+                                 ' the InfectionStatus enum')
         except TypeError:
             raise ValueError('Row and column inputs must be contained in' +
-                             'the InfectionStatus enum')
+                             ' the InfectionStatus enum')
 
         if new_transition_time < 0:
             raise ValueError('New transition time must be larger than' +
-                             'or equal to 0')
+                             ' or equal to 0')
 
         # Extract row and column names from enum and update
         # transition time matrix with single value
@@ -148,23 +156,23 @@ class TransitionTimeMatrix:
             if (current_infection_status_row not in InfectionStatus) or \
                     (next_infection_status_column not in InfectionStatus):
                 raise ValueError('Row and column inputs must be contained in' +
-                                 'the InfectionStatus enum')
+                                 ' the InfectionStatus enum')
         except TypeError:
             raise ValueError('Row and column inputs must be contained in' +
-                             'the InfectionStatus enum')
+                             ' the InfectionStatus enum')
 
         if new_transition_time_icdf_mean < 0:
             raise ValueError('New transition time mean must be larger than' +
-                             'or equal to 0')
+                             ' or equal to 0')
 
         if len(new_transition_time_icdf) in [0, 1]:
             raise ValueError('List of icdf values must have at least two' +
-                             'elements')
+                             ' elements')
 
         for elem in new_transition_time_icdf:
             if elem < 0:
                 raise ValueError('List of icdf values must only contain' +
-                                 'non-negative numbers')
+                                 ' non-negative numbers')
 
         # Extract row and column names from enum and update
         # transition time matrix with :class: `InverseCdf`

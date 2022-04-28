@@ -290,6 +290,7 @@ def generate_animation(
         ani.save((save_path + str("voronoi_animation.gif")), writer=writer,
                  dpi=200)
     else:
+        file_names = []
         for i, t in enumerate(times):
             t_fig, t_ax = plot_time_point(df, vor, name, t, grid_lim, ax,
                                           mapper)
@@ -298,7 +299,9 @@ def generate_animation(
                 cbar.set_label("Number of " + str(name))
             t_ax.set_xlim(grid_lim[0][0], grid_lim[0][1])
             t_ax.set_ylim(grid_lim[1][0], grid_lim[1][1])
-            t_fig.savefig(save_path + "image" + f"{i:03d}" + "d.png")
+            file_name = ("image" + f'{i:03d}' + "d.png")
+            file_names.append(file_name)
+            t_fig.savefig(save_path + file_name)
             plt.close(t_fig)
 
         fp_in = save_path + "image" + "*d.png"
@@ -315,7 +318,7 @@ def generate_animation(
             optimise=True,
         )
         for file in os.listdir(save_path):  # Delete images after use
-            if file.endswith("d.png"):
+            if file in file_names:
                 os.remove(os.path.join(save_path, file))
 
 
@@ -353,13 +356,8 @@ plot_time_grid(
     save_loc=fig_loc,
 )
 
-# # Plot animation of simulation
-animation_path = "python_examples/spatial_example/spatial_outputs/"
-anim = generate_animation(
-    df,
-    vor,
-    name="InfectionStatus.InfectMild",
-    grid_lim=grid_limits,
-    save_path=animation_path,
-    use_pillow=True,
-)
+# Plot animation of simulation
+animation_path = ("python_examples/spatial_example/spatial_outputs/")
+anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
+                          grid_lim=grid_limits, save_path=animation_path,
+                          use_pillow=False)

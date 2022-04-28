@@ -3,7 +3,7 @@
 # Run from epiabm directory with coverage using:
 #   `coverage run pyEpiabm/run_tests.py --unit`
 # Report coverage with `coverage report -m`, or build html with `coverage html`
-# Doc tests can be ran from pyEpiabm with `python3 run_tests.py --doctest`
+# Doc tests can be ran from pyEpiabm with `python3 run_tests.py --docs`
 #
 
 from __future__ import absolute_import, division
@@ -21,13 +21,24 @@ def run_unit_tests():
     Runs unit tests (without subprocesses).
     """
     tests = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                         'pyEpiabm', 'tests')
+                         'pyEpiabm', 'tests', 'test_unit')
     suite = unittest.defaultTestLoader.discover(tests, pattern='test*.py')
     res = unittest.TextTestRunner(verbosity=2).run(suite)
     sys.exit(0 if res.wasSuccessful() else 1)
 
 
-def run_doctests():
+def run_func_tests():
+    """
+    Runs functional and integration tests.
+    """
+    tests = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                         'pyEpiabm', 'tests', 'test_func')
+    suite = unittest.defaultTestLoader.discover(tests, pattern='test*.py')
+    res = unittest.TextTestRunner(verbosity=2).run(suite)
+    sys.exit(0 if res.wasSuccessful() else 1)
+
+
+def run_docs_tests():
     """
     Runs a number of tests related to documentation
     """
@@ -262,11 +273,17 @@ if __name__ == '__main__':
         action='store_true',
         help='Run all unit tests using `python` interpreter.',
     )
-    # Doctests
+    # Documentation tests
     parser.add_argument(
-        '--doctest',
+        '--docs',
         action='store_true',
-        help='Run any doctests, check if docs can be built',
+        help='Run documentation tests, check if docs can be built',
+    )
+    # Functional and Integration tests
+    parser.add_argument(
+        '--func',
+        action='store_true',
+        help='Run functional and integration tests for whole module',
     )
 
     # Parse!
@@ -280,10 +297,15 @@ if __name__ == '__main__':
         has_run = True
         run_unit_tests()
 
-    # Doctests
-    if args.doctest:
+    # Documentation tests
+    if args.docs:
         has_run = True
-        run_doctests()
+        run_docs_tests()
+
+    # Functional and Integration tests
+    if args.func:
+        has_run = True
+        run_func_tests()
 
     # Help
     if not has_run:

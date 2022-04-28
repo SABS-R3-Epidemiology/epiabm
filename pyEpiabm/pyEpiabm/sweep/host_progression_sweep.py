@@ -134,7 +134,7 @@ class HostProgressionSweep(AbstractSweep):
         if person.infection_start_time < 0:
             raise ValueError('The infection start time cannot be negative')
 
-    def _update_next_infection_status(self, person: Person):
+    def update_next_infection_status(self, person: Person):
         """Assigns next infection status based on current infection status
         and on probabilities of transition to different statuses. Weights
         are taken from row in state transition matrix that corresponds to
@@ -159,8 +159,8 @@ class HostProgressionSweep(AbstractSweep):
 
             if len(weights) != len(outcomes):
                 raise AssertionError('The number of infection statuses must' +
-                                     'match the number of transition' +
-                                     'probabilities')
+                                     ' match the number of transition' +
+                                     ' probabilities')
 
             next_infection_status_number = random.choices(outcomes, weights)[0]
             next_infection_status =\
@@ -187,6 +187,9 @@ class HostProgressionSweep(AbstractSweep):
         # the transition time is set to infinity. Else, the transition time is
         # defined using the TransitionTimeMatrix class, with the method
         # `choose` from the InverseCdf class.
+        if person.infection_status == InfectionStatus.Susceptible:
+            raise ValueError("Method should not be used to infect people")
+
         if person.infection_status in [InfectionStatus.Recovered,
                                        InfectionStatus.Dead]:
             transition_time = np.inf
@@ -207,7 +210,7 @@ class HostProgressionSweep(AbstractSweep):
                         transition_time_icdf_object,
                         (float, int)), \
                         ("Entries of transition time matrix" +
-                         "must either be ICDF" + " objects or numbers")
+                         " must either be ICDF" + " objects or numbers")
                 else:
                     raise
 
@@ -215,9 +218,13 @@ class HostProgressionSweep(AbstractSweep):
         # statuses (InfectMild or InfectGP), as is done in CovidSim.
         if person.infection_status in [InfectionStatus.InfectMild,
                                        InfectionStatus.InfectGP]:
-            time += HostProgressionSweep().delay
+            transition_time += HostProgressionSweep().delay
         # Assigns the time of status change using current time and transition
         # time:
+        if transition_time < 0:
+            raise ValueError('New transition time must be larger than' +
+                             ' or equal to 0')
+
         person.time_of_status_change = time + transition_time
 
     def _updates_infectiousness(self, person: Person, time: float):
@@ -237,10 +244,7 @@ class HostProgressionSweep(AbstractSweep):
 
         """
         # Updates infectiousness with scaling if person is infectious:
-        if person.infection_status in \
-            [InfectionStatus.InfectASympt, InfectionStatus.InfectMild,
-             InfectionStatus.InfectGP, InfectionStatus.InfectHosp,
-             InfectionStatus.InfectICU, InfectionStatus.InfectICURecov]:
+        if str(person.infection_status).startswith('InfectionStatus.Infect'):
             scale_infectiousness = self.infectiousness_progression
             time_since_infection = (int((time - person.infection_start_time)
                                         / self.model_time_step))
@@ -279,6 +283,6 @@ class HostProgressionSweep(AbstractSweep):
                              InfectionStatus.InfectMild,
                              InfectionStatus.InfectGP]:
                         self.set_infectiousness(person, time)
-                    self._update_next_infection_status(person)
+                    self.update_next_infection_status(person)
                     self.update_time_status_change(person, time)
                 self._updates_infectiousness(person, time)

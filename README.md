@@ -17,7 +17,7 @@ For each timestep the code loops through the population and records interations 
 
 Once an individual becomes exposed, their progression through the various stages of infection is determined by generating a series of random timesteps to mark their movements between infection categories. The possible paths an individual can take are indicated on the schema below.
 
-![SEIR model conceptualisation](./images/covidsim_schema.png)
+![SEIR model conceptualisation](./images/diagram_covid_transition.jpg)
 
 A more complete overview of our implementation of the Ferguson model is given in [the Wiki](https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Overview-of-the-Ferguson-Model) for this repository.
 
@@ -81,6 +81,7 @@ Configure a simulation with a number of parameters. These are split into two cat
 * `simulation_start_time`: The initial time at the start of the simulation
 * `simulation_end_time`: The final time at which to stop the simulation
 * `initial_infected_number`: The initial number of infected individuals in the population
+* `initial_infect_cell`: Whether to choose initial infected individuals from a single cell
 * `simulation_seed`:  Random seed for reproducible simulations - see above _(Optional)_
 
 *`file_params`* _(For controlling output location)_
