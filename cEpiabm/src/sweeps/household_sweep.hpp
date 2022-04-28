@@ -17,6 +17,8 @@ namespace epiabm
     class HouseholdSweep : public SweepInterface
     {
     private:
+        unsigned long m_counter;
+
     public:
         HouseholdSweep(SimulationConfigPtr cfg);
         ~HouseholdSweep() = default;

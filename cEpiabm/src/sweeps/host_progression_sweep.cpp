@@ -52,7 +52,7 @@ namespace epiabm
             InfectionStatus firstStatus = chooseNextStatus(person, InfectionStatus::Exposed);
             person->updateStatus(cell, firstStatus, timestep);
             person->params().infection_start_timestep = timestep;
-            person->params().infectiousness = static_cast<float>(chooseInfectiousness(firstStatus));
+            person->params().initial_infectiousness = static_cast<float>(chooseInfectiousness(firstStatus));
 
             // Chose the person's next status and next status time
             person->params().next_status = chooseNextStatus(person, firstStatus);
@@ -61,6 +61,7 @@ namespace epiabm
 
             // Move person from exposed to infectious
             cell->markInfectious(person->cellPos());
+            updateInfectiousness(timestep, person);
         }
         return true;
     }
@@ -88,6 +89,7 @@ namespace epiabm
             person->params().next_status_time = static_cast<unsigned short>(timestep +
                                                                             chooseNextTransitionTime(person->status(), person->params().next_status));
         }
+        updateInfectiousness(timestep, person);
         return true;
     }
 
@@ -127,6 +129,14 @@ namespace epiabm
             ss << "Cannot choose infectiousness for " << status_string(status) << ", Invalid First Infective Status";
             std::throw_with_nested(std::runtime_error(ss.str()));
         }
+    }
+
+    void HostProgressionSweep::updateInfectiousness(const unsigned short timestep, Person* person)
+    {
+        if (person->params().infection_start_timestep > timestep) std::throw_with_nested(std::runtime_error("Spatial Sweep: Infection start time cannot be later than current timestep"));
+        const unsigned short t = static_cast<unsigned short>(timestep - person->params().infection_start_timestep);
+        if (t >= m_infectiousnessProfile.size()) std::throw_with_nested(std::runtime_error("Spatial Sweep: Time since infection start too large to scale"));
+        person->params().infectiousness = person->params().initial_infectiousness * static_cast<float>(m_infectiousnessProfile[t]);
     }
 
     void HostProgressionSweep::loadTransitionMatrix()

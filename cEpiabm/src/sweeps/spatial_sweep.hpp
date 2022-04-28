@@ -18,6 +18,7 @@ namespace epiabm
     class SpatialSweep : public SweepInterface
     {
     private:
+        unsigned long m_counter;
 
     public:
         SpatialSweep();
@@ -46,8 +47,11 @@ namespace epiabm
             Cell* cell,
             Person* infector, Person* infectee);
 
-        inline std::vector<Cell*> getCellsToInfect(
+        inline std::vector<size_t> getCellsToInfect(
             std::vector<Cell>& cells, Cell* currentCell, size_t n);
+        
+        std::vector<double> getWeightsFromCells(std::vector<Cell> &cells, Cell *currentCell,
+            bool doDistance, bool doCovidsim);
 
         double calcCellInf(
             Cell* cell,

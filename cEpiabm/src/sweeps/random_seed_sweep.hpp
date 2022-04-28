@@ -10,6 +10,7 @@ namespace epiabm
     {
         private:
             int m_infectRate;
+            unsigned long m_infected;
 
         public:
             /**

@@ -66,6 +66,9 @@ namespace epiabm
         double chooseInfectiousness(
             InfectionStatus status);
 
+        void updateInfectiousness(
+            const unsigned short timestep, Person* person);
+
         void loadTransitionMatrix();
         void loadTransitionTimeMatrix();
         void loadInfectiousnessProfile();

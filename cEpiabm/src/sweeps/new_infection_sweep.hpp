@@ -21,6 +21,7 @@ namespace epiabm
     class NewInfectionSweep : public SweepInterface
     {
         private:
+            unsigned long m_counter;
 
         public:
             NewInfectionSweep(SimulationConfigPtr cfg);
