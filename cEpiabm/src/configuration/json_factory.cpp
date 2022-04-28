@@ -17,6 +17,7 @@ namespace epiabm
         loadSimulationConfig(config, input);
         if (!(
                 loadInfectionConfig(config->infectionConfig, input) &&
+                loadPopulationConfig(config->populationConfig, input) &&
                 loadHostProgressionConfig(config->infectionConfig->hostProgressionConfig, input)))
             throw std::runtime_error("Json Factory Error Loading Config Files");
         return config;
@@ -36,6 +37,20 @@ namespace epiabm
         cfg->timestepsPerDay = retrieve<unsigned short>(j, "timesteps_per_day", 1);
         cfg->randomManager = std::make_shared<RandomManager>(
             retrieve<unsigned int>(j, "random_seed", 0));
+    }
+
+    bool JsonFactory::loadPopulationConfig(
+        PopulationConfigPtr cfg, const json::json &input)
+    {
+        if (input.find("population_config") == input.end())
+        {
+            LOG << LOG_LEVEL_ERROR << "Missing Population Conifg Section";
+            return false;
+        }
+        json::json j = input.at("population_config");
+        cfg->age_proportions = retrieve<std::array<double, 17>>(j, "age_proportions");
+        cfg->age_contacts = retrieve<std::array<double, 17>>(j, "age_contacts");
+        return true;
     }
 
     bool JsonFactory::loadInfectionConfig(
@@ -60,16 +75,14 @@ namespace epiabm
         return true;
     }
 
-    bool JsonFactory::loadHostProgressionConfig(
-        HostProgressionConfigPtr cfg, const json::json &input)
+    inline bool JsonFactory::loadTransitionTimeConfig(HostProgressionConfigPtr cfg, const json::json& input)
     {
-        if (input.find("infection_config") != input.end() &&
-            input["infection_config"].find("host_progression_config") == input["infection_config"].end())
+        if (input.find("transition_time") == input.end())
         {
-            LOG << LOG_LEVEL_ERROR << "Missing Host Progression Config Section";
+            LOG << LOG_LEVEL_ERROR << "Missing Host Progression Transition Time Config Section";
             return false;
         }
-        json::json j = input["infection_config"].at("host_progression_config");
+        json::json j = input.at("transition_time");
         cfg->latentPeriodICDF = retrieveICDF(j, "latent_period", "latent_period_icdf");
         cfg->asymptToRecovICDF = retrieveICDF(j, "asympt_infect_period", "asympt_infect_icdf");
         cfg->mildToRecovICDF = retrieveICDF(j, "mean_mild_to_recov", "mild_to_recov_icdf");
@@ -82,6 +95,47 @@ namespace epiabm
         cfg->icuToICURecovICDF = retrieveICDF(j, "mean_icu_to_icurecov", "icu_to_icurecov_icdf");
         cfg->icuToDeathICDF = retrieveICDF(j, "mean_icu_to_death", "icu_to_death_icdf");
         cfg->icuRecovToRecovICDF = retrieveICDF(j, "mean_icurecov_to_recov", "icurecov_to_recov_icdf");
+        return true;
+    }
+
+    inline bool JsonFactory::loadTransitionStateConfig(HostProgressionConfigPtr cfg, const json::json& input)
+    {
+        if (input.find("transition_state") == input.end())
+        {
+            LOG << LOG_LEVEL_ERROR << "Missing Host Progression Transition State Config Section";
+            return false;
+        }
+        json::json j = input.at("transition_state");
+        cfg->prob_gp_to_hosp = retrieve<std::array<double, N_AGE_GROUPS>>(j, "prob_gp_to_hosp");
+        cfg->prob_gp_to_recov = retrieve<std::array<double, N_AGE_GROUPS>>(j, "prob_gp_to_recov");
+        cfg->prob_exposed_to_asympt = retrieve<std::array<double, N_AGE_GROUPS>>(j, "prob_exposed_to_asympt");
+        cfg->prob_exposed_to_gp = retrieve<std::array<double, N_AGE_GROUPS>>(j, "prob_exposed_to_gp");
+        cfg->prob_exposed_to_mild = retrieve<std::array<double, N_AGE_GROUPS>>(j, "prob_exposed_to_mild");
+        cfg->prob_hosp_to_death = retrieve<std::array<double, N_AGE_GROUPS>>(j, "prob_hosp_to_death");
+        cfg->prob_hosp_to_recov = retrieve<std::array<double, N_AGE_GROUPS>>(j, "prob_hosp_to_recov");
+        cfg->prob_hosp_to_icu = retrieve<std::array<double, N_AGE_GROUPS>>(j, "prob_hosp_to_icu");
+        cfg->prob_icu_to_death = retrieve<std::array<double, N_AGE_GROUPS>>(j, "prob_icu_to_death");
+        cfg->prob_icu_to_icurecov = retrieve<std::array<double, N_AGE_GROUPS>>(j, "prob_icu_to_icurecov");
+        return true;
+    }
+
+    bool JsonFactory::loadHostProgressionConfig(
+        HostProgressionConfigPtr cfg, const json::json &input)
+    {
+        if (input.find("infection_config") != input.end() &&
+            input["infection_config"].find("host_progression_config") == input["infection_config"].end())
+        {
+            LOG << LOG_LEVEL_ERROR << "Missing Host Progression Config Section";
+            return false;
+        }
+        json::json j = input["infection_config"].at("host_progression_config");
+        if (!(
+                loadTransitionTimeConfig(cfg, j) &&
+                loadTransitionStateConfig(cfg, j)))
+            return false;
+        
+        cfg->use_ages = retrieve<bool>(j, "use_ages");
+        cfg->infectiousness_profile = retrieve<std::vector<double>>(j, "infectiousness_profile");
         return true;
     }
 

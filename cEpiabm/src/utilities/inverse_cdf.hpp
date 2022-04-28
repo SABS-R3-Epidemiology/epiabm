@@ -27,6 +27,8 @@ namespace epiabm
         std::array<double, InverseCDF::RES+1>& getValues();
         double& operator[](size_t i);
 
+        double mean();
+
     private:
     };
 

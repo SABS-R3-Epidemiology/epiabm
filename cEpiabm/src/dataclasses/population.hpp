@@ -10,7 +10,8 @@
 
 namespace epiabm
 {
-    
+    const size_t N_AGE_GROUPS = 17; // Each age group is 5 years
+
     class Population
     {
     private:

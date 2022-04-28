@@ -15,7 +15,9 @@ void bind_utilities(py::module &m)
         .def(py::init<double>())
         .def("choose", &InverseCDF::choose, "Generate random number from iCDF")
         .def("values", &InverseCDF::getValues, "Get iCDF values",
-            py::return_value_policy::reference);
+            py::return_value_policy::reference)
+        .def("mean", &InverseCDF::mean, "Get iCDF mean",
+            py::return_value_policy::copy);
 
     py::class_<RandomManager, RandomManagerPtr>(m, "RandomManager")
         .def("generator", &RandomManager::g, "Get RandomGenerator",

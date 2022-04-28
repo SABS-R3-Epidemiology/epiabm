@@ -2,7 +2,7 @@
 #include "spatial_sweep.hpp"
 #include "../covidsim.hpp"
 #include "../dataclasses/cell.hpp" // again seem to be having problems with relative path
-#include "../utility/distance_metrics.hpp"
+#include "../utilities/distance_metrics.hpp"
 #include "../reporters/cell_compartment_reporter.hpp"
 #include "../logfile.hpp"
 
@@ -96,7 +96,6 @@ namespace epiabm
         }
         double ave_num_of_infections = calcCellInf(cell, timestep);
 
-        std::default_random_engine generator;
         std::poisson_distribution<int> distribution(ave_num_of_infections);
         size_t number_to_infect = static_cast<size_t>(distribution(m_cfg->randomManager->g().generator()));
         
@@ -111,7 +110,7 @@ namespace epiabm
             if (inf_cell_addr->people().size() < 1)
                 continue;
 
-            size_t infectee_index = static_cast<size_t>(std::rand()) % inf_cell_addr->people().size();
+            size_t infectee_index = static_cast<size_t>(m_cfg->randomManager->g().randi(RAND_MAX)) % inf_cell_addr->people().size();
             Person *infectee = &inf_cell_addr->people()[infectee_index];
 
             // Could put the lines below in a callback like household_sweep?
@@ -145,18 +144,22 @@ namespace epiabm
 
     double SpatialSweep::calcSpaceInf(
         Cell* /*cell*/,
-        Person* /*infector*/,
+        Person* infector,
         unsigned short int )
     {
-        return 0.5;
+        return m_cfg->infectionConfig->hostProgressionConfig->use_ages ?
+            static_cast<double>(infector->params().infectiousness) * m_cfg->populationConfig->age_contacts[infector->params().age_group]:
+            static_cast<double>(infector->params().infectiousness);
     }
 
     double SpatialSweep::calcSpaceSusc(
         Cell* /*cell*/,
-        Person* /*infectee*/,
+        Person* infectee,
         unsigned short int )
     {
-        return 0.2;
+        return m_cfg->infectionConfig->hostProgressionConfig->use_ages ?
+            m_cfg->populationConfig->age_contacts[infectee->params().age_group]:
+            1.0;
     }
 
 } // namespace epiabm

@@ -57,5 +57,10 @@ namespace epiabm
         return m_values[i];
     }
 
+    double InverseCDF::mean()
+    {
+        return m_mean;
+    }
+
 
 } // namespace epiabm

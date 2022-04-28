@@ -9,13 +9,12 @@
 
 namespace epiabm
 {
-    inline std::vector<size_t> generate_multinomial(size_t nGroups, size_t nRolls)
+    inline std::vector<size_t> generate_multinomial(size_t nGroups, size_t nRolls, size_t seed)
     {
         std::vector<double> probabilities = std::vector<double>(nGroups, 1.0);
         std::vector<size_t> multinomial = std::vector<size_t>(nGroups, 0);
 
-        std::random_device rd;
-        std::mt19937 gen(rd());
+        std::mt19937 gen(seed);
         std::discrete_distribution<size_t> distribution =
             std::discrete_distribution<size_t>(probabilities.begin(), probabilities.end());
         for (size_t i = 0; i < nRolls; i++) multinomial[distribution(gen)]++;
@@ -23,9 +22,9 @@ namespace epiabm
         //return std::vector<size_t>(nGroups, nRolls/nGroups);
     }
 
-    inline void distributePeople(PopulationPtr population, size_t nCells, size_t nMicrocells, size_t nPeople)
+    inline void distributePeople(PopulationPtr population, size_t nCells, size_t nMicrocells, size_t nPeople, size_t seed)
     {
-        std::vector<size_t> multinomial = generate_multinomial(nCells*nMicrocells, nPeople);
+        std::vector<size_t> multinomial = generate_multinomial(nCells*nMicrocells, nPeople, seed);
 
         for (size_t ci = 0; ci < nCells; ci++)
         {
@@ -50,7 +49,7 @@ namespace epiabm
         }
     }
 
-    inline void addHouseholds(PopulationPtr population, size_t nHouseholdsPerMicrocell)
+    inline void addHouseholds(PopulationPtr population, size_t nHouseholdsPerMicrocell, size_t seed)
     {
         for (size_t ci = 0; ci < population->cells().size(); ci++)
         {
@@ -60,7 +59,7 @@ namespace epiabm
                 Microcell* microcell = &cell->microcells()[mi];
                 microcell->households().reserve(nHouseholdsPerMicrocell);
                 std::vector<size_t> distrib = generate_multinomial(
-                    nHouseholdsPerMicrocell, microcell->people().size());
+                    nHouseholdsPerMicrocell, microcell->people().size(), seed);
                 size_t pi = 0;
                 for (size_t hi = 0; hi < nHouseholdsPerMicrocell; hi++)
                 {
@@ -92,13 +91,13 @@ namespace epiabm
 
     PopulationPtr ToyPopulationFactory::makePopulation(
         size_t populationSize, size_t nCells, size_t nMicrocellsPerCell,
-        size_t nHouseholds, size_t)
+        size_t nHouseholds, size_t, std::optional<size_t> seed = 0)
     {
         PopulationFactory factory = PopulationFactory();
         PopulationPtr population = factory.makePopulation(nCells, nMicrocellsPerCell, 0);
 
-        distributePeople(population, nCells, nMicrocellsPerCell, populationSize);
-        if (nHouseholds > 0) addHouseholds(population, nHouseholds);
+        distributePeople(population, nCells, nMicrocellsPerCell, populationSize, seed.value_or(0));
+        if (nHouseholds > 0) addHouseholds(population, nHouseholds, seed.value_or(0) + 1);
 
         assignCellLocations(population);
 

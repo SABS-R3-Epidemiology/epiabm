@@ -39,7 +39,7 @@ void run()
 
     // Randomly Seed Population with Infections
     {
-        RandomSeedSweep randomizer = RandomSeedSweep(10);
+        RandomSeedSweep randomizer = RandomSeedSweep(cfg, 10);
         randomizer.bind_population(population);
         randomizer(0);
     }

@@ -32,13 +32,13 @@ TEST_CASE("json_factory: test errors", "[JsonFactory]")
     
     {
         json::json j = getConfig();
-        j["infection_config"]["host_progression_config"].erase("mean_hosp_to_icu");
+        j["infection_config"]["host_progression_config"]["transition_time"].erase("mean_hosp_to_icu");
         REQUIRE_THROWS(f->loadConfig(j));
     }
     
     {
         json::json j = getConfig();
-        j["infection_config"]["host_progression_config"].erase("asympt_infect_icdf");
+        j["infection_config"]["host_progression_config"]["transition_time"].erase("asympt_infect_icdf");
         REQUIRE_THROWS(f->loadConfig(j));
     }
     

@@ -2,6 +2,7 @@
 #define EPIABM_CONFIGURATION_SIMULATION_CONFIGURATION_HPP
 
 #include "infection_config.hpp"
+#include "population_config.hpp"
 #include "../utilities/random_manager.hpp"
 
 #include <memory>
@@ -15,6 +16,7 @@ namespace epiabm
     private:
     public:
         InfectionConfigPtr infectionConfig;
+        PopulationConfigPtr populationConfig;
 
         unsigned short timestepsPerDay;
         RandomManagerPtr randomManager;
@@ -22,6 +24,7 @@ namespace epiabm
         SimulationConfig()
         {
             infectionConfig = std::make_shared<InfectionConfig>();
+            populationConfig = std::make_shared<PopulationConfig>();
         }
 
     private:

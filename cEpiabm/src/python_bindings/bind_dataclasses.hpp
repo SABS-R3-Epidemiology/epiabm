@@ -28,7 +28,7 @@ void bind_dataclasses(py::module &m)
 
 
     py::class_<PersonParams>(m, "PersonParams")
-        .def_readwrite("age", &PersonParams::age)
+        .def_readwrite("age_group", &PersonParams::age_group)
         .def_readwrite("susceptibility", &PersonParams::susceptibility)
         .def_readwrite("infectiousness", &PersonParams::infectiousness)
         .def_readonly("next_status_time", &PersonParams::next_status_time);
@@ -76,12 +76,16 @@ void bind_dataclasses(py::module &m)
 
     py::class_<ToyPopulationFactory>(m, "ToyPopulationFactory")
         .def(py::init<>())
-        .def("make_population", &ToyPopulationFactory::makePopulation,
+        .def("make_population", 
+            &ToyPopulationFactory::makePopulation,
             "Factory for creating Toy Populations",
+            py::arg("population_size"), py::arg("n_cells"), py::arg("n_mcells_per_cell"), py::arg("n_households"), py::arg("n_places"), py::arg("seed") = 0,
             py::return_value_policy::take_ownership);
 
     py::class_<HouseholdLinker>(m, "HouseholdLinker")
         .def(py::init<>())
-        .def("link_households", &HouseholdLinker::linkHouseholds);
+        .def("link_households", &HouseholdLinker::linkHouseholds,
+            "Randomly Link Households",
+            py::arg("population"), py::arg("n_households"), py::arg("perc_in_households"), py::arg("seed") = 0);
 }
 

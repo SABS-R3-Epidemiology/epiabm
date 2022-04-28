@@ -16,7 +16,6 @@ set(
     output_folder_handler.cpp
     logfile.cpp
     covidsim.cpp
-    utility/distance_metrics.cpp
     sweeps/sweep_interface.cpp
     sweeps/household_sweep.cpp
     sweeps/new_infection_sweep.cpp
@@ -29,6 +28,7 @@ set(
     reporters/percell_compartment_reporter.cpp
     reporters/population_compartment_reporter.cpp
     configuration/json_factory.cpp
+    utilities/distance_metrics.cpp
     utilities/inverse_cdf.cpp
     utilities/random_manager.cpp
     simulations/basic_simulation.cpp
@@ -50,7 +50,6 @@ set(
     output_folder_handler.hpp
     logfile.hpp
     covidsim.hpp
-    utility/distance_metrics.hpp
     sweeps/sweep_interface.hpp
     sweeps/household_sweep.hpp
     sweeps/new_infection_sweep.hpp
@@ -67,6 +66,7 @@ set(
     configuration/host_progression_config.hpp
     configuration/config_factory_interface.hpp
     configuration/json_factory.hpp
+    utilities/distance_metrics.hpp
     utilities/inverse_cdf.hpp
     utilities/random_generator.hpp
     utilities/random_manager.hpp
