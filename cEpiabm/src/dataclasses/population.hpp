@@ -2,6 +2,7 @@
 #define EPIABM_DATACLASSES_POPULATION_HPP
 
 #include "cell.hpp"
+#include "place.hpp"
 
 #include <functional>
 #include <vector>
@@ -14,13 +15,17 @@ namespace epiabm
     {
     private:
         std::vector<Cell> m_cells;
+        std::vector<Place> m_places;
         
     public:
         Population();
-        ~Population() = default;
+        ~Population();
 
         void forEachCell(std::function<bool(Cell*)> callback);
+        void forEachPlace(std::function<bool(Place*)> callback);
+
         std::vector<Cell>& cells();
+        std::vector<Place>& places();
 
         /**
          * @brief Pre-simulation start initialization

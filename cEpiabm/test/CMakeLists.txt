@@ -21,12 +21,22 @@ set(
     dataclasses/test_population.cpp
     dataclasses/test_household.cpp
     dataclasses/test_place.cpp
+    dataclasses/test_compartment_counter.cpp
+    dataclasses/test_infection_status.cpp
     test_population_factory.cpp
+    test_toy_population_factory.cpp
     test_output_file_handler.cpp
     test_log_file.cpp
+    test_covidsim.cpp
     sweeps/test_household_sweep.cpp
     sweeps/test_new_infection_sweep.cpp
     sweeps/test_basic_host_progression_sweep.cpp
+    sweeps/test_random_seed_sweep.cpp
+    sweeps/test_spatial_sweep.cpp
+    reporters/test_cell_compartment_reporter.cpp
+    reporters/test_percell_compartment_reporter.cpp
+    reporters/test_population_compartment_reporter.cpp
+    test_basic_simulation.cpp
 )
 
 add_executable(unit_tests ${test_src})
