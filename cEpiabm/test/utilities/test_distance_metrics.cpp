@@ -4,6 +4,11 @@
 
 using namespace epiabm;
 
+TEST_CASE("utility/distance_metrics: test distance metric init", "[DistanceMetrics]")
+{   // tests the Dist function returns the same as the DistEuclid
+    DistanceMetrics subject = DistanceMetrics()
+}
+
 TEST_CASE("utility/distance_metrics: test distance metric", "[DistanceMetrics]")
 {   // tests the Dist function returns the same as the DistEuclid
     auto loc = std::make_pair(1.0, 1.0);
