@@ -50,24 +50,6 @@ TEST_CASE("dataclasses/household: test initialize household", "[Household]")
     REQUIRE_NOTHROW(subject.params());
 }
 
-TEST_CASE("dataclasses/household: test destructor", "[Household]")
-{
-    {
-        MembersInterface* mi = new Household(5);
-        Household* subject = dynamic_cast<Household*>(mi);
-        REQUIRE(subject->microcellPos() == 5);
-        REQUIRE_NOTHROW(subject->params());
-        delete mi;
-        mi = nullptr;
-        subject = nullptr;
-    }
-    {
-        MembersInterface* mi = new MembersInterface(5);
-        delete mi;
-        mi = nullptr;
-    }
-}
-
 TEST_CASE("dataclasses/household: test add member", "[Household]")
 {
     Household subject = Household(5);

@@ -19,7 +19,7 @@ namespace epiabm
         
     public:
         Population();
-        ~Population() = default;
+        ~Population();
 
         void forEachCell(std::function<bool(Cell*)> callback);
         void forEachPlace(std::function<bool(Place*)> callback);

@@ -5,6 +5,7 @@
 #include "person.hpp"
 
 #include <map>
+#include <unordered_map>
 #include <vector>
 
 namespace epiabm
@@ -14,11 +15,12 @@ namespace epiabm
     class CompartmentCounter
     {
     private:
-        std::map<InfectionStatus, unsigned int> m_counts;
+
+        std::unordered_map<InfectionStatus, unsigned int> m_counts;
         
     public:
         CompartmentCounter();
-        ~CompartmentCounter() = default;
+        ~CompartmentCounter();
 
         void clear();
         unsigned int operator()(InfectionStatus status) const;
@@ -29,6 +31,9 @@ namespace epiabm
         void initialize(const std::vector<Person>& people);
 
     private:
+
+        friend class Cell;
+        friend class Microcell;
     };
 
 

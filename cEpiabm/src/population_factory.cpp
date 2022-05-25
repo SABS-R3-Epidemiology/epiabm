@@ -36,7 +36,7 @@ namespace epiabm
 
     void PopulationFactory::addCell(PopulationPtr population)
     {
-        population->cells().push_back(Cell(population->cells().size()));
+        population->cells().emplace_back(population->cells().size());
     }
 
     void PopulationFactory::addCells(PopulationPtr population, size_t n)
@@ -50,8 +50,7 @@ namespace epiabm
 
     void PopulationFactory::addMicrocell(Cell* cell)
     {
-        cell->microcells().push_back(
-            Microcell(cell->microcells().size()));
+        cell->microcells().emplace_back(cell->microcells().size());
     }
 
     void PopulationFactory::addMicrocells(Cell* cell, size_t n)
@@ -65,8 +64,8 @@ namespace epiabm
 
     void PopulationFactory::addPerson(Cell* cell, size_t microcell_index)
     {
-        cell->people().push_back(
-            Person(microcell_index, cell->people().size(), cell->getMicrocell(microcell_index).people().size()));
+        cell->people().emplace_back(
+            microcell_index, cell->people().size(), cell->getMicrocell(microcell_index).people().size());
         cell->getMicrocell(microcell_index).people().push_back(
             cell->people().size()-1);
     }

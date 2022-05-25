@@ -17,7 +17,7 @@ namespace epiabm
         /**
          * @brief Link households
          * Create n_households per microcell.
-         * Person has percInHousehold to be in a household.
+         * Person has probability percInHousehold (expressed as percentage) to be in a household.
          * People who should be in a household are randomly assigned to a household in their microcell.
          * @param population 
          * @param n_households 

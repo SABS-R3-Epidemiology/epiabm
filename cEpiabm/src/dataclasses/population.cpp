@@ -7,7 +7,14 @@ namespace epiabm
 
     Population::Population() :
         m_cells()
-    {}
+    {
+        std::cout << "Created Population" << std::endl;
+    }
+
+    Population::~Population()
+    {
+        std::cout << "Deleted Population" << std::endl;
+    }
 
     void Population::forEachCell(std::function<bool(Cell*)> callback)
     {

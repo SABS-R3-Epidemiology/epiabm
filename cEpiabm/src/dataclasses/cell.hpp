@@ -50,7 +50,7 @@ namespace epiabm
 
     public:
         Cell(size_t index);
-        ~Cell() = default;
+        ~Cell();
         Cell(const Cell&) = default;
         Cell(Cell&&) = default;
 

@@ -1,6 +1,7 @@
 
 #include "household_sweep.hpp"
 #include "../covidsim.hpp"
+#include "../logfile.hpp"
 
 #include <functional>
 #include <random>
@@ -12,8 +13,10 @@ namespace epiabm
 
     void HouseholdSweep::operator()(const unsigned short timestep)
     {
+        LOG << LOG_LEVEL_DEBUG << "Beginning Household Sweep " << timestep;
         m_population->forEachCell(
             std::bind(&HouseholdSweep::cellCallback, this, timestep, std::placeholders::_1));
+        LOG << LOG_LEVEL_DEBUG << "Finished Household Sweep " << timestep;
     }
 
     /**
@@ -82,6 +85,8 @@ namespace epiabm
 
         if (static_cast<double>(std::rand() % 1000000) / static_cast<double>(1000000) < foi)
         {
+            LOG << LOG_LEVEL_INFO << "Household infection in cell " << cell->index()
+                << " between " << infector->cellPos() << " and " << infectee->cellPos();
             // Infection attempt is successful
             cell->enqueuePerson(infectee->cellPos());
         }

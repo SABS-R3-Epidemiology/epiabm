@@ -1,9 +1,10 @@
 
 #include "spatial_sweep.hpp"
 #include "../covidsim.hpp"
-#include "../dataclasses/cell.hpp" // again seem to be having problems with relative path
 #include "../utility/distance_metrics.hpp"
 #include "../reporters/cell_compartment_reporter.hpp"
+#include "../dataclasses/cell.hpp"
+#include "../logfile.hpp"
 
 #include <functional>
 #include <random>
@@ -17,12 +18,15 @@ namespace epiabm
 
     void SpatialSweep::operator()(const unsigned short timestep)
     {
+  
+        LOG << LOG_LEVEL_DEBUG << "Beginning Spatial Sweep " << timestep;
         if (m_population->cells().size() <= 1)
         {
             return; // no intercell infections if only one cell
         }
         m_population->forEachCell(
             std::bind(&SpatialSweep::cellCallback, this, timestep, std::placeholders::_1));
+        LOG << LOG_LEVEL_DEBUG << "Finished Spatial Sweep " << timestep;
     }
 
     inline std::vector<double> getWeightsFromCells(std::vector<Cell> &cells, Cell *currentCell,
@@ -75,6 +79,7 @@ namespace epiabm
         chosen.reserve(n);
         for (const auto i : chosenCellIndices)
             chosen.push_back(&cells[i]);
+
         return chosen;
     }
 
@@ -82,15 +87,14 @@ namespace epiabm
      * @brief Cell callback
      * Determine number of infections
      * @param timestep
-     * @param cell  //number of infections this cell causes in other cells
+     * @param cell
      * @return true
      * @return false
      */
-    bool SpatialSweep::cellCallback(const unsigned short timestep, Cell *cell)
+    bool SpatialSweep::cellCallback(const unsigned short timestep, Cell* cell)
     {
-        if (cell->numInfectious() <= 0)
-        {
-            return true; // Break out as there are no infectors in cell
+        if (cell->numInfectious() <= 0){
+            return true;  // Break out as there are no infectors in cell
         }
         double ave_num_of_infections = Covidsim::CalcCellInf(cell, timestep);
 
@@ -125,7 +129,11 @@ namespace epiabm
             if ((static_cast<double>(std::rand() % 1000000) / static_cast<double>(1000000)) < foi)
             {
                 // Infection attempt is successful
-                cell->enqueuePerson(infectee->cellPos());
+
+                LOG << LOG_LEVEL_INFO << "Spatial infection between ("
+                    << cell->index() << "," << infector->cellPos() << ") and ("
+                    << inf_cell_addr->index() << "," << infectee->cellPos() << ")";
+                inf_cell_addr->enqueuePerson(infectee->cellPos());
             }
         }
         return true;

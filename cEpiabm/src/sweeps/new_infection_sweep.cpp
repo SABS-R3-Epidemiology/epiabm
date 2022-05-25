@@ -1,6 +1,6 @@
 
 #include "new_infection_sweep.hpp"
-
+#include "../logfile.hpp"
 
 namespace epiabm
 {
@@ -11,9 +11,11 @@ namespace epiabm
 
     void NewInfectionSweep::operator()(const unsigned short timestep)
     {
+        LOG << LOG_LEVEL_DEBUG << "Beginning New Infection Sweep " << timestep;
         m_population->forEachCell(std::bind(
             &NewInfectionSweep::cellCallback, this,
             timestep, std::placeholders::_1));
+        LOG << LOG_LEVEL_DEBUG << "Finished New Infection Sweep " << timestep;
     }
 
     /**
@@ -43,6 +45,9 @@ namespace epiabm
     void NewInfectionSweep::cellPersonQueueCallback(unsigned short timestep, Cell* cell, size_t personIndex)
     {
         Person* person = &cell->getPerson(personIndex);
+
+        LOG << LOG_LEVEL_INFO << "New infection sweep on ("
+            << cell->index() << "," << person->cellPos() << ")";
         person->updateStatus(cell, InfectionStatus::Exposed, timestep);
         person->params().next_status_time = static_cast<unsigned short>(timestep + latent_time(person));
         cell->markExposed(personIndex);

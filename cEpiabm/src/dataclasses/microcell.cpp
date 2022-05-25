@@ -12,6 +12,11 @@ namespace epiabm
         m_compartmentCounter()
     {}
 
+    Microcell::~Microcell()
+    {
+        //std::cout << "Microcell Destructor" << std::endl;
+    }
+
     Microcell::Microcell(const Microcell& other) :
         m_people(other.m_people),
         m_households(other.m_households),

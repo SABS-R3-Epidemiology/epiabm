@@ -7,8 +7,6 @@
 #include "dataclasses/place.hpp"
 #include "dataclasses/person.hpp"
 
-#include <iostream>
-
 namespace epiabm
 {
 

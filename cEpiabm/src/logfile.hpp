@@ -70,6 +70,11 @@ namespace epiabm
         void configure(unsigned int level, std::filesystem::path path);
 
         /**
+         * Set the current logging level
+         */
+        void setLevel(unsigned int level);
+
+        /**
          * Prepare the logger to recieve a log line by configuring the log level
          */
         const std::string prepare(unsigned int level);
@@ -121,9 +126,10 @@ namespace epiabm
     template <class T>
     LogFile& operator<<(LogFile& file, const T message)
     {
-        if (file.m_fileSet && file.m_active)
+        if (file.m_active)
         {
-            (*file.m_os) << std::setprecision(static_cast<int>(file.m_precision))
+            auto& os = file.m_fileSet ? (*file.m_os) : std::cout;
+            os << std::setprecision(static_cast<int>(file.m_precision))
                 << message << std::flush;
         }
         return file;
