@@ -16,10 +16,13 @@ class AbstractReporter:
         Also clears contents of an existing folder if
         clear_folder is true.
 
-        :param folder: Absolute path to folder to store results
-        :type folder: str
-        :param clear_folder: Whether to empty the folder before saving results
-        :type time: bool
+        Parameters
+        ----------
+        folder : str
+            Absolute path to folder to store results
+        clear_folder : bool
+            Whether to empty the folder before saving results
+
         """
         self.folder = folder
         if os.path.exists(folder):
@@ -37,5 +40,6 @@ class AbstractReporter:
 
     def write(self):
         """Write data to .csv files in target folder.
+
         """
         raise NotImplementedError

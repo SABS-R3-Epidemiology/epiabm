@@ -10,8 +10,6 @@ Overview:
 
 - :class:`AbstractPopulationFactory`
 - :class:`FilePopulationFactory`
-- :class:`HouseholdInfection`
-- :class:`PlaceInfection`
 - :class:`ToyPopulationFactory`
 - :class:`Simulation`
 
@@ -21,15 +19,8 @@ Overview:
 .. autoclass:: FilePopulationFactory
     :members:
 
-.. autoclass:: HouseholdInfection
-    :members:
-
-.. autoclass:: PlaceInfection
-    :members:
-    
 .. autoclass:: ToyPopulationFactory
     :members:
 
 .. autoclass:: Simulation
     :members:
-    

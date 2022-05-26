@@ -15,12 +15,16 @@ from ._compartment_counter import _CompartmentCounter
 class Cell:
     """Class representing a Cell (Subset of Population).
     Collection of :class:`Microcell` s and :class:`Person` s.
+
     """
     def __init__(self, loc: typing.Tuple[float, float] = (0, 0)):
         """Constructor Method.
 
-        :param loc: Location of the cell, as an (x,y) tuple
-        :type loc: Tuple(float, float)
+        Parameters
+        ----------
+        loc : Tuple(float, float)
+            Location of the cell, as an (x,y) tuple
+
         """
         self.location = loc
         self.id = hash(self)
@@ -37,8 +41,11 @@ class Cell:
     def __repr__(self):
         """Returns a string representation of the Cell.
 
-        :return: String representation of the Cell
-        :rtype: str
+        Returns
+        -------
+        str
+            String representation of the Cell
+
         """
         return f"Cell with {len(self.microcells)} microcells " + \
             f"and {len(self.persons)} people at location {self.location}."
@@ -46,8 +53,11 @@ class Cell:
     def add_microcells(self, n):
         """Add n empty :class:`Microcell` s to Cell.
 
-        :param n: Number of empty :class:`Microcell` s to add
-        :type n: int
+        Parameters
+        ----------
+        n : int
+            Number of empty :class:`Microcell` s to add
+
         """
         for _ in range(n):
             self.microcells.append(Microcell(self))
@@ -55,16 +65,22 @@ class Cell:
     def set_id(self, id: float):
         """Updates ID of cell (i.e. for input from file).
 
-        :param id: Identity of cell
-        :type id: float
+        Parameters
+        ----------
+        id : float
+            Identity of cell
+
         """
         self.id = id
 
     def enqueue_person(self, person: Person):
         """Add person to queue for processing at end of iteration.
 
-        :param person: Person to enqueue
-        :type person: Person
+        Parameters
+        ----------
+        person : Person
+            Person to enqueue
+
         """
         self.person_queue.put(person)
 
@@ -74,10 +90,13 @@ class Cell:
             new_status: InfectionStatus) -> None:
         """Notify Cell that a person's status has changed.
 
-        :param old_status: Person's old infection status
-        :type old_status: InfectionStatus
-        :param new_status: Person's new infection status
-        :type new_status: InfectionStatus
+        Parameters
+        ----------
+        old_status : InfectionStatus
+            Person's old infection status
+        new_status : InfectionStatus
+            Person's new infection status
+
         """
         self.compartment_counter.report(old_status, new_status)
 
@@ -85,8 +104,11 @@ class Cell:
         """Returns the total number of infectious people in each
         cell.
 
-        :return: Total infectors in cell
-        :rtype: int
+        Returns
+        -------
+        int
+            Total infectors in cell
+
         """
         cell_data = self.compartment_counter.retrieve()
         total_infectors = (cell_data[InfectionStatus.InfectASympt]
@@ -98,7 +120,10 @@ class Cell:
     def set_location(self, loc: typing.Tuple[float, float]):
         """Method to set or change the location of a cell.
 
-        :param loc: (x,y) coordinates of the place
-        :type loc: Tuple[float, float]
+        Parameters
+        ----------
+        loc : Tuple[float, float]
+            (x,y) coordinates of the place
+
         """
         self.location = loc

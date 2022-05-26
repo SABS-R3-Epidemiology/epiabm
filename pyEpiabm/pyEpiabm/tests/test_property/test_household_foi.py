@@ -1,10 +1,11 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.routine import HouseholdInfection
+from pyEpiabm.property import HouseholdInfection
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestHouseholdInfection(unittest.TestCase):
+class TestHouseholdInfection(TestPyEpiabm):
     """Test the 'HouseholdInfection' class, which contains the
     infectiousness and susceptibility calculations that
     determine whether infection events occur within households.
@@ -15,28 +16,30 @@ class TestHouseholdInfection(unittest.TestCase):
         """Intialise a population with one infector and one
         infectee, both in the same place and household.
         """
+        super(TestHouseholdInfection, cls).setUpClass()  # Sets up parameters
         cls.cell = pe.Cell()
         cls.microcell = pe.Microcell(cls.cell)
         cls.infector = pe.Person(cls.microcell)
+        cls.infector.infectiousness = 1.0
         cls.infectee = pe.Person(cls.microcell)
-        cls.timestep = 1
+        cls.time = 1
 
     def test_house_inf(self):
-        result = HouseholdInfection.household_inf(self.infector, self.timestep)
+        result = HouseholdInfection.household_inf(self.infector, self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
     def test_house_susc(self):
         result = HouseholdInfection.household_susc(self.infector,
                                                    self.infectee,
-                                                   self.timestep)
+                                                   self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
     def test_house_inf_force(self):
         result = HouseholdInfection.household_foi(self.infector,
                                                   self.infectee,
-                                                  self.timestep)
+                                                  self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 

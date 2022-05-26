@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
+.DS_Store
+*/.DS_Store
 
 # Prerequisites
 *.d
@@ -103,7 +105,6 @@ target/
 
 # VS Code
 *.vscode
-*.editorconfig
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -161,3 +162,8 @@ dmypy.json
 
 # Epiabm log files
 *.log
+
+# Profiling script
+kernprof.py
+*.prof
+*.lprof

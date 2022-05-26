@@ -5,6 +5,7 @@
 import random
 
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.sweep.host_progression_sweep import HostProgressionSweep
 
 from .abstract_sweep import AbstractSweep
 
@@ -12,6 +13,7 @@ from .abstract_sweep import AbstractSweep
 class InitialInfectedSweep(AbstractSweep):
     """Class for sweeping through population at start
     of simulation and setting an initial number of infected people.
+
     """
 
     def __call__(self, sim_params: dict):
@@ -19,14 +21,22 @@ class InitialInfectedSweep(AbstractSweep):
         in the population, changes their infection status to InfectMild
         and sets their time of next status change.
 
-        :param sim_params: Dictionary of simulation parameters
-        :type sim_params: dict
+        Parameters
+        ----------
+        sim_params : dict
+            Dictionary of simulation parameters
+
         """
         pop_size = self._population.total_people()
         if pop_size < \
                 sim_params["initial_infected_number"]:
-            raise ValueError('Initial number of infected people needs to be \
-                                            less than the total population')
+            raise ValueError('Initial number of infected people needs to be'
+                             + ' less than the total population')
+
+        start_time = sim_params["simulation_start_time"]
+        if start_time < 0:
+            raise ValueError('Simulation start time needs to be greater or'
+                             + ' equal to 0')
 
         # Checks whether there are enough susceptible people to infect.
         status = InfectionStatus.Susceptible
@@ -47,4 +57,6 @@ class InitialInfectedSweep(AbstractSweep):
         for person in pers_to_infect:
             person.update_status(InfectionStatus.InfectMild)
             person.next_infection_status = InfectionStatus.Recovered
-            person.update_time_to_status_change()
+            HostProgressionSweep.set_infectiousness(person, start_time)
+            HostProgressionSweep().update_time_status_change(person,
+                                                             start_time)

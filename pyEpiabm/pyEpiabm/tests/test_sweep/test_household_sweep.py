@@ -3,9 +3,10 @@ from unittest import mock
 from queue import Queue
 
 import pyEpiabm as pe
+from pyEpiabm.tests.parameter_config_tests import TestPyEpiabm
 
 
-class TestHouseholdSweep(unittest.TestCase):
+class TestHouseholdSweep(TestPyEpiabm):
     """Test the 'HouseholdSweep' class.
     """
 
@@ -14,6 +15,7 @@ class TestHouseholdSweep(unittest.TestCase):
         """Initialises a population with one infected person. Sets up a
         single household containing this person.
         """
+        super(TestHouseholdSweep, cls).setUpClass()
         cls.pop = pe.Population()
         cls.house = pe.Household([1.0, 1.0])
         cls.pop.add_cells(1)
@@ -35,7 +37,7 @@ class TestHouseholdSweep(unittest.TestCase):
                          .persons[0].infection_status,
                          pe.property.InfectionStatus.InfectMild)
 
-    @mock.patch('pyEpiabm.routine.HouseholdInfection.household_foi')
+    @mock.patch('pyEpiabm.property.HouseholdInfection.household_foi')
     def test__call__(self, mock_force):
         """Test whether the household sweep function correctly
         adds persons to the queue.

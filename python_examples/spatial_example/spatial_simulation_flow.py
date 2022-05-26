@@ -8,6 +8,10 @@ import matplotlib.pyplot as plt
 
 import pyEpiabm as pe
 
+# Set config file for Parameters
+pe.Parameters.set_file("python_examples/spatial_example/"
+                       + "spatial_parameters.json")
+
 # Method to set the seed at the start of the simulation, for reproducibility
 
 pe.routine.Simulation.set_random_seed(seed=30)
