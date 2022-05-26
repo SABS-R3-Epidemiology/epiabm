@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <iterator>
 #include <random>
+#include <exception>
+#include <stdexcept>
 
 namespace epiabm
 {
@@ -26,6 +28,11 @@ namespace epiabm
         m_deadPeople(),
         m_compartmentCounter()
     {}
+
+    Cell::~Cell()
+    {
+        //std::cout << "Deleted Cell" << std::endl;
+    }
 
     size_t Cell::index() const { return m_index; }
 
@@ -101,6 +108,7 @@ namespace epiabm
      */
     bool Cell::enqueuePerson(size_t personIndex)
     {
+        if (personIndex >= m_people.size()) throw std::runtime_error("Attempted to queue index out of range");
         if (m_peopleInQueue.find(personIndex) != m_peopleInQueue.end()) return false; // if person already queued
         m_personQueue.push(personIndex); // add to queue
         m_peopleInQueue.insert(personIndex); // insert into queued set
@@ -301,7 +309,7 @@ namespace epiabm
         m_location = loc;
     }
         
-    std::pair<double, double> Cell::getLocation() const
+    std::pair<double, double> Cell::location() const
     {
         return m_location;
     }

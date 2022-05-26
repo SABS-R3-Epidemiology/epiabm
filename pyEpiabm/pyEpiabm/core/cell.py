@@ -111,9 +111,10 @@ class Cell:
 
         """
         cell_data = self.compartment_counter.retrieve()
-        total_infectors = (cell_data[InfectionStatus.InfectASympt]
-                           + cell_data[InfectionStatus.InfectMild]
-                           + cell_data[InfectionStatus.InfectGP])
+        total_infectors = 0
+        for status in InfectionStatus:
+            if str(status).startswith('InfectionStatus.Infect'):
+                total_infectors += cell_data[status]
 
         return total_infectors
 

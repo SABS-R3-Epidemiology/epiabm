@@ -50,7 +50,7 @@ namespace epiabm
 
     public:
         Cell(size_t index);
-        ~Cell() = default;
+        ~Cell();
         Cell(const Cell&) = default;
         Cell(Cell&&) = default;
 
@@ -90,7 +90,7 @@ namespace epiabm
 
         unsigned int compartmentCount(InfectionStatus status);
         void setLocation(std::pair<double, double> loc);
-        std::pair<double, double> getLocation() const;
+        std::pair<double, double> location() const;
 
         void personStatusChange(Person* person, InfectionStatus newStatus, unsigned short timestep);
 

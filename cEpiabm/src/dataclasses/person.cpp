@@ -4,6 +4,7 @@
 #include "population.hpp"
 
 #include <iostream>
+#include <exception>
 
 namespace epiabm
 {
@@ -17,6 +18,11 @@ namespace epiabm
         m_hasHousehold(false),
         m_places()
     {}
+
+    Person::~Person()
+    {
+        //std::cout << "Person Destructor" << std::endl;
+    }
 
     InfectionStatus Person::status() const { return m_status; }
     PersonParams& Person::params() { return m_params; }

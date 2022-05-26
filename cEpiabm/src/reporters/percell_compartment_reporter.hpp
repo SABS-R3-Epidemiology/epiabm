@@ -30,6 +30,7 @@ namespace epiabm
         private:
     };
 
+    typedef std::shared_ptr<PerCellCompartmentReporter> PerCellCompartmentReporterPtr;
 
 } // namespace epiabm
 

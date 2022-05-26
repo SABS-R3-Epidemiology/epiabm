@@ -24,6 +24,7 @@ set(
     dataclasses/test_compartment_counter.cpp
     dataclasses/test_infection_status.cpp
     test_population_factory.cpp
+    test_toy_population_factory.cpp
     test_output_file_handler.cpp
     test_log_file.cpp
     test_covidsim.cpp
@@ -35,6 +36,7 @@ set(
     reporters/test_cell_compartment_reporter.cpp
     reporters/test_percell_compartment_reporter.cpp
     reporters/test_population_compartment_reporter.cpp
+    utility/test_distance_metrics.cpp
     test_basic_simulation.cpp
 )
 

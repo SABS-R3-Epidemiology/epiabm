@@ -32,4 +32,4 @@ jobs:
       - name: run doctest
         run: |
           cd pyEpiabm
-          python run_tests.py --doctest
+          python run_tests.py --docs

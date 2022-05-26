@@ -1,9 +1,10 @@
 
 #include "spatial_sweep.hpp"
 #include "../covidsim.hpp"
-#include "../dataclasses/cell.hpp" // again seem to be having problems with relative path
 #include "../utility/distance_metrics.hpp"
 #include "../reporters/cell_compartment_reporter.hpp"
+#include "../dataclasses/cell.hpp"
+#include "../logfile.hpp"
 
 #include <functional>
 #include <random>
@@ -17,12 +18,15 @@ namespace epiabm
 
     void SpatialSweep::operator()(const unsigned short timestep)
     {
+  
+        LOG << LOG_LEVEL_DEBUG << "Beginning Spatial Sweep " << timestep;
         if (m_population->cells().size() <= 1)
         {
             return; // no intercell infections if only one cell
         }
         m_population->forEachCell(
             std::bind(&SpatialSweep::cellCallback, this, timestep, std::placeholders::_1));
+        LOG << LOG_LEVEL_DEBUG << "Finished Spatial Sweep " << timestep;
     }
 
     inline std::vector<double> getWeightsFromCells(std::vector<Cell> &cells, Cell *currentCell,
@@ -31,13 +35,14 @@ namespace epiabm
         std::vector<double> weightVector;
         if (doDistance)
         {
-            std::pair<double, double> current_loc = currentCell->getLocation();
+            std::pair<double, double> current_loc = currentCell->location();
             for (Cell &cell : cells)
             {
-                weightVector.push_back(DistanceMetrics::Dist(cell.getLocation(), current_loc));
+                weightVector.push_back(1./DistanceMetrics::Dist(cell.location(), current_loc));
             }
         }
-        else if (doCovidsim)
+        // LCOV_EXCL_START
+        else if (doCovidsim) //this will be in the config file in cpp-dev
         {
             for (Cell &cell : cells)
             {
@@ -52,11 +57,12 @@ namespace epiabm
                 }
             }
         }
+        // LCOV_EXCL_END
         return weightVector;
     }
 
     inline std::vector<Cell *> getCellsToInfect(std::vector<Cell> &cells, Cell *currentCell, size_t n)
-    {
+    {   
         std::vector<double> weightVector = getWeightsFromCells(cells, currentCell);
         std::vector<size_t> chosenCellIndices = std::vector<size_t>();
         std::random_device rd;
@@ -65,7 +71,7 @@ namespace epiabm
 
         for (size_t i = 0; i < n; ++i)
         {
-            size_t cell_ind = distribution(generator); // generator spits out integers
+            size_t cell_ind = distribution(generator); // generator produces integers
             chosenCellIndices.push_back(cell_ind);
         }
 
@@ -73,6 +79,7 @@ namespace epiabm
         chosen.reserve(n);
         for (const auto i : chosenCellIndices)
             chosen.push_back(&cells[i]);
+
         return chosen;
     }
 
@@ -84,11 +91,10 @@ namespace epiabm
      * @return true
      * @return false
      */
-    bool SpatialSweep::cellCallback(const unsigned short timestep, Cell *cell)
+    bool SpatialSweep::cellCallback(const unsigned short timestep, Cell* cell)
     {
-        if (cell->numInfectious() <= 0)
-        {
-            return true; // Break out as there are no infectors in cell
+        if (cell->numInfectious() <= 0){
+            return true;  // Break out as there are no infectors in cell
         }
         double ave_num_of_infections = Covidsim::CalcCellInf(cell, timestep);
 
@@ -123,7 +129,11 @@ namespace epiabm
             if ((static_cast<double>(std::rand() % 1000000) / static_cast<double>(1000000)) < foi)
             {
                 // Infection attempt is successful
-                cell->enqueuePerson(infectee->cellPos());
+
+                LOG << LOG_LEVEL_INFO << "Spatial infection between ("
+                    << cell->index() << "," << infector->cellPos() << ") and ("
+                    << inf_cell_addr->index() << "," << infectee->cellPos() << ")";
+                inf_cell_addr->enqueuePerson(infectee->cellPos());
             }
         }
         return true;
