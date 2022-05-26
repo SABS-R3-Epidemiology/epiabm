@@ -8,10 +8,11 @@
 namespace epiabm
 {
 
-    ThreadedSimulation::ThreadedSimulation(PopulationPtr population) :
+    ThreadedSimulation::ThreadedSimulation(PopulationPtr population, std::optional<size_t> nThreads) :
         m_population(population),
         m_sweeps(),
-        m_timestepReporters()
+        m_timestepReporters(),
+        m_pool(nThreads.value_or(std::thread::hardware_concurrency()))
     {
     }
 
@@ -42,8 +43,21 @@ namespace epiabm
                 // Run Sweeps
                 for (const auto& sweepGroup : m_sweeps)
                 {
-                    for (const auto& sweep : sweepGroup.second)
-                        (*sweep)(timestep);
+                    LOG << LOG_LEVEL_DEBUG << "Performing Sweep Group " << sweepGroup.first << " at timestep " << timestep;
+                    m_population->forEachCell(
+                        [this,timestep,&sweepGroup](Cell* cell)
+                        {
+                            m_pool.push_task(
+                            [cell,timestep,&sweepGroup]()
+                            {
+                                for (const auto& sweep : sweepGroup.second)
+                                    sweep->cellCallback(timestep, cell);
+                                }
+                            );
+                            return true;
+                        });
+                    LOG << LOG_LEVEL_DEBUG << m_pool.get_tasks_total() << " unfinished tasks";
+                    m_pool.wait_for_tasks();
                 }
 
                 // Report
@@ -71,10 +85,12 @@ namespace epiabm
 
     void ThreadedSimulation::setup()
     {
+        LOG << LOG_LEVEL_NORMAL << "Threaded Simulation with " << m_pool.get_thread_count() << " threads.";
         m_population->initialize();
 
         // Bind populations
-        for (const auto& sweep : m_sweeps) sweep->bind_population(m_population);
+        for (const auto& sweepGroup : m_sweeps)
+            for (const auto& sweep : sweepGroup.second) sweep->bind_population(m_population);
 
         // Setup reporters
         for (const auto& reporter : m_timestepReporters) reporter->setup(m_population);

@@ -35,7 +35,7 @@ namespace epiabm
 
         bool cellCallback(
             const unsigned short timestep,
-            Cell* cell);
+            Cell* cell) override;
 
         /* For each Exposed Person */
         bool cellExposedCallback(

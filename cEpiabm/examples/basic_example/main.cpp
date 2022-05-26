@@ -5,6 +5,7 @@
 #include "toy_population_factory.hpp"
 #include "household_linker.hpp"
 #include "simulations/basic_simulation.hpp"
+#include "simulations/threaded_simulation.hpp"
 #include "sweeps/household_sweep.hpp"
 #include "sweeps/new_infection_sweep.hpp"
 #include "sweeps/spatial_sweep.hpp"
@@ -30,7 +31,7 @@ void run()
     SimulationConfigPtr cfg = JsonFactory().loadConfig(std::filesystem::path("parameters.json"));
 
     // Make Population and Link Households
-    PopulationPtr population = ToyPopulationFactory().makePopulation(5000, 200, 1, 0, 0);
+    PopulationPtr population = ToyPopulationFactory().makePopulation(100000, 10, 100, 50, 0, 2);
     //PopulationPtr population = PopulationFactory().makePopulation(200, 1, 25);
     //HouseholdLinker().linkHouseholds(population, 2, 100);
     population->initialize();
@@ -39,19 +40,19 @@ void run()
 
     // Randomly Seed Population with Infections
     {
-        RandomSeedSweep randomizer = RandomSeedSweep(cfg, 10);
+        RandomSeedSweep randomizer = RandomSeedSweep(cfg, 10000);
         randomizer.bind_population(population);
         randomizer(0);
     }
 
     // Create Simulation
-    BasicSimulation simulation = BasicSimulation(population);
+    ThreadedSimulation simulation = ThreadedSimulation(population, std::optional<size_t>());
 
     // Add Sweeps
-    simulation.addSweep(std::make_shared<HouseholdSweep>(cfg));
-    simulation.addSweep(std::make_shared<SpatialSweep>(cfg));
-    simulation.addSweep(std::make_shared<NewInfectionSweep>(cfg));
-    simulation.addSweep(std::make_shared<HostProgressionSweep>(cfg));
+    simulation.addSweep(std::make_shared<HouseholdSweep>(cfg), 0);
+    simulation.addSweep(std::make_shared<SpatialSweep>(cfg), 1);
+    simulation.addSweep(std::make_shared<NewInfectionSweep>(cfg), 2);
+    simulation.addSweep(std::make_shared<HostProgressionSweep>(cfg), 3);
 
     // Set which reporters to use
     simulation.addTimestepReporter(
@@ -68,10 +69,10 @@ void run()
 
 int main()
 {
-    //try
-    //{
+    try
+    {
         run();
-    /*}
+    }
     catch (std::exception& e)
     {
         std::cout << "Exception: " << e.what();
@@ -79,6 +80,6 @@ int main()
     catch (...)
     {
         std::cout << "Unknown Exception" << std::endl;
-    }*/
+    }
 }
 

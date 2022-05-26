@@ -113,7 +113,7 @@ namespace epiabm
             return 0;
         }
         return m_transitionTimeMatrix[cindex][nindex]->choose(
-            m_cfg->timestepsPerDay, m_cfg->randomManager->g().generator());
+            m_cfg->timestepsPerDay, m_cfg->randomManager->g());
     }
 
     double HostProgressionSweep::chooseInfectiousness(InfectionStatus status)

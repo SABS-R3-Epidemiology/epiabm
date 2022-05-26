@@ -9,12 +9,18 @@
 
 namespace epiabm
 {
-    inline std::vector<size_t> generate_multinomial(size_t nGroups, size_t nRolls, size_t seed)
+    inline std::vector<size_t> generate_multinomial(
+        size_t nGroups, size_t nRolls, std::optional<size_t> seed)
     {
         std::vector<double> probabilities = std::vector<double>(nGroups, 1.0);
         std::vector<size_t> multinomial = std::vector<size_t>(nGroups, 0);
 
-        std::mt19937 gen(seed);
+        if (!seed.has_value())
+        {
+            std::random_device rd;
+            seed = rd();
+        }
+        std::mt19937 gen(seed.value());
         std::discrete_distribution<size_t> distribution =
             std::discrete_distribution<size_t>(probabilities.begin(), probabilities.end());
         for (size_t i = 0; i < nRolls; i++) multinomial[distribution(gen)]++;
@@ -28,7 +34,7 @@ namespace epiabm
 
         for (size_t ci = 0; ci < nCells; ci++)
         {
-            Cell* cell = &population->cells()[ci];
+            Cell* cell = population->cells()[ci].get();
             
             size_t nPeopleInCell = static_cast<size_t>(std::accumulate(
                 std::next(multinomial.begin(), static_cast<long>(ci*nMicrocells)),
@@ -53,7 +59,7 @@ namespace epiabm
     {
         for (size_t ci = 0; ci < population->cells().size(); ci++)
         {
-            Cell* cell = &population->cells()[ci];
+            Cell* cell = population->cells()[ci].get();
             for (size_t mi = 0; mi < cell->microcells().size(); mi++)
             {
                 Microcell* microcell = &cell->microcells()[mi];
@@ -81,7 +87,7 @@ namespace epiabm
         size_t gridLength = static_cast<size_t>(ceil(sqrt(static_cast<double>(nCells))));
         for (size_t ci = 0; ci < nCells; ci++)
         {
-            Cell& cell = population->cells()[ci];
+            Cell& cell = *population->cells()[ci];
             double cx = static_cast<double>(ci%gridLength)/static_cast<double>(gridLength);
             double cy = static_cast<double>(ci/gridLength)/static_cast<double>(gridLength);
             cell.setLocation(
@@ -91,7 +97,7 @@ namespace epiabm
 
     PopulationPtr ToyPopulationFactory::makePopulation(
         size_t populationSize, size_t nCells, size_t nMicrocellsPerCell,
-        size_t nHouseholds, size_t, std::optional<size_t> seed = 0)
+        size_t nHouseholds, size_t, std::optional<size_t> seed)
     {
         PopulationFactory factory = PopulationFactory();
         PopulationPtr population = factory.makePopulation(nCells, nMicrocellsPerCell, 0);

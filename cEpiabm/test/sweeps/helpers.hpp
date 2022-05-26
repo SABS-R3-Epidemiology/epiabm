@@ -9,7 +9,7 @@ inline void bind_households(PopulationPtr population, size_t n_households)
 {
     for (size_t c = 0; c < population->cells().size(); c++)
     {
-        Cell* cell = &population->cells()[c];
+        Cell* cell = population->cells()[c].get();
         for (size_t mc = 0; mc < cell->microcells().size(); mc++)
         {
             Microcell* microcell = &cell->microcells()[mc];
@@ -36,7 +36,7 @@ inline void random_seed(PopulationPtr population, int percentage, InfectionStatu
 {
     for (size_t c = 0; c < population->cells().size(); c++)
     {
-        Cell* cell = &population->cells()[c];
+        Cell* cell = population->cells()[c].get();
         for (size_t mc = 0; mc < cell->microcells().size(); mc++)
         {
             for (size_t p = 0; p < cell->people().size(); p++)

@@ -37,13 +37,13 @@ namespace epiabm
         }
     }
 
-    unsigned short InverseCDF::choose(double timestepsPerDay, std::mt19937_64 generator)
+    unsigned short InverseCDF::choose(double timestepsPerDay, RandomGenerator& generator)
     {
         double q;
-        size_t i = static_cast<size_t>(floor(q = static_cast<double>(generator())/static_cast<double>(generator.max())*static_cast<double>(InverseCDF::RES)));
+        size_t i = static_cast<size_t>(floor(q = generator.randf<double>()*static_cast<double>(InverseCDF::RES)));
         q -= static_cast<double>(i);
 
-        double ti = -m_mean * log(q * m_values[i+1] + (1-q)*m_values[i]);
+        double ti = m_mean * (q * m_values[i+1] + (1.0-q)*m_values[i]);
         return static_cast<unsigned short>(floor(0.5 + (ti * timestepsPerDay)));
     }
 

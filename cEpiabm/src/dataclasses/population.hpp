@@ -15,7 +15,7 @@ namespace epiabm
     class Population
     {
     private:
-        std::vector<Cell> m_cells;
+        std::vector<CellPtr> m_cells;
         std::vector<Place> m_places;
         
     public:
@@ -25,7 +25,7 @@ namespace epiabm
         void forEachCell(std::function<bool(Cell*)> callback);
         void forEachPlace(std::function<bool(Place*)> callback);
 
-        std::vector<Cell>& cells();
+        std::vector<CellPtr>& cells();
         std::vector<Place>& places();
 
         /**

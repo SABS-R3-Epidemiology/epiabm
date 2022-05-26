@@ -13,8 +13,6 @@
 
 namespace epiabm
 {
-    SpatialSweep::SpatialSweep() {}
-
     SpatialSweep::SpatialSweep(SimulationConfigPtr cfg) :
         SweepInterface(cfg),
         m_counter(0)
@@ -34,16 +32,16 @@ namespace epiabm
         LOG << LOG_LEVEL_DEBUG << "Finished Spatial Sweep " << timestep;
     }
 
-    inline std::vector<double> SpatialSweep::getWeightsFromCells(std::vector<Cell> &cells, Cell *currentCell,
+    inline std::vector<double> SpatialSweep::getWeightsFromCells(std::vector<CellPtr> &cells, Cell *currentCell,
                                                    bool doDistance = true, bool doCovidsim = false)
     {
         std::vector<double> weightVector;
         if (doDistance)
         {
             std::pair<double, double> current_loc = currentCell->location();
-            for (Cell &cell : cells)
+            for (CellPtr &cell : cells)
             {
-                double dist = DistanceMetrics::Dist(cell.location(), current_loc);
+                double dist = DistanceMetrics::Dist(cell->location(), current_loc);
                 weightVector.push_back(
                     dist < m_cfg->infectionConfig->infectionRadius ?
                         1.0/dist : 0);
@@ -51,15 +49,15 @@ namespace epiabm
         }
         else if (doCovidsim)
         {
-            for (Cell &cell : cells)
+            for (CellPtr &cell : cells)
             {
-                if (&cell == currentCell)
+                if (cell.get() == currentCell)
                 { // want to compare pointers here
                     weightVector.push_back(0);
                 }
                 else
                 {
-                    size_t num_infectious = cell.numInfectious();
+                    size_t num_infectious = cell->numInfectious();
                     weightVector.push_back(static_cast<int>(num_infectious));
                 }
             }
@@ -67,7 +65,7 @@ namespace epiabm
         return weightVector;
     }
 
-    inline std::vector<size_t> SpatialSweep::getCellsToInfect(std::vector<Cell> &cells, Cell *currentCell, size_t n)
+    inline std::vector<size_t> SpatialSweep::getCellsToInfect(std::vector<CellPtr> &cells, Cell *currentCell, size_t n)
     {
         std::vector<double> weightVector = getWeightsFromCells(cells, currentCell);
         std::vector<size_t> chosenCellIndices = std::vector<size_t>();
@@ -98,18 +96,25 @@ namespace epiabm
         double ave_num_of_infections = calcCellInf(cell, timestep);
 
         std::poisson_distribution<int> distribution(ave_num_of_infections);
-        size_t number_to_infect = static_cast<size_t>(distribution(m_cfg->randomManager->g().generator()));
-        LOG << LOG_LEVEL_DEBUG << "Cell " << cell->index() << " distributing " << number_to_infect << " spatial infections.";
-
+        size_t number_to_infect = static_cast<size_t>(
+            distribution(m_cfg->randomManager->g().generator()));
+        
+        {
+            std::stringstream ss;
+            ss << "Cell " << cell->index() << " distributing " << number_to_infect << " spatial infections.";
+            LOG << LOG_LEVEL_DEBUG << ss.str();
+        }
         std::vector<size_t> inf_cell_indices = getCellsToInfect(m_population->cells(), cell, number_to_infect);
 
         Person *infector;
-        cell->sampleInfectious(1, [&](Person *p)
-                               { infector = p; return true; });
+        cell->sampleInfectious(1,
+            [&](Person *p){
+                infector = p; return true;
+            }, m_cfg->randomManager->g().generator());
 
         for (const size_t infCellIndex : inf_cell_indices)
         {
-            Cell* inf_cell_addr = &m_population->cells()[infCellIndex];
+            Cell* inf_cell_addr = m_population->cells()[infCellIndex].get();
             if (inf_cell_addr->people().size() < 1)
                 continue;
 
@@ -129,9 +134,13 @@ namespace epiabm
             if (m_cfg->randomManager->g().randf<double>() < foi)
             {
                 // Infection attempt is successful
-                LOG << LOG_LEVEL_DEBUG << "Spatial infection between ("
-                    << cell->index() << "," << infector->cellPos() << ") and ("
-                    << inf_cell_addr->index() << "," << infectee->cellPos() << ")";
+                {
+                    std::stringstream ss;
+                    ss  << "Spatial infection between ("
+                        << cell->index() << "," << infector->cellPos() << ") and ("
+                        << inf_cell_addr->index() << "," << infectee->cellPos() << ")";
+                    LOG << LOG_LEVEL_DEBUG << ss.str();
+                }
                 m_counter++;
                 inf_cell_addr->enqueuePerson(infectee->cellPos());
             }

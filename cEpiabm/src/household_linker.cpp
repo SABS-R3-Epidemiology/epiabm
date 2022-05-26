@@ -7,9 +7,9 @@
 namespace epiabm
 {
 
-    void HouseholdLinker::linkHouseholds(PopulationPtr population, size_t n_households, int percInHousehold, size_t seed)
+    void HouseholdLinker::linkHouseholds(PopulationPtr population, size_t n_households, int percInHousehold, std::optional<size_t> seed)
     {
-        std::mt19937_64 g(seed);
+        std::mt19937_64 g(seed.value_or(0));
         population->forEachCell([&](Cell* cell)
             {
                 cell->forEachMicrocell([&](Microcell* microcell)

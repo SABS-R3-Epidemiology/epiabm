@@ -38,6 +38,18 @@ namespace epiabm
          */
         virtual void operator()(const unsigned short /*timestep*/){};
 
+        /**
+         * @brief Callback to apply sweep to each cell
+         * 
+         * @param timestep Current Timestep
+         * @param cell Cell to act on
+         * @return true Returns true to continue and callback on next cell
+         * @return false Terminate Callbacks
+         */
+        virtual bool cellCallback(
+            const unsigned short /*timestep*/,
+            Cell* /*cell*/) { return true; }
+
 
     }; // class SweepInterface
 

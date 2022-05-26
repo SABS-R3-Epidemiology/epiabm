@@ -30,10 +30,9 @@ namespace epiabm
          */
         void operator()(const unsigned short timestep) override;
 
-    private:
         bool cellCallback(
             const unsigned short timestep,
-            Cell* cell);
+            Cell* cell) override;
 
         /* For each Exposed Person */
         bool cellExposedCallback(

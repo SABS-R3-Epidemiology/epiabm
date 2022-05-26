@@ -50,8 +50,12 @@ namespace epiabm
     void NewInfectionSweep::cellPersonQueueCallback(unsigned short timestep, Cell* cell, size_t personIndex)
     {
         Person* person = &cell->getPerson(personIndex);
-        LOG << LOG_LEVEL_DEBUG << "New infection sweep on ("
-            << cell->index() << "," << person->cellPos() << ")";
+        {
+            std::stringstream ss;
+            ss << "New infection sweep on ("
+                << cell->index() << "," << person->cellPos() << ")";
+            LOG << LOG_LEVEL_DEBUG << ss.str();
+        }
         person->updateStatus(cell, InfectionStatus::Exposed, timestep);
         person->params().next_status_time = static_cast<unsigned short>(timestep + latent_time(person));
         cell->markExposed(personIndex);
@@ -61,7 +65,7 @@ namespace epiabm
     unsigned short NewInfectionSweep::latent_time(Person* /*person*/)
     {
         return m_cfg->infectionConfig->hostProgressionConfig->latentPeriodICDF.choose(
-            m_cfg->timestepsPerDay, m_cfg->randomManager->g().generator());
+            m_cfg->timestepsPerDay, m_cfg->randomManager->g());
     }
 
 

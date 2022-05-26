@@ -15,7 +15,7 @@ inline void enqueueRandom(PopulationPtr population)
 {
     for (size_t c = 0; c < population->cells().size(); c++)
     {
-        Cell* cell = &population->cells()[c];
+        Cell* cell = population->cells()[c].get();
         for (size_t mc = 0; mc < cell->microcells().size(); mc++)
         {
             for (size_t p = 0; p < cell->people().size(); p++)

@@ -90,8 +90,12 @@ namespace epiabm
 
         if (m_cfg->randomManager->g().randf<double>() < foi)
         {
-            LOG << LOG_LEVEL_DEBUG << "Household infection in cell " << cell->index()
+            {
+                std::stringstream ss;
+                ss << "Household infection in cell " << cell->index()
                 << " between " << infector->cellPos() << " and " << infectee->cellPos();
+                LOG << LOG_LEVEL_DEBUG << ss.str();
+            }
             // Infection attempt is successful
             cell->enqueuePerson(infectee->cellPos());
             m_counter++;

@@ -1,12 +1,11 @@
-#ifndef EPIABM_SIMULATINS_Threaded_SIMULATION_HPP
-#define EPIABM_SIMULATINS_Threaded_SIMULATION_HPP
+#ifndef EPIABM_SIMULATINS_BASIC_SIMULATION_HPP
+#define EPIABM_SIMULATINS_BASIC_SIMULATION_HPP
 
 
 #include "../sweeps/sweep_interface.hpp"
 #include "../reporters/timestep_reporter_interface.hpp"
 
 #include "../dataclasses/population.hpp"
-#include "../utilities/thread_pool.hpp"
 
 #include <memory>
 #include <vector>
@@ -15,20 +14,23 @@
 namespace epiabm
 {
 
-    class ThreadedSimulation
+    /**
+     * @brief Class to setup simulation closely matching Covid-Sim
+     * 
+     */
+    class CovidSim
     {
     private:
         PopulationPtr m_population;
-        std::map<size_t, std::vector<SweepInterfacePtr>> m_sweeps;
+        std::vector<SweepInterfacePtr> m_sweeps;
         std::vector<TimestepReporterInterfacePtr> m_timestepReporters;
         
-        thread_pool m_pool;
 
     public:
-        ThreadedSimulation(PopulationPtr population, std::optional<size_t> nThreads);
-        ~ThreadedSimulation() = default;
+        CovidSim(PopulationPtr population);
+        ~CovidSim() = default;
 
-        void addSweep(SweepInterfacePtr sweep, size_t group);
+        void addSweep(SweepInterfacePtr sweep);
 
         void addTimestepReporter(TimestepReporterInterfacePtr reporter);
 
@@ -39,7 +41,7 @@ namespace epiabm
         void teardown();
     };
 
-    typedef std::shared_ptr<ThreadedSimulation> ThreadedSimulationPtr;
+    typedef std::shared_ptr<BasicSimulation> BasicSimulationPtr;
 
 }
 

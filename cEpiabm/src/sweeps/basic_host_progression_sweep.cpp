@@ -82,9 +82,13 @@ namespace epiabm
     {
         if (timestep < person->params().next_status_time) return true;
         InfectionStatus next = next_status(person);
-        LOG << LOG_LEVEL_DEBUG << "Basic host progression of ("
-            << cell->index() << "," << person->cellPos() << ") from "
-            << status_string(person->status()) << " to " << status_string(next);
+        {
+            std::stringstream ss;
+            ss << "Basic host progression of ("
+                << cell->index() << "," << person->cellPos() << ") from "
+                << status_string(person->status()) << " to " << status_string(next);
+            LOG << LOG_LEVEL_DEBUG << ss.str();
+        }
         person->updateStatus(cell, next, timestep);
 
         if (next == InfectionStatus::Recovered)
