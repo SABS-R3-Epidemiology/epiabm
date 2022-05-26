@@ -1,7 +1,7 @@
 {
     "basic_reproduction_num": 2.8,
     "do_CovidSim": false,
-    "infection_radius": 1,
+    "infection_radius": 0.02,
     "latent_period": 4.59,
     "asympt_infect_period": 14,
     "mean_mild_to_recov": 7,
