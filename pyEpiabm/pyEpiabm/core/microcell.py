@@ -122,7 +122,7 @@ class Microcell:
             self,
             old_status: InfectionStatus,
             new_status: InfectionStatus,
-            age_group=0) -> None:
+            age_group) -> None:
         """Notify Microcell that a person's status has changed.
 
         Parameters
@@ -136,7 +136,8 @@ class Microcell:
 
         """
         self.compartment_counter.report(old_status, new_status, age_group)
-        self.cell.notify_person_status_change(old_status, new_status)
+        self.cell.notify_person_status_change(old_status, new_status,
+                                              age_group)
 
     def set_location(self, loc: typing.Tuple[float, float]):
         """Method to set or change the location of a microcell.

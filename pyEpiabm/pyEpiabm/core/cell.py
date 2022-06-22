@@ -88,7 +88,8 @@ class Cell:
     def notify_person_status_change(
             self,
             old_status: InfectionStatus,
-            new_status: InfectionStatus) -> None:
+            new_status: InfectionStatus,
+            age_group) -> None:
         """Notify Cell that a person's status has changed.
 
         Parameters
@@ -97,9 +98,10 @@ class Cell:
             Person's old infection status
         new_status : InfectionStatus
             Person's new infection status
-
+        age_group : Age group index
+            Person's associated age group
         """
-        self.compartment_counter.report(old_status, new_status)
+        self.compartment_counter.report(old_status, new_status, age_group)
 
     def number_infectious(self):
         """Returns the total number of infectious people in each
