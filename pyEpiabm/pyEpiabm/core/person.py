@@ -119,7 +119,7 @@ class Person:
 
         """
         self.microcell.notify_person_status_change(
-            self.infection_status, new_status)
+            self.infection_status, new_status, self.age_group)
         self.infection_status = new_status
 
     def add_place(self, place, person_group: int = 0):
