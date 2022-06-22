@@ -38,7 +38,7 @@ class Plotter():
         self.do_ages = (self.age_name is not None)
         if self.do_ages and (self.age_list is None):
             num = self.data[self.age_name].max()
-            self.age_list = ["{}0-{}0".format(i, i+1) for i in range(num+1)]
+            self.age_list = [str(5*i)+"-"+str(5*i+5) for i in range(num+1)]
 
     def sum_infectious(self) -> None:
         """Helper function which sums across all columns containing infectious
