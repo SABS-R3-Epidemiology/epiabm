@@ -153,24 +153,38 @@ class Simulation:
             Time of output data
 
         """
-
+        if Parameters.instance().use_ages:
+            nb_age_groups = len(Parameters.instance().age_proportions)
+        else:
+            nb_age_groups = 1
+        
         if self.spatial_output:  # Separate output line for each cell
             for cell in self.population.cells:
-                data = {s: 0 for s in list(InfectionStatus)}
-                for k in data:
-                    data[k] += cell.compartment_counter.retrieve()[k]
-                data["time"] = time
-                data["cell"] = cell.id
-                data["location_x"] = cell.location[0]
-                data["location_y"] = cell.location[1]
-                self.writer.write(data)
+                for age_i in range(0, nb_age_groups):
+                    data = {s: 0 for s in list(InfectionStatus)}
+                    for inf_status in data:
+                        # Retrieve data for all age groups for each infection
+                        # status
+                        data_per_inf_status =\
+                            cell.compartment_counter.retrieve()[inf_status]
+                        data[inf_status] += data_per_inf_status[age_i]
+                    data["age_group"] = age_i
+                    data["time"] = time
+                    data["cell"] = cell.id
+                    data["location_x"] = cell.location[0]
+                    data["location_y"] = cell.location[1]
+                    self.writer.write(data)
         else:  # Summed output across all cells in population
             data = {s: 0 for s in list(InfectionStatus)}
             for cell in self.population.cells:
-                for k in data:
-                    data[k] += cell.compartment_counter.retrieve()[k]
-            data["time"] = time
-            self.writer.write(data)
+                for age_i in range(0, nb_age_groups):
+                    for inf_status in data:
+                        data_per_inf_status =\
+                            cell.compartment_counter.retrieve()[inf_status]
+                        data[inf_status] += data_per_inf_status[age_i]
+                    data["age_group"] = age_i
+                    data["time"] = time
+                    self.writer.write(data)
 
     @staticmethod
     def set_random_seed(seed):
