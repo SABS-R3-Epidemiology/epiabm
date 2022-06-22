@@ -1,12 +1,9 @@
 #
 # Reads a csv of age stratified data and plots as a bar chart
 
-import matplotlib
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
-from matplotlib import cm
 
 # csv input files should have the column headers:
 # time, infection_Status1, infection_status2, ..., age_range
@@ -35,23 +32,25 @@ class Plotter():
         ind2 = list(self.data.columns).index("InfectionStatus.InfectICURecov")
         self.data["Total Infectious"] = self.data.iloc[:, ind1:ind2+1].sum(axis=1)
 
-    def barchart(self, outfile: str, infection_category: str = "Total Infectious"):
+    def barchart(self, outfile: str,
+                 infection_category: str = "Total Infectious"):
         """Function which creates a bar chart from csv data, with
         capability to stratify by age if required.
-        
+
         Parameters
         ----------
         infection_category : str
             Category to be plotted, includes 
-            
+
         """
         if infection_category == "Total Infectious":
             self.sum_infectious()
         new_frame = self.data.loc[:, ('time', infection_category)]
         if self.do_ages:
             new_frame.loc[:, "AgeRange"] = self.data.loc[:, "AgeRange"]
-            new_frame = new_frame.pivot(index="time", columns='AgeRange', values=infection_category)
-            new_frame.plot.bar(stacked=True, colormap = "inferno_r")
+            new_frame = new_frame.pivot(index="time", columns='AgeRange',
+                                        values=infection_category)
+            new_frame.plot.bar(stacked=True, colormap="inferno_r")
         else:
             new_frame.plot.bar(x='time', y=infection_category)
         plt.title("Infections, stratified by age")
@@ -59,8 +58,8 @@ class Plotter():
         plt.ylabel("Number infected")
         plt.savefig(outfile)
 
-       
-if __name__=='__main__':
+
+if __name__ == '__main__':
     dirname = os.path.dirname(os.path.abspath(__file__))
     p = Plotter(os.path.join(dirname, "output.csv"))
     p.barchart(os.path.join(dirname, "age_stratify.png"))
