@@ -7,7 +7,7 @@ import numpy as np
 
 from pyEpiabm.property import InfectionStatus
 
-from .parameters import Parameters
+import pyEpiabm.core
 
 
 class _CompartmentCounter:
@@ -28,12 +28,14 @@ class _CompartmentCounter:
         # Identifier
         self._identifier = identifier
         # Number of age groups
-        if Parameters.instance().use_ages:
-            self.nb_age_groups = len(Parameters.instance().age_proportions)
+        if pyEpiabm.core.Parameters.instance().use_ages:
+            self.nb_age_groups =\
+                len(pyEpiabm.core.Parameters.instance().age_proportions)
         else:
             self.nb_age_groups = 1
 
-        # Internal datastore
+        # Internal datastore, returns array with age group for each status
+        # infection
         self._compartments = {status: np.zeros(self.nb_age_groups) for status
                               in InfectionStatus}
 

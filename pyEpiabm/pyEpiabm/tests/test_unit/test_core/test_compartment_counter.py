@@ -1,6 +1,7 @@
 import unittest
 import random
 import numpy as np
+from unittest.mock import patch
 
 import pyEpiabm as pe
 from pyEpiabm.property.infection_status import InfectionStatus
@@ -23,6 +24,21 @@ class TestCompartmentCounter(TestPyEpiabm):
         cls.subject = cls.microcell.compartment_counter
 
     def test_construct(self):
+        self.subject = pe._CompartmentCounter("Cell 1")
+        self.assertEqual(self.subject.identifier, "Cell 1")
+        if pe.Parameters.instance().use_ages:
+            nb_groups = len(pe.Parameters.instance().age_proportions)
+        else:
+            nb_groups = 1
+        for status in self.subject.retrieve():
+            for agegroup in range(nb_groups):
+                with self.subTest(status=status):
+                    self.assertEqual(self.subject.retrieve()[status][agegroup],
+                                     0)
+
+    @patch('pyEpiabm.core.Parameters.instance')
+    def test_construct_no_age(self, mock_params):
+        mock_params.return_value.use_ages = False
         self.subject = pe._CompartmentCounter("Cell 1")
         self.assertEqual(self.subject.identifier, "Cell 1")
         if pe.Parameters.instance().use_ages:
