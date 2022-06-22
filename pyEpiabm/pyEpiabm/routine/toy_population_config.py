@@ -99,7 +99,6 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             ToyPopulationFactory.add_places(new_pop, place_number)
 
         logging.info(f"Toy Population Configured with {cell_number} cells")
-        print("hi")
         return new_pop
 
     @staticmethod

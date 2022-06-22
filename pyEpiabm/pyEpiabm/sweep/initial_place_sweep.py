@@ -9,7 +9,7 @@ from .update_place_sweep import UpdatePlaceSweep
 
 
 class InitialisePlaceSweep(AbstractSweep):
-    """Class to update people in the "Place"
+    """Class to initialise people in the "Place"
     class.
     """
     def __call__(self):

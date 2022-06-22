@@ -44,7 +44,7 @@ class InitialInfectedSweep(AbstractSweep):
         num_susceptible = 0
         for cell in self._population.cells:
             num_susceptible = num_susceptible + \
-                                cell.compartment_counter.retrieve()[status]
+                sum(cell.compartment_counter.retrieve()[status])
 
         if num_susceptible < sim_params["initial_infected_number"]:
             raise ValueError('There are not enough susceptible people in the \
