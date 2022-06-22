@@ -32,11 +32,13 @@ class TestPerson(TestPyEpiabm):
         mock_int.assert_called_once()
         self.assertEqual(self.person.age, 22)
 
+        # Testing now without age functionality in the model
         with patch('pyEpiabm.Parameters.instance') as mock_param:
             mock_param.return_value.use_ages = False
             self.person.set_random_age()
             mock_param.assert_called_once()
             self.assertEqual(self.person.age, None)
+            self.assertEqual(self.person.age_group, 0)
 
     def test_repr(self):
         self.assertEqual(repr(self.person),
