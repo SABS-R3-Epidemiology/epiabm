@@ -62,18 +62,21 @@ class Microcell:
         self.id = id
 
     def add_person(self, person):
-        """Adds :class:`Person` with given :class:`InfectionStatus`
-        to Microcell.
+        """Adds :class:`Person` with given :class:`InfectionStatus` and given
+        age group to Microcell.
 
         Parameters
         ----------
         person : Person
-            Newly instantiated person with InfectionStatus
+            Newly instantiated person with InfectionStatus and associated age
+            group
 
         """
         status = person.infection_status
-        self.compartment_counter._increment_compartment(1, status)
-        self.cell.compartment_counter._increment_compartment(1, status)
+        age_group = person.age_group
+        self.compartment_counter._increment_compartment(1, status, age_group)
+        self.cell.compartment_counter._increment_compartment(1, status,
+                                                             age_group)
         self.cell.persons.append(person)
         self.persons.append(person)
 
@@ -98,6 +101,7 @@ class Microcell:
             self.cell.persons.append(p)
             self.persons.append(p)
             p.infection_status = status
+            p.age_group = age_group
 
     def add_place(self, n: int, loc: typing.Tuple[float, float],
                   place_type):

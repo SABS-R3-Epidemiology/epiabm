@@ -27,6 +27,7 @@ class TestMicrocell(TestPyEpiabm):
         self.assertEqual(self.microcell.id, 2.0)
 
     def test_add_person(self):
+        # Add test to check if age is preserved
         self.assertEqual(len(self.microcell.persons), 0)
         self.assertEqual(len(self.cell.persons), 0)
 
