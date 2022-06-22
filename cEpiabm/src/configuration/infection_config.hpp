@@ -26,6 +26,8 @@ namespace epiabm
             double householdTransmission;
             double placeTransmission;
 
+            std::string spatial_distance_metric;
+
             InfectionConfig()
             {
                 hostProgressionConfig = std::make_shared<HostProgressionConfig>();

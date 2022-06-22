@@ -35,10 +35,28 @@ TEST_CASE("json_factory: test errors", "[JsonFactory]")
         j["infection_config"]["host_progression_config"]["transition_time"].erase("mean_hosp_to_icu");
         REQUIRE_THROWS(f->loadConfig(j));
     }
+
+    {
+        json::json j = getConfig();
+        j["infection_config"]["host_progression_config"]["transition_time"]["asympt_infect_icdf"] = std::vector<double>();
+        REQUIRE_THROWS(f->loadConfig(j));
+    }
     
     {
         json::json j = getConfig();
         j["infection_config"]["host_progression_config"]["transition_time"].erase("asympt_infect_icdf");
+        REQUIRE_THROWS(f->loadConfig(j));
+    }
+
+    {
+        json::json j = getConfig();
+        j["infection_config"]["host_progression_config"].erase("transition_state");
+        REQUIRE_THROWS(f->loadConfig(j));
+    }
+
+    {
+        json::json j = getConfig();
+        j["infection_config"]["host_progression_config"].erase("transition_time");
         REQUIRE_THROWS(f->loadConfig(j));
     }
     
@@ -62,6 +80,12 @@ TEST_CASE("json_factory: test errors", "[JsonFactory]")
 
     {
         json::json j = getConfig();
+        j.erase("population_config");
+        REQUIRE_THROWS(f->loadConfig(j));
+    }
+
+    {
+        json::json j = getConfig();
         j.erase("timesteps_per_day");
         REQUIRE_NOTHROW(f->loadConfig(j));
     }
@@ -78,6 +102,7 @@ TEST_CASE("json_factory: test constructor", "[JsonFactory]")
     }
     {
         [[maybe_unused]] ConfigurationFactoryInterface* i = new ConfigurationFactoryInterface();
+        auto s = i->loadConfig("");
         delete i;
         i = nullptr;
     }

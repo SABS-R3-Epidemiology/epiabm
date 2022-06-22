@@ -52,8 +52,7 @@ namespace epiabm
         inline std::vector<size_t> getCellsToInfect(
             std::vector<CellPtr>& cells, Cell* currentCell, size_t n);
         
-        std::vector<double> getWeightsFromCells(std::vector<CellPtr> &cells, Cell *currentCell,
-            bool doDistance, bool doCovidsim);
+        std::vector<double> getWeightsFromCells(std::vector<CellPtr> &cells, Cell *currentCell);
 
         double calcCellInf(
             Cell* cell,

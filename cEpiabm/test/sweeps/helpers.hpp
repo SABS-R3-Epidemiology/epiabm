@@ -46,6 +46,7 @@ inline void random_seed(PopulationPtr population, int percentage, InfectionStatu
                     Person* person = &cell->getPerson(p);
                     person->updateStatus(cell, status, 0);
                     person->params().next_status_time = nextTime;
+                    person->params().infectiousness=1.0;
                 }
             }
         }

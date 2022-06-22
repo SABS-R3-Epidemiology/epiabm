@@ -32,11 +32,10 @@ namespace epiabm
         LOG << LOG_LEVEL_DEBUG << "Finished Spatial Sweep " << timestep;
     }
 
-    inline std::vector<double> SpatialSweep::getWeightsFromCells(std::vector<CellPtr> &cells, Cell *currentCell,
-                                                   bool doDistance = true, bool doCovidsim = false)
+    inline std::vector<double> SpatialSweep::getWeightsFromCells(std::vector<CellPtr> &cells, Cell *currentCell)
     {
         std::vector<double> weightVector;
-        if (doDistance)
+        if (m_cfg->infectionConfig->spatial_distance_metric == "euclidean")
         {
             std::pair<double, double> current_loc = currentCell->location();
             for (CellPtr &cell : cells)
@@ -47,7 +46,7 @@ namespace epiabm
                         1.0/dist : 0);
             }
         }
-        else if (doCovidsim)
+        else if (m_cfg->infectionConfig->spatial_distance_metric == "covidsim")
         {
             for (CellPtr &cell : cells)
             {
@@ -61,6 +60,13 @@ namespace epiabm
                     weightVector.push_back(static_cast<int>(num_infectious));
                 }
             }
+        }
+        else
+        {
+            LOG << LOG_LEVEL_ERROR << "Invalid spatial_distance_metric requested: "
+                << m_cfg->infectionConfig->spatial_distance_metric
+                << ". Allowed options are \"euclidean\" or \"covidsim\"";
+            std::throw_with_nested(std::runtime_error("Invalid spatial_distance_metric parameter"));
         }
         return weightVector;
     }
@@ -116,7 +122,9 @@ namespace epiabm
         {
             Cell* inf_cell_addr = m_population->cells()[infCellIndex].get();
             if (inf_cell_addr->people().size() < 1)
-                continue;
+                // LCOV_EXCL_START
+                continue; // This line is simple but would be a pain to test
+                // LCOV_EXCL_END
 
             size_t infectee_index = static_cast<size_t>(m_cfg->randomManager->g().randi(RAND_MAX)) % inf_cell_addr->people().size();
             Person *infectee = &inf_cell_addr->people()[infectee_index];

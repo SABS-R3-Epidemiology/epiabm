@@ -25,6 +25,7 @@ namespace epiabm
         {
             infectionConfig = std::make_shared<InfectionConfig>();
             populationConfig = std::make_shared<PopulationConfig>();
+            randomManager = std::make_shared<RandomManager>(0);
         }
 
     private:

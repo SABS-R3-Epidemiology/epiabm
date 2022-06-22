@@ -72,6 +72,7 @@ namespace epiabm
         cfg->falsePositiveRate = retrieve<double>(j, "false_positive_rate");
         cfg->householdTransmission = retrieve<double>(j, "household_transmission");
         cfg->placeTransmission = retrieve<double>(j, "place_transmission");
+        cfg->spatial_distance_metric = retrieve<std::string>(j, "spatial_distance_metric");
         return true;
     }
 

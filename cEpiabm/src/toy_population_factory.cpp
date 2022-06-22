@@ -28,7 +28,7 @@ namespace epiabm
         //return std::vector<size_t>(nGroups, nRolls/nGroups);
     }
 
-    inline void distributePeople(PopulationPtr population, size_t nCells, size_t nMicrocells, size_t nPeople, size_t seed)
+    inline void distributePeople(PopulationPtr population, size_t nCells, size_t nMicrocells, size_t nPeople, std::optional<size_t> seed)
     {
         std::vector<size_t> multinomial = generate_multinomial(nCells*nMicrocells, nPeople, seed);
 
@@ -102,7 +102,7 @@ namespace epiabm
         PopulationFactory factory = PopulationFactory();
         PopulationPtr population = factory.makePopulation(nCells, nMicrocellsPerCell, 0);
 
-        distributePeople(population, nCells, nMicrocellsPerCell, populationSize, seed.value_or(0));
+        distributePeople(population, nCells, nMicrocellsPerCell, populationSize, seed);
         if (nHouseholds > 0) addHouseholds(population, nHouseholds, seed.value_or(0) + 1);
 
         assignCellLocations(population);

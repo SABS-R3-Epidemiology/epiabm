@@ -32,6 +32,10 @@ set(
     test_log_file.cpp
     test_covidsim.cpp
     configuration/test_json_factory.cpp
+    configuration/test_simulation_config.cpp
+    configuration/test_infection_config.cpp
+    configuration/test_population_config.cpp
+    configuration/test_host_progression_config.cpp
     sweeps/test_household_sweep.cpp
     sweeps/test_new_infection_sweep.cpp
     sweeps/test_basic_host_progression_sweep.cpp
@@ -40,6 +44,9 @@ set(
     reporters/test_cell_compartment_reporter.cpp
     reporters/test_percell_compartment_reporter.cpp
     reporters/test_population_compartment_reporter.cpp
+    utilities/test_inverse_cdf.cpp
+    utilities/test_random_manager.cpp
+    utilities/test_random_generator.cpp
     test_basic_simulation.cpp
 )
 

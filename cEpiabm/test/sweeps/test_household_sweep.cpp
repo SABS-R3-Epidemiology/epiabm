@@ -54,6 +54,7 @@ TEST_CASE("sweeps/household_sweep: test destructor", "[HouseholdSweep]")
     {
         SweepInterface* i = new SweepInterface();
         i->operator()(0);
+        i->cellCallback(0, nullptr);
         delete i;
         i = nullptr;
     }

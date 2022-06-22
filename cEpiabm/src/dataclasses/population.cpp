@@ -34,8 +34,6 @@ namespace epiabm
 
     std::vector<Place>& Population::places() { return m_places; }
 
-    std::vector<Place>& Population::places() { return m_places; }
-
     void Population::initialize()
     {
         for (size_t i = 0; i < m_cells.size(); i++)

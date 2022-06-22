@@ -15,6 +15,8 @@ TEST_CASE("toy_population_factory: test make empty population", "[ToyPopulationF
     PopulationPtr population = factory.makePopulation(0,0,0,0,0, std::optional<size_t>());
 
     REQUIRE(population->cells().empty());
+
+    PopulationPtr populaiton2 = factory.makePopulation(0,0,0,0,0,0);
 }
 
 inline void testMakePopulation(size_t nPeople, size_t nCells, size_t nMicrocells, size_t nHouseholds, size_t nPlaces)
