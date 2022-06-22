@@ -10,29 +10,29 @@
 
 using namespace epiabm;
 
-inline Cell makeSubject(size_t n_microcells, size_t n_households, size_t n_people)
+inline CellPtr makeSubject(size_t n_microcells, size_t n_households, size_t n_people)
 {
-    Cell subject = Cell(0);
-    subject.microcells().reserve(n_households);
-    subject.people().reserve(n_microcells * n_people);
+    CellPtr subject = std::make_shared<Cell>(0);
+    subject->microcells().reserve(n_households);
+    subject->people().reserve(n_microcells * n_people);
     for (size_t i = 0; i < n_microcells; i++)
     {
-        subject.microcells().push_back(Microcell(i));
-        subject.microcells()[i].people().reserve(n_people);
-        subject.microcells()[i].households().reserve(n_households);
+        subject->microcells().push_back(Microcell(i));
+        subject->microcells()[i].people().reserve(n_people);
+        subject->microcells()[i].households().reserve(n_households);
         for (size_t j = 0; j < n_households; j++)
         {
-            subject.microcells()[i].households().push_back(std::make_shared<Household>(j));
+            subject->microcells()[i].households().push_back(std::make_shared<Household>(j));
         }
         for (size_t j = 0; j < n_people; j++)
         {
-            subject.microcells()[i].people().push_back(subject.people().size());
+            subject->microcells()[i].people().push_back(subject->people().size());
 
-            subject.people().push_back(
+            subject->people().push_back(
                 Person(
                     i,
-                    subject.people().size(),
-                    subject.microcells()[i].people().size() - 1));
+                    subject->people().size(),
+                    subject->microcells()[i].people().size() - 1));
 
             /*printf("Microcell: %ld, Person: (%ld, %ld)\n",
                 i,
@@ -99,26 +99,26 @@ inline void forEachMemberTest(size_t n_microcells, size_t n_households, size_t n
     std::vector<std::vector<std::set<Person *>>> members(
         n_microcells, std::vector<std::set<Person *>>(n_households));
 
-    Cell subject = makeSubject(n_microcells, n_households, n_people);
+    CellPtr subject = makeSubject(n_microcells, n_households, n_people);
 
     //std::cout << "Num Microcells: " << subject.microcells().size() << std::endl;
-    for (size_t mc = 0; mc < subject.microcells().size(); mc++)
+    for (size_t mc = 0; mc < subject->microcells().size(); mc++)
     {
         //std::cout << "Num People: " << subject.microcells()[mc].people().size() << std::endl;
-        for (size_t p = 0; p < subject.microcells()[mc].people().size(); p++)
+        for (size_t p = 0; p < subject->microcells()[mc].people().size(); p++)
         {
             size_t hh = static_cast<size_t>(std::rand())%n_households;
-            REQUIRE(subject.people()[subject.microcells()[mc].people()[p]]
+            REQUIRE(subject->people()[subject->microcells()[mc].people()[p]]
                         .setHousehold(hh));
-            REQUIRE(subject.microcells()[mc].households()[hh]->addMember(p));
+            REQUIRE(subject->microcells()[mc].households()[hh]->addMember(p));
             members[mc][hh].insert(
-                &subject.people()[subject.microcells()[mc].people()[p]]);
+                &subject->people()[subject->microcells()[mc].people()[p]]);
         }
     }
 
-    for (size_t mc = 0; mc < subject.microcells().size(); mc++)
+    for (size_t mc = 0; mc < subject->microcells().size(); mc++)
     {
-        for (size_t hh = 0; hh < subject.microcells()[mc].households().size(); hh++)
+        for (size_t hh = 0; hh < subject->microcells()[mc].households().size(); hh++)
         {
             auto callback = [&](Person *p)
             {
@@ -129,16 +129,16 @@ inline void forEachMemberTest(size_t n_microcells, size_t n_households, size_t n
                 return true;
             };
 
-            REQUIRE_NOTHROW(subject.microcells()[mc].households()[hh]->forEachMember(
-                subject, subject.microcells()[mc], callback));
+            REQUIRE_NOTHROW(subject->microcells()[mc].households()[hh]->forEachMember(
+                *subject, subject->microcells()[mc], callback));
 
             REQUIRE(members[mc][hh].size() == 0);
         }
     }
 
-    for (size_t mc = 0; mc < subject.microcells().size(); mc++)
+    for (size_t mc = 0; mc < subject->microcells().size(); mc++)
     {
-        for (size_t hh = 0; hh < subject.microcells()[mc].households().size(); hh++)
+        for (size_t hh = 0; hh < subject->microcells()[mc].households().size(); hh++)
         {
             size_t ctr = 0;
             auto callback = [&](Person *p)
@@ -149,8 +149,8 @@ inline void forEachMemberTest(size_t n_microcells, size_t n_households, size_t n
                 return (ctr < (n_people / 2));
             };
 
-            REQUIRE_NOTHROW(subject.microcells()[mc].households()[hh]->forEachMember(
-                subject, subject.microcells()[mc], callback));
+            REQUIRE_NOTHROW(subject->microcells()[mc].households()[hh]->forEachMember(
+                *subject, subject->microcells()[mc], callback));
 
             REQUIRE(members[mc][hh].size() == ctr);
         }

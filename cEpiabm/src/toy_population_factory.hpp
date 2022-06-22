@@ -17,7 +17,7 @@ namespace epiabm
         public:
             PopulationPtr makePopulation(
                 size_t populationSize, size_t nCells, size_t nMicrocells,
-                size_t nHouseholds, size_t nPlaces);
+                size_t nHouseholds, size_t nPlaces, std::optional<size_t> seed);
 
         private:
     };

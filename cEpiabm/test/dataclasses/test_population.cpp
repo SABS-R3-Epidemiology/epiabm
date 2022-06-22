@@ -20,7 +20,7 @@ TEST_CASE("dataclasses/population: test add cells", "[Population]")
 
     for (size_t i = 0; i < 1000; i++)
     {
-        subject.cells().push_back(Cell(subject.cells().size()));
+        subject.cells().push_back(std::make_shared<Cell>(subject.cells().size()));
     }
     REQUIRE(subject.cells().size() == 1000);
 }
@@ -33,8 +33,8 @@ TEST_CASE("dataclasses/population: test forEachCell", "[Population]")
     subject.cells().reserve(1000);
     for (size_t i = 0; i < 1000; i++)
     {
-        subject.cells().push_back(Cell(subject.cells().size()));
-        cells.insert(&subject.cells()[i]);
+        subject.cells().push_back(std::make_shared<Cell>(subject.cells().size()));
+        cells.insert(subject.cells()[i].get());
     }
     REQUIRE(subject.cells().size() == 1000);
     REQUIRE(cells.size() == 1000);
@@ -58,8 +58,8 @@ TEST_CASE("dataclasses/population: test forEachCell early stop", "[Population]")
     subject.cells().reserve(1000);
     for (size_t i = 0; i < 1000; i++)
     {
-        subject.cells().push_back(Cell(subject.cells().size()));
-        cells.insert(&subject.cells()[i]);
+        subject.cells().push_back(std::make_shared<Cell>(subject.cells().size()));
+        cells.insert(subject.cells()[i].get());
     }
     REQUIRE(subject.cells().size() == 1000);
     REQUIRE(cells.size() == 1000);

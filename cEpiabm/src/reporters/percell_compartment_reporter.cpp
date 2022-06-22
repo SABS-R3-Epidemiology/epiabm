@@ -67,7 +67,7 @@ namespace epiabm
             LOG << LOG_LEVEL_ERROR << "Per-Cell Compartment Reporter Error writing to file";
             throw e;
         }
-        // LCOV_EXCL_END
+        // LCOV_EXCL_STOP
     }
 
     void PerCellCompartmentReporter::teardown()

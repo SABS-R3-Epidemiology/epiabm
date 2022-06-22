@@ -17,10 +17,13 @@ namespace epiabm
 
     struct PersonParams
     {
-        unsigned char age = 0;
+        unsigned char age_group = 0;
         float susceptibility = 0, infectiousness = 0;
         
         unsigned short next_status_time = 0;
+        InfectionStatus next_status = InfectionStatus::Susceptible;
+        float initial_infectiousness = 0;
+        unsigned short infection_start_timestep = 0;
     };
 
     class Person

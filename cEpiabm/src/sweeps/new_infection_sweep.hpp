@@ -3,6 +3,7 @@
 
 #include "sweep_interface.hpp"
 #include "../dataclasses/person.hpp"
+#include "../configuration/simulation_config.hpp"
 
 #include <memory>
 
@@ -20,8 +21,10 @@ namespace epiabm
     class NewInfectionSweep : public SweepInterface
     {
         private:
+            unsigned long m_counter;
+
         public:
-            NewInfectionSweep();
+            NewInfectionSweep(SimulationConfigPtr cfg);
             ~NewInfectionSweep() = default;
 
             /**
@@ -31,10 +34,9 @@ namespace epiabm
              */
             void operator()(const unsigned short timestep) override;
 
-        private:
             bool cellCallback(
                 const unsigned short timestep,
-                Cell* cell);
+                Cell* cell) override;
 
             void cellPersonQueueCallback(
                 unsigned short timestep,

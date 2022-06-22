@@ -12,7 +12,7 @@ using namespace epiabm;
 TEST_CASE("reporters/percell_compartment_reporter: test initialize", "[PerCellCompartmentReporter]")
 {
     PopulationPtr population = PopulationFactory().makePopulation(10, 10, 1000);
-    HouseholdLinker().linkHouseholds(population, 1, 100);
+    HouseholdLinker().linkHouseholds(population, 1, 100, std::optional<size_t>());
     population->initialize();
 
     PerCellCompartmentReporter subject = PerCellCompartmentReporter("test_output");

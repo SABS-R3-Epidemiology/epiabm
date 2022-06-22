@@ -12,22 +12,24 @@ using namespace epiabm;
 TEST_CASE("toy_population_factory: test make empty population", "[ToyPopulationFactory]")
 {
     ToyPopulationFactory factory = ToyPopulationFactory();
-    PopulationPtr population = factory.makePopulation(0,0,0,0,0);
+    PopulationPtr population = factory.makePopulation(0,0,0,0,0, std::optional<size_t>());
 
     REQUIRE(population->cells().empty());
+
+    PopulationPtr populaiton2 = factory.makePopulation(0,0,0,0,0,0);
 }
 
 inline void testMakePopulation(size_t nPeople, size_t nCells, size_t nMicrocells, size_t nHouseholds, size_t nPlaces)
 {
     ToyPopulationFactory factory = ToyPopulationFactory();
     PopulationPtr pop = factory.makePopulation(
-        nPeople, nCells, nMicrocells, nHouseholds, nPlaces);
+        nPeople, nCells, nMicrocells, nHouseholds, nPlaces, std::optional<size_t>());
     
     REQUIRE(pop->cells().size() == nCells);
     size_t peopleCount = 0;
     for (size_t ci = 0; ci < pop->cells().size(); ci++)
     {
-        Cell& cell = pop->cells()[ci];
+        Cell& cell = *pop->cells()[ci];
         peopleCount += cell.people().size();
 
         for (size_t pi = 0; pi < cell.people().size(); pi++)
