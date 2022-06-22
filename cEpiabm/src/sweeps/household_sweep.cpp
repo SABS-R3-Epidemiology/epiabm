@@ -81,7 +81,7 @@ namespace epiabm
 
         double infectiousness = Covidsim::CalcHouseInf(infector, timestep);
         double susceptibility = Covidsim::CalcHouseSusc(infector, infectee, timestep);
-        double foi = infectiousness * susceptibility * 0.5;
+        double foi = infectiousness * susceptibility;
 
         if (static_cast<double>(std::rand() % 1000000) / static_cast<double>(1000000) < foi)
         {
