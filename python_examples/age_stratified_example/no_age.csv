@@ -1,0 +1,4 @@
+time,InfectionStatus.Susceptible,InfectionStatus.Exposed,InfectionStatus.InfectASympt,InfectionStatus.InfectMild,InfectionStatus.InfectGP,InfectionStatus.InfectHosp,InfectionStatus.InfectICU,InfectionStatus.InfectICURecov,InfectionStatus.Recovered,InfectionStatus.Dead
+0,20,0,0,0,0,0,0,0,0,0
+1,5,0,0,15,0,0,0,0,0,0
+2,0,0,0,20,0,0,0,0,0,0

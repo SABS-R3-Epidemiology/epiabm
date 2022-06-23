@@ -60,8 +60,9 @@ class SpatialSweep(AbstractSweep):
             # infector cell.
             poss_susc_cells = self._population.cells.copy()
             poss_susc_cells.remove(cell)
-            possible_infectee_num = sum([cell2.compartment_counter.retrieve()
-                                        [InfectionStatus.Susceptible]
+            possible_infectee_num = sum([sum(cell2.compartment_counter
+                                        .retrieve()[InfectionStatus
+                                                    .Susceptible])
                                         for cell2 in poss_susc_cells])
             if possible_infectee_num == 0:
                 # Break the loop if no people outside the cell are susceptible.
