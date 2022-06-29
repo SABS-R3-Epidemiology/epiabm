@@ -33,16 +33,16 @@ pop_params = {
 }
 
 # Create a population framework based on the parameters given.
-population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
+# population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
 
 # Alternatively, can generate population from input file
-file_loc = "python_examples/covidsim_comparison/input.csv"
-# population = pe.routine.FilePopulationFactory.make_pop(file_loc,
-#                                                        random_seed=42)
+file_loc = "python_examples/covidsim_comparison/gibraltar_inputs/gib_input.csv"
+population = pe.routine.FilePopulationFactory.make_pop(file_loc,
+                                                       random_seed=42)
 
 # Configure population with input data
-pe.routine.ToyPopulationFactory.assign_cell_locations(population)
-pe.routine.FilePopulationFactory.print_population(population, file_loc)
+# pe.routine.ToyPopulationFactory.assign_cell_locations(population)
+# pe.routine.FilePopulationFactory.print_population(population, file_loc)
 
 
 # sim_ and file_params give details for the running of the simulations and
@@ -59,10 +59,11 @@ file_params = {"output_file": "output.csv",
 sim = pe.routine.Simulation()
 sim.configure(
     population,
-    [pe.sweep.InitialInfectedSweep()],
+    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
     [
         pe.sweep.UpdatePlaceSweep(),
         pe.sweep.HouseholdSweep(),
+        pe.sweep.PlaceSweep(),
         pe.sweep.SpatialSweep(),
         pe.sweep.QueueSweep(),
         pe.sweep.HostProgressionSweep(),
