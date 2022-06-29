@@ -26,7 +26,7 @@ def min_separation(x_loc, y_loc):
 pe.Parameters.set_file("python_examples/covidsim_comparison/"
                        + "gibraltar_parameters.json")
 
-mcell_num = 4
+mcell_num = 81
 file_path = "python_examples/covidsim_comparison/gibraltar_inputs/"
 columns = ["cell", "microcell", "location_x", "location_y",
            "household_number", "Susceptible"]
