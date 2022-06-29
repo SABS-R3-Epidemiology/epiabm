@@ -1,6 +1,6 @@
 {
     "basic_reproduction_num": 2.8,
-    "do_CovidSim": true,
+    "do_CovidSim": false,
     "infection_radius": 0.2,
     "latent_period": 4.59,
     "asympt_infect_period": 14,
