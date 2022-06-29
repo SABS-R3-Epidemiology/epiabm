@@ -27,9 +27,9 @@ pe.routine.Simulation.set_random_seed(seed=30)
 
 pop_params = {
     "population_size": 33078,
-    "cell_number": 7,
+    "cell_number": 12,
     "microcell_number": 81,   # 9*9 microcells per cell
-    "household_number": 30,  # Ave 2 people per household
+    "household_number": 14,  # Ave 2.5 people per household
 }
 
 # Create a population framework based on the parameters given.

@@ -57,14 +57,12 @@ for cell_index, row in df.iterrows():
         y = (row["latitude"]
              + (m_pos[n // grid_len] - 0.5) * delta / grid_len)
 
-        data_dict = {
-                        "cell": cell_index,
-                        "microcell": n,
-                        "location_x": x,
-                        "location_y": y,
-                        "Susceptible": mcell_split[n],
-                        "household_number": int(mcell_split[n] / ave_size)
-                    }
+        data_dict = {"cell": cell_index,
+                     "microcell": n,
+                     "location_x": x,
+                     "location_y": y,
+                     "Susceptible": mcell_split[n],
+                     "household_number": math.ceil(mcell_split[n] / ave_size)}
 
         new_row = pd.DataFrame(data=data_dict, columns=columns, index=[0])
         mcell_df = pd.concat([mcell_df, new_row], ignore_index=True, axis=0)
