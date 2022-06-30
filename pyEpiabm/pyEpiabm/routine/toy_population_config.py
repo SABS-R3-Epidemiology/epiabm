@@ -143,7 +143,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         # in each place.
         for cell in population.cells:
             for microcell in cell.microcells:
-                microcell.add_place(place_number, (1.0, 1.0),
+                microcell.add_place(place_number, cell.location,
                                     PlaceType.Workplace)
 
     @staticmethod

@@ -103,7 +103,9 @@ class UpdatePlaceSweep(AbstractSweep):
         new_capacity = min(new_capacity, len(person_list))
 
         if len(person_list) <= 0:
-            logging.warning("No people in the person list supplied.")
+            logging.warning("No people in the person list supplied"
+                            + " to update " + str(place))
+            return
         count = 0
 
         try:
@@ -130,5 +132,19 @@ class UpdatePlaceSweep(AbstractSweep):
                     place.add_person(person, group_index)
                 else:
                     # Add people randomly to any group within the place
-                    place.add_person(person, random.randint(0, num_groups - 1))
+                    try:
+                        place.add_person(person,
+                                         random.randint(0, num_groups - 1))
+                    except ValueError:  # For num_groups = 0 from poisson dist
+                        place.add_person(person, 0)
                 count += 1
+
+            # Prevent person being readded to list
+            if person_weights is not None:
+                person_weights.pop(person_list.index(person))
+            person_list.remove(person)
+
+            if len(person_list) <= 0:
+                # logging.warning("Insufficient people in the person list"
+                #                 + " supplied to update " + str(place))
+                break
