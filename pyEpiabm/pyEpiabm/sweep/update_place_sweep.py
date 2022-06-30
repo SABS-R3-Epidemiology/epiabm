@@ -148,4 +148,3 @@ class UpdatePlaceSweep(AbstractSweep):
                 # logging.warning("Insufficient people in the person list"
                 #                 + " supplied to update " + str(place))
                 break
-
