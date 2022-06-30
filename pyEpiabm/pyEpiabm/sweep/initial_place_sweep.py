@@ -12,7 +12,7 @@ class InitialisePlaceSweep(AbstractSweep):
     """Class to update people in the "Place"
     class.
     """
-    def __call__(self):
+    def __call__(self, *args):
         """Given a population structure, updates the people
         present in each place at a specific timepoint. The
         explicit code handles the fixed population which are
