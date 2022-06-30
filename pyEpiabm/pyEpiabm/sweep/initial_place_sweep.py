@@ -53,7 +53,7 @@ class InitialisePlaceSweep(AbstractSweep):
                 if place.place_type.name in schools:
                     # Initialise the fixed population
                     helper.update_place_group(place, group_size=ave_group_size,
-                                              person_list=person_list,
+                                              person_list=person_list.copy(),
                                               person_weights=weights,
                                               mean_capacity=mean_cap)
 
@@ -61,7 +61,7 @@ class InitialisePlaceSweep(AbstractSweep):
                     # Fixed population is initialised on first run
                     power_list = [max_size, offset, power]
                     helper.update_place_group(place, group_size=ave_group_size,
-                                              person_list=person_list,
+                                              person_list=person_list.copy(),
                                               person_weights=weights,
                                               mean_capacity=mean_cap,
                                               power_law_params=power_list)
