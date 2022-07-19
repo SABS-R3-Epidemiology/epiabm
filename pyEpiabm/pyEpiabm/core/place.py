@@ -62,7 +62,7 @@ class Place:
 
         """
         return (f"Place of type {self.place_type} at location {self._location}"
-                + f", with current occupancy {len(self.persons)}.")
+                + f", with current occupancy {len(self.persons)} persons.")
 
     def set_infectiousness(self, infectiousness: float):
         """Sets a baseline infectiousness for the place.

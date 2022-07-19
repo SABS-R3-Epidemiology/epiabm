@@ -132,7 +132,8 @@ class UpdatePlaceSweep(AbstractSweep):
                     place.add_person(person, group_index)
                 else:
                     # Add people randomly to any group within the place
-                    place.add_person(person, random.randint(0, max(0, num_groups - 1)))
+                    place.add_person(person,
+                                     random.randint(0, max(0, num_groups - 1)))
                 count += 1
 
             # Prevent person being readded to list
