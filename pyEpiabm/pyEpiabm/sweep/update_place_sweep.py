@@ -132,11 +132,7 @@ class UpdatePlaceSweep(AbstractSweep):
                     place.add_person(person, group_index)
                 else:
                     # Add people randomly to any group within the place
-                    try:
-                        place.add_person(person,
-                                         random.randint(0, num_groups - 1))
-                    except ValueError:  # For num_groups = 0 from poisson dist
-                        place.add_person(person, 0)
+                    place.add_person(person, random.randint(0, max(0, num_groups - 1)))
                 count += 1
 
             # Prevent person being readded to list
