@@ -42,7 +42,7 @@ class TestPlace(TestPyEpiabm):
                               self.cell, self.microcell)
         self.assertEqual(repr(test_place),
                          "Place of type PlaceType.Workplace at location "
-                         "(1.0, 1.0), with current occupancy 0.")
+                         "(1.0, 1.0), with current occupancy 0 persons.")
 
     def test_change_persons(self):
         """Tests the add and remove person functions.
