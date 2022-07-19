@@ -137,7 +137,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         """
         # Unable to replicate CovidSim schools as this uses data not
         # available for all countries. Random dist used instead.
-        # C.f. SetupModel.cpp L1463. (https://github.com/mrc-ide/
+        # Cf. SetupModel.cpp L1463. (https://github.com/mrc-ide/
         # covid-sim/blob/1ada407d4b9c56a259fb6923353b8e55097d5a7c/
         # src/SetupModel.cpp#L1463)
 
