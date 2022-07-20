@@ -239,7 +239,7 @@ def generate_animation(
 ):
     """Plots a grid of spatial plot of all cells in the Voronoi
     tesselation, colour coded by their value in column 'name',
-    for numltiple times.
+    for multiple times.
 
     Has the option to use PillowWriter to generate the animation
     on the fly, or generate the images separately and then compile
