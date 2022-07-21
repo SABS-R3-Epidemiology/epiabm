@@ -30,19 +30,19 @@ pop_params = {
     "cell_number": 12,
     "microcell_number": 81,   # 9*9 microcells per cell
     "household_number": 14,  # Ave 2.5 people per household
+    "place_number": 1,
 }
-
 # Create a population framework based on the parameters given.
-# population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
+population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
 
 # Alternatively, can generate population from input file
 file_loc = "python_examples/covidsim_comparison/gibraltar_inputs/gib_input.csv"
-population = pe.routine.FilePopulationFactory.make_pop(file_loc,
-                                                       random_seed=42)
+# population = pe.routine.FilePopulationFactory.make_pop(file_loc,
+#                                                        random_seed=42)
 
 # Configure population with input data
-# pe.routine.ToyPopulationFactory.assign_cell_locations(population)
-# pe.routine.FilePopulationFactory.print_population(population, file_loc)
+pe.routine.ToyPopulationFactory.assign_cell_locations(population)
+pe.routine.FilePopulationFactory.print_population(population, file_loc)
 
 
 # sim_ and file_params give details for the running of the simulations and
@@ -83,9 +83,9 @@ filename = os.path.join(os.path.dirname(__file__), "comparison_outputs",
                         "output.csv")
 df = pd.read_csv(filename)
 
-
+df['Cases'] = df[list(df.filter(regex='InfectionStatus.Infect'))].sum(axis=1)
 df = df.pivot(index="time", columns="cell",
-              values="InfectionStatus.InfectMild")
+              values="Cases")
 df.plot()
 
 plt.legend(labels=(range(len(df.columns))), title="Cell")
