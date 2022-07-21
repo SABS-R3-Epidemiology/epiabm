@@ -113,12 +113,12 @@ class FilePopulationFactory:
                                                                     time)
 
             # Add households and places to microcell
-            if line["household_number"] > 0:
+            if ('household_number' in line) and (line["household_number"]) > 0:
                 households = int(line["household_number"])
                 FilePopulationFactory.add_households(new_microcell,
                                                      households)
 
-            if line["place_number"] > 0:
+            if ('place_number' in line) and (line["place_number"]) > 0:
                 new_microcell.add_place(int(line["place_number"]),
                                         cell.location,
                                         random.choice(list(PlaceType)))
