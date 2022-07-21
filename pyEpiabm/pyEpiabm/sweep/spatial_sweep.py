@@ -56,7 +56,7 @@ class SpatialSweep(AbstractSweep):
             total_infectors = cell.number_infectious()
             if total_infectors == 0:
                 continue
-            # Creates a list of posible infectee cells which excludes the
+            # Creates a list of possible infectee cells which excludes the
             # infector cell.
             poss_susc_cells = self._population.cells.copy()
             poss_susc_cells.remove(cell)
