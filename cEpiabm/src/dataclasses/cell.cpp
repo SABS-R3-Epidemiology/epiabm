@@ -13,6 +13,7 @@ namespace epiabm
 
     Cell::Cell(size_t index) :
         m_index(index),
+        m_location(),
         m_people(),
         m_microcells(),
         m_personQueue(),
@@ -301,6 +302,16 @@ namespace epiabm
     unsigned int Cell::compartmentCount(InfectionStatus status)
     {
         return m_compartmentCounter(status);
+    }
+
+    void Cell::setLocation(std::pair<double, double> loc)
+    {
+        m_location = loc;
+    }
+        
+    std::pair<double, double> Cell::location() const
+    {
+        return m_location;
     }
 
     void Cell::personStatusChange(Person* person, InfectionStatus newStatus, unsigned short timestep)

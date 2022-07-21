@@ -45,6 +45,7 @@ namespace epiabm
     void NewInfectionSweep::cellPersonQueueCallback(unsigned short timestep, Cell* cell, size_t personIndex)
     {
         Person* person = &cell->getPerson(personIndex);
+
         LOG << LOG_LEVEL_INFO << "New infection sweep on ("
             << cell->index() << "," << person->cellPos() << ")";
         person->updateStatus(cell, InfectionStatus::Exposed, timestep);

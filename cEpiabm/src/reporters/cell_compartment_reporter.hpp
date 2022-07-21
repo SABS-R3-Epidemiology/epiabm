@@ -24,8 +24,8 @@ namespace epiabm
         private:
     };
 
-    typedef std::shared_ptr<CellCompartmentReporter> CellCompartmentReporterPtr;
 
+    typedef std::shared_ptr<CellCompartmentReporter> CellCompartmentReporterPtr;
 
 } // namespace epiabm
 

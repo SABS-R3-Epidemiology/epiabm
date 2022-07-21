@@ -13,6 +13,7 @@ namespace epiabm
         m_counts()
     {}
 
+
     CompartmentCounter::~CompartmentCounter()
     {}
 
