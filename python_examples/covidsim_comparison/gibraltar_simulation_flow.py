@@ -20,7 +20,7 @@ pe.Parameters.set_file("python_examples/covidsim_comparison/"
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
-pe.routine.Simulation.set_random_seed(seed=30)
+pe.routine.Simulation.set_random_seed(seed=42)
 
 # Pop_params are used to configure the population structure being used in this
 # simulation.
