@@ -30,7 +30,7 @@ pop_params = {
     "cell_number": 12,
     "microcell_number": 81,   # 9*9 microcells per cell
     "household_number": 14,  # Ave 2.5 people per household
-    "place_number": 1,
+    "place_number": 0.15,
 }
 # Create a population framework based on the parameters given.
 population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
@@ -47,7 +47,7 @@ pe.routine.FilePopulationFactory.print_population(population, file_loc)
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 100,
               "initial_infected_number": 100, "initial_infect_cell": True}
 
 file_params = {"output_file": "output.csv",
@@ -85,7 +85,7 @@ df = pd.read_csv(filename)
 
 df['Cases'] = df[list(df.filter(regex='InfectionStatus.Infect'))].sum(axis=1)
 df = df.pivot(index="time", columns="cell",
-              values="Cases")
+              values="InfectionStatus.InfectMild")
 df.plot()
 
 plt.legend(labels=(range(len(df.columns))), title="Cell")
