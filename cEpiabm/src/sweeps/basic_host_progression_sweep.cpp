@@ -80,6 +80,7 @@ namespace epiabm
     {
         if (timestep < person->params().next_status_time) return true;
         InfectionStatus next = next_status(person);
+
         LOG << LOG_LEVEL_INFO << "Basic host progression of ("
             << cell->index() << "," << person->cellPos() << ") from "
             << status_string(person->status()) << " to " << status_string(next);
