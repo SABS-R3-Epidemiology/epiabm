@@ -33,7 +33,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             * `cell_number`: Number of cells in population
             * `microcell_number`: Number of microcells in each cell
             * `household_number`: Number of households in each microcell (*)
-            * `place_number`: Number of places in each microcell (*)
+            * `place_number`: Average number of places in each microcell (*)
             * `population_seed`: Random seed for reproducible populations (*)
 
         Parameters
@@ -132,7 +132,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         population : Population
             Population where :class:`Place` s will be added
         place_number : int
-            Number of places to generate per :class:`Microcell`
+            Average number of places to generate per :class:`Microcell`
 
         """
         # Unable to replicate CovidSim schools as this uses data not
@@ -146,7 +146,8 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         # in each place.
         for cell in population.cells:
             for microcell in cell.microcells:
-                microcell.add_place(place_number, cell.location,
+                count = math.floor(place_number + random.random())
+                microcell.add_place(count, cell.location,
                                     random.choice(list(PlaceType)))
 
     @staticmethod
