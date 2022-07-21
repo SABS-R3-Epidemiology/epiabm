@@ -84,7 +84,7 @@ class DistanceFunctions:
             Periodic distance between the two locations
 
         """
-        # Convert indices to distance mesures by dividing by
+        # Convert indices to distance measures by dividing by
         # total number of indices in each row.
         # These points are still on a rectangular grid
         scales = np.asarray(scales)

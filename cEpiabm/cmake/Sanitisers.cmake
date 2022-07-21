@@ -17,7 +17,7 @@ function(enable_sanitisers project_name)
         option(ENABLE_SANITISER_ADDRESS "Enable address sanitiser" FALSE)
         if (ENABLE_SANITISER_ADDRESS)
             list(APPEND SANITISERS "address")
-            list(APPEND ADDITIONAL_COMPILE_OPTIONS "-O1" "-g" "-fno-omit-frame-pointer" "-fno-optimize-sibling-calls")
+            list(APPEND ADDITIONAL_COMPILE_OPTIONS "-O1" "-g" "-fno-omit-frame-pointer" "-fno-optimize-sibling-calls" "-static-libasan")
         endif ()
 
         option(ENABLE_SANITISER_LEAK "Enable leak sanitiser" FALSE)

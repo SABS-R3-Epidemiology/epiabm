@@ -4,7 +4,7 @@ Properties
 
 .. currentmodule:: pyEpiabm.property
 
-Properties provides various methods to get information from the population.
+Property provides various methods to get information from the population.
 
 It includes many infection methods for houses, places and other spatial cells,
 characterised by a force of infection exerted by each infected person.

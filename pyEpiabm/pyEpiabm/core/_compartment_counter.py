@@ -53,7 +53,7 @@ class _CompartmentCounter:
 
     def _increment_compartment(self, n_persons: int,
                                infection_status: InfectionStatus) -> None:
-        """Funtion to add a block of people with the same infection status
+        """Function to add a block of people with the same infection status
         to a compartment.
 
         Parameters

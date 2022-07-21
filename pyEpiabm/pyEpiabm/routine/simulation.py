@@ -107,7 +107,7 @@ class Simulation:
         configure the population on the first timestep. Then at each
         subsequent timestep the sweeps run, updating the population. At each
         timepoint, a count of each infection status is written to file. Note
-        that the elements of intial sweeps take the sim_params dict as an
+        that the elements of initial sweeps take the sim_params dict as an
         argument for their call method but the elements of sweeps take time
         as an argument for their call method.
 

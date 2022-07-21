@@ -1,5 +1,5 @@
 #
-# Mirocell Class
+# Microcell Class
 #
 
 import typing

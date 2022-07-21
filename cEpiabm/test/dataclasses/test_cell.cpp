@@ -9,7 +9,8 @@ using namespace epiabm;
 
 inline Cell makeSubject(size_t n_microcells, size_t n_people)
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
+    REQUIRE(subject.index() == 0);
     for (size_t i = 0; i < n_microcells; i++)
     {
         subject.microcells().push_back(Microcell(i));
@@ -30,14 +31,14 @@ inline Cell makeSubject(size_t n_microcells, size_t n_people)
 
 TEST_CASE("dataclasses/cell: test initialize cell", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     REQUIRE(subject.microcells().empty());
     REQUIRE(subject.people().empty());
 }
 
 TEST_CASE("dataclasses/cell: test add microcells", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     REQUIRE(subject.microcells().empty());
     REQUIRE(subject.people().empty());
 
@@ -55,7 +56,7 @@ TEST_CASE("dataclasses/cell: test add microcells", "[Cell]")
 
 TEST_CASE("dataclasses/cell: test getMicrocell", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     REQUIRE(subject.microcells().empty());
     REQUIRE(subject.people().empty());
 
@@ -73,7 +74,7 @@ TEST_CASE("dataclasses/cell: test getMicrocell", "[Cell]")
 
 TEST_CASE("dataclasses/cell: test add people", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     REQUIRE(subject.microcells().empty());
     REQUIRE(subject.people().empty());
 
@@ -91,7 +92,7 @@ TEST_CASE("dataclasses/cell: test add people", "[Cell]")
 
 TEST_CASE("dataclasses/cell: test getPerson", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     REQUIRE(subject.microcells().empty());
     REQUIRE(subject.people().empty());
 
@@ -128,7 +129,7 @@ TEST_CASE("dataclasses/cell: test add people microcells", "[Cell]")
 
 TEST_CASE("dataclasses/cell: test forEachMicrocell", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     std::set<Microcell *> microcells;
     for (size_t i = 0; i < 100; i++)
     {
@@ -154,7 +155,7 @@ TEST_CASE("dataclasses/cell: test forEachMicrocell", "[Cell]")
 
 TEST_CASE("dataclasses/cell: test forEachMicrocell early stop", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     std::set<Microcell *> microcells;
     for (size_t i = 0; i < 100; i++)
     {
@@ -182,7 +183,7 @@ TEST_CASE("dataclasses/cell: test forEachMicrocell early stop", "[Cell]")
 
 TEST_CASE("dataclasses/cell: test forEachPerson", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     std::set<Person*> people;
     subject.people().reserve(1000);
     for (size_t i = 0; i < 1000; i++)
@@ -206,7 +207,7 @@ TEST_CASE("dataclasses/cell: test forEachPerson", "[Cell]")
 
 TEST_CASE("dataclasses/cell: test forEachPerson early stop", "[Cell]")
 {
-    Cell subject = Cell();
+    Cell subject = Cell(0);
     std::set<Person*> people;
     subject.people().reserve(1000);
     for (size_t i = 0; i < 1000; i++)
@@ -337,4 +338,57 @@ TEST_CASE("dataclasses/cell: test infectious grouping", "[Cell]")
             REQUIRE_NOTHROW(verifyNonInfectious());
         }
     }
+}
+
+TEST_CASE("dataclasses/cell: test infectious sampling", "[Cell]")
+{
+    Cell subject = makeSubject(10, 100);
+    subject.initialize();
+    Person* infector;
+    auto callback = [&](Person* p) { infector = p; return true; };
+    REQUIRE_FALSE(subject.sampleInfectious(1, callback));
+
+    auto callback2 = [&](Person* p){
+        subject.markInfectious(p->cellPos()); 
+        p->updateStatus(&subject, InfectionStatus::InfectASympt, 1);
+        return true;
+    };
+    REQUIRE(subject.sampleSusceptible(10, callback2));
+    REQUIRE(subject.sampleInfectious(5, callback));
+}
+
+TEST_CASE("dataclasses/cell: test susceptible sampling", "[Cell]")
+{
+    Cell subject = makeSubject(10, 100);
+    subject.initialize();
+    Cell empty = makeSubject(10, 0);
+    empty.initialize();
+
+    Person* infector;
+    auto callback = [&](Person* p) { infector = p; return true; };
+    REQUIRE(subject.sampleSusceptible(1, callback));
+    REQUIRE_FALSE(empty.sampleSusceptible(1, callback));
+}
+
+TEST_CASE("dataclasses/cell: test compartment counter", "[Cell]")
+{
+    Cell subject = makeSubject(10, 100);
+    REQUIRE_NOTHROW(subject.initialize());
+    REQUIRE(subject.compartmentCount(InfectionStatus::Susceptible) == 1000);
+    REQUIRE(subject.microcells()[0].compartmentCount(InfectionStatus::Susceptible) == 100);
+    REQUIRE(subject.compartmentCount(InfectionStatus::Exposed) == 0);
+    REQUIRE(subject.microcells()[0].compartmentCount(InfectionStatus::Exposed) == 0);
+}
+
+TEST_CASE("dataclasses/cell: test set and get location", "[Cell]")
+{
+    Cell subject = Cell(0);
+    auto base_loc = std::make_pair(0.0, 0.0);
+    auto loc = std::make_pair(1.0, 1.0);
+    REQUIRE(subject.location() == base_loc); //should work, might initialise to different values
+
+    subject.setLocation(loc);
+    REQUIRE_FALSE(subject.location() == base_loc);
+    auto retrieve_loc = subject.location();
+    REQUIRE(retrieve_loc == loc);
 }
