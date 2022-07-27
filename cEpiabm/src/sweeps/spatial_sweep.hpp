@@ -23,7 +23,6 @@ namespace epiabm
         RandomGeneratorPtr m_generator;
 
     public:
-        SpatialSweep();
         SpatialSweep(SimulationConfigPtr cfg);
         ~SpatialSweep() = default;
 

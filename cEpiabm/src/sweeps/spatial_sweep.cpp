@@ -14,6 +14,7 @@
 
 namespace epiabm
 {
+    
     SpatialSweep::SpatialSweep(SimulationConfigPtr cfg) :
         SweepInterface(cfg),
         m_counter(0)
