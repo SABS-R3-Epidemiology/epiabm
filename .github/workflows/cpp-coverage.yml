@@ -31,7 +31,7 @@ jobs:
       - name: run unit tests with coverage
         run: |
           cmake ../cEpiabm/. -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON
-          cmake --build . --parallel 2 --target unit_tests
+          cmake --build . --parallel $(nproc) --target unit_tests
           ctest -j2 --output-on-failure
         working-directory: build_dir
       

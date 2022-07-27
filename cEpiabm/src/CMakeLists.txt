@@ -17,7 +17,6 @@ set(
     output_folder_handler.cpp
     logfile.cpp
     covidsim.cpp
-    utility/distance_metrics.cpp
     sweeps/sweep_interface.cpp
     sweeps/household_sweep.cpp
     sweeps/new_infection_sweep.cpp
@@ -53,7 +52,6 @@ set(
     output_folder_handler.hpp
     logfile.hpp
     covidsim.hpp
-    utility/distance_metrics.hpp
     sweeps/sweep_interface.hpp
     sweeps/household_sweep.hpp
     sweeps/new_infection_sweep.hpp
