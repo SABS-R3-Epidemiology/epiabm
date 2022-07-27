@@ -7,6 +7,7 @@ from unittest.mock import patch, mock_open
 import pyEpiabm as pe
 
 from pyEpiabm.tests.test_unit.mocked_logging_tests import TestMockedLogs
+from pyEpiabm.core.parameters import Parameters
 
 
 class TestSimulation(TestMockedLogs):
@@ -30,6 +31,7 @@ class TestSimulation(TestMockedLogs):
 
         cls.spatial_file_params = dict(cls.file_params)
         cls.spatial_file_params["spatial_output"] = True
+        cls.spatial_file_params["age_stratified"] = True
 
         cls.initial_sweeps = [pe.sweep.InitialInfectedSweep()]
         cls.sweeps = [pe.sweep.PlaceSweep()]
@@ -89,6 +91,7 @@ class TestSimulation(TestMockedLogs):
                                   self.sweeps, self.sim_params,
                                   self.spatial_file_params)
             self.assertTrue(spatial_sim.spatial_output)
+            self.assertTrue(spatial_sim.age_stratified)
 
             del(test_sim.writer)
             self.assertEqual(mock_mkdir.call_count, 2)
@@ -139,6 +142,7 @@ class TestSimulation(TestMockedLogs):
     @patch('os.makedirs')
     def test_write_to_file(self, mock_mkdir):
         mo = mock_open()
+        Parameters.instance().use_ages = True
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             time = 1
             test_sim = pe.routine.Simulation()
@@ -148,6 +152,19 @@ class TestSimulation(TestMockedLogs):
             data["age_group"] = len(pe.Parameters.instance().age_proportions)
             data["time"] = time
 
+            with patch.object(test_sim.writer, 'write') as mock:
+                test_sim.write_to_file(time)
+                mock.assert_called_with(data)
+        mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
+                                      self.file_params["output_dir"]))
+        Parameters.instance().use_ages = False
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            time = 1
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params)
+            data = {s: 0 for s in list(pe.property.InfectionStatus)}
+            data["time"] = time
             with patch.object(test_sim.writer, 'write') as mock:
                 test_sim.write_to_file(time)
                 mock.assert_called_with(data)

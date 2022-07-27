@@ -201,7 +201,8 @@ class Simulation:
                 data = {s: 0 for s in list(InfectionStatus)}
                 for cell in self.population.cells:
                     for k in data:
-                        data[k] += cell.compartment_counter.retrieve()[k]
+                        # Sum across age compartments
+                        data[k] += sum(cell.compartment_counter.retrieve()[k])
                 data["time"] = time
                 self.writer.write(data)
 
