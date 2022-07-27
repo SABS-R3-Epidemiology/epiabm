@@ -191,7 +191,7 @@ class Simulation:
                 for cell in self.population.cells:
                     data = {s: 0 for s in list(InfectionStatus)}
                     for k in data:
-                        data[k] += cell.compartment_counter.retrieve()[k]
+                        data[k] += sum(cell.compartment_counter.retrieve()[k])
                     data["time"] = time
                     data["cell"] = cell.id
                     data["location_x"] = cell.location[0]
