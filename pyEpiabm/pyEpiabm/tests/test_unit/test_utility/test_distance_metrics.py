@@ -3,11 +3,17 @@ import numpy as np
 
 import pyEpiabm as pe
 from pyEpiabm.utility import DistanceFunctions
+from pyEpiabm.tests.test_unit.mocked_logging_tests import TestMockedLogs
 
 
-class TestDistanceFunctions(unittest.TestCase):
+class TestDistanceFunctions(TestMockedLogs):
     """Test the 'DistanceFunctions' class.
     """
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super(TestDistanceFunctions, cls).setUpClass()
+        # Sets up patch on logging
 
     def test_dist_euclid(self):
         dist = DistanceFunctions.dist_euclid((3, 0))

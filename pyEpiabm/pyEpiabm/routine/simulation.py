@@ -167,7 +167,9 @@ class Simulation:
                             data_per_inf_status =\
                                 cell.compartment_counter.retrieve()[inf_status]
                             data[inf_status] += data_per_inf_status[age_i]
-                        data["age_group"] = age_i
+                        # Age groups are numbered from 1 to the total number
+                        # of age groups (thus the +1):
+                        data["age_group"] = age_i+1
                         data["time"] = time
                         data["cell"] = cell.id
                         data["location_x"] = cell.location[0]
@@ -177,11 +179,11 @@ class Simulation:
                 data = {s: 0 for s in list(InfectionStatus)}
                 for cell in self.population.cells:
                     for age_i in range(0, nb_age_groups):
-                        for inf_status in data:
+                        for inf_status in list(InfectionStatus):
                             data_per_inf_status =\
                                 cell.compartment_counter.retrieve()[inf_status]
                             data[inf_status] += data_per_inf_status[age_i]
-                        data["age_group"] = age_i
+                        data["age_group"] = age_i+1
                         data["time"] = time
                         self.writer.write(data)
         else:  # If age not considered, age_group not written in csv
