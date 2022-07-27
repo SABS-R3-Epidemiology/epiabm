@@ -10,7 +10,7 @@ Epiabm implements an agent-based [SEIR model](https://en.wikipedia.org/wiki/Comp
 
 It's therefore important to us that all new features are grounded in epidemiological research, and based on methods in CovidSim. Any deviations from CovidSim, and further explanation of our model (and the parameters used) can be found in the [wiki](https://github.com/SABS-R3-Epidemiology/epiabm/wiki).
 
-We have two backends for simulation - `pyEpiabm` and `cEpiabm`. The former is written in python, and intended as a user friendly intropduction to the software and pedagogical tool, with complete functionality but limiting performance on larger (~1 million individuals) simulations. `cEpiabm` therefore provides a high performance alternative written in C++, to handle larger and more complex simulations, while using the same framework as both `pyEpiabm` and `CovidSim`.
+We have two backends for simulation - `pyEpiabm` and `cEpiabm`. The former is written in python, and intended as a user friendly introduction to the software and pedagogical tool, with complete functionality but limiting performance on larger (~1 million individuals) simulations. `cEpiabm` therefore provides a high performance alternative written in C++, to handle larger and more complex simulations, while using the same framework as both `pyEpiabm` and `CovidSim`.
 
 ### Useful Resources
 
@@ -21,7 +21,7 @@ We have two backends for simulation - `pyEpiabm` and `cEpiabm`. The former is wr
 
 ### Before you start
 
-1. Create an [issue](https://guides.github.com/features/issues/) where new proposals can be discusssed before any coding is done.
+1. Create an [issue](https://guides.github.com/features/issues/) where new proposals can be discussed before any coding is done.
 2. Create a [branch](https://help.github.com/articles/creating-and-deleting-branches-within-your-repository/) of this repo (ideally on your own [fork](https://help.github.com/articles/fork-a-repo/)), where all changes will be made
 3. Download the source code onto your local system, by [cloning](https://help.github.com/articles/cloning-a-repository/) the repository (or your fork of the repository).
 
@@ -46,7 +46,7 @@ The installation of cEpiabm is more involved, but documented in our [README](htt
 ### Writing your code
 
 4. Make sure to follow our [coding style guidelines](#coding-style-guidelines).
-5. Commit your changes to your branch with useful, descriptive commit messages: these are publically visible and should still make sense a few months ahead in time. If relevant, quote issue numbers in the commit messages as well, e.g.:
+5. Commit your changes to your branch with useful, descriptive commit messages: these are publicly visible and should still make sense a few months ahead in time. If relevant, quote issue numbers in the commit messages as well, e.g.:
 
 ```console
 $ git commit -m "Change installation directory (#94)"
@@ -65,7 +65,7 @@ All our functions are fully documented - there are many examples in the code but
 
 ```python
 def person_inf(infector):
-    """Calculate the time-independant infectiousness of a person.
+    """Calculate the time-independent infectiousness of a person.
 
     Parameters
     ----------
@@ -96,7 +96,7 @@ pyEpiabm docs can be built locally from `pyEpiabm/docs` with: `$ make html`
 Tests for `pyEpiabm` use the `unittest` framework, while those in `cEpiabm` use `Catch2`. Testing is important to us, and we aim for 100% coverage in all PRs, measured using 
 [codecov](https://app.codecov.io/gh/SABS-R3-Epidemiology/epiabm).
 
-All python tests are ran from the `pyEpiabm/run_tests` directory, which also contains comprehensive documentation tests, to ensure all new modules are also included in the documentation. Further information on how to run those tests is availiable in that file, while the github workflows describe how to run the C++ tests.
+All python tests are ran from the `pyEpiabm/run_tests` directory, which also contains comprehensive documentation tests, to ensure all new modules are also included in the documentation. Further information on how to run those tests is available in that file, while the github workflows describe how to run the C++ tests.
 
 We currently support python 3.6 onwards, and C++ 20.04, so ask that any contributions are also compatible with these versions.
 

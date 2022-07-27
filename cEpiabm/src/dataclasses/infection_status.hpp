@@ -40,4 +40,5 @@ namespace epiabm
     }
 }
 
+
 #endif // EPIABM_DATACLASSES_INFECTION_STATUS_HPP

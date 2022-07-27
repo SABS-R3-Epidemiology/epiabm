@@ -44,11 +44,11 @@ class UpdatePlaceSweep(AbstractSweep):
                     # Held in the last group of the place.
                     # Changed at each timestep
                     place.empty_place(groups_to_empty=[-1])
-                    candidate_list = [person for person in place.cell.persons
-                                      if person not in place.persons]
+                    person_list = [person for person in place.cell.persons
+                                   if person not in place.persons]
                     self.update_place_group(place, group_index=-1,
                                             mean_capacity=mean_cap,
-                                            person_list=candidate_list)
+                                            person_list=person_list.copy())
 
                 elif place.place_type.name == "OutdoorSpace":
                     place.empty_place()
@@ -82,7 +82,7 @@ class UpdatePlaceSweep(AbstractSweep):
         """
         # If a specific list of people is not provided, use the whole cell
         if person_list is None:
-            person_list = place.cell.persons
+            person_list = (place.cell.persons).copy()
 
         # Ensure that the number of people put in the place
         # is at most its capacity or the total number of
@@ -103,7 +103,9 @@ class UpdatePlaceSweep(AbstractSweep):
         new_capacity = min(new_capacity, len(person_list))
 
         if len(person_list) <= 0:
-            logging.warning("No people in the person list supplied.")
+            logging.warning("No people in the person list supplied"
+                            + " to update " + str(place))
+            return
         count = 0
 
         try:
@@ -130,5 +132,16 @@ class UpdatePlaceSweep(AbstractSweep):
                     place.add_person(person, group_index)
                 else:
                     # Add people randomly to any group within the place
-                    place.add_person(person, random.randint(0, num_groups - 1))
+                    place.add_person(person,
+                                     random.randint(0, max(0, num_groups - 1)))
                 count += 1
+
+            # Prevent person being readded to list
+            if person_weights is not None:
+                person_weights.pop(person_list.index(person))
+            person_list.remove(person)
+
+            if len(person_list) <= 0:
+                # logging.warning("Insufficient people in the person list"
+                #                 + " supplied to update " + str(place))
+                break

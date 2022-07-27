@@ -62,7 +62,7 @@ class Person:
             self.age_group = random.choices(range(len(group_probs)),
                                             weights=group_probs)[0]
             self.age = random.randint(0, 4) + 5 * self.age_group
-        else:  # Set everyone to 40 (mean qualities)
+        else:
             self.age_group = None
             self.age = None
 
@@ -75,13 +75,7 @@ class Person:
             Whether person is currently infectious
 
         """
-        return self.infection_status in [
-            InfectionStatus.InfectASympt,
-            InfectionStatus.InfectMild,
-            InfectionStatus.InfectGP,
-            InfectionStatus.InfectHosp,
-            InfectionStatus.InfectICU,
-            InfectionStatus.InfectICURecov]
+        return str(self.infection_status).startswith('InfectionStatus.Infect')
 
     def is_susceptible(self):
         """Query if the person is currently susceptible.

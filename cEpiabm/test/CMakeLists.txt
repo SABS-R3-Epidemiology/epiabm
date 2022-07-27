@@ -47,6 +47,7 @@ set(
     utilities/test_inverse_cdf.cpp
     utilities/test_random_manager.cpp
     utilities/test_random_generator.cpp
+    utilities/test_distance_metrics.cpp
     test_basic_simulation.cpp
 )
 

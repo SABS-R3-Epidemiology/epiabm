@@ -4,6 +4,7 @@
 #include "../dataclasses/cell.hpp" // again seem to be having problems with relative path
 #include "../utilities/distance_metrics.hpp"
 #include "../reporters/cell_compartment_reporter.hpp"
+
 #include "../logfile.hpp"
 
 #include <functional>
@@ -21,6 +22,7 @@ namespace epiabm
 
     void SpatialSweep::operator()(const unsigned short timestep)
     {
+  
         LOG << LOG_LEVEL_DEBUG << "Beginning Spatial Sweep " << timestep;
         m_counter = 0;
         if (m_population->cells().size() <= 1){
