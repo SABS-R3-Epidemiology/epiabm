@@ -88,7 +88,6 @@ class Plotter():
                     week_date = (start +  pd.DateOffset(days=time)).date()
                 date_list.append(week_date)
         date_list = [d.strftime('%m-%d') for d in date_list]
-        print(date_list)
         return date_list
             
 
@@ -143,6 +142,6 @@ class Plotter():
 
 if __name__ == '__main__':
     dirname = os.path.dirname(os.path.abspath(__file__))
-    p = Plotter(os.path.join(dirname,"output.csv"), start_date = '01-01-2020')
+    p = Plotter(os.path.join(dirname,"no_age.csv"), start_date = '01-01-2020')
     p.barchart(os.path.join(dirname, "age_stratify.png"))
     plt.show()
