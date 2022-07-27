@@ -20,7 +20,7 @@ namespace epiabm
     {
         for (size_t i = 0; i < m_cells.size(); i++)
         {
-            if (!callback(&m_cells[i])) return;
+            if (!callback(m_cells[i].get())) return;
         }
     }
 
@@ -30,7 +30,7 @@ namespace epiabm
             if (!callback(&m_places[i])) return;
     }
 
-    std::vector<Cell>& Population::cells() { return m_cells; }
+    std::vector<CellPtr>& Population::cells() { return m_cells; }
 
     std::vector<Place>& Population::places() { return m_places; }
 
@@ -38,7 +38,7 @@ namespace epiabm
     {
         for (size_t i = 0; i < m_cells.size(); i++)
         {
-            m_cells[i].initialize();
+            m_cells[i]->initialize();
         }
     }
 

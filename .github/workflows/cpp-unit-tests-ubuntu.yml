@@ -30,7 +30,7 @@ jobs:
         working-directory: build_dir
 
       - name: cmake build
-        run: cmake --build . --parallel 2 --target unit_tests
+        run: cmake --build . --parallel $(nproc) --target unit_tests
         working-directory: build_dir
 
       - name: run unit tests
