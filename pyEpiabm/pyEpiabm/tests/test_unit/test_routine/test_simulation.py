@@ -145,6 +145,7 @@ class TestSimulation(TestMockedLogs):
             test_sim.configure(self.test_population, self.initial_sweeps,
                                self.sweeps, self.sim_params, self.file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
+            data["age_group"] = len(pe.Parameters.instance().age_proportions)
             data["time"] = time
 
             with patch.object(test_sim.writer, 'write') as mock:
@@ -164,6 +165,7 @@ class TestSimulation(TestMockedLogs):
                                   self.sweeps, self.sim_params,
                                   self.spatial_file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
+            data["age_group"] = len(pe.Parameters.instance().age_proportions)
             data["time"] = time
             cell = self.test_population.cells[0]
             data["cell"] = hash(cell)

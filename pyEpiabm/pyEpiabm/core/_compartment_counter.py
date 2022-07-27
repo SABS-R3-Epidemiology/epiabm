@@ -36,8 +36,8 @@ class _CompartmentCounter:
 
         # Internal datastore, returns array with age group for each status
         # infection
-        self._compartments = {status: np.zeros(self.nb_age_groups) for status
-                              in InfectionStatus}
+        self._compartments = {status: np.zeros(self.nb_age_groups, dtype=int)
+                              for status in InfectionStatus}
 
     @property
     def identifier(self):
@@ -66,7 +66,7 @@ class _CompartmentCounter:
                               in this cell.")
 
         # Initialisation of the age_counter array
-        age_counter = np.zeros(self.nb_age_groups)
+        age_counter = np.zeros(self.nb_age_groups, dtype=int)
         age_counter[age_group] = 1
         self._compartments[old_status] -= age_counter
         self._compartments[new_status] += age_counter
@@ -88,7 +88,7 @@ class _CompartmentCounter:
 
         """
         # Initialisation of the age_counter array
-        age_counter = np.zeros(self.nb_age_groups)
+        age_counter = np.zeros(self.nb_age_groups, dtype=int)
         age_counter[age_group] = n_persons
         self._compartments[infection_status] += age_counter
 

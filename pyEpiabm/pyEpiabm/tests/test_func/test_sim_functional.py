@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import unittest
+import numpy as np
 from unittest.mock import patch, mock_open, Mock
 
 import pyEpiabm as pe
@@ -120,6 +121,7 @@ class TestSimFunctional(unittest.TestCase):
         self.assertEqual(len(pop.cells), pop_params["cell_number"])
         self.assertEqual(pop.total_people(), pop_params["population_size"])
 
+        cell_count = len(pop.cells)
         mcell_count = 0
         place_count = 0
         for cell in pop.cells:
@@ -135,7 +137,9 @@ class TestSimFunctional(unittest.TestCase):
         folder = os.path.join(os.getcwd(),
                               "test_folder/integration_tests")
         mock_mkdir.assert_called_with(folder)
-        self.assertEqual(mock_output.call_count, iter_num)
+        nb_age_group = len(pe.Parameters.instance().age_proportions)
+        mock_output_count = iter_num * nb_age_group * cell_count
+        self.assertEqual(mock_output.call_count, mock_output_count)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
@@ -161,8 +165,9 @@ class TestSimFunctional(unittest.TestCase):
                 if status in [InfectionStatus.Recovered, InfectionStatus.Dead]:
                     final_state_count += count
                 else:
-                    self.assertEqual(count, 0)
-        self.assertEqual(final_state_count, self.pop_params["population_size"])
+                    self.assertEqual(np.sum(count), 0)
+        self.assertEqual(np.sum(final_state_count),
+                         self.pop_params["population_size"])
 
         folder = os.path.join(os.getcwd(),
                               "test_folder/integration_tests")
@@ -188,7 +193,7 @@ class TestSimFunctional(unittest.TestCase):
                     cell_data = cell.compartment_counter.retrieve()
                     count += cell_data[status]
                 if status != InfectionStatus.Susceptible:
-                    self.assertEqual(count, 0)
+                    self.assertEqual(np.sum(count), 0)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
@@ -218,16 +223,15 @@ class TestSimFunctional(unittest.TestCase):
 
         cell_data_0 = pop.cells[0].compartment_counter.retrieve()
         cell_data_1 = pop.cells[1].compartment_counter.retrieve()
-
-        self.assertEqual(cell_data_0[InfectionStatus.Susceptible], 0)
-        self.assertEqual((cell_data_0[InfectionStatus.Recovered]
-                          + cell_data_0[InfectionStatus.Dead]),
+        self.assertEqual(np.sum(cell_data_0[InfectionStatus.Susceptible]), 0)
+        self.assertEqual((np.sum(cell_data_0[InfectionStatus.Recovered])
+                          + np.sum(cell_data_0[InfectionStatus.Dead])),
                          (file_input['Susceptible'][0]
                           + file_input["InfectMild"][0]))
 
-        self.assertEqual(cell_data_1[InfectionStatus.Susceptible],
+        self.assertEqual(np.sum(cell_data_1[InfectionStatus.Susceptible]),
                          file_input['Susceptible'][1])
-        self.assertEqual(cell_data_1[InfectionStatus.Recovered], 0)
+        self.assertEqual(np.sum(cell_data_1[InfectionStatus.Recovered]), 0)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
@@ -259,15 +263,15 @@ class TestSimFunctional(unittest.TestCase):
         cell_data_0 = pop.cells[0].compartment_counter.retrieve()
         cell_data_1 = pop.cells[1].compartment_counter.retrieve()
 
-        self.assertEqual(cell_data_0[InfectionStatus.Susceptible], 0)
-        self.assertEqual((cell_data_0[InfectionStatus.Recovered]
-                          + cell_data_0[InfectionStatus.Dead]),
+        self.assertEqual(np.sum(cell_data_0[InfectionStatus.Susceptible]), 0)
+        self.assertEqual((np.sum(cell_data_0[InfectionStatus.Recovered])
+                          + np.sum(cell_data_0[InfectionStatus.Dead])),
                          (file_input['Susceptible'][0]
                           + file_input["InfectMild"][0]))
 
-        self.assertEqual(cell_data_1[InfectionStatus.Susceptible],
+        self.assertEqual(np.sum(cell_data_1[InfectionStatus.Susceptible]),
                          file_input['Susceptible'][1])
-        self.assertEqual(cell_data_1[InfectionStatus.Recovered], 0)
+        self.assertEqual(np.sum(cell_data_1[InfectionStatus.Recovered]), 0)
 
         # Now increase the cutoff to check the infection does spread
         pe.Parameters.instance().infection_radius = 1.5
@@ -279,9 +283,11 @@ class TestSimFunctional(unittest.TestCase):
         for i, cell in enumerate(pop.cells):
             with self.subTest(cell=cell):
                 cell_data = pop.cells[i].compartment_counter.retrieve()
-                self.assertEqual(cell_data[InfectionStatus.Susceptible], 0)
-                self.assertEqual((cell_data[InfectionStatus.Recovered]
-                                  + cell_data[InfectionStatus.Dead]),
+                self.assertEqual(0,
+                                 np.sum(cell_data[InfectionStatus.Susceptible])
+                                 )
+                self.assertEqual((np.sum(cell_data[InfectionStatus.Recovered])
+                                  + np.sum(cell_data[InfectionStatus.Dead])),
                                  (file_input['Susceptible'][i]
                                   + file_input["InfectMild"][i]))
 
