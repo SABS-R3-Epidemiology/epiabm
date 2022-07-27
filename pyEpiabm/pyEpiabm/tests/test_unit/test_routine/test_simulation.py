@@ -157,6 +157,25 @@ class TestSimulation(TestMockedLogs):
                 mock.assert_called_with(data)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                       self.file_params["output_dir"]))
+
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            time = 1
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params,
+                               self.spatial_file_params)
+            data = {s: 0 for s in list(pe.property.InfectionStatus)}
+            data["age_group"] = len(pe.Parameters.instance().age_proportions)
+            data['location_x'] = 0
+            data['location_y'] = 0
+            data["cell"] = test_sim.population.cells[0].id
+            data["time"] = time
+
+            with patch.object(test_sim.writer, 'write') as mock:
+                test_sim.write_to_file(time)
+                mock.assert_called_with(data)
+        mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
+                                      self.file_params["output_dir"]))
         Parameters.instance().use_ages = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             time = 1
