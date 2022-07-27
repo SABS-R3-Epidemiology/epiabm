@@ -2,6 +2,7 @@
 # Factory for creation of a toy population
 #
 
+from hashlib import new
 import typing
 import logging
 import numpy as np
@@ -66,7 +67,6 @@ class ToyPopulationFactory(AbstractPopulationFactory):
 
         # Initialise a population class
         new_pop = Population()
-
         # Checks parameter type and stores as class objects.
         total_number_microcells = cell_number * microcell_number
 
@@ -76,9 +76,11 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         # Multinomially distributes people into microcells.
         cell_split = np.random.multinomial(population_size, p, size=1)[0]
         age_prop = Parameters.instance().age_proportions
+        print(age_prop)
         w = age_prop/sum(age_prop)
         # Split microcell into age groups
 
+        print(new_pop)
         i = 0
         for cell in new_pop.cells:
             cell.add_microcells(microcell_number)

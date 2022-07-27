@@ -1,0 +1,1 @@
+time,age_group,cell,location_x,location_y,InfectionStatus.Susceptible,InfectionStatus.Exposed,InfectionStatus.InfectASympt,InfectionStatus.InfectMild,InfectionStatus.InfectGP,InfectionStatus.InfectHosp,InfectionStatus.InfectICU,InfectionStatus.InfectICURecov,InfectionStatus.Recovered,InfectionStatus.Dead

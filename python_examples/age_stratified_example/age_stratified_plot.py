@@ -19,7 +19,6 @@ class Plotter():
                  age_list: list = None):
         """Initialise the plotter with a filepath and read
         data from the csv.
-
         Parameters
         ----------
         filepath : str
@@ -59,14 +58,12 @@ class Plotter():
     def dates(self, dataFrame=None, period='weekly') -> None:
         """Helper function to calculate a dictionary associating each
         timestep, with the date of a day, or week.
-
         Parameters
         ----------
         dataFrame : DataFrame
             dataFrame containing a "time" column
         period : str
             Either "daily" or "weekly"
-
         Returns
         -------
         date_list: list
@@ -94,14 +91,12 @@ class Plotter():
         """Function which creates a bar chart from csv data, with
         capability to stratify by age if required. Plot is automatically
         saved to a png file.
-
         Parameters
         ----------
         outfile : str
             Path to the .png file where the bar chart will be saved
         infection_category : str
             Category to be plotted, defaults to Total Infectious
-
         """
         if infection_category == "Total Infectious":
             self.sum_infectious()
