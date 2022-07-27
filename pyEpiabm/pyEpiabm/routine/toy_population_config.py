@@ -142,16 +142,19 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             Number of places to generate per :class:`Microcell`
 
         """
-        # Further consideration of whether we initialise place types
-        # at this step is needed.
+        # Unable to replicate CovidSim schools as this uses data not
+        # available for all countries. Random dist used instead.
+        # Cf. SetupModel.cpp L1463. (https://github.com/mrc-ide/
+        # covid-sim/blob/1ada407d4b9c56a259fb6923353b8e55097d5a7c/
+        # src/SetupModel.cpp#L1463)
 
         # As the population of a place is reconfigured in Update
         # Place Sweep, it is not necessary to initialise a population
         # in each place.
         for cell in population.cells:
             for microcell in cell.microcells:
-                microcell.add_place(place_number, (1.0, 1.0),
-                                    PlaceType.Workplace)
+                microcell.add_place(place_number, cell.location,
+                                    random.choice(list(PlaceType)))
 
     @staticmethod
     def assign_cell_locations(population: Population, method: str = 'random'):

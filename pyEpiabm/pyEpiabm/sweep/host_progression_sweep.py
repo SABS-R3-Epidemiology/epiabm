@@ -230,7 +230,7 @@ class HostProgressionSweep(AbstractSweep):
     def _updates_infectiousness(self, person: Person, time: float):
         """Updates infectiousness. Scales using the initial infectiousness
         if the person is in an infectious state. Updates the infectiousness to
-        0 if the person has just been transfered to Recovered or Dead. Doesn't
+        0 if the person has just been transferred to Recovered or Dead. Doesn't
         do anything if the person was already in Recovered, Dead, Susceptible,
         or Exposed (ie if the infectiousness of the person was 0).
 

@@ -76,7 +76,7 @@ class HouseholdInfection:
             Force of infection parameter of household
 
         """
-        seasonality = 1.0  # Not yet implemeted
+        seasonality = 1.0  # Not yet implemented
         false_pos = 1 / (1 - pyEpiabm.core.Parameters.instance().
                          false_positive_rate)
         infectiousness = (HouseholdInfection.household_inf(infector, time)

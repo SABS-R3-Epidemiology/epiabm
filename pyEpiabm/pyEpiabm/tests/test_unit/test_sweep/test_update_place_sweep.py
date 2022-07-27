@@ -89,6 +89,22 @@ class TestUpdatePlaceSweep(TestPyEpiabm):
         self.assertRaises(AssertionError, test_sweep.update_place_group, place,
                           person_list=[person], person_weights=[])
 
+    @mock.patch("numpy.random.poisson")
+    def test_update_place_no_groups(self, mock_poisson):
+        """Test handling of zero groups from poisson distribution.
+        First call of mock gives non-zero capacity"""
+        test_pop = self.pop
+        place = test_pop.cells[0].places[0]
+        person = test_pop.cells[0].persons[0]
+        test_sweep = UpdatePlaceSweep()
+        test_sweep.bind_population(test_pop)
+        mock_poisson.side_effect = [5, 0]
+
+        test_sweep.update_place_group(place, person_list=[person],
+                                      group_size=1)
+        self.assertDictEqual(place.person_groups,
+                             {0: [person]})
+
     @mock.patch("pyEpiabm.sweep.UpdatePlaceSweep.update_place_group")
     def test__call__(self, mock_update):
         """Test whether the update place sweep function takes an

@@ -39,6 +39,13 @@ class TestPlaceInfection(TestPyEpiabm):
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
+        # Parameter free test
+        place = pe.Place((1, 1), pe.property.PlaceType.OutdoorSpace,
+                         self.cell, self.microcell)
+        result = PlaceInfection.place_inf(place, self.infector, self.time)
+        self.assertTrue(result > 0)
+        self.assertIsInstance(result, float)
+
     def test_place_foi(self):
         result = PlaceInfection.place_foi(self.place, self.infector,
                                           self.infectee, self.time)
