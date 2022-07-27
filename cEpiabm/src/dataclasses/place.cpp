@@ -16,7 +16,7 @@ namespace epiabm
         std::function<bool(Person*)> callback)
     {
         for (const auto& p : m_members)
-            if (!callback(&population.cells()[p.first].getPerson(p.second))) return;
+            if (!callback(&population.cells()[p.first]->getPerson(p.second))) return;
     }
 
     bool Place::isMember(size_t cell, size_t person) const

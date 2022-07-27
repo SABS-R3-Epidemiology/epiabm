@@ -19,14 +19,14 @@ namespace epiabm
         addCells(population, n_cells);
         for (size_t i = 0; i < n_cells; i++)
         {
-            population->cells()[i].people().reserve(n_microcells * n_people);
-            population->cells()[i].microcells().reserve(n_microcells);
-            addMicrocells(&population->cells()[i], n_microcells);
+            population->cells()[i]->people().reserve(n_microcells * n_people);
+            population->cells()[i]->microcells().reserve(n_microcells);
+            addMicrocells(population->cells()[i].get(), n_microcells);
             for (size_t j = 0; j < n_microcells; j++)
             {
-                population->cells()[i].microcells()[j].people().reserve(n_people);
+                population->cells()[i]->microcells()[j].people().reserve(n_people);
                 addPeople(
-                    &population->cells()[i],
+                    population->cells()[i].get(),
                     j,
                     n_people);
             }
@@ -36,7 +36,8 @@ namespace epiabm
 
     void PopulationFactory::addCell(PopulationPtr population)
     {
-        population->cells().emplace_back(population->cells().size());
+        population->cells().push_back(
+            std::make_shared<Cell>(population->cells().size()));
     }
 
     void PopulationFactory::addCells(PopulationPtr population, size_t n)

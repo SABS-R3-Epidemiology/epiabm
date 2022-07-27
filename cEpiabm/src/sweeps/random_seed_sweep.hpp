@@ -10,6 +10,7 @@ namespace epiabm
     {
         private:
             int m_infectRate;
+            unsigned long m_infected;
 
         public:
             /**
@@ -17,7 +18,7 @@ namespace epiabm
              * One in every per_n_people is updated to infectious
              * @param infection_rate 
              */
-            RandomSeedSweep(int per_n_people);
+            RandomSeedSweep(SimulationConfigPtr simulationConfig, int per_n_people);
             ~RandomSeedSweep() = default;
 
             /**
@@ -27,10 +28,9 @@ namespace epiabm
              */
             void operator()(const unsigned short timestep) override;
 
-        private:
             bool cellCallback(
                 const unsigned short timestep,
-                Cell* cell);
+                Cell* cell) override;
 
             bool cellPersonCallback(
                 unsigned short timestep,

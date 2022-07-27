@@ -5,7 +5,9 @@
 namespace epiabm
 {
 
-    BasicHostProgressionSweep::BasicHostProgressionSweep() {}
+    BasicHostProgressionSweep::BasicHostProgressionSweep(SimulationConfigPtr cfg) :
+        SweepInterface(cfg)
+    {}
 
     void BasicHostProgressionSweep::operator()(const unsigned short timestep)
     {
@@ -80,10 +82,13 @@ namespace epiabm
     {
         if (timestep < person->params().next_status_time) return true;
         InfectionStatus next = next_status(person);
-
-        LOG << LOG_LEVEL_INFO << "Basic host progression of ("
-            << cell->index() << "," << person->cellPos() << ") from "
-            << status_string(person->status()) << " to " << status_string(next);
+        {
+            std::stringstream ss;
+            ss << "Basic host progression of ("
+                << cell->index() << "," << person->cellPos() << ") from "
+                << status_string(person->status()) << " to " << status_string(next);
+            LOG << LOG_LEVEL_DEBUG << ss.str();
+        }
         person->updateStatus(cell, next, timestep);
 
         if (next == InfectionStatus::Recovered)
@@ -101,7 +106,7 @@ namespace epiabm
      */
     inline unsigned short BasicHostProgressionSweep::time_to_next_status(Person* /*person*/, InfectionStatus /*status*/)
     {
-        return static_cast<unsigned short>(std::rand() % 14 + 14);
+        return m_cfg->randomManager->g().randi<unsigned short>(14, 28);
     }
 
     /**
@@ -126,7 +131,7 @@ namespace epiabm
     inline InfectionStatus BasicHostProgressionSweep::next_status(Person* /*person*/)
     {
         double deathChance = 0.1; // This needs to become a parameter
-        if (static_cast<double>(rand()%1000) / 1000.0 < deathChance)
+        if (m_cfg->randomManager->g().randf<double>() < deathChance)
         {
             return InfectionStatus::Dead;
         }

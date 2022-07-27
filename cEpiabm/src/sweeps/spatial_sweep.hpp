@@ -4,6 +4,7 @@
 #include "sweep_interface.hpp"
 
 #include <memory>
+#include <random>
 
 
 namespace epiabm
@@ -17,8 +18,12 @@ namespace epiabm
     class SpatialSweep : public SweepInterface
     {
     private:
+        unsigned long m_counter;
+
+        RandomGeneratorPtr m_generator;
+
     public:
-        SpatialSweep();
+        SpatialSweep(SimulationConfigPtr cfg);
         ~SpatialSweep() = default;
 
         /**
@@ -28,20 +33,40 @@ namespace epiabm
          */
         void operator()(const unsigned short timestep) override;
 
-    private:
         bool cellCallback(
             const unsigned short timestep,
-            Cell* cell);
+            Cell* cell) override;
 
         bool cellInfectiousCallback(
             const unsigned short timestep,
             Cell* cell,
             Person* infectious);
 
+    private:
         bool infectAttempt(
             const unsigned short timestep,
             Cell* cell,
             Person* infector, Person* infectee);
+
+        inline std::vector<size_t> getCellsToInfect(
+            std::vector<CellPtr>& cells, Cell* currentCell, size_t n);
+        
+        std::vector<double> getWeightsFromCells(std::vector<CellPtr> &cells, Cell *currentCell);
+
+        double calcCellInf(
+            Cell* cell,
+            unsigned short int timestep);
+
+        double calcSpaceInf(
+            Cell* inf_cell,
+            Person* infector,
+            unsigned short int timestep);
+        
+        double calcSpaceSusc(
+            Cell* cell,
+            Person* infectee,
+            unsigned short int timestep);
+    
 
     }; // class SpatialSweep
 

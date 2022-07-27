@@ -91,6 +91,7 @@ namespace epiabm
      */
     void Cell::processQueue(std::function<void(size_t)> callback)
     {
+        std::lock_guard<std::mutex> l(m_queueMutex);
         while (!m_personQueue.empty()) // loop through queue
         {
             callback(m_personQueue.front());
@@ -108,6 +109,7 @@ namespace epiabm
      */
     bool Cell::enqueuePerson(size_t personIndex)
     {
+        std::lock_guard<std::mutex> l(m_queueMutex);
         if (personIndex >= m_people.size()) throw std::runtime_error("Attempted to queue index out of range");
         if (m_peopleInQueue.find(personIndex) != m_peopleInQueue.end()) return false; // if person already queued
         m_personQueue.push(personIndex); // add to queue
@@ -167,6 +169,7 @@ namespace epiabm
 
         m_numInfectious++; // Increment number of infected
         return true;*/
+        std::lock_guard<std::mutex> l(m_markMutex);
         if (m_infectiousPeople.find(newInfected) != m_infectiousPeople.end()) return false;
         m_susceptiblePeople.erase(newInfected);
         m_infectiousPeople.insert(newInfected);
@@ -194,6 +197,7 @@ namespace epiabm
 
         m_numInfectious--;
         return true;*/
+        std::lock_guard<std::mutex> l(m_markMutex);
         if (m_susceptiblePeople.find(oldInfected) != m_susceptiblePeople.end()) return false;
         m_susceptiblePeople.insert(oldInfected);
         m_infectiousPeople.erase(oldInfected);
@@ -203,6 +207,7 @@ namespace epiabm
 
     bool Cell::markExposed(size_t newInfected)
     {
+        std::lock_guard<std::mutex> l(m_markMutex);
         if (m_exposedPeople.find(newInfected) != m_exposedPeople.end()) return false;
         m_susceptiblePeople.erase(newInfected);
         m_infectiousPeople.erase(newInfected);
@@ -212,6 +217,7 @@ namespace epiabm
 
     bool Cell::markDead(size_t person)
     {
+        std::lock_guard<std::mutex> l(m_markMutex);
         if (m_deadPeople.find(person) != m_deadPeople.end()) return false;
         m_deadPeople.insert(person);
         m_infectiousPeople.erase(person);
@@ -222,6 +228,7 @@ namespace epiabm
 
     bool Cell::markRecovered(size_t person)
     {
+        std::lock_guard<std::mutex> l(m_markMutex);
         if (m_recoveredPeople.find(person) != m_recoveredPeople.end()) return false;
         m_recoveredPeople.insert(person);
         m_infectiousPeople.erase(person);
@@ -263,27 +270,27 @@ namespace epiabm
         return m_deadPeople.size();
     }
 
-    bool Cell::sampleInfectious(size_t n, std::function<void(Person*)> callback)
+    bool Cell::sampleInfectious(size_t n, std::function<void(Person*)> callback, std::mt19937_64& rg)
     {
         if (m_infectiousPeople.size() < 1){
             return false;
         }
         std::vector<size_t> sampled = std::vector<size_t>();
         std::sample(m_infectiousPeople.begin(), m_infectiousPeople.end(),
-            std::back_inserter(sampled), n, std::mt19937{std::random_device{}()});
+            std::back_inserter(sampled), n, rg);
         for (const auto& s : sampled)
             callback(&m_people[s]);
         return true;
     }
 
-    bool Cell::sampleSusceptible(size_t n, std::function<void(Person*)> callback)
+    bool Cell::sampleSusceptible(size_t n, std::function<void(Person*)> callback, std::mt19937_64& rg)
     {
         if (m_susceptiblePeople.size() < 1){
             return false;
         }
         std::vector<size_t> sampled = std::vector<size_t>();
         std::sample(m_susceptiblePeople.begin(),m_susceptiblePeople.end(),
-            std::back_inserter(sampled), n, std::mt19937{std::random_device{}()});
+            std::back_inserter(sampled), n, rg);
         for (const auto& s : sampled)
             callback(&m_people[s]);
         return true;

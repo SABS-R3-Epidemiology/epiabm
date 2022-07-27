@@ -4,6 +4,7 @@
 #include "sweeps/random_seed_sweep.hpp"
 #include "reporters/population_compartment_reporter.hpp"
 #include "population_factory.hpp"
+#include "configuration/json_factory.hpp"
 
 #include "../catch/catch.hpp"
 
@@ -31,7 +32,8 @@ TEST_CASE("simulations/basic_simulation: test addSweep", "[BasicSimulation]")
     population->initialize();
     BasicSimulation subject = BasicSimulation(population);
 
-    REQUIRE_NOTHROW(subject.addSweep(std::make_shared<RandomSeedSweep>(50)));
+    REQUIRE_NOTHROW(subject.addSweep(std::make_shared<RandomSeedSweep>(
+        JsonFactory().loadConfig(std::filesystem::path("../testdata/test_config.json")), 50)));
     REQUIRE_NOTHROW(subject.simulate(10));
 }
 

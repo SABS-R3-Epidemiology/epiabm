@@ -12,7 +12,7 @@ using namespace epiabm;
 TEST_CASE("reporters/population_compartment_reporter: test initialize", "[PopulationCompartmentReporter]")
 {
     PopulationPtr population = PopulationFactory().makePopulation(10, 10, 1000);
-    HouseholdLinker().linkHouseholds(population, 1, 100);
+    HouseholdLinker().linkHouseholds(population, 1, 100, std::optional<size_t>());
     population->initialize();
 
     PopulationCompartmentReporter subject = PopulationCompartmentReporter("test_output/test_population_compartment_reporter.csv");

@@ -10,7 +10,8 @@
 #include <functional>
 #include <queue>
 #include <set>
-
+#include <mutex>
+#include <random>
 
 namespace epiabm
 {
@@ -29,6 +30,7 @@ namespace epiabm
         // Indexes stored are position of person in cell's m_people vector
         std::queue<size_t> m_personQueue;
         std::set<size_t> m_peopleInQueue;
+        std::mutex m_queueMutex;
 
 
         /*
@@ -45,13 +47,14 @@ namespace epiabm
         std::set<size_t> m_exposedPeople;
         std::set<size_t> m_recoveredPeople;
         std::set<size_t> m_deadPeople;
+        std::mutex m_markMutex;
 
         CompartmentCounter m_compartmentCounter;
 
     public:
         Cell(size_t index);
         ~Cell();
-        Cell(const Cell&) = default;
+        Cell(const Cell&) = delete;
         Cell(Cell&&) = default;
 
         size_t index() const;
@@ -83,8 +86,8 @@ namespace epiabm
         size_t numRecovered() const;
         size_t numDead() const;
 
-        bool sampleInfectious(size_t n, std::function<void(Person*)> callback);
-        bool sampleSusceptible(size_t n, std::function<void(Person*)> callback);
+        bool sampleInfectious(size_t n, std::function<void(Person*)> callback, std::mt19937_64& rg);
+        bool sampleSusceptible(size_t n, std::function<void(Person*)> callback, std::mt19937_64& rg);
 
         void initialize();
 
