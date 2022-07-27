@@ -2,10 +2,7 @@
 # Reads a csv of age stratified data and plots as a bar chart
 
 import pandas as pd
-import numpy as np
-import datetime as dt
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 import os
 
 # csv input files should have the column headers:
@@ -18,7 +15,7 @@ class Plotter():
     including the capability to make an age-statified
     bar chart.
     """
-    def __init__(self, filepath: str, start_date = None, sum_weekly = True,
+    def __init__(self, filepath: str, start_date=None, sum_weekly=True,
                  age_list: list = None):
         """Initialise the plotter with a filepath and read
         data from the csv.
@@ -28,9 +25,9 @@ class Plotter():
         filepath : str
             Filepath to the .csv containing output data
         start_date : str
-            Starting date for the simulation, "year-month-day"
+            Starting date for the simulation, "day-month-year"
         sum_weekly : bool
-            Flag to plot either each timepoint, or the 7 day sum 
+            Flag to plot either each timepoint, or the 7 day sum
         age_list : list
             List of the explicit age ranges saved in the csv
         """
@@ -55,10 +52,11 @@ class Plotter():
         people and appends the dataframe with a further column containing this
         data.
         """
-        self.data["Total Infectious"] = self.data[list(self.data \
-            .filter(regex='InfectionStatus.Infect'))].sum(axis=1)
-    
-    def dates(self, dataFrame = None, period = 'weekly') -> None:
+        total = self.data[list(self.data.
+                               filter(regex='InfectionStatus.Infect'))]
+        self.data["Total Infectious"] = total.sum(axis=1)
+
+    def dates(self, dataFrame=None, period='weekly') -> None:
         """Helper function to calculate a dictionary associating each
         timestep, with the date of a day, or week.
 
@@ -76,20 +74,20 @@ class Plotter():
         """
         assert self.start_date is not None, 'Start date not set'
         assert period in ['daily', 'weekly'], 'Period not daily or weekly'
-        if dataFrame is None: dataFrame = self.data
+        if dataFrame is None:
+            dataFrame = self.data
         date_list = []
         timepoints = list(dataFrame['time'])
         start = pd.to_datetime(self.start_date).date()
         for time in timepoints:
             if period == 'daily':
-                date_list.append((start +  pd.DateOffset(days=time)).date())
+                date_list.append((start + pd.DateOffset(days=time)).date())
             else:
-                if time % 7 == 0: 
-                    week_date = (start +  pd.DateOffset(days=time)).date()
+                if time % 7 == 0:
+                    week_date = (start + pd.DateOffset(days=time)).date()
                 date_list.append(week_date)
         date_list = [d.strftime('%m-%d') for d in date_list]
         return date_list
-            
 
     def barchart(self, outfile: str,
                  infection_category: str = "Total Infectious"):
@@ -110,12 +108,14 @@ class Plotter():
         new_frame = self.data.loc[:, ('time', infection_category)]
         time_col = 'time'
         if self.start_date is not None:
-            time_col = 'dates'
             # If a start date is given plot with dates on x axis
-            if self.sum_weekly: 
-                # 
+            time_col = 'dates'
+            if self.sum_weekly:
+                # By giving the same 'dates' for each weekday, the
+                # 7 day total is automaticaldly found.
                 new_frame['dates'] = self.dates(new_frame, 'weekly')
-            else: new_frame['dates'] = self.dates(new_frame, 'daily')
+            else:
+                new_frame['dates'] = self.dates(new_frame, 'daily')
 
         if self.do_ages:
             new_frame.loc[:, self.age_name] = self.data.loc[:, self.age_name]
@@ -131,8 +131,6 @@ class Plotter():
         else:
             new_frame = new_frame.groupby([time_col]) \
                 .sum().reset_index()
-            #new_frame = new_frame.pivot(index=time_col, columns=self.age_name,
-            #                            values=infection_category)
             new_frame.plot.bar(x=time_col, y=infection_category)
         plt.title("Weekly Cases by age")
         plt.gca().legend().set_title('')
@@ -142,6 +140,6 @@ class Plotter():
 
 if __name__ == '__main__':
     dirname = os.path.dirname(os.path.abspath(__file__))
-    p = Plotter(os.path.join(dirname,"no_age.csv"), start_date = '01-01-2020')
+    p = Plotter(os.path.join(dirname, "no_age.csv"), start_date='01-01-2020')
     p.barchart(os.path.join(dirname, "age_stratify.png"))
     plt.show()
