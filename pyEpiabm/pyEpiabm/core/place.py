@@ -52,6 +52,18 @@ class Place:
                 isinstance(loc[1], (float, int))):
             raise ValueError("Location must be a tuple of float-type")
 
+    def __repr__(self):
+        """Returns a string representation of Place.
+
+        Returns
+        -------
+        str
+            String representation of place
+
+        """
+        return (f"Place of type {self.place_type} at location {self._location}"
+                + f", with current occupancy {len(self.persons)} persons.")
+
     def set_infectiousness(self, infectiousness: float):
         """Sets a baseline infectiousness for the place.
 

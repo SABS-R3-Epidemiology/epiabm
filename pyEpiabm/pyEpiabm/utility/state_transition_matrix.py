@@ -15,7 +15,7 @@ class StateTransitionMatrix:
     """
     def __init__(self, coefficients: typing.Dict[str, typing.List[float]],
                  use_ages=False):
-        """Generate age independant transition matrix.
+        """Generate age independent transition matrix.
 
         Parameters
         ----------
@@ -125,7 +125,7 @@ class StateTransitionMatrix:
                              ' larger than or equal to 0 and less than' +
                              ' or equal to 1')
 
-        # Extract row and column names from enum and retrieve trasition matrix
+        # Extract row and column names from enum and retrieve transition matrix
         row = current_infection_status_row.name
         column = next_infection_status_column.name
         self.matrix.loc[row, column] = new_probability

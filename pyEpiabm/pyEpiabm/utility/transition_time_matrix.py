@@ -35,7 +35,7 @@ class TransitionTimeMatrix:
         infection status associated with the row i to move to the infection
         status associated with the columns j. Transitions that we do not
         expect to happen are assigned a value of -1.0 in the matrix, so it
-        will not pass silently if these are accessed accidently.
+        will not pass silently if these are accessed accidentally.
 
         Returns
         -------

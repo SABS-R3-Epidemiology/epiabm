@@ -118,6 +118,12 @@ class FilePopulationFactory:
                 FilePopulationFactory.add_households(new_microcell,
                                                      households)
 
+        # Verify all people are logged in cell
+        for cell in new_pop.cells:
+            mcell_persons = [person for mcell in cell.microcells
+                             for person in mcell.persons]
+            cell.persons = list(set(cell.persons) | set(mcell_persons))
+
         logging.info(f"New Population from file {input_file} configured")
         return new_pop
 

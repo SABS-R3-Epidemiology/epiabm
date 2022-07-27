@@ -63,6 +63,7 @@ class Person:
                                             weights=group_probs)[0]
             self.age = random.randint(0, 4) + 5 * self.age_group
         else:
+            self.age_group = None
             self.age = None
             # If age is not used in the model, then every person is in the
             # same age group (to conserve same output structure)
@@ -77,13 +78,7 @@ class Person:
             Whether person is currently infectious
 
         """
-        return self.infection_status in [
-            InfectionStatus.InfectASympt,
-            InfectionStatus.InfectMild,
-            InfectionStatus.InfectGP,
-            InfectionStatus.InfectHosp,
-            InfectionStatus.InfectICU,
-            InfectionStatus.InfectICURecov]
+        return str(self.infection_status).startswith('InfectionStatus.Infect')
 
     def is_susceptible(self):
         """Query if the person is currently susceptible.

@@ -1,5 +1,5 @@
-#ifndef EPIABM_SWEEPS_HOST_PROGRESSION_SWEEP_HPP
-#define EPIABM_SWEEPS_HOST_PROGRESSION_SWEEP_HPP
+#ifndef EPIABM_SWEEPS_BASIC_HOST_PROGRESSION_SWEEP_HPP
+#define EPIABM_SWEEPS_BASIC_HOST_PROGRESSION_SWEEP_HPP
 
 #include "sweep_interface.hpp"
 
@@ -20,7 +20,7 @@ namespace epiabm
     {
     private:
     public:
-        BasicHostProgressionSweep();
+        BasicHostProgressionSweep(SimulationConfigPtr cfg);
         ~BasicHostProgressionSweep() = default;
 
         /**
@@ -30,10 +30,9 @@ namespace epiabm
          */
         void operator()(const unsigned short timestep) override;
 
-    private:
         bool cellCallback(
             const unsigned short timestep,
-            Cell* cell);
+            Cell* cell) override;
 
         /* For each Exposed Person */
         bool cellExposedCallback(
@@ -66,4 +65,4 @@ namespace epiabm
 } // namespace epiabm
 
 
-#endif // EPIABM_SWEEPS_HOST_PROGRESSION_SWEEP_HPP
+#endif // EPIABM_SWEEPS_BASIC_HOST_PROGRESSION_SWEEP_HPP

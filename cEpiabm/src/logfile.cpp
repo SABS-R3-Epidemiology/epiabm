@@ -41,9 +41,16 @@ namespace epiabm
         m_os = handler.OpenOutputFile(path.filename());
         m_fileSet = true;
     }
+
+    void LogFile::setLevel(unsigned int level)
+    {
+        if (m_instance == nullptr) return;
+        m_instance->m_level = level;
+    }
     
     const std::string LogFile::prepare(unsigned int level)
     {
+        if (m_instance == nullptr) return "";
         m_active = level >= m_level;
         if (!m_active) return "";
 
@@ -53,7 +60,8 @@ namespace epiabm
         std::tm tm = *std::localtime(&time_now_t);
 
         // Write header
-        *m_os << std::endl << LogFile::LEVEL_STRINGS.at(level) << " ["
+        auto& os = m_fileSet ? (*m_os) : std::cout;
+        os << std::endl << LogFile::LEVEL_STRINGS.at(level) << " ["
             << std::put_time(&tm, "%Y/%m/%d %H:%M:%S") << "]: ";
         return "";
     }

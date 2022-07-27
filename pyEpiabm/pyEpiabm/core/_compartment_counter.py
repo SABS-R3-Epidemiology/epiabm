@@ -77,6 +77,7 @@ class _CompartmentCounter:
         """Function to add a block of people with the same infection status
         and age group (if age is used) to a compartment.
 
+
         Parameters
         ----------
         n_person : int

@@ -38,7 +38,7 @@ class InverseCdf:
 
     def icdf_choose_noexp(self) -> float:
         """Samples a value from the inverse cumulative distribution function,
-        following what is done in CovidSim (without exponentialisation), and
+        following what is done in CovidSim (without exponentiation), and
         returns the value as a float.
 
         Returns

@@ -7,17 +7,17 @@
 
 ## General Information
 
-This programme implements an agent-based SEIR model with added compartments and spatial complexity. It immitates the Imperial CovidSim model, but aims to simplify and clarify the model by using more user friendly software practices. It also provides various sub-models (with elements of the CovidSim model removed) for research and pedagogical investigation into the effect of different aspects of the model.
+This programme implements an agent-based SEIR model with added compartments and spatial complexity. It imitates the Imperial CovidSim model, but aims to simplify and clarify the model by using more user friendly software practices. It also provides various sub-models (with elements of the CovidSim model removed) for research and pedagogical investigation into the effect of different aspects of the model.
 
 ## Model Summary
 
 The model contains two main sections: transmission mechanisms and within host progression.
 
-For each timestep the code loops through the population and records interations between infected and susceptible people which may lead to infections. Individuals are allocated a susceptibility based on age and location data and pairs of individuals considered to see whether their interaction leads to infection. The likelihood of a pair interacting is weighted by spatial distance and age factors (as people are more likely to socialise with those of the same age, and children maintain close contact with parents). This incorporates the major spatial variation within the model.
+For each timestep the code loops through the population and records interactions between infected and susceptible people which may lead to infections. Individuals are allocated a susceptibility based on age and location data and pairs of individuals considered to see whether their interaction leads to infection. The likelihood of a pair interacting is weighted by spatial distance and age factors (as people are more likely to socialise with those of the same age, and children maintain close contact with parents). This incorporates the major spatial variation within the model.
 
 Once an individual becomes exposed, their progression through the various stages of infection is determined by generating a series of random timesteps to mark their movements between infection categories. The possible paths an individual can take are indicated on the schema below.
 
-![SEIR model conceptualisation](./images/covidsim_schema.png)
+![SEIR model conceptualisation](./images/diagram_covid_transition.jpg)
 
 A more complete overview of our implementation of the Ferguson model is given in [the Wiki](https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Overview-of-the-Ferguson-Model) for this repository.
 
@@ -33,7 +33,7 @@ pyEpiabm is not yet avaliable on [PyPI](https://pypi.org/), but the module can b
 pip install -e .
 ```
 
-from the `pyEpiabm` directory. If you also wish to build the docs locally, this requires additional dependancies, which must be specified:
+from the `pyEpiabm` directory. If you also wish to build the docs locally, this requires additional dependencies, which must be specified:
 
 ```console
 pip install -e .[docs]
@@ -41,7 +41,7 @@ pip install -e .[docs]
 
 ## Running a simulation
 
-A complete workflow for running a simulation is provded in `python_examples/simulation_flow.py`. There are a number of steps to this process:
+A complete workflow for running a simulation is provided in `python_examples/simulation_flow.py`. There are a number of steps to this process:
 
 ### Set Random Seed _(Optional)_
 
