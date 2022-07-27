@@ -196,11 +196,12 @@ class SpatialSweep(AbstractSweep):
             # Weighting for cell choice in Covidsim uses cum_trans and
             # invCDF arrays, which are equivalent to weighting by total
             # susceptibles*max_transmission. May want to add transmission
-            # parameter later.
-            weights = [cell2.compartment_counter.retrieve()
-                       [InfectionStatus.Susceptible] * SpatialKernel.weighting(
-                           DistanceFunctions.dist(cell2.location,
-                                                  current_cell.location))
+            # parameter later
+            weights = [sum(cell2.compartment_counter.retrieve()
+                       [InfectionStatus.Susceptible]) * SpatialKernel
+                       .weighting(DistanceFunctions.dist(cell2.location,
+                                                         current_cell
+                                                         .location))
                        for cell2 in possible_infectee_cells]
             infectee_cell = random.choices(possible_infectee_cells,
                                            weights=weights, k=1)[0]
