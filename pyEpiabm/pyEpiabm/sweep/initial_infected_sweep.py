@@ -28,14 +28,14 @@ class InitialInfectedSweep(AbstractSweep):
             Dictionary of simulation parameters
 
         """
-        pop_size = self._population.total_people()
 
+        pop_size = self._population.total_people()
         if pop_size < \
                 sim_params["initial_infected_number"]:
             raise ValueError('Initial number of infected people needs to be'
                              + ' less than the total population')
-        start_time = sim_params["simulation_start_time"]
 
+        start_time = sim_params["simulation_start_time"]
         if start_time < 0:
             raise ValueError('Simulation start time needs to be greater or'
                              + ' equal to 0')
