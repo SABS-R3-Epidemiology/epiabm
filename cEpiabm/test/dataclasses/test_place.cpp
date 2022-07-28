@@ -20,11 +20,11 @@ inline Population makeSubjectPlaceTest(size_t n_places, size_t n_cells, size_t n
     }
     for (size_t i = 0; i < n_cells; i++)
     {
-        subject.cells().push_back(Cell(i));
-        subject.cells()[i].people().reserve(n_people);
+        subject.cells().push_back(std::make_shared<Cell>(i));
+        subject.cells()[i]->people().reserve(n_people);
         for (size_t j = 0; j < n_people; j++)
         {
-            subject.cells()[i].people().push_back(Person(i, j, j));
+            subject.cells()[i]->people().push_back(Person(i, j, j));
 
             /*printf("Microcell: %ld, Person: (%ld, %ld)\n",
                 i,
@@ -89,14 +89,14 @@ inline void forEachMemberTestPlace(size_t n_places, size_t n_cells, size_t n_peo
     for (size_t c = 0; c < subject.cells().size(); c++)
     {
         //std::cout << "Num People: " << subject.cells()[c].people().size() << std::endl;
-        for (size_t p = 0; p < subject.cells()[c].people().size(); p++)
+        for (size_t p = 0; p < subject.cells()[c]->people().size(); p++)
         {
             for (size_t i = 0; i < n_places; i++)
             {
                 if (std::rand() % 100 > 90) continue;
                 REQUIRE(subject.places()[i].addMember(c, p));
-                members[i].insert(&subject.cells()[c].people()[p]);
-                subject.cells()[c].people()[p].places().insert(i);
+                members[i].insert(&subject.cells()[c]->people()[p]);
+                subject.cells()[c]->people()[p].places().insert(i);
             }
         }
     }

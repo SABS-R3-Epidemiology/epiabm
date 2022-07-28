@@ -55,7 +55,7 @@ namespace epiabm
         {
             LOG << LOG_LEVEL_ERROR << "Error iterating through timesteps: " << e.what();
         }*/
-        // LCOV_EXCL_END
+        // LCOV_EXCL_STOP
         LOG << LOG_LEVEL_NORMAL << "Completed Iterating through timesteps.";
 
         teardown();

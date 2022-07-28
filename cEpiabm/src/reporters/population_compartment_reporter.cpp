@@ -68,7 +68,7 @@ namespace epiabm
             LOG << LOG_LEVEL_ERROR << "Cell Compartment Reporter Error writing to file";
             throw e;
         }
-        // LCOV_EXCL_END
+        // LCOV_EXCL_STOP
     }
 
     std::set<InfectionStatus>& PopulationCompartmentReporter::compartments()
