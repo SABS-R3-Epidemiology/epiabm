@@ -59,22 +59,31 @@ del(sim.writer)
 del(sim)
 
 # Plotter where age is summed over (to compare to simulation without age)
-# Creation of a plot of results (without logging matplotlib info)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
                         "output_withage.csv")
 df = pd.read_csv(filename)
 df_sum_age = df.copy()
-#print(df_sum_age["time"])
-#n_susc = df.groupby(["time", "InfectionStatus.Susceptible"])["age_group"].sum()
-#print(n_susc.head())
-#df.plot(x="time", y=["InfectionStatus.Susceptible",
-#                     "InfectionStatus.InfectMild",
-#                     "InfectionStatus.Recovered"])
-#plt.savefig("python_examples/simulation_outputs/simulation_flow_SIR_plot.png")
+df_sum_age = df_sum_age.drop(["InfectionStatus.Exposed",
+                              "InfectionStatus.InfectASympt",
+                              "InfectionStatus.InfectGP",
+                              "InfectionStatus.InfectHosp",
+                              "InfectionStatus.InfectICU",
+                              "InfectionStatus.InfectICURecov",
+                              "InfectionStatus.Dead"],
+                             axis=1)
+df_sum_age = df_sum_age.groupby(["time"]).agg(
+                                {"InfectionStatus.Susceptible": 'sum',
+                                 "InfectionStatus.InfectMild": 'sum',
+                                 "InfectionStatus.Recovered": 'sum'})
+df_sum_age.plot(y=["InfectionStatus.Susceptible",
+                   "InfectionStatus.InfectMild",
+                   "InfectionStatus.Recovered"])
+plt.savefig("python_examples/simulation_outputs/simulation_flow_SIR_plot.png")
 
 # Creation of a plot of results with age stratification
 p = Plotter(os.path.join(os.path.dirname(__file__),
             "simulation_outputs/output_withage.csv"),
             start_date='01-01-2020')
-p.barchart(os.path.join(os.path.dirname(__file__), "age_stratify.png"))
+p.barchart(os.path.join(os.path.dirname(__file__),
+           "simulation_outputs/age_stratify.png"))
