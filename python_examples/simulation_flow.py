@@ -30,7 +30,6 @@ pop_params = {"population_size": 100, "cell_number": 1,
 
 # Create a population based on the parameters given.
 population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
-print(population)
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.

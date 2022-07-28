@@ -2,7 +2,6 @@
 # Factory for creation of a toy population
 #
 
-from hashlib import new
 import typing
 import logging
 import numpy as np

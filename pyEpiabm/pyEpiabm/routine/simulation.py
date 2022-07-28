@@ -86,12 +86,9 @@ class Simulation:
             s.bind_population(self.population)
             logging.info(f"Bound sweep {s.__class__.__name__} to"
                          + " population")
-            print(f"Bound sweep {s.__class__.__name__} to"
-                  + " population") #to remove
 
         # General sweeps run through the population on every timestep, and
         # include host progression and spatial infections.
-
         folder = os.path.join(os.getcwd(),
                               file_params["output_dir"])
 
@@ -127,13 +124,10 @@ class Simulation:
 
         # Initialise on the time step before starting.
         for sweep in self.initial_sweeps:
-            print('about to do initial sweep') #to remove
             sweep(self.sim_params)
 
         logging.info("Initial Sweeps Completed at time "
                      + f"{self.sim_params['simulation_start_time']} days")
-        print("Initial Sweeps Completed at time "
-              + f"{self.sim_params['simulation_start_time']} days") #to remove
 
         # First entry of the data file is the initial state
         self.write_to_file(self.sim_params["simulation_start_time"])
@@ -164,7 +158,6 @@ class Simulation:
             nb_age_groups = 1
 
         if Parameters.instance().use_ages:
-            print('uses age')
             if self.spatial_output:  # Separate output line for each cell
                 for cell in self.population.cells:
                     for age_i in range(0, nb_age_groups):
