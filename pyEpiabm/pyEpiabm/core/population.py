@@ -48,5 +48,4 @@ class Population:
         count = 0
         for cell in self.cells:
             count += len(cell.persons)
-            print(count)
         return count

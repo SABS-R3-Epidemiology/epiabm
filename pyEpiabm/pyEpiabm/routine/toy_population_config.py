@@ -89,7 +89,6 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                     microcell_split = np.random.multinomial(
                                       people_in_microcell,
                                       w, size=1)[0]
-                    print(microcell_split)
                     for age in range(len(age_prop)):
                         microcell.add_people(microcell_split[age],
                                              age_group=age)

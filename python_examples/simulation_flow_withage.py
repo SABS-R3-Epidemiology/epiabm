@@ -74,9 +74,7 @@ df_sum_age = df.copy()
 #plt.savefig("python_examples/simulation_outputs/simulation_flow_SIR_plot.png")
 
 # Creation of a plot of results with age stratification
-age_list = [str(10*i)+"-"+str(10*i+10) for i in range((17))]
 p = Plotter(os.path.join(os.path.dirname(__file__),
             "simulation_outputs/output_withage.csv"),
-            start_date='01-01-2020',
-            age_list=age_list)
+            start_date='01-01-2020')
 p.barchart(os.path.join(os.path.dirname(__file__), "age_stratify.png"))

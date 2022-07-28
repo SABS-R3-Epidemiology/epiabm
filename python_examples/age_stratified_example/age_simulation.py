@@ -16,9 +16,20 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 
 # Set config file for Parameters
 dirname = os.path.dirname(os.path.abspath(__file__))
-paramfile = (dirname.split(os.sep)[1:-1])
+print(dirname) # output = "c:\Users\44759\Documents\PhD\epiabm\python_examples\age_stratified_example"
+
+paramfile = (dirname.split(os.sep))
+print(paramfile) # output = ['c:', 'Users', '44759', 'Documents', 'PhD', 'epiabm', 'python_examples', 'age_stratified_example']
+
+paramfile = paramfile[1:-1]
+print(paramfile)# output = ['Users', '44759', 'Documents', 'PhD', 'epiabm', 'python_examples']
+
 paramfile.append("spatial_example/spatial_parameters.json")
+print(paramfile) # output = ['Users', '44759', 'Documents', 'PhD', 'epiabm', 'python_examples', 'spatial_example/spatial_parameters.json']
+
 paramfile = os.path.join('C:\\', *paramfile)
+print(paramfile) # output = C:\Users\44759\Documents\PhD\epiabm\python_examples\spatial_example/spatial_parameters.json
+
 pe.Parameters.set_file(paramfile)
 
 # Method to set the seed at the start of the simulation, for reproducibility

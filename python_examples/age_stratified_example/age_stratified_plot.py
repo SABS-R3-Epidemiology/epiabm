@@ -44,7 +44,7 @@ class Plotter():
         self.do_ages = (self.age_name is not None)
         if self.do_ages and (self.age_list is None):
             num = self.data[self.age_name].max()
-            self.age_list = [str(10*i)+"-"+str(10*i+10) for i in range(num+1)]
+            self.age_list = [str(5*i)+"-"+str(5*i+5) for i in range(num+1)]
 
     def sum_infectious(self) -> None:
         """Helper function which sums across all columns containing infectious
@@ -120,8 +120,10 @@ class Plotter():
                                         values=infection_category)
             if self.age_list:
                 # Renames columns to actual age ranges if given.
+                idx = list(new_frame.columns)[0]
                 for i in range(len(list(new_frame.columns))):
-                    new_frame = new_frame.rename(columns={i: self.age_list[i]})
+                    new_frame = new_frame \
+                                    .rename(columns={i+idx: self.age_list[i]})
             new_frame.plot.bar(stacked=True, colormap="inferno_r")
         else:
             new_frame = new_frame.groupby([time_col]) \
@@ -135,6 +137,7 @@ class Plotter():
 
 if __name__ == '__main__':
     dirname = os.path.dirname(os.path.abspath(__file__))
-    p = Plotter(os.path.join(dirname, "no_age.csv"), start_date='01-01-2020')
+    p = Plotter(os.path.join(dirname, "toy_age_example.csv"),
+                start_date='01-01-2020')
     p.barchart(os.path.join(dirname, "age_stratify.png"))
     plt.show()

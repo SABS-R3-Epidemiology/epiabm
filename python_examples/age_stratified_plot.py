@@ -119,9 +119,11 @@ class Plotter():
             new_frame = new_frame.pivot(index=time_col, columns=self.age_name,
                                         values=infection_category)
             if self.age_list:
+                idx = list(new_frame.columns)[0]
                 # Renames columns to actual age ranges if given.
                 for i in range(len(list(new_frame.columns))):
-                    new_frame = new_frame.rename(columns={i: self.age_list[i]})
+                    new_frame = new_frame \
+                                    .rename(columns={i+idx: self.age_list[i]})
             new_frame.plot.bar(stacked=True, colormap="inferno_r")
         else:
             new_frame = new_frame.groupby([time_col]) \
