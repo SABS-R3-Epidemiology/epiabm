@@ -124,14 +124,14 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                         person_index += 1
 
     @staticmethod
-    def add_places(population: Population, place_number: int):
+    def add_places(population: Population, place_number: float):
         """Generates places within a Population.
 
         Parameters
         ----------
         population : Population
             Population where :class:`Place` s will be added
-        place_number : int
+        place_number : float
             Average number of places to generate per :class:`Microcell`
 
         """
