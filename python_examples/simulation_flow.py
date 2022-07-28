@@ -30,6 +30,7 @@ pop_params = {"population_size": 100, "cell_number": 1,
 
 # Create a population based on the parameters given.
 population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
+print(population)
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
@@ -38,7 +39,8 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
 
 file_params = {"output_file": "output.csv",
                "output_dir": "python_examples/simulation_outputs",
-               "spatial_output": False}
+               "spatial_output": False,
+               "age_stratified": False}
 
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.

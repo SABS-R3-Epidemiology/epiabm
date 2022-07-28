@@ -45,7 +45,10 @@ class Population:
         in various sweeps to have this attached.
 
         """
+        print('total pop')
         count = 0
+        print('about to count')
         for cell in self.cells:
             count += len(cell.persons)
+            print(count)
         return count
