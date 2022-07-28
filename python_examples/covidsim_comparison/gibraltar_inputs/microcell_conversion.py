@@ -3,6 +3,7 @@
 #
 
 import math
+import os
 import numpy as np
 import pandas as pd
 
@@ -23,15 +24,16 @@ def min_separation(x_loc, y_loc):
     return sep
 
 
-pe.Parameters.set_file("python_examples/covidsim_comparison/"
-                       + "gibraltar_parameters.json")
+pe.Parameters.set_file(os.path.join(os.path.dirname(__file__), os.pardir,
+                                    "gibraltar_parameters.json"))
+
 
 mcell_num = 81
-file_path = "python_examples/covidsim_comparison/gibraltar_inputs/"
+file_path = os.path.dirname(__file__)
 columns = ["cell", "microcell", "location_x", "location_y",
            "household_number", "Susceptible"]
 
-df = pd.read_csv(file_path + "wpop_gib.txt",
+df = pd.read_csv(os.path.join(file_path, "wpop_gib.txt"),
                  skiprows=0,  delim_whitespace=True, header=0)
 
 mcell_df = pd.DataFrame(columns=columns)
@@ -67,4 +69,5 @@ for cell_index, row in df.iterrows():
         new_row = pd.DataFrame(data=data_dict, columns=columns, index=[0])
         mcell_df = pd.concat([mcell_df, new_row], ignore_index=True, axis=0)
 
-mcell_df.to_csv(file_path + "gib_input.csv", header=True, index=False)
+mcell_df.to_csv(os.path.join(file_path, "gib_input.csv"),
+                header=True, index=False)

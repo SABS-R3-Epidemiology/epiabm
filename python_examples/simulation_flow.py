@@ -15,7 +15,8 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
                             + '- %(levelname)s - %(message)s'))
 
 # Set config file for Parameters
-pe.Parameters.set_file("python_examples/simple_parameters.json")
+pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
+                       "simple_parameters.json"))
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
@@ -37,7 +38,8 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
               "initial_infected_number": 10}
 
 file_params = {"output_file": "output.csv",
-               "output_dir": "python_examples/simulation_outputs",
+               "output_dir": os.path.join(os.path.dirname(__file__),
+                                          "simulation_outputs"),
                "spatial_output": False}
 
 # Create a simulation object, configure it with the parameters given, then
@@ -64,4 +66,8 @@ df = pd.read_csv(filename)
 df.plot(x="time", y=["InfectionStatus.Susceptible",
                      "InfectionStatus.InfectMild",
                      "InfectionStatus.Recovered"])
-plt.savefig("python_examples/simulation_outputs/simulation_flow_SIR_plot.png")
+plt.savefig(
+            os.path.join(os.path.dirname(__file__),
+                         "simulation_outputs",
+                         "simulation_flow_SIR_plot.png")
+)
