@@ -74,8 +74,8 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         p = [1 / total_number_microcells] * total_number_microcells
         # Multinomially distributes people into microcells.
         cell_split = np.random.multinomial(population_size, p, size=1)[0]
-        
-        if Parameters.instance().use_ages: #see this again, doesnt seem to work
+
+        if Parameters.instance().use_ages:
             age_prop = Parameters.instance().age_proportions
             w = age_prop/sum(age_prop)
 
@@ -84,12 +84,15 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             cell.add_microcells(microcell_number)
             for microcell in cell.microcells:
                 people_in_microcell = cell_split[i]
-                
-                if Parameters.instance().use_ages: #see this again, doesnt seem to work
-                    microcell_split = np.random.multinomial(people_in_microcell,
-                                                        w, size=1)[0]
+
+                if Parameters.instance().use_ages:
+                    microcell_split = np.random.multinomial(
+                                      people_in_microcell,
+                                      w, size=1)[0]
+                    print(microcell_split)
                     for age in range(len(age_prop)):
-                        microcell.add_people(microcell_split[age], age_group=age)
+                        microcell.add_people(microcell_split[age],
+                                             age_group=age)
                 else:
                     microcell.add_people(people_in_microcell)
                 i += 1
