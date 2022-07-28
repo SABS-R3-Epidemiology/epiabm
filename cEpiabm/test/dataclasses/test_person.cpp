@@ -24,6 +24,10 @@ TEST_CASE("dataclasses/person: test status", "[Person]")
     cell.people().push_back(Person(0,0,0));
     Person& subject = cell.people()[0];
     REQUIRE(subject.status() == InfectionStatus::Susceptible);
+    subject.setStatus(InfectionStatus::Dead);
+    REQUIRE(subject.status() == InfectionStatus::Dead);
+    subject.setStatus(InfectionStatus::Susceptible);
+    REQUIRE(subject.status() == InfectionStatus::Susceptible);
     
     auto test = [&](InfectionStatus status)
     {
@@ -50,7 +54,7 @@ TEST_CASE("dataclasses/person: test setHousehold", "[Person]")
 TEST_CASE("dataclasses/person: test places", "[Person]")
 {
     Person subject = Person(0, 0, 0);
-    for (size_t i = 0; i < 5; i++) subject.places().insert(i);
+    for (size_t i = 0; i < 5; i++) subject.places().insert(std::make_pair(i, std::rand()));
     REQUIRE(subject.places().size() == 5);
 }
 
@@ -58,17 +62,65 @@ TEST_CASE("dataclasses/person: test forEachPlace", "[Person]")
 {
     Person subject = Person(0, 0, 0);
     Population population = Population();
+    population.cells().push_back(std::make_shared<Cell>(0));
+    population.cells()[0]->people().push_back(subject);
     for (size_t i = 0; i < 5; i++)
     {
         population.places().push_back(Place(i));
-        subject.places().insert(i);
-        population.places()[i].addMember(1, 2);
+        subject.addPlace(population, population.cells()[0].get(), i, 0);
     }
     REQUIRE(subject.places().size() == 5);
 
-    auto callback = [&](Place* place)
+    auto callback = [&](Place* place, size_t)
     {
-        REQUIRE(place->isMember(1, 2));
+        REQUIRE(place->isMember(0, 0));
     };
     REQUIRE_NOTHROW(subject.forEachPlace(population, callback));
+}
+
+TEST_CASE("dataclasses/person: test removePlace", "[Person]")
+{
+    Population population = Population();
+    population.cells().push_back(std::make_shared<Cell>(0));
+    population.cells()[0]->people().emplace_back(0,0,0);
+    Person& subject = population.cells()[0]->people()[0];
+
+    for (size_t i = 0; i < 5; i++)
+    {
+        population.places().emplace_back(i);
+    }
+    std::map<size_t, std::set<size_t>> _places;
+    for (size_t i = 0; i < 5; i++)
+    {
+        for (size_t j = 0; j < 10; j++)
+        {
+            size_t r = static_cast<size_t>(std::rand()%10);
+            subject.addPlace(population, population.cells()[0].get(),
+                i, r);
+            _places[i].insert(r);
+        }
+    }
+
+    size_t ctr = 0;
+    for (const auto& p : _places) ctr += p.second.size();
+    REQUIRE(subject.places().size() == ctr);
+
+    for (size_t i = 0; i < 10; i++)
+    {
+        size_t p = static_cast<size_t>(std::rand()%5);
+        size_t g = static_cast<size_t>(std::rand()%15);
+        subject.removePlace(population, population.cells()[0].get(), p, g);
+        _places[p].erase(g);
+    }
+
+    ctr = 0;
+    for (const auto& p : _places) ctr += p.second.size();
+    REQUIRE(subject.places().size() == ctr);
+
+    for (size_t p = 0; p < 5; p++)
+    {
+        _places[p].clear();
+        subject.removePlaceAllGroups(population, population.cells()[0].get(), p);
+    }
+    REQUIRE(subject.places().empty());
 }
