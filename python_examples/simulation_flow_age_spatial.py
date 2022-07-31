@@ -8,6 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 import pyEpiabm as pe
+from age_stratified_plot import Plotter
 
 # Setup output for logging file
 logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
@@ -25,12 +26,12 @@ pe.routine.Simulation.set_random_seed(seed=42)
 # simulation.
 
 pop_params = {"population_size": 1000, "cell_number": 10,
-              "microcell_number": 2, "household_number": 5}
+              "microcell_number": 1, "household_number": 5,
+              "place_number": 1}
 
 # Create a population based on the parameters given.
 population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
 pe.routine.ToyPopulationFactory.assign_cell_locations(population)
-pe.routine.ToyPopulationFactory.add_places(population, 1)
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
@@ -79,21 +80,18 @@ df_sum_age = df_sum_age.drop(["InfectionStatus.Exposed",
                               "InfectionStatus.InfectICURecov",
                               "InfectionStatus.Dead"],
                              axis=1)
-df_sum_age = df_sum_age.groupby(["time", "cell", "location_x",
-                                 "location_y"]).agg(
+df_sum_age = df_sum_age.groupby(["time"]).agg(
                                 {"InfectionStatus.Susceptible": 'sum',
                                  "InfectionStatus.InfectMild": 'sum',
                                  "InfectionStatus.Recovered": 'sum'})
-df_sum_age = df_sum_age.reset_index(level=["cell", "location_x", "location_y"])
+df_sum_age.plot(y=["InfectionStatus.Susceptible",
+                   "InfectionStatus.InfectMild",
+                   "InfectionStatus.Recovered"])
+plt.savefig("python_examples/simulation_outputs/simulation_flow_SIR_plot.png")
 
-df_sum_age = df_sum_age.pivot(columns="cell",
-                              values="InfectionStatus.InfectMild")
-df_sum_age.plot()
-
-plt.legend(labels=(range(len(df_sum_age.columns))), title="Cell")
-plt.title("Infection curves for multiple cells")
-plt.ylabel("Infected Population")
-plt.savefig(
-    "python_examples/simulation_outputs"
-    + "/spatial_flow_Icurve_plot.png"
-)
+# Creation of a plot of results with age stratification
+p = Plotter(os.path.join(os.path.dirname(__file__),
+            "simulation_outputs/output_age_spatial.csv"),
+            start_date='01-01-2020')
+p.barchart(os.path.join(os.path.dirname(__file__),
+           "simulation_outputs/age_stratify.png"))

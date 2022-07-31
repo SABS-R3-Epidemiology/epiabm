@@ -68,7 +68,6 @@ class InitialisePlaceSweep(AbstractSweep):
 
                 elif place.place_type.name == "CareHome":
                     helper.update_place_group(place)
-
         # Instantiate the temporary population in each place using
         # the update sweep.
         add_temporary_population = UpdatePlaceSweep()
@@ -105,7 +104,6 @@ class InitialisePlaceSweep(AbstractSweep):
         prop = [params["age_group1_prop"][param_ind],
                 params["age_group2_prop"][param_ind],
                 params["age_group3_prop"][param_ind]]
-
         person_list = []
         weights = []
         for person in place.cell.persons:
@@ -124,5 +122,4 @@ class InitialisePlaceSweep(AbstractSweep):
                         person_list.append(person)
                         weights.append(prop[i])
                         break
-
         return person_list, weights

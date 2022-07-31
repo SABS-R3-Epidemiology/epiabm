@@ -43,10 +43,11 @@ class UpdatePlaceSweep(AbstractSweep):
                     # Variable population is people not in the fixed pop.
                     # Held in the last group of the place.
                     # Changed at each timestep
-                    place.empty_place(groups_to_empty=[-1])
+                    group_ind = list(place.person_groups.keys())[-1]
+                    place.empty_place(groups_to_empty=[group_ind])
                     person_list = [person for person in place.cell.persons
                                    if person not in place.persons]
-                    self.update_place_group(place, group_index=-1,
+                    self.update_place_group(place, group_index=group_ind,
                                             mean_capacity=mean_cap,
                                             person_list=person_list.copy())
 
@@ -83,7 +84,6 @@ class UpdatePlaceSweep(AbstractSweep):
         # If a specific list of people is not provided, use the whole cell
         if person_list is None:
             person_list = (place.cell.persons).copy()
-
         # Ensure that the number of people put in the place
         # is at most its capacity or the total number of
         # people in the cell. Will use a power law calculation if
@@ -106,6 +106,11 @@ class UpdatePlaceSweep(AbstractSweep):
             logging.warning("No people in the person list supplied"
                             + " to update " + str(place))
             return
+        if person_weights is not None:
+            if sum(person_weights) == 0:
+                logging.warning("List of 0 weights given: no people" +
+                                "of acceptable age for this place")
+                return
         count = 0
 
         try:
@@ -114,7 +119,6 @@ class UpdatePlaceSweep(AbstractSweep):
             # Will occur when no group_size is set, if there are no groups
             # implemented in this place type
             num_groups = 1
-
         while count < new_capacity:
             if person_weights is not None:
                 assert len(person_weights) == len(person_list),\

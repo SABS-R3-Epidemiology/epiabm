@@ -121,14 +121,11 @@ class Simulation:
         """
         # Define time step between sweeps
         ts = 1 / Parameters.instance().time_steps_per_day
-
         # Initialise on the time step before starting.
         for sweep in self.initial_sweeps:
             sweep(self.sim_params)
-
         logging.info("Initial Sweeps Completed at time "
                      + f"{self.sim_params['simulation_start_time']} days")
-
         # First entry of the data file is the initial state
         self.write_to_file(self.sim_params["simulation_start_time"])
 
@@ -156,7 +153,6 @@ class Simulation:
             nb_age_groups = len(Parameters.instance().age_proportions)
         else:
             nb_age_groups = 1
-
         if Parameters.instance().use_ages:
             if self.spatial_output:  # Separate output line for each cell
                 for cell in self.population.cells:
