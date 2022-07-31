@@ -18,6 +18,9 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 dirname = os.path.dirname(os.path.abspath(__file__))
 print(dirname) # output = "c:\Users\44759\Documents\PhD\epiabm\python_examples\age_stratified_example"
 
+kitparam = os.path.join(os.path.dirname(__file__), 'spatial_example', 'spatial_parameters.json')
+print(kitparam)
+
 paramfile = (dirname.split(os.sep))
 print(paramfile) # output = ['c:', 'Users', '44759', 'Documents', 'PhD', 'epiabm', 'python_examples', 'age_stratified_example']
 

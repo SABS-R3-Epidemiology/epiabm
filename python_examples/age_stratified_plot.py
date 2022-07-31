@@ -2,6 +2,7 @@
 # Reads a csv of age stratified data and plots as a bar chart
 
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import os
 
@@ -86,6 +87,20 @@ class Plotter():
         date_list = [d.strftime('%m-%d') for d in date_list]
         return date_list
 
+    def fiveToTen(self):
+        """Helper function which assumes data is given in equally spaced
+        age groups of 5 year gaps. Returns data redistributed into 10 year
+        age gaps. Dataframe must have age groups on separate rows indexed
+        by numbers.
+        """
+        dataframe = self.data.copy()
+        num_10yr = np.ceil(len(self.age_list)/2)
+        indexCol = [np.floor(i/2) for i in dataframe[self.age_name]]
+        dataframe[self.age_name] = indexCol
+        self.age_list = [str(10*i)+"-"+str(10*i+10) for i
+                         in range(int(num_10yr+1))]
+        self.data = dataframe
+
     def barchart(self, outfile: str,
                  infection_category: str = "Total Infectious"):
         """Function which creates a bar chart from csv data, with
@@ -100,6 +115,9 @@ class Plotter():
         """
         if infection_category == "Total Infectious":
             self.sum_infectious()
+        if self.age_list[0] == '0-5':
+            # If the first age range is '0-5'
+            self.fiveToTen()
         new_frame = self.data.loc[:, ('time', infection_category)]
         time_col = 'time'
         if self.start_date is not None:
@@ -113,14 +131,16 @@ class Plotter():
                 new_frame['dates'] = self.dates(new_frame, 'daily')
 
         if self.do_ages:
+            # If we have age stratified data, plot the bar chart with
+            # colours for each age.
             new_frame.loc[:, self.age_name] = self.data.loc[:, self.age_name]
             new_frame = new_frame.groupby([time_col, self.age_name]) \
                 .sum().reset_index()
             new_frame = new_frame.pivot(index=time_col, columns=self.age_name,
                                         values=infection_category)
             if self.age_list:
-                idx = list(new_frame.columns)[0]
                 # Renames columns to actual age ranges if given.
+                idx = list(new_frame.columns)[0]
                 for i in range(len(list(new_frame.columns))):
                     new_frame = new_frame \
                                     .rename(columns={i+idx: self.age_list[i]})
@@ -137,6 +157,7 @@ class Plotter():
 
 if __name__ == '__main__':
     dirname = os.path.dirname(os.path.abspath(__file__))
-    p = Plotter(os.path.join(dirname, "no_age.csv"), start_date='01-01-2020')
+    p = Plotter(os.path.join(dirname, "toy_age_example.csv"),
+                start_date='01-01-2020')
     p.barchart(os.path.join(dirname, "age_stratify.png"))
     plt.show()
