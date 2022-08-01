@@ -59,9 +59,9 @@ class TestStateTransitionMatrix(TestPyEpiabm):
         assert_frame_equal(empty_mat, zero_filled_dataframe)
 
     def test_create_state_transition_matrix(self):
-        """Tests the fill_state_transition_matrix method and asserts that each row
-        sums to 1 (ie that the transition probabilities for each current
-        infection status sum to 1).
+        """Tests the fill_state_transition_matrix method and asserts that
+        each row sums to 1 (ie that the transition probabilities for each
+        current infection status sum to 1).
         """
         filled_matrix = StateTransitionMatrix(self.real_coefficients)
         row_sums = filled_matrix.matrix.sum(axis=1)

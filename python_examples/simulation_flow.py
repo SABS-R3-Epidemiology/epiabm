@@ -55,8 +55,8 @@ sim.configure(
 sim.run_sweeps()
 
 # Need to close the writer object at the end of each simulation.
-del(sim.writer)
-del(sim)
+del sim.writer
+del sim
 
 # Creation of a plot of results (without logging matplotlib info)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)

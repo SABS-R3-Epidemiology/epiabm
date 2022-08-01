@@ -14,8 +14,9 @@ class PlaceInfection:
 
     @staticmethod
     def place_inf(place, infector, time: float):
-        """Calculate the infectiousness of a place. Does not include interventions
-        such as isolation, or whether individual is a carehome resident.
+        """Calculate the infectiousness of a place. Does not include
+        interventions such as isolation, or whether individual is a
+        carehome resident.
 
         Does not yet differentiate between places as we have not decided which
         places to implement, and what transmission to give them.
