@@ -68,8 +68,8 @@ class SpatialInfection:
     @staticmethod
     def space_susc(susc_cell, infectee,
                    time: float):
-        """Calculate the susceptibility of one cell towards its neighbouring cells.
-        Does not include interventions such as isolation,
+        """Calculate the susceptibility of one cell towards its neighbouring
+        cells. Does not include interventions such as isolation,
         or whether individual is a carehome resident.
 
         Parameters

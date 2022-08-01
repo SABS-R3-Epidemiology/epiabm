@@ -17,7 +17,7 @@ class TestCsvDictWriter(unittest.TestCase):
             mock_categories = ['Cat1', 'Cat2', 'Cat3']
             m = pe.output._CsvDictWriter('mock_folder', 'mock_filename',
                                          mock_categories)
-            del(m)
+            del m
         mo.assert_called_once_with('mock_filename', 'w')
         mo().write.assert_called_once_with('Cat1,Cat2,Cat3\r\n')
         mock_mkdir.assert_called_with('mock_folder')

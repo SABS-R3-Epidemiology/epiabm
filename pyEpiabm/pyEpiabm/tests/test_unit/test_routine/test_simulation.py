@@ -56,7 +56,7 @@ class TestSimulation(TestMockedLogs):
             self.assertEqual(len(test_sim.initial_sweeps), 1)
             self.assertEqual(len(test_sim.sweeps), 1)
             self.assertIsInstance(test_sim.population, pe.Population)
-            del(test_sim.writer)
+            del test_sim.writer
         mo.assert_called_with(filename, 'w')
         mock_mkdir.assert_called_once_with(os.path.join(os.getcwd(),
                                            self.file_params["output_dir"]))
@@ -90,7 +90,7 @@ class TestSimulation(TestMockedLogs):
                                   self.spatial_file_params)
             self.assertTrue(spatial_sim.spatial_output)
 
-            del(test_sim.writer)
+            del test_sim.writer
             self.assertEqual(mock_mkdir.call_count, 2)
             mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                           self.file_params["output_dir"]))

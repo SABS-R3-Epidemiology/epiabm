@@ -145,7 +145,7 @@ class SpatialSweep(AbstractSweep):
         try:
             # Will catch a list of zeros
             if sum(distance_weights) == 0:
-                raise(ValueError)
+                raise ValueError
             cell_list = random.choices(possible_infectee_cells,
                                        weights=distance_weights,
                                        k=number_to_infect)
