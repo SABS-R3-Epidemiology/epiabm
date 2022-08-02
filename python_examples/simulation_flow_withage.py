@@ -55,8 +55,8 @@ sim.configure(
 sim.run_sweeps()
 
 # Need to close the writer object at the end of each simulation.
-del(sim.writer)
-del(sim)
+del (sim.writer)
+del (sim)
 
 # Plotter where age is summed over (to compare to simulation without age)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
