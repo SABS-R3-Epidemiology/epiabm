@@ -40,7 +40,8 @@ class TestPopConfig(TestPyEpiabm):
                     count_non_empty_cells += 1
             # Test there are at least one non-empty cell
             self.assertTrue(count_non_empty_cells >= 1)
-            # Test that everyone in the population has been assigned a microcell
+            # Test that everyone in the population has been assigned a
+            # microcell
             self.assertEqual(total_people, pop_size)
 
             # Test a population class object is returned
