@@ -16,45 +16,44 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                       "spatial_parameters.json"))
+                                    "gibraltar_parameters.json"))
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
-pe.routine.Simulation.set_random_seed(seed=30)
+pe.routine.Simulation.set_random_seed(seed=42)
 
 # Pop_params are used to configure the population structure being used in this
 # simulation.
 
 pop_params = {
-    "population_size": 10000,
-    "cell_number": 200,
-    "microcell_number": 2,
-    "household_number": 5,
+    "population_size": 33078,
+    "cell_number": 12,
+    "microcell_number": 81,   # 9*9 microcells per cell
+    "household_number": 14,  # Ave 2.5 people per household
+    "place_number": 0.15,
 }
-
 # Create a population framework based on the parameters given.
-# population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
+population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
 
 # Alternatively, can generate population from input file
-file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
-population = pe.routine.FilePopulationFactory.make_pop(file_loc,
-                                                       random_seed=42)
-
+file_loc = os.path.join(os.path.dirname(__file__),
+                        "gibraltar_inputs", "gib_input.csv")
+# population = pe.routine.FilePopulationFactory.make_pop(file_loc,
+#                                                        random_seed=42)
 
 # Configure population with input data
-# pe.routine.ToyPopulationFactory.assign_cell_locations(population)
-pe.routine.ToyPopulationFactory.add_places(population, 1)
-# pe.routine.FilePopulationFactory.print_population(population, file_loc)
+pe.routine.ToyPopulationFactory.assign_cell_locations(population)
+pe.routine.FilePopulationFactory.print_population(population, file_loc)
 
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
-              "initial_infected_number": 1, "initial_infect_cell": True}
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 100,
+              "initial_infected_number": 100, "initial_infect_cell": True}
 
 file_params = {"output_file": "output.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
-                                          "spatial_outputs"),
+                                          "comparison_outputs"),
                "spatial_output": True}
 
 # Create a simulation object, configure it with the parameters given, then
@@ -82,11 +81,11 @@ del sim
 
 # Creation of a plot of results
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
-filename = os.path.join(os.path.dirname(__file__), "spatial_outputs",
+filename = os.path.join(os.path.dirname(__file__), "comparison_outputs",
                         "output.csv")
 df = pd.read_csv(filename)
 
-
+df['Cases'] = df[list(df.filter(regex='InfectionStatus.Infect'))].sum(axis=1)
 df = df.pivot(index="time", columns="cell",
               values="InfectionStatus.InfectMild")
 df.plot()
@@ -96,5 +95,5 @@ plt.title("Infection curves for multiple cells")
 plt.ylabel("Infected Population")
 plt.savefig(
     os.path.join(os.path.dirname(__file__),
-                 "spatial_outputs", "spatial_flow_Icurve_plot.png")
+                 "comparison_outputs", "spatial_flow_Icurve_plot.png")
 )

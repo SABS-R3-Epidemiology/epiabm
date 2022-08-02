@@ -69,8 +69,8 @@ class TestSimFunctional(unittest.TestCase):
             sim.run_sweeps()
 
         # Need to close the writer object at the end of each simulation.
-        del(sim.writer)
-        del(sim)
+        del sim.writer
+        del sim
         return population
 
     def file_simulation(pop_file, sim_params, file_params, sweep_list):
@@ -92,8 +92,8 @@ class TestSimFunctional(unittest.TestCase):
             sim.run_sweeps()
 
         # Need to close the writer object at the end of each simulation.
-        del(sim.writer)
-        del(sim)
+        del sim.writer
+        del sim
         return population
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -201,8 +201,8 @@ class TestSimFunctional(unittest.TestCase):
     @patch("pandas.DataFrame.to_csv")
     @patch("pandas.read_csv")
     def test_segmented_infection(self, mock_read, mock_csv):
-        """Basic functional test to ensure people cannot infect those outside their
-        household (or microcell) without a spatial sweep.
+        """Basic functional test to ensure people cannot infect those
+        outside their household (or microcell) without a spatial sweep.
         """
         file_input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
                       'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
@@ -239,8 +239,8 @@ class TestSimFunctional(unittest.TestCase):
     @patch("pandas.DataFrame.to_csv")
     @patch("pandas.read_csv")
     def test_small_cutoff(self, mock_read, mock_csv):
-        """Basic functional test to ensure people cannot infect those outside their
-        cell when the cut-off is sufficiently small.
+        """Basic functional test to ensure people cannot infect those
+        outside theircell when the cut-off is sufficiently small.
         """
         file_input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
                       'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
