@@ -54,7 +54,6 @@ class Plotter():
         """
         total = self.data[list(self.data.
                                filter(regex='InfectionStatus.Infect'))]
-        print(total)
         self.data["Total Infectious"] = total.sum(axis=1)
 
     def dates(self, dataFrame=None, period='weekly') -> None:
