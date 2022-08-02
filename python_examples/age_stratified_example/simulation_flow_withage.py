@@ -16,7 +16,8 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
                             + '- %(levelname)s - %(message)s'))
 
 # Set config file for Parameters
-pe.Parameters.set_file("python_examples/simple_parameters_withage.json")
+pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
+                       "simple_parameters_withage.json"))
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
@@ -38,7 +39,7 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
               "initial_infected_number": 10}
 
 file_params = {"output_file": "output_withage.csv",
-               "output_dir": "python_examples/simulation_outputs",
+               "output_dir": os.path.dirname(__file__),
                "spatial_output": False,
                "age_stratified": True}
 
@@ -55,8 +56,8 @@ sim.configure(
 sim.run_sweeps()
 
 # Need to close the writer object at the end of each simulation.
-del(sim.writer)
-del(sim)
+del (sim.writer)
+del (sim)
 
 # Plotter where age is summed over (to compare to simulation without age)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)

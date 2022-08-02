@@ -63,8 +63,8 @@ sim.configure(
 sim.run_sweeps()
 
 # Need to close the writer object at the end of each simulation.
-del(sim.writer)
-del(sim)
+del (sim.writer)
+del (sim)
 
 # Creation of a plot of results (plotter from spatial_simulation_flow)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
@@ -87,7 +87,8 @@ df_sum_age = df_sum_age.groupby(["time"]).agg(
 df_sum_age.plot(y=["InfectionStatus.Susceptible",
                    "InfectionStatus.InfectMild",
                    "InfectionStatus.Recovered"])
-plt.savefig("age_stratified_example/simulation_outputs/simulation_flow_SIR_plot.png")
+plt.savefig("age_stratified_example/simulation_outputs/" +
+            "simulation_flow_SIR_plot.png")
 
 # Creation of a plot of results with age stratification
 p = Plotter(os.path.join(os.path.dirname(__file__),

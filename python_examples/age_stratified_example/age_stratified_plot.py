@@ -54,6 +54,7 @@ class Plotter():
         """
         total = self.data[list(self.data.
                                filter(regex='InfectionStatus.Infect'))]
+        print(total)
         self.data["Total Infectious"] = total.sum(axis=1)
 
     def dates(self, dataFrame=None, period='weekly') -> None:
@@ -102,7 +103,8 @@ class Plotter():
         self.data = dataframe
 
     def barchart(self, outfile: str,
-                 infection_category: str = "Total Infectious"):
+                 infection_category: str = "Total Infectious",
+                 write_Df_toFile=None):
         """Function which creates a bar chart from csv data, with
         capability to stratify by age if required. Plot is automatically
         saved to a png file.
@@ -112,6 +114,9 @@ class Plotter():
             Path to the .png file where the bar chart will be saved
         infection_category : str
             Category to be plotted, defaults to Total Infectious
+        write_Df_toFile : str
+            Optional argument, .csv filepath if configured plotting
+            data should be written to file
         """
         if infection_category == "Total Infectious":
             self.sum_infectious()
@@ -144,12 +149,18 @@ class Plotter():
                 for i in range(len(list(new_frame.columns))):
                     new_frame = new_frame \
                                     .rename(columns={i+idx: self.age_list[i]})
+            if write_Df_toFile is not None:
+                new_frame.to_csv(write_Df_toFile)
             new_frame.plot.bar(stacked=True, colormap="inferno_r")
         else:
             new_frame = new_frame.groupby([time_col]) \
                 .sum().reset_index()
             new_frame.plot.bar(x=time_col, y=infection_category)
-        plt.title("Weekly Cases by age")
+        if self.sum_weekly:
+            title = "Weekly Cases by age"
+        else:
+            title = "Daily Cases by age"
+        plt.title(title)
         plt.gca().legend().set_title('')
         plt.xlabel("Time")
         plt.savefig(outfile)
@@ -157,7 +168,10 @@ class Plotter():
 
 if __name__ == '__main__':
     dirname = os.path.dirname(os.path.abspath(__file__))
-    p = Plotter(os.path.join(dirname, "toy_age_example.csv"),
-                start_date='01-01-2020')
-    p.barchart(os.path.join(dirname, "age_stratify.png"))
-    plt.show()
+    p = Plotter(os.path.join(os.path.dirname(__file__),
+                "comparison_outputs/output_gibraltar.csv"),
+                start_date='01-01-2020', sum_weekly=False)
+    p.barchart(os.path.join(os.path.dirname(__file__),
+               "comparison_outputs/age_stratify.png"),
+               write_Df_toFile=os.path.join(os.path.dirname(__file__),
+               "comparison_outputs/gibraltar_daily_cases.csv"))

@@ -4,8 +4,6 @@
 
 import os
 import logging
-import pandas as pd
-import matplotlib.pyplot as plt
 from age_stratified_plot import Plotter
 import pyEpiabm as pe
 
@@ -16,22 +14,10 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 
 # Set config file for Parameters
 dirname = os.path.dirname(os.path.abspath(__file__))
-print(dirname) # output = "c:\Users\44759\Documents\PhD\epiabm\python_examples\age_stratified_example"
-
-kitparam = os.path.join(os.path.dirname(__file__), 'spatial_example', 'spatial_parameters.json')
-print(kitparam)
-
 paramfile = (dirname.split(os.sep))
-print(paramfile) # output = ['c:', 'Users', '44759', 'Documents', 'PhD', 'epiabm', 'python_examples', 'age_stratified_example']
-
 paramfile = paramfile[1:-1]
-print(paramfile)# output = ['Users', '44759', 'Documents', 'PhD', 'epiabm', 'python_examples']
-
 paramfile.append("spatial_example/spatial_parameters.json")
-print(paramfile) # output = ['Users', '44759', 'Documents', 'PhD', 'epiabm', 'python_examples', 'spatial_example/spatial_parameters.json']
-
 paramfile = os.path.join('C:\\', *paramfile)
-print(paramfile) # output = C:\Users\44759\Documents\PhD\epiabm\python_examples\spatial_example/spatial_parameters.json
 
 pe.Parameters.set_file(paramfile)
 
@@ -105,9 +91,3 @@ p = Plotter(os.path.join(dirname, "sim_outputs/output.csv"),
             start_date='01-01-2020',
             age_list=age_list)
 p.barchart(os.path.join(dirname, "age_stratify.png"))
-#plt.show()
-#df = pd.read_csv(filename)
-#df.plot(x="time", y=["InfectionStatus.Susceptible",
- #                    "InfectionStatus.InfectMild",
-  #                   "InfectionStatus.Recovered"])
-#plt.savefig("python_examples/simulation_outputs/simulation_flow_SIR_plot.png")
