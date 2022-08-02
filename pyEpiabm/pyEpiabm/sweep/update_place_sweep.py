@@ -106,11 +106,10 @@ class UpdatePlaceSweep(AbstractSweep):
             logging.warning("No people in the person list supplied"
                             + " to update " + str(place))
             return
-        if person_weights is not None:
-            if sum(person_weights) == 0:
-                logging.warning("List of 0 weights given: no people" +
-                                "of acceptable age for this place")
-                return
+        if person_weights == [0 for _ in person_list]:
+            logging.warning("List of 0 weights given: no people" +
+                            "of acceptable age for this place")
+            return
         count = 0
 
         try:

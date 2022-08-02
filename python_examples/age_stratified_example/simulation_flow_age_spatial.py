@@ -16,7 +16,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
                             + '- %(levelname)s - %(message)s'))
 
 # Set config file for Parameters
-pe.Parameters.set_file("age_stratified_example/spatial_parameters.json")
+pe.Parameters.set_file("python_examples/spatial_parameters.json")
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
@@ -39,7 +39,8 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
               "initial_infected_number": 10}
 
 file_params = {"output_file": "output_age_spatial.csv",
-               "output_dir": "age_stratified_example/simulation_outputs",
+               "output_dir": "python_examples/age_stratified_example/" +
+               "simulation_outputs",
                "spatial_output": True,
                "age_stratified": True}
 
@@ -63,8 +64,8 @@ sim.configure(
 sim.run_sweeps()
 
 # Need to close the writer object at the end of each simulation.
-del(sim.writer)
-del(sim)
+del (sim.writer)
+del (sim)
 
 # Creation of a plot of results (plotter from spatial_simulation_flow)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
@@ -87,7 +88,7 @@ df_sum_age = df_sum_age.groupby(["time"]).agg(
 df_sum_age.plot(y=["InfectionStatus.Susceptible",
                    "InfectionStatus.InfectMild",
                    "InfectionStatus.Recovered"])
-plt.savefig("age_stratified_example/simulation_outputs/simulation_flow_SIR_plot.png")
+plt.savefig("python_examples/simulation_outputs/simulation_flow_SIR_plot.png")
 
 # Creation of a plot of results with age stratification
 p = Plotter(os.path.join(os.path.dirname(__file__),
