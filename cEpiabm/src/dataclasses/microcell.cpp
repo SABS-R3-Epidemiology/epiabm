@@ -44,6 +44,11 @@ namespace epiabm
         return cell.m_people[m_people[i]];
     }
 
+    HouseholdPtr Microcell::getHousehold(size_t i)
+    {
+        return m_households[i];
+    }
+
     std::vector<size_t>& Microcell::people() { return m_people; }
     std::vector<HouseholdPtr>& Microcell::households() { return m_households; }
 
