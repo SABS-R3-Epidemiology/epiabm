@@ -32,6 +32,32 @@ inline void bind_households(PopulationPtr population, size_t n_households)
     }
 }
 
+inline void bind_places(PopulationPtr population, size_t n_places, size_t n_groups)
+{
+    for (size_t p = 0; p < n_places; p++)
+    {
+        population->places().emplace_back(p);
+    }
+    for (size_t c = 0; c < population->cells().size(); c++)
+    {
+        Cell* cell = population->cells()[c].get();
+        for (size_t mc = 0; mc < cell->microcells().size(); mc++)
+        {
+            Microcell* microcell = &cell->microcells()[mc];
+            for (size_t p = 0; p < microcell->people().size(); p++)
+            {
+                Person* person = &microcell->getPerson(*cell, p);
+                for (size_t i = 0; i <= static_cast<size_t>(std::rand()%5); i++)
+                {
+                    person->addPlace(*population, cell,
+                        static_cast<size_t>(std::rand())%n_places, 
+                        static_cast<size_t>(std::rand())%n_groups);
+                }
+            }
+        }
+    }
+}
+
 inline void random_seed(PopulationPtr population, int percentage, InfectionStatus status, unsigned short nextTime)
 {
     for (size_t c = 0; c < population->cells().size(); c++)

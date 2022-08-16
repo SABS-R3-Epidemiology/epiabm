@@ -255,3 +255,28 @@ TEST_CASE("dataclasses/population_factory: test microcell initialization", "[Mic
         }
     }
 }
+
+TEST_CASE("dataclasses/population_factory: test add households", "[PopulationFactory]")
+{
+    PopulationFactory f = PopulationFactory();
+    PopulationPtr p = f.makePopulation(1,5,10);
+
+    f.addHousehold(&p->cells()[0]->getMicrocell(1));
+    f.addHouseholds(&p->cells()[0]->getMicrocell(2), 10);
+
+    REQUIRE(p->cells()[0]->getMicrocell(0).households().empty());
+    REQUIRE(p->cells()[0]->getMicrocell(1).households().size() == 1);
+    REQUIRE(p->cells()[0]->getMicrocell(2).households().size() == 10);
+}
+
+TEST_CASE("dataclasses/population_factory: test add places", "[PopulationFactory]")
+{
+    PopulationFactory f = PopulationFactory();
+    PopulationPtr p = f.makePopulation(1,5,10);
+
+    REQUIRE(p->places().empty());
+    f.addPlace(p);
+    REQUIRE(p->places().size() == 1);
+    f.addPlaces(p, 10);
+    REQUIRE(p->places().size() == 11);
+}

@@ -57,6 +57,11 @@ namespace epiabm
         Cell(const Cell&) = delete;
         Cell(Cell&&) = default;
 
+        /**
+         * Get index of cell within Population::m_cells;
+         * 
+         * @return size_t 
+         */
         size_t index() const;
 
         void forEachMicrocell(std::function<bool(Microcell*)> callback);

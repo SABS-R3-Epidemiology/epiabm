@@ -81,4 +81,27 @@ namespace epiabm
         }
     }
 
+    void PopulationFactory::addHousehold(Microcell* microcell)
+    {
+        size_t i = microcell->households().size();
+        microcell->households().push_back(
+            std::make_shared<Household>(i));
+    }
+    void PopulationFactory::addHouseholds(Microcell* microcell, size_t n)
+    {
+        for (size_t i = 0; i < n; i++)
+            addHousehold(microcell);
+    }
+
+    void PopulationFactory::addPlace(PopulationPtr population)
+    {
+        size_t i = population->places().size();
+        population->places().emplace_back(i);
+    }
+    void PopulationFactory::addPlaces(PopulationPtr population, size_t n)
+    {
+        for (size_t i = 0; i < n; i++)
+            addPlace(population);
+    }
+
 } // namespace epiabm

@@ -37,6 +37,7 @@ namespace epiabm
         void forEachPerson(Cell& cell, std::function<bool(Person*)> callback);
 
         Person& getPerson(Cell& cell, size_t i);
+        HouseholdPtr getHousehold(size_t i);
 
         std::vector<size_t>& people();
         std::vector<HouseholdPtr>& households();

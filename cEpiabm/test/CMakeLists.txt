@@ -41,6 +41,7 @@ set(
     sweeps/test_basic_host_progression_sweep.cpp
     sweeps/test_random_seed_sweep.cpp
     sweeps/test_spatial_sweep.cpp
+    sweeps/test_place_sweep.cpp
     reporters/test_cell_compartment_reporter.cpp
     reporters/test_percell_compartment_reporter.cpp
     reporters/test_population_compartment_reporter.cpp

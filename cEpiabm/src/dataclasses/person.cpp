@@ -27,6 +27,11 @@ namespace epiabm
     InfectionStatus Person::status() const { return m_status; }
     PersonParams& Person::params() { return m_params; }
 
+    void Person::setStatus(const InfectionStatus status)
+    {
+        m_status = status;
+    }
+
     void Person::updateStatus(Cell* cell, const InfectionStatus status, const unsigned short timestep)
     {
         cell->personStatusChange(this, status, timestep);
@@ -49,12 +54,37 @@ namespace epiabm
     std::optional<size_t> Person::household()
     { return m_hasHousehold? m_household : std::optional<size_t>(); }
 
-    std::set<size_t>& Person::places() { return m_places; }
-
-    void Person::forEachPlace(Population& population, std::function<void(Place*)> callback)
+    void Person::addPlace(Population& population, Cell* cell, size_t place_index, size_t group)
     {
-        for (const size_t& p : m_places)
-            callback(&population.places()[p]);
+        if (m_places.find(std::make_pair(place_index, group)) != m_places.end()) return;
+        m_places.insert(std::make_pair(place_index, group));
+        population.places()[place_index].addMember(cell->index(), m_cellPos, group);
+    }
+
+    void Person::removePlace(Population& population, Cell* cell, size_t place_index, size_t group)
+    {
+        std::pair<size_t, size_t> r = std::make_pair(place_index, group);
+        if (m_places.find(r) == m_places.end()) return;
+        m_places.erase(r);
+        population.places()[place_index].removeMember(cell->index(), m_cellPos, group);
+    }
+
+    void Person::removePlaceAllGroups(Population& population, Cell* cell, size_t place_index)
+    {
+        for (auto it = m_places.begin(); it != m_places.end();)
+        {
+            if (it->first != place_index) ++it;
+            else m_places.erase(it++);
+        }
+        population.places()[place_index].removeMemberAllGroups(cell->index(), m_cellPos);
+    }
+
+    std::set<std::pair<size_t, size_t>>& Person::places() { return m_places; }
+
+    void Person::forEachPlace(Population& population, std::function<void(Place*, size_t)> callback)
+    {
+        for (const std::pair<size_t, size_t>& p : m_places)
+            callback(&population.places()[p.first], p.second);
     }
 
 } // namespace epiabm
