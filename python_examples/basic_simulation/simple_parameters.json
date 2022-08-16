@@ -1,7 +1,5 @@
 {
     "basic_reproduction_num": 2.8,
-    "do_CovidSim": false,
-    "infection_radius": 1,
     "latent_period": 4.59,
     "asympt_infect_period": 14,
     "mean_mild_to_recov": 7,
@@ -311,109 +309,14 @@
         0.001105933, 0.00091683, 0.000759816, 0.000629496,
         0.000521372, 0.000431695, 0.000357344, 0.000295719,
         0.000244659],
-    "max_infectious_steps": 2550,
-    "infprof_res": 56,
-    "place_params": {
-        "age_group1_min_age": [
-            5,
-            11,
-            18,
-            16
-        ],
-        "age_group1_max_age": [
-            11,
-            16,
-            65,
-            18
-        ],
-        "age_group1_prop": [
-            0.976396125,
-            0.98390173,
-            0,
-            0.37097869299999997
-        ],
-        "age_group2_min_age": [
-            3,
-            16,
-            18,
-            18
-        ],
-        "age_group2_max_age": [
-            5,
-            18,
-            21,
-            21
-        ],
-        "age_group2_prop": [
-            1,
-            0.959727307,
-            0.629021307,
-            0.040272693000000026
-        ],
-        "age_group3_min_age": [
-            21,
-            21,
-            21,
-            21
-        ],
-        "age_group3_max_age": [
-            65,
-            65,
-            65,
-            65
-        ],
-        "age_group3_prop": [
-            0.005292966,
-            0.006331515,
-            0.064144615,
-            0.742058813
-        ],
-        "nearest_places": [
-            3,
-            3,
-            6,
-            0
-        ],
-        "mean_size": [
-            230,
-            1010,
-            3300,
-            14.28
-        ],
-        "max_size": [
-            0,
-            0,
-            0,
-            5927
-        ],
-        "size_power": [
-            0,
-            0,
-            0,
-            1.34
-        ],
-        "size_offset": [
-            0,
-            0,
-            0,
-            5.35
-        ],
-        "mean_group_size": [
-            25,
-            25,
-            100,
-            10
-        ],
-        "place_transmission": 0.1
-    },
     "household_transmission": 0.1,
     "false_positive_rate": 0,
     "place_transmission": 0.1,
-    "use_ages": 1,
+    "use_ages": 0,
     "age_proportions": [6.2, 5.6, 5.8, 6.3, 6.8, 6.8, 6.5, 6.6,
-                        7.3, 7.3, 6.5, 5.7, 6, 4.8, 3.9, 3.2, 4.7],
+        7.3, 7.3, 6.5, 5.7, 6, 4.8, 3.9, 3.2, 4.7],
     "age_contact": [0.6, 0.7, 0.75, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 0.75, 0.5],
+        1, 1, 1, 1, 1, 1, 1, 0.75, 0.5],
     "host_progression_lists": {
         "prob_gp_to_hosp": [0.001896, 0.001616, 0.002981, 0.006083,
                             0.013513, 0.025793, 0.040294, 0.057278,

@@ -64,7 +64,6 @@ class _CompartmentCounter:
         if self._compartments[old_status][age_group] <= 0:
             raise ValueError("No people of this status and of this age group \
                               in this cell.")
-
         # Initialisation of the age_counter array
         age_counter = np.zeros(self.nb_age_groups, dtype=int)
         age_counter[age_group] = 1

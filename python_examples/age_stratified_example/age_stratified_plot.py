@@ -38,7 +38,7 @@ class Plotter():
         self.start_date = start_date
         self.sum_weekly = sum_weekly
 
-        # Identify the column containing age stratifcation as any
+        # Identify the column containing age stratification as any
         # with the substring "age"
         self.age_name = next((s for s in list(self.data.columns)
                              if "age" in s.lower()), None)
@@ -47,7 +47,7 @@ class Plotter():
             num = self.data[self.age_name].max()
             self.age_list = [str(5*i)+"-"+str(5*i+5) for i in range(num+1)]
 
-    def sum_infectious(self) -> None:
+    def _sum_infectious(self) -> None:
         """Helper function which sums across all columns containing infectious
         people and appends the dataframe with a further column containing this
         data.
@@ -56,7 +56,7 @@ class Plotter():
                                filter(regex='InfectionStatus.Infect'))]
         self.data["Total Infectious"] = total.sum(axis=1)
 
-    def dates(self, dataFrame=None, period='weekly') -> None:
+    def _dates(self, dataFrame=None, period='weekly') -> None:
         """Helper function to calculate a dictionary associating each
         timestep, with the date of a day, or week.
         Parameters
@@ -87,7 +87,7 @@ class Plotter():
         date_list = [d.strftime('%m-%d') for d in date_list]
         return date_list
 
-    def fiveToTen(self):
+    def _fiveToTen(self):
         """Helper function which assumes data is given in equally spaced
         age groups of 5 year gaps. Returns data redistributed into 10 year
         age gaps. Dataframe must have age groups on separate rows indexed
@@ -118,10 +118,10 @@ class Plotter():
             data should be written to file
         """
         if infection_category == "Total Infectious":
-            self.sum_infectious()
+            self._sum_infectious()
         if self.age_list[0] == '0-5':
             # If the first age range is '0-5'
-            self.fiveToTen()
+            self._fiveToTen()
         new_frame = self.data.loc[:, ('time', infection_category)]
         time_col = 'time'
         if self.start_date is not None:
@@ -130,9 +130,9 @@ class Plotter():
             if self.sum_weekly:
                 # By giving the same 'dates' for each weekday, the
                 # 7 day total is automaticaldly found.
-                new_frame['dates'] = self.dates(new_frame, 'weekly')
+                new_frame['dates'] = self._dates(new_frame, 'weekly')
             else:
-                new_frame['dates'] = self.dates(new_frame, 'daily')
+                new_frame['dates'] = self._dates(new_frame, 'daily')
 
         if self.do_ages:
             # If we have age stratified data, plot the bar chart with

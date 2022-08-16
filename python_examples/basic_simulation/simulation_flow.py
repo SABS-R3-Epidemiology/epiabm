@@ -8,7 +8,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 import pyEpiabm as pe
-from age_stratified_plot import Plotter
 
 # Setup output for logging file
 logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
@@ -16,7 +15,8 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
                             + '- %(levelname)s - %(message)s'))
 
 # Set config file for Parameters
-pe.Parameters.set_file("python_examples/simple_parameters_withage.json")
+pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
+                       "simple_parameters.json"))
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
@@ -37,10 +37,11 @@ population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
               "initial_infected_number": 10}
 
-file_params = {"output_file": "output_withage.csv",
-               "output_dir": "python_examples/simulation_outputs",
+file_params = {"output_file": "output.csv",
+               "output_dir": os.path.join(os.path.dirname(__file__),
+                                          "simulation_outputs"),
                "spatial_output": False,
-               "age_stratified": True}
+               "age_stratified": False}
 
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.
@@ -55,35 +56,19 @@ sim.configure(
 sim.run_sweeps()
 
 # Need to close the writer object at the end of each simulation.
-del (sim.writer)
-del (sim)
+del sim.writer
+del sim
 
-# Plotter where age is summed over (to compare to simulation without age)
+# Creation of a plot of results (without logging matplotlib info)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
-                        "output_withage.csv")
+                        "output.csv")
 df = pd.read_csv(filename)
-df_sum_age = df.copy()
-df_sum_age = df_sum_age.drop(["InfectionStatus.Exposed",
-                              "InfectionStatus.InfectASympt",
-                              "InfectionStatus.InfectGP",
-                              "InfectionStatus.InfectHosp",
-                              "InfectionStatus.InfectICU",
-                              "InfectionStatus.InfectICURecov",
-                              "InfectionStatus.Dead"],
-                             axis=1)
-df_sum_age = df_sum_age.groupby(["time"]).agg(
-                                {"InfectionStatus.Susceptible": 'sum',
-                                 "InfectionStatus.InfectMild": 'sum',
-                                 "InfectionStatus.Recovered": 'sum'})
-df_sum_age.plot(y=["InfectionStatus.Susceptible",
-                   "InfectionStatus.InfectMild",
-                   "InfectionStatus.Recovered"])
-plt.savefig("python_examples/simulation_outputs/simulation_flow_SIR_plot.png")
-
-# Creation of a plot of results with age stratification
-p = Plotter(os.path.join(os.path.dirname(__file__),
-            "simulation_outputs/output_withage.csv"),
-            start_date='01-01-2020')
-p.barchart(os.path.join(os.path.dirname(__file__),
-           "simulation_outputs/age_stratify.png"))
+df.plot(x="time", y=["InfectionStatus.Susceptible",
+                     "InfectionStatus.InfectMild",
+                     "InfectionStatus.Recovered"])
+plt.savefig(
+            os.path.join(os.path.dirname(__file__),
+                         "simulation_outputs",
+                         "simulation_flow_SIR_plot.png")
+)

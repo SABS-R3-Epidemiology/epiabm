@@ -1,6 +1,5 @@
 #
-# Example simulation script with spatial data output and visualisation
-# Currently running with Kit's gibraltar set-up
+# Example simulation script with data output and visualisation
 #
 
 import os
@@ -18,7 +17,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                                    "gibraltar_parameters.json"))
+                       "spatial_parameters.json"))
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
@@ -27,35 +26,22 @@ pe.routine.Simulation.set_random_seed(seed=42)
 # Pop_params are used to configure the population structure being used in this
 # simulation.
 
-pop_params = {
-    "population_size": 33078,
-    "cell_number": 12,
-    "microcell_number": 81,   # 9*9 microcells per cell
-    "household_number": 14,  # Ave 2.5 people per household
-    "place_number": 0.15,
-}
-# Create a population framework based on the parameters given.
-population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
+pop_params = {"population_size": 1000, "cell_number": 10,
+              "microcell_number": 1, "household_number": 5,
+              "place_number": 1}
 
-# Alternatively, can generate population from input file
-file_loc = os.path.join(os.path.dirname(__file__),
-                        "gibraltar_inputs", "gib_input.csv")
-# population = pe.routine.FilePopulationFactory.make_pop(file_loc,
-#                                                        random_seed=42)
-
-# Configure population with input data
+# Create a population based on the parameters given.
+population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
 pe.routine.ToyPopulationFactory.assign_cell_locations(population)
-pe.routine.FilePopulationFactory.print_population(population, file_loc)
-
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 100,
-              "initial_infected_number": 100, "initial_infect_cell": True}
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
+              "initial_infected_number": 10}
 
-file_params = {"output_file": "output_gibraltar.csv",
+file_params = {"output_file": "output_age_spatial.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
-                                          "comparison_outputs"),
+                                          "spatial_simulation_outputs"),
                "spatial_output": True,
                "age_stratified": True}
 
@@ -84,8 +70,9 @@ del (sim)
 
 # Creation of a plot of results (plotter from spatial_simulation_flow)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
-filename = os.path.join(os.path.dirname(__file__), "comparison_outputs",
-                        "output_gibraltar.csv")
+filename = os.path.join(os.path.dirname(__file__),
+                        "spatial_simulation_outputs",
+                        "output_age_spatial.csv")
 df = pd.read_csv(filename)
 df_sum_age = df.copy()
 df_sum_age = df_sum_age.drop(["InfectionStatus.Exposed",
@@ -104,13 +91,11 @@ df_sum_age.plot(y=["InfectionStatus.Susceptible",
                    "InfectionStatus.InfectMild",
                    "InfectionStatus.Recovered"])
 plt.savefig(os.path.join(os.path.dirname(__file__),
-            "comparison_outputs/simulation_flow_SIR_plot.png"))
+            "spatial_simulation_outputs/SIR_plot.png"))
 
 # Creation of a plot of results with age stratification
 p = Plotter(os.path.join(os.path.dirname(__file__),
-            "comparison_outputs/output_gibraltar.csv"),
+            "spatial_simulation_outputs/output_age_spatial.csv"),
             start_date='01-01-2020')
 p.barchart(os.path.join(os.path.dirname(__file__),
-           "comparison_outputs/age_stratify.png"),
-           write_Df_toFile=os.path.join(os.path.dirname(__file__),
-           "comparison_outputs/gibraltar_daily_cases.csv"))
+           "spatial_simulation_outputs/age_stratify.png"))
