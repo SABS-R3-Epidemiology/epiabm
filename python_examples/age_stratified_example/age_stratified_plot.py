@@ -16,7 +16,7 @@ class Plotter():
     including the capability to make an age-statified
     bar chart.
     """
-    def __init__(self, filepath: str, start_date=None, sum_weekly=True,
+    def __init__(self, filepath: str, start_date=None, sum_weekly=False,
                  age_list: list = None):
         """Initialise the plotter with a filepath and read
         data from the csv.
@@ -120,7 +120,7 @@ class Plotter():
         """
         if infection_category == "Total Infectious":
             self._sum_infectious()
-        if self.age_list[0] == '0-5':
+        if self.do_ages and self.age_list[0] == '0-5':
             # If data is presented in 5 year age groups.
             self._5yrAgeGroupsTo10()
         new_frame = self.data.loc[:, ('time', infection_category)]
