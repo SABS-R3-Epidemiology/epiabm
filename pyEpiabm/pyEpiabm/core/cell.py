@@ -110,7 +110,7 @@ class Cell:
         Returns
         -------
         int
-            Total infectors in cell.
+            Total infectors in cell
 
         """
         cell_data = self.compartment_counter.retrieve()

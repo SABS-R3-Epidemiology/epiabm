@@ -8,6 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 import pyEpiabm as pe
+
 from age_stratified_plot import Plotter
 
 # Setup output for logging file

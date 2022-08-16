@@ -12,7 +12,7 @@ import os
 
 
 class Plotter():
-    """Funtion to take a csv file and return various plots,
+    """Class to take a csv file and return various plots,
     including the capability to make an age-statified
     bar chart.
     """
@@ -65,6 +65,7 @@ class Plotter():
             dataFrame containing a "time" column
         period : str
             Either "daily" or "weekly"
+
         Returns
         -------
         date_list: list
@@ -87,7 +88,7 @@ class Plotter():
         date_list = [d.strftime('%m-%d') for d in date_list]
         return date_list
 
-    def _fiveToTen(self):
+    def _5yrAgeGroupsTo10(self):
         """Helper function which assumes data is given in equally spaced
         age groups of 5 year gaps. Returns data redistributed into 10 year
         age gaps. Dataframe must have age groups on separate rows indexed
@@ -120,16 +121,16 @@ class Plotter():
         if infection_category == "Total Infectious":
             self._sum_infectious()
         if self.age_list[0] == '0-5':
-            # If the first age range is '0-5'
-            self._fiveToTen()
+            # If data is presented in 5 year age groups.
+            self._5yrAgeGroupsTo10()
         new_frame = self.data.loc[:, ('time', infection_category)]
         time_col = 'time'
         if self.start_date is not None:
-            # If a start date is given plot with dates on x axis
+            # If a start date is given, plot with dates on x axis.
             time_col = 'dates'
             if self.sum_weekly:
                 # By giving the same 'dates' for each weekday, the
-                # 7 day total is automaticaldly found.
+                # 7 day total is automatically found.
                 new_frame['dates'] = self._dates(new_frame, 'weekly')
             else:
                 new_frame['dates'] = self._dates(new_frame, 'daily')

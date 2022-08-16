@@ -18,7 +18,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                                    "simple_parameters_withage.json"))
+                                    "simple_parameters_with_age.json"))
 
 # Method to set the seed at the start of the simulation, for reproducibility
 

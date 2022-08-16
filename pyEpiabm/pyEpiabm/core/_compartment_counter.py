@@ -58,7 +58,7 @@ class _CompartmentCounter:
         new_status : InfectionStatus
             Person's new infection state
         age_group : Age group index
-            Person's associated age group
+            Person's associated age group, defaults to 0 if age not implemented
 
         """
         if self._compartments[old_status][age_group] <= 0:

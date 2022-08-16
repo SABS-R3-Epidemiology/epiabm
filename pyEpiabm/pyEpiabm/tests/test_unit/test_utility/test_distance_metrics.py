@@ -13,7 +13,6 @@ class TestDistanceFunctions(TestMockedLogs):
     @classmethod
     def setUpClass(cls) -> None:
         super(TestDistanceFunctions, cls).setUpClass()
-        # Sets up patch on logging
 
     def test_dist_euclid(self):
         dist = DistanceFunctions.dist_euclid((3, 0))

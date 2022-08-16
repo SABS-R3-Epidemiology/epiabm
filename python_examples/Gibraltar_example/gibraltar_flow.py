@@ -45,7 +45,7 @@ population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
 file_loc = os.path.join(os.path.dirname(__file__),
                         "gibraltar_inputs", "gib_input.csv")
 # population = pe.routine.FilePopulationFactory.make_pop(file_loc,
-#                                                        random_seed=42)
+#                                                       random_seed=42)
 
 # Configure population with input data
 pe.routine.ToyPopulationFactory.assign_cell_locations(population)

@@ -1,7 +1,7 @@
 import os
 import pandas as pd
-import unittest
 import numpy as np
+import unittest
 from unittest.mock import patch, mock_open, Mock
 
 import pyEpiabm as pe

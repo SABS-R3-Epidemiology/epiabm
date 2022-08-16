@@ -27,7 +27,6 @@ class TestMicrocell(TestPyEpiabm):
         self.assertEqual(self.microcell.id, 2.0)
 
     def test_add_person(self):
-        # Add test to check if age is preserved
         self.assertEqual(len(self.microcell.persons), 0)
         self.assertEqual(len(self.cell.persons), 0)
 
@@ -36,6 +35,7 @@ class TestMicrocell(TestPyEpiabm):
         self.assertEqual(len(self.microcell.persons), 1)
         self.assertEqual(len(self.cell.persons), 1)
         self.assertEqual(self.cell.number_infectious(), 0)
+        self.assertEqual(self.microcell.persons[0].age, sus_person.age)
 
         inf_person = pe.Person(self.microcell)
         inf_person.infection_status = InfectionStatus.InfectASympt

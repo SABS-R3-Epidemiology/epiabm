@@ -77,7 +77,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
 
         if Parameters.instance().use_ages:
             age_prop = Parameters.instance().age_proportions
-            w = age_prop/sum(age_prop)
+            w = age_prop / sum(age_prop)
 
         i = 0
         for cell in new_pop.cells:
