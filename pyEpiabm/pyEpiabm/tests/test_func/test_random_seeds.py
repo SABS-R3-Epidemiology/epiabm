@@ -147,7 +147,8 @@ class TestSimulationRandomSeeds(unittest.TestCase):
 
         cls.mock_output_dir = "pyEpiabm/pyEpiabm/tests/test_output/mock"
         cls.file_params = {"output_file": "test_file.csv",
-                           "output_dir": cls.mock_output_dir}
+                           "output_dir": cls.mock_output_dir,
+                           "age_stratified": True}
 
         cls.spatial_file_params = dict(cls.file_params)
         cls.spatial_file_params["spatial_output"] = True
@@ -219,7 +220,8 @@ class TestSimulationRandomSeeds(unittest.TestCase):
         folder = os.path.join(os.getcwd(), self.mock_output_dir)
         mock_mkdir.assert_called_with(folder)
         self.assertEqual(mock_mkdir.call_count, 3)
-
+        print(seed_output)
+        print(comp_output)
         self.assertEqual(seed_output, comp_output)
         self.assertNotEqual(seed_output, diff_output)
 

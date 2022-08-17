@@ -36,7 +36,8 @@ class TestSimFunctional(unittest.TestCase):
 
         self.file_params = {"output_file": "output.csv",
                             "output_dir": "test_folder/integration_tests",
-                            "spatial_output": False}
+                            "spatial_output": False,
+                            "age_stratified": True}
 
     @classmethod
     def tearDownClass(cls):
@@ -139,6 +140,7 @@ class TestSimFunctional(unittest.TestCase):
         mock_mkdir.assert_called_with(folder)
         nb_age_group = len(pe.Parameters.instance().age_proportions)
         mock_output_count = iter_num * nb_age_group * cell_count
+        print(mock_output_count)
         self.assertEqual(mock_output.call_count, mock_output_count)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)

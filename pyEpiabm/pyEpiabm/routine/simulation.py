@@ -76,6 +76,7 @@ class Simulation:
         if not self.age_stratified:
             # Configurability in simulation flow, as well as
             # param file
+            print('here')
             Parameters.instance().use_ages = False
 
         # If random seed is specified in parameters, set this in numpy
