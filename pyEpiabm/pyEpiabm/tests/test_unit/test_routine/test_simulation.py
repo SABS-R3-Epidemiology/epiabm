@@ -29,9 +29,9 @@ class TestSimulation(TestMockedLogs):
         cls.file_params = {"output_file": "test_file.csv",
                            "output_dir": cls.mock_output_dir}
 
+        cls.file_params["age_stratified"] = True
         cls.spatial_file_params = dict(cls.file_params)
         cls.spatial_file_params["spatial_output"] = True
-        cls.spatial_file_params["age_stratified"] = True
 
         cls.initial_sweeps = [pe.sweep.InitialInfectedSweep()]
         cls.sweeps = [pe.sweep.PlaceSweep()]
