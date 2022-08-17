@@ -7,7 +7,6 @@ from unittest.mock import patch, mock_open
 import pyEpiabm as pe
 
 from pyEpiabm.tests.test_unit.mocked_logging_tests import TestMockedLogs
-from pyEpiabm.core.parameters import Parameters
 
 
 class TestSimulation(TestMockedLogs):
@@ -29,8 +28,8 @@ class TestSimulation(TestMockedLogs):
         cls.file_params = {"output_file": "test_file.csv",
                            "output_dir": cls.mock_output_dir}
 
-        cls.file_params["age_stratified"] = True
         cls.spatial_file_params = dict(cls.file_params)
+        cls.spatial_file_params["age_stratified"] = True
         cls.spatial_file_params["spatial_output"] = True
 
         cls.initial_sweeps = [pe.sweep.InitialInfectedSweep()]
@@ -142,7 +141,7 @@ class TestSimulation(TestMockedLogs):
     @patch('os.makedirs')
     def test_write_to_file(self, mock_mkdir):
         mo = mock_open()
-        Parameters.instance().use_ages = True
+        self.file_params['age_stratified'] = True
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             time = 1
             test_sim = pe.routine.Simulation()
@@ -158,7 +157,8 @@ class TestSimulation(TestMockedLogs):
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                       self.file_params["output_dir"]))
 
-        Parameters.instance().use_ages = False
+        self.spatial_file_params['age_stratified'] = False
+        self.file_params['age_stratified'] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             time = 1
             test_sim = pe.routine.Simulation()

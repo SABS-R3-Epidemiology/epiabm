@@ -73,11 +73,8 @@ class Simulation:
 
         self.age_stratified = file_params["age_stratified"] \
             if "age_stratified" in file_params else False
-        if not self.age_stratified:
-            # Configurability in simulation flow, as well as
-            # param file
-            print('here')
-            Parameters.instance().use_ages = False
+
+        Parameters.instance().use_ages = self.age_stratified
 
         # If random seed is specified in parameters, set this in numpy
         if "simulation_seed" in self.sim_params:
