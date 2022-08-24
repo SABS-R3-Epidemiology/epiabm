@@ -6,6 +6,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
+from collections import defaultdict
+import pyEpiabm as pe
+from pyEpiabm.core import Parameters
+from pyEpiabm.property import InfectionStatus
+from pyEpiabm.utility import StateTransitionMatrix, TransitionTimeMatrix
 # csv input files should have the column headers:
 # time, infection_Status1, infection_status2, ..., age_range
 # so there will be multiple entries for each timepoint.
@@ -88,6 +93,52 @@ class Plotter():
         date_list = [d.strftime('%m-%d') for d in date_list]
         return date_list
 
+    def _convolveLatentTime(self, paramfile: str):
+        """Helper function which divides each entry of the infectious
+        categories by the average time spent in this category (age
+        independent). This allows for weekly sum to give an
+        approximation to the total new cases."""
+        pe.Parameters.set_file(paramfile)
+        # From parameter file recreate the state transition matrix
+        # and the transmission time matrix.
+        self.number_of_states = len(InfectionStatus)
+        coefficients = defaultdict(int, Parameters.instance()
+                                   .host_progression_lists)
+
+        # Use False for self.do_age to automatically average over ages in
+        # state matrix
+        matrix_object = StateTransitionMatrix(coefficients, False)
+        # state matrix has list entries, or 1, or 0
+        state_transition_matrix = matrix_object.matrix
+
+        # Instantiate transmission time matrix
+        # Unique entries which are icdf objects
+        time_matrix_object = TransitionTimeMatrix()
+        transition_time_matrix =\
+            time_matrix_object.create_transition_time_matrix()
+
+        for colname in self.data.columns:
+            short_colname = colname.replace('InfectionStatus.', '')
+            if not colname.startswith('InfectionStatus.Infect'):
+                continue
+            # Extract data column
+            data = self.data[colname]
+            # Extract the ROW corresponding to colname
+            icdf_list = transition_time_matrix.loc[short_colname].to_numpy()
+            # This list will either have -1 entries, or icdf objects
+            # Tak the mean if non-trivial
+            icdf_list = [t.mean if t != -1.0 else 0 for t in icdf_list]
+
+            # Extract list of next possible states
+            next_state_list = state_transition_matrix.loc[short_colname]\
+                .to_numpy()
+
+            ave_time_spent = sum(icdf_list * next_state_list)
+            # Average time spent is sum_i(time to state i * prob go to state i)
+            data /= ave_time_spent
+
+            self.data[colname] = data.values
+
     def _5yrAgeGroupsTo10(self):
         """Helper function which assumes data is given in equally spaced
         age groups of 5 year gaps. Returns data redistributed into 10 year
@@ -104,7 +155,8 @@ class Plotter():
 
     def barchart(self, outfile: str,
                  infection_category: str = "Total Infectious",
-                 write_Df_toFile=None):
+                 write_Df_toFile=None,
+                 param_file=None):
         """Function which creates a bar chart from csv data, with
         capability to stratify by age if required. Plot is automatically
         saved to a png file.
@@ -117,7 +169,13 @@ class Plotter():
         write_Df_toFile : str
             Optional argument, .csv filepath if configured plotting
             data should be written to file
+        param_file : str
+            Parameters needed to perform latent time convolution
         """
+        if not param_file:
+            print('Need parameters for weekly convolution')
+        else:
+            self._convolveLatentTime(param_file)
         if infection_category == "Total Infectious":
             self._sum_infectious()
         if self.do_ages and self.age_list[0] == '0-5':
@@ -157,9 +215,11 @@ class Plotter():
                 .sum().reset_index()
             new_frame.plot.bar(x=time_col, y=infection_category)
         if self.sum_weekly:
-            title = "Weekly Cases by age"
+            title = "Weekly cases by age"
         else:
-            title = "Daily Cases by age"
+            title = "Daily cases by age"
+        if param_file:
+            title = 'New ' + title
         plt.title(title)
         plt.gca().legend().set_title('')
         plt.xlabel("Time")
@@ -169,9 +229,11 @@ class Plotter():
 if __name__ == '__main__':
     dirname = os.path.dirname(os.path.abspath(__file__))
     p = Plotter(os.path.join(os.path.dirname(__file__),
-                "comparison_outputs/output_gibraltar.csv"),
+                "simulation_outputs/output_withage.csv"),
                 start_date='01-01-2020', sum_weekly=False)
     p.barchart(os.path.join(os.path.dirname(__file__),
-               "comparison_outputs/age_stratify.png"),
+               "simulation_outputs/age_stratify.png"),
                write_Df_toFile=os.path.join(os.path.dirname(__file__),
-               "comparison_outputs/gibraltar_daily_cases.csv"))
+               "simulation_outputs/gibraltar_cases.csv"),
+               param_file=os.path.join(os.path.dirname(__file__),
+               "simple_parameters_with_age.json"))

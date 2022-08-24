@@ -39,13 +39,13 @@ pop_params = {
     "place_number": 0.15,
 }
 # Create a population framework based on the parameters given.
-population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
+# population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
 
 # Alternatively, can generate population from input file
 file_loc = os.path.join(os.path.dirname(__file__),
                         "gibraltar_inputs", "gib_input.csv")
-# population = pe.routine.FilePopulationFactory.make_pop(file_loc,
-#                                                       random_seed=42)
+population = pe.routine.FilePopulationFactory.make_pop(file_loc,
+                                                       random_seed=42)
 
 # Configure population with input data
 pe.routine.ToyPopulationFactory.assign_cell_locations(population)
@@ -54,14 +54,14 @@ pe.routine.FilePopulationFactory.print_population(population, file_loc)
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 4,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 100,
               "initial_infected_number": 100, "initial_infect_cell": True}
 
 file_params = {"output_file": "output_gibraltar.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
                                           "comparison_outputs"),
                "spatial_output": True,
-               "age_stratified": False}
+               "age_stratified": True}
 
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.
@@ -114,8 +114,10 @@ plt.savefig(os.path.join(os.path.dirname(__file__),
 # if file_params["age_stratified"]:
 p = Plotter(os.path.join(os.path.dirname(__file__),
             "comparison_outputs/output_gibraltar.csv"),
-            start_date='01-01-2020')
+            sum_weekly=True, start_date='01-01-2020')
 p.barchart(os.path.join(os.path.dirname(__file__),
            "comparison_outputs/age_stratify.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
-           "comparison_outputs/gibraltar_daily_cases.csv"))
+           "comparison_outputs/gibraltar_daily_cases.csv"),
+           param_file=os.path.join(os.path.dirname(__file__),
+           "gibraltar_parameters.json"))
