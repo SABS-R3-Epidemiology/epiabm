@@ -1,3 +1,4 @@
+import numpy as np
 import unittest
 from unittest import mock
 
@@ -6,8 +7,8 @@ from pyEpiabm.core import Parameters
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
-class TestAssignHouseholdAgesSweep(TestPyEpiabm):
-    """Tests the 'AssignHouseholdAgesSweep' class.
+class TestInitialHouseholdSweep(TestPyEpiabm):
+    """Tests the 'InitialHouseholdSweep' class.
     """
 
     def setUp(self) -> None:
@@ -27,11 +28,37 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         self.three_people = [self.person1, self.person2, self.person3]
         self.four_people = [self.person1, self.person2,
                             self.person3, self.person4]
+        self.cell = self.test_population.cells[0]
+        self.microcell = self.test_population.cells[0].microcells[0]
 
     def test_construct(self):
         """Tests that the assign household ages sweep initialises correctly.
         """
-        pe.sweep.AssignHouseholdAgesSweep()
+        pe.sweep.InitialHouseholdSweep()
+
+    def test_household_allocation(self):
+        """Tests method that assigns people to different sized households
+        dependant on a household size distribution.
+        """
+
+        # initialise sweep
+        test_sweep = pe.sweep.InitialHouseholdSweep()
+
+        # set params so that the test population of 6 people will be
+        # split into three households of 2
+        test_sweep.household_size_distribution = np.zeros(10)
+        test_sweep.household_size_distribution[1] = 1.0
+
+        # check that three households have been created
+        test_sweep.household_allocation(self.test_population)
+        number_of_households = len(self.test_population.cells[0]
+                                   .microcells[0].households)
+        self.assertEqual(number_of_households, 3)
+
+        # check that there are two people in each household
+        for household in \
+                self.test_population.cells[0].microcells[0].households:
+            self.assertEqual(len(household.persons), 2)
 
     @mock.patch('random.random')
     def test_one_person_household_age_elderly_person_case(self, mocked_random):
@@ -45,7 +72,7 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         mock_list = ([case_trigger_value, 0.0])
         mocked_random.side_effect = mock_list
 
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
         test_sweep.one_person_household_age(self.person1)
         self.assertTrue(self.person1.age
                         >= self.age_params["no_child_pers_age"])
@@ -58,7 +85,7 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         """
         # list of mocked values that will trigger the specific case of
         # the test below
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
         # adjust matrix to make sure this case is hit
         test_sweep.age_params["one_pers_house_prob_old"] = 0.0
         case_trigger_value = (((Parameters.instance().household_age_params
@@ -80,7 +107,7 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         """Tests method that assigns age to someone in a one person
         hosuehold for the case that the person is an adult living alone.
         """
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
         mocked_random.return_value = 2.0
         test_sweep.one_person_household_age(self.person1)
         self.assertTrue(self.person1.age >= self.age_params["min_adult_age"])
@@ -90,7 +117,7 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         hosuehold throws error if it is passed a list of people
         greater than size 2.
         """
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
 
         # check that error is raised if provided list of people
         # is larger than 2
@@ -110,7 +137,7 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         mock_list = [case_trigger_case, 0.0, 0.0]
         mocked_random.side_effect = mock_list
 
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
         test_sweep.two_person_household_ages(self.two_people)
         self.assertTrue(self.person1.age
                         >= self.age_params["no_child_pers_age"])
@@ -128,7 +155,7 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         hosuehold for the case of one child and adult living
         together.
         """
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
         test_sweep.age_params["two_pers_house_prob_old"] = 0.0
         # Value that will trigger the specific case of
         # the test below
@@ -154,7 +181,7 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         """
         # Value that will trigger the specific case of
         # the test below
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
         test_sweep.age_params["two_pers_house_prob_old"] = 0.0
         test_sweep.age_params["one_child_two_pers_prob"] = 0.0
         case_trigger_value = ((self.age_params["two_pers_house_prob_young"]
@@ -181,7 +208,7 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         together.
         """
 
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
         mocked_random.return_value = 2.0
         test_sweep.two_person_household_ages(self.two_people)
         self.assertTrue(self.person1.age >= self.age_params["min_adult_age"])
@@ -198,7 +225,7 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         size.
         """
 
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
         # test for possible cases of size three household
         mocked_random.return_value = 0.0
         val = test_sweep.calc_number_of_children(3)
@@ -218,7 +245,7 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         self.assertEqual(val, 1)
 
         # reinitialise sweep due to changing values in above test
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
 
         # test for possible cases of size 4 household
         mocked_random.side_effect = [-1.0]
@@ -244,13 +271,13 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         self.assertTrue(val == 1)
 
     @mock.patch(
-        'pyEpiabm.sweep.AssignHouseholdAgesSweep.calc_number_of_children')
+        'pyEpiabm.sweep.InitialHouseholdSweep.calc_number_of_children')
     def test_three_plus_person_household_ages_no_children(self,
                                                           mocked_children):
         """Tests method that assigns ages to people in a three person
         hosuehold for the case where they have no children.
         """
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
         mocked_children.return_value = 0
         test_sweep.three_or_more_person_household_ages(self.three_people)
         self.assertTrue(self.person2.age >= self.age_params["min_adult_age"])
@@ -264,7 +291,7 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
     @mock.patch('random.choices')
     @mock.patch('random.randint')
     @mock.patch(
-        'pyEpiabm.sweep.AssignHouseholdAgesSweep.calc_number_of_children')
+        'pyEpiabm.sweep.InitialHouseholdSweep.calc_number_of_children')
     def test_three_plus_person_household_ages_child_under_five(self,
                                                                mocked_children,
                                                                mocked_int,
@@ -274,7 +301,7 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         for the case of a single child under five. Also tests the case of just
         two adults at home.
         """
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
         mocked_children.side_effect = [1]
         mocked_int.side_effect = [1, 0, 0]
         mocked_choice.side_effect = [[0], [6], [6]]
@@ -300,7 +327,7 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
     @mock.patch('random.choices')
     @mock.patch('random.randint')
     @mock.patch(
-        'pyEpiabm.sweep.AssignHouseholdAgesSweep.calc_number_of_children')
+        'pyEpiabm.sweep.InitialHouseholdSweep.calc_number_of_children')
     def test_three_plus_person_household_ages_two_child_one_under_five(
                                                     self, mocked_children,
                                                     mocked_int,
@@ -309,7 +336,7 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         """Tests method which assigns ages to people in a household of three or more
         for the case of two children with youngest child under five.
         """
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
         mocked_children.side_effect = [2]
         mocked_int.side_effect = [1, 0]
         mocked_choice.side_effect = [[0], [6]]
@@ -325,14 +352,14 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         self.assertTrue(self.person3.age >= self.age_params["min_adult_age"])
 
     @mock.patch(
-        'pyEpiabm.sweep.AssignHouseholdAgesSweep.calc_number_of_children')
+        'pyEpiabm.sweep.InitialHouseholdSweep.calc_number_of_children')
     def test_three_plus_person_household_ages_more_adults(self,
                                                           mocked_children):
         """Tests method which assigns ages to people in a household of three or more
         for the case of there being at least three more adults in the house
         than children.
         """
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
         mocked_children.return_value = 1
         # edit parameter values so to hit coverage for all lines of method
         test_sweep.num_age_groups = 2
@@ -352,30 +379,26 @@ class TestAssignHouseholdAgesSweep(TestPyEpiabm):
         being passed to a different method of the sweep. Their ages are then
         verified.
         """
+
         # set up populations and put people in households
-        test_sweep = pe.sweep.AssignHouseholdAgesSweep()
+        test_sweep = pe.sweep.InitialHouseholdSweep()
         test_sweep.bind_population(self.test_population)
-        one_pers_household = pe.Household()
-        two_pers_household = pe.Household()
-        three_pers_household = pe.Household()
-        one_pers_household.add_person(self.person1)
-        two_pers_household.add_person(self.person2)
-        two_pers_household.add_person(self.person3)
-        three_pers_household.add_person(self.person4)
-        three_pers_household.add_person(self.person5)
-        three_pers_household.add_person(self.person6)
+        microcell = self.test_population.cells[0].microcells[0]
+        microcell.add_household([self.person1])
+        microcell.add_household([self.person2, self.person3])
+        microcell.add_household([self.person4, self.person5, self.person6])
 
         # reset everyone's ages to None
         for cell in self.test_population.cells:
             for person in cell.persons:
                 person.age = None
 
-        # call sweep and check people have proper ages
+        # call sweep and check people have sensible ages
         test_sweep()
         self.assertTrue(self.person1.age >= self.age_params["min_adult_age"])
-        for person in two_pers_household.persons:
+        for person in microcell.households[1].persons:
             self.assertTrue(0 <= person.age <= 100)
-        for person in three_pers_household.persons:
+        for person in microcell.households[2].persons:
             self.assertTrue(0 <= person.age <= 100)
 
 

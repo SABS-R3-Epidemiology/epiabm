@@ -2,6 +2,7 @@
 # Factory for creation of a toy population
 #
 
+from re import A
 import typing
 import logging
 import numpy as np
@@ -11,6 +12,7 @@ import math
 from pyEpiabm.core import Household, Population
 from pyEpiabm.property import PlaceType
 from pyEpiabm.utility import DistanceFunctions, log_exceptions
+from pyEpiabm.sweep import InitialHouseholdSweep
 
 from .abstract_population_config import AbstractPopulationFactory
 
@@ -32,7 +34,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             * `population_size`: Number of people in population
             * `cell_number`: Number of cells in population
             * `microcell_number`: Number of microcells in each cell
-            * `household_number`: Number of households in each microcell (*)
+            * `use_households`: If True people within population will be assigned to households (*)
             * `place_number`: Number of places in each microcell (*)
             * `population_seed`: Random seed for reproducible populations (*)
 
@@ -52,8 +54,8 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         cell_number = pop_params["cell_number"]
         microcell_number = pop_params["microcell_number"]
 
-        household_number = pop_params["household_number"] \
-            if "household_number" in pop_params else 0
+        use_households = pop_params["use_households"] \
+           if "use_households" in pop_params else False
         place_number = pop_params["place_number"] \
             if "place_number" in pop_params else 0
 
@@ -83,11 +85,12 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                 microcell.add_people(people_in_microcell)
                 i += 1
 
-        # If a household number is given then that number of households
-        # are initialised. If the household number defaults to zero
-        # then no households are initialised.
-        if household_number > 0:
-            ToyPopulationFactory.add_households(new_pop, household_number)
+        # If use_houeholds is set as True then people in population
+        # will be assigned to households using the assign_households()
+        # method of the :class: 'InitialHouseholdSweep' class. Otherwise
+        # population won't be sorted into households.
+        if use_households:
+            ToyPopulationFactory.add_households(new_pop)
         if place_number > 0:
             ToyPopulationFactory.add_places(new_pop, place_number)
 
@@ -95,7 +98,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         return new_pop
 
     @staticmethod
-    def add_households(population: Population, household_number: int):
+    def add_households(population: Population):
         """Groups people in a microcell into households together.
 
         Parameters
@@ -103,25 +106,10 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         population : Population
             Population containing all person objects to be considered for
             grouping
-        household_number : int
-            Number of households to form
-
         """
-        # Initialises another multinomial distribution
-        q = [1 / household_number] * household_number
-        for cell in population.cells:
-            for microcell in cell.microcells:
-                people_number = len(microcell.persons)
-                household_split = np.random.multinomial(people_number, q,
-                                                        size=1)[0]
-                person_index = 0
-                for j in range(household_number):
-                    people_in_household = household_split[j]
-                    new_household = Household()
-                    for _ in range(people_in_household):
-                        person = microcell.persons[person_index]
-                        new_household.add_person(person)
-                        person_index += 1
+        
+        assign_households_sweep = InitialHouseholdSweep()
+        assign_households_sweep.household_allocation(population)
 
     @staticmethod
     def add_places(population: Population, place_number: int):

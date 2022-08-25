@@ -69,35 +69,25 @@ class TestPopConfig(TestPyEpiabm):
 
     @parameterized.expand([(random.randint(1000, 10000) * numReps,
                             random.randint(1, 10) * numReps,
-                            random.randint(1, 10) * numReps,
                             random.randint(1, 10) * numReps)
                           for _ in range(numReps)])
-    def test_if_households(self, pop_size, cell_number, microcell_number,
-                           household_number):
-        """Tests when households are implemented.
-        """
-
+    def test_if_households(self, pop_size, cell_number, microcell_number):
+        #Tests when households are implemented.
+        
         # Initialises population with households
         pop_params = {"population_size": pop_size, "cell_number": cell_number,
-                      "microcell_number": microcell_number,
-                      "household_number": household_number}
+                      "microcell_number": microcell_number, "use_households": True}
         toy_pop = ToyPopulationFactory.make_pop(pop_params)
-        total_people = 0
-        households = []
-        num_empty_households = 0
+        people_not_in_household = []
         for cell in toy_pop.cells:
             for microcell in cell.microcells:
                 for person in microcell.persons:
-                    if person.household not in households:
-                        households.append(person.household)
-                    if len(person.household.persons) == 0:
-                        num_empty_households += 1
-                    total_people += len(person.household.persons)
-        # Some households may be empty so won't be included
-        total_households = cell_number * microcell_number \
-            * household_number
-        self.assertTrue(len(households) <= total_households)
-        self.assertTrue(num_empty_households < total_households)
+                    if person.household == None:
+                        people_not_in_household.append(person)
+
+        #Check that everyone has been put into household
+        self.assertEqual(len(people_not_in_household), 0)
+                        
 
     @parameterized.expand([(random.randint(1000, 10000) * numReps,
                             random.randint(1, 10) * numReps,

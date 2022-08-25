@@ -11,7 +11,7 @@ from packaging import version
 
 from pyEpiabm.core import Cell, Household, Microcell, Person, Population
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.sweep import HostProgressionSweep
+from pyEpiabm.sweep import HostProgressionSweep, InitialHouseholdSweep
 from pyEpiabm.utility import log_exceptions
 
 
@@ -23,9 +23,7 @@ class FilePopulationFactory:
     @log_exceptions()
     def make_pop(input_file: str, random_seed: int = None, time: float = 0):
         """Initialize a population object from an input csv file, with one
-        row per microcell. A uniform multinomial distribution is
-        used to distribute the number of people into the different households
-        within each microcell. A random seed may be specified for reproducible
+        row per microcell. A random seed may be specified for reproducible
         populations.
 
         Input file contains columns:
@@ -33,7 +31,7 @@ class FilePopulationFactory:
             * `microcell`: ID code for microcell
             * `location_x`: The x coordinate of the parent cell location
             * `location_y`: The y coordinate of the parent cell location
-            * `household_number`: Number of households in that microcell
+            * `use_households`: If True people within population will be assigned to households (*)
             * Any number of columns with titles from the `InfectionStatus` \
               enum (such as `InfectionStatus.Susceptible`), giving the \
               number of people with that status in that cell
@@ -65,7 +63,7 @@ class FilePopulationFactory:
 
         # Validate all column names in input
         valid_names = ["cell", "microcell", "location_x",
-                       "location_y", "household_number"]
+                       "location_y", "use_households"]
         for col in input.columns.values:  # Check all column headings
             if not ((col in valid_names) or hasattr(InfectionStatus, col)):
                 raise ValueError(f"Unknown column heading '{col}'")
@@ -111,11 +109,9 @@ class FilePopulationFactory:
                             HostProgressionSweep.set_infectiousness(person,
                                                                     time)
 
-            # Add households to microcell
-            if line["household_number"] > 0:
-                households = int(line["household_number"])
-                FilePopulationFactory.add_households(new_microcell,
-                                                     households)
+        # Add households to microcell
+        if line["assign_households"] == True:
+            FilePopulationFactory.add_households(new_pop)
 
         logging.info(f"New Population from file {input_file} configured")
         return new_pop
@@ -145,34 +141,22 @@ class FilePopulationFactory:
         population.cells.append(new_cell)
         new_cell.set_id(cell_id)
         return new_cell
-
+    
     @staticmethod
-    def add_households(microcell: Microcell, household_number: int):
-        """Groups people in a microcell into households together.
+    def add_households(population: Population):
+        """
+        Groups people in a microcell into households together.
 
         Parameters
         ----------
         microcell : Microcell
             Microcell containing all person objects to be considered
             for grouping
-        household_number : int
-            Number of households to form
-
         """
-        # Initialises another multinomial distribution
-        q = [1 / household_number] * household_number
-        people_number = len(microcell.persons)
-        household_split = np.random.multinomial(people_number, q,
-                                                size=1)[0]
-        person_index = 0
-        for j in range(household_number):
-            people_in_household = household_split[j]
-            new_household = Household(loc=microcell.location)
-            for _ in range(people_in_household):
-                person = microcell.persons[person_index]
-                new_household.add_person(person)
-                person_index += 1
-
+        
+        assign_households_sweep = InitialHouseholdSweep()
+        assign_households_sweep.household_allocation(population)
+    
     @staticmethod
     @log_exceptions()
     def print_population(population: Population, output_file: str):
@@ -213,17 +197,15 @@ class FilePopulationFactory:
                     "location_y": cell.location[1],
                 }
 
-                households = []
                 for person in microcell.persons:
                     status = str(person.infection_status.name)
                     if status in data_dict:
                         data_dict[status] += 1
                     else:  # New status
                         data_dict[status] = 1
-                    if person.household not in households:
-                        households.append(person.household)
-                data_dict['household_number'] = len(households)
-
+                
+                data_dict['household_number'] = len(microcell.households)
+                
                 new_row = pd.DataFrame(data=data_dict, columns=columns,
                                        index=[0])
                 df = pd.concat([df, new_row], ignore_index=True)

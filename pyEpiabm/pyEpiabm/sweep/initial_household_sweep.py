@@ -1,15 +1,15 @@
 #
-# Sweep to assign ages to people in households
+# Sweep to assign people to households and set their ages
 #
 
 import random
 import numpy as np
 
-from pyEpiabm.core import Person, Parameters
+from pyEpiabm.core import Parameters, Person, Population
 from .abstract_sweep import AbstractSweep
 
 
-class AssignHouseholdAgesSweep(AbstractSweep):
+class InitialHouseholdSweep(AbstractSweep):
     """Class to assign ages to people in
     households using the same age distribution
     model as CovidSim.
@@ -18,10 +18,52 @@ class AssignHouseholdAgesSweep(AbstractSweep):
     def __init__(self):
         """Call in variables from the parameters file.
         """
+        # worth putting all household params into one and changing name to just
+        # household_params?
+        self.use_ages = Parameters.instance().use_ages
+        self.household_size_distribution \
+            = Parameters.instance().household_size_distribution
+        self.max_household_size = Parameters.instance().max_household_size
         self.age_params = Parameters.instance().household_age_params
         self.age_proportions = Parameters.instance().age_proportions
         self.num_age_groups = len(self.age_proportions)
         self.age_group_width = 5
+
+    def household_allocation(self, population: Population):
+        """Method that takes in a population and assigns them to different
+        sized hosueholds according to a household size distribution.
+
+        Parameters
+        ----------
+        Population: Population
+            Instance of Population class
+        """
+
+        for cell in population.cells:
+            for microcell in cell.microcells:
+                k = 0
+                while k < len(microcell.persons):
+                    m = 1  # initialises household size count
+                    s = random.random()
+
+                    # increases household size count relative to household size
+                    # distribution. Count stops if maximum household size is
+                    # reached or there aren't enough unassigned people left
+                    # in microcell
+                    while True:
+                        if ((s <= self.household_size_distribution[m - 1]) or
+                                (k + m >= len(microcell.persons)) or
+                                (m >= self.max_household_size)):
+                            break
+                        s -= self.household_size_distribution[m - 1]
+                        m += 1
+
+                    # assign people to chosen size household
+                    people_in_household = []
+                    for i in range(k, k + m):
+                        people_in_household.append(microcell.persons[i])
+                    microcell.add_household(people_in_household)
+                    k += m
 
     def one_person_household_age(self, person: Person):
         """Method that assigns an age to the person
@@ -369,21 +411,30 @@ class AssignHouseholdAgesSweep(AbstractSweep):
                             break
 
     def __call__(self):
-        """Given a population structure, loops over all people
-        assigns them an age dependant on their household size.
+        """Given a population structure, sorts the people into households of required
+        size and if required loops over all people and assigns them an age
+        dependant on their household size.
         """
 
-        households_list = []
+        # call method to put people into households and check to see
+        # if people are already in households (this check makes testing
+        # this method easier)
         for cell in self._population.cells:
-            for person in cell.persons:
-                household = person.household
-                # checks we haven't already looped through this household
-                if household not in households_list:
-                    if len(household.persons) == 1:
-                        self.one_person_household_age(household.persons[0])
-                    elif len(household.persons) == 2:
-                        self.two_person_household_ages(household.persons)
-                    else:
-                        self.three_or_more_person_household_ages(
-                            household.persons)
-                    households_list.append(household)
+            for microcell in cell.microcells:
+                if microcell.households == None:
+                    self.household_allocation(self._population)
+                    break
+
+        # if ages need to be set call method to assign
+        # ages of people in households
+        if self.use_ages:
+            for cell in self._population.cells:
+                for microcell in cell.microcells:
+                    for household in microcell.households:
+                        if len(household.persons) == 1:
+                            self.one_person_household_age(household.persons[0])
+                        elif len(household.persons) == 2:
+                            self.two_person_household_ages(household.persons)
+                        else:
+                            self.three_or_more_person_household_ages(
+                                household.persons)
