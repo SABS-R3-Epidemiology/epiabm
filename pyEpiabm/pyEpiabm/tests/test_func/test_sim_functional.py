@@ -140,7 +140,6 @@ class TestSimFunctional(unittest.TestCase):
         mock_mkdir.assert_called_with(folder)
         nb_age_group = len(pe.Parameters.instance().age_proportions)
         mock_output_count = iter_num * nb_age_group * cell_count
-        print(mock_output_count)
         self.assertEqual(mock_output.call_count, mock_output_count)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
