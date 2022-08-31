@@ -333,8 +333,9 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
                                                     mocked_int,
                                                     mocked_choice,
                                                     mocked_random):
-        """Tests method which assigns ages to people in a household of three or more
-        for the case of two children with youngest child under five.
+        """Tests method which assigns ages to people in a household of
+        three or more for the case of two children with youngest child
+        under five.
         """
         test_sweep = pe.sweep.InitialHouseholdSweep()
         mocked_children.side_effect = [2]

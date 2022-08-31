@@ -411,9 +411,9 @@ class InitialHouseholdSweep(AbstractSweep):
                             break
 
     def __call__(self):
-        """Given a population structure, sorts the people into households of required
-        size and if required loops over all people and assigns them an age
-        dependant on their household size.
+        """Given a population structure, sorts the people into households
+        of required size and if required loops over all people and assigns
+        them an age dependant on their household size.
         """
 
         # call method to put people into households and check to see
