@@ -421,7 +421,7 @@ class InitialHouseholdSweep(AbstractSweep):
         # this method easier)
         for cell in self._population.cells:
             for microcell in cell.microcells:
-                if microcell.households == None:
+                if microcell.households is None:
                     self.household_allocation(self._population)
                     break
 

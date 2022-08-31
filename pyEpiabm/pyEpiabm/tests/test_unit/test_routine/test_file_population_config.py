@@ -139,10 +139,10 @@ class TestPopConfig(TestPyEpiabm):
         for cell in test_pop.cells:
             for microcell in cell.microcells:
                 for person in microcell.persons:
-                    if person.household == None:
+                    if person.household is None:
                         people_not_in_household.append(person)
 
-        #Check that everyone has been put into household
+        # Check that everyone has been put into household
         self.assertEqual(len(people_not_in_household), 0)
 
     @patch("numpy.random.seed")

@@ -2,14 +2,13 @@
 # Factory for creation of a toy population
 #
 
-from re import A
 import typing
 import logging
 import numpy as np
 import random
 import math
 
-from pyEpiabm.core import Household, Population
+from pyEpiabm.core import Population
 from pyEpiabm.property import PlaceType
 from pyEpiabm.utility import DistanceFunctions, log_exceptions
 from pyEpiabm.sweep import InitialHouseholdSweep
@@ -34,7 +33,8 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             * `population_size`: Number of people in population
             * `cell_number`: Number of cells in population
             * `microcell_number`: Number of microcells in each cell
-            * `use_households`: If True people within population will be assigned to households (*)
+            * `use_households`: If True people within population will be\
+               assigned to households (*)
             * `place_number`: Number of places in each microcell (*)
             * `population_seed`: Random seed for reproducible populations (*)
 
@@ -55,7 +55,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         microcell_number = pop_params["microcell_number"]
 
         use_households = pop_params["use_households"] \
-           if "use_households" in pop_params else False
+            if "use_households" in pop_params else False
         place_number = pop_params["place_number"] \
             if "place_number" in pop_params else 0
 
@@ -107,7 +107,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             Population containing all person objects to be considered for
             grouping
         """
-        
+
         assign_households_sweep = InitialHouseholdSweep()
         assign_households_sweep.household_allocation(population)
 

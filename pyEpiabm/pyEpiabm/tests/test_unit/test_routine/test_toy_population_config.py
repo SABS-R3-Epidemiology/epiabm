@@ -72,22 +72,22 @@ class TestPopConfig(TestPyEpiabm):
                             random.randint(1, 10) * numReps)
                           for _ in range(numReps)])
     def test_if_households(self, pop_size, cell_number, microcell_number):
-        #Tests when households are implemented.
-        
+        # Tests when households are implemented.
+
         # Initialises population with households
         pop_params = {"population_size": pop_size, "cell_number": cell_number,
-                      "microcell_number": microcell_number, "use_households": True}
+                      "microcell_number": microcell_number,
+                      "use_households": True}
         toy_pop = ToyPopulationFactory.make_pop(pop_params)
         people_not_in_household = []
         for cell in toy_pop.cells:
             for microcell in cell.microcells:
                 for person in microcell.persons:
-                    if person.household == None:
+                    if person.household is None:
                         people_not_in_household.append(person)
 
-        #Check that everyone has been put into household
+        # Check that everyone has been put into household
         self.assertEqual(len(people_not_in_household), 0)
-                        
 
     @parameterized.expand([(random.randint(1000, 10000) * numReps,
                             random.randint(1, 10) * numReps,
