@@ -55,14 +55,14 @@ TEST_CASE("population_factory: test add microcell", "[PopulationFactory]")
     factory.addCell(population);
     REQUIRE(population->cells().size() == 1);
 
-    factory.addMicrocell(&population->cells()[0]);
+    factory.addMicrocell(population->cells()[0].get());
     REQUIRE(population->cells().size() == 1);
-    REQUIRE(population->cells()[0].microcells().size() == 1);
+    REQUIRE(population->cells()[0]->microcells().size() == 1);
 
     for (int i = 0; i < 4; i++)
-        factory.addMicrocell(&population->cells()[0]);
+        factory.addMicrocell(population->cells()[0].get());
     REQUIRE(population->cells().size() == 1);
-    REQUIRE(population->cells()[0].microcells().size() == 5);
+    REQUIRE(population->cells()[0]->microcells().size() == 5);
 }
 
 TEST_CASE("population_factory: test add microcells", "[PopulationFactory]")
@@ -74,13 +74,13 @@ TEST_CASE("population_factory: test add microcells", "[PopulationFactory]")
     factory.addCell(population);
     REQUIRE(population->cells().size() == 1);
 
-    factory.addMicrocells(&population->cells()[0], 1);
+    factory.addMicrocells(population->cells()[0].get(), 1);
     REQUIRE(population->cells().size() == 1);
-    REQUIRE(population->cells()[0].microcells().size() == 1);
+    REQUIRE(population->cells()[0]->microcells().size() == 1);
 
-    factory.addMicrocells(&population->cells()[0], 4);
+    factory.addMicrocells(population->cells()[0].get(), 4);
     REQUIRE(population->cells().size() == 1);
-    REQUIRE(population->cells()[0].microcells().size() == 5);
+    REQUIRE(population->cells()[0]->microcells().size() == 5);
 }
 
 TEST_CASE("population_factory: test add person", "[PopulationFactory]")
@@ -88,24 +88,24 @@ TEST_CASE("population_factory: test add person", "[PopulationFactory]")
     PopulationFactory factory = PopulationFactory();
     PopulationPtr population = factory.makePopulation();
     factory.addCell(population);
-    factory.addMicrocells(&population->cells()[0], 5);
+    factory.addMicrocells(population->cells()[0].get(), 5);
 
-    factory.addPerson(&population->cells()[0], 0);
-    REQUIRE(population->cells()[0].people().size() == 1);
+    factory.addPerson(population->cells()[0].get(), 0);
+    REQUIRE(population->cells()[0]->people().size() == 1);
     for (size_t i = 0; i < 5; i++)
-        REQUIRE(population->cells()[0].microcells()[i].people().size() == ((i == 0) ? 1 : 0));
+        REQUIRE(population->cells()[0]->microcells()[i].people().size() == ((i == 0) ? 1 : 0));
 
     for (size_t i = 1; i < 5; i++)
     {
         for (size_t j = 0; j <= i; j++)
         {
-            factory.addPerson(&population->cells()[0], i);
+            factory.addPerson(population->cells()[0].get(), i);
         }
     }
-    REQUIRE(population->cells()[0].people().size() == 15);
+    REQUIRE(population->cells()[0]->people().size() == 15);
     for (size_t i = 0; i < 5; i++)
     {
-        REQUIRE(population->cells()[0].microcells()[i].people().size() == i + 1);
+        REQUIRE(population->cells()[0]->microcells()[i].people().size() == i + 1);
     }
 }
 
@@ -114,21 +114,21 @@ TEST_CASE("population_factory: test add people", "[PopulationFactory]")
     PopulationFactory factory = PopulationFactory();
     PopulationPtr population = factory.makePopulation();
     factory.addCell(population);
-    factory.addMicrocells(&population->cells()[0], 5);
+    factory.addMicrocells(population->cells()[0].get(), 5);
 
-    factory.addPeople(&population->cells()[0], 0, 1);
-    REQUIRE(population->cells()[0].people().size() == 1);
+    factory.addPeople(population->cells()[0].get(), 0, 1);
+    REQUIRE(population->cells()[0]->people().size() == 1);
     for (size_t i = 0; i < 5; i++)
-        REQUIRE(population->cells()[0].microcells()[i].people().size() == ((i == 0) ? 1 : 0));
+        REQUIRE(population->cells()[0]->microcells()[i].people().size() == ((i == 0) ? 1 : 0));
 
     for (size_t i = 1; i < 5; i++)
     {
-        factory.addPeople(&population->cells()[0], i, i + 1);
+        factory.addPeople(population->cells()[0].get(), i, i + 1);
     }
-    REQUIRE(population->cells()[0].people().size() == 15);
+    REQUIRE(population->cells()[0]->people().size() == 15);
     for (size_t i = 0; i < 5; i++)
     {
-        REQUIRE(population->cells()[0].microcells()[i].people().size() == i + 1);
+        REQUIRE(population->cells()[0]->microcells()[i].people().size() == i + 1);
     }
 }
 
@@ -144,11 +144,11 @@ TEST_CASE("population_factory: test make population", "[PopulationFactory]")
             REQUIRE(p->cells().size() == n_cells);
             for (size_t i = 0; i < n_cells; i++)
             {
-                REQUIRE(p->cells()[i].microcells().size() == n_microcells);
-                REQUIRE(p->cells()[i].people().size() == n_microcells * n_people);
+                REQUIRE(p->cells()[i]->microcells().size() == n_microcells);
+                REQUIRE(p->cells()[i]->people().size() == n_microcells * n_people);
                 for (size_t j = 0; j < n_microcells; j++)
                 {
-                    REQUIRE(p->cells()[i].microcells()[j].people().size() == n_people);
+                    REQUIRE(p->cells()[i]->microcells()[j].people().size() == n_people);
                 }
             }
         }
@@ -191,8 +191,8 @@ TEST_CASE("population_factory: test make large population", "[PopulationFactory]
             REQUIRE(p->cells().size() == n_cells);
             for (size_t i = 0; i < n_cells; i++)
             {
-                REQUIRE(p->cells()[i].microcells().size() == n_microcells);
-                REQUIRE(p->cells()[i].people().size() == n_microcells * n_people);
+                REQUIRE(p->cells()[i]->microcells().size() == n_microcells);
+                REQUIRE(p->cells()[i]->people().size() == n_microcells * n_people);
             }
         }
     };
@@ -215,22 +215,22 @@ TEST_CASE("dataclasses/population_factory: test position links", "[PopulationFac
             REQUIRE(p->cells().size() == n_cells);
             for (size_t i = 0; i < n_cells; i++)
             {
-                REQUIRE(p->cells()[i].microcells().size() == n_microcells);
-                REQUIRE(p->cells()[i].people().size() == n_microcells * n_people);
+                REQUIRE(p->cells()[i]->microcells().size() == n_microcells);
+                REQUIRE(p->cells()[i]->people().size() == n_microcells * n_people);
 
                 for (size_t j = 0; j < n_microcells; j++)
                 {
-                    REQUIRE(p->cells()[i].microcells()[j].people().size() == n_people);
-                    REQUIRE(p->cells()[i].microcells()[j].cellPos() == j);
+                    REQUIRE(p->cells()[i]->microcells()[j].people().size() == n_people);
+                    REQUIRE(p->cells()[i]->microcells()[j].cellPos() == j);
                     for (size_t k = 0; k < n_people; k++)
                     {
-                        REQUIRE(p->cells()[i].microcells()[j].getPerson(p->cells()[i], k).microcellPos() == k);
+                        REQUIRE(p->cells()[i]->microcells()[j].getPerson(*p->cells()[i], k).microcellPos() == k);
                     }
                 }
 
                 for (size_t k = 0; k < n_microcells * n_people; k++)
                 {
-                    REQUIRE(p->cells()[i].people()[k].cellPos() == k);
+                    REQUIRE(p->cells()[i]->people()[k].cellPos() == k);
                 }
             }
         }
@@ -246,12 +246,37 @@ TEST_CASE("dataclasses/population_factory: test microcell initialization", "[Mic
 {
     PopulationFactory f = PopulationFactory();
     PopulationPtr p = f.makePopulation(1, 5, 10);
-    for (size_t i = 0; i < p->cells()[0].microcells().size(); i++)
+    for (size_t i = 0; i < p->cells()[0]->microcells().size(); i++)
     {
-        for (size_t j = 0; j < p->cells()[0].microcells()[i].people().size(); j++)
+        for (size_t j = 0; j < p->cells()[0]->microcells()[i].people().size(); j++)
         {
-            Person subject = p->cells()[0].microcells()[i].getPerson(p->cells()[0], j);
+            Person subject = p->cells()[0]->microcells()[i].getPerson(*p->cells()[0], j);
             REQUIRE(subject.microcellPos() == j);
         }
     }
+}
+
+TEST_CASE("dataclasses/population_factory: test add households", "[PopulationFactory]")
+{
+    PopulationFactory f = PopulationFactory();
+    PopulationPtr p = f.makePopulation(1,5,10);
+
+    f.addHousehold(&p->cells()[0]->getMicrocell(1));
+    f.addHouseholds(&p->cells()[0]->getMicrocell(2), 10);
+
+    REQUIRE(p->cells()[0]->getMicrocell(0).households().empty());
+    REQUIRE(p->cells()[0]->getMicrocell(1).households().size() == 1);
+    REQUIRE(p->cells()[0]->getMicrocell(2).households().size() == 10);
+}
+
+TEST_CASE("dataclasses/population_factory: test add places", "[PopulationFactory]")
+{
+    PopulationFactory f = PopulationFactory();
+    PopulationPtr p = f.makePopulation(1,5,10);
+
+    REQUIRE(p->places().empty());
+    f.addPlace(p);
+    REQUIRE(p->places().size() == 1);
+    f.addPlaces(p, 10);
+    REQUIRE(p->places().size() == 11);
 }

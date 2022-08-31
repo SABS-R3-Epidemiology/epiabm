@@ -12,7 +12,7 @@ class InitialisePlaceSweep(AbstractSweep):
     """Class to update people in the "Place"
     class.
     """
-    def __call__(self):
+    def __call__(self, *args):
         """Given a population structure, updates the people
         present in each place at a specific timepoint. The
         explicit code handles the fixed population which are
@@ -50,24 +50,23 @@ class InitialisePlaceSweep(AbstractSweep):
                     [person_list, weights] = self.create_age_weights(place,
                                                                      params)
 
-                if place.place_type.name in schools:  # schools
+                if place.place_type.name in schools:
                     # Initialise the fixed population
                     helper.update_place_group(place, group_size=ave_group_size,
-                                              person_list=person_list,
+                                              person_list=person_list.copy(),
                                               person_weights=weights,
                                               mean_capacity=mean_cap)
 
-                elif place.place_type.name == "Workplace":  # WORKSPACE
+                elif place.place_type.name == "Workplace":
                     # Fixed population is initialised on first run
                     power_list = [max_size, offset, power]
                     helper.update_place_group(place, group_size=ave_group_size,
-                                              person_list=person_list,
+                                              person_list=person_list.copy(),
                                               person_weights=weights,
                                               mean_capacity=mean_cap,
                                               power_law_params=power_list)
 
-                elif place.place_type.name == "CareHome":  # CAREHOME
-                    # Kit will add more detail for Carehomes
+                elif place.place_type.name == "CareHome":
                     helper.update_place_group(place)
 
         # Instantiate the temporary population in each place using

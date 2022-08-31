@@ -7,8 +7,6 @@
 #include "dataclasses/place.hpp"
 #include "dataclasses/person.hpp"
 
-#include <iostream>
-
 namespace epiabm
 {
 
@@ -29,6 +27,12 @@ namespace epiabm
         void addCells(PopulationPtr population, size_t n);
         void addMicrocells(Cell* cell, size_t n);
         void addPeople(Cell* cell, size_t microcell_index, size_t n);
+
+        void addHousehold(Microcell* microcell);
+        void addHouseholds(Microcell* microcell, size_t n);
+
+        void addPlace(PopulationPtr population);
+        void addPlaces(PopulationPtr population, size_t n);
         
     private:
     };

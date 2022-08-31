@@ -2,12 +2,13 @@
 # Generate random number, as is done in Covidsim code
 #
 
+
 class RandomMethods:
     """Class to calculate methods in a style similar to CovidSim.
 
     """
     def __init__(self):
-        """s1 and s2 are integers in the range [1, 21474835621]. Covid-sim
+        """s1 and s2 are integers in the range [1, 21474835621]. CovidSim
         initialises these using 32-bit integer memory location information.
         We just choose random integers by hand instead. See the wiki for
         more info on this and the following random algorithm.
@@ -17,7 +18,7 @@ class RandomMethods:
         self.prev_s2 = 6573920043
 
     def covid_sim_rand(self):
-        """Reproduction of the ranf_mt method in the Rand.cpp class of covid-sim.
+        """Reproduction of the ranf_mt method in the Rand.cpp from CovidSim.
         In covid-sim, they would use the thread number to generate the output.
 
         Returns

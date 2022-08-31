@@ -15,6 +15,7 @@ class TestPopConfig(TestPyEpiabm):
     def setUp(self) -> None:
         self.input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
                       'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
+
                       'use_households': True,
                       'Susceptible': [8, 9], 'InfectMild': [2, 3]}
         self.df = pd.DataFrame(self.input)

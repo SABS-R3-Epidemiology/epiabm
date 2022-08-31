@@ -112,27 +112,31 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         assign_households_sweep.household_allocation(population)
 
     @staticmethod
-    def add_places(population: Population, place_number: int):
+    def add_places(population: Population, place_number: float):
         """Generates places within a Population.
 
         Parameters
         ----------
         population : Population
             Population where :class:`Place` s will be added
-        place_number : int
-            Number of places to generate per :class:`Microcell`
+        place_number : float
+            Average number of places to generate per :class:`Microcell`
 
         """
-        # Further consideration of whether we initialise place types
-        # at this step is needed.
+        # Unable to replicate CovidSim schools as this uses data not
+        # available for all countries. Random dist used instead.
+        # Cf. SetupModel.cpp L1463. (https://github.com/mrc-ide/
+        # covid-sim/blob/1ada407d4b9c56a259fb6923353b8e55097d5a7c/
+        # src/SetupModel.cpp#L1463)
 
         # As the population of a place is reconfigured in Update
         # Place Sweep, it is not necessary to initialise a population
         # in each place.
         for cell in population.cells:
             for microcell in cell.microcells:
-                microcell.add_place(place_number, (1.0, 1.0),
-                                    PlaceType.Workplace)
+                count = math.floor(place_number + random.random())
+                microcell.add_place(count, cell.location,
+                                    random.choice(list(PlaceType)))
 
     @staticmethod
     def assign_cell_locations(population: Population, method: str = 'random'):

@@ -10,8 +10,10 @@ import logging
 from packaging import version
 
 from pyEpiabm.core import Cell, Household, Microcell, Person, Population
-from pyEpiabm.property import InfectionStatus
+
+from pyEpiabm.property import InfectionStatus, PlaceType
 from pyEpiabm.sweep import HostProgressionSweep, InitialHouseholdSweep
+
 from pyEpiabm.utility import log_exceptions
 
 
@@ -32,6 +34,8 @@ class FilePopulationFactory:
             * `location_x`: The x coordinate of the parent cell location
             * `location_y`: The y coordinate of the parent cell location
             * `use_households`: If True people within population will be assigned to households (*)
+            * `place_number`: Number of places in that microcell
+
             * Any number of columns with titles from the `InfectionStatus` \
               enum (such as `InfectionStatus.Susceptible`), giving the \
               number of people with that status in that cell
@@ -41,7 +45,7 @@ class FilePopulationFactory:
         input_file : str
             Path to input file
         random_seed : int
-            Seed for reproducible household distribution
+            Seed for reproducible household and place distribution
         time : float
             Start time of simulation where this population is used (default 0)
 
@@ -63,7 +67,9 @@ class FilePopulationFactory:
 
         # Validate all column names in input
         valid_names = ["cell", "microcell", "location_x",
-                       "location_y", "use_households"]
+
+                       "location_y", "use_households", "place_number"]
+
         for col in input.columns.values:  # Check all column headings
             if not ((col in valid_names) or hasattr(InfectionStatus, col)):
                 raise ValueError(f"Unknown column heading '{col}'")
@@ -112,6 +118,18 @@ class FilePopulationFactory:
         # Add households to microcell
         if line["assign_households"] == True:
             FilePopulationFactory.add_households(new_pop)
+
+
+        if ('place_number' in line) and (line["place_number"]) > 0:
+                new_microcell.add_place(int(line["place_number"]),
+                                        cell.location,
+                                        random.choice(list(PlaceType)))
+
+        # Verify all people are logged in cell
+        for cell in new_pop.cells:
+            mcell_persons = [person for mcell in cell.microcells
+                             for person in mcell.persons]
+            cell.persons = list(set(cell.persons) | set(mcell_persons))
 
         logging.info(f"New Population from file {input_file} configured")
         return new_pop
@@ -183,7 +201,7 @@ class FilePopulationFactory:
                             + " only tests version 1.4 and above.")
 
         columns = ['cell', 'microcell', 'location_x', 'location_y',
-                   'household_number']
+                   'household_number', 'place_number']
         for status in InfectionStatus:
             columns.append(str(status.name))
         df = pd.DataFrame(columns=columns)
@@ -203,14 +221,19 @@ class FilePopulationFactory:
                         data_dict[status] += 1
                     else:  # New status
                         data_dict[status] = 1
+
                 
                 data_dict['household_number'] = len(microcell.households)
                 
+                data_dict['place_number'] = len(microcell.places)
+
+
                 new_row = pd.DataFrame(data=data_dict, columns=columns,
                                        index=[0])
                 df = pd.concat([df, new_row], ignore_index=True)
 
         df['household_number'] = df['household_number'].astype(int)
+        df['place_number'] = df['place_number'].astype(int)
         for status in InfectionStatus:
             df[str(status.name)] = df[str(status.name)].fillna(0)\
                 .astype(int)

@@ -2,12 +2,18 @@
 #include "cell.hpp"
 
 #include <iostream>
-
+#include <algorithm>
+#include <iterator>
+#include <random>
+#include <exception>
+#include <stdexcept>
 
 namespace epiabm
 {
 
-    Cell::Cell() :
+    Cell::Cell(size_t index) :
+        m_index(index),
+        m_location(),
         m_people(),
         m_microcells(),
         m_personQueue(),
@@ -19,10 +25,18 @@ namespace epiabm
         m_susceptiblePeople(),
         m_exposedPeople(),
         m_recoveredPeople(),
-        m_deadPeople()
+        m_deadPeople(),
+        m_compartmentCounter()
     {}
 
-        void Cell::forEachMicrocell(std::function<bool(Microcell*)> callback)
+    Cell::~Cell()
+    {
+        //std::cout << "Deleted Cell" << std::endl;
+    }
+
+    size_t Cell::index() const { return m_index; }
+
+    void Cell::forEachMicrocell(std::function<bool(Microcell*)> callback)
     {
         for (size_t i = 0; i < m_microcells.size(); i++)
         {
@@ -77,6 +91,7 @@ namespace epiabm
      */
     void Cell::processQueue(std::function<void(size_t)> callback)
     {
+        std::lock_guard<std::mutex> l(m_queueMutex);
         while (!m_personQueue.empty()) // loop through queue
         {
             callback(m_personQueue.front());
@@ -94,6 +109,8 @@ namespace epiabm
      */
     bool Cell::enqueuePerson(size_t personIndex)
     {
+        std::lock_guard<std::mutex> l(m_queueMutex);
+        if (personIndex >= m_people.size()) throw std::runtime_error("Attempted to queue index out of range");
         if (m_peopleInQueue.find(personIndex) != m_peopleInQueue.end()) return false; // if person already queued
         m_personQueue.push(personIndex); // add to queue
         m_peopleInQueue.insert(personIndex); // insert into queued set
@@ -152,6 +169,7 @@ namespace epiabm
 
         m_numInfectious++; // Increment number of infected
         return true;*/
+        std::lock_guard<std::mutex> l(m_markMutex);
         if (m_infectiousPeople.find(newInfected) != m_infectiousPeople.end()) return false;
         m_susceptiblePeople.erase(newInfected);
         m_infectiousPeople.insert(newInfected);
@@ -179,6 +197,7 @@ namespace epiabm
 
         m_numInfectious--;
         return true;*/
+        std::lock_guard<std::mutex> l(m_markMutex);
         if (m_susceptiblePeople.find(oldInfected) != m_susceptiblePeople.end()) return false;
         m_susceptiblePeople.insert(oldInfected);
         m_infectiousPeople.erase(oldInfected);
@@ -188,6 +207,7 @@ namespace epiabm
 
     bool Cell::markExposed(size_t newInfected)
     {
+        std::lock_guard<std::mutex> l(m_markMutex);
         if (m_exposedPeople.find(newInfected) != m_exposedPeople.end()) return false;
         m_susceptiblePeople.erase(newInfected);
         m_infectiousPeople.erase(newInfected);
@@ -197,6 +217,7 @@ namespace epiabm
 
     bool Cell::markDead(size_t person)
     {
+        std::lock_guard<std::mutex> l(m_markMutex);
         if (m_deadPeople.find(person) != m_deadPeople.end()) return false;
         m_deadPeople.insert(person);
         m_infectiousPeople.erase(person);
@@ -207,6 +228,7 @@ namespace epiabm
 
     bool Cell::markRecovered(size_t person)
     {
+        std::lock_guard<std::mutex> l(m_markMutex);
         if (m_recoveredPeople.find(person) != m_recoveredPeople.end()) return false;
         m_recoveredPeople.insert(person);
         m_infectiousPeople.erase(person);
@@ -246,6 +268,63 @@ namespace epiabm
     size_t Cell::numDead() const
     {
         return m_deadPeople.size();
+    }
+
+    bool Cell::sampleInfectious(size_t n, std::function<void(Person*)> callback, std::mt19937_64& rg)
+    {
+        if (m_infectiousPeople.size() < 1){
+            return false;
+        }
+        std::vector<size_t> sampled = std::vector<size_t>();
+        std::sample(m_infectiousPeople.begin(), m_infectiousPeople.end(),
+            std::back_inserter(sampled), n, rg);
+        for (const auto& s : sampled)
+            callback(&m_people[s]);
+        return true;
+    }
+
+    bool Cell::sampleSusceptible(size_t n, std::function<void(Person*)> callback, std::mt19937_64& rg)
+    {
+        if (m_susceptiblePeople.size() < 1){
+            return false;
+        }
+        std::vector<size_t> sampled = std::vector<size_t>();
+        std::sample(m_susceptiblePeople.begin(),m_susceptiblePeople.end(),
+            std::back_inserter(sampled), n, rg);
+        for (const auto& s : sampled)
+            callback(&m_people[s]);
+        return true;
+    }
+
+    void Cell::initialize()
+    {
+        initializeInfectiousGrouping();
+        m_compartmentCounter.initialize(m_people);
+        for (auto& mc : m_microcells)
+        {
+            mc.initialize(this);
+        }
+    }
+
+    unsigned int Cell::compartmentCount(InfectionStatus status)
+    {
+        return m_compartmentCounter(status);
+    }
+
+    void Cell::setLocation(std::pair<double, double> loc)
+    {
+        m_location = loc;
+    }
+        
+    std::pair<double, double> Cell::location() const
+    {
+        return m_location;
+    }
+
+    void Cell::personStatusChange(Person* person, InfectionStatus newStatus, unsigned short timestep)
+    {
+        m_compartmentCounter.notify(person->status(), newStatus);
+        m_microcells[person->microcell()].personStatusChange(person, newStatus, timestep);
     }
 
 } // namespace epiabm

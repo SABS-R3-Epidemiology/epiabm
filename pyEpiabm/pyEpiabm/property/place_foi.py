@@ -14,8 +14,9 @@ class PlaceInfection:
 
     @staticmethod
     def place_inf(place, infector, time: float):
-        """Calculate the infectiousness of a place. Does not include interventions
-        such as isolation, or whether individual is a carehome resident.
+        """Calculate the infectiousness of a place. Does not include
+        interventions such as isolation, or whether individual is a
+        carehome resident.
 
         Does not yet differentiate between places as we have not decided which
         places to implement, and what transmission to give them.
@@ -38,7 +39,10 @@ class PlaceInfection:
         params = Parameters.instance().place_params
         transmission = params["place_transmission"]
         place_idx = place.place_type.value - 1
-        num_groups = params["mean_group_size"][place_idx]
+        try:
+            num_groups = params["mean_group_size"][place_idx]
+        except IndexError:  # For place types not in parameters
+            num_groups = 1
         # Use group-wise capacity not max_capacity once implemented
         return (transmission / num_groups
                 * PersonalInfection.person_inf(infector, time))

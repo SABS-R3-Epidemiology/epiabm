@@ -17,7 +17,7 @@ class TestCsvWriter(unittest.TestCase):
             mock_content = ['1', '2', '3']
             m = pe.output._CsvWriter('mock_folder', 'mock_filename',
                                      mock_content)
-            del(m)
+            del m
         mo.assert_called_once_with('mock_filename', 'w')
         mo().write.assert_called_once_with('1,2,3\r\n')
         mock_mkdir.assert_called_with('mock_folder')
