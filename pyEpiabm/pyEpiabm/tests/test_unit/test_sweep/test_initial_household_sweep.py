@@ -356,9 +356,9 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         'pyEpiabm.sweep.InitialHouseholdSweep.calc_number_of_children')
     def test_three_plus_person_household_ages_more_adults(self,
                                                           mocked_children):
-        """Tests method which assigns ages to people in a household of three or more
-        for the case of there being at least three more adults in the house
-        than children.
+        """Tests method which assigns ages to people in a household of
+        three or more for the case of there being at least three more
+        adults in the house than children.
         """
         test_sweep = pe.sweep.InitialHouseholdSweep()
         mocked_children.return_value = 1
