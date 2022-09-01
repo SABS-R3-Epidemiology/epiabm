@@ -8,10 +8,9 @@ import numpy as np
 import random
 import math
 
-from pyEpiabm.core import Population
+from pyEpiabm.core import Household, Population
 from pyEpiabm.property import PlaceType
 from pyEpiabm.utility import DistanceFunctions, log_exceptions
-from pyEpiabm.sweep import InitialHouseholdSweep
 
 from .abstract_population_config import AbstractPopulationFactory
 
@@ -19,7 +18,6 @@ from .abstract_population_config import AbstractPopulationFactory
 class ToyPopulationFactory(AbstractPopulationFactory):
     """ Class that creates a toy population for use in the simple
     python model.
-
     """
     @staticmethod
     @log_exceptions()
@@ -28,34 +26,29 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         number of cells and microcells. A uniform multinomial distribution is
         used to distribute the number of people into the different microcells.
         There is also an option to distribute people into households or places.
-
         file_params contains (with optional args as (*)):
             * `population_size`: Number of people in population
             * `cell_number`: Number of cells in population
             * `microcell_number`: Number of microcells in each cell
-            * `use_households`: If True people within population will be\
-               assigned to households (*)
-            * `place_number`: Number of places in each microcell (*)
+            * `household_number`: Number of households in each microcell (*)
+            * `place_number`: Average number of places in each microcell (*)
             * `population_seed`: Random seed for reproducible populations (*)
-
         Parameters
         ----------
         file_params : dict
             Dictionary of parameters for generating a population
-
         Returns
         -------
         Population
             Population object with individuals distributed into households
-
         """
         # Unpack variables from input dictionary
         population_size = pop_params["population_size"]
         cell_number = pop_params["cell_number"]
         microcell_number = pop_params["microcell_number"]
 
-        use_households = pop_params["use_households"] \
-            if "use_households" in pop_params else False
+        household_number = pop_params["household_number"] \
+            if "household_number" in pop_params else 0
         place_number = pop_params["place_number"] \
             if "place_number" in pop_params else 0
 
@@ -85,12 +78,11 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                 microcell.add_people(people_in_microcell)
                 i += 1
 
-        # If use_houeholds is set as True then people in population
-        # will be assigned to households using the assign_households()
-        # method of the :class: 'InitialHouseholdSweep' class. Otherwise
-        # population won't be sorted into households.
-        if use_households:
-            ToyPopulationFactory.add_households(new_pop)
+        # If a household number is given then that number of households
+        # are initialised. If the household number defaults to zero
+        # then no households are initialised.
+        if household_number > 0:
+            ToyPopulationFactory.add_households(new_pop, household_number)
         if place_number > 0:
             ToyPopulationFactory.add_places(new_pop, place_number)
 
@@ -98,30 +90,41 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         return new_pop
 
     @staticmethod
-    def add_households(population: Population):
+    def add_households(population: Population, household_number: int):
         """Groups people in a microcell into households together.
-
         Parameters
         ----------
         population : Population
             Population containing all person objects to be considered for
             grouping
+        household_number : int
+            Number of households to form
         """
-
-        assign_households_sweep = InitialHouseholdSweep()
-        assign_households_sweep.household_allocation(population)
+        # Initialises another multinomial distribution
+        q = [1 / household_number] * household_number
+        for cell in population.cells:
+            for microcell in cell.microcells:
+                people_number = len(microcell.persons)
+                household_split = np.random.multinomial(people_number, q,
+                                                        size=1)[0]
+                person_index = 0
+                for j in range(household_number):
+                    people_in_household = household_split[j]
+                    new_household = Household()
+                    for _ in range(people_in_household):
+                        person = microcell.persons[person_index]
+                        new_household.add_person(person)
+                        person_index += 1
 
     @staticmethod
     def add_places(population: Population, place_number: float):
         """Generates places within a Population.
-
         Parameters
         ----------
         population : Population
             Population where :class:`Place` s will be added
         place_number : float
             Average number of places to generate per :class:`Microcell`
-
         """
         # Unable to replicate CovidSim schools as this uses data not
         # available for all countries. Random dist used instead.
@@ -141,20 +144,17 @@ class ToyPopulationFactory(AbstractPopulationFactory):
     @staticmethod
     def assign_cell_locations(population: Population, method: str = 'random'):
         """Assigns cell locations based on method provided. Possible methods:
-
             * 'random': Assigns all locations randomly within unit square
             * 'uniform_x': Spreads points evenly along x axis in range (0, 1)
             * 'grid': Distributes points according to a square grid within a \
                unit square. There will be cells missing in the last row \
                if the input is not a square number
-
         Parameters
         ----------
         population : Population
             Population containing all cells to be assigned locations
         method : str
             Method of determining cell locations
-
         """
         try:
             if method == "random":
