@@ -1,7 +1,6 @@
 #ifndef EPIABM_DATACLASSES_HOUSEHOLD_HPP
 #define EPIABM_DATACLASSES_HOUSEHOLD_HPP
 
-#include "membersInterface.hpp"
 
 #include <tuple>
 #include <memory>
