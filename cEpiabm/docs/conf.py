@@ -16,7 +16,8 @@
 
 ##############################################################################
 # -- Work around CMake if running on ReadTheDocs servers
-# -- Based on https://devblogs.microsoft.com/cppblog/clear-functional-c-documentation-with-sphinx-breathe-doxygen-cmake/
+# -- Based on https://devblogs.microsoft.com/cppblog/clear-functional-c-docume
+#    ntation-with-sphinx-breathe-doxygen-cmake/
 # -- https://github.com/TartanLlama/cpp-documentation-example
 
 import subprocess
