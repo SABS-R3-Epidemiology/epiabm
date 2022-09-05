@@ -10,7 +10,8 @@
 #include <functional>
 #include <queue>
 #include <set>
-
+#include <mutex>
+#include <random>
 
 namespace epiabm
 {
@@ -19,6 +20,7 @@ namespace epiabm
     {
     private:
         size_t m_index;
+        std::pair<double, double> m_location;
 
         std::vector<Person> m_people;
         std::vector<Microcell> m_microcells;
@@ -28,6 +30,7 @@ namespace epiabm
         // Indexes stored are position of person in cell's m_people vector
         std::queue<size_t> m_personQueue;
         std::set<size_t> m_peopleInQueue;
+        std::mutex m_queueMutex;
 
 
         /*
@@ -44,15 +47,21 @@ namespace epiabm
         std::set<size_t> m_exposedPeople;
         std::set<size_t> m_recoveredPeople;
         std::set<size_t> m_deadPeople;
+        std::mutex m_markMutex;
 
         CompartmentCounter m_compartmentCounter;
 
     public:
         Cell(size_t index);
-        ~Cell() = default;
-        Cell(const Cell&) = default;
+        ~Cell();
+        Cell(const Cell&) = delete;
         Cell(Cell&&) = default;
 
+        /**
+         * Get index of cell within Population::m_cells;
+         * 
+         * @return size_t 
+         */
         size_t index() const;
 
         void forEachMicrocell(std::function<bool(Microcell*)> callback);
@@ -91,12 +100,14 @@ namespace epiabm
         size_t numRecovered() const;
         size_t numDead() const;
 
-        bool sampleInfectious(size_t n, std::function<void(Person*)> callback);
-        bool sampleSusceptible(size_t n, std::function<void(Person*)> callback);
+        bool sampleInfectious(size_t n, std::function<void(Person*)> callback, std::mt19937_64& rg);
+        bool sampleSusceptible(size_t n, std::function<void(Person*)> callback, std::mt19937_64& rg);
 
         void initialize();
 
         unsigned int compartmentCount(InfectionStatus status);
+        void setLocation(std::pair<double, double> loc);
+        std::pair<double, double> location() const;
 
         void personStatusChange(Person* person, InfectionStatus newStatus, unsigned short timestep);
 

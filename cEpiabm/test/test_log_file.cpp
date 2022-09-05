@@ -96,4 +96,22 @@ TEST_CASE("logfile: test others", "[LogFile]")
     LogFile::Instance()->unlock();
     LogFile::Instance()->enable_cout();
     LogFile::Instance()->disable_cout();
+    LogFile::Instance()->setLevel(2);
+}
+
+TEST_CASE("logfile:: test write", "[LogFile]")
+{
+    REQUIRE_NOTHROW(LOG << LOG_LEVEL_NORMAL << static_cast<short>(1));
+    REQUIRE_NOTHROW(LOG << LOG_LEVEL_NORMAL << static_cast<int>(1));
+    REQUIRE_NOTHROW(LOG << LOG_LEVEL_NORMAL << static_cast<long>(1));
+    REQUIRE_NOTHROW(LOG << LOG_LEVEL_NORMAL << static_cast<unsigned int>(1));
+    REQUIRE_NOTHROW(LOG << LOG_LEVEL_NORMAL << static_cast<unsigned long>(1));
+    REQUIRE_NOTHROW(LOG << LOG_LEVEL_NORMAL << static_cast<size_t>(1));
+    REQUIRE_NOTHROW(LOG << LOG_LEVEL_NORMAL << true);
+    REQUIRE_NOTHROW(LOG << LOG_LEVEL_NORMAL << "abc");
+    REQUIRE_NOTHROW(LOG << LOG_LEVEL_NORMAL << 'a');
+    std::string s = "abcdefg";
+    REQUIRE_NOTHROW(LOG << LOG_LEVEL_NORMAL << s.c_str());
+    REQUIRE_NOTHROW(LOG << LOG_LEVEL_NORMAL << static_cast<float>(1));
+    REQUIRE_NOTHROW(LOG << LOG_LEVEL_NORMAL << static_cast<double>(1.0));
 }

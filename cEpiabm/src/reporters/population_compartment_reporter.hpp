@@ -51,6 +51,8 @@ namespace epiabm
         private:
     };
 
+    typedef std::shared_ptr<PopulationCompartmentReporter> PopulationCompartmentReporterPtr;
+
 
 } // namespace epiabm
 

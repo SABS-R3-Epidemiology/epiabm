@@ -28,6 +28,14 @@ include(cmake/StaticAnalysers.cmake)
 
 option(ENABLE_TESTING "Enable Test Builds" ON)
 
+option(PYTHON_BINDINGS "Whether to build the python bindings" OFF)
+if (EXISTS ${CMAKE_SOURCE_DIR}/pybind11/LICENSE)
+    set(PYTHON_BINDINGS ON)
+endif()
+if (PYTHON_BINDINGS)
+    add_subdirectory(pybind11)
+endif ()
+
 add_subdirectory(src)
 
 if (ENABLE_TESTING)

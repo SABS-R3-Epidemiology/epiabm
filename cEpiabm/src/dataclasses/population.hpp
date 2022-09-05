@@ -10,16 +10,17 @@
 
 namespace epiabm
 {
-    
+    const size_t N_AGE_GROUPS = 17; // Each age group is 5 years
+
     class Population
     {
     private:
-        std::vector<Cell> m_cells;
+        std::vector<CellPtr> m_cells;
         std::vector<Place> m_places;
         
     public:
         Population();
-        ~Population() = default;
+        ~Population();
         
         /**
          * @brief Callback each Cell in Population.
@@ -30,7 +31,7 @@ namespace epiabm
         void forEachCell(std::function<bool(Cell*)> callback);
         void forEachPlace(std::function<bool(Place*)> callback);
 
-        std::vector<Cell>& cells();
+        std::vector<CellPtr>& cells();
         std::vector<Place>& places();
 
         /**

@@ -1,0 +1,290 @@
+import os
+import pandas as pd
+import unittest
+from unittest.mock import patch, mock_open, Mock
+
+import pyEpiabm as pe
+from pyEpiabm.property.infection_status import InfectionStatus
+
+
+class TestSimFunctional(unittest.TestCase):
+    """Functional testing of basic simulations. Conducts basic
+    simulations with known results/properties to ensure code functions as
+    desired.
+    """
+    @classmethod
+    def setUpClass(cls) -> None:
+        super(TestSimFunctional, cls).setUpClass()
+        cls.warning_patcher = patch('logging.warning')
+        cls.error_patcher = patch('logging.error')
+
+        cls.warning_patcher.start()
+        cls.error_patcher.start()
+
+        filepath = os.path.join(os.path.dirname(__file__),
+                                os.pardir, 'testing_parameters.json')
+        pe.Parameters.set_file(filepath)
+
+    def setUp(self) -> None:
+        self.pop_params = {"population_size": 100, "cell_number": 1,
+                           "microcell_number": 1, "household_number": 1,
+                           "place_number": 2}
+        self.sim_params = {"simulation_start_time": 0,
+                           "simulation_end_time": 100,
+                           "initial_infected_number": 0}
+
+        self.file_params = {"output_file": "output.csv",
+                            "output_dir": "test_folder/integration_tests",
+                            "spatial_output": False}
+
+    @classmethod
+    def tearDownClass(cls):
+        super(TestSimFunctional, cls).tearDownClass()
+        cls.warning_patcher.stop()
+        cls.error_patcher.stop()
+        if pe.Parameters._instance:
+            pe.Parameters._instance = None
+
+    def notqdm(iterable, *args, **kwargs):
+        """Replacement for tqdm that just passes back the iterable
+        useful to silence `tqdm` in tests
+        """
+        return iterable
+
+    def toy_simulation(pop_params, sim_params, file_params):
+        # Create a population based on the parameters given.
+        population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
+
+        mo = mock_open()
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            sim = pe.routine.Simulation()
+            sim.configure(
+                population,
+                [pe.sweep.InitialInfectedSweep()],
+                [pe.sweep.HouseholdSweep(), pe.sweep.QueueSweep(),
+                 pe.sweep.HostProgressionSweep()],
+                sim_params,
+                file_params)
+            sim.run_sweeps()
+
+        # Need to close the writer object at the end of each simulation.
+        del sim.writer
+        del sim
+        return population
+
+    def file_simulation(pop_file, sim_params, file_params, sweep_list):
+        # Create a population based on the parameters given.
+        population = pe.routine.FilePopulationFactory.make_pop(pop_file)
+        pe.routine.FilePopulationFactory.print_population(population,
+                                                          "test.csv")
+
+        mo = mock_open()
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            sim = pe.routine.Simulation()
+            sim.configure(
+                population,
+                [],
+                sweep_list,
+                sim_params,
+                file_params)
+
+            sim.run_sweeps()
+
+        # Need to close the writer object at the end of each simulation.
+        del sim.writer
+        del sim
+        return population
+
+    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.output._CsvDictWriter.write')
+    @patch('os.makedirs')
+    def test_population_conservation(self, mock_mkdir, mock_output):
+        """Basic functional test with a more complex population
+        to ensure the simulation conserves basic population properties
+        such as cell number.
+        """
+        pop_params = {"population_size": 500, "cell_number": 5,
+                      "microcell_number": 2, "household_number": 5,
+                      "place_number": 2}
+        sim_params = {"simulation_start_time": 0, "simulation_end_time": 400,
+                      "initial_infected_number": 10}
+        iter_num = (sim_params["simulation_end_time"]
+                    - sim_params["simulation_start_time"] + 1)
+
+        pop = TestSimFunctional.toy_simulation(pop_params,
+                                               sim_params,
+                                               self.file_params)
+
+        # Test size of simulation is as expected
+        self.assertIsInstance(pop, pe.Population)
+        self.assertEqual(len(pop.cells), pop_params["cell_number"])
+        self.assertEqual(pop.total_people(), pop_params["population_size"])
+
+        mcell_count = 0
+        place_count = 0
+        for cell in pop.cells:
+            mcell_count += len(cell.microcells)
+            place_count += len(cell.places)
+
+        self.assertEqual(mcell_count, (pop_params["microcell_number"]
+                                       * pop_params["cell_number"]))
+        self.assertEqual(place_count, (pop_params["place_number"]
+                                       * pop_params["microcell_number"]
+                                       * pop_params["cell_number"]))
+
+        folder = os.path.join(os.getcwd(),
+                              "test_folder/integration_tests")
+        mock_mkdir.assert_called_with(folder)
+        self.assertEqual(mock_output.call_count, iter_num)
+
+    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
+    @patch('os.makedirs')
+    def test_total_infection(self, mock_mkdir):
+        """Basic functional test to ensure everyone is infected when the entire
+        population is placed in one large household.
+        """
+        self.sim_params["initial_infected_number"] = 5
+        pop = TestSimFunctional.toy_simulation(self.pop_params,
+                                               self.sim_params,
+                                               self.file_params)
+
+        # Test all individuals have recovered or died from infection at end
+        final_state_count = 0
+        for status in pe.property.InfectionStatus:
+            with self.subTest(status=status):
+                count = 0
+
+                for cell in pop.cells:
+                    cell_data = cell.compartment_counter.retrieve()
+                    count += cell_data[status]
+                if status in [InfectionStatus.Recovered, InfectionStatus.Dead]:
+                    final_state_count += count
+                else:
+                    self.assertEqual(count, 0)
+        self.assertEqual(final_state_count, self.pop_params["population_size"])
+
+        folder = os.path.join(os.getcwd(),
+                              "test_folder/integration_tests")
+        mock_mkdir.assert_called_with(folder)
+
+    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
+    @patch('os.makedirs', Mock())
+    def test_no_infection(self):
+        """Basic functional test to ensure noone is infected when there are
+        no initial cases in the entire population
+        """
+        pop = TestSimFunctional.toy_simulation(self.pop_params,
+                                               self.sim_params,
+                                               self.file_params)
+
+        # Test all individuals have remained Susceptible
+        for status in pe.property.InfectionStatus:
+            with self.subTest(status=status):
+                count = 0
+
+                for cell in pop.cells:
+                    cell_data = cell.compartment_counter.retrieve()
+                    count += cell_data[status]
+                if status != InfectionStatus.Susceptible:
+                    self.assertEqual(count, 0)
+
+    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
+    @patch('os.makedirs', Mock())
+    @patch("pandas.DataFrame.to_csv")
+    @patch("pandas.read_csv")
+    def test_segmented_infection(self, mock_read, mock_csv):
+        """Basic functional test to ensure people cannot infect those
+        outside their household (or microcell) without a spatial sweep.
+        """
+        file_input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
+                      'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
+                      'household_number': [1, 1],
+                      'Susceptible': [8, 9], 'InfectMild': [2, 0]}
+        mock_read.return_value = pd.DataFrame(file_input)
+
+        sweep_list = [pe.sweep.HouseholdSweep(), pe.sweep.QueueSweep(),
+                      pe.sweep.HostProgressionSweep()]
+
+        pop = TestSimFunctional.file_simulation("test_input.csv",
+                                                self.sim_params,
+                                                self.file_params,
+                                                sweep_list)
+
+        mock_read.assert_called_once_with('test_input.csv')
+        mock_csv.assert_called_once()
+
+        cell_data_0 = pop.cells[0].compartment_counter.retrieve()
+        cell_data_1 = pop.cells[1].compartment_counter.retrieve()
+
+        self.assertEqual(cell_data_0[InfectionStatus.Susceptible], 0)
+        self.assertEqual((cell_data_0[InfectionStatus.Recovered]
+                          + cell_data_0[InfectionStatus.Dead]),
+                         (file_input['Susceptible'][0]
+                          + file_input["InfectMild"][0]))
+
+        self.assertEqual(cell_data_1[InfectionStatus.Susceptible],
+                         file_input['Susceptible'][1])
+        self.assertEqual(cell_data_1[InfectionStatus.Recovered], 0)
+
+    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
+    @patch('os.makedirs', Mock())
+    @patch("pandas.DataFrame.to_csv")
+    @patch("pandas.read_csv")
+    def test_small_cutoff(self, mock_read, mock_csv):
+        """Basic functional test to ensure people cannot infect those
+        outside theircell when the cut-off is sufficiently small.
+        """
+        file_input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
+                      'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
+                      'household_number': [1, 1],
+                      'Susceptible': [8, 9], 'InfectMild': [2, 0]}
+        mock_read.return_value = pd.DataFrame(file_input)
+
+        sweep_list = [pe.sweep.HouseholdSweep(), pe.sweep.SpatialSweep(),
+                      pe.sweep.QueueSweep(), pe.sweep.HostProgressionSweep()]
+
+        pe.Parameters.instance().infection_radius = 0.5
+        pop = TestSimFunctional.file_simulation("test_input.csv",
+                                                self.sim_params,
+                                                self.file_params,
+                                                sweep_list)
+
+        mock_read.assert_called_once_with('test_input.csv')
+        mock_csv.assert_called_once()
+
+        cell_data_0 = pop.cells[0].compartment_counter.retrieve()
+        cell_data_1 = pop.cells[1].compartment_counter.retrieve()
+
+        self.assertEqual(cell_data_0[InfectionStatus.Susceptible], 0)
+        self.assertEqual((cell_data_0[InfectionStatus.Recovered]
+                          + cell_data_0[InfectionStatus.Dead]),
+                         (file_input['Susceptible'][0]
+                          + file_input["InfectMild"][0]))
+
+        self.assertEqual(cell_data_1[InfectionStatus.Susceptible],
+                         file_input['Susceptible'][1])
+        self.assertEqual(cell_data_1[InfectionStatus.Recovered], 0)
+
+        # Now increase the cutoff to check the infection does spread
+        pe.Parameters.instance().infection_radius = 1.5
+        pop = TestSimFunctional.file_simulation("test_input.csv",
+                                                self.sim_params,
+                                                self.file_params,
+                                                sweep_list)
+
+        for i, cell in enumerate(pop.cells):
+            with self.subTest(cell=cell):
+                cell_data = pop.cells[i].compartment_counter.retrieve()
+                self.assertEqual(cell_data[InfectionStatus.Susceptible], 0)
+                self.assertEqual((cell_data[InfectionStatus.Recovered]
+                                  + cell_data[InfectionStatus.Dead]),
+                                 (file_input['Susceptible'][i]
+                                  + file_input["InfectMild"][i]))
+
+
+if __name__ == '__main__':
+    unittest.main()

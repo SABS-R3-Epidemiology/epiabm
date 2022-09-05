@@ -12,6 +12,11 @@ namespace epiabm
         m_compartmentCounter()
     {}
 
+    Microcell::~Microcell()
+    {
+        //std::cout << "Microcell Destructor" << std::endl;
+    }
+
     Microcell::Microcell(const Microcell& other) :
         m_people(other.m_people),
         m_households(other.m_households),
@@ -37,6 +42,11 @@ namespace epiabm
     Person& Microcell::getPerson(Cell& cell, size_t i)
     {
         return cell.m_people[m_people[i]];
+    }
+
+    HouseholdPtr Microcell::getHousehold(size_t i)
+    {
+        return m_households[i];
     }
 
     std::vector<size_t>& Microcell::people() { return m_people; }

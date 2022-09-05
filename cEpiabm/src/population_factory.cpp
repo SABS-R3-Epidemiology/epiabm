@@ -19,14 +19,14 @@ namespace epiabm
         addCells(population, n_cells);
         for (size_t i = 0; i < n_cells; i++)
         {
-            population->cells()[i].people().reserve(n_microcells * n_people);
-            population->cells()[i].microcells().reserve(n_microcells);
-            addMicrocells(&population->cells()[i], n_microcells);
+            population->cells()[i]->people().reserve(n_microcells * n_people);
+            population->cells()[i]->microcells().reserve(n_microcells);
+            addMicrocells(population->cells()[i].get(), n_microcells);
             for (size_t j = 0; j < n_microcells; j++)
             {
-                population->cells()[i].microcells()[j].people().reserve(n_people);
+                population->cells()[i]->microcells()[j].people().reserve(n_people);
                 addPeople(
-                    &population->cells()[i],
+                    population->cells()[i].get(),
                     j,
                     n_people);
             }
@@ -36,7 +36,8 @@ namespace epiabm
 
     void PopulationFactory::addCell(PopulationPtr population)
     {
-        population->cells().push_back(Cell(population->cells().size()));
+        population->cells().push_back(
+            std::make_shared<Cell>(population->cells().size()));
     }
 
     void PopulationFactory::addCells(PopulationPtr population, size_t n)
@@ -50,8 +51,7 @@ namespace epiabm
 
     void PopulationFactory::addMicrocell(Cell* cell)
     {
-        cell->microcells().push_back(
-            Microcell(cell->microcells().size()));
+        cell->microcells().emplace_back(cell->microcells().size());
     }
 
     void PopulationFactory::addMicrocells(Cell* cell, size_t n)
@@ -65,8 +65,8 @@ namespace epiabm
 
     void PopulationFactory::addPerson(Cell* cell, size_t microcell_index)
     {
-        cell->people().push_back(
-            Person(microcell_index, cell->people().size(), cell->getMicrocell(microcell_index).people().size()));
+        cell->people().emplace_back(
+            microcell_index, cell->people().size(), cell->getMicrocell(microcell_index).people().size());
         cell->getMicrocell(microcell_index).people().push_back(
             cell->people().size()-1);
     }
@@ -79,6 +79,29 @@ namespace epiabm
         {
             addPerson(cell, microcell_index);
         }
+    }
+
+    void PopulationFactory::addHousehold(Microcell* microcell)
+    {
+        size_t i = microcell->households().size();
+        microcell->households().push_back(
+            std::make_shared<Household>(i));
+    }
+    void PopulationFactory::addHouseholds(Microcell* microcell, size_t n)
+    {
+        for (size_t i = 0; i < n; i++)
+            addHousehold(microcell);
+    }
+
+    void PopulationFactory::addPlace(PopulationPtr population)
+    {
+        size_t i = population->places().size();
+        population->places().emplace_back(i);
+    }
+    void PopulationFactory::addPlaces(PopulationPtr population, size_t n)
+    {
+        for (size_t i = 0; i < n; i++)
+            addPlace(population);
     }
 
 } // namespace epiabm
