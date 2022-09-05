@@ -32,8 +32,7 @@ class NewCasesWriter(_CsvWriter):
         for cell in population.cells:
             new_cases = 0
             for person in cell.persons:
-                if \
-                    person.infection_start_time is not None and \
-                    person.infection_start_time > (t-1):
-                     new_cases += 1
+                if person.infection_start_time is not None and \
+                   person.infection_start_time > (t-1):
+                    new_cases += 1
             super().write([t, cell.id, new_cases])

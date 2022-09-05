@@ -41,7 +41,7 @@ class TestNewCasesWriter(TestPyEpiabm):
             p.cells[0].persons[i].infection_start_time = 1.0
         for i in range(n_old_cases, n_old_cases + n_new_cases):
             p.cells[0].persons[i].infection_start_time = 10.0
-        
+
         with patch('pyEpiabm.output._csv_writer.open', mo):
             m = pe.output.NewCasesWriter('mock_folder')
             m.write(10, p)
