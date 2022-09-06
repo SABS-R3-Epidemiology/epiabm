@@ -38,10 +38,6 @@ Core
     :members:
     :undoc-members:
 
-.. doxygenclass:: epiabm::MembersInterface
-    :members:
-    :undoc-members:
-
 .. doxygenclass:: epiabm::Household
     :members:
     :undoc-members:

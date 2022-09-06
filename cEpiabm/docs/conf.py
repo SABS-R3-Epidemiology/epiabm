@@ -22,6 +22,7 @@
 
 import subprocess
 import os
+import sys
 
 
 def configure_doxyfile(_input_dir, _output_dir):
@@ -45,13 +46,13 @@ if read_the_docs_build:
     output_dir = 'build'
     configure_doxyfile(input_dir, output_dir)
     subprocess.call('doxygen', shell=True)
-    breathe_projects['Epiabm'] = output_dir + '/xml'
+    breathe_projects['cEpiabm'] = output_dir + '/xml'
 
 ##############################################################################
 
 # -- Project information -----------------------------------------------------
 
-project = 'C++ Epiabm'
+project = 'cEpiabm'
 copyright = '2021, University of Oxford'
 author = 'SABS-R3-Epidemiology'
 
