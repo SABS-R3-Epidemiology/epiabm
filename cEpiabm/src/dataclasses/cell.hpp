@@ -73,12 +73,21 @@ namespace epiabm
         Person& getPerson(size_t i);
         Microcell& getMicrocell(size_t i);
 
+        /**
+         * @brief Callback each queued person.
+         * Dequeues people on callback.
+         * @param callback 
+         */
         void processQueue(std::function<void(size_t)> callback);
         bool enqueuePerson(size_t personIndex);
 
         std::vector<Person>& people();
         std::vector<Microcell>& microcells();
 
+        /**
+         * @brief Initialize Sorted People Vectors
+         * This must be called before using markInfectious or markNonInfectious
+         */
         void initializeInfectiousGrouping();
         bool markInfectious(size_t personIndex);
         bool markNonInfectious(size_t personIndex);
