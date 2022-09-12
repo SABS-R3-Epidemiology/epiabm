@@ -84,11 +84,6 @@ namespace epiabm
     Person& Cell::getPerson(size_t i) { return m_people[i]; }
     Microcell& Cell::getMicrocell(size_t i) { return m_microcells[i]; }
 
-    /**
-     * @brief Apply Callback to each person in Queue
-     * Also Clears the queue
-     * @param callback
-     */
     void Cell::processQueue(std::function<void(size_t)> callback)
     {
         std::lock_guard<std::mutex> l(m_queueMutex);
@@ -100,13 +95,6 @@ namespace epiabm
         m_peopleInQueue.clear(); // Remove person from the set of people currently in queue
     }
 
-    /**
-     * @brief Add person to queue
-     * Same person cannot be queued twice.
-     * @param personIndex
-     * @return true Person successfully queued.
-     * @return false Person reject because already in queue.
-     */
     bool Cell::enqueuePerson(size_t personIndex)
     {
         std::lock_guard<std::mutex> l(m_queueMutex);
