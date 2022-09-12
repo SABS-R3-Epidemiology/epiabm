@@ -22,7 +22,6 @@
 
 import subprocess
 import os
-import sys
 
 
 def configure_doxyfile(_input_dir, _output_dir):
