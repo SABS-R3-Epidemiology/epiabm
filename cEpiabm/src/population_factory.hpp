@@ -15,10 +15,21 @@ namespace epiabm
     private:
     public:
         PopulationPtr makePopulation();
+
+        /**
+         * @brief Create a Basic Population
+         * 
+         * Create a Population with n_cells, n_microcells :class:`Microcell` in each cell, and n_people :class:`People` in each microcell.
+         * 
+         * @param n_cells 
+         * @param n_microcells 
+         * @param n_people 
+         * @return PopulationPtr 
+         */
         PopulationPtr makePopulation(
-            size_t n_cells, 
-            size_t n_microcells,
-            size_t n_people);
+            size_t n_cells, // n cells in population
+            size_t n_microcells, // n microcels per cell
+            size_t n_people); // n people per microcell
     
         void addCell(PopulationPtr population);
         void addMicrocell(Cell* cell);
