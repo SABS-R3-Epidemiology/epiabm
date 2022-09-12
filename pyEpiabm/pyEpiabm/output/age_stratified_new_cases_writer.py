@@ -4,6 +4,7 @@ from pyEpiabm.core import Population
 
 class AgeStratifiedNewCasesWriter(_CsvWriter):
     """ Writer for collecting number of daily new cases
+        and splitting them between age groups
     """
 
     def __init__(self, folder: str):
@@ -20,7 +21,8 @@ class AgeStratifiedNewCasesWriter(_CsvWriter):
 
     def write(self, t: float, population: Population):
         """ Write method
-        Write daily new cases from population to file
+        Write daily new cases spit by age group in
+        population to file
 
         Parameters
         ----------
