@@ -16,6 +16,10 @@ namespace epiabm
 {
     class Cell;
 
+    /**
+     * @brief Class representing a microcell
+     * 
+     */
     class Microcell
     {
     private:

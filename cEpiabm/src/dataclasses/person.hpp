@@ -15,6 +15,10 @@ namespace epiabm
     class Cell;
     class Population;
 
+    /**
+     * @brief Structure for person parameters
+     * For parameters which are independent to individual people
+     */
     struct PersonParams
     {
         unsigned char age_group = 0;
@@ -26,6 +30,10 @@ namespace epiabm
         unsigned short infection_start_timestep = 0;
     };
 
+    /**
+     * @brief Class representing a person
+     * 
+     */
     class Person
     {
     private:
@@ -68,13 +76,6 @@ namespace epiabm
         void removePlaceAllGroups(Population& population, Cell* cell, size_t place_index);
 
         std::set<std::pair<size_t, size_t>>& places();
-        /**
-         * @brief Loop through each place
-         * Callback provides the place and group within place that the person is part of
-         * 
-         * @param population 
-         * @param callback 
-         */
         void forEachPlace(Population& population, std::function<void(Place*, size_t)> callback);
 
     private:

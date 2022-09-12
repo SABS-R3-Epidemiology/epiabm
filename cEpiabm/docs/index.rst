@@ -15,7 +15,12 @@ Contents
 .. module:: cEpiabm
 
 .. toctree::
-   core
+   simulations
+   dataclasses
+   sweeps
+   configuration
+   reporters
+   utilities
 
 
 

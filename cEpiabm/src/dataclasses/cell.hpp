@@ -71,19 +71,7 @@ namespace epiabm
         void forEachNonInfectious(std::function<bool(Person*)> callback);
         void forEachExposed(std::function<bool(Person*)> callback);
 
-        /**
-         * @brief Retrieve ith person in cell
-         * 
-         * @param i 
-         * @return Person& 
-         */
         Person& getPerson(size_t i);
-        /**
-         * @brief Retrieve ith microcell in cell
-         * 
-         * @param i 
-         * @return Microcell& 
-         */
         Microcell& getMicrocell(size_t i);
 
         /**
@@ -92,30 +80,9 @@ namespace epiabm
          * @param callback 
          */
         void processQueue(std::function<void(size_t)> callback);
-        /**
-         * @brief Add person to the cell's queue
-         * Used for applying new infections at the end of all infection transmitting sweeps
-         * 
-         * Same person cannot be added twice
-         * Returns true if person was successfully added
-         * 
-         * @param personIndex 
-         * @return true 
-         * @return false 
-         */
         bool enqueuePerson(size_t personIndex);
 
-        /**
-         * @brief Reference to cell's people vector
-         * 
-         * @return std::vector<Person>& 
-         */
         std::vector<Person>& people();
-        /**
-         * @brief Reference to cell's microcells vector
-         * 
-         * @return std::vector<Microcell>& 
-         */
         std::vector<Microcell>& microcells();
 
         /**
