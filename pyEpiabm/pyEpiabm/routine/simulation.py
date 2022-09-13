@@ -11,6 +11,7 @@ from tqdm import tqdm
 
 from pyEpiabm.core import Parameters, Population
 from pyEpiabm.output import _CsvDictWriter
+from pyEpiabm.output import AbstractReporter
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import AbstractSweep
 from pyEpiabm.utility import log_exceptions
@@ -20,6 +21,11 @@ class Simulation:
     """Class to run a full simulation.
 
     """
+    def __init__(self):
+        """ Constructor
+        """
+        self.writers = []
+
     @log_exceptions()
     def configure(self,
                   population: Population,
@@ -137,6 +143,8 @@ class Simulation:
             for sweep in self.sweeps:
                 sweep(t)
             self.write_to_file(t)
+            for writer in self.writers:
+                writer.write(t, self.population)
             logging.debug(f'Iteration at time {t} days completed')
 
         logging.info(f"Final time {t} days reached")
@@ -202,6 +210,9 @@ class Simulation:
                         data[k] += sum(cell.compartment_counter.retrieve()[k])
                 data["time"] = time
                 self.writer.write(data)
+
+    def add_writer(self, writer: AbstractReporter):
+        self.writers.append(writer)
 
     @staticmethod
     def set_random_seed(seed):
