@@ -17,6 +17,8 @@ SIMULATIONS
 
 .. doxygenclass:: epiabm::BasicSimulation
    :members:
+   :undoc-members:
 
 .. doxygenclass:: epiabm::ThreadedSimulation
-    :members:
+   :members:
+   :undoc-members:

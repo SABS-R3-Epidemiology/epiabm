@@ -21,25 +21,33 @@ SWEEPS
 ******
 
 .. doxygenclass:: epiabm::SweepInterface
-   :members:
+    :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::HouseholdSweep
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::SpatialSweep
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::PlaceSweep
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::BasicHostProgressionSweep
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::HostProgressionSweep
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::NewInfectionSweep
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::RandomSeedSweep
     :members:
+    :undoc-members:

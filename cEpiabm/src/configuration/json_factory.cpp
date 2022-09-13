@@ -7,10 +7,20 @@
 namespace epiabm
 {
 
+    /**
+     * @brief Construct a new Json Factory:: Json Factory object
+     * 
+     */
     JsonFactory::JsonFactory() :
         ConfigurationFactoryInterface()
     {}
 
+    /**
+     * @brief Read Json into SimulationConfig
+     * 
+     * @param input input json object
+     * @return SimulationConfigPtr Simulation Config object created from json input 
+     */
     SimulationConfigPtr JsonFactory::loadConfig(const json::json& input)
     {
         SimulationConfigPtr config = std::make_shared<SimulationConfig>();
@@ -23,6 +33,12 @@ namespace epiabm
         return config;
     }
 
+    /**
+     * @brief Read Json file into SimulationConfig
+     * 
+     * @param configFile Input json filename
+     * @return SimulationConfigPtr Simulation config object created from json file input
+     */
     SimulationConfigPtr JsonFactory::loadConfig(const std::filesystem::path &configFile)
     {
         std::ifstream ifs(configFile);

@@ -24,31 +24,41 @@ UTILITIES
 *********
 
 .. doxygenclass:: epiabm::LogFile
-   :members:
+    :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::OutputFolderHandler
-   :members:
+    :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::PopulationFactory
-   :members:
+    :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::ToyPopulationFactory
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::HouseholdLinker
-   :members:
+    :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::thread_pool
-   :members:
+    :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::RandomManager
-   :members:
+    :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::RandomGenerator
-   :members:
+    :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::InverseCDF
-   :members:
+    :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::DistanceMetrics
-   :members:
+    :members:
+    :undoc-members:

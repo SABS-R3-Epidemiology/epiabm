@@ -18,13 +18,17 @@ REPORTERS
 *********
 
 .. doxygenclass:: epiabm::TimestepReporterInterface
-   :members:
+    :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::PopulationCompartmentReporter
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::CellCompartmentReporter
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::PerCellCompartmentReporter
     :members:
+    :undoc-members:

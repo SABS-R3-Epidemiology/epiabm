@@ -20,19 +20,25 @@ CONFIGURATION
 *************
 
 .. doxygenclass:: epiabm::SimulationConfig
-   :members:
+    :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::PopulationConfig
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::InfectionConfig
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::HostProgressionConfig
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::ConfigurationFactoryInterface
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::JsonFactory
     :members:
+    :undoc-members:

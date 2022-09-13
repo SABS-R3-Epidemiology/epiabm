@@ -22,15 +22,19 @@ DATACLASSES
 
 .. doxygenclass:: epiabm::Population
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::Cell
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::Microcell
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::Household
     :members:
+    :undoc-members:
 
 .. doxygenstruct:: epiabm::HouseholdParams
     :members:
@@ -38,9 +42,11 @@ DATACLASSES
 
 .. doxygenclass:: epiabm::Place
     :members:
+    :undoc-members:
 
 .. doxygenclass:: epiabm::Person
     :members:
+    :undoc-members:
 
 .. doxygenstruct:: epiabm::PersonParams
     :members:
