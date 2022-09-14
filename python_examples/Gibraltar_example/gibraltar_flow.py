@@ -59,7 +59,7 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 100,
 
 file_params = {"output_file": "output_gibraltar.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
-                                          "comparison_outputs"),
+                                          "simulation_outputs"),
                "spatial_output": True,
                "age_stratified": True}
 
@@ -88,7 +88,7 @@ del (sim)
 
 # Creation of a plot of results (plotter from spatial_simulation_flow)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
-filename = os.path.join(os.path.dirname(__file__), "comparison_outputs",
+filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
                         "output_gibraltar.csv")
 df_sum_age = pd.read_csv(filename)
 df_sum_age = df_sum_age.drop(["InfectionStatus.Exposed",
@@ -108,16 +108,16 @@ df_sum_age.plot(y=["InfectionStatus.Susceptible",
                    "InfectionStatus.InfectMild",
                    "InfectionStatus.Recovered"])
 plt.savefig(os.path.join(os.path.dirname(__file__),
-            "comparison_outputs/simulation_flow_SIR_plot.png"))
+            "simulation_outputs/simulation_flow_SIR_plot.png"))
 
 # Creation of a plot of results with age stratification
 # if file_params["age_stratified"]:
 p = Plotter(os.path.join(os.path.dirname(__file__),
-            "comparison_outputs/output_gibraltar.csv"),
+            "simulation_outputs/output_gibraltar.csv"),
             sum_weekly=True, start_date='01-01-2020')
 p.barchart(os.path.join(os.path.dirname(__file__),
-           "comparison_outputs/age_stratify.png"),
+           "simulation_outputs/age_stratify.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
-           "comparison_outputs/gibraltar_daily_cases.csv"),
+           "simulation_outputs/gibraltar_daily_cases.csv"),
            param_file=os.path.join(os.path.dirname(__file__),
            "gibraltar_parameters.json"))

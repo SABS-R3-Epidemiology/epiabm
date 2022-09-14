@@ -220,8 +220,6 @@ class TestSimulationRandomSeeds(unittest.TestCase):
         folder = os.path.join(os.getcwd(), self.mock_output_dir)
         mock_mkdir.assert_called_with(folder)
         self.assertEqual(mock_mkdir.call_count, 3)
-        print(seed_output)
-        print(comp_output)
         self.assertEqual(seed_output, comp_output)
         self.assertNotEqual(seed_output, diff_output)
 

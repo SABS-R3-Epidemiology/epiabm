@@ -229,7 +229,7 @@ class Plotter():
 if __name__ == '__main__':
     dirname = os.path.dirname(os.path.abspath(__file__))
     p = Plotter(os.path.join(os.path.dirname(__file__),
-                "simulation_outputs/output_withage.csv"),
+                "simulation_outputs/output_with_age.csv"),
                 start_date='01-01-2020', sum_weekly=False)
     p.barchart(os.path.join(os.path.dirname(__file__),
                "simulation_outputs/age_stratify.png"),
