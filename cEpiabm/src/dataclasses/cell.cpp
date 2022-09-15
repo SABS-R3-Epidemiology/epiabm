@@ -11,6 +11,11 @@
 namespace epiabm
 {
 
+    /**
+     * @brief Construct a new Cell:: Cell object
+     * 
+     * @param index Cell's index in population's cells vector
+     */
     Cell::Cell(size_t index) :
         m_index(index),
         m_location(),
@@ -29,6 +34,10 @@ namespace epiabm
         m_compartmentCounter()
     {}
 
+    /**
+     * @brief Destroy the Cell:: Cell object
+     * 
+     */
     Cell::~Cell()
     {
         //std::cout << "Deleted Cell" << std::endl;
