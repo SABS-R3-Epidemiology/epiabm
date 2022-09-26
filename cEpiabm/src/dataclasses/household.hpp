@@ -36,26 +36,11 @@ namespace epiabm
         std::set<size_t> m_members; // Indices of people in Microcell::m_people vector
 
     public:
-        /**
-         * @brief Construct a new Household object
-         * 
-         * @param mcellPos Index of the household within the host cell
-         */
         Household(size_t mcellPos);
         ~Household() = default;
 
-        /**
-         * @brief Getter for the household's index within the host Cell::m_households
-         * 
-         * @return size_t Household's index within Cell::m_households
-         */
         size_t microcellPos() const;
 
-        /**
-         * @brief Getter for household's parameters
-         * Used to both access and modify individual household's parameters
-         * @return HouseholdParams& 
-         */
         HouseholdParams& params();
 
         void forEachMember(Cell &cell, Microcell &microcell,

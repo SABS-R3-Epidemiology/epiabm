@@ -59,8 +59,6 @@ class TestSimulation(TestMockedLogs):
             self.assertIsInstance(test_sim.population, pe.Population)
             del test_sim.writer
         mo.assert_called_with(filename, 'w')
-        mock_mkdir.assert_called_once_with(os.path.join(os.getcwd(),
-                                           self.file_params["output_dir"]))
 
     @patch('logging.exception')
     @patch('os.path.join')
@@ -116,8 +114,6 @@ class TestSimulation(TestMockedLogs):
             patch_initial.assert_called_with(self.sim_params)
             patch_sweep.assert_called_with(time_sweep)
             patch_write.assert_called_with(time_write)
-        mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
-                                      self.file_params["output_dir"]))
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.sweep.PlaceSweep.__call__')

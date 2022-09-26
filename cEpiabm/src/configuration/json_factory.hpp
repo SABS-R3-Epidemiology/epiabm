@@ -13,7 +13,10 @@ namespace json = nlohmann;
 namespace epiabm
 {
 
-
+    /**
+     * @brief Configuration Factory implementation which reads a json file into a SimulationConfig object
+     * 
+     */
     class JsonFactory : public ConfigurationFactoryInterface
     {
         private:

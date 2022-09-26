@@ -209,8 +209,10 @@ class Plotter():
                                     .rename(columns={i+idx: self.age_list[i]})
             if write_Df_toFile is not None:
                 new_frame.to_csv(write_Df_toFile)
+
             new_frame.plot.bar(stacked=True, edgecolor='black', linewidth=.4,
                                colormap="plasma_r")
+
         else:
             new_frame = new_frame.groupby([time_col]) \
                 .sum().reset_index()
@@ -219,11 +221,13 @@ class Plotter():
             title = "Weekly cases by age"
         else:
             title = "Daily cases by age"
+        plt.gca().set_xticks(plt.gca().get_xticks()[::3])  # Avoids overlap
         if param_file:
             title = 'New ' + title
         plt.title(title)
         plt.gca().legend().set_title('Age Group')
-        plt.xlabel("Time")
+        plt.xlabel("Date (Month-Day)")
+        plt.tight_layout()
         plt.savefig(outfile)
 
 

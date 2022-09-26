@@ -100,8 +100,9 @@ class Simulation:
         folder = os.path.join(os.getcwd(),
                               file_params["output_dir"])
 
-        filename = os.path.join(folder, file_params["output_file"])
-        logging.info(f"Set output location to {filename}")
+        filename = file_params["output_file"]
+        logging.info(
+            f"Set output location to {os.path.join(folder, filename)}")
 
         output_titles = ["time"] + [s for s in InfectionStatus]
         if self.spatial_output:

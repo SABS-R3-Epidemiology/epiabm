@@ -4,13 +4,14 @@
 
 import csv
 import typing
+import os
 
 from pyEpiabm.output.abstract_reporter import AbstractReporter
 
 
 class _CsvWriter(AbstractReporter):
     def __init__(self, folder: str, filename: str, fieldnames: typing.List,
-                 clear_folder: bool = True):
+                 clear_folder: bool = False):
         """Initialises a file to store output in, and which categories
         to record.
 
@@ -28,7 +29,7 @@ class _CsvWriter(AbstractReporter):
         """
         super().__init__(folder, clear_folder)
 
-        self.f = open(filename, 'w')
+        self.f = open(os.path.join(folder, filename), 'w')
         self.writer = csv.writer(
             self.f, delimiter=',')
         self.writer.writerow(fieldnames)

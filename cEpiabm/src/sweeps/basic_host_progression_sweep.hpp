@@ -21,13 +21,8 @@ namespace epiabm
     private:
     public:
         BasicHostProgressionSweep(SimulationConfigPtr cfg);
-        ~BasicHostProgressionSweep() = default;
+        ~BasicHostProgressionSweep();
 
-        /**
-         * @brief Perform Host Progression Sweep
-         * 
-         * @param timestep 
-         */
         void operator()(const unsigned short timestep) override;
 
         bool cellCallback(

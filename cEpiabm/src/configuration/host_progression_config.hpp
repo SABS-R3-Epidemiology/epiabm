@@ -10,6 +10,10 @@
 namespace epiabm
 {
 
+    /**
+     * @brief Configuration subclass for configuring an infection's within host progression dynamics
+     * 
+     */
     class HostProgressionConfig
     {
     private:
