@@ -380,9 +380,9 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.assertIsNone(self.person1.infection_start_time)
 
     def test_compare_value_update_infectiousness(self):
-        """Tests that a person's infectiousness is correctly updated by comparing
-        the infectiousness of a person at the same simulation time in
-        simulations with two different time steps lengths.
+        """Tests that a person's infectiousness is correctly updated by
+        comparing the infectiousness of a person at the same simulation
+        time in simulations with two different time steps lengths.
         """
         with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
             # Parameters used in update infectiousness for both time steps

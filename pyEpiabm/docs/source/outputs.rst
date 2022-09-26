@@ -23,3 +23,7 @@ Overview:
 .. autoclass:: _CsvWriter
     :members:
     :special-members: __init__, __del__
+
+.. autoclass:: NewCasesWriter
+    :members: write
+    :special-members: __init__

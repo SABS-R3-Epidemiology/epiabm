@@ -15,8 +15,8 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
                             + '- %(levelname)s - %(message)s'))
 
 # Set config file for Parameters
-pe.Parameters.set_file("python_examples/spatial_example/"
-                       + "spatial_parameters.json")
+pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
+                       "spatial_parameters.json"))
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
@@ -36,7 +36,7 @@ pop_params = {
 # population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
 
 # Alternatively, can generate population from input file
-file_loc = "python_examples/spatial_example/input.csv"
+file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 population = pe.routine.FilePopulationFactory.make_pop(file_loc,
                                                        random_seed=42)
 
@@ -53,7 +53,8 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
 file_params = {"output_file": "output.csv",
-               "output_dir": "python_examples/spatial_example/spatial_outputs",
+               "output_dir": os.path.join(os.path.dirname(__file__),
+                                          "spatial_outputs"),
                "spatial_output": True}
 
 # Create a simulation object, configure it with the parameters given, then
@@ -94,6 +95,6 @@ plt.legend(labels=(range(len(df.columns))), title="Cell")
 plt.title("Infection curves for multiple cells")
 plt.ylabel("Infected Population")
 plt.savefig(
-    "python_examples/spatial_example/spatial_outputs"
-    + "/spatial_flow_Icurve_plot.png"
+    os.path.join(os.path.dirname(__file__),
+                 "spatial_outputs", "spatial_flow_Icurve_plot.png")
 )

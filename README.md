@@ -41,7 +41,9 @@ pip install -e .[docs]
 
 ## Running a simulation
 
-A complete workflow for running a simulation is provided in `python_examples/simulation_flow.py`. There are a number of steps to this process:
+A number of example simulations are included the in the `python_examples` directory. The simplest complete workflow for running a simulation is provided in `python_examples/basic_example/simulation_flow.py`, but all others follow a similar format. Other example simulations include an `age_stratified_example`, and `spatial_example` which demonstrate these aspects of the module. `gilbraltar_example` combines age and spatial stratification using census data from Gibraltar, and can be used to benchmark against CovidSIM. 
+
+There are a number of steps to any simulation:
 
 ### Set Random Seed _(Optional)_
 
@@ -91,7 +93,7 @@ Configure a simulation with a number of parameters. These are split into two cat
 
 Two lists of sweeps must also be passed to this function - the first will be executed once at the start of the simulation (i.e. to determine the initial infections in the population), while the second list will be ran at every timestep (i.e. to propagate the infection through the population).
 
-## Documentation
+## PyEpiabm Documentation
 
 Documentation on the python backend (pyEpiabm) is stored on [Read The Docs](https://epiabm.readthedocs.io/en/latest/).  
 The Wiki for this repo also contains more detail on the Ferguson model itself, and where our implementation might differ from that.
@@ -119,6 +121,10 @@ Note that cmake must be installed on your system. The following command can be u
 ```console
 sudo apt-get install cmake cmake-data
 ```
+
+## CEpiabm Documentation
+
+Documentation on the C++ backend (cEpiabm) is stored on [Read The Docs](https://cepiabm.readthedocs.io/en/latest/).
 
 # References
 

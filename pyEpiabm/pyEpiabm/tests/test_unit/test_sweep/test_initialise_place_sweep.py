@@ -56,7 +56,7 @@ class TestInitialisePlaceSweep(TestPyEpiabm):
         test_sweep = pe.sweep.InitialisePlaceSweep()
         test_sweep.bind_population(test_pop)
         test_sweep()
-        mock_update.assert_called_with(place, group_index=-1,
+        mock_update.assert_called_with(place, group_index=0,
                                        mean_capacity=14.28,
                                        person_list=[person])
         mock_weights.assert_called_with(place, self.params)

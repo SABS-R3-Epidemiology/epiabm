@@ -21,7 +21,13 @@ namespace epiabm
     public:
         Population();
         ~Population();
-
+        
+        /**
+         * @brief Callback each Cell in Population.
+         * callback function is applied to each cell.
+         * stops if callback function returns false.
+         * @param callback 
+         */
         void forEachCell(std::function<bool(Cell*)> callback);
         void forEachPlace(std::function<bool(Place*)> callback);
 
@@ -38,7 +44,7 @@ namespace epiabm
     };
 
     typedef std::shared_ptr<Population> PopulationPtr;
-    
+
 } // namespace epiabm
 
 #endif // EPIABM_DATACLASSES_POPULATION_HPP

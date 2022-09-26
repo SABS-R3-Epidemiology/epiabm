@@ -22,7 +22,7 @@ namespace epiabm
         std::vector<size_t> m_people;
         std::vector<HouseholdPtr> m_households;
 
-        size_t m_cellPos;
+        size_t m_cellPos; // index of this microcell in parent cell's m_microcells
 
         CompartmentCounter m_compartmentCounter;
 

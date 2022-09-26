@@ -60,8 +60,9 @@ class SpatialSweep(AbstractSweep):
             # infector cell.
             poss_susc_cells = self._population.cells.copy()
             poss_susc_cells.remove(cell)
-            possible_infectee_num = sum([cell2.compartment_counter.retrieve()
-                                        [InfectionStatus.Susceptible]
+            possible_infectee_num = sum([sum(cell2.compartment_counter
+                                        .retrieve()[InfectionStatus
+                                                    .Susceptible])
                                         for cell2 in poss_susc_cells])
             if possible_infectee_num == 0:
                 # Break the loop if no people outside the cell are susceptible.
@@ -145,7 +146,7 @@ class SpatialSweep(AbstractSweep):
         try:
             # Will catch a list of zeros
             if sum(distance_weights) == 0:
-                raise(ValueError)
+                raise ValueError
             cell_list = random.choices(possible_infectee_cells,
                                        weights=distance_weights,
                                        k=number_to_infect)
@@ -195,11 +196,12 @@ class SpatialSweep(AbstractSweep):
             # Weighting for cell choice in Covidsim uses cum_trans and
             # invCDF arrays, which are equivalent to weighting by total
             # susceptibles*max_transmission. May want to add transmission
-            # parameter later.
-            weights = [cell2.compartment_counter.retrieve()
-                       [InfectionStatus.Susceptible] * SpatialKernel.weighting(
-                           DistanceFunctions.dist(cell2.location,
-                                                  current_cell.location))
+            # parameter later
+            weights = [sum(cell2.compartment_counter.retrieve()
+                       [InfectionStatus.Susceptible]) * SpatialKernel
+                       .weighting(DistanceFunctions.dist(cell2.location,
+                                                         current_cell
+                                                         .location))
                        for cell2 in possible_infectee_cells]
             infectee_cell = random.choices(possible_infectee_cells,
                                            weights=weights, k=1)[0]
