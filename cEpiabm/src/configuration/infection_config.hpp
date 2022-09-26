@@ -8,6 +8,10 @@
 namespace epiabm
 {
 
+    /**
+     * @brief Configuration subclass for infection configuration options
+     * 
+     */
     class InfectionConfig
     {
         private:
@@ -28,6 +32,10 @@ namespace epiabm
 
             std::string spatial_distance_metric;
 
+            /**
+             * @brief Construct a new Infection Config object
+             * 
+             */
             InfectionConfig()
             {
                 hostProgressionConfig = std::make_shared<HostProgressionConfig>();

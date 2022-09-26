@@ -11,6 +11,11 @@
 namespace epiabm
 {
 
+    /**
+     * @brief Highest level master configuration class
+     * 
+     * Class to contain configuration information on entire simulation.
+     */
     class SimulationConfig
     {
     private:
@@ -21,6 +26,10 @@ namespace epiabm
         unsigned short timestepsPerDay;
         RandomManagerPtr randomManager;
 
+        /**
+         * @brief Construct a new Simulation Config object
+         * 
+         */
         SimulationConfig()
         {
             infectionConfig = std::make_shared<InfectionConfig>();

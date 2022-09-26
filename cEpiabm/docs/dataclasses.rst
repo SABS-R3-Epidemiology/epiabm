@@ -1,26 +1,24 @@
-****
-Core
-****
+***********
+DATACLASSES
+***********
 
 .. currentmodule:: cEpiabm
 
-Core provides the basic class framework to build a population
+Dataclasses provides the basic class framework to build a population
 
 Overview:
 
-- :class:`PopulationFactory`
 - :class:`Population`
 - :class:`Cell`
 - :class:`Microcell`
+- :class:`Household`
+- :class:`Place`
 - :class:`Person`
+- :enum:`InfectionStatus`
 
 
-Core
-****
-
-.. doxygenclass:: epiabm::PopulationFactory
-   :members:
-   :undoc-members:
+DATACLASSES
+***********
 
 .. doxygenclass:: epiabm::Population
     :members:
@@ -34,14 +32,24 @@ Core
     :members:
     :undoc-members:
 
-.. doxygenclass:: epiabm::Person
+.. doxygenclass:: epiabm::Household
     :members:
     :undoc-members:
 
-.. doxygenclass:: epiabm::Household
+.. doxygenstruct:: epiabm::HouseholdParams
     :members:
     :undoc-members:
 
 .. doxygenclass:: epiabm::Place
     :members:
     :undoc-members:
+
+.. doxygenclass:: epiabm::Person
+    :members:
+    :undoc-members:
+
+.. doxygenstruct:: epiabm::PersonParams
+    :members:
+    :undoc-members:
+
+.. doxygenenum:: epiabm::InfectionStatus

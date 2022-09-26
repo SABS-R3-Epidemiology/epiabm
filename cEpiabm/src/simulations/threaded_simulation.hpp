@@ -14,7 +14,11 @@
 
 namespace epiabm
 {
-
+    /**
+     * @brief Master Simulation Controlling Class with Multithreading
+     * Links population with sweeps, and runs the sweeps to perform simulation
+     * Reporters can be attached to extract information about the simulation
+     */
     class ThreadedSimulation
     {
     private:
@@ -26,7 +30,7 @@ namespace epiabm
 
     public:
         ThreadedSimulation(PopulationPtr population, std::optional<size_t> nThreads);
-        ~ThreadedSimulation() = default;
+        ~ThreadedSimulation();
 
         void addSweep(SweepInterfacePtr sweep, size_t group);
 

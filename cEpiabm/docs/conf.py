@@ -46,6 +46,7 @@ if read_the_docs_build:
     configure_doxyfile(input_dir, output_dir)
     subprocess.call('doxygen', shell=True)
     breathe_projects['cEpiabm'] = output_dir + '/xml'
+    html_extra_path = [output_dir + '/xml']
 
 ##############################################################################
 
