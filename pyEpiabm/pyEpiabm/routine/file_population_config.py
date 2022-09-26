@@ -154,6 +154,7 @@ class FilePopulationFactory:
     @staticmethod
     def add_households(microcell: Microcell, household_number: int):
         """Groups people in a microcell into households together.
+
         Parameters
         ----------
         microcell : Microcell
