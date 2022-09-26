@@ -24,7 +24,7 @@ class TestHouseholdSweep(TestPyEpiabm):
         cls.pop.cells[0].microcells[0].add_people(1)
         cls.person = cls.pop.cells[0].microcells[0].persons[0]
         cls.person.infection_status = pe.property.InfectionStatus.InfectMild
-        cls.house = pe.Household(cls.cell, cls.microcell, [1.0, 1.0])
+        cls.house = pe.Household(cls.microcell, [1.0, 1.0])
         cls.house.persons = [cls.person]
         cls.person.household = cls.house
         cls.time = 1

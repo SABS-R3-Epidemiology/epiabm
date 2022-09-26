@@ -20,9 +20,7 @@ class TestHousehold(TestPyEpiabm):
         cls.person = cls.pop.cells[0].microcells[0].persons[0]
 
     def test_construct(self):
-        pe.Household(self.cell, self.microcell, (1, 1))
-        self.assertRaises(KeyError, pe.Household,
-                          self.cell_other, self.microcell, (1, 1))
+        pe.Household(self.microcell, (1, 1))
 
     def test___repr__(self):
         subject = pe.Household(self.microcell, (1, 1))
