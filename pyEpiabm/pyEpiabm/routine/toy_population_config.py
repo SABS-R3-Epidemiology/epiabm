@@ -110,7 +110,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
     @staticmethod
     def add_households(population: Population, household_number: int):
         """Groups people in a microcell into households together.
-    
+
         Parameters
         ----------
         population : Population
@@ -118,6 +118,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             grouping
         household_number : int
             Number of households to form
+
         """
         # Initialises another multinomial distribution
         q = [1 / household_number] * household_number
@@ -145,6 +146,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             Population where :class:`Place` s will be added
         place_number : float
             Average number of places to generate per :class:`Microcell`
+
         """
         # Unable to replicate CovidSim schools as this uses data not
         # available for all countries. Random dist used instead.
@@ -169,7 +171,6 @@ class ToyPopulationFactory(AbstractPopulationFactory):
             * 'grid': Distributes points according to a square grid within a \
                unit square. There will be cells missing in the last row \
                if the input is not a square number
-        Parameters
 
         Parameters
         ----------
