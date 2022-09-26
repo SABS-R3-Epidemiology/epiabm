@@ -138,6 +138,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
     @staticmethod
     def add_places(population: Population, place_number: float):
         """Generates places within a Population.
+
         Parameters
         ----------
         population : Population
@@ -169,11 +170,14 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                unit square. There will be cells missing in the last row \
                if the input is not a square number
         Parameters
+
+        Parameters
         ----------
         population : Population
             Population containing all cells to be assigned locations
         method : str
             Method of determining cell locations
+
         """
         try:
             if method == "random":
