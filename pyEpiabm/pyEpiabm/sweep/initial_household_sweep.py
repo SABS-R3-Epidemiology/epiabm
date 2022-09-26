@@ -18,8 +18,7 @@ class InitialHouseholdSweep(AbstractSweep):
     def __init__(self):
         """Call in variables from the parameters file.
         """
-        # worth putting all household params into one and changing name to just
-        # household_params?
+
         self.use_ages = Parameters.instance().use_ages
         self.household_size_distribution \
             = Parameters.instance().household_size_distribution
