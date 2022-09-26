@@ -12,7 +12,7 @@ class Household:
     have a combined susceptibility and infectiousness
     different to that of the individuals.
     """
-    def __init__(self, cell, microcell, loc: typing.Tuple[float, float],
+    def __init__(self, microcell, loc: typing.Tuple[float, float],
                  susceptibility=0, infectiousness=0):
         """Constructor Method.
 
@@ -31,11 +31,8 @@ class Household:
         self.susceptibility = susceptibility
         self.infectiousness = infectiousness
 
-        self.cell = cell
+        self.cell = microcell.cell
         self.microcell = microcell
-        # Assert the microcell and cell prescribes are related.
-        if not (self.microcell.cell == self.cell):
-            raise KeyError("Microcell is not contained in cell")
 
         if not (len(loc) == 2 and isinstance(loc[0], (float, int)) and
                 isinstance(loc[1], (float, int))):

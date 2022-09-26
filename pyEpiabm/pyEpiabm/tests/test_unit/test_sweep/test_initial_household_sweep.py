@@ -41,7 +41,6 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         dependant on a household size distribution.
         """
 
-        # initialise sweep
         test_sweep = pe.sweep.InitialHouseholdSweep()
 
         # set params so that the test population of 6 people will be
@@ -49,13 +48,11 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         test_sweep.household_size_distribution = np.zeros(10)
         test_sweep.household_size_distribution[1] = 1.0
 
-        # check that three households have been created
         test_sweep.household_allocation(self.test_population)
         number_of_households = len(self.test_population.cells[0]
                                    .microcells[0].households)
         self.assertEqual(number_of_households, 3)
 
-        # check that there are two people in each household
         for household in \
                 self.test_population.cells[0].microcells[0].households:
             self.assertEqual(len(household.persons), 2)
@@ -83,8 +80,6 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         """Tests method that assigns age to someone in a one person
         hosuehold for the case that the person is elderly.self.
         """
-        # list of mocked values that will trigger the specific case of
-        # the test below
         test_sweep = pe.sweep.InitialHouseholdSweep()
         # adjust matrix to make sure this case is hit
         test_sweep.age_params["one_pers_house_prob_old"] = 0.0
@@ -119,8 +114,6 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         """
         test_sweep = pe.sweep.InitialHouseholdSweep()
 
-        # check that error is raised if provided list of people
-        # is larger than 2
         test_list = [self.person1, self.person2, self.person3]
         with self.assertRaises(AssertionError):
             test_sweep.two_person_household_ages(test_list)

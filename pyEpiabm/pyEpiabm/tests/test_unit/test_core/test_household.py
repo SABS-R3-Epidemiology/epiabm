@@ -25,18 +25,18 @@ class TestHousehold(TestPyEpiabm):
                           self.cell_other, self.microcell, (1, 1))
 
     def test___repr__(self):
-        subject = pe.Household(self.cell, self.microcell, (1, 1))
+        subject = pe.Household(self.microcell, (1, 1))
         self.assertIsInstance(repr(subject), str)
         test_string = "Household at (1.00, 1.00) with 0 people."
         self.assertEqual(repr(subject), test_string)
 
     def test_location_type(self):
         self.assertRaises(ValueError, pe.Household,
-                          self.cell, self.microcell, (1, 1, 1))
+                          self.microcell, (1, 1, 1))
         self.assertRaises(ValueError, pe.Household,
-                          self.cell, self.microcell, (1, (8, 6)))
+                          self.microcell, (1, (8, 6)))
         self.assertRaises(ValueError, pe.Household,
-                          self.cell, self.microcell, ('1', 1))
+                          self.microcell, ('1', 1))
 
 
 if __name__ == '__main__':
