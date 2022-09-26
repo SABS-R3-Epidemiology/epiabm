@@ -64,6 +64,7 @@ namespace epiabm
          */
         size_t index() const;
 
+    
         void forEachMicrocell(std::function<bool(Microcell*)> callback);
         void forEachPerson(std::function<bool(Person*)> callback);
         void forEachInfectious(std::function<bool(Person*)> callback);

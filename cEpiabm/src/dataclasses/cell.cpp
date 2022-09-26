@@ -11,6 +11,11 @@
 namespace epiabm
 {
 
+    /**
+     * @brief Construct a new Cell:: Cell object
+     * 
+     * @param index Cell's index in population's cells vector
+     */
     Cell::Cell(size_t index) :
         m_index(index),
         m_location(),
@@ -29,6 +34,10 @@ namespace epiabm
         m_compartmentCounter()
     {}
 
+    /**
+     * @brief Destroy the Cell:: Cell object
+     * 
+     */
     Cell::~Cell()
     {
         //std::cout << "Deleted Cell" << std::endl;
@@ -36,6 +45,13 @@ namespace epiabm
 
     size_t Cell::index() const { return m_index; }
 
+    /**
+     * @brief Apply callback on each microcell in cell
+     * 
+     * Callback function can return false to terminate loop early.
+     * 
+     * @param callback Callback function applied to each microcell
+     */
     void Cell::forEachMicrocell(std::function<bool(Microcell*)> callback)
     {
         for (size_t i = 0; i < m_microcells.size(); i++)
@@ -44,6 +60,13 @@ namespace epiabm
         }
     }
 
+    /**
+     * @brief Apply callback on each person in cell
+     * 
+     * Callback function can return false to terminate loop early
+     * 
+     * @param callback Callback function to apply to each person
+     */
     void Cell::forEachPerson(std::function<bool(Person*)> callback)
     {
         for (size_t i = 0; i < m_people.size(); i++)
@@ -52,6 +75,13 @@ namespace epiabm
         }
     }
 
+    /**
+     * @brief Apply callback on each infectious person in the cell
+     * 
+     * Callback function can return false to terminate loop early
+     * 
+     * @param callback Callback function to apply to each infectious person
+     */
     void Cell::forEachInfectious(std::function<bool(Person*)> callback)
     {
         /*for (size_t i = 0; i < m_numInfectious; i++)
@@ -63,6 +93,13 @@ namespace epiabm
             if (!callback(&m_people[*it])) return;
     }
 
+    /**
+     * @brief Apply callback on each non-infectious person in the cell
+     * 
+     * Callback function can return false to terminate loop early
+     * 
+     * @param callback Callback function to apply to each non-infectious person
+     */
     void Cell::forEachNonInfectious(std::function<bool(Person*)> callback)
     {
         /*for (size_t i = m_numInfectious; i < m_people.size(); i++)
@@ -74,6 +111,13 @@ namespace epiabm
             if (!callback(&m_people[*it])) return;
     }
 
+    /**
+     * @brief Apply callback on each exposed person in the cell
+     * 
+     * Callback function can return false to terminate loop early
+     * 
+     * @param callback Callback function to apply to each exposed person
+     */
     void Cell::forEachExposed(std::function<bool(Person*)> callback)
     {
         std::set<size_t> set = m_exposedPeople;
@@ -81,14 +125,21 @@ namespace epiabm
             if (!callback(&m_people[*it])) return;
     }
 
+    /**
+     * @brief Retrieve ith person in cell
+     * 
+     * @param i Index of person to retrieve
+     * @return Person& Reference to ith person
+     */
     Person& Cell::getPerson(size_t i) { return m_people[i]; }
+    /**
+     * @brief Retrieve ith microcell in cell
+     * 
+     * @param i Index of microcell to retrieve
+     * @return Microcell& Reference to ith microcell
+     */
     Microcell& Cell::getMicrocell(size_t i) { return m_microcells[i]; }
 
-    /**
-     * @brief Apply Callback to each person in Queue
-     * Also Clears the queue
-     * @param callback
-     */
     void Cell::processQueue(std::function<void(size_t)> callback)
     {
         std::lock_guard<std::mutex> l(m_queueMutex);
@@ -101,11 +152,15 @@ namespace epiabm
     }
 
     /**
-     * @brief Add person to queue
-     * Same person cannot be queued twice.
-     * @param personIndex
-     * @return true Person successfully queued.
-     * @return false Person reject because already in queue.
+     * @brief Add person to the cell's queue
+     * Used for applying new infections at the end of all infection transmitting sweeps
+     * 
+     * Same person cannot be added twice
+     * Returns true if person was successfully added
+     * 
+     * @param personIndex Index of person to enqueue
+     * @return true Returns true if successfully enqueued
+     * @return false Returns false if unable to enqueue person (person already queued)
      */
     bool Cell::enqueuePerson(size_t personIndex)
     {
@@ -117,7 +172,17 @@ namespace epiabm
         return true;
     }
 
+    /**
+     * @brief Reference to cell's people vector
+     * 
+     * @return std::vector<Person>& Reference to people vector
+     */
     std::vector<Person>& Cell::people() { return m_people; }
+    /**
+     * @brief Reference to cell's microcells vector
+     * 
+     * @return std::vector<Microcell>& Reference to microcells vector
+     */
     std::vector<Microcell>& Cell::microcells() { return m_microcells; }
 
     /**
@@ -205,6 +270,13 @@ namespace epiabm
         return true;
     }
 
+    /**
+     * @brief Mark person as exposed
+     * 
+     * @param newInfected Index of newly infected person
+     * @return true Returns true if successfully changed person's state
+     * @return false Returns false if person already marked as exposed
+     */
     bool Cell::markExposed(size_t newInfected)
     {
         std::lock_guard<std::mutex> l(m_markMutex);
@@ -215,6 +287,13 @@ namespace epiabm
         return true;
     }
 
+    /**
+     * @brief Mark person as dead
+     * 
+     * @param person Index of dead person
+     * @return true Returns true if successfully changed person's state
+     * @return false Returns false if person already marked as dead
+     */
     bool Cell::markDead(size_t person)
     {
         std::lock_guard<std::mutex> l(m_markMutex);
@@ -226,6 +305,13 @@ namespace epiabm
         return true;
     }
 
+    /**
+     * @brief Mark person as recovered
+     * 
+     * @param person Index of recovered person
+     * @return true Returns true if successfully changed person's state
+     * @return false Returns false if person already marked as recovered
+     */
     bool Cell::markRecovered(size_t person)
     {
         std::lock_guard<std::mutex> l(m_markMutex);
@@ -237,6 +323,11 @@ namespace epiabm
         return true;
     }
 
+    /**
+     * @brief Get number of susceptible people
+     * 
+     * @return size_t Number of susceptible people
+     */
     size_t Cell::numSusceptible() const
     {
         return m_susceptiblePeople.size();
@@ -255,21 +346,47 @@ namespace epiabm
         return m_infectiousPeople.size();
     }
 
+    /**
+     * @brief Get number of people marked as exposed
+     * 
+     * @return size_t Number of exposed people
+     */
     size_t Cell::numExposed() const
     {
         return m_exposedPeople.size();
     }
     
+    /**
+     * @brief Get number of people marked as recovered
+     * 
+     * @return size_t Number of recovered people
+     */
     size_t Cell::numRecovered() const
     {
         return m_recoveredPeople.size();
     }
 
+    /**
+     * @brief Get number of people marked as dead
+     * 
+     * @return size_t Number of dead people
+     */
     size_t Cell::numDead() const
     {
         return m_deadPeople.size();
     }
 
+    /**
+     * @brief Randomly sample n infectious people in the cell
+     * 
+     * If n is larger than number of infectious people, all infectious people are returned
+     * 
+     * @param n Number of people to sample
+     * @param callback Callback applied to each chosen person
+     * @param rg Random number generator to use
+     * @return true Success
+     * @return false Returns false if there are no infectious people to sample
+     */
     bool Cell::sampleInfectious(size_t n, std::function<void(Person*)> callback, std::mt19937_64& rg)
     {
         if (m_infectiousPeople.size() < 1){
@@ -283,6 +400,17 @@ namespace epiabm
         return true;
     }
 
+    /**
+     * @brief Randomly sample n susceptible people in the cell
+     * 
+     * If n is larger than number of susceptible people, all susceptible people are returned
+     * 
+     * @param n Number of people to sample
+     * @param callback Callback to apply to each sampled person
+     * @param rg Random generator to use
+     * @return true Success
+     * @return false Returns false if there are no susceptible people to sample
+     */
     bool Cell::sampleSusceptible(size_t n, std::function<void(Person*)> callback, std::mt19937_64& rg)
     {
         if (m_susceptiblePeople.size() < 1){
@@ -296,6 +424,12 @@ namespace epiabm
         return true;
     }
 
+    /**
+     * @brief Initialize the cell
+     * 
+     * Automatically called by Population::initialize() as part of the population setup procedure
+     * 
+     */
     void Cell::initialize()
     {
         initializeInfectiousGrouping();
@@ -306,21 +440,50 @@ namespace epiabm
         }
     }
 
+    /**
+     * @brief Retrieve number of people with specific InfectionStatus
+     * 
+     * @param status Compartment to retrieve
+     * @return unsigned int Number of people in the compartment
+     */
     unsigned int Cell::compartmentCount(InfectionStatus status)
     {
         return m_compartmentCounter(status);
     }
 
+    /**
+     * @brief Set the cell's location
+     * 
+     * Used for spatial sweep distance modifiers
+     * 
+     * @param loc Cell's location
+     */
     void Cell::setLocation(std::pair<double, double> loc)
     {
         m_location = loc;
     }
-        
+    
+    /**
+     * @brief Get the cell's location
+     * 
+     * @return std::pair<double, double> Cell's location 
+     */
     std::pair<double, double> Cell::location() const
     {
         return m_location;
     }
 
+    /**
+     * @brief Change a person's status
+     * 
+     * Automatically called by Person::updateStatus.
+     * Should not be called manually
+     * Part of person update status procedure
+     * 
+     * @param person Person to alter
+     * @param newStatus Person's new status
+     * @param timestep Time of status change
+     */
     void Cell::personStatusChange(Person* person, InfectionStatus newStatus, unsigned short timestep)
     {
         m_compartmentCounter.notify(person->status(), newStatus);

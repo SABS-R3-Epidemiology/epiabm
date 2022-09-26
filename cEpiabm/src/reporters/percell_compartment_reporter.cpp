@@ -6,7 +6,11 @@
 namespace epiabm
 {
 
-
+    /**
+     * @brief Construct a new Per Cell Compartment Reporter object
+     * 
+     * @param folder Folder to output to
+     */
     PerCellCompartmentReporter::PerCellCompartmentReporter(const std::string folder) :
         TimestepReporterInterface(folder, true),
         m_compartments(
@@ -25,6 +29,17 @@ namespace epiabm
         m_cellFileMap()
     {}
 
+    /**
+     * @brief Destroy the Per Cell Compartment Reporter:: Per Cell Compartment Reporter object
+     * 
+     */
+    PerCellCompartmentReporter::~PerCellCompartmentReporter() = default;
+
+    /**
+     * @brief Setup method which is called immediately before iterations begin
+     * 
+     * @param pop Initialized population before the iterations start
+     */
     void PerCellCompartmentReporter::setup(PopulationPtr population)
     {
         teardown(); // Close all open files if exist, and clear cell file map
@@ -43,6 +58,12 @@ namespace epiabm
             });
     }
 
+    /**
+     * @brief Report the population state at a timestep
+     * 
+     * @param pop Population to report
+     * @param timestep Timestep of report
+     */
     void PerCellCompartmentReporter::report(
         const PopulationPtr population,
         const unsigned short timestep)
@@ -70,6 +91,10 @@ namespace epiabm
         // LCOV_EXCL_STOP
     }
 
+    /**
+     * @brief Clean up method
+     * Called after the simulation has completed to finalise the output files
+     */
     void PerCellCompartmentReporter::teardown()
     {
         for (const auto& p : m_cellFileMap)
@@ -79,6 +104,11 @@ namespace epiabm
         m_cellFileMap.clear();
     }
 
+    /**
+     * @brief Getter for set which contains the compartment types to return
+     * This set can be configured to specify which compartments to output
+     * @return std::set<InfectionStatus>& 
+     */
     std::set<InfectionStatus>& PerCellCompartmentReporter::compartments()
     {
         return m_compartments;
