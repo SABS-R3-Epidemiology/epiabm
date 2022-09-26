@@ -169,7 +169,8 @@ class FilePopulationFactory:
         person_index = 0
         for j in range(household_number):
             people_in_household = household_split[j]
-            new_household = Household(microcell.cell, microcell, loc=microcell.location)
+            new_household = Household(microcell.cell, microcell,
+                                      loc=microcell.location)
             for _ in range(people_in_household):
                 person = microcell.persons[person_index]
                 new_household.add_person(person)

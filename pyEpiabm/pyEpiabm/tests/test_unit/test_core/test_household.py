@@ -11,8 +11,9 @@ class TestHousehold(TestPyEpiabm):
     def setUpClass(cls) -> None:
         super(TestHousehold, cls).setUpClass()  # Sets up parameters
         cls.pop = pe.Population()
-        cls.pop.add_cells(1)
+        cls.pop.add_cells(2)
         cls.cell = cls.pop.cells[0]
+        cls.cell_other = cls.pop.cells[1]
         cls.pop.cells[0].add_microcells(1)
         cls.microcell = cls.cell.microcells[0]
         cls.pop.cells[0].microcells[0].add_people(1)
@@ -20,6 +21,8 @@ class TestHousehold(TestPyEpiabm):
 
     def test_construct(self):
         pe.Household(self.cell, self.microcell, (1, 1))
+        self.assertRaises(KeyError, pe.Household,
+                          self.cell_other, self.microcell, (1, 1))
 
     def test___repr__(self):
         subject = pe.Household(self.cell, self.microcell, (1, 1))

@@ -374,6 +374,23 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         test_sweep.age_proportions = Parameters.instance().age_proportions
         test_sweep.age_group_width = 5
 
+    def test_household_allocation_in_call(self):
+        """Tests that the household allocation method
+        is called correctly within the call method.
+        """
+
+        # create population with no one in households and
+        # check that people are then put in households
+        test_sweep = pe.sweep.InitialHouseholdSweep()
+        test_sweep.bind_population(self.test_population)
+        microcell = self.test_population.cells[0].microcells[0]
+        microcell.households.clear()
+        test_sweep()
+        for cell in self.test_population.cells:
+            for microcell in cell.microcells:
+                for household in microcell.households:
+                    self.assertNotEqual(0, len(household.persons))
+
     def test_call(self):
         """Tests the main function of the assign household ages
         sweep. People are put into households of different sizes, each
