@@ -110,7 +110,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                 person_index = 0
                 for j in range(household_number):
                     people_in_household = household_split[j]
-                    new_household = Household()
+                    new_household = Household(cell, microcell, loc=(1.0, 1.0))
                     for _ in range(people_in_household):
                         person = microcell.persons[person_index]
                         new_household.add_person(person)

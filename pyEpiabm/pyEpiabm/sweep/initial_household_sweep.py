@@ -54,7 +54,7 @@ class InitialHouseholdSweep(AbstractSweep):
                         if ((s <= self.household_size_distribution[m - 1]) or
                                 (k + m >= len(microcell.persons)) or
                                 (m >= self.max_household_size)):
-                            break
+                            break # pragma: no cover
                         s -= self.household_size_distribution[m - 1]
                         m += 1
 
