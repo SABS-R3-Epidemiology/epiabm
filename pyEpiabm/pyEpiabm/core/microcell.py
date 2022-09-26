@@ -127,7 +127,7 @@ class Microcell:
         Parameters
         ----------
         people : list
-            List of default :class:`People` to add to household
+            List of :class:`People` to add to household
 
         """
         household = Household(self, loc=self.location)

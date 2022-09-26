@@ -14,53 +14,27 @@ namespace epiabm
      */
     class PerCellCompartmentReporter : public TimestepReporterInterface
     {
-        private:
-            std::set<InfectionStatus> m_compartments;
-            std::map<size_t, ofstreamPtr> m_cellFileMap;
+    private:
+        std::set<InfectionStatus> m_compartments;
+        std::map<size_t, ofstreamPtr> m_cellFileMap;
 
-        public:
-            /**
-             * @brief Construct a new Per Cell Compartment Reporter object
-             * 
-             * @param folder Folder to output to
-             */
-            PerCellCompartmentReporter(const std::string folder);
-            ~PerCellCompartmentReporter() = default;
+    public:
+        PerCellCompartmentReporter(const std::string folder);
+        ~PerCellCompartmentReporter();
 
-            /**
-             * @brief Setup method which is called immediately before iterations begin
-             * 
-             * @param pop Initialized population before the iterations start
-             */
-            void setup(const PopulationPtr pop) override;
+        void setup(const PopulationPtr pop) override;
 
-            /**
-             * @brief Report the population state at a timestep
-             * 
-             * @param pop Population to report
-             * @param timestep Timestep of report
-             */
-            void report(const PopulationPtr pop, const unsigned short timestep) override;
+        void report(const PopulationPtr pop, const unsigned short timestep) override;
 
-            /**
-             * @brief Clean up method
-             * Called after the simulation has completed to finalise the output files
-             */
-            void teardown() override;
+        void teardown() override;
 
-            /**
-             * @brief Getter for set which contains the compartment types to return
-             * This set can be configured to specify which compartments to output
-             * @return std::set<InfectionStatus>& 
-             */
-            std::set<InfectionStatus>& compartments();
+        std::set<InfectionStatus> &compartments();
 
-        private:
+    private:
     };
 
     typedef std::shared_ptr<PerCellCompartmentReporter> PerCellCompartmentReporterPtr;
 
 } // namespace epiabm
-
 
 #endif // EPIABM_REPORTERS_PERCELL_COMPARTMENT_REPORTER

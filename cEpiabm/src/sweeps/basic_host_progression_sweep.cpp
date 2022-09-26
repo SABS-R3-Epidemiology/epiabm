@@ -5,10 +5,26 @@
 namespace epiabm
 {
 
+    /**
+     * @brief Construct a new Basic Host Progression Sweep:: Basic Host Progression Sweep object
+     * 
+     * @param cfg Simulation configuration
+     */
     BasicHostProgressionSweep::BasicHostProgressionSweep(SimulationConfigPtr cfg) :
         SweepInterface(cfg)
     {}
 
+    /**
+     * @brief Destroy the Basic Host Progression Sweep:: Basic Host Progression Sweep object
+     * 
+     */
+    BasicHostProgressionSweep::~BasicHostProgressionSweep() = default;
+
+    /**
+     * @brief Perform Host Progression Sweep
+     * 
+     * @param timestep 
+     */
     void BasicHostProgressionSweep::operator()(const unsigned short timestep)
     {
         LOG << LOG_LEVEL_DEBUG << "Beginning Basic Host Progression Sweep " << timestep;

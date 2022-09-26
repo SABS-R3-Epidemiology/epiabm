@@ -122,6 +122,21 @@ Note that cmake must be installed on your system. The following command can be u
 sudo apt-get install cmake cmake-data
 ```
 
+### Compiling cEpiabm Python Bindings
+
+Pybind11 is required for compiling cEpiabm with Python bindings. Pybind11 is added as a git submodule, make sure this submodule is cloned along with the main epiabm repository.
+
+Compiling Python bindings follows similar procedure to compiling the cEpiabm tests:
+```console
+mkdir build_dir
+cd build_dir
+cmake ../cEpiabm/. -DCMAKE_BUILD_TYPE=Release -DENABLE_COVERAGE=OFF
+cmake --build . --parallel 6 --target epiabm
+```
+
+cEpiabm's python bindings will be compiled to a python module named epiabm, located in ```build_dir/src/epiabm.cpython-(version info).so```.
+
+
 ## CEpiabm Documentation
 
 Documentation on the C++ backend (cEpiabm) is stored on [Read The Docs](https://cepiabm.readthedocs.io/en/latest/).

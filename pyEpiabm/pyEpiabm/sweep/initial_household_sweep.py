@@ -31,7 +31,7 @@ class InitialHouseholdSweep(AbstractSweep):
 
     def household_allocation(self, population: Population):
         """Method that takes in a population and assigns them to different
-        sized hosueholds according to a household size distribution.
+        sized households according to a household size distribution.
 
         Parameters
         ----------
