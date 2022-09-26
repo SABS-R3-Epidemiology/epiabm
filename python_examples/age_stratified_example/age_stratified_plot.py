@@ -221,7 +221,7 @@ class Plotter():
         if param_file:
             title = 'New ' + title
         plt.title(title)
-        plt.gca().legend().set_title('')
+        plt.gca().legend().set_title('Age Group')
         plt.xlabel("Time")
         plt.savefig(outfile)
 
