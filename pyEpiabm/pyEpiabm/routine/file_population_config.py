@@ -36,6 +36,7 @@ class FilePopulationFactory:
             * Any number of columns with titles from the `InfectionStatus` \
               enum (such as `InfectionStatus.Susceptible`), giving the \
               number of people with that status in that cell
+
         Parameters
         ----------
         input_file : str
