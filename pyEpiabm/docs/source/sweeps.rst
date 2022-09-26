@@ -22,10 +22,6 @@ Overview:
     :members:
     :special-members: __call__
 
-.. autoclass:: AssignHouseholdAgesSweep
-    :members:
-    :special-members: __call__
-
 .. autoclass:: HostProgressionSweep
     :members:
     :special-members: __call__
