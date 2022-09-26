@@ -130,8 +130,7 @@ class Microcell:
             List of default :class:`People` to add to household
 
         """
-        household = Household(self, loc=(1.0, 1.0))
-        household.loc = self.location
+        household = Household(self, loc=self.location)
         self.cell.households.append(household)
         self.households.append(household)
         for person in people:

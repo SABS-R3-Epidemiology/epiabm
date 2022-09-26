@@ -292,7 +292,7 @@ class InitialHouseholdSweep(AbstractSweep):
         """
 
         n = len(people)
-        num_childs = self.calc_number_of_children(n)
+        num_childs = int(np.floor(self.calc_number_of_children(n)))
 
         # case of zero children in a household, only possible
         # in a household of size three
