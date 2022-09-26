@@ -35,3 +35,5 @@ Overview:
     :members:
 
 .. autofunction:: log_exceptions
+
+.. autofunction:: py2c_population
