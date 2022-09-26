@@ -15,6 +15,10 @@ namespace epiabm
     class Cell;
     class Population;
 
+    /**
+     * @brief Class to represent a place
+     * 
+     */
     class Place
     {
     private:
@@ -35,14 +39,6 @@ namespace epiabm
             std::function<bool(Cell*,Person*)> callback);
         void forEachMemberInGroup(Population& population, size_t group,
             std::function<bool(Cell*,Person*)> callback);
-        /**
-         * @brief Loop through each member group
-         * Callback provides group number and set of people in the group
-         * People in group defined by pairs (cell index, person's index in cell)
-         * 
-         * @param population 
-         * @param callback 
-         */
         void forEachMemberGroup(Population& population,
             std::function<bool(size_t, const std::set<std::pair<size_t, size_t>>&)> callback);
 

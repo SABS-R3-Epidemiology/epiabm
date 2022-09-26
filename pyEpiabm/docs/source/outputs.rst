@@ -27,3 +27,7 @@ Overview:
 .. autoclass:: NewCasesWriter
     :members: write
     :special-members: __init__
+
+.. autoclass:: AgeStratifiedNewCasesWriter
+    :members: write
+    :special-members: __init__

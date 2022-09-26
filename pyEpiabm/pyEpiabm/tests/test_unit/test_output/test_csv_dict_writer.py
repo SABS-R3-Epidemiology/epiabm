@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import patch, mock_open, call, MagicMock
+import os
 
 import pyEpiabm as pe
 
@@ -18,7 +19,8 @@ class TestCsvDictWriter(unittest.TestCase):
             m = pe.output._CsvDictWriter('mock_folder', 'mock_filename',
                                          mock_categories)
             del m
-        mo.assert_called_once_with('mock_filename', 'w')
+        mo.assert_called_once_with(
+            os.path.join('mock_folder', 'mock_filename'), 'w')
         mo().write.assert_called_once_with('Cat1,Cat2,Cat3\r\n')
         mock_mkdir.assert_called_with('mock_folder')
 
