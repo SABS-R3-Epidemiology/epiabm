@@ -36,7 +36,7 @@ pe.routine.Simulation.set_random_seed(seed=42)
 #    "microcell_number": 81,   # 9*9 microcells per cell
 #    "household_number": 14,  # Ave 2.5 people per household
 #    "place_number": 0.15,
-#}
+# }
 # Create a population framework based on the parameters given.
 # population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
 
