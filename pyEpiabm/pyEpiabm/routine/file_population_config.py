@@ -96,6 +96,7 @@ class FilePopulationFactory:
                     value = getattr(InfectionStatus, column)
                     for i in range(int(line[column])):
                         person = Person(new_microcell)
+                        person.set_random_age()
                         new_microcell.add_person(person)
                         person.update_status(InfectionStatus(value))
                         if (person.infection_status

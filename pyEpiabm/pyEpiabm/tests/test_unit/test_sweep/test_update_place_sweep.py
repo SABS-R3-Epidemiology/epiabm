@@ -88,6 +88,9 @@ class TestUpdatePlaceSweep(TestPyEpiabm):
         # Test when weigts are the wrong size
         self.assertRaises(AssertionError, test_sweep.update_place_group, place,
                           person_list=[person], person_weights=[])
+        test_sweep.update_place_group(place, person_list=[person],
+                                      person_weights=[0])
+        log_mock.assert_called
 
     @mock.patch("numpy.random.poisson")
     def test_update_place_no_groups(self, mock_poisson):
