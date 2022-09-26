@@ -222,7 +222,7 @@ class Plotter():
             title = "Weekly cases by age"
         else:
             title = "Daily cases by age"
-        plt.gca().set_xticks(plt.gca().get_xticks()[::3])  # Avoids overlap
+            plt.gca().set_xticks(plt.gca().get_xticks()[::3])  # Avoids overlap
         if param_file:
             title = 'New ' + title
         plt.title(title)
