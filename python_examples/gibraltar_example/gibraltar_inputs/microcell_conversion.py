@@ -31,7 +31,7 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__), os.pardir,
 mcell_num = 81
 file_path = os.path.dirname(__file__)
 columns = ["cell", "microcell", "location_x", "location_y",
-           "household_number", "Susceptible"]
+           "household_number", "place_number", "Susceptible"]
 
 df = pd.read_csv(os.path.join(file_path, "wpop_gib.txt"),
                  skiprows=0,  delim_whitespace=True, header=0)
@@ -53,6 +53,9 @@ for cell_index, row in df.iterrows():
     ave_size = np.sum(np.multiply(np.array(range(1, len(hh_freq) + 1)),
                                   hh_freq))
 
+    # Place count - average of 0.15 places per microcell
+    ave_num_places = 0.35
+
     for n in range(mcell_num):
         x = (row["longitude"]
              + (m_pos[n % grid_len] - 0.5) * delta / grid_len)
@@ -64,6 +67,7 @@ for cell_index, row in df.iterrows():
                      "location_x": x,
                      "location_y": y,
                      "Susceptible": mcell_split[n],
+                     "place_number": np.random.poisson(ave_num_places),
                      "household_number": math.ceil(mcell_split[n] / ave_size)}
 
         new_row = pd.DataFrame(data=data_dict, columns=columns, index=[0])

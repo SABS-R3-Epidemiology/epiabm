@@ -31,13 +31,13 @@ pe.routine.Simulation.set_random_seed(seed=42)
 # Pop_params are used to configure the population structure being used in this
 # simulation.
 
-pop_params = {
-    "population_size": 33078,
-    "cell_number": 12,
-    "microcell_number": 81,   # 9*9 microcells per cell
-    "household_number": 14,  # Ave 2.5 people per household
-    "place_number": 0.15,
-}
+#pop_params = {
+#    "population_size": 33078,
+#    "cell_number": 12,
+#    "microcell_number": 81,   # 9*9 microcells per cell
+#    "household_number": 14,  # Ave 2.5 people per household
+#    "place_number": 0.15,
+#}
 # Create a population framework based on the parameters given.
 # population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
 
@@ -48,13 +48,13 @@ population = pe.routine.FilePopulationFactory.make_pop(file_loc,
                                                        random_seed=42)
 
 # Configure population with input data
-pe.routine.ToyPopulationFactory.assign_cell_locations(population)
+# pe.routine.ToyPopulationFactory.assign_cell_locations(population)
 pe.routine.FilePopulationFactory.print_population(population, file_loc)
 
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 100,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
               "initial_infected_number": 100, "initial_infect_cell": True}
 
 file_params = {"output_file": "output_gibraltar.csv",
@@ -114,7 +114,7 @@ plt.savefig(os.path.join(os.path.dirname(__file__),
 # if file_params["age_stratified"]:
 p = Plotter(os.path.join(os.path.dirname(__file__),
             "simulation_outputs/output_gibraltar.csv"),
-            sum_weekly=True, start_date='01-01-2020')
+            start_date='18-03-2022', sum_weekly=True)
 p.barchart(os.path.join(os.path.dirname(__file__),
            "simulation_outputs/age_stratify.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
