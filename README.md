@@ -41,7 +41,9 @@ pip install -e .[docs]
 
 ## Running a simulation
 
-A complete workflow for running a simulation is provided in `python_examples/simulation_flow.py`. There are a number of steps to this process:
+A number of example simulations are included the in the `python_examples` directory. The simplest complete workflow for running a simulation is provided in `python_examples/basic_example/simulation_flow.py`, but all others follow a similar format. Other example simulations include an `age_stratified_example`, and `spatial_example` which demonstrate these aspects of the module. `gilbraltar_example` combines age and spatial stratification using census data from Gibraltar, and can be used to benchmark against CovidSIM. 
+
+There are a number of steps to any simulation:
 
 ### Set Random Seed _(Optional)_
 
