@@ -25,18 +25,23 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         """Initialize a population object with a given population size,
         number of cells and microcells. A uniform multinomial distribution is
         used to distribute the number of people into the different microcells.
+
         There is also an option to distribute people into households or places.
         file_params contains (with optional args as (*)):
+
             * `population_size`: Number of people in population
             * `cell_number`: Number of cells in population
             * `microcell_number`: Number of microcells in each cell
             * `household_number`: Number of households in each microcell (*)
             * `place_number`: Average number of places in each microcell (*)
             * `population_seed`: Random seed for reproducible populations (*)
+
+
         Parameters
         ----------
         file_params : dict
             Dictionary of parameters for generating a population
+
         Returns
         -------
         Population
@@ -105,6 +110,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
     @staticmethod
     def add_households(population: Population, household_number: int):
         """Groups people in a microcell into households together.
+    
         Parameters
         ----------
         population : Population
