@@ -9,7 +9,7 @@ class AgeStratifiedNewCasesWriter(_CsvWriter):
     """
 
     def __init__(self, folder: str):
-        """ Constructor method
+        """ Constructor method.
 
         Parameters
         ----------
