@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 import pyEpiabm as pe
 
+# Add plotting functions to path
 sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir,
                 "./age_stratified_example"))
 from age_stratified_plot import Plotter  # noqa
@@ -25,36 +26,18 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                                     "gibraltar_parameters.json"))
 
 # Method to set the seed at the start of the simulation, for reproducibility
-
 pe.routine.Simulation.set_random_seed(seed=42)
 
-# Pop_params are used to configure the population structure being used in this
-# simulation.
-
-pop_params = {
-    "population_size": 33078,
-    "cell_number": 12,
-    "microcell_number": 81,   # 9*9 microcells per cell
-    "household_number": 14,  # Ave 2.5 people per household
-    "place_number": 0.15,
-}
-# Create a population framework based on the parameters given.
-# population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
-
-# Alternatively, can generate population from input file
+# Generate population from input file
+# (Input converted from CovidSim with `microcell_conversion.py`)
 file_loc = os.path.join(os.path.dirname(__file__),
                         "gibraltar_inputs", "gib_input.csv")
 population = pe.routine.FilePopulationFactory.make_pop(file_loc,
                                                        random_seed=42)
 
-# Configure population with input data
-pe.routine.ToyPopulationFactory.assign_cell_locations(population)
-pe.routine.FilePopulationFactory.print_population(population, file_loc)
-
-
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 100,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
               "initial_infected_number": 100, "initial_infect_cell": True}
 
 file_params = {"output_file": "output_gibraltar.csv",
@@ -114,7 +97,7 @@ plt.savefig(os.path.join(os.path.dirname(__file__),
 # if file_params["age_stratified"]:
 p = Plotter(os.path.join(os.path.dirname(__file__),
             "simulation_outputs/output_gibraltar.csv"),
-            sum_weekly=True, start_date='01-01-2020')
+            start_date='18-03-2022', sum_weekly=True)
 p.barchart(os.path.join(os.path.dirname(__file__),
            "simulation_outputs/age_stratify.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
