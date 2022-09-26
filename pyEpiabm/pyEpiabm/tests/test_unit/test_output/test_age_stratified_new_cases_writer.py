@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch, mock_open, call, MagicMock
 import random
+import os
 
 import pyEpiabm as pe
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
@@ -18,7 +19,8 @@ class TestAgeStratifiedNewCasesWriter(TestPyEpiabm):
         with patch('pyEpiabm.output._csv_writer.open', mo):
             m = pe.output.AgeStratifiedNewCasesWriter('mock_folder')
             del m
-        mo.assert_called_once_with('age_stratified_new_cases.csv', 'w')
+        mo.assert_called_once_with(
+            os.path.join('mock_folder', 'age_stratified_new_cases.csv'), 'w')
         mo().write.assert_called_once_with('t,cell,age_group,new_cases\r\n')
         mock_mkdir.assert_called_with('mock_folder')
 
