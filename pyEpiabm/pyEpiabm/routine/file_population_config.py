@@ -26,7 +26,9 @@ class FilePopulationFactory:
         used to distribute the number of people into the different households
         within each microcell. A random seed may be specified for reproducible
         populations.
+
         Input file contains columns:
+
             * `cell`: ID code for cell
             * `microcell`: ID code for microcell
             * `location_x`: The x coordinate of the parent cell location
@@ -36,6 +38,7 @@ class FilePopulationFactory:
             * Any number of columns with titles from the `InfectionStatus` \
               enum (such as `InfectionStatus.Susceptible`), giving the \
               number of people with that status in that cell
+
 
         Parameters
         ----------
