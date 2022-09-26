@@ -1,13 +1,15 @@
 import unittest
 
 import pyEpiabm as pe
+from pyEpiabm.tests.test_unit.mocked_logging_tests import TestMockedLogs
 
 
-class TestPopulation(unittest.TestCase):
+class TestPopulation(TestMockedLogs):
     """Test the 'Population' class.
     """
     @classmethod
     def setUpClass(cls) -> None:
+        super(TestPopulation, cls).setUpClass()  # Sets up patch on logging
         cls.population = pe.Population()
 
     def test__init__(self):

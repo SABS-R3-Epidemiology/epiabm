@@ -40,7 +40,8 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
 file_params = {"output_file": "output.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
                                           "simulation_outputs"),
-               "spatial_output": False}
+               "spatial_output": False,
+               "age_stratified": False}
 
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.

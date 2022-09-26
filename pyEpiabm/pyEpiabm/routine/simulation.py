@@ -48,6 +48,8 @@ class Simulation:
                as a relative path
             * `spatial_output`: Boolean to determine whether a spatial output \
                should be used
+            * `age_stratified`: Boolean to determine whether the output will \
+                be age stratified
 
         Parameters
         ----------
@@ -75,6 +77,11 @@ class Simulation:
         self.spatial_output = file_params["spatial_output"] \
             if "spatial_output" in file_params else False
 
+        self.age_stratified = file_params["age_stratified"] \
+            if "age_stratified" in file_params else False
+
+        Parameters.instance().use_ages = self.age_stratified
+
         # If random seed is specified in parameters, set this in numpy
         if "simulation_seed" in self.sim_params:
             random.seed(self.sim_params["simulation_seed"])
@@ -90,7 +97,6 @@ class Simulation:
 
         # General sweeps run through the population on every timestep, and
         # include host progression and spatial infections.
-
         folder = os.path.join(os.getcwd(),
                               file_params["output_dir"])
 
@@ -102,6 +108,9 @@ class Simulation:
             output_titles.insert(1, "cell")
             output_titles.insert(2, "location_x")
             output_titles.insert(3, "location_y")
+
+        if self.age_stratified:
+            output_titles.insert(1, "age_group")
 
         self.writer = _CsvDictWriter(
             folder, filename,
@@ -120,14 +129,11 @@ class Simulation:
         """
         # Define time step between sweeps
         ts = 1 / Parameters.instance().time_steps_per_day
-
         # Initialise on the time step before starting.
         for sweep in self.initial_sweeps:
             sweep(self.sim_params)
-
         logging.info("Initial Sweeps Completed at time "
                      + f"{self.sim_params['simulation_start_time']} days")
-
         # First entry of the data file is the initial state
         self.write_to_file(self.sim_params["simulation_start_time"])
 
@@ -153,24 +159,57 @@ class Simulation:
             Time of output data
 
         """
-
-        if self.spatial_output:  # Separate output line for each cell
-            for cell in self.population.cells:
+        if Parameters.instance().use_ages:
+            nb_age_groups = len(Parameters.instance().age_proportions)
+        else:
+            nb_age_groups = 1
+        if Parameters.instance().use_ages:
+            if self.spatial_output:  # Separate output line for each cell
+                for cell in self.population.cells:
+                    for age_i in range(0, nb_age_groups):
+                        data = {s: 0 for s in list(InfectionStatus)}
+                        for inf_status in data:
+                            data_per_inf_status =\
+                                cell.compartment_counter.retrieve()[inf_status]
+                            data[inf_status] += data_per_inf_status[age_i]
+                        # Age groups are numbered from 1 to the total number
+                        # of age groups (thus the +1):
+                        data["age_group"] = age_i+1
+                        data["time"] = time
+                        data["cell"] = cell.id
+                        data["location_x"] = cell.location[0]
+                        data["location_y"] = cell.location[1]
+                        self.writer.write(data)
+            else:  # Summed output across all cells in population
                 data = {s: 0 for s in list(InfectionStatus)}
-                for k in data:
-                    data[k] += cell.compartment_counter.retrieve()[k]
+                for cell in self.population.cells:
+                    for age_i in range(0, nb_age_groups):
+                        for inf_status in list(InfectionStatus):
+                            data_per_inf_status =\
+                                cell.compartment_counter.retrieve()[inf_status]
+                            data[inf_status] += data_per_inf_status[age_i]
+                        data["age_group"] = age_i+1
+                        data["time"] = time
+                        self.writer.write(data)
+        else:  # If age not considered, age_group not written in csv
+            if self.spatial_output:  # Separate output line for each cell
+                for cell in self.population.cells:
+                    data = {s: 0 for s in list(InfectionStatus)}
+                    for k in data:
+                        data[k] += sum(cell.compartment_counter.retrieve()[k])
+                    data["time"] = time
+                    data["cell"] = cell.id
+                    data["location_x"] = cell.location[0]
+                    data["location_y"] = cell.location[1]
+                    self.writer.write(data)
+            else:  # Summed output across all cells in population
+                data = {s: 0 for s in list(InfectionStatus)}
+                for cell in self.population.cells:
+                    for k in data:
+                        # Sum across age compartments
+                        data[k] += sum(cell.compartment_counter.retrieve()[k])
                 data["time"] = time
-                data["cell"] = cell.id
-                data["location_x"] = cell.location[0]
-                data["location_y"] = cell.location[1]
                 self.writer.write(data)
-        else:  # Summed output across all cells in population
-            data = {s: 0 for s in list(InfectionStatus)}
-            for cell in self.population.cells:
-                for k in data:
-                    data[k] += cell.compartment_counter.retrieve()[k]
-            data["time"] = time
-            self.writer.write(data)
 
     def add_writer(self, writer: AbstractReporter):
         self.writers.append(writer)
