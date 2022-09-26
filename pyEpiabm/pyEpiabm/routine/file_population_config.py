@@ -53,6 +53,7 @@ class FilePopulationFactory:
         -------
         Population
             Population object with individuals distributed into households
+
         """
         # If random seed is specified in parameters, set this
         if random_seed is not None:
@@ -137,16 +138,19 @@ class FilePopulationFactory:
     def find_cell(population: Population, cell_id: float):
         """Returns cell with given ID in population, creates one if
         no cell with that ID exists.
+
         Parameters
         ----------
         population : Population
             Population containing target cell
         cell_id : float
             ID for target cell
+
         Returns
         -------
         Cell
             Cell with given ID in population
+
         """
         for cell in population.cells:
             if cell.id == cell_id:
@@ -191,15 +195,18 @@ class FilePopulationFactory:
         the current household distribution is random, and so the seed for
         household allocation must also be recorded to precisely save the
         simulation state.
+
         WARNING: This function is only tested with versions of pandas > 1.4,
         and may not function correctly in older cases. This will include cases
         where the user is running python 3.7 or older versions.
+
         Parameters
         ----------
         population : Population
             Population object to output
         output_file: str
             Path to output file
+
         """
         if version.parse(pd.__version__) < version.parse("1.4.0"):
             logging.warning(f"Pandas version {pd.__version__} is outdated,"
