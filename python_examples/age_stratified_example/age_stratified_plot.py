@@ -209,7 +209,8 @@ class Plotter():
                                     .rename(columns={i+idx: self.age_list[i]})
             if write_Df_toFile is not None:
                 new_frame.to_csv(write_Df_toFile)
-            new_frame.plot.bar(stacked=True, edgecolor='black', colormap="plasma_r")
+            new_frame.plot.bar(stacked=True, edgecolor='black', linewidth=.4,
+                               colormap="plasma_r")
         else:
             new_frame = new_frame.groupby([time_col]) \
                 .sum().reset_index()

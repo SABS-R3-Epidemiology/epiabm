@@ -54,7 +54,7 @@ for cell_index, row in df.iterrows():
                                   hh_freq))
 
     # Place count - average of 0.15 places per microcell
-    ave_num_places = 0.35
+    ave_num_places = 0.2
 
     for n in range(mcell_num):
         x = (row["longitude"]

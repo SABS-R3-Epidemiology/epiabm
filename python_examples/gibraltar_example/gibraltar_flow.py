@@ -49,7 +49,9 @@ population = pe.routine.FilePopulationFactory.make_pop(file_loc,
 
 # Configure population with input data
 # pe.routine.ToyPopulationFactory.assign_cell_locations(population)
-pe.routine.FilePopulationFactory.print_population(population, file_loc)
+pop_loc = os.path.join(os.path.dirname(__file__),
+                       "gibraltar_inputs", "pop_summary.csv")
+pe.routine.FilePopulationFactory.print_population(population, pop_loc)
 
 
 # sim_ and file_params give details for the running of the simulations and
