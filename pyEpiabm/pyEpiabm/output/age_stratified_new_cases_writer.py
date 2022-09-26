@@ -21,9 +21,8 @@ class AgeStratifiedNewCasesWriter(_CsvWriter):
             ['t', 'cell', 'age_group', 'new_cases'], False)
 
     def write(self, t: float, population: Population):
-        """ Write method
-        Write daily new cases spit by age group in
-        population to file
+        """ Write method - write daily new cases split
+         by age group in population to file.
 
         Parameters
         ----------
