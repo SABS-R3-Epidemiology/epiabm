@@ -15,8 +15,7 @@ class TestPopConfig(TestPyEpiabm):
     def setUp(self) -> None:
         self.input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
                       'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
-
-                      'use_households': True,
+                      'household_number': [1, 1], 'place_number': [1, 1],
                       'Susceptible': [8, 9], 'InfectMild': [2, 3]}
         self.df = pd.DataFrame(self.input)
 
@@ -127,23 +126,29 @@ class TestPopConfig(TestPyEpiabm):
 
     @patch("pandas.read_csv")
     def test_add_households(self, mock_read):
+        """Tests when households are implemented.
         """
-        Tests when households are implemented.
-        """
-        self.df['assign_households'] = True
+        # Define multiple households in cells
+        self.df['household_number'] = pd.Series([2, 3])
         mock_read.return_value = self.df
 
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
 
-        people_not_in_household = []
+        total_people = 0
+        households = []
+        num_empty_households = 0
         for cell in test_pop.cells:
             for microcell in cell.microcells:
                 for person in microcell.persons:
-                    if person.household is None:
-                        people_not_in_household.append(person)
+                    if person.household not in households:
+                        households.append(person.household)
+                    if len(person.household.persons) == 0:
+                        num_empty_households += 1
+                    total_people += len(person.household.persons)
 
-        # Check that everyone has been put into household
-        self.assertEqual(len(people_not_in_household), 0)
+        # Some households may be empty so won't be included
+        self.assertTrue(len(households) <= 5)
+        self.assertTrue(num_empty_households < 5)
 
     @patch("numpy.random.seed")
     @patch("random.seed")
@@ -180,6 +185,7 @@ class TestPopConfig(TestPyEpiabm):
         """Tests method to print population to csv, to match content
         with target. Uses meaningful household data.
         """
+        self.df['household_number'] = pd.Series([2, 3])
         mock_read.return_value = self.df
 
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
