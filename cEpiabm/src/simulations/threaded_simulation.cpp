@@ -8,6 +8,12 @@
 namespace epiabm
 {
 
+    /**
+     * @brief Construct a new Threaded Simulation:: Threaded Simulation object
+     * 
+     * @param population Population simulation should work on
+     * @param nThreads Number of threads to run simulation across
+     */
     ThreadedSimulation::ThreadedSimulation(PopulationPtr population, std::optional<size_t> nThreads) :
         m_population(population),
         m_sweeps(),
@@ -16,16 +22,40 @@ namespace epiabm
     {
     }
 
+    /**
+     * @brief Destroy the Threaded Simulation:: Threaded Simulation object
+     * 
+     */
+    ThreadedSimulation::~ThreadedSimulation() = default;
+
+    /**
+     * @brief Add a sweep to the population
+     * Sweeps sholud be added in the order they will be run each iteration
+     * Sweeps are run in groups. Within a group the sweeps are distributed amongst the cells across threads and so order is not guaranteed.
+     * Sweep groups are guaranteed to run in order.
+     * @param sweep Sweep to add
+     * @param group Sweep group number to add sweep to
+     */
     void ThreadedSimulation::addSweep(SweepInterfacePtr sweep, size_t group)
     {
         m_sweeps[group].push_back(sweep);
     }
 
+    /**
+     * @brief Attach a reporter to the simulation
+     * Timestep Reporter to output information iteration steps
+     * @param reporter Timestep Reporter to add
+     */
     void ThreadedSimulation::addTimestepReporter(TimestepReporterInterfacePtr timestepReporter)
     {
         m_timestepReporters.push_back(timestepReporter);
     }
 
+    /**
+     * @brief Perform Simulation
+     * Run the configured simulation
+     * @param timesteps Number of timesteps ot run for
+     */
     void ThreadedSimulation::simulate(const unsigned short timesteps)
     {
         auto t0 = std::chrono::system_clock::now();

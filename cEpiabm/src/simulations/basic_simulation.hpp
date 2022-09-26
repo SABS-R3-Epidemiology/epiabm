@@ -27,33 +27,13 @@ namespace epiabm
         
 
     public:
-        /**
-         * @brief Construct a new Basic Simulation object
-         * 
-         * @param population Population simulation should work on
-         */
         BasicSimulation(PopulationPtr population);
-        ~BasicSimulation() = default;
+        ~BasicSimulation();
 
-        /**
-         * @brief Add a sweep to the population
-         * Sweeps sholud be added in the order they will be run each iteration
-         * @param sweep Sweep to add
-         */
         void addSweep(SweepInterfacePtr sweep);
 
-        /**
-         * @brief Attach a reporter to the simulation
-         * Timestep Reporter to output information iteration steps
-         * @param reporter Timestep Reporter to add
-         */
         void addTimestepReporter(TimestepReporterInterfacePtr reporter);
 
-        /**
-         * @brief Perform Simulation
-         * Run the configured simulation
-         * @param timesteps Number of timesteps ot run for
-         */
         void simulate(unsigned short timesteps);
 
     private:

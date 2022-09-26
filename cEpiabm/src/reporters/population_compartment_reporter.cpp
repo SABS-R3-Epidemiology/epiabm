@@ -6,7 +6,11 @@
 namespace epiabm
 {
 
-
+    /**
+     * @brief Construct a new Population Compartment Reporter object
+     * If the file already exists, it will be overwritten
+     * @param file File to write to
+     */
     PopulationCompartmentReporter::PopulationCompartmentReporter(const std::string file) :
         TimestepReporterInterface(std::filesystem::path(file).parent_path(), false),
         m_compartments(
@@ -26,6 +30,18 @@ namespace epiabm
         m_os = m_folder.OpenOutputFile(std::filesystem::path(file).filename());
     }
 
+    /**
+     * @brief Construct a new Population Compartment Reporter object
+     * If the file already exists, it will be overwritten
+     * @param file File to write to
+     */
+    PopulationCompartmentReporter::~PopulationCompartmentReporter() = default;
+
+    /**
+     * @brief Setup method which is called immediately before iterations begin
+     *
+     * @param pop Initialized population before the iterations start
+     */
     void PopulationCompartmentReporter::setup(PopulationPtr /*population*/)
     {
         *m_os << "timestep";
@@ -36,6 +52,12 @@ namespace epiabm
         *m_os << std::endl;
     }
 
+    /**
+     * @brief Report the population state at a timestep
+     *
+     * @param pop Population to report
+     * @param timestep Timestep of report
+     */
     void PopulationCompartmentReporter::report(
         const PopulationPtr population,
         const unsigned short timestep)
@@ -71,6 +93,11 @@ namespace epiabm
         // LCOV_EXCL_STOP
     }
 
+    /**
+     * @brief Getter for set which contains the compartment types to return
+     * This set can be configured to specify which compartments to output
+     * @return std::set<InfectionStatus>&
+     */
     std::set<InfectionStatus>& PopulationCompartmentReporter::compartments()
     {
         return m_compartments;
