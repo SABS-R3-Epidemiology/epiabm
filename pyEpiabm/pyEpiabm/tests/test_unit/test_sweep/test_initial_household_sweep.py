@@ -43,7 +43,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
 
         test_sweep = pe.sweep.InitialHouseholdSweep()
 
-        # set params so that the test population of 6 people will be
+        # Set params so that the test population of 6 people will be
         # split into three households of 2
         test_sweep.household_size_distribution = np.zeros(10)
         test_sweep.household_size_distribution[1] = 1.0
@@ -62,7 +62,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         """Tests method that assigns age to someone in a one person
         hosuehold for the case that the person is elderly.
         """
-        # list of mocked values that will trigger the specific case of
+        # List of mocked values that will trigger the specific case of
         # the test below
         case_trigger_value = (Parameters.instance().household_age_params
                               ["one_pers_house_prob_old"] - 0.0001)
@@ -81,7 +81,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         hosuehold for the case that the person is elderly.self.
         """
         test_sweep = pe.sweep.InitialHouseholdSweep()
-        # adjust matrix to make sure this case is hit
+        # Adjust matrix to make sure this case is hit
         test_sweep.age_params["one_pers_house_prob_old"] = 0.0
         case_trigger_value = (((Parameters.instance().household_age_params
                                 ["one_pers_house_prob_young"])
@@ -123,7 +123,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         """Tests method that assigns ages to people in a two person
         hosuehold for the case that both of them are elderly.
         """
-        # list of mocked values that will trigger the specific case of
+        # List of mocked values that will trigger the specific case of
         # the test below
         case_trigger_case = (Parameters.instance().household_age_params
                              ["two_pers_house_prob_old"] - 0.0001)
@@ -219,7 +219,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         """
 
         test_sweep = pe.sweep.InitialHouseholdSweep()
-        # test for possible cases of size three household
+        # Test for possible cases of size three household
         mocked_random.return_value = 0.0
         val = test_sweep.calc_number_of_children(3)
         self.assertEqual(val, 0)
@@ -237,10 +237,10 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         val = test_sweep.calc_number_of_children(3)
         self.assertEqual(val, 1)
 
-        # reinitialise sweep due to changing values in above test
+        # Reinitialise sweep due to changing values in above test
         test_sweep = pe.sweep.InitialHouseholdSweep()
 
-        # test for possible cases of size 4 household
+        # Test for possible cases of size 4 household
         mocked_random.side_effect = [-1.0]
         val = test_sweep.calc_number_of_children(4)
         self.assertEqual(val, 1)
@@ -249,7 +249,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         val = test_sweep.calc_number_of_children(4)
         self.assertEqual(val, 2)
 
-        # test for possible cases of size 5 household
+        # Test for possible cases of size 5 household
         mocked_random.side_effect = [-1.0]
         val = test_sweep.calc_number_of_children(5)
         self.assertTrue(val, 3)
@@ -258,7 +258,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         val = test_sweep.calc_number_of_children(5)
         self.assertEqual(val, 2)
 
-        # test for case of households larger than 5 people
+        # Test for case of households larger than 5 people
         mocked_random.side_effect = [1]
         val = test_sweep.calc_number_of_children(6)
         self.assertTrue(val == 1)
@@ -355,7 +355,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         """
         test_sweep = pe.sweep.InitialHouseholdSweep()
         mocked_children.return_value = 1
-        # edit parameter values so to hit coverage for all lines of method
+        # Edit parameter values so to hit coverage for all lines of method
         test_sweep.num_age_groups = 2
         test_sweep.age_proportions = [0.5, 0.5]
         test_sweep.age_group_width = 1
@@ -372,8 +372,6 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         is called correctly within the call method.
         """
 
-        # create population with no one in households and
-        # check that people are then put in households
         test_sweep = pe.sweep.InitialHouseholdSweep()
         test_sweep.bind_population(self.test_population)
         microcell = self.test_population.cells[0].microcells[0]
@@ -391,7 +389,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         verified.
         """
 
-        # set up populations and put people in households
+        # Set up populations and put people in households
         test_sweep = pe.sweep.InitialHouseholdSweep()
         test_sweep.bind_population(self.test_population)
         microcell = self.test_population.cells[0].microcells[0]
@@ -399,12 +397,11 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         microcell.add_household([self.person2, self.person3])
         microcell.add_household([self.person4, self.person5, self.person6])
 
-        # reset everyone's ages to None
         for cell in self.test_population.cells:
             for person in cell.persons:
                 person.age = None
 
-        # call sweep and check people have sensible ages
+        # Call sweep and check people have sensible ages
         test_sweep()
         self.assertTrue(self.person1.age >= self.age_params["min_adult_age"])
         for person in microcell.households[1].persons:
