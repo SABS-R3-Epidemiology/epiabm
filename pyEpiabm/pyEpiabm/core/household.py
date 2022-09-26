@@ -31,11 +31,8 @@ class Household:
         self.susceptibility = susceptibility
         self.infectiousness = infectiousness
 
-        self.cell = cell
+        self.cell = microcell.cell
         self.microcell = microcell
-        # Assert the microcell and cell prescribes are related.
-        if not (self.microcell.cell == self.cell):
-            raise KeyError("Microcell is not contained in cell")
 
         if not (len(loc) == 2 and isinstance(loc[0], (float, int)) and
                 isinstance(loc[1], (float, int))):
