@@ -12,7 +12,7 @@ class Household:
     have a combined susceptibility and infectiousness
     different to that of the individuals.
     """
-    def __init__(self, cell, microcell, loc: typing.Tuple[float, float],
+    def __init__(self, microcell, loc: typing.Tuple[float, float],
                  susceptibility=0, infectiousness=0):
         """Constructor Method.
 
