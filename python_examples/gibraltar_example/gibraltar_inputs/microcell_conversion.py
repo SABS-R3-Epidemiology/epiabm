@@ -27,8 +27,10 @@ def min_separation(x_loc, y_loc):
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__), os.pardir,
                                     "gibraltar_parameters.json"))
 
+mcell_num_per_cell = pe.Parameters.instance().mcell_num_per_cell
+ave_places_per_mcell = pe.Parameters.instance().ave_places_per_mcell
+np.random.seed(42)
 
-mcell_num = 81
 file_path = os.path.dirname(__file__)
 columns = ["cell", "microcell", "location_x", "location_y",
            "household_number", "place_number", "Susceptible"]
@@ -40,12 +42,12 @@ mcell_df = pd.DataFrame(columns=columns)
 delta = min_separation(df['longitude'], df['latitude'])
 
 for cell_index, row in df.iterrows():
-    grid_len = math.ceil(math.sqrt(mcell_num))
+    grid_len = math.ceil(math.sqrt(mcell_num_per_cell))
     m_pos = np.linspace(0, 1, grid_len)
 
     # Multinomial population distribution
-    mcell_pop = int(row["population"] / mcell_num)
-    p = [1 / mcell_num] * mcell_num
+    mcell_pop = int(row["population"] / mcell_num_per_cell)
+    p = [1 / mcell_num_per_cell] * mcell_num_per_cell
     mcell_split = np.random.multinomial(row["population"], p, size=1)[0]
 
     # Household count - based on average household size
@@ -53,10 +55,7 @@ for cell_index, row in df.iterrows():
     ave_size = np.sum(np.multiply(np.array(range(1, len(hh_freq) + 1)),
                                   hh_freq))
 
-    # Place count - average of 0.15 places per microcell
-    ave_num_places = 0.2
-
-    for n in range(mcell_num):
+    for n in range(mcell_num_per_cell):
         x = (row["longitude"]
              + (m_pos[n % grid_len] - 0.5) * delta / grid_len)
         y = (row["latitude"]
@@ -67,7 +66,7 @@ for cell_index, row in df.iterrows():
                      "location_x": x,
                      "location_y": y,
                      "Susceptible": mcell_split[n],
-                     "place_number": np.random.poisson(ave_num_places),
+                     "place_number": np.random.poisson(ave_places_per_mcell),
                      "household_number": math.ceil(mcell_split[n] / ave_size)}
 
         new_row = pd.DataFrame(data=data_dict, columns=columns, index=[0])
