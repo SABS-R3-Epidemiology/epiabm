@@ -6,6 +6,7 @@ import random
 import numpy as np
 
 from pyEpiabm.core import Parameters, Person, Population
+
 from .abstract_sweep import AbstractSweep
 
 
@@ -41,9 +42,9 @@ class InitialHouseholdSweep(AbstractSweep):
 
         for cell in population.cells:
             for microcell in cell.microcells:
-                k = 0
+                k = 0  # Counter of people with allocated household in mcell
                 while k < len(microcell.persons):
-                    m = 1  # initialises household size count
+                    m = 1  # Current size of household
                     s = random.random()
 
                     # increases household size count relative to household size
@@ -233,8 +234,7 @@ class InitialHouseholdSweep(AbstractSweep):
 
         Returns
         -------
-        nc : int
-            Number of children that will be in that household
+        int : Number of children that will be in that household
 
         """
 
