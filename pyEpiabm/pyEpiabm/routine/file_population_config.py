@@ -45,6 +45,7 @@ class FilePopulationFactory:
             Seed for reproducible household and place distribution
         time : float
             Start time of simulation where this population is used (default 0)
+
         Returns
         -------
         Population
