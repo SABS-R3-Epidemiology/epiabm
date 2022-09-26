@@ -39,7 +39,7 @@ Overview:
     :members:
     :special-members: __call__
 
-.. autoclass:: InitialiseHouseholdSweep
+.. autoclass:: InitialHouseholdSweep
     :members:
     :special-members: __call__
 
