@@ -93,7 +93,7 @@ Configure a simulation with a number of parameters. These are split into two cat
 
 Two lists of sweeps must also be passed to this function - the first will be executed once at the start of the simulation (i.e. to determine the initial infections in the population), while the second list will be ran at every timestep (i.e. to propagate the infection through the population).
 
-## Documentation
+## PyEpiabm Documentation
 
 Documentation on the python backend (pyEpiabm) is stored on [Read The Docs](https://epiabm.readthedocs.io/en/latest/).  
 The Wiki for this repo also contains more detail on the Ferguson model itself, and where our implementation might differ from that.
@@ -121,6 +121,10 @@ Note that cmake must be installed on your system. The following command can be u
 ```console
 sudo apt-get install cmake cmake-data
 ```
+
+## CEpiabm Documentation
+
+Documentation on the C++ backend (cEpiabm) is stored on [Read The Docs](https://cepiabm.readthedocs.io/en/latest/).
 
 # References
 
