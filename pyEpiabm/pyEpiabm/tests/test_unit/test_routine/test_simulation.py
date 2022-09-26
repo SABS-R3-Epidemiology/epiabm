@@ -29,6 +29,7 @@ class TestSimulation(TestMockedLogs):
                            "output_dir": cls.mock_output_dir}
 
         cls.spatial_file_params = dict(cls.file_params)
+        cls.spatial_file_params["age_stratified"] = True
         cls.spatial_file_params["spatial_output"] = True
 
         cls.initial_sweeps = [pe.sweep.InitialInfectedSweep()]
@@ -87,6 +88,7 @@ class TestSimulation(TestMockedLogs):
                                   self.sweeps, self.sim_params,
                                   self.spatial_file_params)
             self.assertTrue(spatial_sim.spatial_output)
+            self.assertTrue(spatial_sim.age_stratified)
 
             del test_sim.writer
             self.assertEqual(mock_mkdir.call_count, 2)
@@ -172,6 +174,40 @@ class TestSimulation(TestMockedLogs):
             os.rmdir(self.file_params["output_dir"])
 
         mo = mock_open()
+        self.file_params['age_stratified'] = True
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            time = 1
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params)
+            data = {s: 0 for s in list(pe.property.InfectionStatus)}
+            data["age_group"] = len(pe.Parameters.instance().age_proportions)
+            data["time"] = time
+
+            with patch.object(test_sim.writer, 'write') as mock:
+                test_sim.write_to_file(time)
+                mock.assert_called_with(data)
+        mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
+                                      self.file_params["output_dir"]))
+
+        self.spatial_file_params['age_stratified'] = False
+        self.file_params['age_stratified'] = False
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            time = 1
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params,
+                               self.spatial_file_params)
+            data = {s: 0 for s in list(pe.property.InfectionStatus)}
+            data["time"] = time
+            data["cell"] = test_sim.population.cells[0].id
+            data['location_x'] = 0
+            data['location_y'] = 0
+            with patch.object(test_sim.writer, 'write') as mock:
+                test_sim.write_to_file(time)
+                mock.assert_called_with(data)
+        mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
+                                      self.file_params["output_dir"]))
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             time = 1
             test_sim = pe.routine.Simulation()
@@ -179,7 +215,6 @@ class TestSimulation(TestMockedLogs):
                                self.sweeps, self.sim_params, self.file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
             data["time"] = time
-
             with patch.object(test_sim.writer, 'write') as mock:
                 test_sim.write_to_file(time)
                 mock.assert_called_with(data)
@@ -197,6 +232,7 @@ class TestSimulation(TestMockedLogs):
                                   self.sweeps, self.sim_params,
                                   self.spatial_file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
+            data["age_group"] = len(pe.Parameters.instance().age_proportions)
             data["time"] = time
             cell = self.test_population.cells[0]
             data["cell"] = hash(cell)

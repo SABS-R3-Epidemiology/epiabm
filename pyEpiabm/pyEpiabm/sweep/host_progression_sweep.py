@@ -51,7 +51,6 @@ class HostProgressionSweep(AbstractSweep):
         time_matrix_object = TransitionTimeMatrix()
         self.transition_time_matrix =\
             time_matrix_object.create_transition_time_matrix()
-
         # Instantiate parameters to be used in update transition time
         # method
         self.latent_to_symptom_delay =\
