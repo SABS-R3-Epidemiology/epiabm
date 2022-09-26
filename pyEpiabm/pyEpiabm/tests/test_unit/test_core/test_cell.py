@@ -49,6 +49,7 @@ class TestCell(TestPyEpiabm):
         self.cell.add_microcells(1)
         self.cell.microcells[0].add_people(1)
         person = self.cell.microcells[0].persons[0]
+        person.age_group = 0
         self.assertEqual(self.cell.number_infectious(), 0)
         person.update_status(InfectionStatus.InfectMild)
         self.assertEqual(self.cell.number_infectious(), 1)

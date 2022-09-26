@@ -35,6 +35,7 @@ class TestMicrocell(TestPyEpiabm):
         self.assertEqual(len(self.microcell.persons), 1)
         self.assertEqual(len(self.cell.persons), 1)
         self.assertEqual(self.cell.number_infectious(), 0)
+        self.assertEqual(self.microcell.persons[0].age, sus_person.age)
 
         inf_person = pe.Person(self.microcell)
         inf_person.infection_status = InfectionStatus.InfectASympt
@@ -70,7 +71,7 @@ class TestMicrocell(TestPyEpiabm):
         self.microcell.add_people(5)
         self.microcell.notify_person_status_change(
             pe.property.InfectionStatus.Susceptible,
-            pe.property.InfectionStatus.Recovered)
+            pe.property.InfectionStatus.Recovered, 0)
 
     def test_set_location(self):
         local_cell = pe.Cell(loc=(-2, 3.2))

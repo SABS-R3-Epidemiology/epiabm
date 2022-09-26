@@ -8,7 +8,7 @@ import numpy as np
 import random
 import math
 
-from pyEpiabm.core import Household, Population
+from pyEpiabm.core import Household, Population, Parameters
 from pyEpiabm.property import PlaceType
 from pyEpiabm.utility import DistanceFunctions, log_exceptions
 
@@ -66,7 +66,6 @@ class ToyPopulationFactory(AbstractPopulationFactory):
 
         # Initialise a population class
         new_pop = Population()
-
         # Checks parameter type and stores as class objects.
         total_number_microcells = cell_number * microcell_number
 
@@ -75,12 +74,26 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         p = [1 / total_number_microcells] * total_number_microcells
         # Multinomially distributes people into microcells.
         cell_split = np.random.multinomial(population_size, p, size=1)[0]
+
+        if Parameters.instance().use_ages:
+            age_prop = Parameters.instance().age_proportions
+            w = age_prop / sum(age_prop)
+
         i = 0
         for cell in new_pop.cells:
             cell.add_microcells(microcell_number)
             for microcell in cell.microcells:
                 people_in_microcell = cell_split[i]
-                microcell.add_people(people_in_microcell)
+
+                if Parameters.instance().use_ages:
+                    microcell_split = np.random.multinomial(
+                                      people_in_microcell,
+                                      w, size=1)[0]
+                    for age in range(len(age_prop)):
+                        microcell.add_people(microcell_split[age],
+                                             age_group=age)
+                else:
+                    microcell.add_people(people_in_microcell)
                 i += 1
 
         # If a household number is given then that number of households
