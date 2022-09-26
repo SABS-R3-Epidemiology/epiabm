@@ -35,7 +35,7 @@ class AgeStratifiedNewCasesWriter(_CsvWriter):
             new_cases = {}
             for person in cell.persons:
                 if (person.infection_start_time is not None
-                    and person.infection_start_time > (t-1)):
+                   and person.infection_start_time > (t-1)):
                     if person.age_group in new_cases:
                         new_cases[person.age_group] += 1
                     else:
