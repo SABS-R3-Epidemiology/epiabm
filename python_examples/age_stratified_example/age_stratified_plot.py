@@ -82,7 +82,8 @@ class Plotter():
             dataFrame = self.data
         date_list = []
         timepoints = list(dataFrame['time'])
-        start = pd.to_datetime(self.start_date, infer_datetime_format=True).date()
+        start = pd.to_datetime(self.start_date,
+                               infer_datetime_format=True).date()
         for time in timepoints:
             if period == 'daily':
                 date_list.append((start + pd.DateOffset(days=time)).date())
