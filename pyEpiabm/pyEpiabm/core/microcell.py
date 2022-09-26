@@ -62,22 +62,25 @@ class Microcell:
         self.id = id
 
     def add_person(self, person):
-        """Adds :class:`Person` with given :class:`InfectionStatus`
-        to Microcell.
+        """Adds :class:`Person` with given :class:`InfectionStatus` and given
+        age group to Microcell.
 
         Parameters
         ----------
         person : Person
-            Newly instantiated person with InfectionStatus
+            Newly instantiated person with InfectionStatus and associated age
+            group
 
         """
         status = person.infection_status
-        self.compartment_counter._increment_compartment(1, status)
-        self.cell.compartment_counter._increment_compartment(1, status)
+        age_group = person.age_group
+        self.compartment_counter._increment_compartment(1, status, age_group)
+        self.cell.compartment_counter._increment_compartment(1, status,
+                                                             age_group)
         self.cell.persons.append(person)
         self.persons.append(person)
 
-    def add_people(self, n, status=InfectionStatus.Susceptible):
+    def add_people(self, n, status=InfectionStatus.Susceptible, age_group=0):
         """Adds n default :class:`Person` of given status to Microcell.
 
         Parameters
@@ -86,15 +89,19 @@ class Microcell:
             Number of default :class:`Person` s to add
         status : InfectionStatus
             Status of persons to add to cell
+        age_group : Age group index
+            Person's associated age group
 
         """
-        self.compartment_counter._increment_compartment(n, status)
-        self.cell.compartment_counter._increment_compartment(n, status)
+        self.compartment_counter._increment_compartment(n, status, age_group)
+        self.cell.compartment_counter._increment_compartment(n, status,
+                                                             age_group)
         for _ in range(n):
             p = Person(self)
             self.cell.persons.append(p)
             self.persons.append(p)
             p.infection_status = status
+            p.age_group = age_group
 
     def add_place(self, n: int, loc: typing.Tuple[float, float],
                   place_type):
@@ -114,7 +121,8 @@ class Microcell:
     def notify_person_status_change(
             self,
             old_status: InfectionStatus,
-            new_status: InfectionStatus) -> None:
+            new_status: InfectionStatus,
+            age_group) -> None:
         """Notify Microcell that a person's status has changed.
 
         Parameters
@@ -123,10 +131,13 @@ class Microcell:
             Person's old infection status
         new_status : InfectionStatus
             Person's new infection status
+        age_group : Age group index
+            Person's associated age group
 
         """
-        self.compartment_counter.report(old_status, new_status)
-        self.cell.notify_person_status_change(old_status, new_status)
+        self.compartment_counter.report(old_status, new_status, age_group)
+        self.cell.notify_person_status_change(old_status, new_status,
+                                              age_group)
 
     def set_location(self, loc: typing.Tuple[float, float]):
         """Method to set or change the location of a microcell.

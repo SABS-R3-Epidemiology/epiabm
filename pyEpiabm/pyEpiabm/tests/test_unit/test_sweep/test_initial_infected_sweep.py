@@ -47,7 +47,7 @@ class TestInitialInfectedSweep(TestPyEpiabm):
         params = {"initial_infected_number": 1, "simulation_start_time": 0}
         test_sweep(params)
         status = pe.property.InfectionStatus.InfectMild
-        num_infectious = self.cell.compartment_counter.retrieve()[status]
+        num_infectious = sum(self.cell.compartment_counter.retrieve()[status])
         self.assertEqual(num_infectious, 1)
 
         # Test that summed initial infectiousness from individuals is non-zero
@@ -81,8 +81,8 @@ class TestInitialInfectedSweep(TestPyEpiabm):
         status = pe.property.InfectionStatus.InfectMild
         num_infectious = []
         for cell in test_population.cells:
-            num_infectious.append(cell.compartment_counter
-                                  .retrieve()[status])
+            num_infectious.append(sum(cell.compartment_counter
+                                  .retrieve()[status]))
         self.assertCountEqual(num_infectious, [4, 0, 0, 0, 0])
 
 

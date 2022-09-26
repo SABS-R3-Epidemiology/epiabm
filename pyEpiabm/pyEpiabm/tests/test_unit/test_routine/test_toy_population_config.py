@@ -23,26 +23,29 @@ class TestPopConfig(TestPyEpiabm):
         """Tests for when the population is implemented by default with
         no households. Parameters are assigned at random.
         """
-        # Population is initialised with no households
-        pop_params = {"population_size": pop_size, "cell_number": cell_number,
-                      "microcell_number": microcell_number}
-        test_pop = ToyPopulationFactory.make_pop(pop_params)
+        for i in [0, 1]:
+            pe.Parameters.instance().use_ages = i
+            # Population is initialised with no households
+            pop_params = {"population_size": pop_size,
+                          "cell_number": cell_number,
+                          "microcell_number": microcell_number}
+            test_pop = ToyPopulationFactory.make_pop(pop_params)
 
-        total_people = 0
-        count_non_empty_cells = 0
-        for cell in test_pop.cells:
-            for microcell in cell.microcells:
-                total_people += len(microcell.persons)
-            if len(cell.persons) > 0:
-                count_non_empty_cells += 1
-        # Test there are at least one non-empty cell
-        self.assertTrue(count_non_empty_cells >= 1)
+            total_people = 0
+            count_non_empty_cells = 0
+            for cell in test_pop.cells:
+                for microcell in cell.microcells:
+                    total_people += len(microcell.persons)
+                if len(cell.persons) > 0:
+                    count_non_empty_cells += 1
+            # Test there is at least one non-empty cell
+            self.assertTrue(count_non_empty_cells >= 1)
+            # Test that everyone in the population has been assigned a
+            # microcell
+            self.assertEqual(total_people, pop_size)
 
-        # Test that everyone in the population has been assigned a microcell
-        self.assertEqual(total_people, pop_size)
-
-        # Test a population class object is returned
-        self.assertIsInstance(test_pop, pe.Population)
+            # Test a population class object is returned
+            self.assertIsInstance(test_pop, pe.Population)
 
     @patch("numpy.random.multinomial")
     @patch('logging.exception')

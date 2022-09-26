@@ -3,12 +3,16 @@
 #
 
 import typing
+import numpy as np
 
 from pyEpiabm.property import InfectionStatus
 
+import pyEpiabm.core
+
 
 class _CompartmentCounter:
-    """Class Component which maintains count of people in each compartment.
+    """Class Component which maintains count of people in each compartment,
+    according to their age group.
 
     """
 
@@ -23,8 +27,17 @@ class _CompartmentCounter:
         """
         # Identifier
         self._identifier = identifier
-        # Internal datastore
-        self._compartments = {status: 0 for status in InfectionStatus}
+        # Number of age groups
+        if pyEpiabm.core.Parameters.instance().use_ages:
+            self.nb_age_groups =\
+                len(pyEpiabm.core.Parameters.instance().age_proportions)
+        else:
+            self.nb_age_groups = 1
+
+        # Internal datastore, returns array with age group for each status
+        # infection
+        self._compartments = {status: np.zeros(self.nb_age_groups, dtype=int)
+                              for status in InfectionStatus}
 
     @property
     def identifier(self):
@@ -34,7 +47,7 @@ class _CompartmentCounter:
         return self._identifier
 
     def report(self, old_status: InfectionStatus,
-               new_status: InfectionStatus) -> None:
+               new_status: InfectionStatus, age_group=0) -> None:
         """Report Person has changed state.
         Update internal compartments state.
 
@@ -44,17 +57,25 @@ class _CompartmentCounter:
             Person's previous infection state
         new_status : InfectionStatus
             Person's new infection state
+        age_group : Age group index
+            Person's associated age group, defaults to 0 if age not implemented
 
         """
-        if self._compartments[old_status] <= 0:
-            raise ValueError("No people of this status in this cell.")
-        self._compartments[old_status] -= 1
-        self._compartments[new_status] += 1
+        if self._compartments[old_status][age_group] <= 0:
+            raise ValueError("No people of this status and of this age group \
+                              in this cell.")
+        # Initialisation of the age_counter array
+        age_counter = np.zeros(self.nb_age_groups, dtype=int)
+        age_counter[age_group] = 1
+        self._compartments[old_status] -= age_counter
+        self._compartments[new_status] += age_counter
 
     def _increment_compartment(self, n_persons: int,
-                               infection_status: InfectionStatus) -> None:
+                               infection_status: InfectionStatus,
+                               age_group=0) -> None:
         """Function to add a block of people with the same infection status
-        to a compartment.
+        and age group (if age is used) to a compartment.
+
 
         Parameters
         ----------
@@ -62,13 +83,20 @@ class _CompartmentCounter:
             Number of people being added to cell or microcell
         infection_status : InfectionStatus
             Status of people being added
+        age_group : Age group index
+            Person's associated age group
 
         """
-        self._compartments[infection_status] += n_persons
+        # Initialisation of the age_counter array
+        age_counter = np.zeros(self.nb_age_groups, dtype=int)
+        age_counter[age_group] = n_persons
+        self._compartments[infection_status] += age_counter
 
-    def retrieve(self) -> typing.Dict[InfectionStatus, int]:
+    def retrieve(self) -> typing.Dict[InfectionStatus, np.array]:
         """Get Compartment Counts.
-        Returns dictionary of compartment counts.
+        Returns dictionary of compartment counts, in which each entry is an
+        array containing the number of people by age group. If age is not used
+        then there is only one age group and the array length is 1.
 
         Returns
         -------
