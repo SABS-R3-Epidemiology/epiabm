@@ -212,12 +212,14 @@ class Plotter():
                 new_frame.to_csv(write_Df_toFile)
 
             new_frame.plot.bar(stacked=True, edgecolor='black', linewidth=.4,
-                               colormap="plasma_r", align='center', width=0.8)
+                               colormap="plasma_r", align='center', width=0.8,
+                               figsize=(6, 6))
 
         else:
             new_frame = new_frame.groupby([time_col]) \
                 .sum().reset_index()
-            new_frame.plot.bar(x=time_col, y=infection_category, align='center', width=0.8)
+            new_frame.plot.bar(x=time_col, y=infection_category, align='center',
+                               width=0.8, figsize=(6, 6))
         if self.sum_weekly:
             title = "Weekly cases by age"
         else:
