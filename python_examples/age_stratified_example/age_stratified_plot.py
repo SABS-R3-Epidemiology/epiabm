@@ -82,7 +82,8 @@ class Plotter():
             dataFrame = self.data
         date_list = []
         timepoints = list(dataFrame['time'])
-        start = pd.to_datetime(self.start_date).date()
+        start = pd.to_datetime(self.start_date,
+                               infer_datetime_format=True).date()
         for time in timepoints:
             if period == 'daily':
                 date_list.append((start + pd.DateOffset(days=time)).date())
@@ -209,7 +210,10 @@ class Plotter():
                                     .rename(columns={i+idx: self.age_list[i]})
             if write_Df_toFile is not None:
                 new_frame.to_csv(write_Df_toFile)
-            new_frame.plot.bar(stacked=True, colormap="inferno_r")
+
+            new_frame.plot.bar(stacked=True, edgecolor='black', linewidth=.4,
+                               colormap="plasma_r")
+
         else:
             new_frame = new_frame.groupby([time_col]) \
                 .sum().reset_index()

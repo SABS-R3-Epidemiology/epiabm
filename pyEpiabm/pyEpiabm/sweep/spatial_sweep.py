@@ -86,7 +86,6 @@ class SpatialSweep(AbstractSweep):
                 infectee_list = self.find_infectees(cell,
                                                     poss_susc_cells,
                                                     number_to_infect)
-
             for infectee in infectee_list:
                 self.do_infection_event(infector, infectee, time)
 
