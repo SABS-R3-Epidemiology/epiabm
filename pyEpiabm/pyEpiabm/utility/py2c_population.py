@@ -123,7 +123,8 @@ class _py2c_converter:
                 #      person doesn't have their own susceptibility?
                 params.age_group = py_person.age_group \
                     if py_person.age_group is not None else 0
-                params.next_status_time = int(py_person.time_of_status_change) \
+                params.next_status_time = int(
+                    py_person.time_of_status_change) \
                     if py_person.time_of_status_change is not None else 0
                 if py_person.next_infection_status is not None:
                     params.next_status =\
