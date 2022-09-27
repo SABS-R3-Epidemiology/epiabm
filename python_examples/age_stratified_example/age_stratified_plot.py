@@ -174,7 +174,7 @@ class Plotter():
             Parameters needed to perform latent time convolution
         """
         if not param_file:
-            print('Need parameters for weekly convolution')
+            print('Need parameter file for convolution')
         else:
             self._convolveLatentTime(param_file)
         if infection_category == "Total Infectious":
@@ -212,12 +212,12 @@ class Plotter():
                 new_frame.to_csv(write_Df_toFile)
 
             new_frame.plot.bar(stacked=True, edgecolor='black', linewidth=.4,
-                               colormap="plasma_r")
+                               colormap="plasma_r", align='center', width=0.8)
 
         else:
             new_frame = new_frame.groupby([time_col]) \
                 .sum().reset_index()
-            new_frame.plot.bar(x=time_col, y=infection_category)
+            new_frame.plot.bar(x=time_col, y=infection_category, align='center', width=0.8)
         if self.sum_weekly:
             title = "Weekly cases by age"
         else:
