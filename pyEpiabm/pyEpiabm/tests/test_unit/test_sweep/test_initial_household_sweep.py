@@ -362,7 +362,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         test_sweep.three_or_more_person_household_ages(self.four_people)
         self.assertTrue(self.person4.age
                         >= self.age_params["no_child_pers_age"])
-        # reset params to original values
+        # Reset params to original values
         test_sweep.num_age_groups = len(Parameters.instance().age_proportions)
         test_sweep.age_proportions = Parameters.instance().age_proportions
         test_sweep.age_group_width = 5
@@ -390,7 +390,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         verified.
         """
 
-        # Set up populations and put people in households
+        # Set up population and put people in households
         test_sweep = pe.sweep.InitialHouseholdSweep()
         test_sweep.bind_population(self.test_population)
         microcell = self.test_population.cells[0].microcells[0]
