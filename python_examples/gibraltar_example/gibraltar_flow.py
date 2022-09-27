@@ -25,9 +25,6 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                                     "gibraltar_parameters.json"))
 
-# Method to set the seed at the start of the simulation, for reproducibility
-pe.routine.Simulation.set_random_seed(seed=42)
-
 # Generate population from input file
 # (Input converted from CovidSim with `microcell_conversion.py`)
 file_loc = os.path.join(os.path.dirname(__file__),
@@ -38,7 +35,8 @@ population = pe.routine.FilePopulationFactory.make_pop(file_loc,
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
-              "initial_infected_number": 100, "initial_infect_cell": True}
+              "initial_infected_number": 100, "initial_infect_cell": True,
+              "simulation_seed": 42}
 
 file_params = {"output_file": "output_gibraltar.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
