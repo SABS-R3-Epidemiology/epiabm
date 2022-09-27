@@ -376,7 +376,8 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         test_sweep.bind_population(self.test_population)
         microcell = self.test_population.cells[0].microcells[0]
         microcell.households.clear()
-        test_sweep()
+        params = {}
+        test_sweep(params)
         for cell in self.test_population.cells:
             for microcell in cell.microcells:
                 for household in microcell.households:
@@ -402,7 +403,8 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
                 person.age = None
 
         # Call sweep and check people have sensible ages
-        test_sweep()
+        params = {}
+        test_sweep(params)
         self.assertTrue(self.person1.age >= self.age_params["min_adult_age"])
         for person in microcell.households[1].persons:
             self.assertTrue(0 <= person.age <= 100)

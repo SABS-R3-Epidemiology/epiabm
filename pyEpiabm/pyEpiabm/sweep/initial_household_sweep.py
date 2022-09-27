@@ -46,7 +46,7 @@ class InitialHouseholdSweep(AbstractSweep):
                     m = 1  # Current size of household
                     s = random.random()
 
-                    # increases household size count relative to household size
+                    # Ancreases household size count relative to household size
                     # distribution. Count stops if maximum household size is
                     # reached or there aren't enough unassigned people left
                     # in microcell
@@ -58,7 +58,7 @@ class InitialHouseholdSweep(AbstractSweep):
                         s -= self.household_size_distribution[m - 1]
                         m += 1
 
-                    # assign people to chosen size household
+                    # Assign people to chosen size household
                     people_in_household = []
                     for i in range(k, k + m):
                         people_in_household.append(microcell.persons[i])
@@ -82,7 +82,7 @@ class InitialHouseholdSweep(AbstractSweep):
 
         r = random.random()
 
-        # case where an elderly person lives alone
+        # Case where an elderly person lives alone
         if r < self.age_params["one_pers_house_prob_old"]:
             while True:
                 person.set_random_age()
@@ -95,7 +95,7 @@ class InitialHouseholdSweep(AbstractSweep):
                    (random.random() <= break_ratio)):
                     break
 
-        # case where a young and single adult lives alone
+        # Case where a young and single adult lives alone
         elif ((self.age_params["one_pers_house_prob_young"] > 0) and
               (r < (self.age_params["one_pers_house_prob_young"]
                / (1 - self.age_params["one_pers_house_prob_old"])))):
@@ -111,7 +111,7 @@ class InitialHouseholdSweep(AbstractSweep):
                    (random.random() <= break_ratio)):
                     break
 
-        # case where it is just one adult living alone of any age
+        # Case where it is just one adult living alone of any age
         # older than minimum adult age
         else:
             while True:
@@ -141,7 +141,7 @@ class InitialHouseholdSweep(AbstractSweep):
         person1 = people[0]
         person2 = people[1]
 
-        # case where two elderly people live alone
+        # Case where two elderly people live alone
         if r < self.age_params["two_pers_house_prob_old"]:
             while True:
                 person1.set_random_age()
@@ -166,7 +166,7 @@ class InitialHouseholdSweep(AbstractSweep):
                    (random.random() <= break_ratio)):
                     break
 
-        # case where one child and one adult live together
+        # Case where one child and one adult live together
         elif r < (self.age_params["one_child_two_pers_prob"]
                   / (1 - self.age_params["two_pers_house_prob_old"])):
             while True:
@@ -182,7 +182,7 @@ class InitialHouseholdSweep(AbstractSweep):
                    (person2.age >= self.age_params["min_adult_age"])):
                     break
 
-        # case where two young adults live together
+        # Case where two young adults live together
         elif ((self.age_params["two_pers_house_prob_young"] > 0) and
                 (r < (self.age_params["two_pers_house_prob_young"]
                       / (1 - self.age_params["two_pers_house_prob_old"]
@@ -207,7 +207,7 @@ class InitialHouseholdSweep(AbstractSweep):
                    (person2.age >= self.age_params["min_adult_age"])):
                     break
 
-        # case where two adults of any appropriate age live together
+        # Case where two adults of any appropriate age live together
         else:
             while True:
                 person1.set_random_age()
@@ -239,7 +239,7 @@ class InitialHouseholdSweep(AbstractSweep):
 
         n = household_size
 
-        # calculate number of children in a 3 person household
+        # Calculate number of children in a 3 person household
         if n == 3:
             if ((self.age_params["zero_child_three_pers_prob"] > 0) or
                     (self.age_params["two_child_three_pers_prob"] > 0)):
@@ -255,24 +255,23 @@ class InitialHouseholdSweep(AbstractSweep):
             else:
                 num_childs = 1
 
-        # calculate number of children in a 4 person household
+        # Calculate number of children in a 4 person household
         if n == 4:
             num_childs = 1 if (random.random()
                                < self.age_params
                                ["one_child_four_pers_prob"]) else 2
 
-        # calculate number of children in a 5 person household
+        # Calculate number of children in a 5 person household
         if n == 5:
             num_childs = 3 if (random.random()
                                < self.age_params
                                ["three_child_five_pers_prob"]) else 2
 
-        # calculate the number of children in a household with more than
+        # Calculate the number of children in a household with more than
         # 5 people
         if n > 5:
             num_childs = n - 2 - np.floor(3 * random.random())
 
-        # return number of children
         return num_childs
 
     def three_or_more_person_household_ages(self, people: list):
@@ -294,7 +293,7 @@ class InitialHouseholdSweep(AbstractSweep):
         n = len(people)
         num_childs = int(np.floor(self.calc_number_of_children(n)))
 
-        # case of zero children in a household, only possible
+        # Case of zero children in a household, only possible
         # in a household of size three
         if num_childs == 0:
             while True:
@@ -311,11 +310,11 @@ class InitialHouseholdSweep(AbstractSweep):
                          - self.age_params["max_FM_partner_age_gap"])):
                     break
 
-        # set ages when children are members of a household
+        # Set ages when children are members of a household
         else:
             while True:
                 people[0].age = 0
-                # set ages of children, increasing the ages between them if
+                # Set ages of children, increasing the ages between them if
                 # there are multiple children in the house
                 for i in range(1, num_childs):
                     people[i].age = (
@@ -328,10 +327,10 @@ class InitialHouseholdSweep(AbstractSweep):
                                            weights=self.age_proportions)[0]
                 age = random.randint(0, 4) + 5 * age_group
                 people[0].age = age - people[random_child_index].age
-                # increase base age of children relative to youngest child
+                # Increase base age of children relative to youngest child
                 for i in range(1, num_childs):
                     people[i].age += people[0].age
-                # set max age of youngest child
+                # Set max age of youngest child
                 youngest_age = 5 if \
                     (((num_childs == 1) and
                         (random.random()
@@ -348,7 +347,6 @@ class InitialHouseholdSweep(AbstractSweep):
                          <= self.age_params["max_child_age"])):
                     break
 
-            # sets age difference of parents and children
             parent_age_gap = (people[num_childs - 1].age - people[0].age
                               - (self.age_params["max_parent_age_gap"]
                               - self.age_params["min_parent_age_gap"]))
@@ -360,7 +358,7 @@ class InitialHouseholdSweep(AbstractSweep):
             while True:
                 people[num_childs].set_random_age()
                 youngest_age = people[num_childs - 1].age
-                # makes sure age of first parent is appropriate
+                # Makes sure age of first parent is appropriate
                 # for their children
                 if ((people[num_childs].age <= people[0].age + parent_age_gap)
                     and (people[num_childs].age
@@ -370,7 +368,7 @@ class InitialHouseholdSweep(AbstractSweep):
                          >= self.age_params["min_adult_age"])):
                     break
 
-            # makes sure if both parents are in the same household their age
+            # Makes sure if both parents are in the same household their age
             # makes sense
             if ((n > num_childs + 1) and
                     (random.random()
@@ -392,7 +390,7 @@ class InitialHouseholdSweep(AbstractSweep):
                              >= self.age_params["min_adult_age"])):
                         break
 
-            # considers case of more than 2 adults in house such as parents
+            # Considers case of more than 2 adults in house such as parents
             # and grandparents
             if n > num_childs + 2:
                 j = (people[num_childs + 1].age if
@@ -409,13 +407,13 @@ class InitialHouseholdSweep(AbstractSweep):
                         if people[i].age >= j:
                             break
 
-    def __call__(self):
+    def __call__(self, sim_params):
         """Given a population structure, sorts the people into households
         of required size and if required loops over all people and assigns
         them an age dependant on their household size.
         """
 
-        # call method to put people into households and check to see
+        # Call method to put people into households and check to see
         # if people are already in households (this check makes testing
         # this method easier)
         for cell in self._population.cells:
@@ -424,16 +422,28 @@ class InitialHouseholdSweep(AbstractSweep):
                     self.household_allocation(self._population)
                     break
 
-        # if ages need to be set call method to assign
+        # If ages need to be set call method to assign
         # ages of people in households
         if self.use_ages:
             for cell in self._population.cells:
+                cell.compartment_counter.clear_counter()
                 for microcell in cell.microcells:
+                    microcell.compartment_counter.clear_counter()
                     for household in microcell.households:
                         if len(household.persons) == 1:
                             self.one_person_household_age(household.persons[0])
+
                         elif len(household.persons) == 2:
                             self.two_person_household_ages(household.persons)
+
                         else:
                             self.three_or_more_person_household_ages(
                                 household.persons)
+
+                        for person in household.persons:
+                            status = person.infection_status
+                            age_group = person.age_group
+                            person.microcell.compartment_counter.\
+                                _increment_compartment(1, status, age_group)
+                            person.microcell.cell.compartment_counter.\
+                                _increment_compartment(1, status, age_group)
