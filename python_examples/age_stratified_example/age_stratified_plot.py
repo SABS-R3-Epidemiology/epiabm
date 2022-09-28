@@ -230,8 +230,10 @@ class Plotter():
             plt.gca().set_xticks(plt.gca().get_xticks()[::3])  # Avoids overlap
         if param_file:
             title = 'New ' + title
-        plt.title(title)
-        plt.gca().legend().set_title('Age Group')
+        # plt.title(title)
+        plt.ylim(0, 6700)
+        plt.gca().legend(prop={'size': 16}, title='Age Group',
+                         title_fontsize=16)
         plt.xlabel("Date (Month-Day)")
         plt.tight_layout()
         plt.savefig(outfile)
