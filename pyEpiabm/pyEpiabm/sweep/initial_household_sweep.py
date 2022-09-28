@@ -46,7 +46,7 @@ class InitialHouseholdSweep(AbstractSweep):
                     m = 1  # Current size of household
                     s = random.random()
 
-                    # Ancreases household size count relative to household size
+                    # Increases household size count relative to household size
                     # distribution. Count stops if maximum household size is
                     # reached or there aren't enough unassigned people left
                     # in microcell
