@@ -4,12 +4,7 @@
 
 import os
 import logging
-import pandas as pd
-import matplotlib.pyplot as plt
-
-import sys, os
-
-from pyEpiabm.sweep import initial_infected_sweep
+import sys
 sys.path.append(os.path.abspath('../../pyEpiabm'))
 import pyEpiabm as pe
 import epiabm as ce
@@ -62,10 +57,11 @@ initialise_place_sweep.bind_population(population)
 initial_infect_sweep(sim_params)
 initialise_place_sweep(sim_params)
 
-ce.LogFile.Instance().configure(1, "output/log.log") # Set logger to print warnings and above to console
-#LogFile.Instance().set_level(0)
+ce.LogFile.Instance().configure(1, "output/log.log")
+# Set logger to print warnings and above to console
+# LogFile.Instance().set_level(0)
 
-### Load parameters to a SimulationConfig
+# Load parameters to a SimulationConfig
 cfg = ce.JsonFactory().load_config("gibraltar_parameters_cpp.json")
 
 # Create a simulation object, configure it with the parameters given, then
@@ -87,7 +83,8 @@ logging.info("Converting python population to cpp.")
 c_population = pe.utility.py2c_population(population, c_factory, c_status_map)
 
 logging.info("Configuring cpp simulation")
-simulation = ce.BasicSimulation(c_population) # Create a simulation acting on the population
+simulation = ce.BasicSimulation(c_population)
+# Create a simulation acting on the population
 
 # Configure which sweeps to run
 simulation.add_sweep(ce.HouseholdSweep(cfg))
