@@ -72,22 +72,18 @@ logging.getLogger("matplotlib").setLevel(logging.WARNING)
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
                         "output_gibraltar.csv")
 df_sum_age = pd.read_csv(filename)
-df_sum_age = df_sum_age.drop(["InfectionStatus.Exposed",
-                              "InfectionStatus.InfectASympt",
-                              "InfectionStatus.InfectGP",
-                              "InfectionStatus.InfectHosp",
-                              "InfectionStatus.InfectICU",
-                              "InfectionStatus.InfectICURecov",
-                              "InfectionStatus.Dead"],
-                             axis=1)
+df_sum_age["Infected"] = sum(df_sum_age[x] for x in df_sum_age.columns
+                             if x.startswith("InfectionStatus.Infect"))
+df_sum_age.rename(columns={"InfectionStatus.Susceptible": "Susceptible",
+                           "InfectionStatus.Recovered": "Recovered"},
+                  inplace=True)
+
 df_sum_age = df_sum_age.groupby(["time"]).agg(
-                                {"InfectionStatus.Susceptible": 'sum',
-                                 "InfectionStatus.InfectMild": 'sum',
-                                 "InfectionStatus.Recovered": 'sum'})
+                                {"Susceptible": 'sum',
+                                 "Infected": 'sum',
+                                 "Recovered": 'sum'})
 # Create plot to show SIR curves against time
-df_sum_age.plot(y=["InfectionStatus.Susceptible",
-                   "InfectionStatus.InfectMild",
-                   "InfectionStatus.Recovered"])
+df_sum_age.plot(y=["Susceptible", "Infected", "Recovered"])
 plt.savefig(os.path.join(os.path.dirname(__file__),
             "simulation_outputs/simulation_flow_SIR_plot.png"))
 
