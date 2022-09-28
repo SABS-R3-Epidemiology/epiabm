@@ -13,7 +13,9 @@ from .abstract_sweep import AbstractSweep
 class InitialHouseholdSweep(AbstractSweep):
     """Class to assign ages to people in
     households using the same age distribution
-    model as CovidSim.
+    model as CovidSim. For a discription of the analagous function
+    in CovidSim see
+    https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Overview-of-the-Ferguson-Model.
     """
 
     def __init__(self):
