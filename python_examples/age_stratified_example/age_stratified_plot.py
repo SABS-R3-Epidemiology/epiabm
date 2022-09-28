@@ -40,6 +40,11 @@ class Plotter():
         if not os.path.splitext(filepath)[1] == ".csv":
             raise TypeError("input file" + filepath + "must be .csv")
         self.data = pd.read_csv(filepath)
+        # Rename time column if necessary
+        if 't' in list(self.data.columns):
+            self.data = self.data.rename(columns={'t': 'time'})
+        if 'timestep' in list(self.data.columns):
+            self.data = self.data.rename(columns={'timestep': 'time'})
         self.age_list = age_list
         self.start_date = start_date
         self.sum_weekly = sum_weekly

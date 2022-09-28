@@ -1,0 +1,22 @@
+#
+# Can be absorbed into the jupyter notebook if helpful
+#
+
+import sys
+import os
+# Add plotting functions to path
+sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir,
+                "../age_stratified_example"))
+print(os.path.join(os.path.dirname(__file__), os.path.pardir,
+                   "../age_stratified_example"))
+from age_stratified_plot import Plotter  # noqa
+
+
+p = Plotter(os.path.join(os.path.dirname(__file__),
+            "age_stratified_new_cases.csv"),
+            start_date='18-03-2022', sum_weekly=True)
+p.barchart(os.path.join(os.path.dirname(__file__),
+           "age_stratify_cpp.png"),
+           infection_category='new_cases',
+           write_Df_toFile=os.path.join(os.path.dirname(__file__),
+           "weeky_cases.csv"))
