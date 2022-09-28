@@ -45,7 +45,7 @@ pe.routine.ToyPopulationFactory.add_places(population, 1)
 
 
 # Method to set the seed at the start of the simulation, for reproducibility
-pe.routine.Simulation.set_random_seed(seed=42) 
+pe.routine.Simulation.set_random_seed(seed=42)
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
