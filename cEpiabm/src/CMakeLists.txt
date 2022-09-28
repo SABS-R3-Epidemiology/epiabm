@@ -29,6 +29,8 @@ set(
     reporters/cell_compartment_reporter.cpp
     reporters/percell_compartment_reporter.cpp
     reporters/population_compartment_reporter.cpp
+    reporters/new_cases_reporter.cpp
+    reporters/age_stratified_new_cases_reporter.cpp
     configuration/json_factory.cpp
     utilities/distance_metrics.cpp
     utilities/inverse_cdf.cpp
@@ -65,6 +67,8 @@ set(
     reporters/cell_compartment_reporter.hpp
     reporters/percell_compartment_reporter.hpp
     reporters/population_compartment_reporter.hpp
+    reporters/new_cases_reporter.hpp
+    reporters/age_stratified_new_cases_reporter.hpp
     configuration/simulation_config.hpp
     configuration/infection_config.hpp
     configuration/host_progression_config.hpp

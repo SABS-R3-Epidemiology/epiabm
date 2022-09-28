@@ -53,13 +53,15 @@ namespace epiabm
         double calcPlaceInf(
             Place* place,
             Person* infector,
-            const unsigned short int timestep);
+            const unsigned short int timestep,
+            size_t place_group);
 
         double calcPlaceFoi(
             Place* place,
             Person* infector,
             Person* infectee,
-            const unsigned short int timestep);
+            const unsigned short int timestep,
+            size_t place_group);
 
     }; // class PlaceSweep
 
