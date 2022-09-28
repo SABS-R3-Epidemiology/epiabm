@@ -235,7 +235,7 @@ class TestSimulation(TestMockedLogs):
             data["age_group"] = len(pe.Parameters.instance().age_proportions)
             data["time"] = time
             cell = self.test_population.cells[0]
-            data["cell"] = hash(cell)
+            data["cell"] = cell.id
             data["location_x"] = cell.location[0]
             data["location_y"] = cell.location[0]
 
