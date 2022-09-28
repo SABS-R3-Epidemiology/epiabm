@@ -6,8 +6,8 @@ import os
 import logging
 import sys
 sys.path.append(os.path.abspath('../../pyEpiabm'))
-import pyEpiabm as pe
-import epiabm as ce
+import pyEpiabm as pe  # noqa: E402
+import epiabm as ce  # noqa: E402
 
 # Setup output for logging file
 logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
