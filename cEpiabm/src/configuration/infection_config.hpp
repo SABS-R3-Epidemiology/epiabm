@@ -2,6 +2,7 @@
 #define EPIABM_CONFIGURATION_INFECTION_CONFIGURATION_HPP
 
 #include "host_progression_config.hpp"
+#include "../dataclasses/place.hpp"
 
 #include <memory>
 
@@ -29,6 +30,8 @@ namespace epiabm
 
             double householdTransmission;
             double placeTransmission;
+
+            std::array<unsigned int, N_PLACE_GROUPS> meanPlaceGroupSize;
 
             std::string spatial_distance_metric;
 

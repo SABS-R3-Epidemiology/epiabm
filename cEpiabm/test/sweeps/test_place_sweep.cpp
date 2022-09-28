@@ -32,7 +32,7 @@ TEST_CASE("sweeps/place_sweep: test place_sweep run sweep", "[PlaceSweep]")
 {
     PlaceSweepPtr subject = std::make_shared<PlaceSweep>(
         JsonFactory().loadConfig(std::filesystem::path("../testdata/test_config.json")));
-    PopulationPtr population = PopulationFactory().makePopulation(5, 5, 1000);
+    PopulationPtr population = PopulationFactory().makePopulation(5, 5, 100);
     bind_places(population, 50, 10);
     random_seed(population, 10, InfectionStatus::InfectASympt, 5);
     population->initialize();
