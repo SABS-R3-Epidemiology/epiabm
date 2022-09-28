@@ -119,7 +119,8 @@ class _py2c_converter:
                 assert c_i == py_cell._index
                 params = c_person.params()
                 params.infectiousness = py_person.infectiousness
-                params.initial_infectiousness = py_person.initial_infectiousness
+                params.initial_infectiousness =\
+                    py_person.initial_infectiousness
                 params.susceptibility = 1.0  # Is this correct? each
                 #      person doesn't have their own susceptibility?
                 params.age_group = py_person.age_group \
