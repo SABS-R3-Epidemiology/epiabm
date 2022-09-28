@@ -100,7 +100,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
     @mock.patch('random.random')
     def test_one_person_household_age_adult_alone(self, mocked_random):
         """Tests method that assigns age to someone in a one person
-        hosuehold for the case that the person is an adult living alone.
+        household for the case that the person is an adult living alone.
         """
         test_sweep = pe.sweep.InitialHouseholdSweep()
         mocked_random.return_value = 2.0
@@ -109,7 +109,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
 
     def test_two_person_household_ages_people_list_test(self):
         """Tests method that assigns ages to people in a two person
-        hosuehold throws error if it is passed a list of people
+        household throws error if it is passed a list of people
         greater than size 2.
         """
         test_sweep = pe.sweep.InitialHouseholdSweep()
@@ -121,7 +121,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
     @mock.patch('random.random')
     def test_two_person_household_ages_people_old_case(self, mocked_random):
         """Tests method that assigns ages to people in a two person
-        hosuehold for the case that both of them are elderly.
+        household for the case that both of them are elderly.
         """
         # List of mocked values that will trigger the specific case of
         # the test below
@@ -145,7 +145,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
     @mock.patch('random.random')
     def test_two_person_household_ages_child_adult_case(self, mocked_random):
         """Tests method that assigns ages to people in a two person
-        hosuehold for the case of one child and adult living
+        household for the case of one child and adult living
         together.
         """
         test_sweep = pe.sweep.InitialHouseholdSweep()
@@ -169,7 +169,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
     @mock.patch('random.random')
     def test_two_person_household_ages_young_adults(self, mocked_random):
         """Tests method that assigns ages to people in a two person
-        hosuehold for the case of two young adults living
+        household for the case of two young adults living
         together.
         """
         # Value that will trigger the specific case of
@@ -197,7 +197,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
     @mock.patch('random.random')
     def test_two_person_household_ages_adults(self, mocked_random):
         """Tests method that assigns ages to people in a two person
-        hosuehold for the case of two adults living
+        household for the case of two adults living
         together.
         """
 
@@ -268,7 +268,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
     def test_three_plus_person_household_ages_no_children(self,
                                                           mocked_children):
         """Tests method that assigns ages to people in a three person
-        hosuehold for the case where they have no children.
+        household for the case where they have no children.
         """
         test_sweep = pe.sweep.InitialHouseholdSweep()
         mocked_children.return_value = 0
