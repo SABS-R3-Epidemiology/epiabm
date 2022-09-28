@@ -10,6 +10,7 @@ print(os.path.join(os.path.dirname(__file__), os.path.pardir,
                    "../age_stratified_example"))
 from age_stratified_plot import Plotter  # noqa
 
+# Extract csv and turn into numerical dataframe
 data = pd.read_csv(os.path.join(os.path.dirname(__file__),
                                 "severity_age.csv"))
 
@@ -24,16 +25,23 @@ for index, row in data.iterrows():
         dataFrame.loc[len(dataFrame.index)] = newdata
 
 INCdF = dataFrame[list(dataFrame.filter(regex='inc'))]
+INCdF['t'] = dataFrame.copy()['t']
 CUMdF = dataFrame[list(dataFrame.filter(regex='cum'))]
-Pcolumns = list(dataFrame.filter(regex='P'))
+Pcolumns = list(dataFrame.filter(regex='P_'))
+INCPcolumns = list(dataFrame.filter(regex='inc.*P_'))
 dF = dataFrame.drop(columns=(list(INCdF.columns) + list(CUMdF.columns)
                     + list(Pcolumns)))
 
-case_list = list(dF.columns)[1:]  # remove time column
+# use if looking at incidence cases
+INCdeath = INCdF[list(INCdF.filter(regex='incDeath'))]
+dF = INCdF.drop(columns=(list(INCdeath.columns) + list(INCPcolumns)))
+
+# Configure dataframe into exact format 
+case_list = list(dF.columns)  # remove time column
+case_list.remove('t')
 severity_list = list(set(['_'.join(case.split('_')[:-1])
                          for case in case_list]))
 age_list = [case.split('_')[-1] for case in case_list]
-
 num_age_groups = max([int(age) for age in age_list]) + 1
 
 agedF = []
@@ -61,7 +69,6 @@ for index, row in finalDF.iterrows():
 # Write the fully modified
 finalDF['time'] = finalDF['time'] - finalDF.iloc[(0, 0)]
 finalDF = finalDF.reset_index().drop(columns=['index'])
-print(finalDF)
 finalDF.to_csv(os.path.join(os.path.dirname(__file__),
                "modified_age_severity.csv"))
 
@@ -69,8 +76,9 @@ p = Plotter(os.path.join(os.path.dirname(__file__),
             "modified_age_severity.csv"),
             start_date='18-03-2022', sum_weekly=True)
 p.barchart(os.path.join(os.path.dirname(__file__),
-           "age_stratify.png"),
+           "inc_age_stratify.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
            "covidsim_daily_cases.csv"),
-           param_file=os.path.join(os.path.dirname(__file__),
-           os.path.pardir, "./gibraltar_parameters.json"))
+           infection_category='incI')
+           #param_file=os.path.join(os.path.dirname(__file__),
+           #os.path.pardir, "./gibraltar_parameters.json"))

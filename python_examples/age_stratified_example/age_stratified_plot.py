@@ -190,6 +190,8 @@ class Plotter():
             # If data is presented in 5 year age groups.
             self._5yrAgeGroupsTo10()
         new_frame = self.data.loc[:, ('time', infection_category)]
+        print(new_frame)
+        print(self.do_ages)
         time_col = 'time'
         if self.start_date is not None:
             # If a start date is given, plot with dates on x axis.
