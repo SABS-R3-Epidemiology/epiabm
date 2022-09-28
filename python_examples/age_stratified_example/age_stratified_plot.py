@@ -1,5 +1,6 @@
 #
 # Reads a csv of age stratified data and plots as a bar chart
+#
 
 import pandas as pd
 import numpy as np
@@ -173,10 +174,11 @@ class Plotter():
         param_file : str
             Parameters needed to perform latent time convolution
         """
-        if not param_file:
-            print('Need parameter file for convolution')
-        else:
+        if param_file:
+            print('Performing latent time convolution')
             self._convolveLatentTime(param_file)
+        else:
+            print('No param file provided for latent convolution')
         if infection_category == "Total Infectious":
             self._sum_infectious()
         if self.do_ages and self.age_list[0] == '0-5':
@@ -218,8 +220,9 @@ class Plotter():
         else:
             new_frame = new_frame.groupby([time_col]) \
                 .sum().reset_index()
-            new_frame.plot.bar(x=time_col, y=infection_category, align='center',
-                               width=0.8, figsize=(6, 6))
+            new_frame.plot.bar(x=time_col, y=infection_category,
+                               align='center', width=0.8,
+                               figsize=(6, 6))
         if self.sum_weekly:
             title = "Weekly cases by age"
         else:

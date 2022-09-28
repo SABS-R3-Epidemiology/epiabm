@@ -32,13 +32,14 @@ pe.routine.Simulation.set_random_seed(seed=42)
 # (Input converted from CovidSim with `microcell_conversion.py`)
 file_loc = os.path.join(os.path.dirname(__file__),
                         "gibraltar_inputs", "gib_input.csv")
-population = pe.routine.FilePopulationFactory.make_pop(file_loc,random_seed=42)
+population = pe.routine.FilePopulationFactory.make_pop(file_loc,
+                                                       random_seed=42)
 
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
-              "initial_infected_number": 100, "initial_infect_cell": True}#,"simulation_seed": 42}
+              "initial_infected_number": 100, "initial_infect_cell": True}
 
 file_params = {"output_file": "output_gibraltar.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
@@ -96,6 +97,6 @@ p = Plotter(os.path.join(os.path.dirname(__file__),
 p.barchart(os.path.join(os.path.dirname(__file__),
            "simulation_outputs/age_stratify.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
-           "simulation_outputs/gibraltar_daily_cases.csv"),
+           "simulation_outputs/gibraltar_weeky_cases.csv"),
            param_file=os.path.join(os.path.dirname(__file__),
            "gibraltar_parameters.json"))
