@@ -11,6 +11,7 @@
 
 namespace epiabm
 {
+    const size_t N_PLACE_GROUPS = 4;
 
     class Cell;
     class Population;

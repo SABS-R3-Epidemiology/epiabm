@@ -1,5 +1,6 @@
 import time
 from pyEpiabm.core import Population
+from pyEpiabm.property import InfectionStatus
 
 
 def py2c_population(py_population: Population, c_factory, c_status_map):
@@ -118,14 +119,30 @@ class _py2c_converter:
                 assert c_i == py_cell._index
                 params = c_person.params()
                 params.infectiousness = py_person.infectiousness
+                params.initial_infectiousness =\
+                    py_person.initial_infectiousness
                 params.susceptibility = 1.0  # Is this correct? each
                 #      person doesn't have their own susceptibility?
                 params.age_group = py_person.age_group \
                     if py_person.age_group is not None else 0
-                params.next_status_time = py_person.time_of_status_change \
+                params.next_status_time = int(
+                    py_person.time_of_status_change) \
                     if py_person.time_of_status_change is not None else 0
+                if py_person.next_infection_status is not None:
+                    params.next_status =\
+                        self.c_status_map[py_person.next_infection_status]
                 c_person.set_status(
                     self.c_status_map[py_person.infection_status])
+                if py_person.infection_status == InfectionStatus.Susceptible:
+                    c_cell.mark_non_infectious(c_i)
+                elif py_person.infection_status == InfectionStatus.Exposed:
+                    c_cell.mark_exposed(c_i)
+                elif py_person.infection_status == InfectionStatus.Recovered:
+                    c_cell.mark_recovered(c_i)
+                elif py_person.infection_status == InfectionStatus.Dead:
+                    c_cell.mark_dead(c_i)
+                else:
+                    c_cell.mark_infectious(c_i)
 
     def _configure_households(self):
         _ = _Timer("_configure_households")
@@ -164,6 +181,6 @@ class _py2c_converter:
                     for py_person in persons:
                         (c_i, mc_i, p_i) = py_person._index
                         c_cell = self.c_population.get_cell(c_i)
-                        c_person = c_cell.get_person(p_i)
-                        c_person.add_place(self.c_population, c_cell,
-                                           c_place.index(), group)
+                        c_cell.get_person(p_i).add_place(
+                            self.c_population, c_cell,
+                            c_place.index(), group)
