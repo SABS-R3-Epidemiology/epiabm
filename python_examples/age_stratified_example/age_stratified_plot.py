@@ -126,7 +126,8 @@ class Plotter():
 
         for colname in self.data.columns:
             short_colname = colname.replace('InfectionStatus.', '')
-            if not colname.startswith('InfectionStatus.Infect'):
+            if not (colname.startswith('InfectionStatus.Infect') or
+                    colname.startswith('Infect')):
                 continue
             # Extract data column
             data = self.data[colname]

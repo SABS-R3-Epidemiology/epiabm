@@ -34,7 +34,7 @@ dF = dataFrame.drop(columns=(list(INCdF.columns) + list(CUMdF.columns)
 
 # use if looking at incidence cases
 INCdeath = INCdF[list(INCdF.filter(regex='incDeath'))]
-dF = INCdF.drop(columns=(list(INCdeath.columns) + list(INCPcolumns)))
+dF = INCdF.drop(columns=(list(INCdeath.columns) + list(INCPcolumns)))# + ['incI']))
 
 # Configure dataframe into exact format 
 case_list = list(dF.columns)  # remove time column
@@ -71,14 +71,13 @@ finalDF['time'] = finalDF['time'] - finalDF.iloc[(0, 0)]
 finalDF = finalDF.reset_index().drop(columns=['index'])
 finalDF.to_csv(os.path.join(os.path.dirname(__file__),
                "modified_age_severity.csv"))
-
+print(finalDF)
 p = Plotter(os.path.join(os.path.dirname(__file__),
             "modified_age_severity.csv"),
             start_date='18-03-2022', sum_weekly=True)
 p.barchart(os.path.join(os.path.dirname(__file__),
            "inc_age_stratify.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
-           "covidsim_daily_cases.csv"),
-           infection_category='incI')
+           "covidsim_daily_cases.csv"))#, infection_category='incI')
            #param_file=os.path.join(os.path.dirname(__file__),
            #os.path.pardir, "./gibraltar_parameters.json"))

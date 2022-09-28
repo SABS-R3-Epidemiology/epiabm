@@ -19,4 +19,6 @@ p.barchart(os.path.join(os.path.dirname(__file__),
            "age_stratify_cpp.png"),
            infection_category='new_cases',
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
-           "weeky_cases.csv"))
+           "weeky_cases.csv"),
+           param_file=os.path.join(os.path.dirname(__file__),
+           os.path.pardir, "./gibraltar_parameters_py.json"))
