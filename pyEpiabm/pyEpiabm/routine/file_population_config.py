@@ -126,9 +126,10 @@ class FilePopulationFactory:
 
         # Verify all people are logged in cell
         for cell in new_pop.cells:
-            mcell_persons = [person for mcell in cell.microcells
-                             for person in mcell.persons]
-            cell.persons = list(set(cell.persons) | set(mcell_persons))
+            updated_persons = [person for mcell in cell.microcells
+                               for person in mcell.persons]
+            assert len(updated_persons) == len(cell.persons), \
+                "Person gone missing in microcell allocation"
 
         logging.info(f"New Population from file {input_file} configured")
         return new_pop
