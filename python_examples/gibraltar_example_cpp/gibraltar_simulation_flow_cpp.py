@@ -6,6 +6,7 @@ import os
 import logging
 import sys
 sys.path.append(os.path.abspath('../../pyEpiabm'))
+sys.path.append(os.path.abspath('../../build_dir/src'))
 import pyEpiabm as pe  # noqa: E402
 import epiabm as ce  # noqa: E402
 
