@@ -119,6 +119,7 @@ class _py2c_converter:
                 assert c_i == py_cell._index
                 params = c_person.params()
                 params.infectiousness = py_person.infectiousness
+                params.initial_infectiousness = py_person.initial_infectiousness
                 params.susceptibility = 1.0  # Is this correct? each
                 #      person doesn't have their own susceptibility?
                 params.age_group = py_person.age_group \
@@ -133,14 +134,14 @@ class _py2c_converter:
                     self.c_status_map[py_person.infection_status])
                 if py_person.infection_status == InfectionStatus.Susceptible:
                     c_cell.mark_non_infectious(c_i)
+                elif py_person.infection_status == InfectionStatus.Exposed:
+                    c_cell.mark_exposed(c_i)
                 elif py_person.infection_status == InfectionStatus.Recovered:
                     c_cell.mark_recovered(c_i)
                 elif py_person.infection_status == InfectionStatus.Dead:
                     c_cell.mark_dead(c_i)
                 else:
-                    c_cell.mark_exposed(c_i)
-                    c_person.set_status(
-                        self.c_status_map[InfectionStatus.Exposed])
+                    c_cell.mark_infectious(c_i)
 
     def _configure_households(self):
         _ = _Timer("_configure_households")
