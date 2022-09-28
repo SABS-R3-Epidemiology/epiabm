@@ -14,6 +14,7 @@
         "false_positive_rate": 0,
         "household_transmission": 0.1,
         "place_transmission": 0.1,
+        "mean_place_group_size": [25, 25, 100, 10],
         "spatial_distance_metric": "euclidean",
         "host_progression_config": {
             "use_ages": false,

@@ -6,6 +6,7 @@ import os
 import logging
 import sys
 sys.path.append(os.path.abspath('../../pyEpiabm'))
+sys.path.append(os.path.abspath('../../build_dir/src'))
 import pyEpiabm as pe  # noqa: E402
 import epiabm as ce  # noqa: E402
 
@@ -36,7 +37,7 @@ pop_params = {
 population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
 
 # Alternatively, can generate population from input file
-file_loc = os.path.join(os.path.dirname(__file__),
+file_loc = os.path.join(os.path.dirname(__file__), "..", "gibraltar_example",
                         "gibraltar_inputs", "gib_input.csv")
 # population = pe.routine.FilePopulationFactory.make_pop(file_loc,
 #                                                        random_seed=42)

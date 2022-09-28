@@ -77,7 +77,7 @@ namespace epiabm
         Cell* infectorCell, Person* infector,
         Place* place, size_t group)
     {
-        double infectiousness = calcPlaceInf(place, infector, timestep);
+        double infectiousness = calcPlaceInf(place, infector, timestep, group);
 
         if (infectiousness >= 1)
         {
@@ -105,7 +105,7 @@ namespace epiabm
                 {
                     if (infectee->status() != InfectionStatus::Susceptible) return true;
 
-                    double foi = calcPlaceFoi(place, infector, infectee, timestep);
+                    double foi = calcPlaceFoi(place, infector, infectee, timestep, group);
                     if (m_cfg->randomManager->g().randf<double>() < foi)
                     {
                         doInfect(timestep, infectorCell, infector,
@@ -141,19 +141,24 @@ namespace epiabm
     double PlaceSweep::calcPlaceInf(
         Place*,
         Person* infector,
-        const unsigned short int)
+        const unsigned short int,
+        size_t place_group)
     {
+        double group_mul = (place_group < N_PLACE_GROUPS ?
+            static_cast<double>(m_cfg->infectionConfig->meanPlaceGroupSize[place_group]) :
+            1.0);
         return m_cfg->infectionConfig->placeTransmission *
-            static_cast<double>(infector->params().infectiousness);
+            static_cast<double>(infector->params().infectiousness) / group_mul;
     }
 
     double PlaceSweep::calcPlaceFoi(
         Place* place,
         Person* infector,
         Person* /*infectee*/,
-        const unsigned short int timestep)
+        const unsigned short int timestep,
+        size_t group)
     {
-        return calcPlaceInf(place, infector, timestep);
+        return calcPlaceInf(place, infector, timestep, group);
     }
 
 
