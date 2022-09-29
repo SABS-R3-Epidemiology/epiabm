@@ -103,12 +103,12 @@ class UpdatePlaceSweep(AbstractSweep):
         new_capacity = min(new_capacity, len(person_list))
 
         if len(person_list) <= 0:
-            logging.warning("No people in the person list supplied"
-                            + " to update " + str(place))
+            logging.info("No people in the person list supplied"
+                         + " to update " + str(place))
             return
         if person_weights == [0 for _ in person_list]:
-            logging.warning("List of 0 weights given: no people" +
-                            "of acceptable age for this place")
+            logging.info("List of 0 weights given: no people"
+                         + " of acceptable age for this place")
             return
         count = 0
 

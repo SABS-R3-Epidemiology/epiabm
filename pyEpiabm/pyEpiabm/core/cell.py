@@ -5,6 +5,7 @@
 import typing
 import numpy as np
 from queue import Queue
+from numbers import Number
 
 from pyEpiabm.property import InfectionStatus
 
@@ -35,8 +36,8 @@ class Cell:
         self.person_queue = Queue()
         self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
 
-        if not (len(loc) == 2 and isinstance(loc[0], (float, int)) and
-                isinstance(loc[1], (float, int))):
+        if not (len(loc) == 2 and isinstance(loc[0], Number) and
+                isinstance(loc[1], Number)):
             raise ValueError("Location must be a tuple of float-type")
 
     def __repr__(self):
