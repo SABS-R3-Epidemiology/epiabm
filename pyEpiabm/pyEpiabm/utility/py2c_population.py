@@ -94,6 +94,8 @@ class _py2c_converter:
         self.c_factory.add_places(self.c_population, self.n_places)
         for py_cell, c_cell in zip(
           self.py_population.cells, self.c_population.cells()):
+            if py_cell.location is not None:
+                c_cell.set_location(py_cell.location)
             n_microcells = len(py_cell.microcells)
             self.c_factory.add_microcells(c_cell, n_microcells)
             for py_mcell, c_mcell in zip(

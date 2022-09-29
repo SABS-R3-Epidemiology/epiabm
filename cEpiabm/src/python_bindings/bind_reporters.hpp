@@ -7,6 +7,7 @@
 #include "reporters/population_compartment_reporter.hpp"
 #include "reporters/new_cases_reporter.hpp"
 #include "reporters/age_stratified_new_cases_reporter.hpp"
+#include "reporters/age_stratified_population_reporter.hpp"
 
 
 namespace py = pybind11;
@@ -41,6 +42,10 @@ void bind_reporters(py::module &m)
         .def(py::init<const std::string>());
 
     py::class_<AgeStratifiedNewCasesReporter, AgeStratifiedNewCasesReporterPtr>(m, "AgeStratifiedNewCasesReporter",
+        py::base<TimestepReporterInterface>())
+        .def(py::init<const std::string>());
+
+    py::class_<AgeStratifiedPopulationReporter, AgeStratifiedPopulationReporterPtr>(m, "AgeStratifiedPopulationReporter",
         py::base<TimestepReporterInterface>())
         .def(py::init<const std::string>());
 }
