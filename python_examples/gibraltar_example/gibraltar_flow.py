@@ -35,9 +35,10 @@ file_loc = os.path.join(os.path.dirname(__file__),
 population = pe.routine.FilePopulationFactory.make_pop(file_loc,
                                                        random_seed=42)
 
+
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 105,
               "initial_infected_number": 100, "initial_infect_cell": True}
 
 file_params = {"output_file": "output_gibraltar.csv",
@@ -73,23 +74,18 @@ del (sim)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
                         "output_gibraltar.csv")
-df_sum_age = pd.read_csv(filename)
-df_sum_age = df_sum_age.drop(["InfectionStatus.Exposed",
-                              "InfectionStatus.InfectASympt",
-                              "InfectionStatus.InfectGP",
-                              "InfectionStatus.InfectHosp",
-                              "InfectionStatus.InfectICU",
-                              "InfectionStatus.InfectICURecov",
-                              "InfectionStatus.Dead"],
-                             axis=1)
-df_sum_age = df_sum_age.groupby(["time"]).agg(
+SIRdf = pd.read_csv(filename)
+total = SIRdf[list(SIRdf.filter(regex='InfectionStatus.Infect'))]
+SIRdf["Total Infectious"] = total.sum(axis=1)
+SIRdf = SIRdf.groupby(["time"]).agg(
                                 {"InfectionStatus.Susceptible": 'sum',
-                                 "InfectionStatus.InfectMild": 'sum',
-                                 "InfectionStatus.Recovered": 'sum'})
+                                 "Total Infectious": 'sum',
+                                 "InfectionStatus.Recovered": 'sum',
+                                 "InfectionStatus.Dead": 'sum'})
 # Create plot to show SIR curves against time
-df_sum_age.plot(y=["InfectionStatus.Susceptible",
-                   "InfectionStatus.InfectMild",
-                   "InfectionStatus.Recovered"])
+SIRdf.plot(y=["InfectionStatus.Susceptible",
+              "Total Infectious",
+              "InfectionStatus.Recovered"])
 plt.savefig(os.path.join(os.path.dirname(__file__),
             "simulation_outputs/simulation_flow_SIR_plot.png"))
 
@@ -101,6 +97,6 @@ p = Plotter(os.path.join(os.path.dirname(__file__),
 p.barchart(os.path.join(os.path.dirname(__file__),
            "simulation_outputs/age_stratify.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
-           "simulation_outputs/gibraltar_daily_cases.csv"),
+           "simulation_outputs/gibraltar_weeky_cases.csv"),
            param_file=os.path.join(os.path.dirname(__file__),
            "gibraltar_parameters.json"))
