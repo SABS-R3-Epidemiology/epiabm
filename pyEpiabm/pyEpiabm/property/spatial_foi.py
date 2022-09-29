@@ -62,7 +62,7 @@ class SpatialInfection:
         space_inf = infector.infectiousness
         if pyEpiabm.core.Parameters.instance().use_ages:
             space_inf *= pyEpiabm.core.Parameters.instance().\
-                age_proportions[infector.age_group]
+                age_contact[infector.age_group]
         return space_inf
 
     @staticmethod
@@ -89,7 +89,7 @@ class SpatialInfection:
         """
         if pyEpiabm.core.Parameters.instance().use_ages:
             return pyEpiabm.core.Parameters.instance().\
-                age_proportions[infectee.age_group]
+                age_contact[infectee.age_group]
         else:
             return 1.0
 
