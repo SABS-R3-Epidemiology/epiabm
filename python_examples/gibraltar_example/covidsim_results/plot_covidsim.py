@@ -61,7 +61,7 @@ for index, row in finalDF.iterrows():
 # Write the fully modified
 finalDF['time'] = finalDF['time'] - finalDF.iloc[(0, 0)]
 finalDF = finalDF.reset_index().drop(columns=['index'])
-print(finalDF)
+
 finalDF.to_csv(os.path.join(os.path.dirname(__file__),
                "modified_age_severity.csv"))
 

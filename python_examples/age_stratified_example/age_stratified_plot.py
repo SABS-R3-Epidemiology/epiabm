@@ -2,6 +2,7 @@
 # Reads a csv of age stratified data and plots as a bar chart
 #
 
+from datetime import datetime
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -232,8 +233,16 @@ class Plotter():
         if param_file:
             title = 'New ' + title
         # plt.title(title)
-        # plt.ylim(0, 6700)  # hardwire ylim if needed
-        plt.xlabel("Date (Month-Day)")
+        ticklabels_list = []
+        for lab in new_frame.index.values:
+            month, day = lab.split('-')
+            val = datetime(year=2022, month=int(month), day=int(day))
+            ticklabels_list.append(str(val.strftime("%b %d")))
+        plt.gca().set_xticklabels(ticklabels_list)
+        plt.gca().legend().set_title('Age Group')
+        plt.xlim(-0.5, 12.5)  # hardwire ylim if needed
+        plt.ylabel("Cases")
+        plt.xlabel('')
         plt.tight_layout()
         plt.savefig(outfile)
 

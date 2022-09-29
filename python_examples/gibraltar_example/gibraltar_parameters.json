@@ -1,9 +1,9 @@
 {
-    "basic_reproduction_num": 3.0,
+    "basic_reproduction_num": 3.12,
     "do_CovidSim": false,
     "mcell_num_per_cell": 81,
     "ave_places_per_mcell": 5,
-    "infection_radius": 0.0075,
+    "infection_radius": 0.0083,
     "latent_period": 4.59,
     "asympt_infect_period": 14,
     "mean_mild_to_recov": 7,

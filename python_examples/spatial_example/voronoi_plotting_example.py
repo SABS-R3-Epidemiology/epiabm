@@ -19,8 +19,17 @@ from PIL import Image
 
 class voronoiPlotter():
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self, boarder_points_csv: str = None) -> None:
+        """
+        Parameters
+        ----------
+
+        boarder_points_csv : str
+            Filepath to csv containing boarder points to be plotted"""
+        if boarder_points_csv is not None:
+            self.boarder_points = pd.read_csv(boarder_points_csv, header=None)
+        else:
+            self.boarder_points = None
 
     def point_in_region(self, point: np.ndarray,
                         grid_lim: typing.List[typing.List[float]]):
@@ -133,7 +142,7 @@ class voronoiPlotter():
         time: float,
         grid_lim: typing.List[typing.List[float]],
         ax: plt.Axes,
-        mapper: plt.cm.ScalarMappable,
+        mapper: plt.cm.ScalarMappable
     ):
         """Returns figure object with a spatial plot of all cells in the
         Voronoi tesselation, colour coded by their value in column
@@ -174,11 +183,24 @@ class voronoiPlotter():
             if -1 not in region:
                 point_idx = np.where(vor.point_region == r)[0]
                 point = vor.points[point_idx][0]
+
                 if self.point_in_region(point, grid_lim):
                     value = self.find_value_for_region(current_data,
                                                        point, name=name)
                     polygon = [vor.vertices[i] for i in region]
                     ax.fill(*zip(*polygon), color=mapper.to_rgba(value))
+
+        if self.boarder_points is not None:
+            long = self.boarder_points.iloc[:, 0]  # - 0.005
+            lat = self.boarder_points.iloc[:, 1] - 0.01
+            ax.fill(lat, long, edgecolor='r', fill=False)
+
+        locations = np.unique(np.transpose(np.stack((df["location_x"],
+                              df["location_y"]))), axis=0)
+        for loc in locations:
+            ax.plot(loc[0], loc[1], marker="o", markersize=10,
+                    markeredgecolor="black",
+                    markerfacecolor="black")
 
         ax.set_aspect("equal")
         ax.set_title(f"t = {time:.2f}")
@@ -221,7 +243,7 @@ class voronoiPlotter():
         # Configure subplot grid
         fig, axs = plt.subplots(grid_dim[0], grid_dim[1], sharex=True,
                                 sharey=True)
-        fig.subplots_adjust(hspace=0.01, wspace=0.015)
+        fig.subplots_adjust(hspace=0.3, wspace=0.15)
         axs = axs.ravel()
 
         # Determine time points to use
@@ -245,7 +267,7 @@ class voronoiPlotter():
         name: str,
         grid_lim: typing.List[typing.List[float]],
         save_path: str,
-        use_pillow: bool = True,
+        use_pillow: bool = True
     ):
         """Plots a grid of spatial plot of all cells in the Voronoi
         tesselation, colour coded by their value in column 'name',
