@@ -231,7 +231,7 @@ class Plotter():
             plt.gca().set_xticks(plt.gca().get_xticks()[::3])  # Avoids overlap
         if param_file:
             title = 'New ' + title
-        # plt.title(title)  # option to add title is required
+        # plt.title(title)
         # plt.ylim(0, 6700)  # hardwire ylim if needed
         plt.xlabel("Date (Month-Day)")
         plt.tight_layout()
