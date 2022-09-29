@@ -25,9 +25,6 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                                     "gibraltar_parameters.json"))
 
-# Method to set the seed at the start of the simulation, for reproducibility
-pe.routine.Simulation.set_random_seed(seed=42)
-
 # Generate population from input file
 # (Input converted from CovidSim with `microcell_conversion.py`)
 file_loc = os.path.join(os.path.dirname(__file__),
@@ -35,10 +32,12 @@ file_loc = os.path.join(os.path.dirname(__file__),
 population = pe.routine.FilePopulationFactory.make_pop(file_loc,
                                                        random_seed=42)
 
+
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
-              "initial_infected_number": 100, "initial_infect_cell": True}
+              "initial_infected_number": 100, "initial_infect_cell": True,
+              "simulation_seed": 42}
 
 file_params = {"output_file": "output_gibraltar.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
@@ -75,23 +74,19 @@ del (sim)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
                         "output_gibraltar.csv")
-df_sum_age = pd.read_csv(filename)
-df_sum_age = df_sum_age.drop(["InfectionStatus.Exposed",
-                              "InfectionStatus.InfectASympt",
-                              "InfectionStatus.InfectGP",
-                              "InfectionStatus.InfectHosp",
-                              "InfectionStatus.InfectICU",
-                              "InfectionStatus.InfectICURecov",
-                              "InfectionStatus.Dead"],
-                             axis=1)
-df_sum_age = df_sum_age.groupby(["time"]).agg(
+SIRdf = pd.read_csv(filename)
+total = SIRdf[list(SIRdf.filter(regex='InfectionStatus.Infect'))]
+SIRdf["Infected"] = total.sum(axis=1)
+SIRdf = SIRdf.groupby(["time"]).agg(
                                 {"InfectionStatus.Susceptible": 'sum',
-                                 "InfectionStatus.InfectMild": 'sum',
-                                 "InfectionStatus.Recovered": 'sum'})
+                                 "Infected": 'sum',
+                                 "InfectionStatus.Recovered": 'sum',
+                                 "InfectionStatus.Dead": 'sum'})
+SIRdf.rename(columns={"InfectionStatus.Susceptible": "Susceptible",
+                      "InfectionStatus.Recovered": "Recovered"},
+             inplace=True)
 # Create plot to show SIR curves against time
-df_sum_age.plot(y=["InfectionStatus.Susceptible",
-                   "InfectionStatus.InfectMild",
-                   "InfectionStatus.Recovered"])
+SIRdf.plot(y=["Susceptible", "Infected", "Recovered"])
 plt.savefig(os.path.join(os.path.dirname(__file__),
             "simulation_outputs/simulation_flow_SIR_plot.png"))
 
@@ -103,6 +98,6 @@ p = Plotter(os.path.join(os.path.dirname(__file__),
 p.barchart(os.path.join(os.path.dirname(__file__),
            "simulation_outputs/age_stratify.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
-           "simulation_outputs/gibraltar_daily_cases.csv"),
+           "simulation_outputs/gibraltar_weeky_cases.csv"),
            param_file=os.path.join(os.path.dirname(__file__),
            "gibraltar_parameters.json"))

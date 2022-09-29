@@ -3,6 +3,7 @@
 #
 
 import typing
+from numbers import Number
 
 
 class Household:
@@ -30,12 +31,11 @@ class Household:
         self.location = loc
         self.susceptibility = susceptibility
         self.infectiousness = infectiousness
-
         self.cell = microcell.cell
         self.microcell = microcell
 
-        if not (len(loc) == 2 and isinstance(loc[0], (float, int)) and
-                isinstance(loc[1], (float, int))):
+        if not (len(loc) == 2 and isinstance(loc[0], Number) and
+                isinstance(loc[1], Number)):
             raise ValueError("Location must be a tuple of float-type")
 
     def __repr__(self):
