@@ -22,6 +22,8 @@ namespace epiabm
         std::mt19937 m_generator;
         std::gamma_distribution<double> m_initialInfectiousnessDistrib;
 
+        unsigned short delay;
+
     public:
         HostProgressionSweep(SimulationConfigPtr cfg);
         ~HostProgressionSweep() = default;

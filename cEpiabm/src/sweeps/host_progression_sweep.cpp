@@ -18,6 +18,8 @@ namespace epiabm
         loadTransitionTimeMatrix();
         loadInfectiousnessProfile();
         m_initialInfectiousnessDistrib = std::gamma_distribution<double>(1.0, 1.0);
+        delay = static_cast<unsigned short>(
+            m_cfg->infectionConfig->latentToSymptDelay * m_cfg->timestepsPerDay);
     }
 
     void HostProgressionSweep::operator()(const unsigned short timestep)
@@ -112,8 +114,11 @@ namespace epiabm
             LOG << LOG_LEVEL_ERROR << "No transition time ICDF for " << status_string(current) << " -> " << status_string(next);
             return 0;
         }
-        return m_transitionTimeMatrix[cindex][nindex]->choose(
+        unsigned short result = m_transitionTimeMatrix[cindex][nindex]->choose(
             m_cfg->timestepsPerDay, m_cfg->randomManager->g());
+        if (current == InfectionStatus::InfectMild || current == InfectionStatus::InfectGP)
+            result = static_cast<unsigned short>(result + delay);
+        return result;
     }
 
     double HostProgressionSweep::chooseInfectiousness(InfectionStatus status)

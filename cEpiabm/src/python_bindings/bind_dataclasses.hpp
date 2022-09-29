@@ -77,6 +77,7 @@ void bind_dataclasses(py::module &m)
             py::return_value_policy::reference)
         .def("get_microcell", &Cell::getMicrocell,
             py::return_value_policy::reference)
+        .def("set_location", &Cell::setLocation)
         .def("location", &Cell::location,
             py::return_value_policy::reference)
         .def("mark_infectious", &Cell::markInfectious)

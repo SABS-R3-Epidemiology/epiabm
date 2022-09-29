@@ -30,6 +30,8 @@ class Household:
         self.location = loc
         self.susceptibility = susceptibility
         self.infectiousness = infectiousness
+        self.cell = microcell.cell
+        self.microcell = microcell
 
         self.cell = microcell.cell
         self.microcell = microcell
