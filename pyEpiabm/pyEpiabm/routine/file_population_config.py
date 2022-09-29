@@ -17,7 +17,6 @@ from pyEpiabm.utility import log_exceptions
 
 class FilePopulationFactory:
     """ Class that creates a population based on an input .csv file.
-
     """
     @staticmethod
     @log_exceptions()
@@ -29,6 +28,7 @@ class FilePopulationFactory:
         populations.
 
         Input file contains columns:
+
             * `cell`: ID code for cell
             * `microcell`: ID code for microcell
             * `location_x`: The x coordinate of the parent cell location
@@ -38,6 +38,7 @@ class FilePopulationFactory:
             * Any number of columns with titles from the `InfectionStatus` \
               enum (such as `InfectionStatus.Susceptible`), giving the \
               number of people with that status in that cell
+
 
         Parameters
         ----------
@@ -126,9 +127,10 @@ class FilePopulationFactory:
 
         # Verify all people are logged in cell
         for cell in new_pop.cells:
-            mcell_persons = [person for mcell in cell.microcells
-                             for person in mcell.persons]
-            cell.persons = list(set(cell.persons) | set(mcell_persons))
+            updated_persons = [person for mcell in cell.microcells
+                               for person in mcell.persons]
+            assert len(updated_persons) == len(cell.persons), \
+                "Person gone missing in microcell allocation"
 
         logging.info(f"New Population from file {input_file} configured")
         return new_pop
@@ -170,7 +172,6 @@ class FilePopulationFactory:
             for grouping
         household_number : int
             Number of households to form
-
         """
         # Initialises another multinomial distribution
         q = [1 / household_number] * household_number
@@ -180,7 +181,8 @@ class FilePopulationFactory:
         person_index = 0
         for j in range(household_number):
             people_in_household = household_split[j]
-            new_household = Household(loc=microcell.location)
+            new_household = Household(microcell,
+                                      loc=microcell.location)
             for _ in range(people_in_household):
                 person = microcell.persons[person_index]
                 new_household.add_person(person)

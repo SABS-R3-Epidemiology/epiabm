@@ -3,11 +3,13 @@
 #
 
 import typing
+from numbers import Number
 
 from pyEpiabm.property import InfectionStatus
 
 from .person import Person
 from .place import Place
+from .household import Household
 from ._compartment_counter import _CompartmentCounter
 
 
@@ -33,6 +35,7 @@ class Microcell:
         self.id = hash(self)
         self.persons = []
         self.places = []
+        self.households = []
         self.cell = cell
         self.location = cell.location
         self.compartment_counter = _CompartmentCounter(
@@ -118,6 +121,22 @@ class Microcell:
             self.cell.places.append(p)
             self.places.append(p)
 
+    def add_household(self, people: list):
+        """Adds a default :class:`Household` to Microcell and fills it with
+        a number of :class:`Person` s.
+
+        Parameters
+        ----------
+        people : list
+            List of :class:`People` to add to household
+
+        """
+        household = Household(self, loc=self.location)
+        self.cell.households.append(household)
+        self.households.append(household)
+        for person in people:
+            household.add_person(person)
+
     def notify_person_status_change(
             self,
             old_status: InfectionStatus,
@@ -148,7 +167,7 @@ class Microcell:
             (x,y) coordinates of the microcell
 
         """
-        if not (len(loc) == 2 and isinstance(loc[0], (float, int)) and
-                isinstance(loc[1], (float, int))):
+        if not (len(loc) == 2 and isinstance(loc[0], Number) and
+                isinstance(loc[1], Number)):
             raise ValueError("Location must be a tuple of float-type")
         self.location = loc

@@ -18,7 +18,6 @@ from .abstract_population_config import AbstractPopulationFactory
 class ToyPopulationFactory(AbstractPopulationFactory):
     """ Class that creates a toy population for use in the simple
     python model.
-
     """
     @staticmethod
     @log_exceptions()
@@ -26,15 +25,17 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         """Initialize a population object with a given population size,
         number of cells and microcells. A uniform multinomial distribution is
         used to distribute the number of people into the different microcells.
-        There is also an option to distribute people into households or places.
 
+        There is also an option to distribute people into households or places.
         file_params contains (with optional args as (*)):
+
             * `population_size`: Number of people in population
             * `cell_number`: Number of cells in population
             * `microcell_number`: Number of microcells in each cell
             * `household_number`: Number of households in each microcell (*)
             * `place_number`: Average number of places in each microcell (*)
             * `population_seed`: Random seed for reproducible populations (*)
+
 
         Parameters
         ----------
@@ -45,7 +46,6 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         -------
         Population
             Population object with individuals distributed into households
-
         """
         # Unpack variables from input dictionary
         population_size = pop_params["population_size"]
@@ -130,7 +130,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                 person_index = 0
                 for j in range(household_number):
                     people_in_household = household_split[j]
-                    new_household = Household()
+                    new_household = Household(microcell, loc=(1.0, 1.0))
                     for _ in range(people_in_household):
                         person = microcell.persons[person_index]
                         new_household.add_person(person)
@@ -166,7 +166,6 @@ class ToyPopulationFactory(AbstractPopulationFactory):
     @staticmethod
     def assign_cell_locations(population: Population, method: str = 'random'):
         """Assigns cell locations based on method provided. Possible methods:
-
             * 'random': Assigns all locations randomly within unit square
             * 'uniform_x': Spreads points evenly along x axis in range (0, 1)
             * 'grid': Distributes points according to a square grid within a \

@@ -105,3 +105,10 @@ class _CompartmentCounter:
 
         """
         return self._compartments
+
+    def clear_counter(self):
+        """ Method to clear and reset compartment counter to zero.
+        """
+
+        self._compartments = {status: np.zeros(self.nb_age_groups, dtype=int)
+                              for status in InfectionStatus}
