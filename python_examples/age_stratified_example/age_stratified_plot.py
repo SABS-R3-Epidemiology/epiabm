@@ -196,6 +196,7 @@ class Plotter():
             else:
                 new_frame['dates'] = self._dates(new_frame, 'daily')
 
+        plt.rcParams['font.size'] = '12'
         if self.do_ages:
             # If we have age stratified data, plot the bar chart with
             # colours for each age.
@@ -230,10 +231,8 @@ class Plotter():
             plt.gca().set_xticks(plt.gca().get_xticks()[::3])  # Avoids overlap
         if param_file:
             title = 'New ' + title
-        # plt.title(title)
-        plt.ylim(0, 6700)
-        plt.gca().legend(prop={'size': 16}, title='Age Group',
-                         title_fontsize=16)
+        # plt.title(title)  # option to add title is required
+        # plt.ylim(0, 6700)  # hardwire ylim if needed
         plt.xlabel("Date (Month-Day)")
         plt.tight_layout()
         plt.savefig(outfile)

@@ -18,8 +18,10 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        "spatial_parameters.json"))
 
+# Method to set the seed at the start of the simulation, for reproducibility
 
 pe.routine.Simulation.set_random_seed(seed=30)
+
 # Pop_params are used to configure the population structure being used in this
 # simulation.
 
