@@ -96,4 +96,6 @@ p = Plotter(os.path.join(os.path.dirname(__file__),
 p.barchart(os.path.join(os.path.dirname(__file__),
            "simulation_outputs/age_stratify.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
-           "simulation_outputs/daily_cases.csv"))
+           "simulation_outputs/daily_cases.csv"),
+           param_file=os.path.join(os.path.dirname(__file__),
+           "simple_parameters_with_age.json"))

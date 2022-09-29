@@ -32,6 +32,7 @@ file_loc = os.path.join(os.path.dirname(__file__),
 population = pe.routine.FilePopulationFactory.make_pop(file_loc,
                                                        random_seed=42)
 
+
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
@@ -95,6 +96,6 @@ p = Plotter(os.path.join(os.path.dirname(__file__),
 p.barchart(os.path.join(os.path.dirname(__file__),
            "simulation_outputs/age_stratify.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
-           "simulation_outputs/gibraltar_daily_cases.csv"),
+           "simulation_outputs/gibraltar_weeky_cases.csv"),
            param_file=os.path.join(os.path.dirname(__file__),
            "gibraltar_parameters.json"))
