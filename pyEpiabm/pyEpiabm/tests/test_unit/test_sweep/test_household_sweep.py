@@ -17,7 +17,6 @@ class TestHouseholdSweep(TestPyEpiabm):
         """
         super(TestHouseholdSweep, cls).setUpClass()
         cls.pop = pe.Population()
-        cls.house = pe.Household([1.0, 1.0])
         cls.pop.add_cells(1)
         cls.cell = cls.pop.cells[0]
         cls.pop.cells[0].add_microcells(1)
@@ -25,8 +24,9 @@ class TestHouseholdSweep(TestPyEpiabm):
         cls.pop.cells[0].microcells[0].add_people(1)
         cls.person = cls.pop.cells[0].microcells[0].persons[0]
         cls.person.infection_status = pe.property.InfectionStatus.InfectMild
-        cls.person.household = cls.house
+        cls.house = pe.Household(cls.microcell, [1.0, 1.0])
         cls.house.persons = [cls.person]
+        cls.person.household = cls.house
         cls.time = 1
         pe.Parameters.instance().time_steps_per_day = 1
 
