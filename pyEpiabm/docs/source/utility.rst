@@ -13,7 +13,6 @@ Overview:
 - :class:`RandomMethods`
 - :class:`SpatialKernel`
 - :class:`StateTransitionMatrix`
-
 - :class:`TransitionTimeMatrix`
 
 .. autoclass:: DistanceFunctions

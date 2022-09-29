@@ -9,6 +9,7 @@
 from .abstract_sweep import AbstractSweep
 from .host_progression_sweep import HostProgressionSweep
 from .household_sweep import HouseholdSweep
+from .initial_household_sweep import InitialHouseholdSweep
 from .initial_infected_sweep import InitialInfectedSweep
 from .place_sweep import PlaceSweep
 from .initial_place_sweep import InitialisePlaceSweep

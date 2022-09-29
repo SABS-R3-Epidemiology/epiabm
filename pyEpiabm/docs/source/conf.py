@@ -52,6 +52,8 @@ else:
         'inherited-members': None,
     }
 
+master_doc = 'index'
+
 # Napoleon settings
 napoleon_use_ivar = True
 

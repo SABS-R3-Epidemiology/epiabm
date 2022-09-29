@@ -36,6 +36,13 @@ class TestCompartmentCounter(TestPyEpiabm):
                     self.assertEqual(self.subject.retrieve()[status][agegroup],
                                      0)
 
+    def test_clear_counter(self):
+        counter = pe._CompartmentCounter("test")
+        counter._increment_compartment(1, InfectionStatus.Susceptible, 0)
+        counter.clear_counter()
+        self.assertEqual(counter.retrieve()[InfectionStatus.Susceptible].all(),
+                         0)
+
     @patch('pyEpiabm.core.Parameters.instance')
     def test_construct_no_age(self, mock_params):
         mock_params.return_value.use_ages = False

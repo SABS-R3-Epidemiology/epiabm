@@ -50,7 +50,9 @@ file_params = {"output_file": "output_gibraltar.csv",
 sim = pe.routine.Simulation()
 sim.configure(
     population,
-    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
+    [pe.sweep.InitialHouseholdSweep(),
+     pe.sweep.InitialInfectedSweep(),
+     pe.sweep.InitialisePlaceSweep()],
     [
         pe.sweep.UpdatePlaceSweep(),
         pe.sweep.HouseholdSweep(),
