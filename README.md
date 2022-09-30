@@ -7,7 +7,7 @@
 
 ## General Information
 
-This program implements an agent-based SEIR model with added compartments and spatial complexity. It imitates the Imperial [CovidSim](https://github.com/mrc-ide/covid-sim) model, but aims to simplify and clarify the model by using more user friendly software practices. It also provides various sub-models (with elements of the CovidSim model removed) for research and pedagogical investigation into the effect of different aspects of the model.
+This program implements an agent-based SEIR model with added compartments and spatial complexity. It imitates the Imperial [CovidSim](https://github.com/mrc-ide/covid-sim) model, but aims to simplify and clarify the model by using more user-friendly software practices. It also provides various sub-models (with elements such as age-stratification or spatial distribution removed) for research and pedagogical investigation into the effect of different aspects of the model.
 
 ## Model Summary
 
