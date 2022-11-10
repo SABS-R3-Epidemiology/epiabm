@@ -6,6 +6,7 @@ import random
 
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep.host_progression_sweep import HostProgressionSweep
+from pyEpiabm.core import Parameters
 
 from .abstract_sweep import AbstractSweep
 
@@ -51,15 +52,31 @@ class InitialInfectedSweep(AbstractSweep):
             raise ValueError('There are not enough susceptible people in the \
                                         population to infect')
 
-        if ("initial_infected_cell" not in sim_params
-                or not sim_params["initial_infected_cell"]):
-            all_persons = [pers for cell in self._population.cells for pers
-                           in cell.persons if pers.infection_status
-                           == InfectionStatus.Susceptible]
+        params = Parameters.instance().carehome_params
+
+        if params["carehome_allow_initial_infections"] > 0:
+            if ("initial_infected_cell" not in sim_params
+                    or not sim_params["initial_infected_cell"]):
+                all_persons = [pers for cell in self._population.cells for pers
+                               in cell.persons if pers.infection_status
+                               == InfectionStatus.Susceptible]
+            else:
+                cell = random.choice(self._population.cells)
+                all_persons = [pers for pers in cell.persons if pers
+                               .infection_status == InfectionStatus.Susceptible]
+
         else:
-            cell = random.choice(self._population.cells)
-            all_persons = [pers for pers in cell.persons if pers
-                           .infection_status == InfectionStatus.Susceptible]
+            if ("initial_infected_cell" not in sim_params
+                    or not sim_params["initial_infected_cell"]):
+                all_persons = [pers for cell in self._population.cells for pers
+                               in cell.persons if (pers.infection_status ==
+                               InfectionStatus.Susceptible
+                               and "CareHome" not in pers.place_types)]
+            else:
+                cell = random.choice(self._population.cells)
+                all_persons = [pers for pers in cell.persons if
+                (pers.infection_status == InfectionStatus.Susceptible and
+                "CareHome" not in pers.place_types)]
 
         pers_to_infect = random.sample(all_persons,
                                        sim_params["initial_infected_number"])
