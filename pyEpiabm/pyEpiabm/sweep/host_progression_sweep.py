@@ -149,6 +149,10 @@ class HostProgressionSweep(AbstractSweep):
         if person.infection_status in [InfectionStatus.Recovered,
                                        InfectionStatus.Dead]:
             person.next_infection_status = None
+        elif ("CareHome" in person.place_types and person in
+              person.place_types["CareHome"].person_groups[1] and
+              person.infection_status == InfectionStatus.InfectHosp):
+            person.next_infection_status = InfectionStatus.Dead
         else:
             row_index = person.infection_status.name
             weights = self.state_transition_matrix.loc[row_index].to_numpy()
