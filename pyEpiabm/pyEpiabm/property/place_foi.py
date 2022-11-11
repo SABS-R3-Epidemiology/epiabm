@@ -96,13 +96,13 @@ class PlaceInfection:
             Force of infection parameter of place
 
         """
-        carehome_params = Parameters.isinstance().carehome_params
+        carehome_params = Parameters.instance().carehome_params
         infectiousness = PlaceInfection.place_inf(place, infector, time)
         susceptibility = (PlaceInfection.place_susc(place, infector, infectee, time)
-                          * carehome_params["carehome_worker_group_scaling"]
+                          * (carehome_params["carehome_worker_group_scaling"]
                           if (("CareHome" in infectee.place_types
-                          and infectee in infectee.place_types["CareHome"].person_groups[0])
-                          or ("CareHome" in infector.place_types
-                          and infector.place_types["CareHome"].person_groups[0]))
-                          else 1)
+                             and infectee in infectee.place_types["CareHome"].person_groups[0])
+                             or ("CareHome" in infector.place_types
+                             and infector.place_types["CareHome"].person_groups[0]))
+                          else 1))
         return (infectiousness * susceptibility)
