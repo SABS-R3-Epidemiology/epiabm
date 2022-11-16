@@ -41,7 +41,8 @@ class TestInitialisePlaceSweep(TestPyEpiabm):
 
     @mock.patch("pyEpiabm.sweep.InitialisePlaceSweep.create_age_weights")
     @mock.patch("pyEpiabm.sweep.UpdatePlaceSweep.update_place_group")
-    def test__call__(self, mock_update, mock_weights):
+    @mock.patch("pyEpiabm.sweep.UpdatePlaceSweep.update_carehome_group")
+    def test__call__(self, mock_care, mock_update, mock_weights):
         """Test whether the update place sweep function takes an
         initially empty place and correctly adds a person to
         the place.
@@ -51,6 +52,7 @@ class TestInitialisePlaceSweep(TestPyEpiabm):
         place.place_type = PlaceType.Workplace
         person = test_pop.cells[0].persons[0]
         mock_update.return_value = None
+        mock_care.return_value = None
         mock_weights.return_value = [[person], [1]]
 
         test_sweep = pe.sweep.InitialisePlaceSweep()
@@ -70,9 +72,11 @@ class TestInitialisePlaceSweep(TestPyEpiabm):
                                        mean_capacity=1010)
 
         place.place_type = PlaceType.CareHome
-        mock_update.side_effect = place.add_person(person)
         test_sweep()
-        mock_update.assert_called_with(place)
+        mock_care.assert_called_with(place, group_size=20,
+                                     person_list=[person],
+                                     person_weights=[1],
+                                     mean_capacity=40)
 
     def test_weights_func(self):
         test_pop = self.pop
