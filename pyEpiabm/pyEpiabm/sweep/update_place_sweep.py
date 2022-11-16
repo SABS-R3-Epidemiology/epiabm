@@ -184,7 +184,7 @@ class UpdatePlaceSweep(AbstractSweep):
         person_weights : list
             Weights for people in list
         """
-        carehome_minimum_age = Parameters.instance().carehome_minimum_age
+        carehome_params = Parameters.instance().carehome_params
         # If a specific list of people is not provided, use the whole cell
         if person_list is None:
             person_list = (place.cell.persons).copy()
@@ -226,12 +226,12 @@ class UpdatePlaceSweep(AbstractSweep):
                 person = person_list[i-1]
             # Checks person is not already in the place, and that they
             # haven't already been assigned to this place type.
-            if person.age >= carehome_minimum_age:
+            if person.age >= carehome_params["carehome_minimum_age"]:
                 if ((person not in place.persons) and
                         (place.place_type not in person.place_types)):
                     place.add_person(person, 1)
                 count += 1
-            elif person.age < carehome_minimum_age:
+            elif person.age < carehome_params["carehome_minimum_age"]:
                 if ((person not in place.persons) and
                         (place.place_type not in person.place_types)):
                     place.add_person(person, 0)
