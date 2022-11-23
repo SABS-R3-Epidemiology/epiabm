@@ -77,10 +77,16 @@ class HouseholdInfection:
 
         """
         seasonality = 1.0  # Not yet implemented
-        false_pos = 1 / (1 - pyEpiabm.core.Parameters.instance().
-                         false_positive_rate)
+        #false_pos = 1 / (1 - pyEpiabm.core.Parameters.instance().
+        #                 false_positive_rate)
+        true_pos = 1 - pyEpiabm.core.Parameters.instance().false_positive_rate
+
+        #infectiousness = (HouseholdInfection.household_inf(infector, time)
+        #                  * seasonality * false_pos
+        #                  * pyEpiabm.core.Parameters.instance().
+        #                  household_transmission)
         infectiousness = (HouseholdInfection.household_inf(infector, time)
-                          * seasonality * false_pos
+                          * seasonality * true_pos
                           * pyEpiabm.core.Parameters.instance().
                           household_transmission)
 
