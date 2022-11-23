@@ -56,6 +56,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.test_population1.add_cells(1)
         self.test_population1.cells[0].add_microcells(1)
         self.test_population1.cells[0].microcells[0].add_people(3)
+        self.test_population1.cells[0].microcells[0].add_place(1, [1, 1], place_type=5)
+        self.place1 = self.test_population1.cells[0].microcells[0].places[0]
         self.person1 = self.test_population1.cells[0].microcells[0].persons[0]
         self.person2 = self.test_population1.cells[0].microcells[0].persons[1]
         self.person3 = self.test_population1.cells[0].microcells[0].persons[2]
@@ -109,6 +111,14 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.person1.update_status(InfectionStatus.InfectASympt)
         with self.assertRaises(ValueError):
             pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, -2)
+
+    def test_carehomme_residents_die(self):
+        test_sweep = pe.sweep.HostProgressionSweep()
+
+        self.person1.add_place(self.place1, 1)
+        self.person1.update_status(InfectionStatus.InfectHosp)
+        test_sweep.update_next_infection_status(self.person1)
+        self.assertEqual(self.person1.next_infection_status, InfectionStatus.Dead)
 
     def test_update_next_infection_status(self):
         """Tests that an assertion error is raised if length of weights
