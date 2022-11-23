@@ -149,9 +149,12 @@ class HostProgressionSweep(AbstractSweep):
         if person.infection_status in [InfectionStatus.Recovered,
                                        InfectionStatus.Dead]:
             person.next_infection_status = None
-        elif ("CareHome" in person.place_types and person in
-              person.place_types["CareHome"].person_groups[1] and
-              person.infection_status == InfectionStatus.InfectHosp):
+        elif (person.care_home_resident == 1 and
+              person.infection_status == InfectionStatus.InfectICU):
+            person.next_infection_status = InfectionStatus.Dead
+        elif (person.care_home_resident == 1 and
+              person.infection_status == InfectionStatus.InfectHosp and
+              random.uniform(0, 1) > Parameters.instance().carehome_params['carehome_rel_prob_hosp']):
             person.next_infection_status = InfectionStatus.Dead
         else:
             row_index = person.infection_status.name

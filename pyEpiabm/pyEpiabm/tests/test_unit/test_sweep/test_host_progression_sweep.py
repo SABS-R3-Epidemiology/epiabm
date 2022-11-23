@@ -2,6 +2,7 @@ import unittest
 from unittest import mock
 import numpy as np
 import pandas as pd
+import random
 
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
@@ -112,13 +113,21 @@ class TestHostProgressionSweep(TestPyEpiabm):
         with self.assertRaises(ValueError):
             pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, -2)
 
-    def test_carehomme_residents_die(self):
+    @mock.patch('random.uniform')
+    def test_carehome_residents_die(self, mock_rand):
+        mock_rand.return_value = 2
         test_sweep = pe.sweep.HostProgressionSweep()
 
-        self.person1.add_place(self.place1, 1)
-        self.person1.update_status(InfectionStatus.InfectHosp)
+        self.person1.care_home_resident = 1
+        self.person1.update_status(InfectionStatus.InfectICU)
         test_sweep.update_next_infection_status(self.person1)
         self.assertEqual(self.person1.next_infection_status, InfectionStatus.Dead)
+
+        self.person2.care_home_resident = 1
+        self.person2.infection_status = InfectionStatus.InfectHosp
+        test_sweep.update_next_infection_status(self.person2)
+        self.assertEqual(self.person2.next_infection_status, InfectionStatus.Dead)
+        mock_rand.assert_called_once_with(0, 1)
 
     def test_update_next_infection_status(self):
         """Tests that an assertion error is raised if length of weights

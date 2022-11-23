@@ -86,13 +86,11 @@ class HouseholdInfection:
                           * pyEpiabm.core.Parameters.instance().
                           household_transmission
                           * (carehome_params["carehome_resident_household_scaling"]
-                          if ("CareHome" in infector.place_types
-                              and infector in infector.place_types["CareHome"].person_groups[1])
+                          if infector.care_home_resident == 1
                           else 1))
 
         susceptibility = (HouseholdInfection.household_susc(infector, infectee, time)
                           * (carehome_params["carehome_resident_household_scaling"]
-                          if ("CareHome" in infectee.place_types
-                             and infectee in infectee.place_types["CareHome"].person_groups[1])
+                          if infectee.care_home_resident == 1
                           else 1))
         return (infectiousness * susceptibility)

@@ -230,11 +230,13 @@ class UpdatePlaceSweep(AbstractSweep):
                 if ((person not in place.persons) and
                         (place.place_type not in person.place_types)):
                     place.add_person(person, 1)
+                    person.care_home_resident = 1
                 count += 1
             elif person.age < carehome_params["carehome_minimum_age"]:
                 if ((person not in place.persons) and
                         (place.place_type not in person.place_types)):
                     place.add_person(person, 0)
+                    person.key_worker = 1
                 count += 1
             # Prevent person being readded to list
             if person_weights is not None:
