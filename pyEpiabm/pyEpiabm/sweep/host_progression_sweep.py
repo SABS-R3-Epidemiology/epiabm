@@ -158,7 +158,7 @@ class HostProgressionSweep(AbstractSweep):
             person.next_infection_status = InfectionStatus.Dead
         elif (person.care_home_resident == 1 and
               person.infection_status == InfectionStatus.InfectHosp and
-              random.uniform(0, 1) > carehome_hosp:
+              random.uniform(0, 1) > carehome_hosp):
             person.next_infection_status = InfectionStatus.Dead
         else:
             row_index = person.infection_status.name
