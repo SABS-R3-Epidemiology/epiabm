@@ -115,6 +115,10 @@ class TestHostProgressionSweep(TestPyEpiabm):
 
     @mock.patch('random.uniform')
     def test_carehome_residents_die(self, mock_rand):
+        """Tests that carehome_residents die with probability=1 if they reach
+        ICU, and with probability = 1 - carehome_rel_prob_hosp if they reach
+        hospital
+        """
         mock_rand.return_value = 2
         test_sweep = pe.sweep.HostProgressionSweep()
 
