@@ -23,7 +23,7 @@ copyright = '2022, SABS-R3-Epidemiology'
 author = 'SABS-R3-Epidemiology'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.3'
+release = '1.0.1'
 
 
 # -- General configuration ---------------------------------------------------
