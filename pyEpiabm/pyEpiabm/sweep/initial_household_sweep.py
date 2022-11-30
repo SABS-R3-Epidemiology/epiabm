@@ -241,17 +241,16 @@ class InitialHouseholdSweep(AbstractSweep):
         """
 
         n = household_size
-
+        r = random.random()
         # Calculate number of children in a 3 person household
         if n == 3:
             if ((self.age_params["zero_child_three_pers_prob"] > 0) or
                     (self.age_params["two_child_three_pers_prob"] > 0)):
-                if (random.random()
-                   < self.age_params["zero_child_three_pers_prob"]):
+                if (r < self.age_params["zero_child_three_pers_prob"]):
                     num_childs = 0
                 else:
-                    if (random.random()
-                            < self.age_params["two_child_three_pers_prob"]):
+                    if (r - self.age_params["zero_child_three_pers_prob"]
+                    < self.age_params["two_child_three_pers_prob"]):
                         num_childs = 2
                     else:
                         num_childs = 1
@@ -260,20 +259,22 @@ class InitialHouseholdSweep(AbstractSweep):
 
         # Calculate number of children in a 4 person household
         if n == 4:
-            num_childs = 1 if (random.random()
-                               < self.age_params
-                               ["one_child_four_pers_prob"]) else 2
+            if (r< self.age_params["one_child_four_pers_prob"]): 
+                num_childs = 1
+            else: 
+                num_childs = 2
 
         # Calculate number of children in a 5 person household
         if n == 5:
-            num_childs = 3 if (random.random()
-                               < self.age_params
-                               ["three_child_five_pers_prob"]) else 2
+            if (r < self.age_params["three_child_five_pers_prob"]):
+                num_childs = 3
+            else:
+                num_childs = 2
 
         # Calculate the number of children in a household with more than
         # 5 people
         if n > 5:
-            num_childs = n - 2 - np.floor(3 * random.random())
+            num_childs = n - 2 - np.floor(3 * r)
 
         return num_childs
 
@@ -292,7 +293,6 @@ class InitialHouseholdSweep(AbstractSweep):
             List of three or more instances of Person class
 
         """
-
         n = len(people)
         num_childs = int(np.floor(self.calc_number_of_children(n)))
 
@@ -331,19 +331,17 @@ class InitialHouseholdSweep(AbstractSweep):
                 age = random.randint(0, 4) + 5 * age_group
                 people[0].age = age - people[random_child_index].age
                 # Increase base age of children relative to youngest child
+                r = random.random()
                 for i in range(1, num_childs):
                     people[i].age += people[0].age
                 # Set max age of youngest child
-                youngest_age = 5 if \
-                    (((num_childs == 1) and
-                        (random.random()
-                         < self.age_params
-                         ["one_child_prob_youngest_child_under_five"])) or
-                     ((num_childs == 2) and
-                        (random.random()
-                            < self.age_params
-                            ["two_children_prob_youngest_under_five"]))) else \
-                    self.age_params["max_child_age"]
+                if  (((num_childs == 1) and 
+                    (r < self.age_params["one_child_prob_youngest_child_under_five"])) or
+                    ((num_childs == 2) and
+                    (r < self.age_params["two_children_prob_youngest_under_five"]))): 
+                    youngest_age = 5 
+                else:
+                    youngest_age = self.age_params["max_child_age"]
                 if ((people[0].age >= 0) and
                         (people[0].age <= youngest_age) and
                         (people[num_childs - 1].age

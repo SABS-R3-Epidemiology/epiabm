@@ -224,9 +224,17 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         val = test_sweep.calc_number_of_children(3)
         self.assertEqual(val, 0)
 
-        mocked_random.side_effect = [2.0, 0.0]
+        mocked_random.side_effect = [0.1]
+        val = test_sweep.calc_number_of_children(3)
+        self.assertEqual(val, 0)
+
+        mocked_random.side_effect = [0.3]
         val = test_sweep.calc_number_of_children(3)
         self.assertEqual(val, 2)
+
+        mocked_random.side_effect = [0.5]
+        val = test_sweep.calc_number_of_children(3)
+        self.assertEqual(val, 1)
 
         mocked_random.side_effect = [2.0, 2.0]
         val = test_sweep.calc_number_of_children(3)
