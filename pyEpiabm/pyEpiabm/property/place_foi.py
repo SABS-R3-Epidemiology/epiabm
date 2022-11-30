@@ -98,7 +98,8 @@ class PlaceInfection:
         """
         carehome_params = Parameters.instance().carehome_params
         infectiousness = PlaceInfection.place_inf(place, infector, time)
-        susceptibility = (PlaceInfection.place_susc(place, infector, infectee, time)
+        susceptibility = (PlaceInfection.place_susc(place, infector,
+                                                    infectee, time)
                           * (carehome_params["carehome_worker_group_scaling"]
                           if (infectee.key_worker == 1
                              or infector.key_worker == 1)

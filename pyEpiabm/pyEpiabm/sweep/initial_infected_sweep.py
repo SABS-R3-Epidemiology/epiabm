@@ -52,9 +52,10 @@ class InitialInfectedSweep(AbstractSweep):
             raise ValueError('There are not enough susceptible people in the \
                                         population to infect')
 
-        care_param = Parameters.instance().carehome_params["carehome_allow_initial_infections"]
+        care_param = Parameters.instance().carehome_params
+        carehome_infection = care_param["carehome_allow_initial_infections"]
 
-        if care_param > 0:
+        if carehome_infection > 0:
             if ("initial_infected_cell" not in sim_params
                     or not sim_params["initial_infected_cell"]):
                 all_persons = [pers for cell in self._population.cells for pers
@@ -63,19 +64,22 @@ class InitialInfectedSweep(AbstractSweep):
             else:
                 cell = random.choice(self._population.cells)
                 all_persons = [pers for pers in cell.persons if pers
-                               .infection_status == InfectionStatus.Susceptible]
+                               .infection_status ==
+                               InfectionStatus.Susceptible]
 
         else:
             if ("initial_infected_cell" not in sim_params
                     or not sim_params["initial_infected_cell"]):
                 all_persons = [pers for cell in self._population.cells for pers
                                in cell.persons if
-                               (pers.infection_status == InfectionStatus.Susceptible
+                               (pers.infection_status ==
+                                InfectionStatus.Susceptible
                                 and 5 not in pers.place_types)]
             else:
                 cell = random.choice(self._population.cells)
                 all_persons = [pers for pers in cell.persons if
-                               (pers.infection_status == InfectionStatus.Susceptible
+                               (pers.infection_status ==
+                                InfectionStatus.Susceptible
                                 and 5 not in pers.place_types)]
 
         pers_to_infect = random.sample(all_persons,

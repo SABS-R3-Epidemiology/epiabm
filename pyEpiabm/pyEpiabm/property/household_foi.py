@@ -78,6 +78,7 @@ class HouseholdInfection:
 
         """
         carehome_params = Parameters.instance().carehome_params
+        carehome_scale = carehome_params["carehome_resident_household_scaling"]
         seasonality = 1.0  # Not yet implemented
         false_pos = 1 / (1 - pyEpiabm.core.Parameters.instance().
                          false_positive_rate)
@@ -85,12 +86,13 @@ class HouseholdInfection:
                           * seasonality * false_pos
                           * pyEpiabm.core.Parameters.instance().
                           household_transmission
-                          * (carehome_params["carehome_resident_household_scaling"]
+                          * carehome_scale
                           if infector.care_home_resident == 1
                           else 1))
 
-        susceptibility = (HouseholdInfection.household_susc(infector, infectee, time)
-                          * (carehome_params["carehome_resident_household_scaling"]
+        susceptibility = (HouseholdInfection.household_susc(infector,
+                                                            infectee, time)
+                          * carehome_scale
                           if infectee.care_home_resident == 1
                           else 1))
         return (infectiousness * susceptibility)

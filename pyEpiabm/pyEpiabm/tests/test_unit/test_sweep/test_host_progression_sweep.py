@@ -57,7 +57,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.test_population1.add_cells(1)
         self.test_population1.cells[0].add_microcells(1)
         self.test_population1.cells[0].microcells[0].add_people(3)
-        self.test_population1.cells[0].microcells[0].add_place(1, [1, 1], place_type=5)
+        self.test_population1.cells[0].microcells[0].add_place(1, [1, 1],
+                                                               place_type=5)
         self.place1 = self.test_population1.cells[0].microcells[0].places[0]
         self.person1 = self.test_population1.cells[0].microcells[0].persons[0]
         self.person2 = self.test_population1.cells[0].microcells[0].persons[1]
@@ -125,12 +126,14 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.person1.care_home_resident = 1
         self.person1.update_status(InfectionStatus.InfectICU)
         test_sweep.update_next_infection_status(self.person1)
-        self.assertEqual(self.person1.next_infection_status, InfectionStatus.Dead)
+        self.assertEqual(self.person1.next_infection_status,
+                         InfectionStatus.Dead)
 
         self.person2.care_home_resident = 1
         self.person2.infection_status = InfectionStatus.InfectHosp
         test_sweep.update_next_infection_status(self.person2)
-        self.assertEqual(self.person2.next_infection_status, InfectionStatus.Dead)
+        self.assertEqual(self.person2.next_infection_status,
+                         InfectionStatus.Dead)
         mock_rand.assert_called_once_with(0, 1)
 
     def test_update_next_infection_status(self):

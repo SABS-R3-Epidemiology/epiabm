@@ -1,9 +1,9 @@
 import unittest
-from unittest import mock
 
 import pyEpiabm as pe
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 from pyEpiabm.core import Parameters
+
 
 class TestInitialInfectedSweep(TestPyEpiabm):
     """Test the 'InitialInfectedSweep' class.
@@ -80,24 +80,12 @@ class TestInitialInfectedSweep(TestPyEpiabm):
         self.person2.update_status(pe.property.InfectionStatus.InfectMild)
         self.person1.age = 65
         self.person1.care_home_resident = 1
-        Parameters.instance().carehome_params["carehome_allow_initial_infections"] = 1
+        carehome_param = Parameters.instance().carehome_params
+        carehome_param["carehome_allow_initial_infections"] = 1
         test_sweep(params)
         status = pe.property.InfectionStatus.InfectMild
         num_infectious = sum(self.cell.compartment_counter.retrieve()[status])
         self.assertEqual(num_infectious, 2)
-
-        # Test that call assigns correct number of infectious people when do not have
-        # carehome initial infections.
-        #params = {"initial_infected_number": 1, "simulation_start_time": 0}
-        #self.person1.update_status(pe.property.InfectionStatus.Susceptible)
-        #self.person2.update_status(pe.property.InfectionStatus.Susceptible)
-        #self.person1.age = 65
-        #self.person1.care_home_resident = 1
-        #Parameters.instance().carehome_params["carehome_allow_initial_infections"] = 0
-        #test_sweep(params)
-        #status = pe.property.InfectionStatus.InfectMild
-        #num_infectious = sum(self.cell.compartment_counter.retrieve()[status])
-        #self.assertEqual(num_infectious, 1)
 
     def test_cell_distribution(self):
         """Test the main function of the Initial Infected Sweep.

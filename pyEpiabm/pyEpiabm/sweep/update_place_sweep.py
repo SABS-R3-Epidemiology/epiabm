@@ -51,7 +51,7 @@ class UpdatePlaceSweep(AbstractSweep):
                                             mean_capacity=mean_cap,
                                             person_list=person_list.copy())
 
-                #elif place.place_type.name == "CareHome":
+                # elif place.place_type.name == "CareHome":
                 #    group_ind = list(place.person_groups.keys())[0]
                 #    place.empty_place(groups_to_empty=[group_ind])
                 #    person_list = [person for person in place.cell.persons

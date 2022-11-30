@@ -119,10 +119,12 @@ class SpatialInfection:
 
         """
         carehome_params = pyEpiabm.core.Parameters.instance().carehome_params
+        carehome_scale = carehome_params["carehome_resident_spatial_scaling"]
         infectiousness = SpatialInfection.space_inf(inf_cell, infector,
                                                     time)
-        susceptibility = (SpatialInfection.space_susc(susc_cell, infectee, time)
-                          * (carehome_params["carehome_resident_spatial_scaling"]
+        susceptibility = (SpatialInfection.space_susc(susc_cell,
+                                                      infectee, time)
+                          * carehome_scale
                           if ("CareHome" in infector.place_types
                              or "CareHome" in infectee.place_types)
                           else 1))
