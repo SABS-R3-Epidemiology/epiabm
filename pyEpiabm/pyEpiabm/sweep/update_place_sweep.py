@@ -163,7 +163,7 @@ class UpdatePlaceSweep(AbstractSweep):
                               group_index: int = None,
                               group_size: int = 0, person_list: list = None,
                               person_weights: list = None):
-        """Specific method to update people in a place or place group.
+        """Specific method to update people in a carehomes.
 
         Parameters
         ----------

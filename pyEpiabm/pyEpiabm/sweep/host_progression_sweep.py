@@ -139,6 +139,8 @@ class HostProgressionSweep(AbstractSweep):
         are taken from row in state transition matrix that corresponds to
         the person's current infection status. Weights are then used in
         random.choices method to select person's next infection status.
+        Exception is carehome residents who die with probability=1 if reach ICU
+        and probability=1-'carehome_rel_prob_hosp' if reach hospital.
 
         Parameters
         ----------
