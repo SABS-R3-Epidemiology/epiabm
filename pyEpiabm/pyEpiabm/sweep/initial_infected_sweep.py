@@ -52,9 +52,9 @@ class InitialInfectedSweep(AbstractSweep):
             raise ValueError('There are not enough susceptible people in the \
                                         population to infect')
 
-        params = Parameters.instance().carehome_params
+        care_param = Parameters.instance().carehome_params["carehome_allow_initial_infections"]
 
-        if params["carehome_allow_initial_infections"] > 0:
+        if care_param > 0:
             if ("initial_infected_cell" not in sim_params
                     or not sim_params["initial_infected_cell"]):
                 all_persons = [pers for cell in self._population.cells for pers

@@ -134,6 +134,79 @@ class TestUpdatePlaceSweep(TestPyEpiabm):
         self.assertDictEqual(place.person_groups,
                              {0: [person]})
 
+    @mock.patch("random.randint")
+    @mock.patch('logging.warning')
+    def test_update_carehome(self, log_mock, mock_random):
+        """Test explicitly the update carehome function.
+        """
+        test_pop = self.pop
+        place = test_pop.cells[0].places[0]
+        person = test_pop.cells[0].persons[0]
+        person.age = 45
+        test_sweep = UpdatePlaceSweep()
+        test_sweep.bind_population(test_pop)
+        mock_random.return_value = 0
+
+        test_sweep.update_carehome_group(place)
+        self.assertTrue(place.persons)
+        self.assertDictEqual(place.person_groups, {0: [person]})
+        self.place.empty_place()
+        person.age = 70
+        mock_random.return_value = 1
+        test_sweep.update_carehome_group(place, person_list=[person],
+                                      group_size=1)
+        self.assertDictEqual(place.person_groups,
+                             {0: [], 1: [person]})
+
+        # Test when max capacity not set
+        self.place.empty_place([1])
+        test_sweep.update_carehome_group(place, person_list=[person],
+                                      power_law_params=[3, 1, 4])
+        self.assertDictEqual(place.person_groups,
+                             {0: [], 1: [person]})
+        self.assertRaises(AssertionError, test_sweep.update_place_group,
+                          place, person_list=[person], power_law_params=[3])
+
+        # Test when group index set
+        self.place.empty_place([1])
+        test_sweep.update_carehome_group(place, person_list=[person],
+                                      group_index=1)
+        self.assertDictEqual(place.person_groups,
+                             {0: [], 1: [person]})
+
+        # Test with weights
+        self.place.empty_place([1])
+        test_sweep.update_carehome_group(place, person_list=[person],
+                                      person_weights=[1])
+        self.assertDictEqual(place.person_groups,
+                             {0: [], 1: [person]})
+        self.place.empty_place()
+        test_sweep.update_carehome_group(place, person_list=[])
+        log_mock.assert_called
+
+        # Test when weigts are the wrong size
+        self.assertRaises(AssertionError, test_sweep.update_carehome_group, place,
+                          person_list=[person], person_weights=[])
+        test_sweep.update_carehome_group(place, person_list=[person],
+                                      person_weights=[0])
+        log_mock.assert_called
+
+    @mock.patch("numpy.random.poisson")
+    def test_update_place_no_groups(self, mock_poisson):
+        """Test handling of zero groups from poisson distribution.
+        First call of mock gives non-zero capacity"""
+        test_pop = self.pop
+        place = test_pop.cells[0].places[0]
+        person = test_pop.cells[0].persons[0]
+        test_sweep = UpdatePlaceSweep()
+        test_sweep.bind_population(test_pop)
+        mock_poisson.side_effect = [5, 0]
+
+        test_sweep.update_place_group(place, person_list=[person],
+                                      group_size=1)
+        self.assertDictEqual(place.person_groups,
+                             {0: [person]})
+
     @mock.patch("pyEpiabm.sweep.UpdatePlaceSweep.update_place_group")
     def test__call__(self, mock_update):
         """Test whether the update place sweep function takes an
