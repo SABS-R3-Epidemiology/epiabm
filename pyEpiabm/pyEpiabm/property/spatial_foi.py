@@ -124,7 +124,7 @@ class SpatialInfection:
                                                     time)
         susceptibility = (SpatialInfection.space_susc(susc_cell,
                                                       infectee, time)
-                          * carehome_scale
+                          * (carehome_scale
                           if ("CareHome" in infector.place_types
                              or "CareHome" in infectee.place_types)
                           else 1))

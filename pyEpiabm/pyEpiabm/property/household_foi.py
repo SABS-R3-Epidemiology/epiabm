@@ -86,13 +86,13 @@ class HouseholdInfection:
                           * seasonality * false_pos
                           * pyEpiabm.core.Parameters.instance().
                           household_transmission
-                          * carehome_scale
+                          * (carehome_scale
                           if infector.care_home_resident == 1
                           else 1))
 
         susceptibility = (HouseholdInfection.household_susc(infector,
                                                             infectee, time)
-                          * carehome_scale
+                          * (carehome_scale
                           if infectee.care_home_resident == 1
                           else 1))
         return (infectiousness * susceptibility)
