@@ -12,7 +12,6 @@
     "mean_icu_to_icurecov": 1,
     "mean_icu_to_death": 1,
     "mean_icurecov_to_recov": 1,
-    "CDF_RES": 20,
     "time_steps_per_day": 1,
     "prob_symptomatic": 0.66,
     "sympt_infectiousness": 1.5,
@@ -58,6 +57,7 @@
         "prop_other_parent_away": 0.0
     },
     "note2": "Don't change parameters below this",
+    "CDF_RES": 20,
 "latent_period_iCDF": [
     0,
     0.098616903,
