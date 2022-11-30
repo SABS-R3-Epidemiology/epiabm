@@ -92,32 +92,6 @@ class TestUpdatePlaceSweep(TestPyEpiabm):
                                       person_weights=[0])
         log_mock.assert_called
 
-    def test_carehome_group(self):
-        """Test the update carehome function splits by age appropriately.
-        """
-        test_pop = self.pop
-        place = test_pop.cells[0].places[0]
-        person = test_pop.cells[0].persons[0]
-        test_sweep = UpdatePlaceSweep()
-        test_sweep.bind_population(test_pop)
-
-        test_sweep.update_carehome_group(place)
-        self.assertTrue(place.persons)
-        self.assertDictEqual(place.person_groups, {0: [person]})
-        self.place.empty_place()
-        person.age = 85
-        test_sweep.update_carehome_group(place, person_list=[person],
-                                         group_size=1)
-        self.assertDictEqual(place.person_groups,
-                             {0: [], 1: [person]})
-
-        self.place.empty_place()
-        person.age = 45
-        test_sweep.update_carehome_group(place, person_list=[person],
-                                         group_size=1)
-        self.assertDictEqual(place.person_groups,
-                             {0: [person], 1: []})
-
     @mock.patch("numpy.random.poisson")
     def test_update_place_no_groups(self, mock_poisson):
         """Test handling of zero groups from poisson distribution.
