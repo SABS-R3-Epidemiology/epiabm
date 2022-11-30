@@ -99,8 +99,8 @@ class InitialHouseholdSweep(AbstractSweep):
 
         # Case where a young and single adult lives alone
         elif ((self.age_params["one_pers_house_prob_young"] > 0) and
-              (r < (self.age_params["one_pers_house_prob_young"]
-               / (1 - self.age_params["one_pers_house_prob_old"])))):
+              (r - self.age_params["one_pers_house_prob_old"] < 
+              (self.age_params["one_pers_house_prob_young"]))):
             while True:
                 person.set_random_age()
                 break_ratio = (
@@ -169,8 +169,9 @@ class InitialHouseholdSweep(AbstractSweep):
                     break
 
         # Case where one child and one adult live together
-        elif r < (self.age_params["one_child_two_pers_prob"]
-                  / (1 - self.age_params["two_pers_house_prob_old"])):
+        elif ((self.age_params["one_child_two_pers_prob"] > 0) and
+        r - self.age_params["two_pers_house_prob_old"] < 
+        (self.age_params["one_child_two_pers_prob"])):
             while True:
                 person1.set_random_age()
                 if person1.age <= self.age_params["max_child_age"]:
@@ -186,9 +187,9 @@ class InitialHouseholdSweep(AbstractSweep):
 
         # Case where two young adults live together
         elif ((self.age_params["two_pers_house_prob_young"] > 0) and
-                (r < (self.age_params["two_pers_house_prob_young"]
-                      / (1 - self.age_params["two_pers_house_prob_old"]
-                 - self.age_params["one_child_two_pers_prob"])))):
+                (r - self.age_params["two_pers_house_prob_old"]
+                - self.age_params["one_child_two_pers_prob"] <
+                (self.age_params["two_pers_house_prob_young"]))):
             while True:
                 person1.set_random_age()
                 break_ratio = 1 - (self.age_params["young_and_single_slope"]
