@@ -32,7 +32,7 @@ class AbstractIntervention:
         return (
             self.start_time <= time and
             self.start_time + self.policy_duration >= time and
-            self.threshold >= num_cases
+            self.threshold <= num_cases
         )
 
     def __call__(self, time: float):
