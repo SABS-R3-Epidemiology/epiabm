@@ -67,7 +67,7 @@ class InitialisePlaceSweep(AbstractSweep):
                                               power_law_params=power_list)
 
                 elif place.place_type.name == "CareHome":
-                    helper.update_carehome_group(
+                    helper.update_place_group(
                         place,
                         group_size=ave_group_size,
                         person_list=person_list.copy(),
