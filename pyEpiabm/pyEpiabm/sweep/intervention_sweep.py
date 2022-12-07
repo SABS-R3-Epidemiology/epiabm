@@ -17,7 +17,7 @@ class InterventionSweep(AbstractSweep):
         """Call in variables from the parameters file and set flags
         """
         self.interventions = []
-        self.intervention_params = Parameters.instance().intervention_params  #{'case_isolation': [time_start, policy_duration]}
+        self.intervention_params = Parameters.instance().intervention_params
 
     def bind_population(self, population):
         self._population = population
@@ -28,11 +28,11 @@ class InterventionSweep(AbstractSweep):
                     start_time=params['time_start'],
                     policy_duration=params['policy_duration'],
                     threshold=params['threshold'],
-                    isolation_delay=['isolation_delay'],
-                    isolation_duration=['isolation_duration'],
-                    isolation_probability=['isolation_probability'],
-                    isolation_effectiveness=['isolation_effectiveness'],
-                    isolation_house_effectiveness=['isolation_house_effectiveness'],
+                    isolation_delay=params['isolation_delay'],
+                    isolation_duration=params['isolation_duration'],
+                    isolation_probability=params['isolation_probability'],
+                    isolation_effectiveness=params['isolation_effectiveness'],
+                    isolation_house_effectiveness=params['isolation_house_effectiveness'],
                     population=self._population
                 ))
 
