@@ -98,7 +98,7 @@ class DistanceFunctions:
         # Enforce periodicity of the map from the grid to the Earth.
         # If the distance between points is more than half the total length,
         # it would be quicker to "go round the back" of the Earth
-        for index in range(1):
+        for index in range(2):
             if diff[index] > 0.5 * scales[index]:
                 diff[index] = scales[index] - diff[index]
         return np.linalg.norm(diff)

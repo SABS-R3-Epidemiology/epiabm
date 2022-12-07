@@ -152,4 +152,4 @@ class Person:
         else:
             ind = place_list.index(place)
             self.places.pop(ind)
-            self.place_types.remove(place.place_type)
+            self.place_types.pop(ind)
