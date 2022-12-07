@@ -8,7 +8,7 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__), os.pardir,
                        "simple_parameters_with_age.json"))
 
 # Set population parameters
-pop_params = {"population_size": 100000, "cell_number": 1,
+pop_params = {"population_size": 1000000, "cell_number": 1,
               "microcell_number": 1, "household_number": 5,
               "place_number": 2}
 
@@ -58,7 +58,7 @@ for cell in population.cells:
     for person in cell.persons:
         ylist.append(person.age)
 
-y = np.array(xlist)
+y = np.array(ylist)
 
 # Plot and save histogram
 plt.figure(2)
