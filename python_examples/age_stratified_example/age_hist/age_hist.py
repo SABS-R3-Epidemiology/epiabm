@@ -24,7 +24,7 @@ for cell in population.cells:
 x = np.array(xlist)
 
 plt.figure(1)
-plt.hist(x, density=False, bins=17)
+plt.hist(x, density=False, rwidth=0.6, bins=17)
 plt.ylabel('Count')
 plt.xlabel('Age')
 plt.title('Histogram of toy population')
@@ -59,7 +59,7 @@ for cell in population.cells:
 y = np.array(xlist)
 
 plt.figure(2)
-plt.hist(y, density=False, bins=17)
+plt.hist(y, density=False, rwidth=0.6, bins=17)
 plt.ylabel('Count')
 plt.xlabel('Age')
 plt.title('Histogram of toy population after simulation')
