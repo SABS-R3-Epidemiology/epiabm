@@ -3,9 +3,9 @@
 #
 
 import pyEpiabm.core
+from pyEpiabm.core import Parameters
 
 from .personal_foi import PersonalInfection
-from pyEpiabm.core import Parameters
 
 
 class HouseholdInfection:
@@ -87,12 +87,12 @@ class HouseholdInfection:
                           * pyEpiabm.core.Parameters.instance().
                           household_transmission
                           * (carehome_scale
-                          if infector.care_home_resident == 1
+                          if infector.care_home_resident
                           else 1))
 
         susceptibility = (HouseholdInfection.household_susc(infector,
                                                             infectee, time)
                           * (carehome_scale
-                          if infectee.care_home_resident == 1
+                          if infectee.care_home_resident
                           else 1))
         return (infectiousness * susceptibility)

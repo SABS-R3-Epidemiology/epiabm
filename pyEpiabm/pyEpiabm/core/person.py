@@ -47,8 +47,8 @@ class Person:
         self.next_infection_status = None
         self.time_of_status_change = None
         self.infection_start_time = None
-        self.care_home_resident = None
-        self.key_worker = None
+        self.care_home_resident = False
+        self.key_worker = False
 
         self.set_random_age()
 
