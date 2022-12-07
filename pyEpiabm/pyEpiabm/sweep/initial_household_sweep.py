@@ -99,7 +99,7 @@ class InitialHouseholdSweep(AbstractSweep):
 
         # Case where a young and single adult lives alone
         elif ((self.age_params["one_pers_house_prob_young"] > 0) and
-              (r - self.age_params["one_pers_house_prob_old"] < 
+              (r - self.age_params["one_pers_house_prob_old"] <
               (self.age_params["one_pers_house_prob_young"]))):
             while True:
                 person.set_random_age()
@@ -259,9 +259,9 @@ class InitialHouseholdSweep(AbstractSweep):
 
         # Calculate number of children in a 4 person household
         if n == 4:
-            if (r < self.age_params["one_child_four_pers_prob"]): 
+            if (r < self.age_params["one_child_four_pers_prob"]):
                 num_childs = 1
-            else: 
+            else:
                 num_childs = 2
 
         # Calculate number of children in a 5 person household
