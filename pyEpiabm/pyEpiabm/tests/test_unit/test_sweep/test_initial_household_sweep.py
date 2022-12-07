@@ -344,6 +344,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         mocked_choice.side_effect = [[0], [6]]
         mocked_random.side_effect = [0.0, 2.0]
         test_sweep.three_or_more_person_household_ages(self.three_people)
+        self.assertTrue(self.age_params["max_child_age"] >= 5)
         self.assertTrue(self.person1.age >= 0)
         self.assertTrue(self.person1.age <= 5)
         self.assertTrue(self.person2.age <= self.age_params["max_child_age"])

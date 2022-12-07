@@ -170,8 +170,8 @@ class InitialHouseholdSweep(AbstractSweep):
 
         # Case where one child and one adult live together
         elif ((self.age_params["one_child_two_pers_prob"] > 0) and
-        r - self.age_params["two_pers_house_prob_old"] < 
-        (self.age_params["one_child_two_pers_prob"])):
+                r - self.age_params["two_pers_house_prob_old"] <
+                (self.age_params["one_child_two_pers_prob"])):
             while True:
                 person1.set_random_age()
                 if person1.age <= self.age_params["max_child_age"]:
@@ -188,8 +188,8 @@ class InitialHouseholdSweep(AbstractSweep):
         # Case where two young adults live together
         elif ((self.age_params["two_pers_house_prob_young"] > 0) and
                 (r - self.age_params["two_pers_house_prob_old"]
-                - self.age_params["one_child_two_pers_prob"] <
-                (self.age_params["two_pers_house_prob_young"]))):
+                    - self.age_params["one_child_two_pers_prob"] <
+                    (self.age_params["two_pers_house_prob_young"]))):
             while True:
                 person1.set_random_age()
                 break_ratio = 1 - (self.age_params["young_and_single_slope"]
@@ -250,7 +250,7 @@ class InitialHouseholdSweep(AbstractSweep):
                     num_childs = 0
                 else:
                     if (r - self.age_params["zero_child_three_pers_prob"]
-                    < self.age_params["two_child_three_pers_prob"]):
+                            < self.age_params["two_child_three_pers_prob"]):
                         num_childs = 2
                     else:
                         num_childs = 1
@@ -259,7 +259,7 @@ class InitialHouseholdSweep(AbstractSweep):
 
         # Calculate number of children in a 4 person household
         if n == 4:
-            if (r< self.age_params["one_child_four_pers_prob"]): 
+            if (r < self.age_params["one_child_four_pers_prob"]): 
                 num_childs = 1
             else: 
                 num_childs = 2
@@ -335,11 +335,13 @@ class InitialHouseholdSweep(AbstractSweep):
                 for i in range(1, num_childs):
                     people[i].age += people[0].age
                 # Set max age of youngest child
-                if  (((num_childs == 1) and 
-                    (r < self.age_params["one_child_prob_youngest_child_under_five"])) or
-                    ((num_childs == 2) and
-                    (r < self.age_params["two_children_prob_youngest_under_five"]))): 
-                    youngest_age = 5 
+                if (((num_childs == 1) and
+                    (r < self.age_params
+                    ["one_child_prob_youngest_child_under_five"]))
+                        or ((num_childs == 2) and
+                            (r < self.age_params
+                            ["two_children_prob_youngest_under_five"]))):
+                    youngest_age = 5
                 else:
                     youngest_age = self.age_params["max_child_age"]
                 if ((people[0].age >= 0) and
