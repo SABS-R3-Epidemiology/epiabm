@@ -77,15 +77,15 @@ class TestInitialInfectedSweep(TestPyEpiabm):
         # carehome initial infections.
         params = {"initial_infected_number": 1, "simulation_start_time": 0}
         self.person1.update_status(pe.property.InfectionStatus.Susceptible)
-        self.person2.update_status(pe.property.InfectionStatus.InfectMild)
-        self.person1.age = 65
-        self.person1.care_home_resident = 1
+        self.person2.update_status(pe.property.InfectionStatus.Susceptible)
+        self.person1.age = 80
+        self.person1.care_home_resident = True
         carehome_param = Parameters.instance().carehome_params
-        carehome_param["carehome_allow_initial_infections"] = 1
+        carehome_param["carehome_allow_initial_infections"] = 0
         test_sweep(params)
         status = pe.property.InfectionStatus.InfectMild
         num_infectious = sum(self.cell.compartment_counter.retrieve()[status])
-        self.assertEqual(num_infectious, 2)
+        self.assertEqual(num_infectious, 1)
 
     def test_cell_distribution(self):
         """Test the main function of the Initial Infected Sweep.

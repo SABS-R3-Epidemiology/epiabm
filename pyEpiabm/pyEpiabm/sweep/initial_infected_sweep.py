@@ -55,32 +55,22 @@ class InitialInfectedSweep(AbstractSweep):
         care_param = Parameters.instance().carehome_params
         carehome_infection = care_param["carehome_allow_initial_infections"]
 
-        if carehome_infection > 0:
-            if ("initial_infected_cell" not in sim_params
-                    or not sim_params["initial_infected_cell"]):
-                all_persons = [pers for cell in self._population.cells for pers
-                               in cell.persons if pers.infection_status
-                               == InfectionStatus.Susceptible]
-            else:
-                cell = random.choice(self._population.cells)
-                all_persons = [pers for pers in cell.persons if pers
-                               .infection_status ==
-                               InfectionStatus.Susceptible]
-
+        if ("initial_infected_cell" not in sim_params
+                or not sim_params["initial_infected_cell"]):
+            all_persons = [pers for cell in self._population.cells for pers
+                           in cell.persons if
+                           (pers.infection_status ==
+                            InfectionStatus.Susceptible)]
         else:
-            if ("initial_infected_cell" not in sim_params
-                    or not sim_params["initial_infected_cell"]):
-                all_persons = [pers for cell in self._population.cells for pers
-                               in cell.persons if
-                               (pers.infection_status ==
-                                InfectionStatus.Susceptible
-                                and 5 not in pers.place_types)]
-            else:
-                cell = random.choice(self._population.cells)
-                all_persons = [pers for pers in cell.persons if
-                               (pers.infection_status ==
-                                InfectionStatus.Susceptible
-                                and 5 not in pers.place_types)]
+            cell = random.choice(self._population.cells)
+            all_persons = [pers for pers in cell.persons if
+                           (pers.infection_status ==
+                            InfectionStatus.Susceptible)]
+
+        if carehome_infection == 0:
+            for person in all_persons:
+                if person.care_home_resident or person.key_worker:
+                    all_persons.remove(person)
 
         pers_to_infect = random.sample(all_persons,
                                        sim_params["initial_infected_number"])
