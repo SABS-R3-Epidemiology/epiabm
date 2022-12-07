@@ -4,9 +4,12 @@
 
 from pyEpiabm.intervention import AbstractIntervention
 
+
 class CaseIsolation(AbstractIntervention):
-   """
-   """
+    """
+    TODO
+    """
 
     def __call__(self):
-        pass
+        for cell in self._population.cells:
+            pass
