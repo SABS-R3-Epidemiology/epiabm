@@ -242,7 +242,7 @@ class InitialHouseholdSweep(AbstractSweep):
 
         n = household_size
         r = random.random()
-        # Calculate number of children in a 3 person household
+        # Calculate the number of children in a 3 person household
         if n == 3:
             if ((self.age_params["zero_child_three_pers_prob"] > 0) or
                     (self.age_params["two_child_three_pers_prob"] > 0)):
