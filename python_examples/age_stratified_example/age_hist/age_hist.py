@@ -42,7 +42,7 @@ file_params = {"output_file": "output_gibraltar.csv",
                "spatial_output": True,
                "age_stratified": True}
 
-# Run the simulation sweeps
+# Run the initial household sweep
 sim = pe.routine.Simulation()
 sim.configure(
     population,
