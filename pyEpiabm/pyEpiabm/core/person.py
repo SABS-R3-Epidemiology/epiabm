@@ -47,6 +47,7 @@ class Person:
         self.next_infection_status = None
         self.time_of_status_change = None
         self.infection_start_time = None
+        self.is_isolating = False
 
         self.set_random_age()
 
@@ -67,6 +68,23 @@ class Person:
             # If age is not used in the model, then every person is in the
             # same age group (to conserve same output structure)
             self.age_group = 0
+
+    def is_symptomatic(self):
+        """Query if the person is currently symptomatic.
+
+        Returns
+        -------
+        bool
+            Whether person is currently symptomatic
+
+        """
+        return self.infection_status in (
+            InfectionStatus.InfectMild,
+            InfectionStatus.InfectGP,
+            InfectionStatus.InfectHosp,
+            InfectionStatus.InfectICU,
+            InfectionStatus.InfectICURecov,
+        )
 
     def is_infectious(self):
         """Query if the person is currently infectious.

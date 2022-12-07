@@ -9,24 +9,24 @@ class AbstractIntervention:
     """Abstract class for Interventions.
 
     """
-    def __init__(self, start_time, duration, population):
+    def __init__(self, start_time, policy_duration, population):
         """Set the parameters of the interventions
 
         Parameters
         ----------
         start_time : float
             Start time of intervention
-        duration : float
+        policy_duration : float
             Duration of the intervention
         is_active : boolean
             Whether intervention is active
         """
         self.start_time = start_time
-        self.duration = duration
+        self.policy_duration = policy_duration
         self._population = population
 
-    def is_active(time):
-        return self.start_time <= time and self.start_time + duration >= time
+    def is_active(self, time):
+        return self.start_time <= time and self.start_time + self.policy_duration >= time
 
     def __call__(self, time: float):
         """Run intervention.

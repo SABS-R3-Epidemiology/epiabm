@@ -6,7 +6,7 @@ from pyEpiabm.core import Parameters, Person, Population
 from pyEpiabm.intervention import CaseIsolation
 from .abstract_sweep import AbstractSweep
 
-class InterventionsSweep(AbstractSweep):
+class InterventionSweep(AbstractSweep):
     """Class to sweep through all possible interventions. 
     Check if intervention should take place based on time (and/or threshold).
     Possible interventions:
@@ -17,11 +17,17 @@ class InterventionsSweep(AbstractSweep):
         """Call in variables from the parameters file and set flags
         """
         self.interventions = []
-        self.intervention_params = Parameters.instance().intervention_params  #{'case_isolation': [time_start, duration]}
+        self.intervention_params = Parameters.instance().intervention_params  #{'case_isolation': [time_start, policy_duration]}
+
+    def bind_population(self, population):
+        self._population = population
         for intervention in self.intervention_params.keys():
             params = self.intervention_params[intervention]
             if intervention == 'case_isolation':
-                self.interventions.append(CaseIsolation(*params, population=self._population))
+                self.interventions.append(CaseIsolation(
+                    start_time=params['time_start'],
+                    policy_duration=params['policy_duration'],
+                    population=self._population))
 
     def __call__(self, time):
         """

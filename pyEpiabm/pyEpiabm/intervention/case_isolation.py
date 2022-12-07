@@ -6,10 +6,11 @@ from pyEpiabm.intervention import AbstractIntervention
 
 
 class CaseIsolation(AbstractIntervention):
-    """
-    TODO
+    """Case isolation intervention
     """
 
     def __call__(self):
         for cell in self._population.cells:
-            pass
+            for person in cell.persons:
+                # Require symptomatic individuals to self-isolate
+                person.is_isolating = person.is_symptomatic()
