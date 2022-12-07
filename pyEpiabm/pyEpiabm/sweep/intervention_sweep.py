@@ -27,7 +27,9 @@ class InterventionSweep(AbstractSweep):
                 self.interventions.append(CaseIsolation(
                     start_time=params['time_start'],
                     policy_duration=params['policy_duration'],
-                    population=self._population))
+                    threshold=params['threshold'],
+                    population=self._population
+                ))
 
     def __call__(self, time):
         """
@@ -39,5 +41,11 @@ class InterventionSweep(AbstractSweep):
             Simulation time
         """
         for intervention in self.interventions:
-            if intervention.is_active(time):
+            # TODO: better case-count, condition on ICU, etc.
+            num_cases = 0
+            for cell in self._population.cells:
+                for person in cell.persons:
+                    if person.is_infectious():
+                        num_cases += 1
+            if intervention.is_active(time, num_cases):
                 intervention()
