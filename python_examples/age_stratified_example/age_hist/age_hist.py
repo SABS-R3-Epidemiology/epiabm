@@ -1,5 +1,4 @@
 import pyEpiabm as pe
-from pyEpiabm.core import Population
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -25,7 +24,7 @@ for cell in population.cells:
 x = np.array(xlist)
 
 plt.figure(1)
-plt.hist(x, density=False, bins=17)  # density=False would make counts
+plt.hist(x, density=False, bins=17)
 plt.ylabel('Count')
 plt.xlabel('Age')
 plt.title('Histogram of toy population')
@@ -45,7 +44,7 @@ file_params = {"output_file": "output_gibraltar.csv",
 sim = pe.routine.Simulation()
 sim.configure(
     population,
-    [pe.sweep.InitialHouseholdSweep()],[],
+    [pe.sweep.InitialHouseholdSweep()], [],
     sim_params,
     file_params,
 )
@@ -60,7 +59,7 @@ for cell in population.cells:
 y = np.array(xlist)
 
 plt.figure(2)
-plt.hist(y, density=False, bins=17)  # density=False would make counts
+plt.hist(y, density=False, bins=17)
 plt.ylabel('Count')
 plt.xlabel('Age')
 plt.title('Histogram of toy population after simulation')
