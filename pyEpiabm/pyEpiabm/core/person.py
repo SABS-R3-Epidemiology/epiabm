@@ -47,7 +47,7 @@ class Person:
         self.next_infection_status = None
         self.time_of_status_change = None
         self.infection_start_time = None
-        self.is_isolating = False
+        self.isolation_start_time = None
 
         self.set_random_age()
 

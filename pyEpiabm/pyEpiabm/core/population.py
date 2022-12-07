@@ -15,6 +15,8 @@ class Population:
 
         """
         self.cells = []
+        self.isolation_effectiveness = None
+        self.isolation_house_effectiveness = None
 
     def __repr__(self):
         """Returns a string representation of a Population.

@@ -77,6 +77,7 @@ class HouseholdInfection:
 
         """
         seasonality = 1.0  # Not yet implemented
+        isolation = population.isolation_house_effectiveness if infector.isolation_start_time is None else 1
         false_pos = 1 / (1 - pyEpiabm.core.Parameters.instance().
                          false_positive_rate)
         infectiousness = (HouseholdInfection.household_inf(infector, time)
@@ -86,4 +87,4 @@ class HouseholdInfection:
 
         susceptibility = HouseholdInfection.household_susc(infector, infectee,
                                                            time)
-        return (infectiousness * susceptibility)
+        return (isolation * infectiousness * susceptibility)

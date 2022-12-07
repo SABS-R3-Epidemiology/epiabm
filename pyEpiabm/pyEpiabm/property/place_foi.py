@@ -96,7 +96,7 @@ class PlaceInfection:
             Force of infection parameter of place
 
         """
-        isolation = 0 if infector.is_isolating else 1
+        isolation = population.isolation_effectiveness if infector.isolation_start_time is None else 1
         infectiousness = PlaceInfection.place_inf(place, infector, time)
         susceptibility = PlaceInfection.place_susc(place, infector, infectee,
                                                    time)

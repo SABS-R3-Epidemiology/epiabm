@@ -28,6 +28,11 @@ class InterventionSweep(AbstractSweep):
                     start_time=params['time_start'],
                     policy_duration=params['policy_duration'],
                     threshold=params['threshold'],
+                    isolation_delay=['isolation_delay'],
+                    isolation_duration=['isolation_duration'],
+                    isolation_probability=['isolation_probability'],
+                    isolation_effectiveness=['isolation_effectiveness'],
+                    isolation_house_effectiveness=['isolation_house_effectiveness'],
                     population=self._population
                 ))
 
@@ -48,4 +53,4 @@ class InterventionSweep(AbstractSweep):
                     if person.is_infectious():
                         num_cases += 1
             if intervention.is_active(time, num_cases):
-                intervention()
+                intervention(time)
