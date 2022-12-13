@@ -75,5 +75,6 @@ class TestHouseholdInfection(TestPyEpiabm):
                                                   self.time)
         self.assertEqual(result, 4)
 
+
 if __name__ == '__main__':
     unittest.main()

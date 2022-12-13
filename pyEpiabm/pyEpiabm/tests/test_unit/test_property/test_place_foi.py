@@ -68,5 +68,6 @@ class TestPlaceInfection(TestPyEpiabm):
                                           self.infectee, self.time)
         self.assertEqual(result, 2)
 
+
 if __name__ == '__main__':
     unittest.main()
