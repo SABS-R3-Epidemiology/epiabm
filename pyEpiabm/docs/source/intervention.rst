@@ -1,6 +1,6 @@
-****
+************
 Intervention
-****
+************
 
 .. currentmodule:: pyEpiabm.intervention
 
