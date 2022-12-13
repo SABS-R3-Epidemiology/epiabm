@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 import pyEpiabm as pe
 from pyEpiabm.property import PlaceInfection
@@ -52,6 +53,20 @@ class TestPlaceInfection(TestPyEpiabm):
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
+    @patch('pyEpiabm.property.PlaceInfection.place_susc')
+    @patch('pyEpiabm.property.PlaceInfection.place_inf')
+    @patch('pyEpiabm.core.Parameters.instance')
+    def test_carehome_scaling(self, mock_params, mock_inf, mock_susc):
+        mock_inf.return_value = 1
+        mock_susc.return_value = 1
+        mock_params.return_value.carehome_params\
+            = {'carehome_worker_group_scaling': 2}
+        self.place.place_type = pe.property.PlaceType.CareHome
+        self.infector.key_worker = True
+        self.infectee.key_worker = False
+        result = PlaceInfection.place_foi(self.place, self.infector,
+                                          self.infectee, self.time)
+        self.assertEqual(result, 2)
 
 if __name__ == '__main__':
     unittest.main()
