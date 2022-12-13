@@ -114,6 +114,7 @@ def doctest_rst_and_public_interface():
         'pyEpiabm.Person',
         'pyEpiabm.Place',
         'pyEpiabm.Population',
+        'pyEpiabm.intervention',
     ]
 
     doc_symbols = get_all_documented_symbols()
