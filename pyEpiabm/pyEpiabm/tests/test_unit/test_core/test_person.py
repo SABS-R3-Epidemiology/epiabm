@@ -45,6 +45,12 @@ class TestPerson(TestPyEpiabm):
                          f"Person, Age = {self.person.age}, "
                          + f"Status = {self.person.infection_status}.")
 
+    def test_is_symptomatic(self):
+        self.person.update_status(pe.property.InfectionStatus.InfectMild)
+        self.assertTrue(self.person.is_symptomatic())
+        self.person.update_status(pe.property.InfectionStatus.InfectASympt)
+        self.assertFalse(self.person.is_symptomatic())
+
     def test_is_infectious(self):
         self.assertFalse(self.person.is_infectious())
         self.person.update_status(pe.property.InfectionStatus.InfectMild)

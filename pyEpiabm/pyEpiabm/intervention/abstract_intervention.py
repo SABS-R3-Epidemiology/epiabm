@@ -2,8 +2,6 @@
 # AbstractIntervention Class
 #
 
-from pyEpiabm.core import Population
-
 
 class AbstractIntervention:
     """Abstract class for Interventions.

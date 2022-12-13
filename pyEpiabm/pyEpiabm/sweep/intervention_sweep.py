@@ -2,12 +2,13 @@
 # Sweeps for taking care of the interventions
 #
 
-from pyEpiabm.core import Parameters, Person, Population
+from pyEpiabm.core import Parameters
 from pyEpiabm.intervention import CaseIsolation
 from .abstract_sweep import AbstractSweep
 
+
 class InterventionSweep(AbstractSweep):
-    """Class to sweep through all possible interventions. 
+    """Class to sweep through all possible interventions.
     Check if intervention should take place based on time (and/or threshold).
     Possible interventions:
     isolate_individual: Symptomatic case stays home.
@@ -32,7 +33,8 @@ class InterventionSweep(AbstractSweep):
                     isolation_duration=params['isolation_duration'],
                     isolation_probability=params['isolation_probability'],
                     isolation_effectiveness=params['isolation_effectiveness'],
-                    isolation_house_effectiveness=params['isolation_house_effectiveness'],
+                    isolation_house_effectiveness=params['isolation_house_'
+                                                         'effectiveness'],
                     population=self._population
                 ))
 

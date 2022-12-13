@@ -496,5 +496,18 @@
         "three_child_five_pers_prob": 0.5,
         "older_gen_gap": 19,
         "prop_other_parent_away": 0.0
-    }
+    },
+    "intervention_params": {
+        "case_isolation": {
+            "time_start": 6,
+            "policy_duration": 365,
+            "threshold": 0,
+            "isolation_delay": 0,
+            "isolation_duration": 100,
+            "isolation_probability": 1,
+            "isolation_effectiveness": 0,
+            "isolation_house_effectiveness": 0
+        }
+        }
+    
 }
