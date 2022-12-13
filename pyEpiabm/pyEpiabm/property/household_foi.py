@@ -77,7 +77,8 @@ class HouseholdInfection:
 
         """
         seasonality = 1.0  # Not yet implemented
-        isolation = infector.microcell.cell.isolation_house_effectiveness if infector.isolation_start_time is not None else 1
+        isolation = infector.microcell.cell.isolation_house_effectiveness \
+            if infector.isolation_start_time is not None else 1
         false_pos = 1 / (1 - pyEpiabm.core.Parameters.instance().
                          false_positive_rate)
         infectiousness = (HouseholdInfection.household_inf(infector, time)
