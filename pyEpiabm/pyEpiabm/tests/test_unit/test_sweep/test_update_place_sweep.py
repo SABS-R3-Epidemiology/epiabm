@@ -95,6 +95,7 @@ class TestUpdatePlaceSweep(TestPyEpiabm):
 
         # Change to care homes
         self.place.place_type = 5
+
         # Test for care home resident
         self.place.empty_place()
         person.age = 70
@@ -104,6 +105,7 @@ class TestUpdatePlaceSweep(TestPyEpiabm):
         self.assertDictEqual(place.person_groups,
                              {0: [], 1: [person]})
         self.assertTrue(person.care_home_resident)
+
         # Test for key worker
         self.place.empty_place()
         person.age = 45
