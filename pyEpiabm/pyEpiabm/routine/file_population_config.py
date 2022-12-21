@@ -100,7 +100,7 @@ class FilePopulationFactory:
             for column in input.columns.values:
                 if hasattr(InfectionStatus, column):
                     value = getattr(InfectionStatus, column)
-                    for i in range(int(line[column])):
+                    for _ in range(int(line[column])):
                         person = Person(new_microcell)
                         person.set_random_age()
                         new_microcell.add_person(person)
@@ -228,16 +228,13 @@ class FilePopulationFactory:
                     "location_y": cell.location[1],
                 }
 
-                households = []
                 for person in microcell.persons:
                     status = str(person.infection_status.name)
                     if status in data_dict:
                         data_dict[status] += 1
                     else:  # New status
                         data_dict[status] = 1
-                    if person.household not in households:
-                        households.append(person.household)
-                data_dict['household_number'] = len(households)
+                data_dict['household_number'] = len(microcell.households)
                 data_dict['place_number'] = len(microcell.places)
 
                 new_row = pd.DataFrame(data=data_dict, columns=columns,
