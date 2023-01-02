@@ -25,8 +25,6 @@ class CaseIsolation(AbstractIntervention):
         self.isolation_duration = isolation_duration
         self.isolation_delay = isolation_delay
         self.isolation_probability = isolation_probability
-        # self.isolation_effectiveness = isolation_effectiveness
-        # self.isolation_house_effectiveness = isolation_house_effectiveness
         for cell in population.cells:
             cell.isolation_effectiveness = isolation_effectiveness
             cell.isolation_house_effectiveness = isolation_house_effectiveness

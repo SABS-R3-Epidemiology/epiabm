@@ -7,8 +7,9 @@ class AbstractIntervention:
     """Abstract class for Interventions.
 
     """
-    def __init__(self, start_time, policy_duration, threshold, population):
-        """Set the parameters of the interventions
+    def __init__(self, start_time, policy_duration, case_threshold,
+                 population):
+        """Set the parameters of the interventions.
 
         Parameters
         ----------
@@ -16,21 +17,29 @@ class AbstractIntervention:
             Start time of intervention
         policy_duration : float
             Duration of the intervention
-        threshold : float
+        case_threshold : float
             Number of cases required to trigger the intervention
         is_active : boolean
             Whether intervention is active
         """
         self.start_time = start_time
         self.policy_duration = policy_duration
-        self.threshold = threshold
+        self.case_threshold = case_threshold
         self._population = population
 
     def is_active(self, time, num_cases):
+        """Query if the intervention is currently active.
+
+        Returns
+        -------
+        bool
+            Whether the intervention is currently active
+
+        """
         return (
             self.start_time <= time and
             self.start_time + self.policy_duration >= time and
-            self.threshold <= num_cases
+            self.case_threshold <= num_cases
         )
 
     def __call__(self, time: float):

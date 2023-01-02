@@ -15,7 +15,7 @@ class TestInterventionSweep(TestPyEpiabm):
         super(TestInterventionSweep, cls).setUpClass()
         cls.interventionsweep = InterventionSweep()
 
-        # construct a popultion with 8 persons
+        # Construct a population with 8 persons
         cls._population = pe.Population()
         cls._population.add_cells(1)
         cls._population.cells[0].add_microcells(1)

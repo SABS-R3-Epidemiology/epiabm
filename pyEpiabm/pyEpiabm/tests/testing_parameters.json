@@ -501,7 +501,7 @@
         "case_isolation": {
             "time_start": 6,
             "policy_duration": 365,
-            "threshold": 0,
+            "case_threshold": 0,
             "isolation_delay": 0,
             "isolation_duration": 100,
             "isolation_probability": 1,

@@ -78,13 +78,8 @@ class Person:
             Whether person is currently symptomatic
 
         """
-        return self.infection_status in (
-            InfectionStatus.InfectMild,
-            InfectionStatus.InfectGP,
-            InfectionStatus.InfectHosp,
-            InfectionStatus.InfectICU,
-            InfectionStatus.InfectICURecov,
-        )
+        return Person.is_infectious(self) and self.infection_status != \
+            InfectionStatus.InfectASympt
 
     def is_infectious(self):
         """Query if the person is currently infectious.

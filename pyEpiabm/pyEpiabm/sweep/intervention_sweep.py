@@ -28,7 +28,7 @@ class InterventionSweep(AbstractSweep):
                 self.interventions.append(CaseIsolation(
                     start_time=params['time_start'],
                     policy_duration=params['policy_duration'],
-                    threshold=params['threshold'],
+                    case_threshold=params['case_threshold'],
                     isolation_delay=params['isolation_delay'],
                     isolation_duration=params['isolation_duration'],
                     isolation_probability=params['isolation_probability'],
