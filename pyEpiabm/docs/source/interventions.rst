@@ -1,8 +1,8 @@
-************
+*************
 Interventions
-************
+*************
 
-.. currentmodule:: pyEpiabm.interventions
+.. currentmodule:: pyEpiabm.intervention
 
 Interventions provides the basic class framework to interact with different interventions
 
