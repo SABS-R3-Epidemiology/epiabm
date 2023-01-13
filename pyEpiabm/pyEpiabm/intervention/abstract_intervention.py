@@ -19,8 +19,8 @@ class AbstractIntervention:
             Duration of the intervention
         case_threshold : float
             Number of cases required to trigger the intervention
-        is_active : boolean
-            Whether intervention is active
+        population : Population
+            Population: :class:`Population` to bind
         """
         self.start_time = start_time
         self.policy_duration = policy_duration
@@ -29,6 +29,13 @@ class AbstractIntervention:
 
     def is_active(self, time, num_cases):
         """Query if the intervention is currently active.
+
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+        num_cases : integer
+            Number of cases
 
         Returns
         -------
