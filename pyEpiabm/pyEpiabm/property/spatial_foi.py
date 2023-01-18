@@ -118,10 +118,10 @@ class SpatialInfection:
             Force of infection parameter of cell
 
         """
-        isolation = inf_cell.isolation_effectiveness\
+        isolating = inf_cell.isolation_effectiveness\
             if infector.isolation_start_time is not None else 1
-        infectiousness = SpatialInfection.space_inf(inf_cell, infector,
-                                                    time)
+        infectiousness = (SpatialInfection.space_inf(inf_cell, infector,
+                          time) * isolating)
         susceptibility = SpatialInfection.space_susc(susc_cell, infectee,
                                                      time)
-        return (isolation * infectiousness * susceptibility)
+        return (infectiousness * susceptibility)
