@@ -1,4 +1,4 @@
-# COde to plot runtime from .txt file
+# Code to plot runtime from .txt file
 
 import matplotlib.pyplot as plt
 
