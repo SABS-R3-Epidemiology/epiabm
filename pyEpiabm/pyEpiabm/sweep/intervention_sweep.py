@@ -10,8 +10,10 @@ from .abstract_sweep import AbstractSweep
 class InterventionSweep(AbstractSweep):
     """Class to sweep through all possible interventions.
     Check if intervention should take place based on time (and/or threshold).
+    
     Possible interventions:
-    isolate_individual: Symptomatic case stays home.
+
+            * `case_isolation`: Symptomatic case stays home.
     """
 
     def __init__(self):
