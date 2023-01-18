@@ -3,7 +3,7 @@
 #
 
 from .cell import Cell
-
+from queue import PriorityQueue
 
 class Population:
     """Class representing a Population.
@@ -15,6 +15,7 @@ class Population:
 
         """
         self.cells = []
+        self.vaccine_queue = PriorityQueue()
 
     def __repr__(self):
         """Returns a string representation of a Population.
@@ -50,3 +51,14 @@ class Population:
         for cell in self.cells:
             count += len(cell.persons)
         return count
+
+    def enqueue_vaccine(self, person: Person):
+        """Add person to queue for processing at end of iteration.
+
+        Parameters
+        ----------
+        person : Person
+            Person to enqueue
+
+        """
+        self.vaccine_queue.put((person.priority_level, person))
