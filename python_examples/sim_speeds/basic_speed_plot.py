@@ -13,6 +13,7 @@ plt.xlabel('Population Size')
 plt.ylabel('time (s)')
 plt.plot(x, y, marker = 'o', c = 'g')
 
-plt.show()
+plt.savefig("sim_speeds_plots/basic_sim_speed.png")
 
-plt.savefig("basic_sim_speed.png")
+
+plt.show()
