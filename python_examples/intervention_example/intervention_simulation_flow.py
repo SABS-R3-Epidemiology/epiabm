@@ -39,8 +39,6 @@ file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 population = pe.routine.FilePopulationFactory.make_pop(file_loc,
                                                        random_seed=42)
 
-print(population)
-
 # Configure population with input data
 # pe.routine.ToyPopulationFactory.assign_cell_locations(population)
 pe.routine.ToyPopulationFactory.add_places(population, 1)

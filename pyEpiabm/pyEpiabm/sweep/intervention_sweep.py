@@ -48,7 +48,12 @@ class InterventionSweep(AbstractSweep):
             Simulation time
         """
         for intervention in self.interventions:
-            # TODO: better case-count, condition on ICU, etc.
+            # TODO:
+            # - Include an alternative way of case-count. 
+            #   Idealy this will be a global parameter that we can plot
+            # - Include condition on ICU
+            #   Intervention will be activated based on time and cases now. 
+            #   We would like to implement a threshold based on ICU numbers.
             num_cases = 0
             for cell in self._population.cells:
                 for person in cell.persons:
