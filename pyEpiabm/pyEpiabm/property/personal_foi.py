@@ -2,6 +2,8 @@
 # Calculate infectiousness and susceptibility for an individual
 #
 
+import pyEpiabm.core
+from pyEpiabm.core import Parameters
 
 class PersonalInfection:
     """Class to calculate the infectiousness and susceptibility
@@ -27,7 +29,12 @@ class PersonalInfection:
             Infectiousness parameter of person
 
         """
-        return infector.infectiousness
+        vaccine_params = Parameters.instance()\
+            .intervention_params['vaccine_params']
+        return infector.infectiousness *
+            (vaccine_params['vacc_inf_drop'] if (infector.is_vaccinated and
+            time > (infector.date_vaccinated +
+            vaccine_params['time_to_efficacy'])))
 
     @staticmethod
     def person_susc(infector, infectee, time: float):
@@ -53,4 +60,9 @@ class PersonalInfection:
             Susceptibility parameter of household
 
         """
-        return 1.0
+        vaccine_params = Parameters.instance()\
+            .intervention_params['vaccine_params']
+        return 1.0 *
+            (vaccine_params['vacc_susc_drop'] if infectee.is_vaccinated and
+            time > (infectee.date_vaccinated +
+            vaccine_params['time_to_efficacy'])))
