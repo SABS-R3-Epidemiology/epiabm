@@ -39,7 +39,7 @@ for i in range(len(pop_sizes)):
     # sim_ and file_params give details for the running of the simulations and
     # where output should be written to.
     sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
-              "initial_infected_number": 10}
+              "initial_infected_number": int(pop_sizes[i]/1000)}
 
     file_params = {"output_file": "output.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
@@ -86,7 +86,7 @@ plt.xscale('linear')
 plt.ylabel('time (s)')
 plt.plot(x, y, marker = 'o', c = 'g')
 
-plt.savefig("sim_speeds_plots/basic_sim_speed.png")
+plt.savefig("sim_speeds_plots/basic_sim_speed_test_cst_proportion.png")
 
 
 plt.show()
