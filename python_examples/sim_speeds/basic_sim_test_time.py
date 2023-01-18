@@ -1,6 +1,5 @@
 import os
 import logging
-import pandas as pd
 import matplotlib.pyplot as plt
 import time
 import numpy as np
@@ -20,18 +19,18 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 
 pe.routine.Simulation.set_random_seed(seed=42)
 
-pop_sizes = np.array([1000,2000,4000,8000,10000])
+pop_sizes = np.array([int(1000), int(2000), int(4000), int(8000), int(10000)])
 sim_times = []
 
 number_sims = len(pop_sizes)
 
 for i in range(len(pop_sizes)):
 
-    # Pop_params are used to configure the population structure being used in this
-    # simulation.
+    # Pop_params are used to configure the population structure being used i
+    # this simulation.
     pop_params = {"population_size": pop_sizes[i], "cell_number": 1,
-              "microcell_number": 1, "household_number": 5,
-              "place_number": 2}
+                  "microcell_number": 1, "household_number": 5,
+                  "place_number": 2}
 
     # Create a population based on the parameters given.
     population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
@@ -39,13 +38,12 @@ for i in range(len(pop_sizes)):
     # sim_ and file_params give details for the running of the simulations and
     # where output should be written to.
     sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
-              "initial_infected_number": 10}
+                  "initial_infected_number": 10}
 
     file_params = {"output_file": "output.csv",
-               "output_dir": os.path.join(os.path.dirname(__file__),
-                                          "simulation_outputs"),
-               "spatial_output": False,
-               "age_stratified": False}
+                   "output_dir": os.path.join(os.path.dirname(__file__),
+                                              "simulation_outputs"),
+                   "spatial_output": False, "age_stratified": False}
 
     # Store start time
     st = time.time()
@@ -57,7 +55,7 @@ for i in range(len(pop_sizes)):
         population,
         [pe.sweep.InitialInfectedSweep()],
         [pe.sweep.HouseholdSweep(), pe.sweep.QueueSweep(),
-        pe.sweep.HostProgressionSweep()],
+         pe.sweep.HostProgressionSweep()],
         sim_params,
         file_params)
     sim.run_sweeps()
@@ -72,19 +70,16 @@ for i in range(len(pop_sizes)):
     del sim.writer
     del sim
 
-
-
-
-
-##Plotting graph code
+# Plotting graph code
 x = pop_sizes
 y = sim_times
 
-plt.title("Simulation time for basic simulation over 60 days with constant initial infections (10)")
+plt.title("Simulation time for basic simulation over 60 days with constant "
+          "initial infections (10)")
 plt.xlabel('Population Size')
 plt.xscale('linear')
 plt.ylabel('time (s)')
-plt.plot(x, y, marker = 'o', c = 'g')
+plt.plot(x, y, marker='o', c='g')
 
 plt.savefig("sim_speeds_plots/basic_sim_speed.png")
 
