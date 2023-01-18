@@ -73,7 +73,8 @@ class InitialInfectedSweep(AbstractSweep):
                            .infection_status == InfectionStatus.Susceptible]
 
         pers_to_infect = random.sample(all_persons,
-                                       sim_params["initial_infected_number"])
+                                       int(sim_params
+                                           ["initial_infected_number"]))
         for person in pers_to_infect:
             person.update_status(InfectionStatus.InfectMild)
             person.next_infection_status = InfectionStatus.Recovered
