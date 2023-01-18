@@ -1,3 +1,6 @@
+# Code to run simulations and plot runtime for populations of varying size
+# but with constant number of population (10 individuals) initially infected.
+
 import os
 import logging
 import matplotlib.pyplot as plt

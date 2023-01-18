@@ -1,3 +1,5 @@
+# COde to plot runtime from .txt file
+
 import matplotlib.pyplot as plt
 
 x = []
