@@ -21,6 +21,7 @@ class AbstractIntervention:
             Number of cases required to trigger the intervention
         population : Population
             Population: :class:`Population` to bind
+
         """
         self.start_time = start_time
         self.policy_duration = policy_duration

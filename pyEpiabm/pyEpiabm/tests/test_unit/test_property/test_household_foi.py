@@ -61,6 +61,20 @@ class TestHouseholdInfection(TestPyEpiabm):
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
+    def test_house_case_isolation(self):
+        result = HouseholdInfection.household_foi(self.infector,
+                                                  self.infectee,
+                                                  self.time)
+        # Case isolate
+        isolation_house_effectiveness = 0.5
+        self.cell.isolation_house_effectiveness = isolation_house_effectiveness
+        self.infector.isolation_start_time = 1
+        result_isolating = HouseholdInfection.household_foi(self.infector,
+                                                            self.infectee,
+                                                            self.time)
+        self.assertEqual(result*isolation_house_effectiveness,
+                         result_isolating)
+
 
 if __name__ == '__main__':
     unittest.main()

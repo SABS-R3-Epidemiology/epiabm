@@ -99,9 +99,10 @@ class PlaceInfection:
             Force of infection parameter of place
 
         """
-        isolation = infector.microcell.cell.isolation_effectiveness\
+        isolating = infector.microcell.cell.isolation_effectiveness\
             if infector.isolation_start_time is not None else 1
-        infectiousness = PlaceInfection.place_inf(place, infector, time)
+        infectiousness = (PlaceInfection.place_inf(place, infector, time)
+                          * isolating)
         susceptibility = PlaceInfection.place_susc(place, infector, infectee,
                                                    time)
-        return (isolation * infectiousness * susceptibility)
+        return (infectiousness * susceptibility)

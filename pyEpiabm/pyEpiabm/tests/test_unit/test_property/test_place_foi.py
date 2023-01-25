@@ -52,6 +52,19 @@ class TestPlaceInfection(TestPyEpiabm):
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
+    def test_place_case_isolation(self):
+        result = PlaceInfection.place_foi(self.place, self.infector,
+                                          self.infectee, self.time)
+
+        # Case isolate
+        isolation_effectiveness = 0.5
+        self.cell.isolation_effectiveness = isolation_effectiveness
+        self.infector.isolation_start_time = 1
+        result_isolating = PlaceInfection.place_foi(self.place, self.infector,
+                                                    self.infectee, self.time)
+        self.assertEqual(result*isolation_effectiveness,
+                         result_isolating)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -11,12 +11,14 @@ from .abstract_sweep import AbstractSweep
 class InterventionSweep(AbstractSweep):
     """Class to sweep through all possible interventions.
     Check if intervention should take place based on time (and/or threshold).
+
     Possible interventions:
-    isolate_individual: Symptomatic case stays home.
+
+            * `case_isolation`: Symptomatic case stays home.
     """
 
     def __init__(self):
-        """Call in variables from the parameters file and set flags
+        """Call in variables from the parameters file and set flags.
         """
         self.interventions = []
         self.intervention_params = Parameters.instance().intervention_params
@@ -64,7 +66,12 @@ class InterventionSweep(AbstractSweep):
             Simulation time
         """
         for intervention in self.interventions:
-            # TODO: better case-count, condition on ICU, etc.
+            # TODO:
+            # - Include an alternative way of case-count.
+            #   Idealy this will be a global parameter that we can plot
+            # - Include condition on ICU
+            #   Intervention will be activated based on time and cases now.
+            #   We would like to implement a threshold based on ICU numbers.
             num_cases = 0
             for cell in self._population.cells:
                 for person in cell.persons:

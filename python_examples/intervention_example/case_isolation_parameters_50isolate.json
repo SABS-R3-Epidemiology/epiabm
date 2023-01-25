@@ -499,22 +499,11 @@
 	    "time_start": 6,
 	    "policy_duration": 365,
 	    "case_threshold": 0,
-	    "isolation_delay": 1,
-	    "isolation_duration": 7,
-	    "isolation_probability": 1,
-	    "isolation_effectiveness": 0.25,
-	    "isolation_house_effectiveness": 0.5
-	},
-    "place_closure": {
-        "time_start": 6,
-        "policy_duration": 365,
-        "case_threshold": 0,
-        "closure_delay": 0,
-        "closure_duration": 100,
-        "closure_household_infectiousness": 5,
-        "closure_spatial_params": 0,
-        "icu_microcell_threshold": 0,
-        "case_microcell_threshold":0
-    }
+	    "isolation_delay": 0,
+	    "isolation_duration": 10,
+	    "isolation_probability": 0.5,
+	    "isolation_effectiveness": 0.1,
+	    "isolation_house_effectiveness": 0.2
+	}
     }
 }
