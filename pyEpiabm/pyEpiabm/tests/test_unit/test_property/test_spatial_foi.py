@@ -29,7 +29,7 @@ class TestSpatialInfection(TestPyEpiabm):
         pe.Parameters.instance().basic_reproduction_num = 2.8
 
     def test_spatial_susc(self):
-        result = SpatialInfection.space_susc(self.cell, self.infectee,
+        result = SpatialInfection.spatial_susc(self.cell, self.infectee,
                                              self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
@@ -37,13 +37,13 @@ class TestSpatialInfection(TestPyEpiabm):
     @patch('pyEpiabm.core.Parameters.instance')
     def test_spatial_susc_no_age(self, mock_params):
         mock_params.return_value.use_ages = False
-        result = SpatialInfection.space_susc(self.cell, self.infectee,
+        result = SpatialInfection.spatial_susc(self.cell, self.infectee,
                                              self.time)
         self.assertIsInstance(result, float)
         self.assertEqual(result, 1)
 
     def test_spatial_inf(self):
-        result = SpatialInfection.space_inf(self.cell, self.infector,
+        result = SpatialInfection.spatial_inf(self.cell, self.infector,
                                             self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
@@ -51,13 +51,13 @@ class TestSpatialInfection(TestPyEpiabm):
     @patch('pyEpiabm.core.Parameters.instance')
     def test_spatial_inf_no_age(self, mock_params):
         mock_params.return_value.use_ages = False
-        result = SpatialInfection.space_inf(self.cell, self.infector,
+        result = SpatialInfection.spatial_inf(self.cell, self.infector,
                                             self.time)
         self.assertIsInstance(result, float)
         self.assertEqual(result, self.infector.infectiousness)
 
     def test_spatial_foi(self):
-        result = SpatialInfection.space_foi(self.cell, self.cell,
+        result = SpatialInfection.spatial_foi(self.cell, self.cell,
                                             self.infector, self.infectee,
                                             self.time)
         self.assertTrue(result > 0)
@@ -70,7 +70,7 @@ class TestSpatialInfection(TestPyEpiabm):
         self.assertTrue(result >= 0)
 
     def test_spatial_case_isolation(self):
-        result = SpatialInfection.space_foi(self.cell, self.cell,
+        result = SpatialInfection.spatial_foi(self.cell, self.cell,
                                             self.infector, self.infectee,
                                             self.time)
 
@@ -79,7 +79,7 @@ class TestSpatialInfection(TestPyEpiabm):
         self.infector.microcell.cell.isolation_effectiveness = \
             isolation_effectiveness
         self.infector.isolation_start_time = 1
-        result_isolating = SpatialInfection.space_foi(self.cell, self.cell,
+        result_isolating = SpatialInfection.spatial_foi(self.cell, self.cell,
                                                       self.infector,
                                                       self.infectee, self.time)
         self.assertEqual(result*isolation_effectiveness,

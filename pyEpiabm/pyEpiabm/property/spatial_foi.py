@@ -38,7 +38,7 @@ class SpatialInfection:
         return average_number_to_infect
 
     @staticmethod
-    def space_inf(inf_cell, infector,
+    def spatial_inf(inf_cell, infector,
                   time: float):
         """Calculate the infectiousness between cells, dependent on the
         infectious people in it. Does not include interventions such as
@@ -59,14 +59,14 @@ class SpatialInfection:
             Infectiousness parameter of cell
 
         """
-        space_inf = infector.infectiousness
+        spatial_inf = infector.infectiousness
         if pyEpiabm.core.Parameters.instance().use_ages:
-            space_inf *= pyEpiabm.core.Parameters.instance().\
+            spatial_inf *= pyEpiabm.core.Parameters.instance().\
                 age_contact[infector.age_group]
-        return space_inf
+        return spatial_inf
 
     @staticmethod
-    def space_susc(susc_cell, infectee,
+    def spatial_susc(susc_cell, infectee,
                    time: float):
         """Calculate the susceptibility of one cell towards its neighbouring
         cells. Does not include interventions such as isolation,
@@ -94,7 +94,7 @@ class SpatialInfection:
             return 1.0
 
     @staticmethod
-    def space_foi(inf_cell, susc_cell, infector,
+    def spatial_foi(inf_cell, susc_cell, infector,
                   infectee, time: float):
         """Calculate the force of infection between cells, for a particular
         infector and infectee.
@@ -120,8 +120,8 @@ class SpatialInfection:
         """
         isolating = inf_cell.isolation_effectiveness\
             if infector.isolation_start_time is not None else 1
-        infectiousness = (SpatialInfection.space_inf(inf_cell, infector,
+        infectiousness = (SpatialInfection.spatial_inf(inf_cell, infector,
                           time) * isolating)
-        susceptibility = SpatialInfection.space_susc(susc_cell, infectee,
+        susceptibility = SpatialInfection.spatial_susc(susc_cell, infectee,
                                                      time)
         return (infectiousness * susceptibility)
