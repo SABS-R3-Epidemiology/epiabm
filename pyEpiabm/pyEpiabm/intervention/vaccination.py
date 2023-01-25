@@ -11,27 +11,31 @@ class Vaccination(AbstractIntervention):
 
     def __init__(
         self,
-        vaccine_params,
+        daily_doses,
+        vacc_inf_drop,
+	    vacc_susc_drop,
+	    time_to_efficacy,
         population,
         *args,
         **kwargs
     ):
-        self.vaccine_start_time = vaccine_params["vaccine_start_time"]
-        # self.time_to_next_group = time_to_next_group
-        self.vaccines_per_day = vaccine_params["daily_doses"]
+        self.vaccines_per_day = daily_doses
+        for cell in population.cells:
+            for person in cell.persons:
+                person.vac_inf_drop = vacc_inf_drop
+                person.vac_susc_drop = vacc_susc_drop
+                person.time_to_efficacy = time_to_efficacy
 
         # start_time, policy_duration, threshold, population
         super(Vaccination, self).__init__(population=population, *args,
                                           **kwargs)
 
     def __call__(self, time):
-        if time > self.vaccine_start_time:
-            number_vaccinated = 0
-            while number_vaccinated < self.vaccines_per_day:
-                person = population.vaccine_queue.get()[1]
-
-                person.is_vaccinated = True
-                person.date_vaccinated = time
-                number_vaccinated += 1
+        number_vaccinated = 0
+        while number_vaccinated < self.vaccines_per_day:
+            person = self._population.vaccine_queue.get()[2]
+            person.is_vaccinated = True
+            person.date_vaccinated = time
+            number_vaccinated += 1
 
 # age prioritised mass vaccination, with vaccination kicking in after 2 weeks. just go for this more simplistic
