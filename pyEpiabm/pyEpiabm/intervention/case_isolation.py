@@ -9,6 +9,8 @@ from pyEpiabm.intervention import AbstractIntervention
 
 class CaseIsolation(AbstractIntervention):
     """Case isolation intervention
+    Isolate symptomatic individual based on the isolation_probability
+    and stop isolating isolated individuals after their isolation period.
     """
 
     def __init__(
@@ -44,6 +46,7 @@ class CaseIsolation(AbstractIntervention):
                     if person.is_symptomatic():
                         r = random.random()
                         # Require symptomatic individuals to self-isolate
+                        # with given probability
                         if r < self.isolation_probability:
                             person.isolation_start_time = time + self.\
                                                           isolation_delay
