@@ -44,8 +44,11 @@ class PlaceInfection:
         except IndexError:  # For place types not in parameters
             num_groups = 1
         # Use group-wise capacity not max_capacity once implemented
-        return (transmission / num_groups
+        place_inf = 0 if infector.microcell. \
+            closure_start_time is not None else \
+            (transmission / num_groups
                 * PersonalInfection.person_inf(infector, time))
+        return place_inf
 
     @staticmethod
     def place_susc(place, infector, infectee,

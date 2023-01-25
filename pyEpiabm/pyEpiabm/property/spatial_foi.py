@@ -59,14 +59,16 @@ class SpatialInfection:
             Infectiousness parameter of cell
 
         """
-        space_inf = infector.infectiousness
+        space_inf_value = infector.infectiousness
         if pyEpiabm.core.Parameters.instance().use_ages:
-            space_inf *= pyEpiabm.core.Parameters.instance().\
+            space_inf_value *= pyEpiabm.core.Parameters.instance().\
                 age_contact[infector.age_group]
-        return space_inf
+        if infector.microcell.closure_start_time is not None:
+            space_inf_value *= infector.microcell.closure_spatial_params
+        return space_inf_value
 
     @staticmethod
-    def space_susc(susc_cell, infectee,
+    def space_susc(susc_cell, infector, infectee,
                    time: float):
         """Calculate the susceptibility of one cell towards its neighbouring
         cells. Does not include interventions such as isolation,
@@ -76,6 +78,8 @@ class SpatialInfection:
         ----------
         susc_cell : Cell
             Cell receiving infections
+        infector : Person
+            Infector
         infectee : Person
             Infectee
         time : float
@@ -87,11 +91,14 @@ class SpatialInfection:
             Susceptibility parameter of cell
 
         """
+        space_susc_value = 1.0
         if pyEpiabm.core.Parameters.instance().use_ages:
-            return pyEpiabm.core.Parameters.instance().\
+            space_susc_value = pyEpiabm.core.Parameters.instance().\
                 age_contact[infectee.age_group]
-        else:
-            return 1.0
+
+        if infector.microcell.closure_start_time is not None:
+            space_susc_value *= infector.microcell.closure_spatial_params
+        return space_susc_value
 
     @staticmethod
     def space_foi(inf_cell, susc_cell, infector,
@@ -122,6 +129,6 @@ class SpatialInfection:
             if infector.isolation_start_time is not None else 1
         infectiousness = SpatialInfection.space_inf(inf_cell, infector,
                                                     time)
-        susceptibility = SpatialInfection.space_susc(susc_cell, infectee,
-                                                     time)
+        susceptibility = SpatialInfection.space_susc(susc_cell, infector,
+                                                     infectee, time)
         return (isolation * infectiousness * susceptibility)

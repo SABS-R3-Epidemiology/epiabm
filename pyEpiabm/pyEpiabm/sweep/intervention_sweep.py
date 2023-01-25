@@ -4,6 +4,7 @@
 
 from pyEpiabm.core import Parameters
 from pyEpiabm.intervention import CaseIsolation
+from pyEpiabm.intervention import PlaceClosure
 from .abstract_sweep import AbstractSweep
 
 
@@ -35,6 +36,21 @@ class InterventionSweep(AbstractSweep):
                     isolation_effectiveness=params['isolation_effectiveness'],
                     isolation_house_effectiveness=params['isolation_house_'
                                                          'effectiveness'],
+                    population=self._population
+                ))
+            elif intervention == 'place_closure':
+                self.interventions.append(PlaceClosure(
+                    start_time=params['time_start'],
+                    policy_duration=params['policy_duration'],
+                    case_threshold=params['case_threshold'],
+                    closure_delay=params['closure_delay'],
+                    closure_duration=params['closure_duration'],
+                    closure_household_infectiousness=params
+                    ['closure_household_infectiousness'],
+                    closure_spatial_params=params['closure_spatial_params'],
+                    icu_microcell_threshold=params['icu_microcell_threshold'],
+                    case_microcell_threshold=params['case_microcell_'
+                                                    'threshold'],
                     population=self._population
                 ))
 

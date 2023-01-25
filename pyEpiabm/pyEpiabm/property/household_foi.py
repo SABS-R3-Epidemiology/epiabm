@@ -31,7 +31,11 @@ class HouseholdInfection:
             Infectiousness parameter of household
 
         """
-        return PersonalInfection.person_inf(infector, time)
+        household_infectiousness = PersonalInfection.person_inf(infector, time)
+        if (infector.microcell.closure_start_time is not None):
+            household_infectiousness *= \
+                infector.microcell.closure_household_infectiousness
+        return household_infectiousness
 
     @staticmethod
     def household_susc(infector, infectee, time: float):

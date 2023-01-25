@@ -10,11 +10,16 @@ Overview:
 
 - :class:`AbstractIntervention`
 - :class:`CaseIsolation`
+- :class:`PlaceClosure`
 
 .. autoclass:: AbstractIntervention
     :members:
     :special-members: __init__, __call__
 
 .. autoclass:: CaseIsolation
+    :members:
+    :special-members: __init__, __call__
+
+.. autoclass:: PlaceClosure
     :members:
     :special-members: __init__, __call__

@@ -1,7 +1,8 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.property import HouseholdInfection
+from pyEpiabm.property import HouseholdInfection, InfectionStatus
+from pyEpiabm.intervention import PlaceClosure
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
@@ -17,29 +18,46 @@ class TestHouseholdInfection(TestPyEpiabm):
         infectee, both in the same place and household.
         """
         super(TestHouseholdInfection, cls).setUpClass()  # Sets up parameters
-        cls.cell = pe.Cell()
-        cls.microcell = pe.Microcell(cls.cell)
-        cls.infector = pe.Person(cls.microcell)
-        cls.infector.infectiousness = 1.0
-        cls.infectee = pe.Person(cls.microcell)
         cls.time = 1
+        cls._population = pe.Population()
+        cls._population.add_cells(1)
+        cls._population.cells[0].add_microcells(1)
+        cls._population.cells[0].microcells[0].add_people(2)
+        for person in cls._population.cells[0].microcells[0].persons:
+            person.update_status(InfectionStatus(7))
+            person.infectiousness = 1.0
+        cls.placeclosure = PlaceClosure(start_time=1,
+                                        policy_duration=365,
+                                        case_threshold=0,
+                                        closure_delay=0,
+                                        closure_duration=100,
+                                        closure_household_infectiousness=5,
+                                        closure_spatial_params=0.5,
+                                        icu_microcell_threshold=1,
+                                        case_microcell_threshold=1,
+                                        population=cls._population)
 
     def test_house_inf(self):
-        result = HouseholdInfection.household_inf(self.infector, self.time)
+        self.placeclosure(self.time)
+        result = HouseholdInfection.household_inf(self._population.cells[0].
+                                                  microcells[0].persons[0],
+                                                  self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
     def test_house_susc(self):
-        result = HouseholdInfection.household_susc(self.infector,
-                                                   self.infectee,
-                                                   self.time)
+        result = HouseholdInfection.household_susc(
+            self._population.cells[0].microcells[0].persons[0],
+            self._population.cells[0].microcells[0].persons[1],
+            self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
     def test_house_inf_force(self):
-        result = HouseholdInfection.household_foi(self.infector,
-                                                  self.infectee,
-                                                  self.time)
+        result = HouseholdInfection.household_foi(
+            self._population.cells[0].microcells[0].persons[0],
+            self._population.cells[0].microcells[0].persons[1],
+            self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
