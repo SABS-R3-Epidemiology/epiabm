@@ -11,7 +11,7 @@ class TestAbstractIntervention(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         super(TestAbstractIntervention, cls).setUpClass()
-        
+
         cls.population = pe.Population()
         cls.intervention_object = AbstractIntervention(
             start_time=1,
