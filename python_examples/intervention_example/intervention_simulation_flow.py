@@ -21,20 +21,7 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 # Method to set the seed at the start of the simulation, for reproducibility
 pe.routine.Simulation.set_random_seed(seed=30)
 
-# Pop_params are used to configure the population structure being used in this
-# simulation.
-
-pop_params = {
-    "population_size": 10000,
-    "cell_number": 200,
-    "microcell_number": 2,
-    "household_number": 5,
-}
-
-# Create a population framework based on the parameters given.
-# population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
-
-# Alternatively, can generate population from input file
+# Generate population from input file
 file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 population = pe.routine.FilePopulationFactory.make_pop(file_loc,
                                                        random_seed=42)

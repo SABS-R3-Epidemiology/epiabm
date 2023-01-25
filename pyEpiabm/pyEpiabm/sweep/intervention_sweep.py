@@ -17,7 +17,7 @@ class InterventionSweep(AbstractSweep):
     """
 
     def __init__(self):
-        """Call in variables from the parameters file and set flags
+        """Call in variables from the parameters file and set flags.
         """
         self.interventions = []
         self.intervention_params = Parameters.instance().intervention_params
