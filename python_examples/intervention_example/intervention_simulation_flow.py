@@ -62,7 +62,10 @@ file_params = {"output_file": "output.csv",
 sim = pe.routine.Simulation()
 sim.configure(
     population,
-    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
+    [pe.sweep.InitialInfectedSweep(),
+     pe.sweep.InitialisePlaceSweep(),
+     pe.sweep.InitialVaccineQueue()
+    ],
     [
         pe.sweep.InterventionSweep(),
         pe.sweep.UpdatePlaceSweep(),
