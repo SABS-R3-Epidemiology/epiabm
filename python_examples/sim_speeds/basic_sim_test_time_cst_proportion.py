@@ -78,7 +78,7 @@ x = pop_sizes
 y = sim_times
 
 plt.title("Simulation time for basic simulation over 60 days with constant "
-          "initial infections (10)")
+          "initial infected proportion (0.1%)")
 plt.xlabel('Population Size')
 plt.xscale('linear')
 plt.ylabel('time (s)')
