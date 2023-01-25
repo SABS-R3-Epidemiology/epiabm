@@ -50,7 +50,7 @@ class TestSpatialInfection(TestPyEpiabm):
     def test_spatial_susc_no_age(self, mock_params):
         self.placeclosure(self.time)
         mock_params.return_value.use_ages = False
-        result = SpatialInfection.spatial_inf(
+        result = SpatialInfection.spatial_susc(
             self._population.cells[0], self._population.cells[0].
             microcells[0].persons[0], self._population.cells[0].
             microcells[0].persons[1], self.time)
@@ -95,19 +95,22 @@ class TestSpatialInfection(TestPyEpiabm):
         self.assertTrue(result >= 0)
 
     def test_spatial_case_isolation(self):
-        result = SpatialInfection.spatial_foi(self.cell, self.cell,
-                                              self.infector, self.infectee,
-                                              self.time)
+        result = SpatialInfection.spatial_foi(
+            self._population.cells[0], self._population.cells[0],
+            self._population.cells[0].microcells[0].persons[0],
+            self._population.cells[0].microcells[0].persons[1],
+            self.time)
 
         # Case isolate
         isolation_effectiveness = 0.5
-        self.infector.microcell.cell.isolation_effectiveness = \
+        infector = self._population.cells[0].microcells[0].persons[0]
+        infector.microcell.cell.isolation_effectiveness = \
             isolation_effectiveness
-        self.infector.isolation_start_time = 1
-        result_isolating = SpatialInfection.spatial_foi(self.cell, self.cell,
-                                                        self.infector,
-                                                        self.infectee,
-                                                        self.time)
+        infector.isolation_start_time = 1
+        result_isolating = SpatialInfection.spatial_foi(
+            self._population.cells[0], self._population.cells[0],
+            infector, self._population.cells[0].microcells[0].persons[1],
+            self.time)
         self.assertEqual(result*isolation_effectiveness,
                          result_isolating)
 
