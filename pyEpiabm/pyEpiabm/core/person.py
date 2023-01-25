@@ -47,6 +47,8 @@ class Person:
         self.next_infection_status = None
         self.time_of_status_change = None
         self.infection_start_time = None
+        self.care_home_resident = False
+        self.key_worker = False
         self.isolation_start_time = None
         self.date_vaccinated = None
         self.is_vaccinated = False
