@@ -504,6 +504,17 @@
 	    "isolation_probability": 1,
 	    "isolation_effectiveness": 0,
 	    "isolation_house_effectiveness": 0
-	}
+	},
+	"vaccine_params": {
+        "time_start": 6,
+	    "policy_duration": 365,
+	    "case_threshold": 0,
+	    "vacc_inf_drop": 0.8,
+	    "vacc_susc_drop": 0.8,
+	    "time_to_efficacy": 14,
+	    "min_ages": [80, 65, 50, 18],
+	    "prob_vaccinated": [0.94, 0.97, 0.94, 0.76],
+	    "daily_doses": 10
+    }
     }
 }
