@@ -32,7 +32,7 @@ class HouseholdInfection:
             Infectiousness parameter of household
 
         """
-        return PersonalInfection.person_inf(infector, time)
+        return infector.infectiousness
 
     @staticmethod
     def household_susc(infector, infectee, time: float):
@@ -85,7 +85,7 @@ class HouseholdInfection:
         vacc_inf_drop = 1
         if infector.is_vaccinated:
             if time > infector.date_vaccinated + infector.time_to_efficacy:
-                vacc_inf_drop *= infector.vacc_inf_drop
+                vacc_inf_drop *= infector.vac_inf_drop
         
         infectiousness = (HouseholdInfection.household_inf(infector, time)
                           * seasonality * false_pos
