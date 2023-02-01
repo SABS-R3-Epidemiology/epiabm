@@ -16,13 +16,10 @@ class TestInterventionSweep(TestPyEpiabm):
         cls.interventionsweep = InterventionSweep()
 
         # Construct a population with 8 persons
-        cls._population = pe.Population()
-        cls._population.add_cells(1)
-        cls._population.cells[0].add_microcells(1)
-        cls._population.cells[0].microcells[0].add_people(8)
-        for i in range(8):
-            person = cls._population.cells[0].microcells[0].persons[i]
-            person.update_status(InfectionStatus(i + 1))
+        cls.pop_factory = pe.routine.ToyPopulationFactory()
+        cls.pop_params = {"population_size": 8, "cell_number": 1,
+                          "microcell_number": 1, "household_number": 1}
+        cls._population = cls.pop_factory.make_pop(cls.pop_params)
         cls.interventionsweep.bind_population(cls._population)
 
     def test_bind_population(self):

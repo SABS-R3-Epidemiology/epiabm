@@ -123,7 +123,9 @@ class TestSpatialInfection(TestPyEpiabm):
         result_isolating = SpatialInfection.spatial_foi(
             self._population.cells[0], self._population.cells[0],
             self.infector, self.infectee, self.time)
-        self.assertEqual(result*quarantine_spatial_effectiveness,
+        # foi scaled twice: infectiousness and susceptibility
+        self.assertEqual(result*quarantine_spatial_effectiveness
+                         * quarantine_spatial_effectiveness,
                          result_isolating)
 
 

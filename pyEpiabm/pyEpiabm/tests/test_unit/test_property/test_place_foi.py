@@ -75,7 +75,9 @@ class TestPlaceInfection(TestPyEpiabm):
         result_isolating = PlaceInfection.place_foi(self.place, self.infector,
                                                     self.infectee, self.time)
         place_idx = self.place.place_type.value - 1
-        self.assertEqual(result*quarantine_place_effectiveness[place_idx],
+        # foi scaled twice: infectiousness and susceptibility
+        self.assertEqual(result*quarantine_place_effectiveness[place_idx]
+                         * quarantine_place_effectiveness[place_idx],
                          result_isolating)
 
 
