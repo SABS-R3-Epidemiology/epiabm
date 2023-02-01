@@ -6,6 +6,7 @@ from pyEpiabm.intervention import AbstractIntervention
 
 class TestAbstractIntervention(unittest.TestCase):
     """Test the 'AbstractIntervention' class.
+
     """
 
     @classmethod
