@@ -75,6 +75,9 @@ class TestHouseholdInfection(TestPyEpiabm):
                                                   self.time)
         self.assertEqual(result, 4)
 
+        self.assertEqual(mock_inf.call_count, 3)
+        self.assertEqual(mock_susc.call_count, 3)
+
 
 if __name__ == '__main__':
     unittest.main()
