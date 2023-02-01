@@ -32,10 +32,8 @@ class Vaccination(AbstractIntervention):
 
     def __call__(self, time):
         number_vaccinated = 0
-        while number_vaccinated < self.vaccines_per_day:
+        while number_vaccinated < self.vaccines_per_day and not self._population.vaccine_queue.empty():
             person = self._population.vaccine_queue.get()[2]
             person.is_vaccinated = True
             person.date_vaccinated = time
             number_vaccinated += 1
-
-# age prioritised mass vaccination, with vaccination kicking in after 2 weeks. just go for this more simplistic
