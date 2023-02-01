@@ -84,9 +84,9 @@ class TestMicrocell(TestPyEpiabm):
 
     def test_count_icu(self):
         self.microcell.add_people(6)
-        for person in self.microcell.persons:
+        for person in self.microcell.persons[:4]:
             person.update_status(InfectionStatus(7))
-        self.assertEqual(self.microcell.count_icu(), 6)
+        self.assertEqual(self.microcell.count_icu(), 4)
 
     def test_count_infectious(self):
         self.microcell.add_people(6)
