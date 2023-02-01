@@ -65,6 +65,19 @@ class TestPlaceInfection(TestPyEpiabm):
         self.assertEqual(result*isolation_effectiveness,
                          result_isolating)
 
+    def test_place_household_quarantine(self):
+        result = PlaceInfection.place_foi(self.place, self.infector,
+                                          self.infectee, self.time)
+        quarantine_place_effectiveness = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+        self.cell.quarantine_place_effectiveness = \
+            quarantine_place_effectiveness
+        self.infector.quarantine_start_time = 1
+        result_isolating = PlaceInfection.place_foi(self.place, self.infector,
+                                                    self.infectee, self.time)
+        place_idx = self.place.place_type.value - 1
+        self.assertEqual(result*quarantine_place_effectiveness[place_idx],
+                         result_isolating)
+
 
 if __name__ == '__main__':
     unittest.main()

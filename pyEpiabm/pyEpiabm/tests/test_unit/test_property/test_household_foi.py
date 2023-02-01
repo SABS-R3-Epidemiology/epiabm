@@ -71,6 +71,19 @@ class TestHouseholdInfection(TestPyEpiabm):
         self.assertEqual(result*closure_household_infectiousness,
                          result_closure)
 
+    def test_house_household_closure(self):
+        result = HouseholdInfection.household_foi(
+            self.infector, self.infectee, self.time)
+        quarantine_house_effectiveness = 0.5
+        self._population.cells[0].\
+            quarantine_house_effectiveness = quarantine_house_effectiveness
+        self.infector.quarantine_start_time = 1
+        result_isolating = HouseholdInfection.household_foi(self.infector,
+                                                            self.infectee,
+                                                            self.time)
+        self.assertEqual(result*quarantine_house_effectiveness,
+                         result_isolating)
+
 
 if __name__ == '__main__':
     unittest.main()

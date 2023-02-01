@@ -112,6 +112,20 @@ class TestSpatialInfection(TestPyEpiabm):
         self.assertEqual(result_inf*closure_spatial_params,
                          result_closure_inf)
 
+    def test_spatial_household_quarantine(self):
+        result = SpatialInfection.spatial_foi(
+            self._population.cells[0], self._population.cells[0],
+            self.infector, self.infectee, self.time)
+        quarantine_spatial_effectiveness = 0.5
+        self.infector.microcell.cell.quarantine_spatial_effectiveness = \
+            quarantine_spatial_effectiveness
+        self.infector.quarantine_start_time = 1
+        result_isolating = SpatialInfection.spatial_foi(
+            self._population.cells[0], self._population.cells[0],
+            self.infector, self.infectee, self.time)
+        self.assertEqual(result*quarantine_spatial_effectiveness,
+                         result_isolating)
+
 
 if __name__ == '__main__':
     unittest.main()

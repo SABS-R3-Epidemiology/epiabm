@@ -28,12 +28,16 @@ class TestInterventionSweep(TestPyEpiabm):
     def test_bind_population(self):
         self.assertEqual(len(self.interventionsweep.
                              intervention_params['case_isolation']), 8)
-        self.assertEqual(len(self.interventionsweep.interventions), 2)
+        self.assertEqual(len(self.interventionsweep.
+                             intervention_params['household_quarantine']), 10)
+        self.assertEqual(len(self.interventionsweep.interventions), 3)
 
     def test___call__(self):
         self.interventionsweep(time=100)
         self.assertIsNone(self.interventionsweep._population.cells[0].
                           persons[0].isolation_start_time)
+        self.assertIsNone(self.interventionsweep._population.cells[0].
+                          persons[0].quarantine_start_time)
 
 
 if __name__ == '__main__':

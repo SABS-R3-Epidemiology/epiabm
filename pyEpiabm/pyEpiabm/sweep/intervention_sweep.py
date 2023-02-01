@@ -5,6 +5,7 @@
 from pyEpiabm.core import Parameters
 from pyEpiabm.intervention import CaseIsolation
 from pyEpiabm.intervention import PlaceClosure
+from pyEpiabm.intervention import HouseholdQuarantine
 from .abstract_sweep import AbstractSweep
 
 
@@ -15,6 +16,8 @@ class InterventionSweep(AbstractSweep):
     Possible interventions:
 
             * `case_isolation`: Symptomatic case stays home.
+            * `household quarantine`: Household quarantine if member
+                                      is symptomatic
     """
 
     def __init__(self):
@@ -53,6 +56,29 @@ class InterventionSweep(AbstractSweep):
                     icu_microcell_threshold=params['icu_microcell_threshold'],
                     case_microcell_threshold=params['case_microcell_'
                                                     'threshold'],
+                    population=self._population
+                ))
+            elif intervention == 'household_quarantine':
+                self.interventions.append(HouseholdQuarantine(
+                    start_time=params['time_start'],
+                    policy_duration=params['policy_duration'],
+                    case_threshold=params['case_threshold'],
+                    quarantine_delay=params['quarantine_delay'],
+                    quarantine_duration=params['quarantine_duration'],
+                    quarantine_house_compliant=params['quarantine_house_'
+                                                      'compliant'],
+                    quarantine_individual_compliant=params['quarantine_'
+                                                           'individual_'
+                                                           'compliant'],
+                    quarantine_house_effectiveness=params['quarantine_'
+                                                          'house_'
+                                                          'effectiveness'],
+                    quarantine_spatial_effectiveness=params['quarantine_'
+                                                            'spatial_'
+                                                            'effectiveness'],
+                    quarantine_place_effectiveness=params['quarantine_'
+                                                          'place_'
+                                                          'effectiveness'],
                     population=self._population
                 ))
 
