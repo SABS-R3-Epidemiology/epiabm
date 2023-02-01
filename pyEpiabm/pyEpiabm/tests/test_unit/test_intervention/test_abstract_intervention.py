@@ -31,6 +31,8 @@ class TestAbstractIntervention(unittest.TestCase):
                                                            num_cases=50))
         self.assertFalse(self.intervention_object.is_active(time=5,
                                                             num_cases=5))
+        self.assertFalse(self.intervention_object.is_active(time=0,
+                                                            num_cases=50))                                                            
 
     def test___call__(self):
         self.assertRaises(NotImplementedError,
