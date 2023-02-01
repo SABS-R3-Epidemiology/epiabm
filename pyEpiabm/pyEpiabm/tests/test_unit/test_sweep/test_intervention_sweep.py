@@ -28,7 +28,9 @@ class TestInterventionSweep(TestPyEpiabm):
     def test_bind_population(self):
         self.assertEqual(len(self.interventionsweep.
                              intervention_params['case_isolation']), 8)
-        self.assertEqual(len(self.interventionsweep.interventions), 1)
+        self.assertEqual(len(self.interventionsweep.
+                             intervention_params['vaccine_params']), 9)
+        self.assertEqual(len(self.interventionsweep.interventions), 2)
 
     def test___call__(self):
         self.interventionsweep(time=100)
