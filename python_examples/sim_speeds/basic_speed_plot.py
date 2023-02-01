@@ -6,9 +6,20 @@ import matplotlib.pyplot as plt
 
 
 def get_seconds(time_str):
-    print('Time in mm:ss:', time_str)
-    # split in  mm, ss
-    mm, ss = time_str.split(':')
+    """Converts a string for the time of a simulation of the form mm:ss
+    into an integer value for the number of seconds that corresponds to
+
+    Parameters
+    ----------
+    time_str : time string in form mm:ss
+
+    Returns
+    -------
+    int
+        Integer value of number of seconds for the given time string
+
+    """
+    mm, ss = time_str.split(':')  # split in  mm, ss
     return int(mm) * 60 + int(ss)
 
 
@@ -18,12 +29,8 @@ df = pd.read_csv(data_path, header=0, sep=r"\s\s+")
 df['Seconds'] = df['Time'].apply(get_seconds)
 print(df.head())
 
-x = []
-y = []
-
 x = df['Pop size']
 y = df['Seconds']
-
 
 plt.plot(x, y, marker='o', c='g')
 plt.title("Simulation time for basic simulation over 60 days")
@@ -32,9 +39,7 @@ plt.xscale('log')
 plt.yscale('log')
 plt.ylabel('time (s)')
 
-
 plt.savefig(os.path.join(os.path.dirname(__file__),
             "sim_speeds_plots/", "basic_sim_speed_from_file.png"))
-
 
 plt.show()
