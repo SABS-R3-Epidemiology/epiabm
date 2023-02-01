@@ -3,6 +3,7 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def get_seconds(time_str):
@@ -38,6 +39,15 @@ plt.xlabel('Population Size')
 plt.xscale('log')
 plt.yscale('log')
 plt.ylabel('time (s)')
+
+slope, intercept = np.polyfit(np.log10(x), np.log10(y), 1)
+print('The slope of the linear  regression line and so the big O power is: ',
+      slope)
+print(intercept)
+
+plt.plot(x, 10**intercept*x**slope, c='b',
+         label=("Regression gradient", slope))
+plt.legend()
 
 plt.savefig(os.path.join(os.path.dirname(__file__),
             "sim_speeds_plots/", "basic_sim_speed_from_file.png"))
