@@ -3,6 +3,8 @@
 #
 
 import random
+import math
+import logging
 
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep.host_progression_sweep import HostProgressionSweep
@@ -35,6 +37,15 @@ class InitialInfectedSweep(AbstractSweep):
             raise ValueError('Initial number of infected people needs to be'
                              + ' less than the total population')
 
+        if math.floor(sim_params["initial_infected_number"]) < \
+                sim_params["initial_infected_number"]:
+            logging.warning("Initial number of infected people needs to be an"
+                            + " integer so we use floor function to round"
+                            + " down. Inputed value was"
+                            + f" {sim_params['initial_infected_number']}")
+            sim_params["initial_infected_number"] = \
+                math.floor(sim_params["initial_infected_number"])
+
         start_time = sim_params["simulation_start_time"]
         if start_time < 0:
             raise ValueError('Simulation start time needs to be greater or'
@@ -62,7 +73,8 @@ class InitialInfectedSweep(AbstractSweep):
                            .infection_status == InfectionStatus.Susceptible]
 
         pers_to_infect = random.sample(all_persons,
-                                       sim_params["initial_infected_number"])
+                                       int(sim_params
+                                           ["initial_infected_number"]))
         for person in pers_to_infect:
             person.update_status(InfectionStatus.InfectMild)
             person.next_infection_status = InfectionStatus.Recovered
