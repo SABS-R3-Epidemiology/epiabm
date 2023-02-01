@@ -1,4 +1,5 @@
 import unittest
+from unittest import mock
 
 import pyEpiabm as pe
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
@@ -86,6 +87,21 @@ class TestInitialInfectedSweep(TestPyEpiabm):
         status = pe.property.InfectionStatus.InfectMild
         num_infectious = sum(self.cell.compartment_counter.retrieve()[status])
         self.assertEqual(num_infectious, 1)
+
+    @mock.patch('logging.warning')
+    def test_logging(self, mock_log):
+        """Test the Initial Infected Sweep for logging messages.
+        """
+        test_sweep = pe.sweep.InitialInfectedSweep()
+        test_sweep.bind_population(self.test_population)
+        # Test asking for non-integer infected people
+        # raises a logging warning.
+        params = {"initial_infected_number": 0.2, "simulation_start_time": 0}
+        test_sweep(params)
+        mock_log.assert_called_once_with("Initial number of infected people "
+                                         + "needs to be an integer so we use "
+                                         + "floor function to round down. "
+                                         + "Inputed value was 0.2")
 
     def test_cell_distribution(self):
         """Test the main function of the Initial Infected Sweep.
