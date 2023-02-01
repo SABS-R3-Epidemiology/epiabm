@@ -71,5 +71,6 @@ class TestPlaceInfection(TestPyEpiabm):
         self.assertEqual(mock_inf.call_count, 1)
         self.assertEqual(mock_susc.call_count, 1)
 
+
 if __name__ == '__main__':
     unittest.main()
