@@ -7,6 +7,8 @@ from pyEpiabm.intervention import AbstractIntervention
 
 class PlaceClosure(AbstractIntervention):
     """Place closure intervention
+    Close places based on the number of icu patients and infecious persons
+    in their microcells and reopen places after their closure period.
     """
 
     def __init__(
@@ -41,7 +43,7 @@ class PlaceClosure(AbstractIntervention):
                 if microcell.closure_start_time is not None:
                     if time > microcell.closure_start_time + self.\
                               closure_duration:
-                        # Stop isolating people after their isolation period
+                        # Reopen places after their closure period
                         microcell.closure_start_time = None
 
                 else:
