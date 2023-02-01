@@ -516,7 +516,7 @@
             "vacc_susc_drop": 0.8,
             "time_to_efficacy": 14,
             "min_ages": [80, 65, 50, 18],
-            "prob_vaccinated": [0.94, 0.97, 0.94, 0.76],
+            "prob_vaccinated": [1, 1, 1, 1],
             "daily_doses": 1
         }
     }
