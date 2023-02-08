@@ -512,9 +512,9 @@
             "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
-            "vacc_inf_drop": 0.8,
-            "vacc_susc_drop": 0.8,
-            "time_to_efficacy": 14,
+            "vacc_inf_drop": 0.5,
+            "vacc_susc_drop": 0.5,
+            "time_to_efficacy": 0,
             "min_ages": [80, 65, 50, 18],
             "prob_vaccinated": [1, 1, 1, 1],
             "daily_doses": 1

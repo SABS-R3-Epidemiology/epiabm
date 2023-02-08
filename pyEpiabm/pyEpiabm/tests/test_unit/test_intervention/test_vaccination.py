@@ -18,13 +18,7 @@ class TestVaccination(TestPyEpiabm):
         cls._population.cells[0].add_microcells(1)
         cls._population.cells[0].microcells[0].add_people(5)
         params = pe.Parameters.instance().intervention_params['vaccine_params']
-        cls.vaccination = Vaccination(start_time = params['time_start'],
-                                      policy_duration = params['policy_duration'],
-                                      case_threshold = params['case_threshold'],
-                                      daily_doses = params['daily_doses'], 
-                                      vacc_inf_drop = params['vacc_inf_drop'], 
-                                      vacc_susc_drop = params['vacc_susc_drop'], 
-                                      time_to_efficacy = params['time_to_efficacy'],
+        cls.vaccination = Vaccination(**params,
                                       population = cls._population
                                       )
 
@@ -44,10 +38,7 @@ class TestVaccination(TestPyEpiabm):
         self.assertEqual(self._population.vaccine_queue.queue[0][2], self._population.cells[0].persons[0])
 
     def test__init__(self):
-        self.assertEqual(self.vaccination.vaccines_per_day, 1)
-        self.assertEqual(self._population.cells[0].persons[0].vac_inf_drop, 0.8)
-        self.assertEqual(self._population.cells[0].persons[0].vac_susc_drop, 0.8)
-        self.assertEqual(self._population.cells[0].persons[0].time_to_efficacy, 14)
+        self.assertEqual(self.vaccination.daily_doses, 1)
     
     def test__call__(self):
         self.vaccination(time=5)

@@ -40,15 +40,17 @@ class TestVaccinationSweep(TestPyEpiabm):
 
         person_list = [self.person1, self.person2, self.person3, 
                        self.person4, self.person5, self.person6]
+        priority_list = []
         for per in person_list:
-            test_sweep.assign_priority_group(per, params['min_ages'])
+            level = test_sweep.assign_priority_group(per, params['min_ages'])
+            priority_list.append(level)
         
-        self.assertEqual(self.person1.priority_level, 1)
-        self.assertEqual(self.person6.priority_level, 1)
-        self.assertEqual(self.person2.priority_level, 2)
-        self.assertEqual(self.person3.priority_level, 3)
-        self.assertEqual(self.person4.priority_level, 4)
-        self.assertIsNone(self.person5.priority_level)
+        self.assertEqual(priority_list[0], 1)
+        self.assertEqual(priority_list[5], 1)
+        self.assertEqual(priority_list[1], 2)
+        self.assertEqual(priority_list[2], 3)
+        self.assertEqual(priority_list[3], 4)
+        self.assertIsNone(priority_list[4])
 
 
 if __name__ == '__main__':

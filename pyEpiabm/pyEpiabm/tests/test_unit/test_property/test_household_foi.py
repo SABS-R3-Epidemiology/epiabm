@@ -21,13 +21,9 @@ class TestHouseholdInfection(TestPyEpiabm):
         cls.microcell = pe.Microcell(cls.cell)
         cls.infector = pe.Person(cls.microcell)
         cls.infector.infectiousness = 1.0
-        cls.infector.vac_inf_drop = 0.5
         cls.infector.date_vaccinated = 0
-        cls.infector.time_to_efficacy = 0
         cls.infectee = pe.Person(cls.microcell)
-        cls.infectee.vac_susc_drop = 0.5
         cls.infectee.date_vaccinated = 0
-        cls.infectee.time_to_efficacy = 0
         cls.infectee.is_vaccinated = True
         cls.infector.is_vaccinated = True
         cls.time = 1
