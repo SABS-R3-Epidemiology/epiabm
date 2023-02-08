@@ -29,10 +29,11 @@ class PersonalInfection:
             Infectiousness parameter of person
 
         """
+        params = Parameters.instance().intervention_params['vaccine_params']
         vacc_inf_drop = 1
         if infector.is_vaccinated:
-            if time > (infector.date_vaccinated + infector.time_to_efficacy):
-                vacc_inf_drop *= infector.vac_inf_drop
+            if time > (infector.date_vaccinated + params['time_to_efficacy']):
+                vacc_inf_drop *= params['vac_inf_drop']
 
         return infector.infectiousness * vacc_inf_drop
 
@@ -60,9 +61,10 @@ class PersonalInfection:
             Susceptibility parameter of household
 
         """
+        params = Parameters.instance().intervention_params['vaccine_params']
         vacc_susc_drop = 1
         if infectee.is_vaccinated:
-            if time > infectee.date_vaccinated + infectee.time_to_efficacy:
-                vacc_susc_drop *= infectee.vac_susc_drop  
+            if time > infectee.date_vaccinated + params['time_to_efficacy']:
+                vacc_susc_drop *= params['vac_susc_drop']  
         
         return 1.0 * vacc_susc_drop

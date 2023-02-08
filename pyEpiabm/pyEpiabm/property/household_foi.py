@@ -84,8 +84,8 @@ class HouseholdInfection:
                          false_positive_rate)
         vacc_inf_drop = 1
         if infector.is_vaccinated:
-            if time > infector.date_vaccinated + infector.time_to_efficacy:
-                vacc_inf_drop *= infector.vac_inf_drop
+            if time > (infector.date_vaccinated + Parameters.instance().vaccine_params['time_to_efficacy']):
+                vacc_inf_drop *= Parameters.instance().vaccine_params['vac_inf_drop']
         
         infectiousness = (HouseholdInfection.household_inf(infector, time)
                           * seasonality * false_pos
