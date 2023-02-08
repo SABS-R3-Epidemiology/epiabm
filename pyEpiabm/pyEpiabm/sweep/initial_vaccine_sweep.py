@@ -35,7 +35,7 @@ class InitialVaccineQueue(AbstractSweep):
             random.shuffle(all_persons)
             unique = count()
             for person in all_persons:
-                priority_level = assign_priority_group(person, self.age_thresholds)
+                priority_level = self.assign_priority_group(person, self.age_thresholds)
                 if priority_level is not None and random.random() <= self.prob_by_age[int(priority_level)-1]:
                     self._population.enqueue_vaccine(priority_level, next(unique), person)
 
