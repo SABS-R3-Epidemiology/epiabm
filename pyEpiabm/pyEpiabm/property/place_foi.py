@@ -104,5 +104,5 @@ class PlaceInfection:
         infectiousness = PlaceInfection.place_inf(place, infector, time)
         susceptibility = (PlaceInfection.place_susc(place, infector,
                                                     infectee, time)
-                          * carehome_params)
+                          * carehome_scale_susc)
         return (infectiousness * susceptibility)
