@@ -99,7 +99,9 @@ class PlaceInfection:
             Force of infection parameter of place
 
         """
-        isolating = infector.microcell.cell.isolation_effectiveness\
+        isolation_effectiveness = Parameters.instance().\
+            intervention_params['case_isolation']['isolation_effectiveness']
+        isolating = isolation_effectiveness\
             if infector.isolation_start_time is not None else 1
         infectiousness = (PlaceInfection.place_inf(place, infector, time)
                           * isolating)

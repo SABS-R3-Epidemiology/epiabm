@@ -2,6 +2,7 @@
 # Calculate household force of infection based on Covidsim code
 #
 
+from pyEpiabm.core import Parameters
 import pyEpiabm.core
 
 from .personal_foi import PersonalInfection
@@ -31,10 +32,14 @@ class HouseholdInfection:
             Infectiousness parameter of household
 
         """
-        household_infectiousness = PersonalInfection.person_inf(infector, time)
-        if (infector.microcell.closure_start_time is not None):
-            household_infectiousness *= \
-                infector.microcell.closure_household_infectiousness
+        closure_household_infectiousness = \
+            Parameters.instance().\
+            intervention_params['place_closure']['closure_household'
+                                                 '_infectiousness']
+        closure_inf = closure_household_infectiousness \
+            if infector.microcell.closure_start_time is not None else 1
+        household_infectiousness = PersonalInfection.person_inf(
+            infector, time) * closure_inf
         return household_infectiousness
 
     @staticmethod
@@ -81,7 +86,10 @@ class HouseholdInfection:
 
         """
         seasonality = 1.0  # Not yet implemented
-        isolating = infector.microcell.cell.isolation_house_effectiveness \
+        isolation_house_effectiveness = Parameters.instance().\
+            intervention_params['case_isolation']['isolation_house'
+                                                  '_effectiveness']
+        isolating = isolation_house_effectiveness \
             if infector.isolation_start_time is not None else 1
         false_pos = 1 / (1 - pyEpiabm.core.Parameters.instance().
                          false_positive_rate)

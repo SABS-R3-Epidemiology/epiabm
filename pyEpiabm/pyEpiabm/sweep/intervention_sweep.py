@@ -5,6 +5,7 @@
 from pyEpiabm.core import Parameters
 from pyEpiabm.intervention import CaseIsolation
 from pyEpiabm.intervention import PlaceClosure
+
 from .abstract_sweep import AbstractSweep
 
 
@@ -25,36 +26,12 @@ class InterventionSweep(AbstractSweep):
 
     def bind_population(self, population):
         self._population = population
+        intervention_dict = {'case_isolation': CaseIsolation,
+                             'place_closure': PlaceClosure}
         for intervention in self.intervention_params.keys():
             params = self.intervention_params[intervention]
-            if intervention == 'case_isolation':
-                self.interventions.append(CaseIsolation(
-                    start_time=params['time_start'],
-                    policy_duration=params['policy_duration'],
-                    case_threshold=params['case_threshold'],
-                    isolation_delay=params['isolation_delay'],
-                    isolation_duration=params['isolation_duration'],
-                    isolation_probability=params['isolation_probability'],
-                    isolation_effectiveness=params['isolation_effectiveness'],
-                    isolation_house_effectiveness=params['isolation_house_'
-                                                         'effectiveness'],
-                    population=self._population
-                ))
-            elif intervention == 'place_closure':
-                self.interventions.append(PlaceClosure(
-                    start_time=params['time_start'],
-                    policy_duration=params['policy_duration'],
-                    case_threshold=params['case_threshold'],
-                    closure_delay=params['closure_delay'],
-                    closure_duration=params['closure_duration'],
-                    closure_household_infectiousness=params
-                    ['closure_household_infectiousness'],
-                    closure_spatial_params=params['closure_spatial_params'],
-                    icu_microcell_threshold=params['icu_microcell_threshold'],
-                    case_microcell_threshold=params['case_microcell_'
-                                                    'threshold'],
-                    population=self._population
-                ))
+            self.interventions.append(intervention_dict[intervention](
+                                      population=self._population, **params))
 
     def __call__(self, time):
         """
@@ -72,10 +49,7 @@ class InterventionSweep(AbstractSweep):
             # - Include condition on ICU
             #   Intervention will be activated based on time and cases now.
             #   We would like to implement a threshold based on ICU numbers.
-            num_cases = 0
-            for cell in self._population.cells:
-                for person in cell.persons:
-                    if person.is_infectious():
-                        num_cases += 1
+            num_cases = sum(map(lambda cell: cell.number_infectious(),
+                            self._population.cells))
             if intervention.is_active(time, num_cases):
                 intervention(time)

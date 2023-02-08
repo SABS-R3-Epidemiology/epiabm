@@ -49,8 +49,6 @@ class TestHouseholdInfection(TestPyEpiabm):
             self.infector, self.infectee, self.time)
         # Case isolate
         isolation_house_effectiveness = 0.5
-        self._population.cells[0].\
-            isolation_house_effectiveness = isolation_house_effectiveness
         self.infector.isolation_start_time = 1
         result_isolating = HouseholdInfection.household_foi(self.infector,
                                                             self.infectee,
@@ -62,9 +60,7 @@ class TestHouseholdInfection(TestPyEpiabm):
         result = HouseholdInfection.household_inf(
             self.infector, self.time)
         # Place closure
-        closure_household_infectiousness = 0.5
-        self._population.cells[0].microcells[0].\
-            closure_household_infectiousness = closure_household_infectiousness
+        closure_household_infectiousness = 5
         self.infector.microcell.closure_start_time = 1
         result_closure = HouseholdInfection.household_inf(
             self.infector, self.time)

@@ -499,17 +499,17 @@
     },
     "intervention_params": {
         "case_isolation": {
-            "time_start": 6,
+            "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
             "isolation_delay": 0,
             "isolation_duration": 100,
             "isolation_probability": 1,
-            "isolation_effectiveness": 0,
-            "isolation_house_effectiveness": 0
+            "isolation_effectiveness": 0.5,
+            "isolation_house_effectiveness": 0.5
         },
         "place_closure": {
-            "time_start": 6,
+            "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
             "closure_delay": 0,

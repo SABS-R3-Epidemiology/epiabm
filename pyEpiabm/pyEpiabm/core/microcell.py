@@ -40,8 +40,6 @@ class Microcell:
         self.location = cell.location
         self.compartment_counter = _CompartmentCounter(
             f"Microcell {id(self)}")
-        self.closure_household_infectiousness = None
-        self.closure_spatial_params = None
         self.closure_start_time = None
 
     def __repr__(self):
@@ -176,15 +174,9 @@ class Microcell:
         self.location = loc
 
     def count_icu(self):
-        num_icu = 0
-        for person in self.persons:
-            if person.infection_status == InfectionStatus.InfectICU:
-                num_icu += 1
-        return num_icu
+        return sum(map(lambda person: person.infection_status ==
+                   InfectionStatus.InfectICU, self.persons))
 
     def count_infectious(self):
-        num_infectious = 0
-        for person in self.persons:
-            if person.is_infectious():
-                num_infectious += 1
-        return num_infectious
+        return sum(map(lambda person: person.is_infectious() is
+                   True, self.persons))

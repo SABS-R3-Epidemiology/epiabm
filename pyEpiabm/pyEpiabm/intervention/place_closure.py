@@ -2,6 +2,8 @@
 # Place closure Class
 #
 
+from pyEpiabm.core import Parameters
+
 from pyEpiabm.intervention import AbstractIntervention
 
 
@@ -15,26 +17,16 @@ class PlaceClosure(AbstractIntervention):
         self,
         closure_duration,
         closure_delay,
-        closure_household_infectiousness,
-        closure_spatial_params,
         icu_microcell_threshold,
         case_microcell_threshold,
         population,
-        *args,
         **kwargs
     ):
         self.closure_duration = closure_duration
         self.closure_delay = closure_delay
         self.icu_microcell_threshold = icu_microcell_threshold
         self.case_microcell_threshold = case_microcell_threshold
-        for cell in population.cells:
-            for microcell in cell.microcells:
-                microcell.closure_household_infectiousness = \
-                    closure_household_infectiousness
-                microcell.closure_spatial_params = \
-                    closure_spatial_params
-        # start_time, policy_duration, threshold, population
-        super(PlaceClosure, self).__init__(population=population, *args,
+        super(PlaceClosure, self).__init__(population=population,
                                            **kwargs)
 
     def __call__(self, time):

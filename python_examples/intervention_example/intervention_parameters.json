@@ -496,7 +496,7 @@
     },
     "intervention_params": {
 	"case_isolation": {
-	    "time_start": 6,
+	    "start_time": 6,
 	    "policy_duration": 365,
 	    "case_threshold": 0,
 	    "isolation_delay": 1,
@@ -506,13 +506,13 @@
 	    "isolation_house_effectiveness": 0.5
 	},
     "place_closure": {
-        "time_start": 6,
+        "start_time": 6,
         "policy_duration": 365,
         "case_threshold": 0,
         "closure_delay": 0,
         "closure_duration": 100,
         "closure_household_infectiousness": 5,
-        "closure_spatial_params": 0,
+        "closure_spatial_params": 0.5,
         "icu_microcell_threshold": 0,
         "case_microcell_threshold":0
     }
