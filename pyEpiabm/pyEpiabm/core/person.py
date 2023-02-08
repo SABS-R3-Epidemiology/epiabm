@@ -8,6 +8,8 @@ from pyEpiabm.property import InfectionStatus
 
 from .parameters import Parameters
 
+from functools import lru_cache
+
 
 class Person:
     """Class to represent each person in a population.
@@ -79,6 +81,18 @@ class Person:
         """
         return str(self.infection_status).startswith('InfectionStatus.Infect')
 
+    # @property
+    # def infection_status(self):
+    #    return self._infection_status
+
+    # @infection_status.setter
+    # def infection_status(self, value):
+    #     self._infection_status = value
+    #     type(self).is_susceptible(self).fget.cache_clear()
+
+    # # @lru_cache(maxsize=None)
+    # @lru_cache()
+    # @profile
     def is_susceptible(self):
         """Query if the person is currently susceptible.
 
@@ -115,6 +129,16 @@ class Person:
         self.microcell.notify_person_status_change(
             self.infection_status, new_status, self.age_group)
         self.infection_status = new_status
+
+        if self.infection_status \
+            in [InfectionStatus.InfectASympt,
+                InfectionStatus.InfectMild,
+                InfectionStatus.InfectGP]:
+            self.household.add_infectious_person(self)
+        if self.infection_status \
+            in [InfectionStatus.Recovered,
+                InfectionStatus.Dead]:
+            self.household.remove_infectious_person(self)
 
     def add_place(self, place, person_group: int = 0):
         """Method adds a place to the place list if the person visits

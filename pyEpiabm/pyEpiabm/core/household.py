@@ -28,6 +28,7 @@ class Household:
 
         """
         self.persons = []
+        self.infectious_persons = []
         self.location = loc
         self.susceptibility = susceptibility
         self.infectiousness = infectiousness
@@ -62,3 +63,28 @@ class Household:
         """
         self.persons.append(person)
         person.household = self
+
+    def add_infectious_person(self, infectious_person):
+        """Adds a person to the list of infectious people in the household.
+
+        Parameters
+        ----------
+        infectious_person : Person
+            Person to be added
+
+        """
+        if infectious_person not in self.infectious_persons:
+            self.infectious_persons.append(infectious_person)
+            infectious_person.household = self
+
+    def remove_infectious_person(self, non_infectious_person):
+        """Removes an infectious person from the list of infectious people in the household.
+
+        Parameters
+        ----------
+        non_infectious_person : Person
+            Person to be removed
+
+        """
+        self.infectious_persons.remove(non_infectious_person)
+        non_infectious_person.household = self

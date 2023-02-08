@@ -18,6 +18,7 @@ class HouseholdSweep(AbstractSweep):
 
     """
 
+    @profile
     def __call__(self, time: float):
         """Given a population structure, loops over infected members
         and considers whether they infected household members based
@@ -32,18 +33,20 @@ class HouseholdSweep(AbstractSweep):
         # Double loop over the whole population, checking infectiousness
         # status, and whether they are absent from their household.
         for cell in self._population.cells:
-            for infector in cell.persons:
-                if not infector.is_infectious():
+            for infectee in cell.persons:
+                if infectee.is_infectious():
                     continue
 
-                if infector.household is None:
-                    raise AttributeError(f"{infector} is not part of a "
+                if infectee.household is None:
+                    raise AttributeError(f"{infectee} is not part of a "
                                          + "household")
 
                 # Check to see whether a household member is susceptible.
-                for infectee in infector.household.persons:
-                    if not infectee.is_susceptible():
-                        continue
+                # for infectee in infector.household.persons:
+                #     if not infectee.is_susceptible():
+                #         continue
+                # print('Length currently', len(infectee.household.infectious_persons))
+                for infector in infectee.household.infectious_persons:
 
                     # Calculate "force of infection" parameter which will
                     # determine the likelihood of an infection event.
