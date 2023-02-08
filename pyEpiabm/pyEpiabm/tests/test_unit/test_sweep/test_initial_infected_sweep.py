@@ -73,19 +73,42 @@ class TestInitialInfectedSweep(TestPyEpiabm):
         params = {"initial_infected_number": 1, "simulation_start_time": 0}
         self.assertRaises(ValueError, test_sweep, params)
 
-        # Test that call assigns correct number of infectious people when have
-        # carehome initial infections.
+    def test_carehome_options(self):
+        """ Test that call assigns correct number of infectious people when have \
+        carehome initial infections.
+        """
+        test_sweep = pe.sweep.InitialInfectedSweep()
+        test_sweep.bind_population(self.test_population)
+
+        # Set parameters and initial susceptibility
         params = {"initial_infected_number": 1, "simulation_start_time": 0}
         self.person1.update_status(pe.property.InfectionStatus.Susceptible)
         self.person2.update_status(pe.property.InfectionStatus.Susceptible)
         self.person1.age = 80
         self.person1.care_home_resident = True
-        carehome_param = Parameters.instance().carehome_params
-        carehome_param["carehome_allow_initial_infections"] = 0
+
         test_sweep(params)
         status = pe.property.InfectionStatus.InfectMild
         num_infectious = sum(self.cell.compartment_counter.retrieve()[status])
         self.assertEqual(num_infectious, 1)
+        self.assertEqual(self.person2.infection_status, status)
+
+        # Set parameters and initial susceptibilty to test error
+        params = {"initial_infected_number": 2, "simulation_start_time": 0}
+        self.person1.update_status(pe.property.InfectionStatus.Susceptible)
+        self.person2.update_status(pe.property.InfectionStatus.Susceptible)
+        self.person1.age = 80
+        self.person1.care_home_resident = True
+        Parameters.instance().carehome_params['carehome_allow_initial_infections']
+        
+        self.assertRaises(ValueError, test_sweep, params)
+
+        # Test functions if no carehome parameters given
+        delattr(Parameters.instance(), 'carehome_params')
+        test_sweep(params)
+        status = pe.property.InfectionStatus.InfectMild
+        num_infectious = sum(self.cell.compartment_counter.retrieve()[status])
+        self.assertEqual(num_infectious, 2)
 
     def test_cell_distribution(self):
         """Test the main function of the Initial Infected Sweep.
