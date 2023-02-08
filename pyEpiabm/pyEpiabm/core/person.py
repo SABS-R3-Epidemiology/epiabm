@@ -131,14 +131,11 @@ class Person:
         self.infection_status = new_status
 
         if self.infection_status \
-            in [InfectionStatus.InfectASympt,
-                InfectionStatus.InfectMild,
-                InfectionStatus.InfectGP]:
-            self.household.add_infectious_person(self)
+                in [InfectionStatus.Susceptible]:
+            self.household.add_susceptible_person(self)
         if self.infection_status \
-            in [InfectionStatus.Recovered,
-                InfectionStatus.Dead]:
-            self.household.remove_infectious_person(self)
+                in [InfectionStatus.Exposed]:
+            self.household.remove_susceptible_person(self)
 
     def add_place(self, place, person_group: int = 0):
         """Method adds a place to the place list if the person visits
@@ -159,6 +156,7 @@ class Person:
                                  cell")
         self.places.append((place, person_group))
         self.place_types.append(place.place_type)
+        self.household.add_susceptible_person(self)
 
     def remove_place(self, place):
         """Method to remove person for each associated place, to be

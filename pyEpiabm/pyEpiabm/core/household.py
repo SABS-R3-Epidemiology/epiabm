@@ -4,6 +4,7 @@
 
 import typing
 from numbers import Number
+from pyEpiabm.property import InfectionStatus
 
 
 class Household:
@@ -28,7 +29,7 @@ class Household:
 
         """
         self.persons = []
-        self.infectious_persons = []
+        self.susceptible_persons = []
         self.location = loc
         self.susceptibility = susceptibility
         self.infectiousness = infectiousness
@@ -63,28 +64,31 @@ class Household:
         """
         self.persons.append(person)
         person.household = self
+        if person.infection_status \
+                in [InfectionStatus.Susceptible]:
+            self.add_susceptible_person(person)
 
-    def add_infectious_person(self, infectious_person):
-        """Adds a person to the list of infectious people in the household.
+    def add_susceptible_person(self, susceptible_person):
+        """Adds a person to the list of susceptible people in the household.
 
         Parameters
         ----------
-        infectious_person : Person
+        susceptible_person : Person
             Person to be added
 
         """
-        if infectious_person not in self.infectious_persons:
-            self.infectious_persons.append(infectious_person)
-            infectious_person.household = self
+        if susceptible_person not in self.susceptible_persons:
+            self.susceptible_persons.append(susceptible_person)
+            susceptible_person.household = self
 
-    def remove_infectious_person(self, non_infectious_person):
-        """Removes an infectious person from the list of infectious people in the household.
+    def remove_susceptible_person(self, non_susceptible_person):
+        """Removes an susceptible person from the list of susceptible people in the household.
 
         Parameters
         ----------
-        non_infectious_person : Person
+        non_susceptible_person : Person
             Person to be removed
 
         """
-        self.infectious_persons.remove(non_infectious_person)
-        non_infectious_person.household = self
+        self.susceptible_persons.remove(non_susceptible_person)
+        non_susceptible_person.household = self

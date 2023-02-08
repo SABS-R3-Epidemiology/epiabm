@@ -5,7 +5,7 @@
 import random
 
 from pyEpiabm.property import HouseholdInfection
-
+from pyEpiabm.core import Person
 from .abstract_sweep import AbstractSweep
 
 
@@ -33,12 +33,11 @@ class HouseholdSweep(AbstractSweep):
         # Double loop over the whole population, checking infectiousness
         # status, and whether they are absent from their household.
         for cell in self._population.cells:
-            for infectee in cell.persons:
-                if infectee.is_infectious():
-                    continue
+            infectious_persons = filter(Person.is_infectious, cell.persons)
+            for infector in infectious_persons:
 
-                if infectee.household is None:
-                    raise AttributeError(f"{infectee} is not part of a "
+                if infector.household is None:
+                    raise AttributeError(f"{infector} is not part of a "
                                          + "household")
 
                 # Check to see whether a household member is susceptible.
@@ -46,7 +45,7 @@ class HouseholdSweep(AbstractSweep):
                 #     if not infectee.is_susceptible():
                 #         continue
                 # print('Length currently', len(infectee.household.infectious_persons))
-                for infector in infectee.household.infectious_persons:
+                for infectee in infector.household.susceptible_persons:
 
                     # Calculate "force of infection" parameter which will
                     # determine the likelihood of an infection event.
