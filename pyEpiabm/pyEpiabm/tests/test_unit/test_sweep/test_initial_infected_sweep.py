@@ -1,3 +1,4 @@
+import os
 import unittest
 from unittest import mock
 
@@ -23,6 +24,15 @@ class TestInitialInfectedSweep(TestPyEpiabm):
         cls.microcell = cls.cell.microcells[0]
         cls.person1 = cls.cell.microcells[0].persons[0]
         cls.person2 = cls.test_population.cells[0].microcells[0].persons[1]
+
+    def setUp(self) -> None:
+        """This reinitialises the parameters singleton before every test
+        (default behaviour is only once per class). This allows modification
+        of the parameters in each test without side effects to others.
+        """
+        filepath = os.path.join(os.path.dirname(__file__), os.pardir,
+                                os.pardir, 'testing_parameters.json')
+        pe.Parameters.set_file(filepath)
 
     def test_call(self):
         """Test the main function of the Initial Infected Sweep.
