@@ -39,6 +39,9 @@ class TestVaccination(TestPyEpiabm):
 
     def test__init__(self):
         self.assertEqual(self.vaccination.daily_doses, 1)
+        self.assertEqual(self.vaccination.start_time, 6)
+        self.assertEqual(self.vaccination.policy_duration, 365)
+        self.assertEqual(self.vaccination.case_threshold, 0)
     
     def test__call__(self):
         self.vaccination(time=5)
