@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 import pyEpiabm as pe
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
@@ -61,6 +61,11 @@ class TestPerson(TestPyEpiabm):
         self.assertEqual(
             self.person.infection_status,
             pe.property.InfectionStatus.InfectMild)
+        self.person.household = MagicMock()
+        self.person.update_status(pe.property.InfectionStatus.Exposed)
+        self.assertEqual(
+            self.person.infection_status,
+            pe.property.InfectionStatus.Exposed)
 
     def test_configure_place(self):
         # Tests both the add and remove functions

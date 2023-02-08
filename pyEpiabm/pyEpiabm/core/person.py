@@ -131,10 +131,12 @@ class Person:
         self.infection_status = new_status
 
         if self.infection_status \
-                in [InfectionStatus.Susceptible]:
+                in [InfectionStatus.Susceptible] and \
+                self.household is not None:
             self.household.add_susceptible_person(self)
         if self.infection_status \
-                in [InfectionStatus.Exposed]:
+                in [InfectionStatus.Exposed] and \
+                self.household is not None:
             self.household.remove_susceptible_person(self)
 
     def add_place(self, place, person_group: int = 0):
@@ -156,7 +158,6 @@ class Person:
                                  cell")
         self.places.append((place, person_group))
         self.place_types.append(place.place_type)
-        self.household.add_susceptible_person(self)
 
     def remove_place(self, place):
         """Method to remove person for each associated place, to be

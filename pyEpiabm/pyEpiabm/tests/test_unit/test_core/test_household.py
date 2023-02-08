@@ -36,6 +36,19 @@ class TestHousehold(TestPyEpiabm):
         self.assertRaises(ValueError, pe.Household,
                           self.microcell, ('1', 1))
 
+    def test_add_susceptible_person(self):
+        subject = pe.Household(self.microcell, (1, 1))
+        self.assertEqual(len(subject.susceptible_persons), 0)
+        subject.add_susceptible_person(self.person)
+        self.assertEqual(len(subject.susceptible_persons), 1)
+
+    def test_remove_susceptible_person(self):
+        subject = pe.Household(self.microcell, (1, 1))
+        subject.susceptible_persons.append(self.person)
+        self.assertEqual(len(subject.susceptible_persons), 1)
+        subject.remove_susceptible_person(self.person)
+        self.assertEqual(len(subject.susceptible_persons), 0)
+
 
 if __name__ == '__main__':
     unittest.main()

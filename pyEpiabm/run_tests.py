@@ -15,6 +15,14 @@ import re
 import subprocess
 import unittest
 
+import builtins
+
+try:
+    builtins.profile
+except AttributeError:
+    # No line profiler, provide a pass-through version
+    def profile(func): return func
+    builtins.profile = profile
 
 def run_unit_tests():
     """
