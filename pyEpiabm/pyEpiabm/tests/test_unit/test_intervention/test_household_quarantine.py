@@ -20,7 +20,8 @@ class TestHouseholdQuarantine(TestPyEpiabm):
         cls.pop_params = {"population_size": 2, "cell_number": 1,
                           "microcell_number": 1, "household_number": 1}
         cls.test_population = cls.pop_factory.make_pop(cls.pop_params)
-        cls.sympt_person = cls.test_population.cells[0].microcells[0].persons[0]
+        cls.sympt_person = cls.test_population.cells[0].microcells[
+            0].persons[0]
         cls.sympt_person.update_status(InfectionStatus.InfectMild)
         cls.susc_person = cls.test_population.cells[0].microcells[0].persons[1]
         cls.susc_person.update_status(InfectionStatus.Susceptible)
@@ -62,6 +63,7 @@ class TestHouseholdQuarantine(TestPyEpiabm):
         self.householdquarantine(time=20)
         self.assertIsNone(self.sympt_person.quarantine_start_time)
         self.assertIsNone(self.susc_person.quarantine_start_time)
+
 
 if __name__ == '__main__':
     unittest.main()

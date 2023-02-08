@@ -38,6 +38,9 @@ class Cell:
         self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
         self.isolation_effectiveness = None
         self.isolation_house_effectiveness = None
+        self.quarantine_house_effectiveness = None
+        self.quarantine_spatial_effectiveness = None
+        self.quarantine_place_effectiveness = None
 
         if not (len(loc) == 2 and isinstance(loc[0], Number) and
                 isinstance(loc[1], Number)):
