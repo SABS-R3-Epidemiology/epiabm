@@ -38,14 +38,7 @@ class InterventionSweep(AbstractSweep):
                     population=self._population
                 ))
             elif intervention == 'vaccine_params':
-                self.interventions.append(Vaccination(
-                    start_time=params['time_start'],
-                    policy_duration=params['policy_duration'],
-                    case_threshold=params['case_threshold'],
-                    daily_doses=params['daily_doses'],
-                    vacc_inf_drop=params['vacc_inf_drop'],
-	                vacc_susc_drop=params['vacc_susc_drop'],
-	                time_to_efficacy=params['time_to_efficacy'],
+                self.interventions.append(Vaccination(**params,
                     population=self._population
                 ))
 

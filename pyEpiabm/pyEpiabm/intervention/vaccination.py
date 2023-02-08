@@ -12,19 +12,11 @@ class Vaccination(AbstractIntervention):
     def __init__(
         self,
         daily_doses,
-        vacc_inf_drop,
-	    vacc_susc_drop,
-	    time_to_efficacy,
         population,
         *args,
         **kwargs
     ):
-        self.vaccines_per_day = daily_doses
-        for cell in population.cells:
-            for person in cell.persons:
-                person.vac_inf_drop = vacc_inf_drop
-                person.vac_susc_drop = vacc_susc_drop
-                person.time_to_efficacy = time_to_efficacy
+        self.daily_doses = daily_doses
 
         # start_time, policy_duration, threshold, population
         super(Vaccination, self).__init__(population=population, *args,
