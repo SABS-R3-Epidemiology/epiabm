@@ -77,20 +77,22 @@ class HouseholdInfection:
             Force of infection parameter of household
 
         """
-        carehome_params = Parameters.instance()\
-            .carehome_params["carehome_resident_household_scaling"]
+        carehome_scale_inf = 1
+        if infector.care_home_resident:
+            carehome_scale_inf = Parameters.instance()\
+                .carehome_params["carehome_resident_household_scaling"]
+        carehome_scale_susc = 1
+        if infectee.care_home_resident:
+            carehome_scale_susc = Parameters.instance()\
+                .carehome_params["carehome_resident_household_scaling"]
         seasonality = 1.0  # Not yet implemented
         infectiousness = (HouseholdInfection.household_inf(infector, time)
                           * seasonality
                           * pyEpiabm.core.Parameters.instance().
                           household_transmission
-                          * (carehome_params
-                          if infector.care_home_resident
-                          else 1))
+                          * carehome_scale_inf)
 
         susceptibility = (HouseholdInfection.household_susc(infector,
                                                             infectee, time)
-                          * (carehome_params
-                          if infectee.care_home_resident
-                          else 1))
+                          * carehome_scale_susc)
         return (infectiousness * susceptibility)

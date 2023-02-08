@@ -63,8 +63,11 @@ class InitialInfectedSweep(AbstractSweep):
             raise ValueError('There are not enough susceptible people in the \
                                         population to infect')
 
-        care_param = Parameters.instance().carehome_params
-        carehome_infection = care_param["carehome_allow_initial_infections"]
+        # set default to not treat carehome residents differently
+        carehome_inf = 1
+        if hasattr(Parameters.instance(), 'carehome_params'):
+            care_param = Parameters.instance().carehome_params
+            carehome_inf = care_param["carehome_allow_initial_infections"]
 
         if ("initial_infected_cell" not in sim_params
                 or not sim_params["initial_infected_cell"]):
@@ -78,10 +81,15 @@ class InitialInfectedSweep(AbstractSweep):
                            (pers.infection_status ==
                             InfectionStatus.Susceptible)]
 
-        if carehome_infection == 0:
+        if carehome_inf == 0:
             for person in all_persons:
                 if person.care_home_resident or person.key_worker:
                     all_persons.remove(person)
+
+        if len(all_persons) < sim_params["initial_infected_number"]:
+            raise ValueError('There are not enough susceptible people in the \
+                                        population to infect due to excluding \
+                                        care home residents')
 
         pers_to_infect = random.sample(all_persons,
                                        int(sim_params

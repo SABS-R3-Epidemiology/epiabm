@@ -118,17 +118,18 @@ class SpatialInfection:
             Force of infection parameter of cell
 
         """
-        carehome_scale = pyEpiabm.core.Parameters.instance()\
-            .carehome_params["carehome_resident_spatial_scaling"]
+        carehome_scale_inf = 1
+        if infector.care_home_resident:
+            carehome_scale_inf = pyEpiabm.core.Parameters.instance()\
+                .carehome_params["carehome_resident_spatial_scaling"]
+        carehome_scale_susc = 1
+        if infectee.care_home_resident or infector.care_home_resident:
+            carehome_scale_susc = pyEpiabm.core.Parameters.instance()\
+                .carehome_params["carehome_resident_spatial_scaling"]
         infectiousness = ((SpatialInfection.space_inf(inf_cell, infector,
                                                       time))
-                          * (carehome_scale
-                          if (infector.care_home_resident)
-                          else 1))
+                          * carehome_scale_inf)
         susceptibility = ((SpatialInfection.space_susc(susc_cell,
                                                        infectee, time))
-                          * (carehome_scale
-                          if (infector.care_home_resident
-                             or infectee.care_home_resident)
-                          else 1))
+                          * carehome_scale_susc)
         return (infectiousness * susceptibility)
