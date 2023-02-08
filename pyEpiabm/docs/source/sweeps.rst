@@ -19,6 +19,7 @@ Overview:
 - :class:`QueueSweep`
 - :class:`SpatialSweep`
 - :class:`UpdatePlaceSweep`
+- :class:`InitialVaccineQueue`
 
 .. autoclass:: AbstractSweep
     :members:
@@ -61,5 +62,9 @@ Overview:
     :special-members: __call__
 
 .. autoclass:: UpdatePlaceSweep
+    :members:
+    :special-members: __call__
+
+.. autoclass:: InitialVaccineQueue
     :members:
     :special-members: __call__
