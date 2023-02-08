@@ -80,12 +80,13 @@ class HouseholdInfection:
         seasonality = 1.0  # Not yet implemented
         isolation = infector.microcell.cell.isolation_house_effectiveness \
             if infector.isolation_start_time is not None else 1
-        false_pos = 1 / (1 - pyEpiabm.core.Parameters.instance().
+        false_pos = 1 / (1 - Parameters.instance().
                          false_positive_rate)
         vacc_inf_drop = 1
+        vacc_params = Parameters.instance().intervention_params['vaccine_params']
         if infector.is_vaccinated:
-            if time > (infector.date_vaccinated + Parameters.instance().vaccine_params['time_to_efficacy']):
-                vacc_inf_drop *= Parameters.instance().vaccine_params['vac_inf_drop']
+            if time > (infector.date_vaccinated + vacc_params['time_to_efficacy']):
+                vacc_inf_drop *= vacc_params['vacc_inf_drop']
         
         infectiousness = (HouseholdInfection.household_inf(infector, time)
                           * seasonality * false_pos

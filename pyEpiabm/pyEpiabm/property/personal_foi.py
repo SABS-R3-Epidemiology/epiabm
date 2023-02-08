@@ -33,7 +33,7 @@ class PersonalInfection:
         vacc_inf_drop = 1
         if infector.is_vaccinated:
             if time > (infector.date_vaccinated + params['time_to_efficacy']):
-                vacc_inf_drop *= params['vac_inf_drop']
+                vacc_inf_drop *= params['vacc_inf_drop']
 
         return infector.infectiousness * vacc_inf_drop
 
@@ -65,6 +65,6 @@ class PersonalInfection:
         vacc_susc_drop = 1
         if infectee.is_vaccinated:
             if time > infectee.date_vaccinated + params['time_to_efficacy']:
-                vacc_susc_drop *= params['vac_susc_drop']  
+                vacc_susc_drop *= params['vacc_susc_drop']  
         
         return 1.0 * vacc_susc_drop
