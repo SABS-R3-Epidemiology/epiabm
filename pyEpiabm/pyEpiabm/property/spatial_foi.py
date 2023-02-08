@@ -61,12 +61,11 @@ class SpatialInfection:
             Infectiousness parameter of cell
 
         """
-        closure_spatial_params = Parameters.instance().\
-            intervention_params['place_closure']['closure_spatial_params']
         age = pyEpiabm.core.Parameters.instance().\
             age_contact[infector.age_group] \
             if pyEpiabm.core.Parameters.instance().use_ages is True else 1
-        closure_spatial = closure_spatial_params \
+        closure_spatial = Parameters.instance().\
+            intervention_params['place_closure']['closure_spatial_params'] \
             if infector.microcell.closure_start_time is not None else 1
         return infector.infectiousness * age * closure_spatial
 
@@ -94,14 +93,14 @@ class SpatialInfection:
 
         """
         spatial_susc = 1.0
-        closure_spatial_params = Parameters.instance().\
-            intervention_params['place_closure']['closure_spatial_params']
         if pyEpiabm.core.Parameters.instance().use_ages:
             spatial_susc = pyEpiabm.core.Parameters.instance().\
                 age_contact[infectee.age_group]
 
         if infector.microcell.closure_start_time is not None:
-            spatial_susc *= closure_spatial_params
+            spatial_susc *= Parameters.instance().\
+                intervention_params['place_'
+                                    'closure']['closure_spatial_params']
         return spatial_susc
 
     @staticmethod
@@ -129,9 +128,8 @@ class SpatialInfection:
             Force of infection parameter of cell
 
         """
-        isolation_effectiveness = Parameters.instance().\
-            intervention_params['case_isolation']['isolation_effectiveness']
-        isolating = isolation_effectiveness\
+        isolating = Parameters.instance().\
+            intervention_params['case_isolation']['isolation_effectiveness']\
             if infector.isolation_start_time is not None else 1
         infectiousness = (SpatialInfection.spatial_inf(
             inf_cell, infector, time) * isolating)

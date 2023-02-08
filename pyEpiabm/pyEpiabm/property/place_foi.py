@@ -99,9 +99,8 @@ class PlaceInfection:
             Force of infection parameter of place
 
         """
-        isolation_effectiveness = Parameters.instance().\
-            intervention_params['case_isolation']['isolation_effectiveness']
-        isolating = isolation_effectiveness\
+        isolating = Parameters.instance().\
+            intervention_params['case_isolation']['isolation_effectiveness']\
             if infector.isolation_start_time is not None else 1
         infectiousness = (PlaceInfection.place_inf(place, infector, time)
                           * isolating)
