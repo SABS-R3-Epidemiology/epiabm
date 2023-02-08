@@ -99,11 +99,13 @@ class PlaceInfection:
             Force of infection parameter of place
 
         """
-        isolating = infector.microcell.cell.isolation_effectiveness\
+        isolating = Parameters.instance().\
+            intervention_params['case_isolation']['isolation_effectiveness']\
             if infector.isolation_start_time is not None else 1
         place_idx = place.place_type.value - 1
-        quarantine = infector.microcell.cell.\
-            quarantine_place_effectiveness[place_idx] \
+        quarantine = Parameters.instance().\
+            intervention_params['household_quarantine'][
+                'quarantine_place_effectiveness'][place_idx]\
             if infector.quarantine_start_time is not None else 1
         infectiousness = (PlaceInfection.place_inf(place, infector, time)
                           * isolating * quarantine)

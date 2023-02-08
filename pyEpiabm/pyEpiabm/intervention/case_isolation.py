@@ -16,23 +16,16 @@ class CaseIsolation(AbstractIntervention):
     def __init__(
         self,
         isolation_duration,
-        isolation_delay,
         isolation_probability,
-        isolation_effectiveness,
-        isolation_house_effectiveness,
+        isolation_delay,
         population,
-        *args,
         **kwargs
     ):
         self.isolation_duration = isolation_duration
         self.isolation_delay = isolation_delay
         self.isolation_probability = isolation_probability
-        for cell in population.cells:
-            cell.isolation_effectiveness = isolation_effectiveness
-            cell.isolation_house_effectiveness = isolation_house_effectiveness
-        # start_time, policy_duration, threshold, population
-        super(CaseIsolation, self).__init__(population=population, *args,
-                                            **kwargs)
+
+        super(CaseIsolation, self).__init__(population=population, **kwargs)
 
     def __call__(self, time):
         for cell in self._population.cells:

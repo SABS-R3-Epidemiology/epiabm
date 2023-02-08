@@ -79,8 +79,8 @@ class TestSpatialInfection(TestPyEpiabm):
 
         # Case isolate
         isolation_effectiveness = 0.5
-        self.infector.microcell.cell.isolation_effectiveness = \
-            isolation_effectiveness
+        pe.Parameters.instance().intervention_params['case_isolation'][
+            'isolation_effectiveness'] = isolation_effectiveness
         self.infector.isolation_start_time = 1
         result_isolating = SpatialInfection.spatial_foi(
             self._population.cells[0], self._population.cells[0],
@@ -96,8 +96,6 @@ class TestSpatialInfection(TestPyEpiabm):
 
         # Update start time
         closure_spatial_params = 0.5
-        self._population.cells[0].microcells[0].\
-            closure_spatial_params = closure_spatial_params
         self.infector.microcell.closure_start_time = 1
 
         # Place closure susceptibility
@@ -117,7 +115,8 @@ class TestSpatialInfection(TestPyEpiabm):
             self._population.cells[0], self._population.cells[0],
             self.infector, self.infectee, self.time)
         quarantine_spatial_effectiveness = 0.5
-        self.infector.microcell.cell.quarantine_spatial_effectiveness = \
+        pe.Parameters.instance().intervention_params['household_quarantine'][
+            'quarantine_spatial_effectiveness'] =\
             quarantine_spatial_effectiveness
         self.infector.quarantine_start_time = 1
         result_isolating = SpatialInfection.spatial_foi(

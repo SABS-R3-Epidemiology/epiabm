@@ -1,6 +1,7 @@
 #
 # Calculate spatial force of infection based on Covidsim code
 #
+from pyEpiabm.core import Parameters
 
 import pyEpiabm.core
 
@@ -59,13 +60,13 @@ class SpatialInfection:
             Infectiousness parameter of cell
 
         """
-        spatial_inf = infector.infectiousness
-        if pyEpiabm.core.Parameters.instance().use_ages:
-            spatial_inf *= pyEpiabm.core.Parameters.instance().\
-                age_contact[infector.age_group]
-        if infector.microcell.closure_start_time is not None:
-            spatial_inf *= infector.microcell.closure_spatial_params
-        return spatial_inf
+        age = pyEpiabm.core.Parameters.instance().\
+            age_contact[infector.age_group] \
+            if pyEpiabm.core.Parameters.instance().use_ages is True else 1
+        closure_spatial = Parameters.instance().\
+            intervention_params['place_closure']['closure_spatial_params'] \
+            if infector.microcell.closure_start_time is not None else 1
+        return infector.infectiousness * age * closure_spatial
 
     @staticmethod
     def spatial_susc(susc_cell, infector, infectee, time: float):
@@ -96,7 +97,9 @@ class SpatialInfection:
                 age_contact[infectee.age_group]
 
         if infector.microcell.closure_start_time is not None:
-            spatial_susc *= infector.microcell.closure_spatial_params
+            spatial_susc *= Parameters.instance().\
+                intervention_params['place_'
+                                    'closure']['closure_spatial_params']
         return spatial_susc
 
     @staticmethod
@@ -124,9 +127,12 @@ class SpatialInfection:
             Force of infection parameter of cell
 
         """
-        isolating = inf_cell.isolation_effectiveness\
+        isolating = Parameters.instance().\
+            intervention_params['case_isolation']['isolation_effectiveness']\
             if infector.isolation_start_time is not None else 1
-        quarantine = inf_cell.quarantine_spatial_effectiveness \
+        quarantine = Parameters.instance().\
+            intervention_params['household_quarantine'][
+                'quarantine_spatial_effectiveness']\
             if infector.quarantine_start_time is not None else 1
         infectiousness = (SpatialInfection.spatial_inf(
             inf_cell, infector, time) * isolating * quarantine)

@@ -58,19 +58,28 @@ class TestPlaceInfection(TestPyEpiabm):
 
         # Case isolate
         isolation_effectiveness = 0.5
-        self.cell.isolation_effectiveness = isolation_effectiveness
+        pe.Parameters.instance().intervention_params['case_isolation'][
+            'isolation_effectiveness'] = isolation_effectiveness
         self.infector.isolation_start_time = 1
         result_isolating = PlaceInfection.place_foi(self.place, self.infector,
                                                     self.infectee, self.time)
         self.assertEqual(result*isolation_effectiveness,
                          result_isolating)
 
+    def test_place_place_closure(self):
+        result = PlaceInfection.place_inf(self.place, self.infector, self.time)
+        self.assertNotEqual(result, 0)
+        self.infector.microcell.closure_start_time = 1
+        result_closure = PlaceInfection.place_inf(self.place, self.infector,
+                                                  self.time)
+        self.assertEqual(result_closure, 0)
+
     def test_place_household_quarantine(self):
         result = PlaceInfection.place_foi(self.place, self.infector,
                                           self.infectee, self.time)
         quarantine_place_effectiveness = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
-        self.cell.quarantine_place_effectiveness = \
-            quarantine_place_effectiveness
+        pe.Parameters.instance().intervention_params['household_quarantine'][
+            'quarantine_place_effectiveness'] = quarantine_place_effectiveness
         self.infector.quarantine_start_time = 1
         result_isolating = PlaceInfection.place_foi(self.place, self.infector,
                                                     self.infectee, self.time)

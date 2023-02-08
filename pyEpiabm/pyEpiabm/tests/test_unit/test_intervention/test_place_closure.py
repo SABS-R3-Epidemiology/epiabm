@@ -23,26 +23,17 @@ class TestCaseIsolation(TestPyEpiabm):
         for person in cls._population.cells[0].microcells[0].persons:
             person.update_status(InfectionStatus(7))
 
-        cls.placeclosure = PlaceClosure(start_time=1,
-                                        policy_duration=365,
-                                        case_threshold=0,
-                                        closure_delay=0,
-                                        closure_duration=100,
-                                        closure_household_infectiousness=5,
-                                        closure_spatial_params=0.5,
-                                        icu_microcell_threshold=1,
-                                        case_microcell_threshold=1,
-                                        population=cls._population)
+        params = pe.Parameters.instance().intervention_params['place_closure']
+        cls.placeclosure = PlaceClosure(population=cls._population, **params)
 
     def test__init__(self):
+        self.assertEqual(self.placeclosure.start_time, 6)
+        self.assertEqual(self.placeclosure.policy_duration, 365)
+        self.assertEqual(self.placeclosure.case_threshold, 0)
         self.assertEqual(self.placeclosure.closure_delay, 0)
         self.assertEqual(self.placeclosure.closure_duration, 100)
         self.assertEqual(self.placeclosure.icu_microcell_threshold, 1)
         self.assertEqual(self.placeclosure.case_microcell_threshold, 1)
-        self.assertEqual(self._population.cells[0].microcells[0].
-                         closure_household_infectiousness, 5)
-        self.assertEqual(self._population.cells[0].microcells[0].
-                         closure_spatial_params, 0.5)
 
     def test___call__(self):
         self.assertIsNone(self._population.cells[0].microcells[0].

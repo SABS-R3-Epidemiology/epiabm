@@ -20,26 +20,16 @@ class HouseholdQuarantine(AbstractIntervention):
         quarantine_delay,
         quarantine_house_compliant,
         quarantine_individual_compliant,
-        quarantine_house_effectiveness,
-        quarantine_spatial_effectiveness,
-        quarantine_place_effectiveness,
         population,
-        *args,
         **kwargs
     ):
         self.quarantine_duration = quarantine_duration
         self.quarantine_delay = quarantine_delay
         self.quarantine_house_compliant = quarantine_house_compliant
         self.quarantine_individual_compliant = quarantine_individual_compliant
-        for cell in population.cells:
-            cell.quarantine_house_effectiveness = \
-                quarantine_house_effectiveness
-            cell.quarantine_spatial_effectiveness = \
-                quarantine_spatial_effectiveness
-            cell.quarantine_place_effectiveness = \
-                quarantine_place_effectiveness
+
         # start_time, policy_duration, threshold, population
-        super(HouseholdQuarantine, self).__init__(population=population, *args,
+        super(HouseholdQuarantine, self).__init__(population=population,
                                                   **kwargs)
 
     def __call__(self, time):
