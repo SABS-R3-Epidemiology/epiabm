@@ -100,8 +100,6 @@ class TestInitialInfectedSweep(TestPyEpiabm):
         self.person2.update_status(pe.property.InfectionStatus.Susceptible)
         self.person1.age = 80
         self.person1.care_home_resident = True
-        Parameters.instance().\
-            carehome_params['carehome_allow_initial_infections']
 
         self.assertRaises(ValueError, test_sweep, params)
 
