@@ -74,8 +74,8 @@ class TestInitialInfectedSweep(TestPyEpiabm):
         self.assertRaises(ValueError, test_sweep, params)
 
     def test_carehome_options(self):
-        """ Test that call assigns correct number of infectious people when have \
-        carehome initial infections.
+        """ Test that call assigns correct number of infectious people when \
+        have carehome initial infections.
         """
         test_sweep = pe.sweep.InitialInfectedSweep()
         test_sweep.bind_population(self.test_population)
@@ -99,8 +99,9 @@ class TestInitialInfectedSweep(TestPyEpiabm):
         self.person2.update_status(pe.property.InfectionStatus.Susceptible)
         self.person1.age = 80
         self.person1.care_home_resident = True
-        Parameters.instance().carehome_params['carehome_allow_initial_infections']
-        
+        Parameters.instance().\
+            carehome_params['carehome_allow_initial_infections']
+
         self.assertRaises(ValueError, test_sweep, params)
 
         # Test functions if no carehome parameters given

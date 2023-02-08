@@ -98,7 +98,7 @@ class PlaceInfection:
         """
         carehome_params = 1
         if place.place_type.value == 5 and (infectee.key_worker
-            or infector.key_worker):
+                                            or infector.key_worker):
             carehome_params = Parameters.instance()\
                 .carehome_params["carehome_worker_group_scaling"]
         infectiousness = PlaceInfection.place_inf(place, infector, time)
