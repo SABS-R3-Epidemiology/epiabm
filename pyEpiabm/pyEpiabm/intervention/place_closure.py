@@ -2,8 +2,6 @@
 # Place closure Class
 #
 
-from pyEpiabm.core import Parameters
-
 from pyEpiabm.intervention import AbstractIntervention
 
 
