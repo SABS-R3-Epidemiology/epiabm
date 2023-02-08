@@ -3,6 +3,7 @@
 #
 
 import pyEpiabm.core
+from pyEpiabm.core import Parameters
 
 from .personal_foi import PersonalInfection
 
@@ -76,21 +77,20 @@ class HouseholdInfection:
             Force of infection parameter of household
 
         """
+        carehome_params = Parameters.instance()\
+            .carehome_params["carehome_resident_household_scaling"]
         seasonality = 1.0  # Not yet implemented
-        # false_pos code commented out as an increase in
-        # false_positive_rate leads to an increase in infectiousness
-        # false_pos = 1 / (1 - pyEpiabm.core.Parameters.instance().
-        #                 false_positive_rate)
-
-        # infectiousness = (HouseholdInfection.household_inf(infector, time)
-        #                  * seasonality * false_pos
-        #                  * pyEpiabm.core.Parameters.instance().
-        #                  household_transmission)
         infectiousness = (HouseholdInfection.household_inf(infector, time)
                           * seasonality
                           * pyEpiabm.core.Parameters.instance().
-                          household_transmission)
+                          household_transmission
+                          * (carehome_params
+                          if infector.care_home_resident
+                          else 1))
 
-        susceptibility = HouseholdInfection.household_susc(infector, infectee,
-                                                           time)
+        susceptibility = (HouseholdInfection.household_susc(infector,
+                                                            infectee, time)
+                          * (carehome_params
+                          if infectee.care_home_resident
+                          else 1))
         return (infectiousness * susceptibility)
