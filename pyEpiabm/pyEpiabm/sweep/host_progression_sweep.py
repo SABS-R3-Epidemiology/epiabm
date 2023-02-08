@@ -166,7 +166,6 @@ class HostProgressionSweep(AbstractSweep):
                 InfectionStatus(next_infection_status_number)
             person.next_infection_status = next_infection_status
 
-    @profile
     def update_time_status_change(self, person: Person, time: float):
         """Calculates transition time as calculated in CovidSim,
         and updates the time_of_status_change for the given
@@ -258,7 +257,6 @@ class HostProgressionSweep(AbstractSweep):
                 person.infectiousness = 0
                 person.infection_start_time = None
 
-    @profile
     def __call__(self, time: float):
         """Sweeps through all people in the population, updates their
         infection status if it is time and assigns them their next infection

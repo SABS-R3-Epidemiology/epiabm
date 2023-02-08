@@ -18,7 +18,6 @@ class HouseholdSweep(AbstractSweep):
 
     """
 
-#    @profile
     def __call__(self, time: float):
         """Given a population structure, loops over infected members
         and considers whether they infected household members based
@@ -40,11 +39,7 @@ class HouseholdSweep(AbstractSweep):
                     raise AttributeError(f"{infector} is not part of a "
                                          + "household")
 
-                # Check to see whether a household member is susceptible.
-                # for infectee in infector.household.persons:
-                #     if not infectee.is_susceptible():
-                #         continue
-                # print('Length currently', len(infectee.household.infectious_persons))
+                # Loop over susceptible household members.
                 for infectee in infector.household.susceptible_persons:
 
                     # Calculate "force of infection" parameter which will

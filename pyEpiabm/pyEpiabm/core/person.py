@@ -8,8 +8,6 @@ from pyEpiabm.property import InfectionStatus
 
 from .parameters import Parameters
 
-from functools import lru_cache
-
 
 class Person:
     """Class to represent each person in a population.
@@ -81,18 +79,6 @@ class Person:
         """
         return str(self.infection_status).startswith('InfectionStatus.Infect')
 
-    # @property
-    # def infection_status(self):
-    #    return self._infection_status
-
-    # @infection_status.setter
-    # def infection_status(self, value):
-    #     self._infection_status = value
-    #     type(self).is_susceptible(self).fget.cache_clear()
-
-    # # @lru_cache(maxsize=None)
-    # @lru_cache()
-    # @profile
     def is_susceptible(self):
         """Query if the person is currently susceptible.
 
