@@ -29,7 +29,7 @@ plt.hist(x, density=False, rwidth=0.6, bins=17)
 plt.ylabel('Count')
 plt.xlabel('Age')
 plt.title('Histogram of toy population')
-plt.savefig('images/Histograms//Withoutsim.png')
+plt.savefig('images/Histograms/Withoutsim.png')
 
 # Set simulation parameters
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
