@@ -1,0 +1,485 @@
+#
+# Example simulation script with place closure intervention data output
+# and visualisation
+#
+
+import os
+import logging
+import pandas as pd
+import matplotlib.pyplot as plt
+
+import pyEpiabm as pe
+
+# Setup output for logging file
+logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
+                    format=('%(asctime)s - %(name)s'
+                            + '- %(levelname)s - %(message)s'))
+
+# Set population input file
+file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
+
+# sim_params give details for the running of the simulations
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
+              "initial_infected_number": 1, "initial_infect_cell": True}
+
+# Set parameter file
+name_parameter_file = 'place_closure_parameters.json'
+
+# Set config file for Parameters
+pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
+                       name_parameter_file))
+
+###############################
+# Scale the household infectiousness by 2
+name_output_file = 'output_2household_infectiousness.csv'
+
+pe.Parameters.instance().intervention_params['place_closure'][
+    'closure_household_infectiousness'] = 2
+print('Set closure_household_infectiousness to: {}'.format(
+      pe.Parameters.instance().intervention_params['place_closure'][
+        'closure_household_infectiousness']))
+print('Set closure_spatial to: {}'.format(
+      pe.Parameters.instance().intervention_params['place_closure'][
+        'closure_spatial_params']))
+
+# Method to set the seed at the start of the simulation, for reproducibility
+pe.routine.Simulation.set_random_seed(seed=30)
+
+# Create population
+population = pe.routine.FilePopulationFactory.make_pop(file_loc,
+                                                       random_seed=42)
+
+# Configure population with input data
+pe.routine.ToyPopulationFactory.add_places(population, 1)
+
+# file_params give details for where output should be written to.
+file_params = {"output_file": name_output_file,
+               "output_dir": os.path.join(os.path.dirname(__file__),
+                                          "intervention_outputs"),
+               "spatial_output": True}
+
+# Create a simulation object, configure it with the parameters given, then
+# run the simulation.
+sim = pe.routine.Simulation()
+sim.configure(
+    population,
+    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
+    [
+        pe.sweep.InterventionSweep(),
+        pe.sweep.UpdatePlaceSweep(),
+        pe.sweep.HouseholdSweep(),
+        pe.sweep.PlaceSweep(),
+        pe.sweep.SpatialSweep(),
+        pe.sweep.QueueSweep(),
+        pe.sweep.HostProgressionSweep(),
+    ],
+    sim_params,
+    file_params,
+)
+sim.run_sweeps()
+
+# Need to close the writer object at the end of each simulation.
+del sim.writer
+del sim
+
+###############################
+# Scale the household infectiousness by 10
+name_output_file = 'output_10household_infectiousness.csv'
+
+pe.Parameters.instance().intervention_params['place_closure'][
+    'closure_household_infectiousness'] = 10
+print('Set closure_household_infectiousness to: {}'.format(
+      pe.Parameters.instance().intervention_params['place_closure'][
+        'closure_household_infectiousness']))
+print('Set closure_spatial to: {}'.format(
+      pe.Parameters.instance().intervention_params['place_closure'][
+        'closure_spatial_params']))
+
+# Method to set the seed at the start of the simulation, for reproducibility
+pe.routine.Simulation.set_random_seed(seed=30)
+
+# Create population
+population = pe.routine.FilePopulationFactory.make_pop(file_loc,
+                                                       random_seed=42)
+
+# Configure population with input data
+pe.routine.ToyPopulationFactory.add_places(population, 1)
+
+# file_params give details for where output should be written to.
+file_params = {"output_file": name_output_file,
+               "output_dir": os.path.join(os.path.dirname(__file__),
+                                          "intervention_outputs"),
+               "spatial_output": True}
+
+# Create a simulation object, configure it with the parameters given, then
+# run the simulation.
+sim = pe.routine.Simulation()
+sim.configure(
+    population,
+    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
+    [
+        pe.sweep.InterventionSweep(),
+        pe.sweep.UpdatePlaceSweep(),
+        pe.sweep.HouseholdSweep(),
+        pe.sweep.PlaceSweep(),
+        pe.sweep.SpatialSweep(),
+        pe.sweep.QueueSweep(),
+        pe.sweep.HostProgressionSweep(),
+    ],
+    sim_params,
+    file_params,
+)
+sim.run_sweeps()
+
+# Need to close the writer object at the end of each simulation.
+del sim.writer
+del sim
+
+
+###############################
+# Scale the household infectiousness by 20
+name_output_file = 'output_20household_infectiousness.csv'
+
+pe.Parameters.instance().intervention_params['place_closure'][
+    'closure_household_infectiousness'] = 20
+print('Set closure_household_infectiousness to: {}'.format(
+      pe.Parameters.instance().intervention_params['place_closure'][
+        'closure_household_infectiousness']))
+print('Set closure_spatial to: {}'.format(
+      pe.Parameters.instance().intervention_params['place_closure'][
+        'closure_spatial_params']))
+
+# Method to set the seed at the start of the simulation, for reproducibility
+pe.routine.Simulation.set_random_seed(seed=30)
+
+# Create population
+population = pe.routine.FilePopulationFactory.make_pop(file_loc,
+                                                       random_seed=42)
+
+# Configure population with input data
+pe.routine.ToyPopulationFactory.add_places(population, 1)
+
+# file_params give details for where output should be written to.
+file_params = {"output_file": name_output_file,
+               "output_dir": os.path.join(os.path.dirname(__file__),
+                                          "intervention_outputs"),
+               "spatial_output": True}
+
+# Create a simulation object, configure it with the parameters given, then
+# run the simulation.
+sim = pe.routine.Simulation()
+sim.configure(
+    population,
+    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
+    [
+        pe.sweep.InterventionSweep(),
+        pe.sweep.UpdatePlaceSweep(),
+        pe.sweep.HouseholdSweep(),
+        pe.sweep.PlaceSweep(),
+        pe.sweep.SpatialSweep(),
+        pe.sweep.QueueSweep(),
+        pe.sweep.HostProgressionSweep(),
+    ],
+    sim_params,
+    file_params,
+)
+sim.run_sweeps()
+
+# Need to close the writer object at the end of each simulation.
+del sim.writer
+del sim
+
+################################
+# Reset closure_household_infectiousness to 1.0 and
+# scale the spatial parameter by 0.2
+name_output_file = 'output_02spatial_params.csv'
+
+pe.Parameters.instance().intervention_params['place_closure'][
+    'closure_household_infectiousness'] = 1.0
+pe.Parameters.instance().intervention_params['place_closure'][
+    'closure_spatial_params'] = 0.2
+print('Set closure_household_infectiousness to: {}'.format(
+      pe.Parameters.instance().intervention_params['place_closure'][
+        'closure_household_infectiousness']))
+print('Set closure_spatial_params to: {}'.format(
+      pe.Parameters.instance().intervention_params['place_closure'][
+        'closure_spatial_params']))
+
+# Method to set the seed at the start of the simulation, for reproducibility
+pe.routine.Simulation.set_random_seed(seed=30)
+
+# Create population
+population = pe.routine.FilePopulationFactory.make_pop(file_loc,
+                                                       random_seed=42)
+
+# Configure population with input data
+pe.routine.ToyPopulationFactory.add_places(population, 1)
+
+# file_params give details for where output should be written to.
+file_params = {"output_file": name_output_file,
+               "output_dir": os.path.join(os.path.dirname(__file__),
+                                          "intervention_outputs"),
+               "spatial_output": True}
+
+# Create a simulation object, configure it with the parameters given, then
+# run the simulation.
+sim = pe.routine.Simulation()
+sim.configure(
+    population,
+    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
+    [
+        pe.sweep.InterventionSweep(),
+        pe.sweep.UpdatePlaceSweep(),
+        pe.sweep.HouseholdSweep(),
+        pe.sweep.PlaceSweep(),
+        pe.sweep.SpatialSweep(),
+        pe.sweep.QueueSweep(),
+        pe.sweep.HostProgressionSweep(),
+    ],
+    sim_params,
+    file_params,
+)
+sim.run_sweeps()
+
+# Need to close the writer object at the end of each simulation.
+del sim.writer
+del sim
+
+################################
+# Scale the spatial parameter by 0.5
+name_output_file = 'output_05spatial_params.csv'
+
+pe.Parameters.instance().intervention_params['place_closure'][
+    'closure_spatial_params'] = 0.5
+print('Set closure_household_infectiousness to: {}'.format(
+      pe.Parameters.instance().intervention_params['place_closure'][
+        'closure_household_infectiousness']))
+print('Set closure_spatial_params to: {}'.format(
+      pe.Parameters.instance().intervention_params['place_closure'][
+        'closure_spatial_params']))
+
+# Method to set the seed at the start of the simulation, for reproducibility
+pe.routine.Simulation.set_random_seed(seed=30)
+
+# Create population
+population = pe.routine.FilePopulationFactory.make_pop(file_loc,
+                                                       random_seed=42)
+
+# Configure population with input data
+pe.routine.ToyPopulationFactory.add_places(population, 1)
+
+# file_params give details for where output should be written to.
+file_params = {"output_file": name_output_file,
+               "output_dir": os.path.join(os.path.dirname(__file__),
+                                          "intervention_outputs"),
+               "spatial_output": True}
+
+# Create a simulation object, configure it with the parameters given, then
+# run the simulation.
+sim = pe.routine.Simulation()
+sim.configure(
+    population,
+    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
+    [
+        pe.sweep.InterventionSweep(),
+        pe.sweep.UpdatePlaceSweep(),
+        pe.sweep.HouseholdSweep(),
+        pe.sweep.PlaceSweep(),
+        pe.sweep.SpatialSweep(),
+        pe.sweep.QueueSweep(),
+        pe.sweep.HostProgressionSweep(),
+    ],
+    sim_params,
+    file_params,
+)
+sim.run_sweeps()
+
+# Need to close the writer object at the end of each simulation.
+del sim.writer
+del sim
+
+################################
+# Scale the spatial parameter by 0.8
+name_output_file = 'output_08spatial_params.csv'
+
+pe.Parameters.instance().intervention_params['place_closure'][
+    'closure_spatial_params'] = 0.8
+print('Set closure_household_infectiousness to: {}'.format(
+      pe.Parameters.instance().intervention_params['place_closure'][
+        'closure_household_infectiousness']))
+print('Set closure_spatial_params to: {}'.format(
+      pe.Parameters.instance().intervention_params['place_closure'][
+        'closure_spatial_params']))
+
+# Method to set the seed at the start of the simulation, for reproducibility
+pe.routine.Simulation.set_random_seed(seed=30)
+
+# Create population
+population = pe.routine.FilePopulationFactory.make_pop(file_loc,
+                                                       random_seed=42)
+
+# Configure population with input data
+pe.routine.ToyPopulationFactory.add_places(population, 1)
+
+# file_params give details for where output should be written to.
+file_params = {"output_file": name_output_file,
+               "output_dir": os.path.join(os.path.dirname(__file__),
+                                          "intervention_outputs"),
+               "spatial_output": True}
+
+# Create a simulation object, configure it with the parameters given, then
+# run the simulation.
+sim = pe.routine.Simulation()
+sim.configure(
+    population,
+    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
+    [
+        pe.sweep.InterventionSweep(),
+        pe.sweep.UpdatePlaceSweep(),
+        pe.sweep.HouseholdSweep(),
+        pe.sweep.PlaceSweep(),
+        pe.sweep.SpatialSweep(),
+        pe.sweep.QueueSweep(),
+        pe.sweep.HostProgressionSweep(),
+    ],
+    sim_params,
+    file_params,
+)
+sim.run_sweeps()
+
+# Need to close the writer object at the end of each simulation.
+del sim.writer
+del sim
+
+
+###############################
+# Creation of a plot of results
+logging.getLogger("matplotlib").setLevel(logging.WARNING)
+
+dict_filenames = {}
+for i in ['2household_infectiousness', '10household_infectiousness',
+          '20household_infectiousness', '02spatial_params',
+          '05spatial_params', '08spatial_params']:
+    dict_filenames["filename_" + str(i)] =\
+        os.path.join(os.path.dirname(__file__),
+                     "intervention_outputs",
+                     "output_{}.csv".format(i))
+
+
+df_2household_infectiousness = pd.read_csv(
+    dict_filenames['filename_2household_infectiousness'])
+df_10household_infectiousness = pd.read_csv(
+    dict_filenames['filename_10household_infectiousness'])
+df_20household_infectiousness = pd.read_csv(
+    dict_filenames['filename_20household_infectiousness'])
+
+df_02spatial_params = pd.read_csv(dict_filenames['filename_02spatial_params'])
+df_05spatial_params = pd.read_csv(dict_filenames['filename_05spatial_params'])
+df_08spatial_params = pd.read_csv(dict_filenames['filename_08spatial_params'])
+
+
+total_2household_infectiousness = \
+    df_2household_infectiousness[list(df_2household_infectiousness.filter(
+        regex='InfectionStatus.Infect'))]
+df_2household_infectiousness["Infected"] = total_2household_infectiousness.\
+    sum(axis=1)
+df_2household_infectiousness = df_2household_infectiousness.groupby(["time"]).\
+    agg({"InfectionStatus.Susceptible": 'sum',
+         "Infected": 'sum', "InfectionStatus.Recovered": 'sum',
+         "InfectionStatus.Dead": 'sum'})
+df_2household_infectiousness = df_2household_infectiousness.\
+    reset_index(level=0)
+
+total_10household_infectiousness = \
+    df_10household_infectiousness[list(df_10household_infectiousness.filter(
+        regex='InfectionStatus.Infect'))]
+df_10household_infectiousness["Infected"] = total_10household_infectiousness.\
+    sum(axis=1)
+df_10household_infectiousness = df_10household_infectiousness.\
+    groupby(["time"]).\
+    agg({"InfectionStatus.Susceptible": 'sum',
+         "Infected": 'sum', "InfectionStatus.Recovered": 'sum',
+         "InfectionStatus.Dead": 'sum'})
+df_10household_infectiousness = df_10household_infectiousness.\
+    reset_index(level=0)
+
+total_20household_infectiousness = \
+    df_20household_infectiousness[list(df_20household_infectiousness.filter(
+        regex='InfectionStatus.Infect'))]
+df_20household_infectiousness["Infected"] = total_20household_infectiousness.\
+    sum(axis=1)
+df_20household_infectiousness = df_20household_infectiousness.\
+    groupby(["time"]).\
+    agg({"InfectionStatus.Susceptible": 'sum',
+         "Infected": 'sum', "InfectionStatus.Recovered": 'sum',
+         "InfectionStatus.Dead": 'sum'})
+df_20household_infectiousness = df_20household_infectiousness.\
+    reset_index(level=0)
+
+total_02spatial_params = \
+    df_02spatial_params[list(df_02spatial_params.filter(
+        regex='InfectionStatus.Infect'))]
+df_02spatial_params["Infected"] = total_02spatial_params.sum(axis=1)
+df_02spatial_params = df_02spatial_params.groupby(["time"]).agg(
+                                {"InfectionStatus.Susceptible": 'sum',
+                                 "Infected": 'sum',
+                                 "InfectionStatus.Recovered": 'sum',
+                                 "InfectionStatus.Dead": 'sum'})
+df_02spatial_params = df_02spatial_params.reset_index(level=0)
+
+total_05spatial_params = \
+    df_05spatial_params[list(df_05spatial_params.filter(
+        regex='InfectionStatus.Infect'))]
+df_05spatial_params["Infected"] = total_05spatial_params.sum(axis=1)
+df_05spatial_params = df_05spatial_params.groupby(["time"]).agg(
+                                {"InfectionStatus.Susceptible": 'sum',
+                                 "Infected": 'sum',
+                                 "InfectionStatus.Recovered": 'sum',
+                                 "InfectionStatus.Dead": 'sum'})
+df_05spatial_params = df_05spatial_params.reset_index(level=0)
+
+total_08spatial_params = \
+    df_08spatial_params[list(df_08spatial_params.filter(
+        regex='InfectionStatus.Infect'))]
+df_08spatial_params["Infected"] = total_08spatial_params.sum(axis=1)
+df_08spatial_params = df_08spatial_params.groupby(["time"]).agg(
+                                {"InfectionStatus.Susceptible": 'sum',
+                                 "Infected": 'sum',
+                                 "InfectionStatus.Recovered": 'sum',
+                                 "InfectionStatus.Dead": 'sum'})
+df_08spatial_params = df_08spatial_params.reset_index(level=0)
+
+plt.plot(df_2household_infectiousness['time'],
+         df_2household_infectiousness['Infected'],
+         label='household infectiousness scaled by 2')
+plt.plot(df_10household_infectiousness['time'],
+         df_10household_infectiousness['Infected'],
+         label='household infectiousness scaled by 10')
+plt.plot(df_20household_infectiousness['time'],
+         df_20household_infectiousness['Infected'],
+         label='household infectiousness scaled by 20')
+plt.legend()
+plt.title("Infection curves for different household infectiousness")
+plt.ylabel("Infected Population")
+plt.savefig(
+    os.path.join(os.path.dirname(__file__),
+                 "intervention_outputs",
+                 "place_closure_household_infectiousness_Icurve_plot.png")
+)
+plt.clf()
+
+plt.plot(df_02spatial_params['time'], df_02spatial_params['Infected'],
+         label='spatial params scale by 0.2')
+plt.plot(df_05spatial_params['time'], df_05spatial_params['Infected'],
+         label='spatial params scale by 0.5')
+plt.plot(df_08spatial_params['time'], df_08spatial_params['Infected'],
+         label='spatial params scale by 0.8')
+plt.legend()
+plt.title("Infection curves for different spatial parameters")
+plt.ylabel("Infected Population")
+plt.savefig(
+    os.path.join(os.path.dirname(__file__),
+                 "intervention_outputs",
+                 "place_closure_spatial_house_Icurve_plot.png")
+)
+plt.clf()
