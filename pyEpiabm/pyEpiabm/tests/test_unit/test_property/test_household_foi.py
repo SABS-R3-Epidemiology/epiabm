@@ -67,6 +67,25 @@ class TestHouseholdInfection(TestPyEpiabm):
         self.assertEqual(result*closure_household_infectiousness,
                          result_closure)
 
+    def test_house_social_distancing(self):
+        result = HouseholdInfection.household_foi(
+            self.infector, self.infectee, self.time)
+        # Normal social distancing
+        self.infector.microcell.distancing_start_time = 1
+        self.infector.distancing_enhanced = False
+        distancing_house_susc = 0.8
+        result_distancing = HouseholdInfection.household_foi(
+            self.infector, self.infectee, self.time)
+        self.assertEqual(result*distancing_house_susc,
+                         result_distancing)
+        # Enhanced social distancing
+        self.infector.distancing_enhanced = True
+        distancing_house_enhanced_susc = 0.5
+        result_distancing_enhanced = HouseholdInfection.household_foi(
+            self.infector, self.infectee, self.time)
+        self.assertEqual(result*distancing_house_enhanced_susc,
+                         result_distancing_enhanced)
+
 
 if __name__ == '__main__':
     unittest.main()

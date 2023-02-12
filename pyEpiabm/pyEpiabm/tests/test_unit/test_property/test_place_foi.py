@@ -67,10 +67,30 @@ class TestPlaceInfection(TestPyEpiabm):
     def test_place_place_closure(self):
         result = PlaceInfection.place_inf(self.place, self.infector, self.time)
         self.assertNotEqual(result, 0)
+        # Place closure
         self.infector.microcell.closure_start_time = 1
         result_closure = PlaceInfection.place_inf(self.place, self.infector,
                                                   self.time)
         self.assertEqual(result_closure, 0)
+
+    def test_place_social_distancing(self):
+        result = PlaceInfection.place_foi(self.place, self.infector,
+                                          self.infectee, self.time)
+        # Normal social distancing
+        self.infector.microcell.distancing_start_time = 1
+        self.infector.distancing_enhanced = False
+        distancing_place_susc = 0.8
+        result_distancing = PlaceInfection.place_foi(
+            self.place, self.infector, self.infectee, self.time)
+        self.assertEqual(result*distancing_place_susc,
+                         result_distancing)
+        # Enhanced social distancing
+        self.infector.distancing_enhanced = True
+        distancing_place_enhanced_susc = 0.5
+        result_distancing_enhanced = PlaceInfection.place_foi(
+            self.place, self.infector, self.infectee, self.time)
+        self.assertEqual(result*distancing_place_enhanced_susc,
+                         result_distancing_enhanced)
 
 
 if __name__ == '__main__':

@@ -30,12 +30,16 @@ class TestInterventionSweep(TestPyEpiabm):
                              intervention_params['case_isolation']), 8)
         self.assertEqual(len(self.interventionsweep.
                              intervention_params['place_closure']), 9)
-        self.assertEqual(len(self.interventionsweep.interventions), 2)
+        self.assertEqual(len(self.interventionsweep.
+                             intervention_params['social_distancing']), 13)
+        self.assertEqual(len(self.interventionsweep.interventions), 3)
 
     def test___call__(self):
         self.interventionsweep(time=100)
         self.assertIsNotNone(self.interventionsweep._population.cells[0].
                              microcells[0].closure_start_time)
+        self.assertIsNotNone(self.interventionsweep._population.cells[0].
+                             microcells[0].distancing_start_time)
 
 
 if __name__ == '__main__':

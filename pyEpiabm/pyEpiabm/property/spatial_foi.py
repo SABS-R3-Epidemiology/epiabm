@@ -133,6 +133,19 @@ class SpatialInfection:
             if infector.isolation_start_time is not None else 1
         infectiousness = (SpatialInfection.spatial_inf(
             inf_cell, infector, time) * isolating)
-        susceptibility = SpatialInfection.spatial_susc(susc_cell, infector,
-                                                       infectee, time)
+        if infector.microcell.distancing_start_time is not None:
+            if infector.distancing_enhanced is True:
+                distancing = Parameters.instance().\
+                             intervention_params[
+                             'social_distancing'][
+                             'distancing_spatial_enhanced_susc']
+            else:
+                distancing = Parameters.instance().\
+                             intervention_params[
+                             'social_distancing'][
+                             'distancing_spatial_susc']
+        else:
+            distancing = 1
+        susceptibility = SpatialInfection.spatial_susc(
+            susc_cell, infector, infectee, time) * distancing
         return (infectiousness * susceptibility)

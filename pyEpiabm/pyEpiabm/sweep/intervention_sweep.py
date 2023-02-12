@@ -5,6 +5,7 @@
 from pyEpiabm.core import Parameters
 from pyEpiabm.intervention import CaseIsolation
 from pyEpiabm.intervention import PlaceClosure
+from pyEpiabm.intervention import SocialDistancing
 
 from .abstract_sweep import AbstractSweep
 
@@ -27,7 +28,8 @@ class InterventionSweep(AbstractSweep):
     def bind_population(self, population):
         self._population = population
         intervention_dict = {'case_isolation': CaseIsolation,
-                             'place_closure': PlaceClosure}
+                             'place_closure': PlaceClosure,
+                             'social_distancing': SocialDistancing}
         for intervention in self.intervention_params.keys():
             params = self.intervention_params[intervention]
             self.interventions.append(intervention_dict[intervention](
