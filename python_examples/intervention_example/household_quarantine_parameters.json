@@ -496,7 +496,7 @@
     },
     "intervention_params": {
         "household_quarantine": {
-            "time_start": 6,
+            "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
             "quarantine_delay": 1,
