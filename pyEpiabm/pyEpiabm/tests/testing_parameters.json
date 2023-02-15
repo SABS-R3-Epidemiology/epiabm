@@ -505,8 +505,8 @@
             "isolation_delay": 0,
             "isolation_duration": 100,
             "isolation_probability": 1,
-            "isolation_effectiveness": 0,
-            "isolation_house_effectiveness": 0
+            "isolation_effectiveness": 0.5,
+            "isolation_house_effectiveness": 0.5
         },
         "place_closure": {
             "start_time": 6,

@@ -73,14 +73,15 @@ class TestSpatialInfection(TestPyEpiabm):
         self.assertTrue(result >= 0)
 
     def test_spatial_case_isolation(self):
+        # Not isolating (isolation_start_time = None)
         result = SpatialInfection.spatial_foi(
             self._population.cells[0], self._population.cells[0],
             self.infector, self.infectee, self.time)
 
         # Case isolate
-        isolation_effectiveness = 0.5
-        pe.Parameters.instance().intervention_params['case_isolation'][
-            'isolation_effectiveness'] = isolation_effectiveness
+        isolation_effectiveness = \
+            pe.Parameters.instance().intervention_params['case_isolation'][
+                'isolation_effectiveness']
         self.infector.isolation_start_time = 1
         result_isolating = SpatialInfection.spatial_foi(
             self._population.cells[0], self._population.cells[0],
@@ -111,13 +112,14 @@ class TestSpatialInfection(TestPyEpiabm):
                          result_closure_inf)
 
     def test_spatial_household_quarantine(self):
+        # Not in quarantine (quarantine_start_time = None)
         result = SpatialInfection.spatial_foi(
             self._population.cells[0], self._population.cells[0],
             self.infector, self.infectee, self.time)
-        quarantine_spatial_effectiveness = 0.5
-        pe.Parameters.instance().intervention_params['household_quarantine'][
-            'quarantine_spatial_effectiveness'] =\
-            quarantine_spatial_effectiveness
+
+        quarantine_spatial_effectiveness = \
+            pe.Parameters.instance().intervention_params[
+                'household_quarantine']['quarantine_spatial_effectiveness']
         self.infector.quarantine_start_time = 1
         result_isolating = SpatialInfection.spatial_foi(
             self._population.cells[0], self._population.cells[0],
