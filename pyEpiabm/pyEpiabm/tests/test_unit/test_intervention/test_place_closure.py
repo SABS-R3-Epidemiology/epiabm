@@ -6,15 +6,15 @@ from pyEpiabm.intervention import PlaceClosure
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
-class TestCaseIsolation(TestPyEpiabm):
-    """Test the 'CaseIsolation' class.
+class TestPlaceClosure(TestPyEpiabm):
+    """Test the 'PlaceClosure' class.
     """
     @classmethod
     def setUpClass(cls) -> None:
         """Intialise a population with one infector and one
         infectee, both in the same place and household.
         """
-        super(TestCaseIsolation, cls).setUpClass()  # Sets up parameters
+        super(TestPlaceClosure, cls).setUpClass()  # Sets up parameters
         cls.time = 1
         cls._population = pe.Population()
         cls._population.add_cells(1)

@@ -512,7 +512,7 @@
             "closure_delay": 0,
             "closure_duration": 100,
             "closure_household_infectiousness": 5,
-            "closure_spatial_params": 0,
+            "closure_spatial_params": 0.5,
             "icu_microcell_threshold": 0,
             "case_microcell_threshold":0
         },
@@ -528,5 +528,6 @@
             "quarantine_spatial_effectiveness": 0.25,
             "quarantine_place_effectiveness": [0.25, 0.25, 0.25, 0.25, 0.25, 0.25]
         }
+
     }
 }

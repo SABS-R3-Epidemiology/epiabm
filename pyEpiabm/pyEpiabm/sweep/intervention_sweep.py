@@ -6,6 +6,7 @@ from pyEpiabm.core import Parameters
 from pyEpiabm.intervention import CaseIsolation
 from pyEpiabm.intervention import PlaceClosure
 from pyEpiabm.intervention import HouseholdQuarantine
+
 from .abstract_sweep import AbstractSweep
 
 
