@@ -3,8 +3,6 @@
 #
 from pyEpiabm.core import Parameters
 
-from pyEpiabm.core import Parameters
-
 import pyEpiabm.core
 
 
