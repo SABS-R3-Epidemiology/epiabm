@@ -22,14 +22,23 @@ file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
-#############
-# 0% isolates
-name_parameter_file = 'case_isolation_parameters_0isolate.json'
+# Set parameter file
+name_parameter_file = 'case_isolation_parameters.json'
+
+# Set config file for Parameters
+pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
+                       name_parameter_file))
+
+##########################
+# 0% isolating probability
 name_output_file = 'output_0isolate.csv'
 
-# Set config file for Parameters
-pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                       name_parameter_file))
+# Set parameter
+pe.Parameters.instance().intervention_params['case_isolation'][
+    'isolation_probability'] = 0.0
+print('Set isolation_probability to: {}'.format(
+      pe.Parameters.instance().intervention_params['case_isolation'][
+        'isolation_probability']))
 
 # Method to set the seed at the start of the simulation, for reproducibility
 pe.routine.Simulation.set_random_seed(seed=30)
@@ -71,14 +80,16 @@ sim.run_sweeps()
 del sim.writer
 del sim
 
-##############
-# 50% isolates
-name_parameter_file = 'case_isolation_parameters_50isolate.json'
+###########################
+# 50% isolating probability
 name_output_file = 'output_50isolate.csv'
 
-# Set config file for Parameters
-pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                       name_parameter_file))
+# Set parameter
+pe.Parameters.instance().intervention_params['case_isolation'][
+    'isolation_probability'] = 0.5
+print('Set isolation_probability to: {}'.format(
+      pe.Parameters.instance().intervention_params['case_isolation'][
+        'isolation_probability']))
 
 # Method to set the seed at the start of the simulation, for reproducibility
 pe.routine.Simulation.set_random_seed(seed=30)
@@ -120,14 +131,16 @@ sim.run_sweeps()
 del sim.writer
 del sim
 
-###############
-# 100% isolates
-name_parameter_file = 'case_isolation_parameters_100isolate.json'
+############################
+# 100% isolating probability
 name_output_file = 'output_100isolate.csv'
 
-# Set config file for Parameters
-pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                       name_parameter_file))
+# Set parameter
+pe.Parameters.instance().intervention_params['case_isolation'][
+    'isolation_probability'] = 1.0
+print('Set isolation_probability to: {}'.format(
+      pe.Parameters.instance().intervention_params['case_isolation'][
+        'isolation_probability']))
 
 # Method to set the seed at the start of the simulation, for reproducibility
 pe.routine.Simulation.set_random_seed(seed=30)
@@ -172,19 +185,17 @@ del sim
 ###############################
 # Creation of a plot of results
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
-filename_0isolate = os.path.join(os.path.dirname(__file__),
-                                 "intervention_outputs",
-                                 "output_0isolate.csv")
-filename_50isolate = os.path.join(os.path.dirname(__file__),
-                                  "intervention_outputs",
-                                  "output_50isolate.csv")
-filename_100isolate = os.path.join(os.path.dirname(__file__),
-                                   "intervention_outputs",
-                                   "output_100isolate.csv")
 
-df_0isolate = pd.read_csv(filename_0isolate)
-df_50isolate = pd.read_csv(filename_50isolate)
-df_100isolate = pd.read_csv(filename_100isolate)
+dict_filenames = {}
+for i in [0, 50, 100]:
+    dict_filenames["filename_" + str(i) + 'isolate'] =\
+        os.path.join(os.path.dirname(__file__),
+                     "intervention_outputs",
+                     "output_{}isolate.csv".format(i))
+
+df_0isolate = pd.read_csv(dict_filenames['filename_0isolate'])
+df_50isolate = pd.read_csv(dict_filenames['filename_50isolate'])
+df_100isolate = pd.read_csv(dict_filenames['filename_100isolate'])
 
 total_0isolate = \
     df_0isolate[list(df_0isolate.filter(regex='InfectionStatus.Infect'))]
