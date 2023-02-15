@@ -61,10 +61,14 @@ class TestHouseholdInfection(TestPyEpiabm):
                          result_isolating)
 
     def test_house_place_closure(self):
+        # No place closure (closure_start_time = None)
         result = HouseholdInfection.household_inf(
             self.infector, self.time)
+
         # Place closure
-        closure_household_infectiousness = 5
+        closure_household_infectiousness = \
+            pe.Parameters.instance().intervention_params[
+                'place_closure']['closure_household_infectiousness']
         self.infector.microcell.closure_start_time = 1
         result_closure = HouseholdInfection.household_inf(
             self.infector, self.time)

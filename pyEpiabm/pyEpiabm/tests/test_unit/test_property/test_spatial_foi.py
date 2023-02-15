@@ -96,7 +96,9 @@ class TestSpatialInfection(TestPyEpiabm):
             self._population.cells[0], self.infector, self.time)
 
         # Update start time
-        closure_spatial_params = 0.5
+        closure_spatial_params = \
+            pe.Parameters.instance().intervention_params[
+                'place_closure']['closure_spatial_params']
         self.infector.microcell.closure_start_time = 1
 
         # Place closure susceptibility
