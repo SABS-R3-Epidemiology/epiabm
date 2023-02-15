@@ -39,8 +39,7 @@ class InterventionSweep(AbstractSweep):
                 ))
             elif intervention == 'vaccine_params':
                 self.interventions.append(Vaccination(**params,
-                    population=self._population
-                ))
+                                          population=self._population))
 
     def __call__(self, time):
         """

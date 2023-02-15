@@ -60,7 +60,8 @@ class HouseholdInfection:
     @staticmethod
     def household_foi(infector, infectee, time: float):
         """Calculate the force of infection parameter of a household,
-        for a particular infector and infectee.
+        for a particular infector and infectee. Scales infectiousness
+        if a person is vaccinated.
 
         Parameters
         ----------
@@ -83,11 +84,13 @@ class HouseholdInfection:
         false_pos = 1 / (1 - Parameters.instance().
                          false_positive_rate)
         vacc_inf_drop = 1
-        vacc_params = Parameters.instance().intervention_params['vaccine_params']
+        vacc_params = Parameters.instance()\
+            .intervention_params['vaccine_params']
         if infector.is_vaccinated:
-            if time > (infector.date_vaccinated + vacc_params['time_to_efficacy']):
+            if time > (infector.date_vaccinated +
+                       vacc_params['time_to_efficacy']):
                 vacc_inf_drop *= vacc_params['vacc_inf_drop']
-        
+
         infectiousness = (HouseholdInfection.household_inf(infector, time)
                           * seasonality * false_pos
                           * vacc_inf_drop

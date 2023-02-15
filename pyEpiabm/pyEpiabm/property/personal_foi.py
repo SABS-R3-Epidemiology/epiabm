@@ -2,8 +2,8 @@
 # Calculate infectiousness and susceptibility for an individual
 #
 
-import pyEpiabm.core
 from pyEpiabm.core import Parameters
+
 
 class PersonalInfection:
     """Class to calculate the infectiousness and susceptibility
@@ -14,7 +14,8 @@ class PersonalInfection:
     def person_inf(infector, time: float):
         """Calculate the infectiousness of a person. Does not
         include interventions such as isolation, or whether individual
-        is a carehome resident.
+        is a carehome resident. Scales infectiousness if a person is
+        vaccinated.
 
         Parameters
         ----------
@@ -41,7 +42,8 @@ class PersonalInfection:
     def person_susc(infector, infectee, time: float):
         """Calculate the susceptibility of one person to another. Does not
         include interventions such as isolation, or whether individual is a
-        carehome resident.
+        carehome resident. Scales susceptibility if a person is
+        vaccinated.
 
         Also does not yet import WAIFW matrix from Polymod data to determine
         age dependant contact between individuals.
@@ -65,6 +67,6 @@ class PersonalInfection:
         vacc_susc_drop = 1
         if infectee.is_vaccinated:
             if time > infectee.date_vaccinated + params['time_to_efficacy']:
-                vacc_susc_drop *= params['vacc_susc_drop']  
-        
+                vacc_susc_drop *= params['vacc_susc_drop']
+
         return 1.0 * vacc_susc_drop
