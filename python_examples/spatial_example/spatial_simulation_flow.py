@@ -26,9 +26,9 @@ pe.routine.Simulation.set_random_seed(seed=30)
 # simulation.
 
 pop_params = {
-    "population_size": 10000,
-    "cell_number": 200,
-    "microcell_number": 2,
+    "population_size": 50000,
+    "cell_number": 800,
+    "microcell_number": 4,
     "household_number": 5,
 }
 
@@ -42,14 +42,14 @@ population = pe.routine.FilePopulationFactory.make_pop(file_loc,
 
 
 # Configure population with input data
-# pe.routine.ToyPopulationFactory.assign_cell_locations(population)
+# pe.routine.ToyPopulationFactory.assign_cell_locations(population, method='grid')
 pe.routine.ToyPopulationFactory.add_places(population, 1)
 # pe.routine.FilePopulationFactory.print_population(population, file_loc)
 
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 30,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
 file_params = {"output_file": "output.csv",

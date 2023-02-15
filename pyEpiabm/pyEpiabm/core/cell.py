@@ -7,7 +7,9 @@ import numpy as np
 from queue import Queue
 from numbers import Number
 
+from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
+# from pyEpiabm.utility import DistanceFunctions
 
 from .microcell import Microcell
 from .person import Person
@@ -36,6 +38,7 @@ class Cell:
         self.households = []
         self.person_queue = Queue()
         self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
+        self.nearest_neighbours = dict()
 
         if not (len(loc) == 2 and isinstance(loc[0], Number) and
                 isinstance(loc[1], Number)):
@@ -133,3 +136,38 @@ class Cell:
 
         """
         self.location = loc
+
+    def near_neighbour(self, loc, other_cells):
+        # List of near neghbours
+        cutoff = Parameters.instance().infection_radius
+
+        for cell2 in other_cells:
+            distance = self.dist_euclid(self.location, cell2.location)
+            if distance < cutoff:
+                self.nearest_neighbours[cell2.id] = distance
+
+    @staticmethod
+    def dist_euclid(loc1: typing.Tuple[float, float],
+                    loc2: typing.Tuple[float, float] = (0.0, 0.0)):
+        """Calculates distance based on the standard L2, Euclidean
+        norm. This assumes the space is approximately planar, and
+        so is a good approximation for smaller areas where the curvature
+        of the Earth is not significant. Passing a single location
+        argument will return the norm of this tuple.
+
+        Parameters
+        ----------
+        loc1 : Tuple[float, float]
+            (x,y) coordinates of the first place
+        loc2 : Tuple[float, float]
+            (x,y) coordinates of the second place
+
+        Returns
+        -------
+        float
+            Euclidean distance between the two locations
+
+        """
+        x1, y1 = loc1
+        x2, y2 = loc2
+        return ((x1-x2)**2+(y1-y2)**2)**(1/2)

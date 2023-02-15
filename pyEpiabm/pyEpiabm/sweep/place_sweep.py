@@ -18,7 +18,7 @@ class PlaceSweep(AbstractSweep):
     exposed person is added to an infection queue.
 
     """
-
+    @profile
     def __call__(self, time: float):
         """
         Given a population structure with places, loops over infected
