@@ -495,26 +495,39 @@
         "prop_other_parent_away": 0.0
     },
     "intervention_params": {
-	"case_isolation": {
-	    "start_time": 6,
-	    "policy_duration": 365,
-	    "case_threshold": 0,
-	    "isolation_delay": 1,
-	    "isolation_duration": 7,
-	    "isolation_probability": 1,
-	    "isolation_effectiveness": 0.25,
-	    "isolation_house_effectiveness": 0.5
-	},
-    "place_closure": {
-        "start_time": 6,
-        "policy_duration": 365,
-        "case_threshold": 0,
-        "closure_delay": 0,
-        "closure_duration": 100,
-        "closure_household_infectiousness": 5,
-        "closure_spatial_params": 0.5,
-        "icu_microcell_threshold": 0,
-        "case_microcell_threshold":0
-    }
+        "case_isolation": {
+            "time_start": 6,
+            "policy_duration": 365,
+            "case_threshold": 0,
+            "isolation_delay": 1,
+            "isolation_duration": 7,
+            "isolation_probability": 1,
+            "isolation_effectiveness": 0.25,
+            "isolation_house_effectiveness": 0.5
+        },
+        "place_closure": {
+            "time_start": 6,
+            "policy_duration": 365,
+            "case_threshold": 0,
+            "closure_delay": 0,
+            "closure_duration": 100,
+            "closure_household_infectiousness": 5,
+            "closure_spatial_params": 0.5,
+            "icu_microcell_threshold": 0,
+            "case_microcell_threshold":0
+        },
+        "household_quarantine": {
+            "time_start": 6,
+            "policy_duration": 365,
+            "case_threshold": 0,
+            "quarantine_delay": 1,
+            "quarantine_duration": 14,
+            "quarantine_house_compliant": 0.75,
+            "quarantine_individual_compliant": 1.0,
+            "quarantine_house_effectiveness": 1.5,
+            "quarantine_spatial_effectiveness": 0.25,
+            "quarantine_place_effectiveness": [0.25, 0.25, 0.25, 0.25, 0.25, 0.25]
+        }
+
     }
 }

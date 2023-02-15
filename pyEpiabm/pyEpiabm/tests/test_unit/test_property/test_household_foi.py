@@ -45,10 +45,14 @@ class TestHouseholdInfection(TestPyEpiabm):
         self.assertIsInstance(result, float)
 
     def test_house_case_isolation(self):
+        # Not isolating (isolation_start_time = None)
         result = HouseholdInfection.household_foi(
             self.infector, self.infectee, self.time)
+
         # Case isolate
-        isolation_house_effectiveness = 0.5
+        isolation_house_effectiveness = \
+            pe.Parameters.instance().intervention_params[
+                'case_isolation']['isolation_house_effectiveness']
         self.infector.isolation_start_time = 1
         result_isolating = HouseholdInfection.household_foi(self.infector,
                                                             self.infectee,
@@ -66,6 +70,22 @@ class TestHouseholdInfection(TestPyEpiabm):
             self.infector, self.time)
         self.assertEqual(result*closure_household_infectiousness,
                          result_closure)
+
+    def test_house_household_quarantine(self):
+        # Not in quarantine (quarantine_start_time = None)
+        result = HouseholdInfection.household_foi(
+            self.infector, self.infectee, self.time)
+
+        # Household quarantine
+        quarantine_house_effectiveness = \
+            pe.Parameters.instance().intervention_params[
+                'household_quarantine']['quarantine_house_effectiveness']
+        self.infector.quarantine_start_time = 1
+        result_isolating = HouseholdInfection.household_foi(self.infector,
+                                                            self.infectee,
+                                                            self.time)
+        self.assertEqual(result*quarantine_house_effectiveness,
+                         result_isolating)
 
 
 if __name__ == '__main__':

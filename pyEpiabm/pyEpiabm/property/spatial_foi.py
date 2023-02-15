@@ -1,7 +1,6 @@
 #
 # Calculate spatial force of infection based on Covidsim code
 #
-
 from pyEpiabm.core import Parameters
 
 import pyEpiabm.core
@@ -131,8 +130,12 @@ class SpatialInfection:
         isolating = Parameters.instance().\
             intervention_params['case_isolation']['isolation_effectiveness']\
             if infector.isolation_start_time is not None else 1
+        quarantine = Parameters.instance().\
+            intervention_params['household_quarantine'][
+                'quarantine_spatial_effectiveness']\
+            if infector.quarantine_start_time is not None else 1
         infectiousness = (SpatialInfection.spatial_inf(
-            inf_cell, infector, time) * isolating)
-        susceptibility = SpatialInfection.spatial_susc(susc_cell, infector,
-                                                       infectee, time)
+            inf_cell, infector, time) * isolating * quarantine)
+        susceptibility = (SpatialInfection.spatial_susc(
+            susc_cell, infector, infectee, time) * quarantine)
         return (infectiousness * susceptibility)
