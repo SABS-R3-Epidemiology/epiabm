@@ -25,7 +25,7 @@ pe.routine.Simulation.set_random_seed(seed=42)
 # Pop_params are used to configure the population structure being used in this
 # simulation.
 
-pop_params = {"population_size": 10000, "cell_number": 1,
+pop_params = {"population_size": 1000000, "cell_number": 1,
               "microcell_number": 1, "household_number": 5,
               "place_number": 2}
 
@@ -48,20 +48,11 @@ file_params = {"output_file": "output.csv",
 sim = pe.routine.Simulation()
 sim.configure(
     population,
-    [pe.sweep.InitialHouseholdSweep(),
-     pe.sweep.InitialInfectedSweep(),
-     pe.sweep.InitialisePlaceSweep()],
-    [
-        pe.sweep.UpdatePlaceSweep(),
-        pe.sweep.HouseholdSweep(),
-        pe.sweep.PlaceSweep(),
-        pe.sweep.SpatialSweep(),
-        pe.sweep.QueueSweep(),
-        pe.sweep.HostProgressionSweep(),
-    ],
+    [pe.sweep.InitialInfectedSweep()],
+    [pe.sweep.HouseholdSweep(), pe.sweep.QueueSweep(),
+     pe.sweep.HostProgressionSweep()],
     sim_params,
-    file_params,
-)
+    file_params)
 sim.run_sweeps()
 
 # Need to close the writer object at the end of each simulation.
