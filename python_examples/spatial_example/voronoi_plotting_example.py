@@ -345,7 +345,7 @@ locations = np.append(
 vor = Voronoi(locations)
 
 # Plot grid of time points
-fig_loc = ("spatial_outputs/"
+fig_loc = ("python_examples/spatial_example/spatial_outputs/"
            + "voronoi_grid_img.png")
 plot_time_grid(
     df,
@@ -357,7 +357,7 @@ plot_time_grid(
 )
 
 # Plot animation of simulation
-animation_path = ("spatial_outputs/")
+animation_path = ("python_examples/spatial_example/spatial_outputs/")
 anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
                           grid_lim=grid_limits, save_path=animation_path,
                           use_pillow=False)
