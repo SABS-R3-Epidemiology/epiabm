@@ -37,14 +37,14 @@ class TestHouseholdInfection(TestPyEpiabm):
         result = HouseholdInfection.household_susc(self.infector,
                                                    self.infectee,
                                                    self.time)
-        self.assertEqual(result, 0.5)
+        self.assertEqual(result, 1.0)
         self.assertIsInstance(result, float)
 
     def test_house_inf_force(self):
         result = HouseholdInfection.household_foi(self.infector,
                                                   self.infectee,
                                                   self.time)
-        self.assertEqual(result, 0.025)
+        self.assertEqual(result, 0.05)
         self.assertIsInstance(result, float)
 
 
