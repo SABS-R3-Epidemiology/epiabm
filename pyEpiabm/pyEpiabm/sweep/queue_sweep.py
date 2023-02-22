@@ -1,7 +1,9 @@
 #
 # Sweeps for enqueued persons to update infection status
 #
+import random
 
+from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
 
 from .abstract_sweep import AbstractSweep
@@ -21,11 +23,26 @@ class QueueSweep(AbstractSweep):
             Simulation time
 
         """
+        vacc_params = Parameters.instance().\
+            intervention_params['vaccine_params']
         for cell in self._population.cells:
             while not cell.person_queue.empty():
                 person = cell.person_queue.get()
                 # Get takes person from the queue and removes them, so clears
                 # the queue for the next timestep.
                 # Update the infection status
-                person.next_infection_status = InfectionStatus.Exposed
-                person.time_of_status_change = time
+                if (person.is_vaccinated
+                        and time > (person.date_vaccinated +
+                                    vacc_params['time_to_efficacy'])):
+                    r = random.random()
+                    if r < vacc_params['vacc_protectiveness']:
+                        person.next_infection_status = InfectionStatus.\
+                            Vaccinated
+                        person.time_of_status_change = time
+                    else:
+                        person.next_infection_status = InfectionStatus.Exposed
+                        person.time_of_status_change = time
+                else:
+                    person.next_infection_status = InfectionStatus.Exposed
+                    person.time_of_status_change = time
+
