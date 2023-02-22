@@ -36,6 +36,7 @@ class TestSocialDistancing(TestPyEpiabm):
         self.assertEqual(self.socialdistancing.case_threshold, 0)
         self.assertEqual(self.socialdistancing.distancing_delay, 0)
         self.assertEqual(self.socialdistancing.distancing_duration, 100)
+        self.assertEqual(self.socialdistancing.distancing_compliant, 1)
         self.assertEqual(self.socialdistancing.case_microcell_threshold, 1)
         self.assertEqual(self.socialdistancing.distancing_enhanced_prob,
                          [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
