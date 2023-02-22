@@ -74,12 +74,15 @@ class TestSpatialInfection(TestPyEpiabm):
         self.assertTrue(result >= 0)
 
     def test_spatial_case_isolation(self):
+        # Not isolating (isolation_start_time = None)
         result = SpatialInfection.spatial_foi(
             self.cell, self.cell,
             self.infector, self.infectee, self.time)
 
         # Case isolate
-        isolation_effectiveness = 0.5
+        isolation_effectiveness = \
+            pe.Parameters.instance().intervention_params['case_isolation'][
+                'isolation_effectiveness']
         self.infector.isolation_start_time = 1
         result_isolating = SpatialInfection.spatial_foi(
             self.cell, self.cell,
@@ -88,13 +91,16 @@ class TestSpatialInfection(TestPyEpiabm):
                          result_isolating)
 
     def test_spatial_place_closure(self):
+        # Not place closure (closure_start_time = None)
         result_susc = SpatialInfection.spatial_susc(
             self.cell, self.infector, self.infectee, self.time)
         result_inf = SpatialInfection.spatial_inf(
             self.cell, self.infector, self.time)
 
         # Update start time
-        closure_spatial_params = 0.5
+        closure_spatial_params = \
+            pe.Parameters.instance().intervention_params[
+                'place_closure']['closure_spatial_params']
         self.infector.microcell.closure_start_time = 1
 
         # Place closure susceptibility
@@ -109,10 +115,30 @@ class TestSpatialInfection(TestPyEpiabm):
         self.assertEqual(result_inf*closure_spatial_params,
                          result_closure_inf)
 
-    def test_spatial_social_distancing(self):
+    def test_spatial_household_quarantine(self):
+        # Not in quarantine (quarantine_start_time = None)
         result = SpatialInfection.spatial_foi(
             self.cell, self.cell,
             self.infector, self.infectee, self.time)
+
+        quarantine_spatial_effectiveness = \
+            pe.Parameters.instance().intervention_params[
+                'household_quarantine']['quarantine_spatial_effectiveness']
+        self.infector.quarantine_start_time = 1
+        result_isolating = SpatialInfection.spatial_foi(
+            self.cell, self.cell,
+            self.infector, self.infectee, self.time)
+        # foi scaled twice: infectiousness and susceptibility
+        self.assertEqual(result*quarantine_spatial_effectiveness
+                         * quarantine_spatial_effectiveness,
+                         result_isolating)
+
+    def test_spatial_social_distancing(self):
+        # Not in social distancing (distancing_start_time = None)
+        result = SpatialInfection.spatial_foi(
+            self.cell, self.cell,
+            self.infector, self.infectee, self.time)
+
         # Normal social distancing
         self.infector.microcell.distancing_start_time = 1
         self.infector.distancing_enhanced = False
@@ -124,6 +150,7 @@ class TestSpatialInfection(TestPyEpiabm):
             self.infector, self.infectee, self.time)
         self.assertEqual(result*distancing_spatial_susc,
                          result_distancing)
+
         # Enhanced social distancing
         self.infector.distancing_enhanced = True
         distancing_spatial_enhanced_susc = pe.Parameters.instance().\

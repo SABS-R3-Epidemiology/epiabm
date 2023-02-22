@@ -14,7 +14,7 @@ class TestCaseIsolation(TestPyEpiabm):
     def setUpClass(cls) -> None:
         super(TestCaseIsolation, cls).setUpClass()  # Sets up patch on logging
 
-        # Construct a population with 5 persons
+        # Construct a population with 2 persons
         cls._population = pe.Population()
         cls._population.add_cells(1)
         cls._population.cells[0].add_microcells(1)

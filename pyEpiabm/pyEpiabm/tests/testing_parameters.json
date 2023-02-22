@@ -519,6 +519,18 @@
             "icu_microcell_threshold": 1,
             "case_microcell_threshold": 1
         },
+        "household_quarantine": {
+            "start_time": 6,
+            "policy_duration": 365,
+            "case_threshold": 0,
+            "quarantine_delay": 1,
+            "quarantine_duration": 14,
+            "quarantine_house_compliant": 0.75,
+            "quarantine_individual_compliant": 1.0,
+            "quarantine_house_effectiveness": 1.5,
+            "quarantine_spatial_effectiveness": 0.25,
+            "quarantine_place_effectiveness": [0.25, 0.25, 0.25, 0.25, 0.25, 0.25]
+        },
         "social_distancing": {
             "start_time": 6,
             "policy_duration": 365,
@@ -535,7 +547,7 @@
             "distancing_place_susc": 0.8,
             "distancing_spatial_susc": 0.8
         }
-        }
+    }
     
     
 }

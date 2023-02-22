@@ -48,6 +48,7 @@ class Person:
         self.time_of_status_change = None
         self.infection_start_time = None
         self.isolation_start_time = None
+        self.quarantine_start_time = None
 
         self.set_random_age()
 

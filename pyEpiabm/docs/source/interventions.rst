@@ -11,6 +11,8 @@ Overview:
 - :class:`AbstractIntervention`
 - :class:`CaseIsolation`
 - :class:`PlaceClosure`
+- :class:`HouseholdQuarantine`
+- :class:`SocialDistancing`
 
 .. autoclass:: AbstractIntervention
     :members:
@@ -21,5 +23,13 @@ Overview:
     :special-members: __init__, __call__
 
 .. autoclass:: PlaceClosure
+    :members:
+    :special-members: __init__, __call__
+
+.. autoclass:: HouseholdQuarantine
+    :members:
+    :special-members: __init__, __call__
+
+.. autoclass:: SocialDistancing
     :members:
     :special-members: __init__, __call__

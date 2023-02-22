@@ -53,11 +53,13 @@ class TestPlaceInfection(TestPyEpiabm):
         self.assertIsInstance(result, float)
 
     def test_place_case_isolation(self):
+        # Not isolating (isolation_start_time = None)
         result = PlaceInfection.place_foi(self.place, self.infector,
                                           self.infectee, self.time)
 
         # Case isolate
-        isolation_effectiveness = 0.5
+        isolation_effectiveness = pe.Parameters.instance().intervention_params[
+            'case_isolation']['isolation_effectiveness']
         self.infector.isolation_start_time = 1
         result_isolating = PlaceInfection.place_foi(self.place, self.infector,
                                                     self.infectee, self.time)
@@ -65,17 +67,39 @@ class TestPlaceInfection(TestPyEpiabm):
                          result_isolating)
 
     def test_place_place_closure(self):
+        # Not place closure (closure_start_time = None)
         result = PlaceInfection.place_inf(self.place, self.infector, self.time)
         self.assertNotEqual(result, 0)
+
         # Place closure
         self.infector.microcell.closure_start_time = 1
         result_closure = PlaceInfection.place_inf(self.place, self.infector,
                                                   self.time)
         self.assertEqual(result_closure, 0)
 
-    def test_place_social_distancing(self):
+    def test_place_household_quarantine(self):
+        # Not in quarantine (quarantine_start_time = None)
         result = PlaceInfection.place_foi(self.place, self.infector,
                                           self.infectee, self.time)
+
+        # Household quarantine
+        quarantine_place_effectiveness = \
+            pe.Parameters.instance().intervention_params[
+                'household_quarantine']['quarantine_place_effectiveness']
+        self.infector.quarantine_start_time = 1
+        result_isolating = PlaceInfection.place_foi(self.place, self.infector,
+                                                    self.infectee, self.time)
+        place_idx = self.place.place_type.value - 1
+        # foi scaled twice: infectiousness and susceptibility
+        self.assertEqual(result*quarantine_place_effectiveness[place_idx]
+                         * quarantine_place_effectiveness[place_idx],
+                         result_isolating)
+
+    def test_place_social_distancing(self):
+        # Not in social distancing (distancing_start_time = None)
+        result = PlaceInfection.place_foi(self.place, self.infector,
+                                          self.infectee, self.time)
+
         # Normal social distancing
         self.infector.microcell.distancing_start_time = 1
         self.infector.distancing_enhanced = False

@@ -45,10 +45,14 @@ class TestHouseholdInfection(TestPyEpiabm):
         self.assertIsInstance(result, float)
 
     def test_house_case_isolation(self):
+        # Not isolating (isolation_start_time = None)
         result = HouseholdInfection.household_foi(
             self.infector, self.infectee, self.time)
+
         # Case isolate
-        isolation_house_effectiveness = 0.5
+        isolation_house_effectiveness = \
+            pe.Parameters.instance().intervention_params[
+                'case_isolation']['isolation_house_effectiveness']
         self.infector.isolation_start_time = 1
         result_isolating = HouseholdInfection.household_foi(self.infector,
                                                             self.infectee,
@@ -57,19 +61,41 @@ class TestHouseholdInfection(TestPyEpiabm):
                          result_isolating)
 
     def test_house_place_closure(self):
+        # No place closure (closure_start_time = None)
         result = HouseholdInfection.household_inf(
             self.infector, self.time)
+
         # Place closure
-        closure_household_infectiousness = 5
+        closure_household_infectiousness = \
+            pe.Parameters.instance().intervention_params[
+                'place_closure']['closure_household_infectiousness']
         self.infector.microcell.closure_start_time = 1
         result_closure = HouseholdInfection.household_inf(
             self.infector, self.time)
         self.assertEqual(result*closure_household_infectiousness,
                          result_closure)
 
-    def test_house_social_distancing(self):
+    def test_house_household_quarantine(self):
+        # Not in quarantine (quarantine_start_time = None)
         result = HouseholdInfection.household_foi(
             self.infector, self.infectee, self.time)
+
+        # Household quarantine
+        quarantine_house_effectiveness = \
+            pe.Parameters.instance().intervention_params[
+                'household_quarantine']['quarantine_house_effectiveness']
+        self.infector.quarantine_start_time = 1
+        result_isolating = HouseholdInfection.household_foi(self.infector,
+                                                            self.infectee,
+                                                            self.time)
+        self.assertEqual(result*quarantine_house_effectiveness,
+                         result_isolating)
+
+    def test_house_social_distancing(self):
+        # Not in social distancing (distancing_start_time = None)
+        result = HouseholdInfection.household_foi(
+            self.infector, self.infectee, self.time)
+
         # Normal social distancing
         self.infector.microcell.distancing_start_time = 1
         self.infector.distancing_enhanced = False
@@ -80,6 +106,7 @@ class TestHouseholdInfection(TestPyEpiabm):
             self.infector, self.infectee, self.time)
         self.assertEqual(result*distancing_house_susc,
                          result_distancing)
+
         # Enhanced social distancing
         self.infector.distancing_enhanced = True
         distancing_house_enhanced_susc = pe.Parameters.instance().\

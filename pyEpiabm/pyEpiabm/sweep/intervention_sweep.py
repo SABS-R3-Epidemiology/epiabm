@@ -5,6 +5,7 @@
 from pyEpiabm.core import Parameters
 from pyEpiabm.intervention import CaseIsolation
 from pyEpiabm.intervention import PlaceClosure
+from pyEpiabm.intervention import HouseholdQuarantine
 from pyEpiabm.intervention import SocialDistancing
 
 from .abstract_sweep import AbstractSweep
@@ -17,6 +18,12 @@ class InterventionSweep(AbstractSweep):
     Possible interventions:
 
             * `case_isolation`: Symptomatic case stays home.
+            * `place closure`: Place closure if number of infectious
+                               people or icu patients exceeds the threshold.
+            * `household quarantine`: Household quarantine if member
+                                      is symptomatic.
+            * `social distancing`: Social distancing if number of infectious
+                               people exceeds the threshold.
     """
 
     def __init__(self):
@@ -29,6 +36,7 @@ class InterventionSweep(AbstractSweep):
         self._population = population
         intervention_dict = {'case_isolation': CaseIsolation,
                              'place_closure': PlaceClosure,
+                             'household_quarantine': HouseholdQuarantine,
                              'social_distancing': SocialDistancing}
         for intervention in self.intervention_params.keys():
             params = self.intervention_params[intervention]

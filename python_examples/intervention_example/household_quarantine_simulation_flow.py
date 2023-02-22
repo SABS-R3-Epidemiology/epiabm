@@ -1,5 +1,5 @@
 #
-# Example simulation script with case isolation intervention data output
+# Example simulation script with household quarantine intervention data output
 # and visualisation
 #
 
@@ -23,24 +23,24 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
 # Set parameter file
-name_parameter_file = 'case_isolation_parameters.json'
+name_parameter_file = 'household_quarantine_parameters.json'
 
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
 # Parameter to change
-to_modify_parameter = 'isolation_probability'
+to_modify_parameter = 'quarantine_house_compliant'
 parameter_values = [0.0, 0.5, 1.0]
 
 for i in range(len(parameter_values)):
     name_output_file = 'output_{}_{}'.format(
         int(parameter_values[i]*100), to_modify_parameter)
 
-    pe.Parameters.instance().intervention_params['case_isolation'][
+    pe.Parameters.instance().intervention_params['household_quarantine'][
         to_modify_parameter] = parameter_values[i]
-    print('Set isolation_probability to: {}'.format(
-        pe.Parameters.instance().intervention_params['case_isolation'][
+    print('Set quarantine_house_compliant to: {}'.format(
+        pe.Parameters.instance().intervention_params['household_quarantine'][
             to_modify_parameter]))
 
     # Method to set the seed at the start of the simulation,
@@ -105,14 +105,14 @@ for i in range(len(parameter_values)):
                  "InfectionStatus.Dead": 'sum'})
     df = df.reset_index(level=0)
 
-    plt.plot(df['time'], df['Infected'], label='{}% isolating'.format(
+    plt.plot(df['time'], df['Infected'], label='{}% house compliance'.format(
         int(parameter_values[i]*100)))
 
 plt.legend()
-plt.title("Infection curves for different case isolating probabilities")
+plt.title("Infection curves for different house quarantine compliance")
 plt.ylabel("Infected Population")
 plt.savefig(
     os.path.join(os.path.dirname(__file__),
                  "intervention_outputs",
-                 "case_isolation_Icurve_plot.png")
+                 "household_quarantine_Icurve_plot.png")
 )

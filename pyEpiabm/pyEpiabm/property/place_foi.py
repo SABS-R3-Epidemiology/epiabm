@@ -102,8 +102,13 @@ class PlaceInfection:
         isolating = Parameters.instance().\
             intervention_params['case_isolation']['isolation_effectiveness']\
             if infector.isolation_start_time is not None else 1
+        place_idx = place.place_type.value - 1
+        quarantine = Parameters.instance().\
+            intervention_params['household_quarantine'][
+                'quarantine_place_effectiveness'][place_idx]\
+            if infector.quarantine_start_time is not None else 1
         infectiousness = (PlaceInfection.place_inf(place, infector, time)
-                          * isolating)
+                          * isolating * quarantine)
         if infector.microcell.distancing_start_time is not None:
             if infector.distancing_enhanced is True:
                 distancing = Parameters.instance().\
@@ -117,6 +122,6 @@ class PlaceInfection:
                              'distancing_place_susc']
         else:
             distancing = 1
-        susceptibility = PlaceInfection.place_susc(place, infector, infectee,
-                                                   time) * distancing
+        susceptibility = (PlaceInfection.place_susc(place, infector, infectee,
+                          time) * quarantine * distancing)
         return (infectiousness * susceptibility)
