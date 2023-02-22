@@ -26,7 +26,7 @@ class SpatialSweep(AbstractSweep):
     exposed person is added to an infection queue.
 
     """
-    @profile
+#    @profile
     def __call__(self, time: float):
         """
         Given a population structure, loops over cells and generates
@@ -60,10 +60,29 @@ class SpatialSweep(AbstractSweep):
             # infector cell.
             poss_susc_cells = self._population.cells.copy()
             poss_susc_cells.remove(cell)
+
             possible_infectee_num = sum([sum(cell2.compartment_counter
                                         .retrieve()[InfectionStatus
                                                     .Susceptible])
                                         for cell2 in poss_susc_cells])
+
+            # possible_infectee_num = 0
+            # for cell2 in poss_susc_cells:
+            #     for microcell in cell2.microcells:
+            #         for household in microcell.households:
+            #             possible_infectee_num += len(household.susceptible_persons)
+
+            # possible_infectee_num = sum([sum([sum([len(household.susceptible_persons)
+            #                             for household in microcell.households])
+            #                             for microcell in cell2.microcells])
+            #                             for cell2 in poss_susc_cells])
+            # for cell2 in poss_susc_cells:
+            #     # print('hello')
+            #     for microcell in cell2.microcells:
+            #         # print('hi')
+            #         # print('Len:', len(microcell.households))
+            #         for household in microcell.households:
+            #             print('length:', len(household.susceptible_persons))
             if possible_infectee_num == 0:
                 # Break the loop if no people outside the cell are susceptible.
                 continue
@@ -89,7 +108,7 @@ class SpatialSweep(AbstractSweep):
             for infectee in infectee_list:
                 self.do_infection_event(infector, infectee, time)
 
-    @profile
+#    @profile
     def find_infectees(self, infector_cell: Cell,
                        possible_infectee_cells: typing.List[Cell],
                        number_to_infect: int):

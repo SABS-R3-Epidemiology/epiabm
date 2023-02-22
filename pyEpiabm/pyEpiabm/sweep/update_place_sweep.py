@@ -17,7 +17,7 @@ class UpdatePlaceSweep(AbstractSweep):
     class.
 
     """
-    @profile
+#    @profile
     def __call__(self, time: float):
         """Given a population structure, updates the people
         present in each place at a specific timepoint.

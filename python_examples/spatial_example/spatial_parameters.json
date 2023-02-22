@@ -409,7 +409,7 @@
     "household_transmission": 0.1,
     "false_positive_rate": 0,
     "place_transmission": 0.1,
-    "use_ages": 1,
+    "use_ages": 0,
     "age_proportions": [6.2, 5.6, 5.8, 6.3, 6.8, 6.8, 6.5, 6.6,
                         7.3, 7.3, 6.5, 5.7, 6, 4.8, 3.9, 3.2, 4.7],
     "age_contact": [0.6, 0.7, 0.75, 1, 1, 1, 1, 1,
@@ -467,6 +467,11 @@
                                     0.47651, 0.47651, 0.47651, 0.47651,
                                     0.47651]
     },
+    "household_size_distribution": [0.283708848, 0.345103011, 0.150677793, 
+    0.12764915, 0.057777709, 0.022624223,
+    0.007151747, 0.002988208, 0.001179132, 
+    0.001140178],
+    "max_household_size": 10,
     "household_age_params": {
         "mean_child_age_gap": 2,
         "min_adult_age": 19,

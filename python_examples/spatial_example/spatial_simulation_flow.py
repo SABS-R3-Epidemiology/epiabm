@@ -55,14 +55,14 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 30,
 file_params = {"output_file": "output.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
                                           "spatial_outputs"),
-               "spatial_output": True}
+               "spatial_output": True, "age_stratified": False}
 
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.
 sim = pe.routine.Simulation()
 sim.configure(
     population,
-    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
+    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep(), pe.sweep.InitialHouseholdSweep()],
     [
         pe.sweep.UpdatePlaceSweep(),
         pe.sweep.HouseholdSweep(),

@@ -65,6 +65,7 @@ class InitialHouseholdSweep(AbstractSweep):
                     for i in range(k, k + m):
                         people_in_household.append(microcell.persons[i])
                     microcell.add_household(people_in_household)
+                    # print('k', k)
                     k += m
 
     def one_person_household_age(self, person: Person):
@@ -420,6 +421,7 @@ class InitialHouseholdSweep(AbstractSweep):
         # if people are already in households (this check makes testing
         # this method easier)
         for cell in self._population.cells:
+        #    print('Marker 1')
             for microcell in cell.microcells:
                 if len(microcell.households) == 0:
                     self.household_allocation(self._population)
