@@ -84,12 +84,12 @@ class HouseholdInfection:
         false_pos = 1 / (1 - Parameters.instance().
                          false_positive_rate)
         vacc_inf_drop = 1
-        vacc_params = Parameters.instance()\
-            .intervention_params['vaccine_params']
         if infector.is_vaccinated:
+            vacc_params = Parameters.instance()\
+                .intervention_params['vaccine_params']
             if time > (infector.date_vaccinated +
                        vacc_params['time_to_efficacy']):
-                vacc_inf_drop *= vacc_params['vacc_inf_drop']
+                vacc_inf_drop *= (1 - vacc_params['vacc_inf_drop'])
 
         infectiousness = (HouseholdInfection.household_inf(infector, time)
                           * seasonality * false_pos
