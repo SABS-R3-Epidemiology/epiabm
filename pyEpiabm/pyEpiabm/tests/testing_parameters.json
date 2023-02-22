@@ -513,7 +513,7 @@
             "policy_duration": 365,
             "case_threshold": 0,
             "vacc_inf_drop": 0.5,
-            "vacc_susc_drop": 0.5,
+            "vacc_protectiveness": 1,
             "time_to_efficacy": 0,
             "min_ages": [80, 65, 50, 18],
             "prob_vaccinated": [1, 1, 1, 1],
