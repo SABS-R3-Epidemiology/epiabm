@@ -133,7 +133,7 @@ class HostProgressionSweep(AbstractSweep):
         if person.infection_start_time < 0:
             raise ValueError('The infection start time cannot be negative')
 
-    def update_next_infection_status(self, person: Person):
+    def update_next_infection_status(self, person: Person, time: float):
         """Assigns next infection status based on current infection status
         and on probabilities of transition to different statuses. Weights
         are taken from row in state transition matrix that corresponds to
@@ -147,7 +147,8 @@ class HostProgressionSweep(AbstractSweep):
 
         """
         if person.infection_status in [InfectionStatus.Recovered,
-                                       InfectionStatus.Dead]:
+                                       InfectionStatus.Dead,
+                                       InfectionStatus.Vaccinated]:
             person.next_infection_status = None
         else:
             row_index = person.infection_status.name
@@ -164,6 +165,7 @@ class HostProgressionSweep(AbstractSweep):
             next_infection_status_number = random.choices(outcomes, weights)[0]
             next_infection_status =\
                 InfectionStatus(next_infection_status_number)
+
             person.next_infection_status = next_infection_status
 
     def update_time_status_change(self, person: Person, time: float):
@@ -190,7 +192,8 @@ class HostProgressionSweep(AbstractSweep):
             raise ValueError("Method should not be used to infect people")
 
         if person.infection_status in [InfectionStatus.Recovered,
-                                       InfectionStatus.Dead]:
+                                       InfectionStatus.Dead,
+                                       InfectionStatus.Vaccinated]:
             transition_time = np.inf
         else:
             row_index = person.infection_status.name
@@ -253,7 +256,8 @@ class HostProgressionSweep(AbstractSweep):
         # sets its infection start time to None again.
         elif person.infectiousness != 0:
             if person.infection_status in [InfectionStatus.Recovered,
-                                           InfectionStatus.Dead]:
+                                           InfectionStatus.Dead,
+                                           InfectionStatus.Vaccinated]:
                 person.infectiousness = 0
                 person.infection_start_time = None
 
@@ -282,6 +286,6 @@ class HostProgressionSweep(AbstractSweep):
                              InfectionStatus.InfectMild,
                              InfectionStatus.InfectGP]:
                         self.set_infectiousness(person, time)
-                    self.update_next_infection_status(person)
+                    self.update_next_infection_status(person, time)
                     self.update_time_status_change(person, time)
                 self._updates_infectiousness(person, time)
