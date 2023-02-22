@@ -2,6 +2,8 @@
 # Vaccination Class
 #
 
+import random
+
 from pyEpiabm.intervention import AbstractIntervention
 
 
@@ -25,8 +27,7 @@ class Vaccination(AbstractIntervention):
         self.daily_doses = daily_doses
 
         # start_time, policy_duration, threshold, population
-        super(Vaccination, self).__init__(population=population,
-                                          **kwargs)
+        super(Vaccination, self).__init__(**kwargs, population=population)
 
     def __call__(self, time):
         """ Move down the priority queue removing people and
