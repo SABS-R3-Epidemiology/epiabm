@@ -7,9 +7,9 @@ import numpy as np
 from queue import Queue
 from numbers import Number
 
-from pyEpiabm.core import Parameters
+# from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.utility import DistanceFunctions
+# from pyEpiabm.utility import DistanceFunctions
 
 from .microcell import Microcell
 from .person import Person
@@ -145,5 +145,3 @@ class Cell:
     #         distance = DistanceFunctions.dist(self.location, cell2.location)
     #         if distance < cutoff:
     #             self.nearest_neighbours[cell2.id] = distance
-
-

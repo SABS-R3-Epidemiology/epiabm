@@ -141,10 +141,16 @@ class SpatialSweep(AbstractSweep):
         # Will catch the case if distance weights isn't configured
         # correctly and returns the wrong length.
         for cell2 in possible_infectee_cells:
-            if cell2 in infector_cell.nearest_neighbours:
-                distance_weights.append(infector_cell.nearest_neighbours[cell2])
+            # print('Near:', infector_cell.nearest_neighbours)
+            if cell2.id in infector_cell.nearest_neighbours.keys():
+                # print('Dist:', infector_cell.nearest_neighbours[cell2.id])
+                distance_weights.append(infector_cell.nearest_neighbours[cell2.id])
             else:
                 distance_weights.append(0)
+
+        # print('Print:', infector_cell.nearest_neighbours)
+        # print('Print:', distance_weights)
+        # print('Print:', Parameters.instance().infection_radius)
 
         assert len(distance_weights) == len(possible_infectee_cells), (
             "Distance weights are not the same length as cell list")
