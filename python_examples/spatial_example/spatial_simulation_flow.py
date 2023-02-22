@@ -26,9 +26,9 @@ pe.routine.Simulation.set_random_seed(seed=30)
 # simulation.
 
 pop_params = {
-    "population_size": 50000,
-    "cell_number": 800,
-    "microcell_number": 4,
+    "population_size": 10000,
+    "cell_number": 200,
+    "microcell_number": 2,
     "household_number": 5,
 }
 
