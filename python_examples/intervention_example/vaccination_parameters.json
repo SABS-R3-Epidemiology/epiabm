@@ -496,15 +496,15 @@
     },
     "intervention_params": {
         "vaccine_params": {
-            "time_start": 6,
-            "policy_duration": 365,
+            "start_time": 1,
+            "policy_duration": 1,
             "case_threshold": 0,
-            "vacc_inf_drop": 0.8,
-            "vacc_susc_drop": 0.8,
-            "time_to_efficacy": 14,
+            "vacc_inf_drop": 0.2,
+            "vacc_protectiveness": 0.8,
+            "time_to_efficacy": 0,
             "min_ages": [80, 65, 50, 18],
-            "prob_vaccinated": [0.94, 0.97, 0.94, 0.76],
-            "daily_doses": 10
+            "prob_vaccinated": [0.9, 0.9, 0.9, 0.9],
+            "daily_doses": 5000
         }
     }
 }
