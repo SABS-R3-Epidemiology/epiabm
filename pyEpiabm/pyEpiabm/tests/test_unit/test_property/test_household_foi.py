@@ -73,14 +73,18 @@ class TestHouseholdInfection(TestPyEpiabm):
         # Normal social distancing
         self.infector.microcell.distancing_start_time = 1
         self.infector.distancing_enhanced = False
-        distancing_house_susc = 0.8
+        distancing_house_susc = pe.Parameters.instance().\
+            intervention_params['social_distancing'][
+                'distancing_house_susc']
         result_distancing = HouseholdInfection.household_foi(
             self.infector, self.infectee, self.time)
         self.assertEqual(result*distancing_house_susc,
                          result_distancing)
         # Enhanced social distancing
         self.infector.distancing_enhanced = True
-        distancing_house_enhanced_susc = 0.5
+        distancing_house_enhanced_susc = pe.Parameters.instance().\
+            intervention_params['social_distancing'][
+                'distancing_house_enhanced_susc']
         result_distancing_enhanced = HouseholdInfection.household_foi(
             self.infector, self.infectee, self.time)
         self.assertEqual(result*distancing_house_enhanced_susc,
