@@ -39,8 +39,10 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
                 parameter_value, to_modify_parameter)
 
         if to_modify_parameter == 'distancing_enhanced_prob':
+            num_age_group = len(pe.Parameters.instance().intervention_params[
+                'social_distancing'][to_modify_parameter])
             pe.Parameters.instance().intervention_params['social_distancing'][
-                to_modify_parameter] = [parameter_value] * 17
+                to_modify_parameter] = [parameter_value] * num_age_group
         else:
             pe.Parameters.instance().intervention_params['social_distancing'][
                 to_modify_parameter] = parameter_value
