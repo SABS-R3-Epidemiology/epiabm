@@ -30,9 +30,9 @@ class PersonalInfection:
             Infectiousness parameter of person
 
         """
-        params = Parameters.instance().intervention_params['vaccine_params']
         vacc_inf_drop = 1
         if infector.is_vaccinated:
+            params = Parameters.instance().intervention_params['vaccine_params']
             if time > (infector.date_vaccinated + params['time_to_efficacy']):
                 vacc_inf_drop *= (1 - params['vacc_inf_drop'])
 
