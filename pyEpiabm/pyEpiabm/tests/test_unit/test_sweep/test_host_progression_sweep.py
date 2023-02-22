@@ -133,7 +133,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
         for person in self.people:
             with self.subTest(person=person):
                 test_sweep.update_next_infection_status(person)
-                if person.infection_status.name in ['Recovered', 'Dead']:
+                if person.infection_status.name in ['Recovered', 'Dead',
+                                                    'Vaccinated']:
                     self.assertEqual(person.next_infection_status, None)
                 else:
                     self.assertEqual(person.infection_status,
@@ -143,7 +144,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         # Set ICU recovery infection status column values to 1. This way
         # everyone who is not recovered or dead will have their next
         # infection status set as ICURecov
-        matrix[:, -3] = 1
+        matrix[:, InfectionStatus.InfectICURecov.value - 1] = 1
         matrix = pd.DataFrame(matrix,
                               columns=[status.name for
                                        status in InfectionStatus],
@@ -153,7 +154,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
         for person in self.people:
             with self.subTest(person=person):
                 test_sweep.update_next_infection_status(person)
-                if person.infection_status.name in ['Recovered', 'Dead']:
+                if person.infection_status.name in ['Recovered', 'Dead',
+                                                    'Vaccinated']:
                     self.assertEqual(person.next_infection_status, None)
                 else:
                     self.assertEqual(person.next_infection_status,
@@ -171,7 +173,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
         for person in self.people:
             with self.subTest(person=person):
                 test_sweep.update_next_infection_status(person)
-                if person.infection_status.name in ['Recovered', 'Dead']:
+                if person.infection_status.name in ['Recovered', 'Dead',
+                                                    'Vaccinated']:
                     self.assertEqual(person.next_infection_status, None)
                 else:
                     current_enum_value = person.infection_status.value
