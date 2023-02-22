@@ -30,15 +30,21 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
 # Parameter to change
-to_modify_parameter_values = {'distancing_spatial_susc': [0.1, 0.3, 0.9]}
+to_modify_parameter_values = {'distancing_enhanced_prob': [1, 0.5, 0],
+                              'distancing_spatial_susc': [0.1, 0.3, 0.9]}
 for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         items():
     for parameter_value in parameter_values:
         name_output_file = 'output_{}_{}.csv'.format(
                 parameter_value, to_modify_parameter)
 
-        pe.Parameters.instance().intervention_params['social_distancing'][
+        if to_modify_parameter == 'distancing_enhanced_prob':
+            pe.Parameters.instance().intervention_params['social_distancing'][
+                to_modify_parameter] = [parameter_value] * 17
+        else:
+            pe.Parameters.instance().intervention_params['social_distancing'][
                 to_modify_parameter] = parameter_value
+
         print('Set {} to: {}'.format(to_modify_parameter,
                                      pe.Parameters.instance(
                                      ).intervention_params[
@@ -58,9 +64,10 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
 
         # file_params give details for where output should be written to.
         file_params = {"output_file": name_output_file,
-                       "output_dir": os.path.join(os.path.dirname(__file__),
-                                                  "intervention_outputs"),
-                       "spatial_output": True}
+                       "output_dir": os.path.join(
+                        os.path.dirname(__file__), "intervention_outputs"),
+                       "spatial_output": True,
+                       "age_stratified": True}
 
         # Create a simulation object, configure it with the parameters given,
         # then run the simulation.
