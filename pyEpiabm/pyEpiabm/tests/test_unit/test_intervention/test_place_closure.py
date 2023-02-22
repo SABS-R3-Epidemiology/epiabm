@@ -16,10 +16,10 @@ class TestPlaceClosure(TestPyEpiabm):
         """
         super(TestPlaceClosure, cls).setUpClass()  # Sets up parameters
         cls.time = 1
-        cls._population = pe.Population()
-        cls._population.add_cells(1)
-        cls._population.cells[0].add_microcells(1)
-        cls._population.cells[0].microcells[0].add_people(2)
+        cls.pop_factory = pe.routine.ToyPopulationFactory()
+        cls.pop_params = {"population_size": 2, "cell_number": 1,
+                          "microcell_number": 1, "household_number": 1}
+        cls._population = cls.pop_factory.make_pop(cls.pop_params)
         for person in cls._population.cells[0].microcells[0].persons:
             person.update_status(InfectionStatus(7))
 

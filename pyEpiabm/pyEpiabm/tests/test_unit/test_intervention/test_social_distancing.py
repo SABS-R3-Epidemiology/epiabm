@@ -17,11 +17,11 @@ class TestSocialDistancing(TestPyEpiabm):
         """
         super(TestSocialDistancing, cls).setUpClass()  # Sets up parameters
         cls.time = 1
-        cls._population = pe.Population()
-        cls._population.add_cells(1)
-        cls._population.cells[0].add_microcells(1)
+        cls.pop_factory = pe.routine.ToyPopulationFactory()
+        cls.pop_params = {"population_size": 1, "cell_number": 1,
+                          "microcell_number": 1, "household_number": 1}
+        cls._population = cls.pop_factory.make_pop(cls.pop_params)
         cls.microcell = cls._population.cells[0].microcells[0]
-        cls.microcell.add_people(1)
         cls.person = cls.microcell.persons[0]
         cls.person.update_status(InfectionStatus(7))
 
@@ -45,6 +45,7 @@ class TestSocialDistancing(TestPyEpiabm):
         # Social distancing haven't start
         self.assertIsNone(self.microcell.distancing_start_time)
         # Age group exists with normal social distancing
+        self.person.age_group = 0
         self.socialdistancing(time=5)
         self.assertIsNotNone(self.microcell.distancing_start_time)
         self.assertFalse(self.person.distancing_enhanced)

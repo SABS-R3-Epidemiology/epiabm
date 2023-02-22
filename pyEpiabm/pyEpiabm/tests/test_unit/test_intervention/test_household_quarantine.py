@@ -29,7 +29,6 @@ class TestHouseholdQuarantine(TestPyEpiabm):
         params = pe.Parameters.instance().intervention_params[
             'household_quarantine']
         params['quarantine_house_compliant'] = 1.0
-        print(params)
         cls.householdquarantine = HouseholdQuarantine(
             population=cls.test_population, **params)
 
