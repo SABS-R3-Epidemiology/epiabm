@@ -78,9 +78,15 @@ class HouseholdInfection:
             Force of infection parameter of household
 
         """
+        carehome_scale_inf = 1
+        if infector.care_home_resident:
+            carehome_scale_inf = Parameters.instance()\
+                .carehome_params["carehome_resident_household_scaling"]
+        carehome_scale_susc = 1
+        if infectee.care_home_resident:
+            carehome_scale_susc = Parameters.instance()\
+                .carehome_params["carehome_resident_household_scaling"]
         seasonality = 1.0  # Not yet implemented
-        isolation = infector.microcell.cell.isolation_house_effectiveness \
-            if infector.isolation_start_time is not None else 1
         false_pos = 1 / (1 - Parameters.instance().
                          false_positive_rate)
         vacc_inf_drop = 1
@@ -95,8 +101,10 @@ class HouseholdInfection:
                           * seasonality * false_pos
                           * vacc_inf_drop
                           * pyEpiabm.core.Parameters.instance().
-                          household_transmission)
-
-        susceptibility = HouseholdInfection.household_susc(infector, infectee,
-                                                           time)
-        return (isolation * infectiousness * susceptibility)
+                          household_transmission
+                          * carehome_scale_inf)
+                          
+        susceptibility = (HouseholdInfection.household_susc(infector,
+                                                            infectee, time)
+                          * carehome_scale_susc)
+        return (infectiousness * susceptibility)

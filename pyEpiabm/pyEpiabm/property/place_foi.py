@@ -96,9 +96,14 @@ class PlaceInfection:
             Force of infection parameter of place
 
         """
-        isolation = infector.microcell.cell.isolation_effectiveness\
-            if infector.isolation_start_time is not None else 1
+
+        carehome_scale_susc = 1
+        if place.place_type.value == 5 and (infectee.key_worker
+                                            or infector.key_worker):
+            carehome_scale_susc = Parameters.instance()\
+                .carehome_params["carehome_worker_group_scaling"]
         infectiousness = PlaceInfection.place_inf(place, infector, time)
-        susceptibility = PlaceInfection.place_susc(place, infector, infectee,
-                                                   time)
-        return (isolation * infectiousness * susceptibility)
+        susceptibility = (PlaceInfection.place_susc(place, infector,
+                                                    infectee, time)
+                          * carehome_scale_susc)
+        return (infectiousness * susceptibility)
