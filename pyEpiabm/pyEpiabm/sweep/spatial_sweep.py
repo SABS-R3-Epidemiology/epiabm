@@ -70,11 +70,15 @@ class SpatialSweep(AbstractSweep):
             # for cell2 in poss_susc_cells:
             #     for microcell in cell2.microcells:
             #         for household in microcell.households:
-            #             possible_infectee_num += len(household.susceptible_persons)
+            #             possible_infectee_num +=
+            #                 len(household.susceptible_persons)
 
-            # possible_infectee_num = sum([sum([sum([len(household.susceptible_persons)
-            #                             for household in microcell.households])
-            #                             for microcell in cell2.microcells])
+            # possible_infectee_num = sum([sum([sum(
+            #                       [len(household.susceptible_persons)
+            #                             for household in
+            #                                   microcell.households])
+            #                             for microcell in
+            #                                   cell2.microcells])
             #                             for cell2 in poss_susc_cells])
             # for cell2 in poss_susc_cells:
             #     # print('hello')
@@ -163,7 +167,8 @@ class SpatialSweep(AbstractSweep):
             # print('Near:', infector_cell.nearest_neighbours)
             if cell2.id in infector_cell.nearest_neighbours.keys():
                 # print('Dist:', infector_cell.nearest_neighbours[cell2.id])
-                distance_weights.append(infector_cell.nearest_neighbours[cell2.id])
+                distance_weights.append(
+                    infector_cell.nearest_neighbours[cell2.id])
             else:
                 distance_weights.append(0)
 

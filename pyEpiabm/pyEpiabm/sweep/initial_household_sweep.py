@@ -421,7 +421,7 @@ class InitialHouseholdSweep(AbstractSweep):
         # if people are already in households (this check makes testing
         # this method easier)
         for cell in self._population.cells:
-        #    print('Marker 1')
+            # print('Marker 1')
             for microcell in cell.microcells:
                 if len(microcell.households) == 0:
                     self.household_allocation(self._population)

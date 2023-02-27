@@ -42,7 +42,8 @@ population = pe.routine.FilePopulationFactory.make_pop(file_loc,
 
 
 # Configure population with input data
-# pe.routine.ToyPopulationFactory.assign_cell_locations(population, method='grid')
+# pe.routine.ToyPopulationFactory.assign_cell_locations
+#   (population, method='grid')
 pe.routine.ToyPopulationFactory.add_places(population, 1)
 # pe.routine.FilePopulationFactory.print_population(population, file_loc)
 
@@ -62,7 +63,9 @@ file_params = {"output_file": "output.csv",
 sim = pe.routine.Simulation()
 sim.configure(
     population,
-    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep(), pe.sweep.InitialHouseholdSweep()],
+    [pe.sweep.InitialInfectedSweep(),
+     pe.sweep.InitialisePlaceSweep(),
+     pe.sweep.InitialHouseholdSweep()],
     [
         pe.sweep.UpdatePlaceSweep(),
         pe.sweep.HouseholdSweep(),
