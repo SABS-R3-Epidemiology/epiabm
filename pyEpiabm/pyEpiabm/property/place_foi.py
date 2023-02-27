@@ -74,7 +74,21 @@ class PlaceInfection:
             Susceptibility parameter of place
 
         """
-        return 1.0
+        place_susc = 1.0
+        if infector.microcell.distancing_start_time is not None:
+            if infector.distancing_enhanced is True:
+                distancing = Parameters.instance().\
+                             intervention_params[
+                             'social_distancing'][
+                             'distancing_place_enhanced_susc']
+            else:
+                distancing = Parameters.instance().\
+                             intervention_params[
+                             'social_distancing'][
+                             'distancing_place_susc']
+        else:
+            distancing = 1
+        return place_susc * distancing
 
     @staticmethod
     def place_foi(place, infector, infectee,
@@ -109,19 +123,6 @@ class PlaceInfection:
             if infector.quarantine_start_time is not None else 1
         infectiousness = (PlaceInfection.place_inf(place, infector, time)
                           * isolating * quarantine)
-        if infector.microcell.distancing_start_time is not None:
-            if infector.distancing_enhanced is True:
-                distancing = Parameters.instance().\
-                             intervention_params[
-                             'social_distancing'][
-                             'distancing_place_enhanced_susc']
-            else:
-                distancing = Parameters.instance().\
-                             intervention_params[
-                             'social_distancing'][
-                             'distancing_place_susc']
-        else:
-            distancing = 1
         susceptibility = (PlaceInfection.place_susc(place, infector, infectee,
-                          time) * quarantine * distancing)
+                          time) * quarantine)
         return (infectiousness * susceptibility)

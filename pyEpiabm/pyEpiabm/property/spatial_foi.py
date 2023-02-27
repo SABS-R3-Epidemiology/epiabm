@@ -96,11 +96,22 @@ class SpatialInfection:
             spatial_susc = pyEpiabm.core.Parameters.instance().\
                 age_contact[infectee.age_group]
 
-        if infector.microcell.closure_start_time is not None:
-            spatial_susc *= Parameters.instance().\
-                intervention_params['place_'
-                                    'closure']['closure_spatial_params']
-        return spatial_susc
+        closure_susc = Parameters.instance().\
+            intervention_params['place_closure']['closure_spatial_params'] \
+            if infector.microcell.closure_start_time is not None else 1
+
+        if infector.microcell.distancing_start_time is not None:
+            if infector.distancing_enhanced is True:
+                distancing_susc = Parameters.instance().\
+                    intervention_params['social_distancing'][
+                        'distancing_spatial_enhanced_susc']
+            else:
+                distancing_susc = Parameters.instance().\
+                    intervention_params['social_distancing'][
+                        'distancing_spatial_susc']
+        else:
+            distancing_susc = 1
+        return spatial_susc * closure_susc * distancing_susc
 
     @staticmethod
     def spatial_foi(inf_cell, susc_cell, infector,
@@ -136,19 +147,6 @@ class SpatialInfection:
             if infector.quarantine_start_time is not None else 1
         infectiousness = (SpatialInfection.spatial_inf(
             inf_cell, infector, time) * isolating * quarantine)
-        if infector.microcell.distancing_start_time is not None:
-            if infector.distancing_enhanced is True:
-                distancing = Parameters.instance().\
-                             intervention_params[
-                             'social_distancing'][
-                             'distancing_spatial_enhanced_susc']
-            else:
-                distancing = Parameters.instance().\
-                             intervention_params[
-                             'social_distancing'][
-                             'distancing_spatial_susc']
-        else:
-            distancing = 1
         susceptibility = (SpatialInfection.spatial_susc(
-            susc_cell, infector, infectee, time) * quarantine * distancing)
+            susc_cell, infector, infectee, time) * quarantine)
         return (infectiousness * susceptibility)

@@ -61,7 +61,22 @@ class HouseholdInfection:
             Susceptibility parameter of household
 
         """
-        return PersonalInfection.person_susc(infector, infectee, time)
+        if infector.microcell.distancing_start_time is not None:
+            if infector.distancing_enhanced is True:
+                distancing = Parameters.instance().\
+                             intervention_params[
+                             'social_distancing'][
+                             'distancing_house_enhanced_susc']
+            else:
+                distancing = Parameters.instance().\
+                             intervention_params[
+                             'social_distancing'][
+                             'distancing_house_susc']
+        else:
+            distancing = 1
+        household_susceptibility = PersonalInfection.person_susc(
+            infector, infectee, time) * distancing
+        return household_susceptibility
 
     @staticmethod
     def household_foi(infector, infectee, time: float):
@@ -99,19 +114,6 @@ class HouseholdInfection:
                           * pyEpiabm.core.Parameters.instance().
                           household_transmission
                           * isolating * quarantine)
-        if infector.microcell.distancing_start_time is not None:
-            if infector.distancing_enhanced is True:
-                distancing = Parameters.instance().\
-                             intervention_params[
-                             'social_distancing'][
-                             'distancing_house_enhanced_susc']
-            else:
-                distancing = Parameters.instance().\
-                             intervention_params[
-                             'social_distancing'][
-                             'distancing_house_susc']
-        else:
-            distancing = 1
         susceptibility = HouseholdInfection.household_susc(infector, infectee,
-                                                           time) * distancing
+                                                           time)
         return (infectiousness * susceptibility)

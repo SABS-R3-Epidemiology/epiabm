@@ -135,9 +135,8 @@ class TestSpatialInfection(TestPyEpiabm):
 
     def test_spatial_social_distancing(self):
         # Not in social distancing (distancing_start_time = None)
-        result = SpatialInfection.spatial_foi(
-            self.cell, self.cell,
-            self.infector, self.infectee, self.time)
+        result = SpatialInfection.spatial_susc(
+            self.cell, self.infector, self.infectee, self.time)
 
         # Normal social distancing
         self.infector.microcell.distancing_start_time = 1
@@ -145,9 +144,8 @@ class TestSpatialInfection(TestPyEpiabm):
         distancing_spatial_susc = pe.Parameters.instance().\
             intervention_params['social_distancing'][
                 'distancing_spatial_susc']
-        result_distancing = SpatialInfection.spatial_foi(
-            self.cell, self.cell,
-            self.infector, self.infectee, self.time)
+        result_distancing = SpatialInfection.spatial_susc(
+            self.cell, self.infector, self.infectee, self.time)
         self.assertEqual(result*distancing_spatial_susc,
                          result_distancing)
 
@@ -156,9 +154,8 @@ class TestSpatialInfection(TestPyEpiabm):
         distancing_spatial_enhanced_susc = pe.Parameters.instance().\
             intervention_params['social_distancing'][
                 'distancing_spatial_enhanced_susc']
-        result_distancing_enhanced = SpatialInfection.spatial_foi(
-            self.cell, self.cell,
-            self.infector, self.infectee, self.time)
+        result_distancing_enhanced = SpatialInfection.spatial_susc(
+            self.cell, self.infector, self.infectee, self.time)
         self.assertEqual(result*distancing_spatial_enhanced_susc,
                          result_distancing_enhanced)
 
