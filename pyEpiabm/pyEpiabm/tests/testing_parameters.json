@@ -537,7 +537,6 @@
             "case_threshold": 0,
             "distancing_delay": 0,
             "distancing_duration": 100,
-            "distancing_compliant": 1,
             "case_microcell_threshold": 1,
             "distancing_enhanced_prob": [0, 1, 1, 1, 1, 1, 1, 1,
             1, 1, 1, 1, 1, 1, 1, 1, 1],
