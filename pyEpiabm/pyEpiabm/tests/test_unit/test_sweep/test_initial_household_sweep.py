@@ -263,6 +263,8 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         val = test_sweep.calc_number_of_children(6)
         self.assertTrue(val == 1)
 
+        self.assertRaises(ValueError, test_sweep.calc_number_of_children, 2)
+
     @mock.patch(
         'pyEpiabm.sweep.InitialHouseholdSweep.calc_number_of_children')
     def test_three_plus_person_household_ages_no_children(self,
@@ -367,22 +369,6 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         test_sweep.age_proportions = Parameters.instance().age_proportions
         test_sweep.age_group_width = 5
 
-    def test_household_allocation_in_call(self):
-        """Tests that the household allocation method
-        is called correctly within the call method.
-        """
-
-        test_sweep = pe.sweep.InitialHouseholdSweep()
-        test_sweep.bind_population(self.test_population)
-        microcell = self.test_population.cells[0].microcells[0]
-        microcell.households.clear()
-        params = {}
-        test_sweep(params)
-        for cell in self.test_population.cells:
-            for microcell in cell.microcells:
-                for household in microcell.households:
-                    self.assertNotEqual(0, len(household.persons))
-
     def test_call(self):
         """Tests the main function of the assign household ages
         sweep. People are put into households of different sizes, each
@@ -410,6 +396,18 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
             self.assertTrue(0 <= person.age <= 100)
         for person in microcell.households[2].persons:
             self.assertTrue(0 <= person.age <= 100)
+
+    def test_error(self):
+        """Tests the check that households have already been created
+        before this function is called.
+        """
+
+        # Set up population and put people in households
+        test_sweep = pe.sweep.InitialHouseholdSweep()
+        test_sweep.bind_population(self.test_population)
+
+        params = {}
+        self.assertRaises(ValueError, test_sweep, params)
 
 
 if __name__ == "__main__":

@@ -132,6 +132,8 @@ class TestPopConfig(TestPyEpiabm):
         self.df['household_number'] = pd.Series([2, 3])
         mock_read.return_value = self.df
 
+        pe.Parameters.instance().household_size_distribution = []
+
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
 
         total_people = 0
