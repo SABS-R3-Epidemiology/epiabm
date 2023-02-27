@@ -241,6 +241,10 @@ class InitialHouseholdSweep(AbstractSweep):
 
         n = household_size
 
+        if n < 3:
+            raise ValueError("Household must be greater than 3 people for " +
+                             "calc_number_of_children to be called")
+
         # Calculate number of children in a 3 person household
         if n == 3:
             if ((self.age_params["zero_child_three_pers_prob"] > 0) or
@@ -415,14 +419,10 @@ class InitialHouseholdSweep(AbstractSweep):
         them an age dependant on their household size.
         """
 
-        # Call method to put people into households and check to see
-        # if people are already in households (this check makes testing
-        # this method easier)
-        for cell in self._population.cells:
-            for microcell in cell.microcells:
-                if len(microcell.households) == 0:
-                    self.household_allocation(self._population)
-                    break
+        if all([len(microcell.households) == 0
+                for cell in self._population.cells
+                for microcell in cell.microcells]):
+            raise ValueError("Cannot find any microcells with households")
 
         # If ages need to be set call method to assign
         # ages of people in households
@@ -432,7 +432,10 @@ class InitialHouseholdSweep(AbstractSweep):
                 for microcell in cell.microcells:
                     microcell.compartment_counter.clear_counter()
                     for household in microcell.households:
-                        if len(household.persons) == 1:
+                        if len(household.persons) == 0:
+                            continue
+
+                        elif len(household.persons) == 1:
                             self.one_person_household_age(household.persons[0])
 
                         elif len(household.persons) == 2:

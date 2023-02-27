@@ -9,9 +9,9 @@ import copy
 import logging
 from packaging import version
 
-from pyEpiabm.core import Cell, Household, Microcell, Person, Population
+from pyEpiabm.core import Cell, Microcell, Person, Population, Parameters
 from pyEpiabm.property import InfectionStatus, PlaceType
-from pyEpiabm.sweep import HostProgressionSweep
+from pyEpiabm.sweep import HostProgressionSweep, InitialHouseholdSweep
 from pyEpiabm.utility import log_exceptions
 
 
@@ -114,16 +114,21 @@ class FilePopulationFactory:
                             HostProgressionSweep.set_infectiousness(person,
                                                                     time)
 
-            # Add households and places to microcell
-            if ('household_number' in line) and (line["household_number"]) > 0:
-                households = int(line["household_number"])
-                FilePopulationFactory.add_households(new_microcell,
-                                                     households)
+            # Add places to microcell
+            if Parameters.instance().household_size_distribution == []:
+                if (('household_number' in line) and
+                        (line["household_number"]) > 0):
+                    households = int(line["household_number"])
+                    FilePopulationFactory.add_households(new_microcell,
+                                                         households)
 
             if ('place_number' in line) and (line["place_number"]) > 0:
                 new_microcell.add_place(int(line["place_number"]),
                                         cell.location,
                                         random.choice(list(PlaceType)))
+
+        if Parameters.instance().household_size_distribution != []:
+            InitialHouseholdSweep().household_allocation(new_pop)
 
         # Verify all people are logged in cell
         for cell in new_pop.cells:
@@ -178,15 +183,9 @@ class FilePopulationFactory:
         people_number = len(microcell.persons)
         household_split = np.random.multinomial(people_number, q,
                                                 size=1)[0]
-        person_index = 0
         for j in range(household_number):
             people_in_household = household_split[j]
-            new_household = Household(microcell,
-                                      loc=microcell.location)
-            for _ in range(people_in_household):
-                person = microcell.persons[person_index]
-                new_household.add_person(person)
-                person_index += 1
+            microcell.add_household(people_in_household)
 
     @staticmethod
     @log_exceptions()
