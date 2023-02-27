@@ -99,6 +99,7 @@ class TestPlaceInfection(TestPyEpiabm):
         # Not in social distancing (distancing_start_time = None)
         result = PlaceInfection.place_susc(self.place, self.infector,
                                            self.infectee, self.time)
+        place_idx = self.place.place_type.value - 1
 
         # Normal social distancing
         self.infector.microcell.distancing_start_time = 1
@@ -108,7 +109,7 @@ class TestPlaceInfection(TestPyEpiabm):
                 'distancing_place_susc']
         result_distancing = PlaceInfection.place_susc(
             self.place, self.infector, self.infectee, self.time)
-        self.assertEqual(result*distancing_place_susc,
+        self.assertEqual(result*distancing_place_susc[place_idx],
                          result_distancing)
         # Enhanced social distancing
         self.infector.distancing_enhanced = True
@@ -117,7 +118,7 @@ class TestPlaceInfection(TestPyEpiabm):
                 'distancing_place_enhanced_susc']
         result_distancing_enhanced = PlaceInfection.place_susc(
             self.place, self.infector, self.infectee, self.time)
-        self.assertEqual(result*distancing_place_enhanced_susc,
+        self.assertEqual(result*distancing_place_enhanced_susc[place_idx],
                          result_distancing_enhanced)
 
 

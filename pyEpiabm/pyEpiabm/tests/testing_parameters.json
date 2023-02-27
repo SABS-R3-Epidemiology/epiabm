@@ -541,10 +541,10 @@
             "distancing_enhanced_prob": [0, 1, 1, 1, 1, 1, 1, 1,
             1, 1, 1, 1, 1, 1, 1, 1, 1],
             "distancing_house_enhanced_susc": 0.5,
-            "distancing_place_enhanced_susc": 0.5,
+            "distancing_place_enhanced_susc": [0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
             "distancing_spatial_enhanced_susc": 0.5,
             "distancing_house_susc": 0.8,
-            "distancing_place_susc": 0.8,
+            "distancing_place_susc": [0.8, 0.8, 0.8, 0.8, 0.8, 0.8],
             "distancing_spatial_susc": 0.8
         }
     }

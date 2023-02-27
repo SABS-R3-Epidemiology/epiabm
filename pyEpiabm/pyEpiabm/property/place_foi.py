@@ -75,17 +75,18 @@ class PlaceInfection:
 
         """
         place_susc = 1.0
+        place_idx = place.place_type.value - 1
         if infector.microcell.distancing_start_time is not None:
             if infector.distancing_enhanced is True:
                 distancing = Parameters.instance().\
                              intervention_params[
                              'social_distancing'][
-                             'distancing_place_enhanced_susc']
+                             'distancing_place_enhanced_susc'][place_idx]
             else:
                 distancing = Parameters.instance().\
                              intervention_params[
                              'social_distancing'][
-                             'distancing_place_susc']
+                             'distancing_place_susc'][place_idx]
         else:
             distancing = 1
         return place_susc * distancing
