@@ -1,5 +1,5 @@
 #
-# Social distancing Class
+# Social Distancing Intervention
 #
 
 import random
