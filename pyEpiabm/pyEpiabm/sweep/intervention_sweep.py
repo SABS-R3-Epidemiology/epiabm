@@ -24,7 +24,7 @@ class InterventionSweep(AbstractSweep):
     def __init__(self):
         """Call in variables from the parameters file and set flags.
         """
-        self.interventions = []
+        self.interventions = {}
         self.intervention_params = Parameters.instance().intervention_params
 
     def bind_population(self, population):
@@ -34,8 +34,8 @@ class InterventionSweep(AbstractSweep):
                              'household_quarantine': HouseholdQuarantine}
         for intervention in self.intervention_params.keys():
             params = self.intervention_params[intervention]
-            self.interventions.append(intervention_dict[intervention](
-                                      population=self._population, **params))
+            self.interventions[(intervention_dict[intervention](
+                population=self._population, **params))] = False
 
     def __call__(self, time):
         """
@@ -46,7 +46,7 @@ class InterventionSweep(AbstractSweep):
         time : float
             Simulation time
         """
-        for intervention in self.interventions:
+        for intervention in self.interventions.keys():
             # TODO:
             # - Include an alternative way of case-count.
             #   Idealy this will be a global parameter that we can plot
@@ -57,3 +57,10 @@ class InterventionSweep(AbstractSweep):
                             self._population.cells))
             if intervention.is_active(time, num_cases):
                 intervention(time)
+                if self.interventions[intervention] is False:
+                    self.interventions[intervention] = True
+
+            elif self.interventions[intervention] is True:
+                # turn off intervention
+                self.interventions[intervention] = False
+                intervention.turn_off(time)

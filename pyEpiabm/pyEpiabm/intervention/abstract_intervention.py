@@ -44,6 +44,7 @@ class AbstractIntervention:
             Whether the intervention is currently active
 
         """
+
         return (
             self.start_time <= time and
             self.start_time + self.policy_duration >= time and
@@ -52,6 +53,17 @@ class AbstractIntervention:
 
     def __call__(self, time: float):
         """Run intervention.
+
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+
+        """
+        raise NotImplementedError
+
+    def __turn_off__(self, time: float):
+        """Turn off intervention after intervention stops being active.
 
         Parameters
         ----------
