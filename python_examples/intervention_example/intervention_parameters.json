@@ -513,7 +513,6 @@
             "closure_duration": 100,
             "closure_household_infectiousness": 5,
             "closure_spatial_params": 0.5,
-            "icu_microcell_threshold": 0,
             "case_microcell_threshold":0
         },
         "household_quarantine": {

@@ -32,7 +32,6 @@ class TestPlaceClosure(TestPyEpiabm):
         self.assertEqual(self.placeclosure.case_threshold, 0)
         self.assertEqual(self.placeclosure.closure_delay, 0)
         self.assertEqual(self.placeclosure.closure_duration, 100)
-        self.assertEqual(self.placeclosure.icu_microcell_threshold, 1)
         self.assertEqual(self.placeclosure.case_microcell_threshold, 1)
 
     def test___call__(self):

@@ -15,14 +15,12 @@ class PlaceClosure(AbstractIntervention):
         self,
         closure_duration,
         closure_delay,
-        icu_microcell_threshold,
         case_microcell_threshold,
         population,
         **kwargs
     ):
         self.closure_duration = closure_duration
         self.closure_delay = closure_delay
-        self.icu_microcell_threshold = icu_microcell_threshold
         self.case_microcell_threshold = case_microcell_threshold
         super(PlaceClosure, self).__init__(population=population,
                                            **kwargs)
@@ -37,9 +35,7 @@ class PlaceClosure(AbstractIntervention):
                         microcell.closure_start_time = None
 
                 else:
-                    if (microcell.count_icu() >= self.
-                        icu_microcell_threshold) or \
-                            (microcell.count_infectious() >= self.
-                                case_microcell_threshold):
+                    if (microcell.count_infectious() >= self.
+                            case_microcell_threshold):
                         microcell.closure_start_time = time + self.\
                                                         closure_delay
