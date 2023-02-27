@@ -5,7 +5,8 @@
 import random
 
 from pyEpiabm.core import Parameters
-from pyEpiabm.intervention import AbstractIntervention
+
+from .abstract_intervention import AbstractIntervention
 
 
 class SocialDistancing(AbstractIntervention):
