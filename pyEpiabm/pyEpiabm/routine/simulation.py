@@ -27,7 +27,6 @@ class Simulation:
         self.writers = []
 
     @log_exceptions()
-#    @profile
     def configure(self,
                   population: Population,
                   initial_sweeps: typing.List[AbstractSweep],
@@ -118,7 +117,6 @@ class Simulation:
             output_titles)
 
     @log_exceptions()
-#    @profile
     def run_sweeps(self):
         """Iteration step of the simulation. First the initialisation sweeps
         configure the population on the first timestep. Then at each
@@ -151,7 +149,6 @@ class Simulation:
 
         logging.info(f"Final time {t} days reached")
 
-#    @profile
     def write_to_file(self, time):
         """Records the count number of a given list of infection statuses
         and writes these to file.

@@ -17,7 +17,6 @@ class HouseholdSweep(AbstractSweep):
     exposed person is added to an infection queue.
 
     """
-#    @profile
     def __call__(self, time: float):
         """Given a population structure, loops over infected members
         and considers whether they infected household members based
