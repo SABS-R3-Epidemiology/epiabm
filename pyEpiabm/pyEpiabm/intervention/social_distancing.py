@@ -12,7 +12,12 @@ from .abstract_intervention import AbstractIntervention
 class SocialDistancing(AbstractIntervention):
     """Social distancing intervention
     Social distancing is based on the number of infecious persons in their
-    microcells and stop distancing people after their distancing period.
+    microcells and their individual compliance. The intensity of
+    distancing is affected by the age group (with probability to take
+    enhanced social distancing). Social distancing is stopped after
+    people's distancing period. Detailed description of parameters is given
+    in github wiki:
+    https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions.
     """
 
     def __init__(

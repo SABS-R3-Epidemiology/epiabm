@@ -31,6 +31,7 @@ class TestSocialDistancing(TestPyEpiabm):
                                                 **params)
 
     def test__init__(self):
+        # Test the parameter values from params file (testing_parameters.json)
         self.assertEqual(self.socialdistancing.start_time, 6)
         self.assertEqual(self.socialdistancing.policy_duration, 365)
         self.assertEqual(self.socialdistancing.case_threshold, 0)
