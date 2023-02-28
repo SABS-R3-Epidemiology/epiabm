@@ -121,6 +121,7 @@ class SpatialSweep(AbstractSweep):
         cutoff = Parameters.instance().infection_radius
         # Will catch the case if distance weights isn't configured
         # correctly and returns the wrong length.
+        print('cutoff in function', cutoff)
         for cell2 in possible_infectee_cells:
             if cell2.id in infector_cell.nearest_neighbours.keys():
                 distance_weights.append(
@@ -143,6 +144,7 @@ class SpatialSweep(AbstractSweep):
                               + f" within radius {cutoff} of"
                               + f" cell {infector_cell.id} at location"
                               + f" {infector_cell.location} - skipping cell.")
+            print('infectee list', infectee_list)
             # This returns an empty list so no infection events tested.
             return infectee_list
 
@@ -152,6 +154,7 @@ class SpatialSweep(AbstractSweep):
             # Sample at random from the infectee cell to find
             # an infectee
             infectee_list.append(random.sample(infectee_cell.persons, 1)[0])
+        print('infectee list', infectee_list)
         return infectee_list
 
     def find_infectees_Covidsim(self, infector: Person,
@@ -262,8 +265,10 @@ class SpatialSweep(AbstractSweep):
             distance = DistanceFunctions.dist(cell.location, cell2.location)
             if distance < cutoff:
                 cell.nearest_neighbours[cell2.id] = distance
+                # print('True nearest neighbours', cell.nearest_neighbours)
 
     def bind_population(self, population):
         super().bind_population(population)
         for cell in population.cells:
-            self.near_neighbour(cell, population.cells)
+            other_cells = [x for x in population.cells if x != cell]
+            self.near_neighbour(cell, other_cells)
