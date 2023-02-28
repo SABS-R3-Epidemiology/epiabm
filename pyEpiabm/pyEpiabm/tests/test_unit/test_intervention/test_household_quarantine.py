@@ -23,9 +23,11 @@ class TestHouseholdQuarantine(TestPyEpiabm):
         cls.sympt_person = cls.test_population.cells[0].microcells[
             0].persons[0]
         cls.sympt_person.update_status(InfectionStatus.InfectMild)
-        cls.susc_person1 = cls.test_population.cells[0].microcells[0].persons[1]
+        cls.susc_person1 = \
+            cls.test_population.cells[0].microcells[0].persons[1]
         cls.susc_person1.update_status(InfectionStatus.Susceptible)
-        cls.susc_person2 = cls.test_population.cells[0].microcells[0].persons[2]
+        cls.susc_person2 = \
+            cls.test_population.cells[0].microcells[0].persons[2]
         cls.susc_person2.update_status(InfectionStatus.Susceptible)
 
         params = pe.Parameters.instance().intervention_params[
@@ -57,6 +59,7 @@ class TestHouseholdQuarantine(TestPyEpiabm):
         self.susc_person2.update_status(InfectionStatus.InfectMild)
         self.susc_person2.isolation_start_time = 6
         self.householdquarantine(time=6)
+        self.assertIsNone(self.sympt_person.quarantine_start_time)
         self.assertEqual(self.susc_person1.quarantine_start_time, 7)
 
         # End quarantine
