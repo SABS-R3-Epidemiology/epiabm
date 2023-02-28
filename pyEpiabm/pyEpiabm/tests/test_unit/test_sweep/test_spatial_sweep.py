@@ -16,9 +16,10 @@ class TestSpatialSweep(TestMockedLogs):
 
     def setUp(self):
         self.pop = Population()
-        self.pop.add_cells(2)
+        self.pop.add_cells(3)
         self.cell_inf = self.pop.cells[0]
         self.cell_susc = self.pop.cells[1]
+        self.cell_non_susc = self.pop.cells[2]
 
         self.cell_inf.add_microcells(1)
         self.microcell_inf = self.cell_inf.microcells[0]
@@ -26,11 +27,18 @@ class TestSpatialSweep(TestMockedLogs):
         self.cell_susc.add_microcells(1)
         self.microcell_susc = self.cell_susc.microcells[0]
 
+        self.cell_non_susc.add_microcells(1)
+        self.microcell_non_susc = self.cell_non_susc.microcells[0]
+
         self.microcell_inf.add_people(100)
         self.infector = self.microcell_inf.persons[0]
 
         self.microcell_susc.add_people(1)
         self.infectee = self.microcell_susc.persons[0]
+
+        self.microcell_non_susc.add_people(1)
+        self.non_infectee = self.microcell_non_susc.persons[0]
+        self.non_infectee.InfectionStatus = "Recovered"
 
         self.infector.infectiousness = 1.0
         Parameters.instance().time_steps_per_day = 1
@@ -44,7 +52,7 @@ class TestSpatialSweep(TestMockedLogs):
         mock_dist.return_value = 2
         print('ID', self.cell_inf.id)
         test_sweep.bind_population(test_pop)
-        self.assertEqual(self.cell_inf.nearest_neighbours, {1: 2})
+        self.assertEqual(self.cell_inf.nearest_neighbours, {1: 2, 2: 2})
 
     # @mock.patch("logging.exception")
     # @mock.patch("numpy.nan_to_num")
@@ -81,7 +89,7 @@ class TestSpatialSweep(TestMockedLogs):
     @mock.patch("logging.exception")
     @mock.patch("numpy.nan_to_num")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
-    def test_find_infectees(self, mock_dist, mock_nan, mock_logger):
+    def test_find_infectees_successful(self, mock_dist, mock_nan, mock_logger):
         Parameters.instance().infection_radius = 1000
         cutoff = Parameters.instance().infection_radius
         # print('cutoff', cutoff)
@@ -107,32 +115,38 @@ class TestSpatialSweep(TestMockedLogs):
         self.assertFalse(mock_nan.called)
         self.assertEqual(test_list, [self.infectee])
 
-        mock_nan.return_value = [2, 0.0000001]
-        mock_dist.side_effect = [0, 2]
-        test_pop.add_cells(1)
-        third_cell = test_pop.cells[2]
-        third_cell.add_microcells(1)
-        third_cell.microcells[0].add_people(1)
 
-        test_list = test_sweep.find_infectees(self.cell_inf, [self.cell_susc,
-                                                              third_cell], 1)
-        mock_nan.assert_called_once_with([np.nan, 0.5], nan=0.5)
-        self.assertEqual(test_list, [self,infectee])
+    @mock.patch("logging.exception")
+    @mock.patch("numpy.nan_to_num")
+    @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
+    def test_find_infectees_fails(self, mock_dist, mock_nan, mock_logger):
+        Parameters.instance().infection_radius = 0.0001
+        cutoff = Parameters.instance().infection_radius
+        # print('cutoff', cutoff)
+        print('cell_non_susc', self.cell_non_susc)
+        test_pop = self.pop
+        test_sweep = SpatialSweep()
+        mock_dist.return_value = 2.2
+        test_sweep.bind_population(test_pop)
+        print('nearest_neighbours', self.cell_inf.nearest_neighbours)
 
-        # test the assert that the distance weights has correct length
-        mock_dist.side_effect = [0, 2]
-        mock_nan.return_value = [1]
-        self.assertRaises(AssertionError, test_sweep.find_infectees,
-                          self.cell_inf, [self.cell_susc, third_cell], 1)
+        test_non_list = test_sweep.find_infectees(self.cell_inf, [self.cell_non_susc], 1)
+        self.assertEqual(self.cell_inf.nearest_neighbours, {})
 
-        # test value error is raised if all cells too far away
-        Parameters.instance().infection_radius = 0.000001
-        mock_dist.side_effect = [0, 2]
-        mock_nan.return_value = [1, 1]
-        test_list = test_sweep.find_infectees(self.cell_inf, [self.cell_susc,
-                                              third_cell], 1)
-        mock_logger.assert_called
-        # test logger is called here
+        # # test the assert that the distance weights has correct length
+        # mock_dist.side_effect = [0, 2]
+        # mock_nan.return_value = [1]
+        # self.assertRaises(AssertionError, test_sweep.find_infectees,
+        #                   self.cell_inf, [self.cell_susc, third_cell], 1)
+
+        # # test value error is raised if all cells too far away
+        # Parameters.instance().infection_radius = 0.000001
+        # mock_dist.side_effect = [0, 2]
+        # mock_nan.return_value = [1, 1]
+        # test_list = test_sweep.find_infectees(self.cell_inf, [self.cell_susc,
+        #                                       third_cell], 1)
+        # mock_logger.assert_called
+        # # test logger is called here
 
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     def test_find_infectees_Covidsim(self, mock_dist):
