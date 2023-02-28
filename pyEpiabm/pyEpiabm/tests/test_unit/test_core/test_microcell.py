@@ -1,4 +1,5 @@
 import unittest
+from unittest import mock
 
 import pyEpiabm as pe
 from pyEpiabm.property import PlaceType, InfectionStatus
@@ -67,12 +68,17 @@ class TestMicrocell(TestPyEpiabm):
         self.cell.add_microcells(n)
         self.assertEqual(len(self.cell.microcells), n)
     
-    def add_household(self):
+    def test_add_household(self):
         self.microcell.add_people(1)
         self.microcell.add_household(self.microcell.persons)
         self.assertEqual(len(self.microcell.households), 1)
         household = self.microcell.households[0]
         self.assertEqual(len(household.persons), 1)
+    
+    @mock.patch('logging.info')
+    def test_logging(self, mock_log):
+        self.microcell.add_household(self.microcell.persons)
+        mock_log.assert_called_once()
 
     def test_report(self):
         self.microcell.add_people(5)
