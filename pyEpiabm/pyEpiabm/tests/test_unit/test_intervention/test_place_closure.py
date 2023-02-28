@@ -11,8 +11,8 @@ class TestPlaceClosure(TestPyEpiabm):
     """
     @classmethod
     def setUpClass(cls) -> None:
-        """Intialise a population with one infector and one
-        infectee, both in the same place and household.
+        """Intialise a population with one cell and one microcell with
+        one infector.
         """
         super(TestPlaceClosure, cls).setUpClass()  # Sets up parameters
         cls.time = 1
@@ -20,9 +20,8 @@ class TestPlaceClosure(TestPyEpiabm):
         cls._population.add_cells(1)
         cls._population.cells[0].add_microcells(1)
         cls._microcell = cls._population.cells[0].microcells[0]
-        cls._microcell.add_people(2)
-        for person in cls._microcell.persons:
-            person.update_status(InfectionStatus(7))
+        cls._microcell.add_people(1)
+        cls._microcell.persons[0].update_status(InfectionStatus(7))
 
         params = pe.Parameters.instance().intervention_params['place_closure']
         cls.placeclosure = PlaceClosure(population=cls._population, **params)
@@ -45,7 +44,7 @@ class TestPlaceClosure(TestPyEpiabm):
 
     def test__turn_off__(self):
         self._microcell.closure_start_time = 370
-        self.placeclosure.__turn_off__(time=371)
+        self.placeclosure.__turn_off__()
         self.assertIsNone(self._microcell.closure_start_time)
 
 

@@ -58,7 +58,7 @@ class TestHouseholdQuarantine(TestPyEpiabm):
 
     def test__turn_off__(self):
         self.sympt_person.quarantine_start_time = 370
-        self.householdquarantine.__turn_off__(time=371)
+        self.householdquarantine.__turn_off__()
         self.assertIsNone(self.sympt_person.quarantine_start_time)
 
 

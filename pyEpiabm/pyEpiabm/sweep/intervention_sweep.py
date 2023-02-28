@@ -63,4 +63,4 @@ class InterventionSweep(AbstractSweep):
             elif self.interventions[intervention] is True:
                 # turn off intervention
                 self.interventions[intervention] = False
-                intervention.turn_off(time)
+                intervention.__turn_off__()

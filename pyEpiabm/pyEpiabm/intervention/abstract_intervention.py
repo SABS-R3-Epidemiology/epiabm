@@ -62,13 +62,7 @@ class AbstractIntervention:
         """
         raise NotImplementedError
 
-    def __turn_off__(self, time: float):
+    def __turn_off__(self):
         """Turn off intervention after intervention stops being active.
-
-        Parameters
-        ----------
-        time : float
-            Current simulation time
-
         """
         raise NotImplementedError

@@ -39,6 +39,16 @@ class TestInterventionSweep(TestPyEpiabm):
         self.assertIsNotNone(self.interventionsweep._population.cells[0].
                              microcells[0].closure_start_time)
 
+    def test__turn_of__(self):
+        # Isolate the InfectMild individual
+        inf_person = self._population.cells[0].microcells[0].persons[3]
+        inf_person.isolation_start_time = 370
+        self.assertIsNotNone(inf_person.isolation_start_time)
+
+        # stop isolating after start_time + policy_duration
+        self.interventionsweep(time=372)
+        self.assertIsNone(inf_person.isolation_start_time)
+
 
 if __name__ == '__main__':
     unittest.main()

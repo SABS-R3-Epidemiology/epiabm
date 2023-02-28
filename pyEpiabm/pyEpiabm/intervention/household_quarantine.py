@@ -54,7 +54,7 @@ class HouseholdQuarantine(AbstractIntervention):
                                     household_person.quarantine_start_time = \
                                         time + self.quarantine_delay
 
-    def __turn_off__(self, time: float):
+    def __turn_off__(self):
         for cell in self._population.cells:
             for person in cell.persons:
                 if person.quarantine_start_time is not None:

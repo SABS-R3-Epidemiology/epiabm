@@ -44,7 +44,7 @@ class CaseIsolation(AbstractIntervention):
                             person.isolation_start_time = time + self.\
                                                           isolation_delay
 
-    def __turn_off__(self, time: float):
+    def __turn_off__(self):
         for cell in self._population.cells:
             for person in cell.persons:
                 if person.isolation_start_time is not None:

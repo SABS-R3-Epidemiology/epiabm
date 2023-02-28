@@ -44,7 +44,7 @@ class PlaceClosure(AbstractIntervention):
                         microcell.closure_start_time = time + self.\
                                                         closure_delay
 
-    def __turn_off__(self, time: float):
+    def __turn_off__(self):
         for cell in self._population.cells:
             for microcell in cell.microcells:
                 if microcell.closure_start_time is not None:
