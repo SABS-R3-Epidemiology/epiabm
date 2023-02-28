@@ -9,9 +9,10 @@ from pyEpiabm.intervention import AbstractIntervention
 
 class HouseholdQuarantine(AbstractIntervention):
     """Household/Home quarantine intervention
-    People who share household with a symptomatic case stay home based on
-    the household and individual compliance, if intervention is active.
-    Quarantine stops after the quarantine period.
+    People who share household with a symptomatic case (who case isolates)
+    stay home based on the household and individual compliance, if
+    intervention is active. Quarantine stops after the quarantine period
+    or after the end of the policy.
     """
 
     def __init__(
@@ -48,11 +49,14 @@ class HouseholdQuarantine(AbstractIntervention):
                         r_house = random.random()
                         if r_house < self.quarantine_house_compliant:
                             for household_person in person.household.persons:
-                                r_indiv = random.random()
-                                if r_indiv < self.\
-                                   quarantine_individual_compliant:
-                                    household_person.quarantine_start_time = \
-                                        time + self.quarantine_delay
+                                if not household_person.is_symptomatic():
+                                    # symptomatic individuals case isolate
+                                    r_indiv = random.random()
+                                    if r_indiv < \
+                                       self.quarantine_individual_compliant:
+                                        household_person.\
+                                            quarantine_start_time = \
+                                            time + self.quarantine_delay
 
     def __turn_off__(self):
         for cell in self._population.cells:

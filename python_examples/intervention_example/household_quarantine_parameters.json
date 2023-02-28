@@ -495,6 +495,16 @@
         "prop_other_parent_away": 0.0
     },
     "intervention_params": {
+        "case_isolation": {
+            "start_time": 6,
+            "policy_duration": 365,
+            "case_threshold": 0,
+            "isolation_delay": 0,
+            "isolation_duration": 10,
+            "isolation_probability": 1,
+            "isolation_effectiveness": 0.1,
+            "isolation_house_effectiveness": 0.2
+        },
         "household_quarantine": {
             "start_time": 6,
             "policy_duration": 365,

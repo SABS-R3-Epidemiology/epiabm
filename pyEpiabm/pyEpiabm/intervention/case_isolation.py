@@ -10,7 +10,8 @@ from pyEpiabm.intervention import AbstractIntervention
 class CaseIsolation(AbstractIntervention):
     """Case isolation intervention
     Isolate symptomatic individual based on the isolation_probability
-    and stop isolating isolated individuals after their isolation period.
+    and stop isolating isolated individuals after their isolation period
+    or after the end of the policy.
     """
 
     def __init__(

@@ -29,7 +29,6 @@ class TestHouseholdQuarantine(TestPyEpiabm):
         params = pe.Parameters.instance().intervention_params[
             'household_quarantine']
         params['quarantine_house_compliant'] = 1.0
-        print(params)
         cls.householdquarantine = HouseholdQuarantine(
             population=cls.test_population, **params)
 
@@ -45,9 +44,10 @@ class TestHouseholdQuarantine(TestPyEpiabm):
                          quarantine_individual_compliant, 1.0)
 
     def test___call__(self):
-        # Both in quarantine as one symptomatic and 100% compliance
+        # Susceptible person in quarantine (100% compliant),
+        # symptomatic in isolation (100% probability)
         self.householdquarantine(time=3)
-        self.assertIsNotNone(self.sympt_person.quarantine_start_time)
+        self.assertIsNone(self.sympt_person.quarantine_start_time)
         self.assertIsNotNone(self.susc_person.quarantine_start_time)
 
         # End quarantine

@@ -15,14 +15,18 @@ class TestInterventionSweep(TestPyEpiabm):
         super(TestInterventionSweep, cls).setUpClass()
         cls.interventionsweep = InterventionSweep()
 
-        # Construct a population with 8 persons
-        cls.pop_factory = pe.routine.ToyPopulationFactory()
-        cls.pop_params = {"population_size": 8, "cell_number": 1,
-                          "microcell_number": 1, "household_number": 1}
-        cls._population = cls.pop_factory.make_pop(cls.pop_params)
-        for i in range(8):
-            person = cls._population.cells[0].microcells[0].persons[i]
-            person.update_status(InfectionStatus(i + 1))
+        # Construct a population with 2 persons, one infector and one infectee
+        cls._population = pe.Population()
+        cls._population.add_cells(1)
+        cls._population.cells[0].add_microcells(1)
+        cls._microcell = cls._population.cells[0].microcells[0]
+        cls._microcell.add_people(2)
+        cls._microcell.add_household(cls._microcell.persons)
+        cls.person_susc = cls._population.cells[0].microcells[0].persons[0]
+        cls.person_susc.update_status(InfectionStatus(1))
+        cls.person_symp = cls._population.cells[0].microcells[0].persons[1]
+        cls.person_symp.update_status(InfectionStatus(4))
+
         cls.interventionsweep.bind_population(cls._population)
 
     def test_bind_population(self):
@@ -39,15 +43,20 @@ class TestInterventionSweep(TestPyEpiabm):
         self.assertIsNotNone(self.interventionsweep._population.cells[0].
                              microcells[0].closure_start_time)
 
+        # infector in case isolation, infectee in quarantine as
+        # 100% probability and compliance
+        self.interventionsweep(time=10)
+        self.assertIsNotNone(self.person_symp.isolation_start_time)
+        self.assertIsNotNone(self.person_susc.quarantine_start_time)
+
     def test__turn_of__(self):
         # Isolate the InfectMild individual
-        inf_person = self._population.cells[0].microcells[0].persons[3]
-        inf_person.isolation_start_time = 370
-        self.assertIsNotNone(inf_person.isolation_start_time)
+        self.person_symp.isolation_start_time = 370
+        self.assertIsNotNone(self.person_symp.isolation_start_time)
 
         # stop isolating after start_time + policy_duration
         self.interventionsweep(time=372)
-        self.assertIsNone(inf_person.isolation_start_time)
+        self.assertIsNone(self.person_symp.isolation_start_time)
 
 
 if __name__ == '__main__':
