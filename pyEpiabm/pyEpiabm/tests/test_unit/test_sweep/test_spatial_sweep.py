@@ -191,39 +191,39 @@ class TestSpatialSweep(TestMockedLogs):
 
         # Add in another cell with a susceptible, but still
         # no infectors so no infection events.
-        test_pop.add_cells(1)
-        cell_susc = test_pop.cells[1]
-        cell_susc.add_microcells(1)
-        microcell_susc = cell_susc.microcells[0]
-        microcell_susc.add_people(1)
-        infectee = microcell_susc.persons[0]
-        mock_inf_list.return_value = [infectee]
-        mock_list_covid.return_value = [infectee]
+        # test_pop.add_cells(1)
+        # cell_susc = test_pop.cells[1]
+        # cell_susc.add_microcells(1)
+        # microcell_susc = cell_susc.microcells[0]
+        # microcell_susc.add_people(1)
+        # infectee = microcell_susc.persons[0]
+        mock_inf_list.return_value = [self.infectee]
+        mock_list_covid.return_value = [self.infectee]
 
         test_sweep(time)
-        self.assertTrue(cell_susc.person_queue.empty())
+        self.assertTrue(self.cell_susc.person_queue.empty())
 
         # Change infector's status to infected
         self.infector.update_status(InfectionStatus.InfectMild)
         test_sweep(time)
-        self.assertEqual(cell_susc.person_queue.qsize(), 1)
+        self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
         Parameters.instance().do_CovidSim = True
-        cell_susc.person_queue = Queue()
+        self.cell_susc.person_queue = Queue()
         test_sweep(time)
-        self.assertEqual(cell_susc.person_queue.qsize(), 1)
+        self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
 
         # Check when we have an infector but no infectees
-        infectee.update_status(InfectionStatus.Recovered)
-        cell_susc.person_queue = Queue()
+        self.infectee.update_status(InfectionStatus.Recovered)
+        self.cell_susc.person_queue = Queue()
         test_sweep(time)
-        self.assertEqual(cell_susc.person_queue.qsize(), 0)
+        self.assertEqual(self.cell_susc.person_queue.qsize(), 0)
 
         # Test parameters break-out clause
         Parameters.instance().infection_radius = 0
         test_sweep(time)
         mock_inf_list.assert_not_called
         mock_list_covid.assert_not_called
-        self.assertEqual(cell_susc.person_queue.qsize(), 0)
+        self.assertEqual(self.cell_susc.person_queue.qsize(), 0)
 
     @mock.patch("random.random")
     def test_do_infection_event(self, mock_random):
