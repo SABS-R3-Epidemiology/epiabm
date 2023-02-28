@@ -80,18 +80,16 @@ class PlaceInfection:
         if (hasattr(infector.microcell, 'distancing_start_time') is True) and (
                 infector.microcell.distancing_start_time is not None):
             if infector.distancing_enhanced is True:
-                distancing = Parameters.instance().\
+                place_susc *= Parameters.instance().\
                              intervention_params[
                              'social_distancing'][
                              'distancing_place_enhanced_susc'][place_idx]
             else:
-                distancing = Parameters.instance().\
+                place_susc *= Parameters.instance().\
                              intervention_params[
                              'social_distancing'][
                              'distancing_place_susc'][place_idx]
-        else:
-            distancing = 1
-        return place_susc * distancing
+        return place_susc
 
     @staticmethod
     def place_foi(place, infector, infectee,
