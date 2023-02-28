@@ -8,7 +8,7 @@ from pyEpiabm.intervention import AbstractIntervention
 
 
 class HouseholdQuarantine(AbstractIntervention):
-    """Household/Home quarantine intervention
+    """Household/Home quarantine intervention.
     People who share household with a symptomatic case (who case isolates)
     stay home based on the household and individual compliance, if
     intervention is active. Quarantine stops after the quarantine period
@@ -37,28 +37,32 @@ class HouseholdQuarantine(AbstractIntervention):
         for cell in self._population.cells:
             for person in cell.persons:
                 if person.quarantine_start_time is not None:
-                    if time > person.quarantine_start_time + self.\
-                              quarantine_duration:
+                    if time > person.quarantine_start_time + \
+                       self.quarantine_duration:
                         # Stop quarantine after quarantine period
                         person.quarantine_start_time = None
-                else:
-                    if person.is_symptomatic():
-                        # Require household of symptomatic individuals to
-                        # quarantine with given household compliance and
-                        # individual compliance.
-                        r_house = random.random()
-                        if r_house < self.quarantine_house_compliant:
-                            for household_person in person.household.persons:
-                                if not household_person.is_symptomatic():
-                                    # symptomatic individuals case isolate
-                                    r_indiv = random.random()
-                                    if r_indiv < \
-                                       self.quarantine_individual_compliant:
-                                        household_person.\
-                                            quarantine_start_time = \
-                                            time + self.quarantine_delay
 
-    def __turn_off__(self):
+                if person.is_symptomatic() and \
+                   person.isolation_start_time == time:
+                    # Require household of symptomatic individuals to
+                    # quarantine with given household compliance and
+                    # individual compliance. Only check when infector
+                    # starts its isolation in order to prevent resetting.
+                    # Start time is reset when new person in household
+                    # becomes an infector.
+                    r_house = random.random()
+                    if r_house < self.quarantine_house_compliant:
+                        for household_person in person.household.persons:
+                            if not household_person.is_symptomatic():
+                                # symptomatic individuals case isolate
+                                r_indiv = random.random()
+                                if r_indiv < \
+                                   self.quarantine_individual_compliant:
+                                    household_person.\
+                                        quarantine_start_time = \
+                                        time + self.quarantine_delay
+
+    def turn_off(self):
         for cell in self._population.cells:
             for person in cell.persons:
                 if person.quarantine_start_time is not None:

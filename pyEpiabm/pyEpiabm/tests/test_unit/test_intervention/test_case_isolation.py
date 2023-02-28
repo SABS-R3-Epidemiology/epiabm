@@ -50,9 +50,9 @@ class TestCaseIsolation(TestPyEpiabm):
         self.assertIsNone(self.person_susc.isolation_start_time)
         self.assertIsNone(self.person_symp.isolation_start_time)
 
-    def test__turn_off__(self):
+    def test_turn_off(self):
         self.person_symp.isolation_start_time = 370
-        self.caseisolation.__turn_off__()
+        self.caseisolation.turn_off()
         self.assertIsNone(self.person_symp.isolation_start_time)
 
 

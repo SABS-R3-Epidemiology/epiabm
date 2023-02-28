@@ -6,10 +6,10 @@ from pyEpiabm.intervention import AbstractIntervention
 
 
 class PlaceClosure(AbstractIntervention):
-    """Place closure intervention
-    Close places based on the number of icu patients and infecious persons
+    """Place closure intervention.
+    Close places based on the number of ICU patients and infectious persons
     in their microcells and reopen places after their closure period or
-    after the end of the policy..
+    after the end of the policy.
     """
 
     def __init__(
@@ -45,7 +45,7 @@ class PlaceClosure(AbstractIntervention):
                         microcell.closure_start_time = time + self.\
                                                         closure_delay
 
-    def __turn_off__(self):
+    def turn_off(self):
         for cell in self._population.cells:
             for microcell in cell.microcells:
                 if microcell.closure_start_time is not None:
