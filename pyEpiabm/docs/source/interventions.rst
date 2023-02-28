@@ -9,14 +9,9 @@ Interventions provides the basic class framework to interact with different inte
 Overview:
 
 - :class:`AbstractIntervention`
-- :class:`CaseIsolation`
 - :class:`Vaccination`
 
 .. autoclass:: AbstractIntervention
-    :members:
-    :special-members: __init__, __call__
-
-.. autoclass:: CaseIsolation
     :members:
     :special-members: __init__, __call__
 
