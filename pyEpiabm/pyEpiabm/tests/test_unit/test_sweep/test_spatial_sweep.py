@@ -294,8 +294,8 @@ class TestSpatialSweep(TestMockedLogs):
         # self.assertEqual(self.cell_no_infectees_non_susc.person_queue.qsize(), 0)
         # self.assertEqual(test_sweep.do_infection_event.call_count, 0)
         test_function = test_sweep.do_infection_event
-        test_function.not_called()
-        # self.assertEqual(test_function.call_count(), 0)
+        # test_function.not_called()
+        self.assertEqual(test_function.call_count(), 0)
 
     @mock.patch("random.random")
     def test_do_infection_event(self, mock_random):
