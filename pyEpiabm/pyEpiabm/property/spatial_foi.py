@@ -65,7 +65,9 @@ class SpatialInfection:
             if pyEpiabm.core.Parameters.instance().use_ages is True else 1
         closure_spatial = Parameters.instance().\
             intervention_params['place_closure']['closure_spatial_params'] \
-            if infector.microcell.closure_start_time is not None else 1
+            if infector.close_place(
+                Parameters.instance().intervention_params['place_closure'][
+                    'closure_place_type']) is True else 1
         return infector.infectiousness * age * closure_spatial
 
     @staticmethod
@@ -98,7 +100,9 @@ class SpatialInfection:
 
         closure_susc = Parameters.instance().\
             intervention_params['place_closure']['closure_spatial_params'] \
-            if infector.microcell.closure_start_time is not None else 1
+            if infector.close_place(
+                Parameters.instance().intervention_params['place_closure'][
+                    'closure_place_type']) is True else 1
 
         if infector.microcell.distancing_start_time is not None:
             if infector.distancing_enhanced is True:

@@ -167,3 +167,10 @@ class Person:
             ind = place_list.index(place)
             self.places.pop(ind)
             self.place_types.remove(place.place_type)
+
+    def close_place(self, closure_place_type):
+        if self.microcell.closure_start_time is not None:
+            for place_type in self.place_types:
+                if place_type.value in closure_place_type:
+                    return True
+        return False

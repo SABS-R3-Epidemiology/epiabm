@@ -1,7 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.property import PlaceInfection
+from pyEpiabm.property import PlaceInfection, PlaceType
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
@@ -78,7 +78,8 @@ class TestPlaceInfection(TestPyEpiabm):
         self.assertEqual(result_closure, 0)
 
     def test_place_household_quarantine(self):
-        # Not in quarantine (quarantine_start_time = None)
+        # Update place type, not in quarantine (quarantine_start_time = None)
+        self.infector.place_types.append(PlaceType.PrimarySchool)
         result = PlaceInfection.place_foi(self.place, self.infector,
                                           self.infectee, self.time)
 

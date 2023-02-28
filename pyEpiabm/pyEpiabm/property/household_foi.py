@@ -33,9 +33,11 @@ class HouseholdInfection:
 
         """
         closure_inf = Parameters.instance().\
-            intervention_params['place_closure']['closure_household'
-                                                 '_infectiousness'] \
-            if infector.microcell.closure_start_time is not None else 1
+            intervention_params['place_closure'][
+                'closure_household_infectiousness'] \
+            if infector.close_place(
+                Parameters.instance().intervention_params['place_closure'][
+                    'closure_place_type']) is True else 1
         household_infectiousness = PersonalInfection.person_inf(
             infector, time) * closure_inf
         return household_infectiousness

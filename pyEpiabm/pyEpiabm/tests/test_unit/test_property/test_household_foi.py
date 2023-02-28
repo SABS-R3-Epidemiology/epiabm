@@ -1,7 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.property import HouseholdInfection
+from pyEpiabm.property import HouseholdInfection, PlaceType
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
@@ -61,7 +61,8 @@ class TestHouseholdInfection(TestPyEpiabm):
                          result_isolating)
 
     def test_house_place_closure(self):
-        # No place closure (closure_start_time = None)
+        # Update place type, no place closure (closure_start_time = None)
+        self.infector.place_types.append(PlaceType.PrimarySchool)
         result = HouseholdInfection.household_inf(
             self.infector, self.time)
 

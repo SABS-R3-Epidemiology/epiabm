@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch
 
 import pyEpiabm as pe
-from pyEpiabm.property import InfectionStatus, SpatialInfection
+from pyEpiabm.property import InfectionStatus, SpatialInfection, PlaceType
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
@@ -91,7 +91,8 @@ class TestSpatialInfection(TestPyEpiabm):
                          result_isolating)
 
     def test_spatial_place_closure(self):
-        # Not place closure (closure_start_time = None)
+        # Update place type, not place closure (closure_start_time = None)
+        self.infector.place_types.append(PlaceType.PrimarySchool)
         result_susc = SpatialInfection.spatial_susc(
             self.cell, self.infector, self.infectee, self.time)
         result_inf = SpatialInfection.spatial_inf(
