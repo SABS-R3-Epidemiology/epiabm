@@ -44,6 +44,20 @@ class TestSpatialSweep(TestMockedLogs):
         Parameters.instance().time_steps_per_day = 1
         Parameters.instance().do_CovidSim = False
 
+        self.pop_only1 = Population()
+        self.pop_only1.add_cells(1)
+        self.cell_inf_only1 = self.pop_only1.cells[0]
+
+        self.cell_inf_only1.add_microcells(1)
+        self.microcell_inf_only1 = self.cell_inf_only1.microcells[0]
+
+        self.microcell_inf_only1.add_people(100)
+        self.infector_only1 = self.microcell_inf_only1.persons[0]
+
+        self.infector_only1.infectiousness = 1.0
+        Parameters.instance().time_steps_per_day = 1
+        Parameters.instance().do_CovidSim = False
+
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     def test_near_neighbour(self, mock_dist):
         Parameters.instance().infection_radius = 1000
@@ -195,11 +209,12 @@ class TestSpatialSweep(TestMockedLogs):
         time = 1
         Parameters.instance().infection_radius = 1000
 
+        test_pop_only1 = self.pop_only1
         test_pop = self.pop
         test_sweep = SpatialSweep()
 
         # Assert a population with one cell doesn't do anything
-        test_sweep.bind_population(test_pop)
+        test_sweep.bind_population(test_pop_only1)
         test_sweep(time)
         self.assertTrue(self.cell_inf.person_queue.empty())
 
@@ -208,6 +223,10 @@ class TestSpatialSweep(TestMockedLogs):
         mock_inf_list.return_value = [self.infectee]
         mock_list_covid.return_value = [self.infectee]
 
+        test_sweep = SpatialSweep()
+
+        # Assert a population with one cell doesn't do anything
+        test_sweep.bind_population(test_pop)
         test_sweep(time)
         self.assertTrue(self.cell_susc.person_queue.empty())
 
@@ -232,6 +251,46 @@ class TestSpatialSweep(TestMockedLogs):
         mock_inf_list.assert_not_called
         mock_list_covid.assert_not_called
         self.assertEqual(self.cell_susc.person_queue.qsize(), 0)
+
+
+    def test_possible_infectee_number_0(self):
+
+        self.pop_no_infectees = Population()
+        self.pop.add_cells(2)
+        self.cell_no_infectees_inf = self.pop.cells[0]
+        self.cell_no_infectees_non_susc = self.pop.cells[1]
+
+        self.cell_no_infectees_inf.add_microcells(1)
+        self.microcell_no_infectees_inf = self.cell_no_infectees_inf.microcells[0]
+
+        self.cell_no_infectees_non_susc.add_microcells(1)
+        self.microcell_no_infectees_non_susc = self.cell_no_infectees_non_susc.microcells[0]
+
+        self.microcell_no_infectees_inf.add_people(100)
+        self.no_infectees_infector = self.microcell_no_infectees_inf.persons[0]
+
+        self.microcell_no_infectees_non_susc.add_people(1)
+        self.no_infectees_non_infectee = self.microcell_no_infectees_non_susc.persons[0]
+        self.no_infectees_non_infectee.InfectionStatus = "Recovered"
+
+        print('STATUS', self.no_infectees_non_infectee.InfectionStatus)
+
+        time = 1
+
+        self.no_infectees_infector.infectiousness = 1.0
+        Parameters.instance().time_steps_per_day = 1
+        Parameters.instance().do_CovidSim = False
+
+
+        test_pop_no_infectees = self.pop_no_infectees
+        test_sweep = SpatialSweep()
+
+        # Assert a population with one cell doesn't do anything
+        test_sweep.bind_population(test_pop_no_infectees)
+
+        Parameters.instance().infection_radius = 2
+        test_sweep(time)
+        self.assertEqual(self.cell_no_infectees_non_susc.person_queue.qsize(), 0)
 
     @mock.patch("random.random")
     def test_do_infection_event(self, mock_random):
