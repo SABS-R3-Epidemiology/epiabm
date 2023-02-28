@@ -1,12 +1,12 @@
 import unittest
 from unittest import mock
 from queue import Queue
-import numpy as np
+# import numpy as np
 
 from pyEpiabm.core import Population, Parameters
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import SpatialSweep
-from pyEpiabm.utility import DistanceFunctions
+# from pyEpiabm.utility import DistanceFunctions
 from pyEpiabm.tests.test_unit.mocked_logging_tests import TestMockedLogs
 
 
@@ -65,14 +65,15 @@ class TestSpatialSweep(TestMockedLogs):
         self.cell_no_infectees_rec = self.pop_no_infectees.cells[1]
 
         self.cell_no_infectees_inf.add_microcells(1)
-        self.microcell_no_infectees_inf = self.cell_no_infectees_inf.microcells[0]
+        self.microcell_no_infectees_inf = self.\
+            cell_no_infectees_inf.microcells[0]
 
         self.cell_no_infectees_rec.add_microcells(1)
-        self.microcell_no_infectees_rec = self.cell_no_infectees_rec.microcells[0]
+        self.microcell_no_infectees_rec = self.\
+            cell_no_infectees_rec.microcells[0]
 
         self.microcell_no_infectees_inf.add_people(1)
         self.no_infectees_infector = self.microcell_no_infectees_inf.persons[0]
-        ##########HERE lies the mistake, how to set infection status
         # self.no_infectees_infector.InfectionStatus.InfectMild
         # self.no_infectees_infector.InfectionStatus = 4
         # self.no_infectees_infector.InfectionStatus = "InfectMild"
@@ -102,7 +103,7 @@ class TestSpatialSweep(TestMockedLogs):
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     def test_find_infectees_successful(self, mock_dist, mock_nan, mock_logger):
         Parameters.instance().infection_radius = 1000
-        cutoff = Parameters.instance().infection_radius
+        # cutoff = Parameters.instance().infection_radius
         # print('cutoff', cutoff)
         test_pop = self.pop
         # print('TEST POP', test_pop)
@@ -120,19 +121,20 @@ class TestSpatialSweep(TestMockedLogs):
         # print('cell_susc', self.cell_susc)
         # print('cell_inf', self.cell_inf)
         # print('infectee', [self.infectee])
-        # # self.cell_inf.nearest_neighbours['cell_susc.id'] = mock_dist.return_value
+        # # self.cell_inf.nearest_neighbours['cell_susc.id'] =
+        # # mock_dist.return_value
         # print('nearest_neighbours', self.cell_inf.nearest_neighbours)
-        test_list = test_sweep.find_infectees(self.cell_inf, [self.cell_susc], 1)
+        test_list = test_sweep.\
+            find_infectees(self.cell_inf, [self.cell_susc], 1)
         self.assertFalse(mock_nan.called)
         self.assertEqual(test_list, [self.infectee])
-
 
     @mock.patch("logging.exception")
     @mock.patch("numpy.nan_to_num")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     def test_find_infectees_fails(self, mock_dist, mock_nan, mock_logger):
         Parameters.instance().infection_radius = 0.0001
-        cutoff = Parameters.instance().infection_radius
+        # cutoff = Parameters.instance().infection_radius
         # print('cutoff', cutoff)
         # print('cell_non_susc', self.cell_non_susc)
         test_pop = self.pop
@@ -141,21 +143,22 @@ class TestSpatialSweep(TestMockedLogs):
         test_sweep.bind_population(test_pop)
         # print('nearest_neighbours', self.cell_inf.nearest_neighbours)
 
-        test_non_list = test_sweep.find_infectees(self.cell_inf, [self.cell_non_susc], 1)
+        # test_non_list = test_sweep.\
+        #     find_infectees(self.cell_inf, [self.cell_non_susc], 1)
         self.assertEqual(self.cell_inf.nearest_neighbours, {})
 
         # # test the assert that the distance weights has correct length
         # mock_dist.side_effect = [0, 2]
         # mock_nan.return_value = [1]
         # self.assertRaises(AssertionError, test_sweep.find_infectees,
-        #                   self.cell_inf, [self.cell_susc, third_cell], 1)
+        #                   self.cell_inf, [self.cell_susc], 1)
 
         # # test value error is raised if all cells too far away
         # Parameters.instance().infection_radius = 0.000001
         # mock_dist.side_effect = [0, 2]
         # mock_nan.return_value = [1, 1]
-        # test_list = test_sweep.find_infectees(self.cell_inf, [self.cell_susc,
-        #                                       third_cell], 1)
+        # test_list = test_sweep.\
+        #   find_infectees(self.cell_inf, [self.cell_susc], 1)
         # mock_logger.assert_called
         # # test logger is called here
 
@@ -258,8 +261,9 @@ class TestSpatialSweep(TestMockedLogs):
     @mock.patch("numpy.random.poisson")
     @mock.patch("pyEpiabm.property.SpatialInfection.space_foi")
     @mock.patch("pyEpiabm.property.SpatialInfection.cell_inf")
-    def test_call_possible_infectee_number_0(self, mock_inf, mock_foi, mock_poisson, mock_inf_list,
-                     mock_list_covid):
+    def test_call_possible_infectee_number_0(self, mock_inf, mock_foi,
+                                             mock_poisson, mock_inf_list,
+                                             mock_list_covid):
         print('STATUS', self.no_infectees_rec.__repr__())
         print('STATUS 2', self.no_infectees_infector.__repr__())
 
@@ -270,15 +274,12 @@ class TestSpatialSweep(TestMockedLogs):
         Parameters.instance().infection_radius = 1000
 
         test_pop_no_infectees = self.pop_no_infectees
-        test_pop = self.pop
         test_sweep = SpatialSweep()
 
         # Assert a population with one cell doesn't do anything
         test_sweep.bind_population(test_pop_no_infectees)
         test_sweep(time)
         self.assertTrue(self.cell_inf.person_queue.empty())
-
-
 
         test_pop_no_infectees = self.pop_no_infectees
         self.no_infectees_non_infectee_queue = Queue()
@@ -289,8 +290,9 @@ class TestSpatialSweep(TestMockedLogs):
 
         test_sweep(time)
         # print('SWEEP AFTER', test_sweep)
-        
-        # self.assertEqual(self.cell_no_infectees_non_susc.person_queue.qsize(), 0)
+
+        # self.assertEqual(self.\
+        #   cell_no_infectees_non_susc.person_queue.qsize(), 0)
         # self.assertEqual(test_sweep.do_infection_event.call_count, 0)
         # test_function = test_sweep.do_infection_event
         print('Marker 1')
