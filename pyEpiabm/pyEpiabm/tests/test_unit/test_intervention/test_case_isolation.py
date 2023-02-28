@@ -28,12 +28,20 @@ class TestCaseIsolation(TestPyEpiabm):
         cls.caseisolation = CaseIsolation(population=cls._population, **params)
 
     def test__init__(self):
-        self.assertEqual(self.caseisolation.start_time, 6)
-        self.assertEqual(self.caseisolation.policy_duration, 365)
-        self.assertEqual(self.caseisolation.case_threshold, 0)
-        self.assertEqual(self.caseisolation.isolation_delay, 0)
-        self.assertEqual(self.caseisolation.isolation_duration, 100)
-        self.assertEqual(self.caseisolation.isolation_probability, 1)
+        # Test the parameter values from params file (testing_parameters.json)
+        params = pe.Parameters.instance().intervention_params[
+                'case_isolation']
+        self.assertEqual(self.caseisolation.start_time, params['start_time'])
+        self.assertEqual(self.caseisolation.policy_duration,
+                         params['policy_duration'])
+        self.assertEqual(self.caseisolation.case_threshold,
+                         params['case_threshold'])
+        self.assertEqual(self.caseisolation.isolation_delay,
+                         params['isolation_delay'])
+        self.assertEqual(self.caseisolation.isolation_duration,
+                         params['isolation_duration'])
+        self.assertEqual(self.caseisolation.isolation_probability,
+                         params['isolation_probability'])
 
     def test___call__(self):
         # Before isolation starts

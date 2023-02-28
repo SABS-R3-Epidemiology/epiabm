@@ -28,12 +28,21 @@ class TestPlaceClosure(TestPyEpiabm):
         cls.placeclosure = PlaceClosure(population=cls._population, **params)
 
     def test__init__(self):
-        self.assertEqual(self.placeclosure.start_time, 6)
-        self.assertEqual(self.placeclosure.policy_duration, 365)
-        self.assertEqual(self.placeclosure.case_threshold, 0)
-        self.assertEqual(self.placeclosure.closure_delay, 0)
-        self.assertEqual(self.placeclosure.closure_duration, 100)
-        self.assertEqual(self.placeclosure.case_microcell_threshold, 1)
+        # Test the parameter values from params file (testing_parameters.json)
+        params = pe.Parameters.instance().intervention_params[
+                'place_closure']
+        self.assertEqual(self.placeclosure.start_time,
+                         params['start_time'])
+        self.assertEqual(self.placeclosure.policy_duration,
+                         params['policy_duration'])
+        self.assertEqual(self.placeclosure.case_threshold,
+                         params['case_threshold'])
+        self.assertEqual(self.placeclosure.closure_delay,
+                         params['closure_delay'])
+        self.assertEqual(self.placeclosure.closure_duration,
+                         params['closure_duration'])
+        self.assertEqual(self.placeclosure.case_microcell_threshold,
+                         params['case_microcell_threshold'])
 
     def test___call__(self):
         self.assertFalse(hasattr(self.microcell, 'closure_start_time'))

@@ -33,15 +33,25 @@ class TestHouseholdQuarantine(TestPyEpiabm):
             population=cls.test_population, **params)
 
     def test__init__(self):
-        self.assertEqual(self.householdquarantine.start_time, 6)
-        self.assertEqual(self.householdquarantine.policy_duration, 365)
-        self.assertEqual(self.householdquarantine.case_threshold, 0)
-        self.assertEqual(self.householdquarantine.quarantine_duration, 14)
-        self.assertEqual(self.householdquarantine.quarantine_delay, 1)
+        # Test the parameter values from params file (testing_parameters.json)
+        params = pe.Parameters.instance().intervention_params[
+                'household_quarantine']
+        self.assertEqual(self.householdquarantine.start_time,
+                         params['start_time'])
+        self.assertEqual(self.householdquarantine.policy_duration,
+                         params['policy_duration'])
+        self.assertEqual(self.householdquarantine.case_threshold,
+                         params['case_threshold'])
+        self.assertEqual(self.householdquarantine.quarantine_duration,
+                         params['quarantine_duration'])
+        self.assertEqual(self.householdquarantine.quarantine_delay,
+                         params['quarantine_delay'])
         self.assertEqual(self.householdquarantine.
-                         quarantine_house_compliant, 1.0)
+                         quarantine_house_compliant,
+                         params['quarantine_house_compliant'])
         self.assertEqual(self.householdquarantine.
-                         quarantine_individual_compliant, 1.0)
+                         quarantine_individual_compliant,
+                         params['quarantine_individual_compliant'])
 
     def test___call__(self):
         # Both in quarantine as one symptomatic and 100% compliance

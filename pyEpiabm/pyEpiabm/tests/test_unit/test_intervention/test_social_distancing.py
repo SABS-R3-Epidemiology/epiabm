@@ -32,14 +32,22 @@ class TestSocialDistancing(TestPyEpiabm):
 
     def test__init__(self):
         # Test the parameter values from params file (testing_parameters.json)
-        self.assertEqual(self.socialdistancing.start_time, 6)
-        self.assertEqual(self.socialdistancing.policy_duration, 365)
-        self.assertEqual(self.socialdistancing.case_threshold, 0)
-        self.assertEqual(self.socialdistancing.distancing_delay, 0)
-        self.assertEqual(self.socialdistancing.distancing_duration, 100)
-        self.assertEqual(self.socialdistancing.case_microcell_threshold, 1)
+        params = pe.Parameters.instance().intervention_params[
+                'social_distancing']
+        self.assertEqual(self.socialdistancing.start_time,
+                         params['start_time'])
+        self.assertEqual(self.socialdistancing.policy_duration,
+                         params['policy_duration'])
+        self.assertEqual(self.socialdistancing.case_threshold,
+                         params['case_threshold'])
+        self.assertEqual(self.socialdistancing.distancing_delay,
+                         params['distancing_delay'])
+        self.assertEqual(self.socialdistancing.distancing_duration,
+                         params['distancing_duration'])
+        self.assertEqual(self.socialdistancing.case_microcell_threshold,
+                         params['case_microcell_threshold'])
         self.assertEqual(self.socialdistancing.distancing_enhanced_prob,
-                         [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+                         params['distancing_enhanced_prob'])
 
     def test___call__(self):
         # Social distancing haven't start
