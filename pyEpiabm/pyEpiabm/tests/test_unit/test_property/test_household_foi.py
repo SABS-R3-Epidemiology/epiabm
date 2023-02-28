@@ -58,6 +58,9 @@ class TestHouseholdInfection(TestPyEpiabm):
             = {'carehome_resident_household_scaling': 2}
         mock_params.return_value.household_transmission = 1
         mock_params.return_value.false_positive_rate = 0
+        mock_params.return_value.intervention_params\
+            = {"vaccine_params": {'vacc_inf_drop': 0,
+                                  'time_to_efficacy': 0}}
         self.infector.care_home_resident = True
         self.infectee.care_home_resident = False
         result = HouseholdInfection.household_foi(self.infector,

@@ -2,8 +2,6 @@
 # Vaccination Class
 #
 
-import random
-
 from pyEpiabm.intervention import AbstractIntervention
 
 

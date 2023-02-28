@@ -103,7 +103,7 @@ class HouseholdInfection:
                           * pyEpiabm.core.Parameters.instance().
                           household_transmission
                           * carehome_scale_inf)
-                          
+
         susceptibility = (HouseholdInfection.household_susc(infector,
                                                             infectee, time)
                           * carehome_scale_susc)

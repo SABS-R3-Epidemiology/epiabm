@@ -3,6 +3,7 @@ import unittest
 import pyEpiabm as pe
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
+
 class TestVaccinationSweep(TestPyEpiabm):
     """ Tests the initial vaccine sweep class in which a vaccination
     queue is generated.
@@ -30,7 +31,7 @@ class TestVaccinationSweep(TestPyEpiabm):
         test_sweep = pe.sweep.InitialVaccineQueue()
         test_sweep.bind_population(self.test_population)
         params = pe.Parameters.instance().intervention_params['vaccine_params']
-        
+
         self.person1.age = 90
         self.person2.age = 70
         self.person3.age = 55
@@ -38,13 +39,13 @@ class TestVaccinationSweep(TestPyEpiabm):
         self.person5.age = 15
         self.person6.care_home_resident = True
 
-        person_list = [self.person1, self.person2, self.person3, 
+        person_list = [self.person1, self.person2, self.person3,
                        self.person4, self.person5, self.person6]
         priority_list = []
         for per in person_list:
             level = test_sweep.assign_priority_group(per, params['min_ages'])
             priority_list.append(level)
-        
+
         self.assertEqual(priority_list[0], 1)
         self.assertEqual(priority_list[5], 1)
         self.assertEqual(priority_list[1], 2)

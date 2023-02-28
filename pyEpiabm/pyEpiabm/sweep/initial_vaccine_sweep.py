@@ -4,7 +4,6 @@
 
 import random
 from itertools import count
-from queue import PriorityQueue
 
 from pyEpiabm.core import Parameters
 from .abstract_sweep import AbstractSweep
