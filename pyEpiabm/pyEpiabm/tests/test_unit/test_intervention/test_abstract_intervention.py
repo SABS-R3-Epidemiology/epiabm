@@ -38,6 +38,10 @@ class TestAbstractIntervention(unittest.TestCase):
         self.assertRaises(NotImplementedError,
                           self.intervention_object.__call__, 1)
 
+    def test__turn_off__(self):
+        self.assertRaises(NotImplementedError,
+                          self.intervention_object.__turn_off__)
+
 
 if __name__ == '__main__':
     unittest.main()

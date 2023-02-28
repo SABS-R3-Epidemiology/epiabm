@@ -1,8 +1,8 @@
 #
 # Example simulation script with household quarantine intervention data output
 # and visualisation
-# Note: case isolation parameters need to be given as infector should case isolate 
-# and its household should quarantine. 
+# Note: case isolation parameters need to be given as infector should case
+# isolate and its household should quarantine.
 #
 
 import os
