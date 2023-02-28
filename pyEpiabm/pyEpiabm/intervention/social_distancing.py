@@ -39,12 +39,12 @@ class SocialDistancing(AbstractIntervention):
     def __call__(self, time):
         for cell in self._population.cells:
             for microcell in cell.microcells:
-                if microcell.distancing_start_time is not None:
+                if (hasattr(microcell, 'distancing_start_time') is True) and (
+                        microcell.distancing_start_time is not None):
                     if time > microcell.distancing_start_time + self.\
                               distancing_duration:
                         # Stop social distancing after their distancing period
                         microcell.distancing_start_time = None
-
                 else:
                     if microcell.count_infectious() >= self.\
                                 case_microcell_threshold:

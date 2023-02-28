@@ -28,12 +28,12 @@ class PlaceClosure(AbstractIntervention):
     def __call__(self, time):
         for cell in self._population.cells:
             for microcell in cell.microcells:
-                if microcell.closure_start_time is not None:
+                if (hasattr(microcell, 'closure_start_time') is True) and (
+                        microcell.closure_start_time is not None):
                     if time > microcell.closure_start_time + self.\
                               closure_duration:
                         # Reopen places after their closure period
                         microcell.closure_start_time = None
-
                 else:
                     if (microcell.count_infectious() >= self.
                             case_microcell_threshold):

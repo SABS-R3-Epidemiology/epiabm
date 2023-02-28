@@ -89,7 +89,7 @@ class TestPerson(TestPyEpiabm):
         closure_place_type = pe.Parameters.instance().intervention_params[
             'place_closure']['closure_place_type']
         # Not in place closure
-        self.assertIsNone(self.person.microcell.closure_start_time)
+        self.assertFalse(hasattr(self.person.microcell, 'closure_start_time'))
         self.assertFalse(self.person.close_place(closure_place_type))
         # Place closure time starts but the place is not in closure_place_type
         self.person.microcell.closure_start_time = 1

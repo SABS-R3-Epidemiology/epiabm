@@ -37,17 +37,17 @@ class TestCaseIsolation(TestPyEpiabm):
 
     def test___call__(self):
         # Before isolation starts
-        self.assertIsNone(self.person_susc.isolation_start_time)
-        self.assertIsNone(self.person_symp.isolation_start_time)
+        self.assertFalse(hasattr(self.person_susc, 'isolation_start_time'))
+        self.assertFalse(hasattr(self.person_symp, 'isolation_start_time'))
 
         # Start isolation if the person is symptomatic
         self.caseisolation(time=5)
-        self.assertIsNone(self.person_susc.isolation_start_time)
+        self.assertFalse(hasattr(self.person_susc, 'isolation_start_time'))
         self.assertEqual(self.person_symp.isolation_start_time, 5)
 
         # End isolation
         self.caseisolation(time=150)
-        self.assertIsNone(self.person_susc.isolation_start_time)
+        self.assertFalse(hasattr(self.person_susc, 'isolation_start_time'))
         self.assertIsNone(self.person_symp.isolation_start_time)
 
 

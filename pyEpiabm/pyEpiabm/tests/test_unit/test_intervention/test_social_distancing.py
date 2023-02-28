@@ -43,11 +43,11 @@ class TestSocialDistancing(TestPyEpiabm):
 
     def test___call__(self):
         # Social distancing haven't start
-        self.assertIsNone(self.microcell.distancing_start_time)
+        self.assertFalse(hasattr(self.microcell, 'distancing_start_time'))
         # Age group exists with normal social distancing
         self.person.age_group = 0
         self.socialdistancing(time=5)
-        self.assertIsNotNone(self.microcell.distancing_start_time)
+        self.assertTrue(hasattr(self.microcell, 'distancing_start_time'))
         self.assertFalse(self.person.distancing_enhanced)
         # Social distancing ends
         self.socialdistancing(time=150)

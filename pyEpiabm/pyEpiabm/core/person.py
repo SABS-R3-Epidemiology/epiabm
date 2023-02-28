@@ -47,8 +47,6 @@ class Person:
         self.next_infection_status = None
         self.time_of_status_change = None
         self.infection_start_time = None
-        self.isolation_start_time = None
-        self.quarantine_start_time = None
 
         self.set_random_age()
 
@@ -169,7 +167,8 @@ class Person:
             self.place_types.remove(place.place_type)
 
     def close_place(self, closure_place_type):
-        if self.microcell.closure_start_time is not None:
+        if (hasattr(self.microcell, 'closure_start_time') is True) and (
+                self.microcell.closure_start_time is not None):
             for place_type in self.place_types:
                 if place_type.value in closure_place_type:
                     return True

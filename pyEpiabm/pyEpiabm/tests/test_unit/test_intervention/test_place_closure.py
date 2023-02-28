@@ -20,6 +20,7 @@ class TestPlaceClosure(TestPyEpiabm):
         cls.pop_params = {"population_size": 2, "cell_number": 1,
                           "microcell_number": 1, "household_number": 1}
         cls._population = cls.pop_factory.make_pop(cls.pop_params)
+        cls.microcell = cls._population.cells[0].microcells[0]
         for person in cls._population.cells[0].microcells[0].persons:
             person.update_status(InfectionStatus(7))
 
@@ -35,14 +36,11 @@ class TestPlaceClosure(TestPyEpiabm):
         self.assertEqual(self.placeclosure.case_microcell_threshold, 1)
 
     def test___call__(self):
-        self.assertIsNone(self._population.cells[0].microcells[0].
-                          closure_start_time)
+        self.assertFalse(hasattr(self.microcell, 'closure_start_time'))
         self.placeclosure(time=5)
-        self.assertIsNotNone(self._population.cells[0].microcells[0].
-                             closure_start_time)
+        self.assertIsNotNone(self.microcell.closure_start_time)
         self.placeclosure(time=150)
-        self.assertIsNone(self._population.cells[0].microcells[0].
-                          closure_start_time)
+        self.assertIsNone(self.microcell.closure_start_time)
 
 
 if __name__ == '__main__':
