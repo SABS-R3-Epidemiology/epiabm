@@ -3,7 +3,7 @@
 #
 
 from pyEpiabm.core import Parameters
-from pyEpiabm.intervention import CaseIsolation, Vaccination
+from pyEpiabm.intervention import Vaccination
 from .abstract_sweep import AbstractSweep
 
 
@@ -24,20 +24,7 @@ class InterventionSweep(AbstractSweep):
         self._population = population
         for intervention in self.intervention_params.keys():
             params = self.intervention_params[intervention]
-            if intervention == 'case_isolation':
-                self.interventions.append(CaseIsolation(
-                    start_time=params['time_start'],
-                    policy_duration=params['policy_duration'],
-                    case_threshold=params['case_threshold'],
-                    isolation_delay=params['isolation_delay'],
-                    isolation_duration=params['isolation_duration'],
-                    isolation_probability=params['isolation_probability'],
-                    isolation_effectiveness=params['isolation_effectiveness'],
-                    isolation_house_effectiveness=params['isolation_house_'
-                                                         'effectiveness'],
-                    population=self._population
-                ))
-            elif intervention == 'vaccine_params':
+            if intervention == 'vaccine_params':
                 self.interventions.append(Vaccination(**params,
                                           population=self._population))
 
