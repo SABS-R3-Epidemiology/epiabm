@@ -19,8 +19,9 @@ class TestPlaceClosure(TestPyEpiabm):
         cls._population = pe.Population()
         cls._population.add_cells(1)
         cls._population.cells[0].add_microcells(1)
-        cls._population.cells[0].microcells[0].add_people(2)
-        for person in cls._population.cells[0].microcells[0].persons:
+        cls._microcell = cls._population.cells[0].microcells[0]
+        cls._microcell.add_people(2)
+        for person in cls._microcell.persons:
             person.update_status(InfectionStatus(7))
 
         params = pe.Parameters.instance().intervention_params['place_closure']
@@ -36,14 +37,16 @@ class TestPlaceClosure(TestPyEpiabm):
         self.assertEqual(self.placeclosure.case_microcell_threshold, 1)
 
     def test___call__(self):
-        self.assertIsNone(self._population.cells[0].microcells[0].
-                          closure_start_time)
+        self.assertIsNone(self._microcell.closure_start_time)
         self.placeclosure(time=5)
-        self.assertIsNotNone(self._population.cells[0].microcells[0].
-                             closure_start_time)
+        self.assertIsNotNone(self._microcell.closure_start_time)
         self.placeclosure(time=150)
-        self.assertIsNone(self._population.cells[0].microcells[0].
-                          closure_start_time)
+        self.assertIsNone(self._microcell.closure_start_time)
+
+    def test__turn_off__(self):
+        self._microcell.closure_start_time = 370
+        self.placeclosure.__turn_off__(time=371)
+        self.assertIsNone(self._microcell.closure_start_time)
 
 
 if __name__ == '__main__':
