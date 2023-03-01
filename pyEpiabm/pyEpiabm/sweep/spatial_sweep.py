@@ -256,7 +256,7 @@ class SpatialSweep(AbstractSweep):
         '''
         Helper function which takes in a given cell and the list of all cells
         and generates a list of near neighbours which are the cells that are
-        closer than the cutoff for cross-cell infection
+        closer than the cutoff for cross-cell infection.
 
         Parameters
         ----------
@@ -268,7 +268,7 @@ class SpatialSweep(AbstractSweep):
         Returns
         -------
         cell.nearest_neighbours
-            Dictionary of all cells with distance below cutoff
+            Dictionary of all cells with distance below cutoff.
             Dictionary stores cell.id and distance between the 2 cells
             These are stored in the form:
             cell.id: distance
