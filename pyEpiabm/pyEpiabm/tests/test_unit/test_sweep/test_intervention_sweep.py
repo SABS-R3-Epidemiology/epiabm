@@ -10,24 +10,23 @@ class TestInterventionSweep(TestPyEpiabm):
     """Test the 'InterventionSweep' class.
     """
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        super(TestInterventionSweep, cls).setUpClass()
-        cls.interventionsweep = InterventionSweep()
+    def setUp(self) -> None:
+        super(TestInterventionSweep, self).setUp()
+        self.interventionsweep = InterventionSweep()
 
         # Construct a population with 2 persons, one infector and one infectee
-        cls._population = pe.Population()
-        cls._population.add_cells(1)
-        cls._population.cells[0].add_microcells(1)
-        cls._microcell = cls._population.cells[0].microcells[0]
-        cls._microcell.add_people(2)
-        cls._microcell.add_household(cls._microcell.persons)
-        cls.person_susc = cls._population.cells[0].microcells[0].persons[0]
-        cls.person_susc.update_status(InfectionStatus(1))
-        cls.person_symp = cls._population.cells[0].microcells[0].persons[1]
-        cls.person_symp.update_status(InfectionStatus(4))
+        self._population = pe.Population()
+        self._population.add_cells(1)
+        self._population.cells[0].add_microcells(1)
+        self._microcell = self._population.cells[0].microcells[0]
+        self._microcell.add_people(2)
+        self._microcell.add_household(self._microcell.persons)
+        self.person_susc = self._population.cells[0].microcells[0].persons[0]
+        self.person_susc.update_status(InfectionStatus(1))
+        self.person_symp = self._population.cells[0].microcells[0].persons[1]
+        self.person_symp.update_status(InfectionStatus(4))
 
-        cls.interventionsweep.bind_population(cls._population)
+        self.interventionsweep.bind_population(self._population)
 
     def test_bind_population(self):
         self.assertEqual(len(self.interventionsweep.
@@ -50,10 +49,10 @@ class TestInterventionSweep(TestPyEpiabm):
         self.assertEqual(self.person_symp.isolation_start_time, 100)
         self.assertIsNotNone(self.person_susc.quarantine_start_time)
 
-    def test__turn_of__(self):
+    def test_turn_of(self):
         # Isolate the InfectMild individual
-        self.person_symp.isolation_start_time = 370
-        self.assertIsNotNone(self.person_symp.isolation_start_time)
+        self.interventionsweep(time=370)
+        self.assertEqual(self.person_symp.isolation_start_time, 370)
 
         # stop isolating after start_time + policy_duration
         self.interventionsweep(time=372)
