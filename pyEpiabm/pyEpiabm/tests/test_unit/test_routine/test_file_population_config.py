@@ -190,7 +190,7 @@ class TestPopConfig(TestPyEpiabm):
         mock_write.assert_called_once()
         self.assertEqual(mock_write.call_args[0], ('output.csv',))
 
-    @patch('logging.info')
+    @patch('logging.warning')
     @patch("pandas.read_csv")
     @patch("copy.copy")
     def test_print_population(self, mock_copy, mock_read, mock_house_log):
