@@ -12,8 +12,12 @@ from .abstract_sweep import AbstractSweep
 
 class InitialVaccineQueue(AbstractSweep):
     """ Runs through the eligible population and adds people to a priority
-        queue for vaccination, prioritised by age and added according to the
-        uptake in each age group.
+    queue for vaccination, prioritised by age and added according to the
+    uptake in each age group.
+    For a description of how the method functions in the context of vaccination
+    see
+    https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#vaccination
+    
     """
     def __init__(self):
         """ Call in age group and uptake parameters if vaccination parameters

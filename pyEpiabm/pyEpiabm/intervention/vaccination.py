@@ -7,6 +7,8 @@ from pyEpiabm.intervention import AbstractIntervention
 
 class Vaccination(AbstractIntervention):
     """Vaccination intervention
+    For a description of this intervention see
+    https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#vaccination
 
     """
 
