@@ -105,6 +105,9 @@ class TestSpatialSweep(TestMockedLogs):
         test_sweep = SpatialSweep()
         mock_dist.return_value = 2.2
         self.assertEqual(test_sweep.bind_population(test_pop), None)
+        test_list = test_sweep.\
+            find_infectees(self.cell_inf, [self.cell_susc], 1)
+        self.assertEqual(test_sweep.bind_population(test_pop), None)
 
     
     @mock.patch("logging.exception")
