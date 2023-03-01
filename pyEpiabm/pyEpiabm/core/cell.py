@@ -136,12 +136,3 @@ class Cell:
 
         """
         self.location = loc
-
-    # def near_neighbour(self, loc, other_cells):
-    #     # List of near neghbours
-    #     cutoff = Parameters.instance().infection_radius
-
-    #     for cell2 in other_cells:
-    #         distance = DistanceFunctions.dist(self.location, cell2.location)
-    #         if distance < cutoff:
-    #             self.nearest_neighbours[cell2.id] = distance
