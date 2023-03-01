@@ -348,10 +348,6 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         mocked_choice.side_effect = [[0], [2], [6], [6]]
         mocked_random.side_effect = [0.0, -1.0, 0.0]
         test_sweep.three_or_more_person_household_ages(self.four_people)
-        print(self.person1.age)
-        print(self.person2.age)
-        print(self.person3.age)
-        print(self.person4.age)
         self.assertTrue(self.person1.age <= 5)
 
     @mock.patch(
