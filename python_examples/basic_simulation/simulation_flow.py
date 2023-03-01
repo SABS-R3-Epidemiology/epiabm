@@ -25,7 +25,7 @@ pe.routine.Simulation.set_random_seed(seed=42)
 # Pop_params are used to configure the population structure being used in this
 # simulation.
 
-pop_params = {"population_size": 1000000, "cell_number": 1,
+pop_params = {"population_size": 100000, "cell_number": 1,
               "microcell_number": 1, "household_number": 5,
               "place_number": 2}
 
