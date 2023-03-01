@@ -46,8 +46,8 @@ class TestInterventionSweep(TestPyEpiabm):
 
         # infector in case isolation, infectee in quarantine as
         # 100% probability and compliance
-        self.interventionsweep(time=10)
-        self.assertIsNotNone(self.person_symp.isolation_start_time)
+        # isolation_start_time = 100 as evaluated at this time (see above)
+        self.assertEqual(self.person_symp.isolation_start_time, 100)
         self.assertIsNotNone(self.person_susc.quarantine_start_time)
 
     def test__turn_of__(self):
