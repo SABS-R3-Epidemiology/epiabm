@@ -50,6 +50,13 @@ class TestPlaceClosure(TestPyEpiabm):
         self.placeclosure(time=150)
         self.assertIsNone(self._microcell.closure_start_time)
 
+    def test_turn_off(self):
+        self._microcell.closure_start_time = 370
+        self.placeclosure(time=370)
+
+        self.placeclosure.turn_off()
+        self.assertIsNone(self._microcell.closure_start_time)
+
 
 if __name__ == '__main__':
     unittest.main()
