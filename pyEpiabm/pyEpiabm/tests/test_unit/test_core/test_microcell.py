@@ -67,14 +67,14 @@ class TestMicrocell(TestPyEpiabm):
         self.assertEqual(len(self.cell.microcells), 0)
         self.cell.add_microcells(n)
         self.assertEqual(len(self.cell.microcells), n)
-    
+
     def test_add_household(self):
         self.microcell.add_people(1)
         self.microcell.add_household(self.microcell.persons)
         self.assertEqual(len(self.microcell.households), 1)
         household = self.microcell.households[0]
         self.assertEqual(len(household.persons), 1)
-    
+
     @mock.patch('logging.info')
     def test_logging(self, mock_log):
         self.microcell.add_household(self.microcell.persons)

@@ -134,8 +134,6 @@ class Microcell:
         """
         if len(people) != 0:
             household = Household(self, loc=self.location)
-            self.cell.households.append(household)
-            self.households.append(household)
             for person in people:
                 household.add_person(person)
         else:

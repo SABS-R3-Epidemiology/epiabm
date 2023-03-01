@@ -84,8 +84,7 @@ class HouseholdInfection:
             carehome_scale_susc = Parameters.instance()\
                 .carehome_params["carehome_resident_household_scaling"]
         seasonality = 1.0  # Not yet implemented
-        false_pos = 1 / (1 - Parameters.instance()\
-                         .false_positive_rate)
+        false_pos = 1 / (1 - Parameters.instance().false_positive_rate)
 
         infectiousness = (HouseholdInfection.household_inf(infector, time)
                           * seasonality * false_pos

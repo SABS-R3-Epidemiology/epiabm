@@ -2,10 +2,7 @@
 # Population Class
 #
 
-from queue import PriorityQueue
-
 from .cell import Cell
-from .person import Person
 
 
 class Population:

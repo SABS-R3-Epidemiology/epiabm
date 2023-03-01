@@ -271,6 +271,8 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         val = test_sweep.calc_number_of_children(6)
         self.assertTrue(val == 1)
 
+    def test_number_children_error(self):
+        test_sweep = pe.sweep.InitialHouseholdSweep()
         self.assertRaises(ValueError, test_sweep.calc_number_of_children, 2)
 
     @mock.patch(

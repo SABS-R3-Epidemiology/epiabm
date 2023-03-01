@@ -1,9 +1,7 @@
 #
 # Sweeps for enqueued persons to update infection status
 #
-import random
 
-from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
 
 from .abstract_sweep import AbstractSweep
@@ -31,4 +29,3 @@ class QueueSweep(AbstractSweep):
                 # Update the infection status
                 person.next_infection_status = InfectionStatus.Exposed
                 person.time_of_status_change = time
-

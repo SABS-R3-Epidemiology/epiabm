@@ -5,7 +5,6 @@ from packaging import version
 
 import pyEpiabm as pe
 from pyEpiabm.routine import FilePopulationFactory
-from pyEpiabm.sweep import InitialHouseholdSweep
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
@@ -246,12 +245,14 @@ class TestPopConfig(TestPyEpiabm):
 
     @patch("pandas.read_csv")
     @patch("pyEpiabm.sweep.InitialHouseholdSweep.household_allocation")
-    def test_use_of_household_size_distribution(self, mock_household_function, mock_read):
+    def test_use_of_household_size_distribution(self, mock_household_function,
+                                                mock_read):
         pe.Parameters.instance().household_size_distribution = [0.5, 0.5]
         mock_read.return_value = self.df
 
         FilePopulationFactory.make_pop('test_input.csv')
         mock_household_function.assert_called_once()
+
 
 if __name__ == '__main__':
     unittest.main()

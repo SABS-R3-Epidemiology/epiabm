@@ -2,8 +2,6 @@
 # Calculate infectiousness and susceptibility for an individual
 #
 
-from pyEpiabm.core import Parameters
-
 
 class PersonalInfection:
     """Class to calculate the infectiousness and susceptibility

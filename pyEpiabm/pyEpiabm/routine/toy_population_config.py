@@ -128,7 +128,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                 people_number = len(people_list)
                 household_split = np.random.multinomial(people_number, q,
                                                         size=1)[0]
-                
+
                 for j in range(household_number):
                     people_in_household = household_split[j]
                     household_people = []

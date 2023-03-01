@@ -246,7 +246,7 @@ class InitialHouseholdSweep(AbstractSweep):
         if n < 3:
             raise ValueError("Household must be greater than 3 people for " +
                              "calc_number_of_children to be called")
-     
+
         # Calculate the number of children in a 3 person household
         if n == 3:
             if ((self.age_params["zero_child_three_pers_prob"] > 0) or

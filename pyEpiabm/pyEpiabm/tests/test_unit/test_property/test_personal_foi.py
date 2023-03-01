@@ -35,7 +35,7 @@ class TestPersonalInfection(TestPyEpiabm):
                                                self.time)
         self.assertEqual(result, 1.0)
         self.assertIsInstance(result, float)
-        
+
 
 if __name__ == '__main__':
     unittest.main()
