@@ -49,6 +49,8 @@ class TestHouseholdQuarantine(TestPyEpiabm):
     def test___call__(self):
         # Susceptible person in quarantine (100% compliant),
         # symptomatic in isolation (100% probability)
+        self.householdquarantine.quarantine_house_compliant = 1.0
+        self.householdquarantine.quarantine_individual_compliant = 1.0
         self.sympt_person.isolation_start_time = 3
         self.householdquarantine(time=3)
         self.assertIsNone(self.sympt_person.quarantine_start_time)
