@@ -67,7 +67,7 @@ class Population:
             4 being lowest.
         counter : int
             Counter to prioritise by order of addition within each
-            priority group. Generated successively onn addition of
+            priority group. Generated successively on addition of
             individuals to the queue.
         person : Person
             Person to enqueue

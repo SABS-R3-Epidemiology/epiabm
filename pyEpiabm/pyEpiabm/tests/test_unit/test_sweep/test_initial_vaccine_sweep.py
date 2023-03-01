@@ -21,29 +21,23 @@ class TestVaccinationSweep(TestPyEpiabm):
         self.test_population = self.pop_factory.make_pop(self.pop_params)
         self.cell = self.test_population.cells[0]
         self.microcell = self.cell.microcells[0]
-        self.person1 = self.cell.microcells[0].persons[0]
-        self.person2 = self.test_population.cells[0].microcells[0].persons[1]
-        self.person3 = self.test_population.cells[0].microcells[0].persons[2]
-        self.person4 = self.test_population.cells[0].microcells[0].persons[3]
-        self.person5 = self.test_population.cells[0].microcells[0].persons[4]
-        self.person6 = self.test_population.cells[0].microcells[0].persons[5]
+        self.person_list = []
+        for i in range(6):
+            self.person_list.append(self.microcell.persons[i])
 
     def test_priority_group(self):
         test_sweep = pe.sweep.InitialVaccineQueue()
         test_sweep.bind_population(self.test_population)
         params = pe.Parameters.instance().intervention_params['vaccine_params']
 
-        self.person1.age = 90
-        self.person2.age = 70
-        self.person3.age = 55
-        self.person4.age = 30
-        self.person5.age = 15
-        self.person6.care_home_resident = True
-
-        person_list = [self.person1, self.person2, self.person3,
-                       self.person4, self.person5, self.person6]
+        age_list = [90, 70, 55, 30, 15, 80]
+        for i in range(len(self.person_list)):
+            self.person_list[i].age = age_list[i]
+        
+        self.person_list[5].care_home_resident = True
+        
         priority_list = []
-        for per in person_list:
+        for per in self.person_list:
             level = test_sweep.assign_priority_group(per, params['min_ages'])
             priority_list.append(level)
 

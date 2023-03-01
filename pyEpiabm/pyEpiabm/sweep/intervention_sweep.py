@@ -13,10 +13,12 @@ class InterventionSweep(AbstractSweep):
     Check if intervention should take place based on time (and/or threshold).
     Possible interventions:
     vaccination: Implement mass vaccination
+
     """
 
     def __init__(self):
-        """Call in variables from the parameters file and set flags
+        """Read in variables from the parameters file
+
         """
         self.interventions = []
         self.intervention_params = Parameters.instance().intervention_params
@@ -38,6 +40,7 @@ class InterventionSweep(AbstractSweep):
         ----------
         time : float
             Simulation time
+
         """
         for intervention in self.interventions:
             # TODO: better case-count, condition on ICU, etc.

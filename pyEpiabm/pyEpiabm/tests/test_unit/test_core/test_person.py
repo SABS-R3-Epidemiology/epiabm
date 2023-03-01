@@ -86,7 +86,7 @@ class TestPerson(TestPyEpiabm):
         self.assertRaises(KeyError, self.person.remove_place, test_place_2)
 
     def test_vaccinate(self):
-        self.person.vaccinate(5)
+        self.person.vaccinate(time=5)
         self.assertTrue(self.person.is_vaccinated)
         self.assertEqual(self.person.date_vaccinated, 5)
 

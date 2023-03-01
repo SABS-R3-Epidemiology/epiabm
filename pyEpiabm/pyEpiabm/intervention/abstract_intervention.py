@@ -35,7 +35,7 @@ class AbstractIntervention:
         ----------
         time : float
             Current simulation time
-        num_cases : integer
+        num_cases : int
             Number of cases
 
         Returns

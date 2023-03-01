@@ -7,6 +7,7 @@ from pyEpiabm.intervention import AbstractIntervention
 
 class Vaccination(AbstractIntervention):
     """Vaccination intervention
+
     """
 
     def __init__(
@@ -21,10 +22,12 @@ class Vaccination(AbstractIntervention):
         ----------
         daily_doses : int
             Number of vaccine doses administered per day nationwide
+
         """
         self.daily_doses = daily_doses
 
-        # start_time, policy_duration, threshold, population
+        # kwargs read in by this method are: start_time, policy_duration, 
+        # and case_threshold
         super(Vaccination, self).__init__(**kwargs, population=population)
 
     def __call__(self, time):
@@ -35,6 +38,7 @@ class Vaccination(AbstractIntervention):
         ----------
         time : float
             Current simulation time
+
         """
         number_vaccinated = 0
         while (number_vaccinated < self.daily_doses

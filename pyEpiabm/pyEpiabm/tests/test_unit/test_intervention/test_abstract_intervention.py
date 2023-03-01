@@ -19,7 +19,6 @@ class TestAbstractIntervention(unittest.TestCase):
                                                         self.case_threshold)
 
     def test_construct(self):
-
         self.assertEqual(self.intervention_object.start_time, self.start_time)
         self.assertEqual(self.intervention_object.policy_duration,
                          self.policy_duration)
