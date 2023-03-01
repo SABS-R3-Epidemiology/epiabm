@@ -141,7 +141,8 @@ class TestSpatialSweep(TestMockedLogs):
         mock_dist.side_effect = [0, 2]
         mock_nan.return_value = [1, 1]
         test_list = test_sweep.\
-          find_infectees(self.cell_inf, [self.cell_susc], 1)
+            find_infectees(self.cell_inf, [self.cell_susc], 1)
+        self.assertEqual(test_list, [])
         mock_logger.assert_called
         # test logger is called here
 
