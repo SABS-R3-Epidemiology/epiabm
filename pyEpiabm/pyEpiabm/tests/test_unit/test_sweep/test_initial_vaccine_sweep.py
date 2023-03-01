@@ -33,9 +33,9 @@ class TestVaccinationSweep(TestPyEpiabm):
         age_list = [90, 70, 55, 30, 15, 80]
         for i in range(len(self.person_list)):
             self.person_list[i].age = age_list[i]
-        
+
         self.person_list[5].care_home_resident = True
-        
+
         priority_list = []
         for per in self.person_list:
             level = test_sweep.assign_priority_group(per, params['min_ages'])

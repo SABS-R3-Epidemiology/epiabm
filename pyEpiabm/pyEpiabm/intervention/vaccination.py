@@ -26,7 +26,7 @@ class Vaccination(AbstractIntervention):
         """
         self.daily_doses = daily_doses
 
-        # kwargs read in by this method are: start_time, policy_duration, 
+        # kwargs read in by this method are: start_time, policy_duration,
         # and case_threshold
         super(Vaccination, self).__init__(**kwargs, population=population)
 
