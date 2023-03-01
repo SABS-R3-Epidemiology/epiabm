@@ -36,7 +36,7 @@ parameter_values = [[2, 10, 20], [0.2, 0.5, 0.8]]
 
 for j in range(len(to_modify_parameter)):
     for i in range(len(parameter_values[j])):
-        name_output_file = 'output_{}_{}'.format(
+        name_output_file = 'output_{}_{}.csv'.format(
             parameter_values[j][i], to_modify_parameter[j])
 
         pe.Parameters.instance().intervention_params['place_closure'][
@@ -96,7 +96,7 @@ for j in range(len(to_modify_parameter)):
     for i in range(len(parameter_values[j])):
         file_name = os.path.join(os.path.dirname(__file__),
                                  "intervention_outputs",
-                                 'output_{}_{}'.format(
+                                 'output_{}_{}.csv'.format(
                                  parameter_values[j][i],
                                  to_modify_parameter[j]))
         df = pd.read_csv(file_name)
