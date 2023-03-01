@@ -268,7 +268,7 @@ class SpatialSweep(AbstractSweep):
         Returns
         -------
         cell.nearest_neighbours
-            Dictionary of all cells with distance below cutoff
+            Dictionary of all cells with distance below cutoff.
             Dictionary stores cell.id and distance between the 2 cells
             These are stored in the form:
             cell.id: distance
