@@ -104,7 +104,7 @@ class SpatialInfection:
                 Parameters.instance().intervention_params['place_closure'][
                     'closure_place_type']) is True else 1
 
-        if (hasattr(infector.microcell, 'distancing_start_time') is True) and (
+        if (hasattr(infector.microcell, 'distancing_start_time')) and (
                 infector.microcell.distancing_start_time is not None):
             if infector.distancing_enhanced is True:
                 spatial_susc *= Parameters.instance().\
@@ -143,12 +143,12 @@ class SpatialInfection:
         """
         isolating = Parameters.instance().\
             intervention_params['case_isolation']['isolation_effectiveness']\
-            if (hasattr(infector, 'isolation_start_time') is True) and (
+            if (hasattr(infector, 'isolation_start_time')) and (
                 infector.isolation_start_time is not None) else 1
         quarantine = Parameters.instance().\
             intervention_params['household_quarantine'][
                 'quarantine_spatial_effectiveness']\
-            if (hasattr(infector, 'quarantine_start_time') is True) and (
+            if (hasattr(infector, 'quarantine_start_time')) and (
                 infector.quarantine_start_time is not None) else 1
         infectiousness = (SpatialInfection.spatial_inf(
             inf_cell, infector, time) * isolating * quarantine)

@@ -167,7 +167,7 @@ class Person:
             self.place_types.remove(place.place_type)
 
     def close_place(self, closure_place_type):
-        if (hasattr(self.microcell, 'closure_start_time') is True) and (
+        if (hasattr(self.microcell, 'closure_start_time')) and (
                 self.microcell.closure_start_time is not None):
             for place_type in self.place_types:
                 if place_type.value in closure_place_type:

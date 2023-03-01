@@ -39,7 +39,7 @@ class SocialDistancing(AbstractIntervention):
     def __call__(self, time):
         for cell in self._population.cells:
             for microcell in cell.microcells:
-                if (hasattr(microcell, 'distancing_start_time') is True) and (
+                if (hasattr(microcell, 'distancing_start_time')) and (
                         microcell.distancing_start_time is not None):
                     if time > microcell.distancing_start_time + self.\
                               distancing_duration:

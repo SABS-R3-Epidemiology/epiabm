@@ -77,7 +77,7 @@ class PlaceInfection:
         """
         place_susc = 1.0
         place_idx = place.place_type.value - 1
-        if (hasattr(infector.microcell, 'distancing_start_time') is True) and (
+        if (hasattr(infector.microcell, 'distancing_start_time')) and (
                 infector.microcell.distancing_start_time is not None):
             if infector.distancing_enhanced is True:
                 place_susc *= Parameters.instance().\
@@ -116,13 +116,13 @@ class PlaceInfection:
         """
         isolating = Parameters.instance().\
             intervention_params['case_isolation']['isolation_effectiveness']\
-            if (hasattr(infector, 'isolation_start_time') is True) and (
+            if (hasattr(infector, 'isolation_start_time')) and (
                 infector.isolation_start_time is not None)else 1
         place_idx = place.place_type.value - 1
         quarantine = Parameters.instance().\
             intervention_params['household_quarantine'][
                 'quarantine_place_effectiveness'][place_idx]\
-            if (hasattr(infector, 'quarantine_start_time') is True) and (
+            if (hasattr(infector, 'quarantine_start_time')) and (
                 infector.quarantine_start_time is not None) else 1
         infectiousness = (PlaceInfection.place_inf(place, infector, time)
                           * isolating * quarantine)

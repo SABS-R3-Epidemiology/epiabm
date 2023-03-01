@@ -35,7 +35,7 @@ class HouseholdQuarantine(AbstractIntervention):
     def __call__(self, time):
         for cell in self._population.cells:
             for person in cell.persons:
-                if (hasattr(person, 'quarantine_start_time') is True) and (
+                if (hasattr(person, 'quarantine_start_time')) and (
                         person.quarantine_start_time is not None):
                     if time > person.quarantine_start_time + self.\
                               quarantine_duration:
