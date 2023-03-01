@@ -24,7 +24,8 @@ class TestCaseIsolation(TestPyEpiabm):
         self.person_symp.update_status(InfectionStatus(4))
 
         params = pe.Parameters.instance().intervention_params['case_isolation']
-        self.caseisolation = CaseIsolation(population=self._population, **params)
+        self.caseisolation = \
+            CaseIsolation(population=self._population, **params)
 
     def test__init__(self):
         self.assertEqual(self.caseisolation.start_time, 6)
