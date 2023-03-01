@@ -14,7 +14,8 @@ class SocialDistancing(AbstractIntervention):
     Social distancing is based on the number of infectious persons in each
     microcell. The intensity of distancing for each individual is affected
     by the age group (with probability to take enhanced social distancing).
-    Social distancing is stopped after the distancing period.
+    Social distancing is stopped after the distancing period or
+    after the end of the policy.
     Detailed description of parameters is given in github wiki:
     https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions.
     """
@@ -59,3 +60,9 @@ class SocialDistancing(AbstractIntervention):
                                     person.distancing_enhanced = False
                             else:
                                 person.distancing_enhanced = False
+
+    def turn_off(self):
+        for cell in self._population.cells:
+            for microcell in cell.microcells:
+                if microcell.distancing_start_time is not None:
+                    microcell.distancing_start_time = None

@@ -12,8 +12,8 @@ class TestSocialDistancing(TestPyEpiabm):
     """
     @classmethod
     def setUpClass(cls) -> None:
-        """Intialise a population with one infector and one
-        infectee, both in the same place and household.
+        """Intialise a population with one cell and one microcell with
+        one infector.
         """
         super(TestSocialDistancing, cls).setUpClass()  # Sets up parameters
         cls.time = 1
@@ -73,6 +73,11 @@ class TestSocialDistancing(TestPyEpiabm):
         mock_params.return_value.use_ages = False
         self.socialdistancing(time=5)
         self.assertFalse(self.person.distancing_enhanced)
+
+    def test_turn_off(self):
+        self.microcell.distancing_start_time = 370
+        self.socialdistancing.turn_off()
+        self.assertIsNone(self.microcell.distancing_start_time)
 
 
 if __name__ == '__main__':
