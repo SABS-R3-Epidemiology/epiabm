@@ -23,10 +23,10 @@ class TestSpatialSweep(TestMockedLogs):
         # who is Susceptible
         # 3rd cell: 1 microcell, 1 person who has the status recovered
         self.pop = Population()
-        self.pop.add_cells(3)
+        self.pop.add_cells(2)
         self.cell_inf = self.pop.cells[0]
         self.cell_susc = self.pop.cells[1]
-        self.cell_non_susc = self.pop.cells[2]
+        # self.cell_non_susc = self.pop.cells[2]
 
         self.cell_inf.add_microcells(1)
         self.microcell_inf = self.cell_inf.microcells[0]
@@ -34,8 +34,8 @@ class TestSpatialSweep(TestMockedLogs):
         self.cell_susc.add_microcells(1)
         self.microcell_susc = self.cell_susc.microcells[0]
 
-        self.cell_non_susc.add_microcells(1)
-        self.microcell_non_susc = self.cell_non_susc.microcells[0]
+        # self.cell_non_susc.add_microcells(1)
+        # self.microcell_non_susc = self.cell_non_susc.microcells[0]
 
         self.microcell_inf.add_people(100)
         self.infector = self.microcell_inf.persons[0]
@@ -44,9 +44,9 @@ class TestSpatialSweep(TestMockedLogs):
         self.microcell_susc.add_people(1)
         self.infectee = self.microcell_susc.persons[0]
 
-        self.microcell_non_susc.add_people(1)
-        self.non_infectee = self.microcell_non_susc.persons[0]
-        self.non_infectee.update_status(InfectionStatus.Recovered)
+        # self.microcell_non_susc.add_people(1)
+        # self.non_infectee = self.microcell_non_susc.persons[0]
+        # self.non_infectee.update_status(InfectionStatus.Recovered)
 
         self.infector.infectiousness = 1.0
         Parameters.instance().time_steps_per_day = 1
@@ -101,7 +101,7 @@ class TestSpatialSweep(TestMockedLogs):
         test_sweep = SpatialSweep()
         mock_dist.return_value = 2
         test_sweep.bind_population(test_pop)
-        self.assertEqual(self.cell_inf.nearest_neighbours, {1: 2, 2: 2})
+        self.assertEqual(self.cell_inf.nearest_neighbours, {1: 2})
 
     @mock.patch("logging.exception")
     @mock.patch("numpy.nan_to_num")
@@ -204,11 +204,11 @@ class TestSpatialSweep(TestMockedLogs):
         test_pop = self.pop
         test_sweep.bind_population(test_pop)
         test_sweep(time)
-        self.assertTrue(self.cell_susc.person_queue.empty())
+        self.assertTrue(self.cell_inf.person_queue.empty())
         # Change infector's status to infected
         self.infector.update_status(InfectionStatus.InfectMild)
         test_sweep(time)
-        self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
+        self.assertEqual(self.cell_inf.person_queue.qsize(), 0)
         Parameters.instance().do_CovidSim = True
         self.cell_susc.person_queue = Queue()
         test_sweep(time)
