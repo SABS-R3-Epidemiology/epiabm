@@ -118,12 +118,10 @@ class Person:
             self.infection_status, new_status, self.age_group)
         self.infection_status = new_status
 
-        if self.infection_status \
-                in [InfectionStatus.Susceptible] and \
+        if self.infection_status == InfectionStatus.Susceptible and \
                 self.household is not None:
             self.household.add_susceptible_person(self)
-        if self.infection_status \
-                in [InfectionStatus.Exposed] and \
+        if self.infection_status == InfectionStatus.Exposed and \
                 self.household is not None:
             self.household.remove_susceptible_person(self)
 

@@ -67,8 +67,7 @@ class Household:
         """
         self.persons.append(person)
         person.household = self
-        if person.infection_status \
-                in [InfectionStatus.Susceptible]:
+        if person.infection_status == InfectionStatus.Susceptible:
             self.add_susceptible_person(person)
 
     def add_susceptible_person(self, susceptible_person):
