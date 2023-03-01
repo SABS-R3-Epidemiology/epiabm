@@ -70,18 +70,6 @@ class Person:
             # same age group (to conserve same output structure)
             self.age_group = 0
 
-    def is_symptomatic(self):
-        """Query if the person is currently symptomatic.
-
-        Returns
-        -------
-        bool
-            Whether person is currently symptomatic
-
-        """
-        return Person.is_infectious(self) and self.infection_status != \
-            InfectionStatus.InfectASympt
-
     def is_infectious(self):
         """Query if the person is currently infectious.
 

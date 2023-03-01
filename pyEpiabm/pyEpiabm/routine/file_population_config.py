@@ -114,7 +114,7 @@ class FilePopulationFactory:
                             HostProgressionSweep.set_infectiousness(person,
                                                                     time)
 
-            # Add places to microcell
+            # Add households and places to microcell
             if Parameters.instance().household_size_distribution == []:
                 if (('household_number' in line) and
                         (line["household_number"]) > 0):
@@ -127,6 +127,8 @@ class FilePopulationFactory:
                                         cell.location,
                                         random.choice(list(PlaceType)))
 
+        # if household_size_distribution parameters are available use
+        # appropriate function
         if Parameters.instance().household_size_distribution != []:
             InitialHouseholdSweep().household_allocation(new_pop)
 
