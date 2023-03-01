@@ -17,7 +17,7 @@ class InitialVaccineQueue(AbstractSweep):
     For a description of how the method functions in the context of vaccination
     see
     https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#vaccination
-    
+
     """
     def __init__(self):
         """ Call in age group and uptake parameters if vaccination parameters
