@@ -18,12 +18,12 @@ class TestPopConfig(TestPyEpiabm):
                       'household_number': [1, 1], 'place_number': [1, 1],
                       'Susceptible': [8, 9], 'InfectMild': [2, 3]}
         self.df = pd.DataFrame(self.input)
+        pe.Parameters.instance().household_size_distribution = []
 
     @patch('logging.exception')
     def test_make_pop_no_file(self, mock_log):
         """Tests for when no file is specified.
         """
-        pe.Parameters.instance().household_size_distribution = []
 
         FilePopulationFactory.make_pop()
         mock_log.assert_called_once_with("TypeError in"
@@ -35,7 +35,6 @@ class TestPopConfig(TestPyEpiabm):
         """
         # Population is initialised with no households
         mock_read.return_value = self.df
-        pe.Parameters.instance().household_size_distribution = []
 
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
         mock_read.assert_called_once_with('test_input.csv')
@@ -78,7 +77,6 @@ class TestPopConfig(TestPyEpiabm):
         """Tests for when the population is read from empty file.
         """
         mock_read.side_effect = FileNotFoundError
-        pe.Parameters.instance().household_size_distribution = []
 
         FilePopulationFactory.make_pop('test_input.csv')
         mock_log.assert_called_once_with("FileNotFoundError in"
@@ -92,7 +90,6 @@ class TestPopConfig(TestPyEpiabm):
         # Read in data with incorrect infection status
         data = self.df.rename(columns={'InfectMild': 'InfectUnknown'})
         mock_read.return_value = data
-        pe.Parameters.instance().household_size_distribution = []
 
         FilePopulationFactory.make_pop('test_input.csv')
         mock_log.assert_called_once_with("ValueError in FilePopulation"
@@ -109,7 +106,6 @@ class TestPopConfig(TestPyEpiabm):
         self.df.iat[1, 0] = 1
 
         mock_read.return_value = self.df
-        pe.Parameters.instance().household_size_distribution = []
 
         FilePopulationFactory.make_pop('test_input.csv')
         mock_log.assert_called_once_with("ValueError in FilePopulation"
@@ -138,8 +134,6 @@ class TestPopConfig(TestPyEpiabm):
         self.df['household_number'] = pd.Series([2, 3])
         mock_read.return_value = self.df
 
-        pe.Parameters.instance().household_size_distribution = []
-
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
 
         total_people = 0
@@ -165,7 +159,6 @@ class TestPopConfig(TestPyEpiabm):
                                mock_np_random, n=42):
         # Population is initialised with no households
         mock_read.return_value = self.df
-        pe.Parameters.instance().household_size_distribution = []
 
         FilePopulationFactory.make_pop('test_input.csv', random_seed=n)
         mock_read.assert_called_once_with('test_input.csv')
@@ -180,7 +173,6 @@ class TestPopConfig(TestPyEpiabm):
         the file outputs to the correct location.
         """
         mock_read.return_value = self.df
-        pe.Parameters.instance().household_size_distribution = []
 
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
         self.assertEqual(len(test_pop.cells), 2)
@@ -190,16 +182,14 @@ class TestPopConfig(TestPyEpiabm):
         mock_write.assert_called_once()
         self.assertEqual(mock_write.call_args[0], ('output.csv',))
 
-    @patch('logging.warning')
     @patch("pandas.read_csv")
     @patch("copy.copy")
-    def test_print_population(self, mock_copy, mock_read, mock_house_log):
+    def test_print_population(self, mock_copy, mock_read):
         """Tests method to print population to csv, to match content
         with target. Uses meaningful household data.
         """
         self.df['household_number'] = pd.Series([2, 3])
         mock_read.return_value = self.df
-        pe.Parameters.instance().household_size_distribution = []
 
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
         self.assertEqual(len(test_pop.cells), 2)
@@ -229,7 +219,6 @@ class TestPopConfig(TestPyEpiabm):
         """
         mock_print.side_effect = FileNotFoundError
         mock_read.return_value = self.df
-        pe.Parameters.instance().household_size_distribution = []
 
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
 
@@ -247,7 +236,6 @@ class TestPopConfig(TestPyEpiabm):
         """Tests method to print population to csv, to match content
         with target.
         """
-        pe.Parameters.instance().household_size_distribution = []
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
 
         FilePopulationFactory.print_population(test_pop, 'output.csv')
