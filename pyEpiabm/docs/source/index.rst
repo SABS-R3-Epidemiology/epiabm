@@ -17,7 +17,6 @@ Contents
 .. toctree::
 
     core
-    interventions
     outputs
     properties
     routines
