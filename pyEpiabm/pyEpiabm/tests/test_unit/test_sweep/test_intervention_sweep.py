@@ -18,7 +18,7 @@ class TestInterventionSweep(TestPyEpiabm):
         # Construct a population with 2 persons, one infector and one infectee
         cls.pop_factory = pe.routine.ToyPopulationFactory()
         cls.pop_params = {"population_size": 2, "cell_number": 1,
-                           "microcell_number": 1, "household_number": 1}
+                          "microcell_number": 1, "household_number": 1}
         cls._population = cls.pop_factory.make_pop(cls.pop_params)
         cls.person_susc = cls._population.cells[0].microcells[0].persons[0]
         cls.person_susc.update_status(InfectionStatus(1))
