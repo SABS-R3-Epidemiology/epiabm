@@ -273,14 +273,14 @@ class SpatialSweep(AbstractSweep):
             These are stored in the form:
             cell.id: distance
         '''
-        # List of near neghbours, cells which are closer than the
-        # cutoff for cross-cell infection
         cutoff = Parameters.instance().infection_radius
 
         for cell2 in other_cells:
             distance = DistanceFunctions.dist(cell.location, cell2.location)
             if distance < cutoff:
                 cell.nearest_neighbours[cell2.id] = distance
+                # List of near neghbours, cells which are closer than the
+                # cutoff for cross-cell infection
 
     def bind_population(self, population):
         super().bind_population(population)
