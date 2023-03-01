@@ -85,6 +85,11 @@ class TestPerson(TestPyEpiabm):
         self.assertEqual(len(self.person.places), 0)
         self.assertRaises(KeyError, self.person.remove_place, test_place_2)
 
+    def test_vaccinate(self):
+        self.person.vaccinate(5)
+        self.assertTrue(self.person.is_vaccinated)
+        self.assertEqual(self.person.date_vaccinated, 5)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,4 +1,5 @@
 import unittest
+from unittest import mock
 
 import pyEpiabm as pe
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
@@ -9,23 +10,23 @@ class TestVaccinationSweep(TestPyEpiabm):
     queue is generated.
     """
 
-    def setUp(cls) -> None:
+    def setUp(self) -> None:
         """Sets up a population we can use throughout the test.
-        2 people are located in one microcell.
+        6 people are located in one microcell.
         """
-        super(TestVaccinationSweep, cls).setUp()
-        cls.pop_factory = pe.routine.ToyPopulationFactory()
-        cls.pop_params = {"population_size": 6, "cell_number": 1,
-                          "microcell_number": 1, "household_number": 1}
-        cls.test_population = cls.pop_factory.make_pop(cls.pop_params)
-        cls.cell = cls.test_population.cells[0]
-        cls.microcell = cls.cell.microcells[0]
-        cls.person1 = cls.cell.microcells[0].persons[0]
-        cls.person2 = cls.test_population.cells[0].microcells[0].persons[1]
-        cls.person3 = cls.test_population.cells[0].microcells[0].persons[2]
-        cls.person4 = cls.test_population.cells[0].microcells[0].persons[3]
-        cls.person5 = cls.test_population.cells[0].microcells[0].persons[4]
-        cls.person6 = cls.test_population.cells[0].microcells[0].persons[5]
+        super(TestVaccinationSweep, self).setUp()
+        self.pop_factory = pe.routine.ToyPopulationFactory()
+        self.pop_params = {"population_size": 6, "cell_number": 1,
+                           "microcell_number": 1, "household_number": 1}
+        self.test_population = self.pop_factory.make_pop(self.pop_params)
+        self.cell = self.test_population.cells[0]
+        self.microcell = self.cell.microcells[0]
+        self.person1 = self.cell.microcells[0].persons[0]
+        self.person2 = self.test_population.cells[0].microcells[0].persons[1]
+        self.person3 = self.test_population.cells[0].microcells[0].persons[2]
+        self.person4 = self.test_population.cells[0].microcells[0].persons[3]
+        self.person5 = self.test_population.cells[0].microcells[0].persons[4]
+        self.person6 = self.test_population.cells[0].microcells[0].persons[5]
 
     def test_priority_group(self):
         test_sweep = pe.sweep.InitialVaccineQueue()
@@ -52,6 +53,13 @@ class TestVaccinationSweep(TestPyEpiabm):
         self.assertEqual(priority_list[2], 3)
         self.assertEqual(priority_list[3], 4)
         self.assertIsNone(priority_list[4])
+
+    @mock.patch("pyEpiabm.core.Parameters.instance")
+    @mock.patch("logging.warning")
+    def test_warning(self, mock_log, mock_params):
+        mock_params.return_value.intervention_params = {}
+        pe.sweep.InitialVaccineQueue()
+        mock_log.assert_called_once()
 
 
 if __name__ == '__main__':
