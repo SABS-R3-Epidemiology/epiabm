@@ -256,7 +256,7 @@ class SpatialSweep(AbstractSweep):
         '''
         Helper function which takes in a given cell and the list of all cells
         and generates a list of near neighbours which are the cells that are
-        closer than the cutoff for cross-cell infection
+        closer than the cutoff for cross-cell infection.
 
         Parameters
         ----------
