@@ -26,8 +26,6 @@ pe.routine.Simulation.set_random_seed(seed=42)
 pop_sizes = np.array([int(1000), int(2000), int(4000), int(8000), int(10000)])
 sim_times = []
 
-number_sims = len(pop_sizes)
-
 for i in range(len(pop_sizes)):
 
     # Pop_params are used to configure the population structure being used in
