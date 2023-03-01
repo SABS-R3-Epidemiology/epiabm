@@ -10,22 +10,22 @@ class TestCaseIsolation(TestPyEpiabm):
     """Test the 'CaseIsolation' class.
     """
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        super(TestCaseIsolation, cls).setUpClass()  # Sets up patch on logging
+    def setUp(self) -> None:
+        super(TestCaseIsolation, self).setUp()  # Sets up patch on logging
 
         # Construct a population with 2 persons
-        cls._population = pe.Population()
-        cls._population.add_cells(1)
-        cls._population.cells[0].add_microcells(1)
-        cls._population.cells[0].microcells[0].add_people(2)
-        cls.person_susc = cls._population.cells[0].microcells[0].persons[0]
-        cls.person_susc.update_status(InfectionStatus(1))
-        cls.person_symp = cls._population.cells[0].microcells[0].persons[1]
-        cls.person_symp.update_status(InfectionStatus(4))
+        self.pop_factory = pe.routine.ToyPopulationFactory()
+        self.pop_params = {"population_size": 2, "cell_number": 1,
+                           "microcell_number": 1, "household_number": 1}
+        self._population = self.pop_factory.make_pop(self.pop_params)
+        self.person_susc = self._population.cells[0].microcells[0].persons[0]
+        self.person_susc.update_status(InfectionStatus(1))
+        self.person_symp = self._population.cells[0].microcells[0].persons[1]
+        self.person_symp.update_status(InfectionStatus(4))
 
         params = pe.Parameters.instance().intervention_params['case_isolation']
-        cls.caseisolation = CaseIsolation(population=cls._population, **params)
+        self.caseisolation = \
+            CaseIsolation(population=self._population, **params)
 
     def test__init__(self):
         self.assertEqual(self.caseisolation.start_time, 6)
@@ -41,6 +41,7 @@ class TestCaseIsolation(TestPyEpiabm):
         self.assertIsNone(self.person_symp.isolation_start_time)
 
         # Start isolation if the person is symptomatic
+        self.caseisolation.isolation_probability = 1.0
         self.caseisolation(time=5)
         self.assertIsNone(self.person_susc.isolation_start_time)
         self.assertEqual(self.person_symp.isolation_start_time, 5)
@@ -48,6 +49,13 @@ class TestCaseIsolation(TestPyEpiabm):
         # End isolation
         self.caseisolation(time=150)
         self.assertIsNone(self.person_susc.isolation_start_time)
+        self.assertIsNone(self.person_symp.isolation_start_time)
+
+    def test_turn_off(self):
+        self.person_symp.isolation_start_time = 370
+        self.caseisolation(time=370)
+
+        self.caseisolation.turn_off()
         self.assertIsNone(self.person_symp.isolation_start_time)
 
 
