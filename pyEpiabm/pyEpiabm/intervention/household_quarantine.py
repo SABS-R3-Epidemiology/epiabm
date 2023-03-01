@@ -41,20 +41,21 @@ class HouseholdQuarantine(AbstractIntervention):
                        self.quarantine_duration:
                         # Stop quarantine after quarantine period
                         person.quarantine_start_time = None
+                    if person.isolation_start_time is not None:
+                        # Isolated individual should not quarantine
+                        person.quarantine_start_time = None
 
-                if person.is_symptomatic() and \
-                   person.isolation_start_time == time:
-                    # Require household of symptomatic individuals to
-                    # quarantine with given household compliance and
-                    # individual compliance. Only check when infector
-                    # starts its isolation in order to prevent resetting.
-                    # Start time is reset when new person in household
-                    # becomes an infector.
+                if person.isolation_start_time == time:
+                    # Require household of symptomatic/isolating individuals to
+                    # quarantine with given household compliance and individual
+                    # compliance. Only check when infector starts its isolation
+                    # in order to prevent resetting. Start time is reset when
+                    # new person in household becomes an infector.
                     r_house = random.random()
                     if r_house < self.quarantine_house_compliant:
                         for household_person in person.household.persons:
-                            if not household_person.is_symptomatic():
-                                # symptomatic individuals case isolate
+                            if household_person.isolation_start_time is None:
+                                # isolated individuals don't quarantine
                                 r_indiv = random.random()
                                 if r_indiv < \
                                    self.quarantine_individual_compliant:

@@ -55,17 +55,17 @@ class TestHouseholdQuarantine(TestPyEpiabm):
         self.householdquarantine(time=3)
         self.assertIsNone(self.sympt_person.quarantine_start_time)
         self.assertEqual(self.susc_person1.quarantine_start_time, 4)
+        self.assertEqual(self.susc_person2.quarantine_start_time, 4)
 
         # second household infection while in quarantine
-        self.susc_person2.update_status(InfectionStatus.InfectMild)
         self.susc_person2.isolation_start_time = 6
         self.householdquarantine(time=6)
         self.assertIsNone(self.sympt_person.quarantine_start_time)
+        self.assertIsNone(self.susc_person2.quarantine_start_time)
         self.assertEqual(self.susc_person1.quarantine_start_time, 7)
 
         # End quarantine
         self.householdquarantine(time=22)
-        self.assertIsNone(self.sympt_person.quarantine_start_time)
         self.assertIsNone(self.susc_person1.quarantine_start_time)
 
     def test_turn_off(self):
