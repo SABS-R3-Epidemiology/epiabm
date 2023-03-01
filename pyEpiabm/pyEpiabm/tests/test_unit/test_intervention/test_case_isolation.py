@@ -14,10 +14,10 @@ class TestCaseIsolation(TestPyEpiabm):
         super(TestCaseIsolation, self).setUp()  # Sets up patch on logging
 
         # Construct a population with 2 persons
-        self._population = pe.Population()
-        self._population.add_cells(1)
-        self._population.cells[0].add_microcells(1)
-        self._population.cells[0].microcells[0].add_people(2)
+        self.pop_factory = pe.routine.ToyPopulationFactory()
+        self.pop_params = {"population_size": 2, "cell_number": 1,
+                           "microcell_number": 1, "household_number": 1}
+        self._population = self.pop_factory.make_pop(self.pop_params)
         self.person_susc = self._population.cells[0].microcells[0].persons[0]
         self.person_susc.update_status(InfectionStatus(1))
         self.person_symp = self._population.cells[0].microcells[0].persons[1]
