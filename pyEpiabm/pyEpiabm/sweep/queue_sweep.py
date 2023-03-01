@@ -45,5 +45,5 @@ class QueueSweep(AbstractSweep):
                         person.next_infection_status = InfectionStatus.Exposed
                 else:
                     person.next_infection_status = InfectionStatus.Exposed
-                
+
                 person.time_of_status_change = time

@@ -45,7 +45,7 @@ class TestHouseholdInfection(TestPyEpiabm):
         result = HouseholdInfection.household_foi(self.infector,
                                                   self.infectee,
                                                   self.time)
-                    
+
         self.assertEqual(result, 0.05)
         # expected value based on infectiousness(1) * susceptibiliy (1) *
         # vaccine infectiouness drop (0.5) * household transmission (0.1)
