@@ -16,8 +16,7 @@ class HouseholdInfection:
     @staticmethod
     def household_inf(infector, time: float):
         """Calculate the infectiousness of a person in a given
-        household. Does not include interventions such as isolation,
-        or whether individual is a carehome resident.
+        household.
 
         Parameters
         ----------
@@ -37,8 +36,7 @@ class HouseholdInfection:
     @staticmethod
     def household_susc(infector, infectee, time: float):
         """Calculate the susceptibility of one person to another in a given
-        household. Does not include interventions such as isolation,
-        or whether individual is a carehome resident.
+        household.
 
         Parameters
         ----------
@@ -60,8 +58,7 @@ class HouseholdInfection:
     @staticmethod
     def household_foi(infector, infectee, time: float):
         """Calculate the force of infection parameter of a household,
-        for a particular infector and infectee. Scales infectiousness
-        if a person is vaccinated.
+        for a particular infector and infectee.
 
         Parameters
         ----------
@@ -79,7 +76,7 @@ class HouseholdInfection:
 
         """
         seasonality = 1.0  # Not yet implemented
-        false_pos = 1 / (1 - Parameters.instance().
+        false_pos = 1 / (1 - Parameters.instance().\
                          false_positive_rate)
 
         infectiousness = (HouseholdInfection.household_inf(infector, time)

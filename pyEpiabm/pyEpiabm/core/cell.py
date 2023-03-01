@@ -36,8 +36,6 @@ class Cell:
         self.households = []
         self.person_queue = Queue()
         self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
-        self.isolation_effectiveness = None
-        self.isolation_house_effectiveness = None
 
         if not (len(loc) == 2 and isinstance(loc[0], Number) and
                 isinstance(loc[1], Number)):
