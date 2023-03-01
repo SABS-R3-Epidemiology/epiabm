@@ -38,11 +38,12 @@ class QueueSweep(AbstractSweep):
                         if r < vacc_params['vacc_protectiveness']:
                             person.next_infection_status = InfectionStatus.\
                                 Vaccinated
-                            person.time_of_status_change = time
                         else:
                             person.next_infection_status = InfectionStatus.\
                                 Exposed
-                            person.time_of_status_change = time
+                    else:
+                        person.next_infection_status = InfectionStatus.Exposed
                 else:
                     person.next_infection_status = InfectionStatus.Exposed
-                    person.time_of_status_change = time
+                
+                person.time_of_status_change = time

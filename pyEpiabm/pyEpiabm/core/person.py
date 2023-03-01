@@ -169,3 +169,7 @@ class Person:
             ind = place_list.index(place)
             self.places.pop(ind)
             self.place_types.pop(ind)
+
+    def vaccinate(self, time):
+        self.is_vaccinated = True
+        self.date_vaccinated = time

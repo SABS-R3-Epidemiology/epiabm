@@ -20,7 +20,7 @@ class Vaccination(AbstractIntervention):
         Parameters
         ----------
         daily_doses : int
-            Number of vaccine doses administered per day
+            Number of vaccine doses administered per day nationwide
         """
         self.daily_doses = daily_doses
 
@@ -40,6 +40,5 @@ class Vaccination(AbstractIntervention):
         while (number_vaccinated < self.daily_doses
                 and not self._population.vaccine_queue.empty()):
             person = self._population.vaccine_queue.get()[2]
-            person.is_vaccinated = True
-            person.date_vaccinated = time
+            person.vaccinate(time)
             number_vaccinated += 1

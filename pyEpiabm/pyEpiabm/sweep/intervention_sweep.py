@@ -4,6 +4,7 @@
 
 from pyEpiabm.core import Parameters
 from pyEpiabm.intervention import Vaccination
+
 from .abstract_sweep import AbstractSweep
 
 
@@ -11,7 +12,7 @@ class InterventionSweep(AbstractSweep):
     """Class to sweep through all possible interventions.
     Check if intervention should take place based on time (and/or threshold).
     Possible interventions:
-    isolate_individual: Symptomatic case stays home.
+    vaccination: Implement mass vaccination
     """
 
     def __init__(self):
@@ -25,8 +26,9 @@ class InterventionSweep(AbstractSweep):
         for intervention in self.intervention_params.keys():
             params = self.intervention_params[intervention]
             if intervention == 'vaccine_params':
-                self.interventions.append(Vaccination(**params,
-                                          population=self._population))
+                self.interventions.append(Vaccination(
+                                          population=self._population,
+                                          **params,))
 
     def __call__(self, time):
         """

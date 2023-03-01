@@ -63,10 +63,12 @@ class Population:
         ----------
         priority : int
             Priority level of 1, 2, 3, or 4 to prioritise by age and
-            whether carehome resident.
+            whether carehome resident. 1 being highest priority and
+            4 being lowest.
         counter : int
             Counter to prioritise by order of addition within each
-            priority group
+            priority group. Generated successively onn addition of
+            individuals to the queue.
         person : Person
             Person to enqueue
 

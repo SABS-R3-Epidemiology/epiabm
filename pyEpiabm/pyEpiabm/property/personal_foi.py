@@ -43,8 +43,7 @@ class PersonalInfection:
     def person_susc(infector, infectee, time: float):
         """Calculate the susceptibility of one person to another. Does not
         include interventions such as isolation, or whether individual is a
-        carehome resident. Scales susceptibility if a person is
-        vaccinated.
+        carehome resident.
 
         Also does not yet import WAIFW matrix from Polymod data to determine
         age dependant contact between individuals.

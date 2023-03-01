@@ -3,6 +3,7 @@
 #
 
 import random
+import logging
 from itertools import count
 
 from pyEpiabm.core import Parameters
@@ -23,6 +24,10 @@ class InitialVaccineQueue(AbstractSweep):
                 .intervention_params['vaccine_params']
             self.age_thresholds = vaccine_params["min_ages"]
             self.prob_by_age = vaccine_params["prob_vaccinated"]
+
+        else:
+            logging.warning("InitialVaccineQueue is being run but no " +
+                            "vaccination parameters are provided")
 
     def assign_priority_group(self, person, age_thresholds):
         """ Assigns priority group to each person based on age and whether
@@ -67,7 +72,9 @@ class InitialVaccineQueue(AbstractSweep):
             all_persons = [pers for cell in self._population.cells
                            for pers in cell.persons]
             random.shuffle(all_persons)
-            unique = count()
+            unique = count()  # returns a count object. each time next() is
+            # called returns consecutive value. used to generate secondary
+            # priority index to order within each priority group.
             for person in all_persons:
                 level = self.assign_priority_group(person,
                                                    self.age_thresholds)

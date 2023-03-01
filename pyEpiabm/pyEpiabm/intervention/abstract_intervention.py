@@ -7,8 +7,8 @@ class AbstractIntervention:
     """Abstract class for Interventions.
 
     """
-    def __init__(self, start_time, policy_duration, case_threshold,
-                 population, **kwargs):
+    def __init__(self, start_time, policy_duration, population,
+                 case_threshold=0, **kwargs):
         """Set the parameters of the interventions.
 
         Parameters
