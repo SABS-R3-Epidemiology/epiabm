@@ -64,5 +64,6 @@ class SocialDistancing(AbstractIntervention):
     def turn_off(self):
         for cell in self._population.cells:
             for microcell in cell.microcells:
-                if microcell.distancing_start_time is not None:
+                if (hasattr(microcell, 'distancing_start_time')) and (
+                        microcell.distancing_start_time is not None):
                     microcell.distancing_start_time = None

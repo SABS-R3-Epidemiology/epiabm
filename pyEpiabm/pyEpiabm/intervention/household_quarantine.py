@@ -8,10 +8,11 @@ from pyEpiabm.intervention import AbstractIntervention
 
 
 class HouseholdQuarantine(AbstractIntervention):
-    """Household/Home quarantine intervention
-    People who share household with a symptomatic case stay home based on
-    the household and individual compliance, if intervention is active.
-    Quarantine stops after the quarantine period.
+    """Household/Home quarantine intervention.
+    People who share household with a symptomatic case (who case isolates)
+    stay home based on the household and individual compliance, if
+    intervention is active. Quarantine stops after the quarantine period
+    or after the end of the policy.
     """
 
     def __init__(
@@ -41,16 +42,36 @@ class HouseholdQuarantine(AbstractIntervention):
                               quarantine_duration:
                         # Stop quarantine after quarantine period
                         person.quarantine_start_time = None
-                else:
-                    if person.is_symptomatic():
-                        # Require household of symptomatic individuals to
-                        # quarantine with given household compliance and
-                        # individual compliance.
-                        r_house = random.random()
-                        if r_house < self.quarantine_house_compliant:
-                            for household_person in person.household.persons:
+                    if (hasattr(person, 'isolation_start_time')) and (
+                            person.isolation_start_time is not None):
+                        # Isolated individual should not quarantine
+                        person.quarantine_start_time = None
+
+                if (hasattr(person, 'isolation_start_time')) and (
+                        person.isolation_start_time == time):
+                    # Require household of symptomatic/isolating individuals to
+                    # quarantine with given household compliance and individual
+                    # compliance. Only check when infector starts its isolation
+                    # in order to prevent resetting. Start time is reset when
+                    # new person in household becomes an infector.
+                    r_house = random.random()
+                    if r_house < self.quarantine_house_compliant:
+                        for household_person in person.household.persons:
+                            if (not hasattr(household_person,
+                                'isolation_start_time')) or (
+                                    household_person.isolation_start_time
+                                    is None):
+                                # isolated individuals don't quarantine
                                 r_indiv = random.random()
-                                if r_indiv < self.\
-                                   quarantine_individual_compliant:
-                                    household_person.quarantine_start_time = \
+                                if r_indiv < \
+                                   self.quarantine_individual_compliant:
+                                    household_person.\
+                                        quarantine_start_time = \
                                         time + self.quarantine_delay
+
+    def turn_off(self):
+        for cell in self._population.cells:
+            for person in cell.persons:
+                if (hasattr(person, 'quarantine_start_time')) and (
+                        person.quarantine_start_time is not None):
+                    person.quarantine_start_time = None

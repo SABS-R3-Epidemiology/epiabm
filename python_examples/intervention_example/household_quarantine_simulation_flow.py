@@ -1,6 +1,8 @@
 #
 # Example simulation script with household quarantine intervention data output
 # and visualisation
+# Note: case isolation parameters need to be given as infector should case
+# isolate and its household should quarantine.
 #
 
 import os
@@ -34,7 +36,7 @@ to_modify_parameter = 'quarantine_house_compliant'
 parameter_values = [0.0, 0.5, 1.0]
 
 for i in range(len(parameter_values)):
-    name_output_file = 'output_{}_{}'.format(
+    name_output_file = 'output_{}_{}.csv'.format(
         int(parameter_values[i]*100), to_modify_parameter)
 
     pe.Parameters.instance().intervention_params['household_quarantine'][
@@ -91,7 +93,7 @@ logging.getLogger("matplotlib").setLevel(logging.WARNING)
 for i in range(len(parameter_values)):
     file_name = os.path.join(os.path.dirname(__file__),
                              "intervention_outputs",
-                             'output_{}_{}'.format(
+                             'output_{}_{}.csv'.format(
                                 int(parameter_values[i]*100),
                                 to_modify_parameter))
     df = pd.read_csv(file_name)

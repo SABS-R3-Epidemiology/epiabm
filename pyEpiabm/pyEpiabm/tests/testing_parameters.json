@@ -525,7 +525,7 @@
             "case_threshold": 0,
             "quarantine_delay": 1,
             "quarantine_duration": 14,
-            "quarantine_house_compliant": 0.75,
+            "quarantine_house_compliant": 1.0,
             "quarantine_individual_compliant": 1.0,
             "quarantine_house_effectiveness": 1.5,
             "quarantine_spatial_effectiveness": 0.25,

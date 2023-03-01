@@ -8,9 +8,10 @@ from pyEpiabm.intervention import AbstractIntervention
 
 
 class CaseIsolation(AbstractIntervention):
-    """Case isolation intervention
+    """Case isolation intervention.
     Isolate symptomatic individual based on the isolation_probability
-    and stop isolating isolated individuals after their isolation period.
+    and stop isolating isolated individuals after their isolation period
+    or after the end of the policy.
     """
 
     def __init__(
@@ -44,3 +45,10 @@ class CaseIsolation(AbstractIntervention):
                         if r < self.isolation_probability:
                             person.isolation_start_time = time + self.\
                                                           isolation_delay
+
+    def turn_off(self):
+        for cell in self._population.cells:
+            for person in cell.persons:
+                if (hasattr(person, 'isolation_start_time')) and (
+                        person.isolation_start_time is not None):
+                    person.isolation_start_time = None
