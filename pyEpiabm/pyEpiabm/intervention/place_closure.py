@@ -7,7 +7,7 @@ from pyEpiabm.intervention import AbstractIntervention
 
 class PlaceClosure(AbstractIntervention):
     """Place closure intervention.
-    Close places based on the number of ICU patients and infectious persons
+    Close specific types of places based on the number of infecious persons
     in their microcells and reopen places after their closure period or
     after the end of the policy.
     """
