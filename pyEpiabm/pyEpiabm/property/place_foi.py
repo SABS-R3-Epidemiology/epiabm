@@ -44,13 +44,12 @@ class PlaceInfection:
         except IndexError:  # For place types not in parameters
             num_groups = 1
         # Use group-wise capacity not max_capacity once implemented
-        place_inf = (transmission / num_groups
-                     * PersonalInfection.person_inf(infector, time))
-        if ('place_closure' in Parameters.instance().intervention_params.keys()
-            ) and (infector.close_place(Parameters.instance().
-                   intervention_params['place_closure'][
-                    'closure_place_type'])):
-            place_inf = 0
+        place_inf = 0 if ((hasattr(infector.microcell, 'closure_start_time'))
+                          ) and (infector.close_place(
+                            Parameters.instance().intervention_params[
+                                'place_closure']['closure_place_type'])) else \
+            (transmission / num_groups
+                * PersonalInfection.person_inf(infector, time))
         return place_inf
 
     @staticmethod

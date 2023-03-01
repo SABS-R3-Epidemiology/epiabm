@@ -63,13 +63,11 @@ class SpatialInfection:
         age = pyEpiabm.core.Parameters.instance().\
             age_contact[infector.age_group] \
             if pyEpiabm.core.Parameters.instance().use_ages is True else 1
-        closure_spatial = 1
-        if ('place_closure' in Parameters.instance().intervention_params.keys()
-            ) and (infector.close_place(Parameters.instance().
-                   intervention_params['place_closure'][
-                    'closure_place_type'])):
-            closure_spatial = Parameters.instance().\
-                intervention_params['place_closure']['closure_spatial_params']
+        closure_spatial = Parameters.instance().\
+            intervention_params['place_closure']['closure_spatial_params'] \
+            if ((hasattr(infector.microcell, 'closure_start_time'))) and (
+                infector.close_place(Parameters.instance().intervention_params[
+                    'place_closure']['closure_place_type'])) else 1
         return infector.infectiousness * age * closure_spatial
 
     @staticmethod
@@ -100,12 +98,11 @@ class SpatialInfection:
             spatial_susc = pyEpiabm.core.Parameters.instance().\
                 age_contact[infectee.age_group]
 
-        if ('place_closure' in Parameters.instance().intervention_params.keys()
-            ) and (infector.close_place(Parameters.instance().
-                   intervention_params['place_closure'][
-                    'closure_place_type'])):
-            spatial_susc *= Parameters.instance().\
-                intervention_params['place_closure']['closure_spatial_params']
+        spatial_susc *= Parameters.instance().\
+            intervention_params['place_closure']['closure_spatial_params'] \
+            if ((hasattr(infector.microcell, 'closure_start_time'))) and (
+                infector.close_place(Parameters.instance().intervention_params[
+                    'place_closure']['closure_place_type'])) else 1
 
         if (hasattr(infector.microcell, 'distancing_start_time')) and (
                 infector.microcell.distancing_start_time is not None):
