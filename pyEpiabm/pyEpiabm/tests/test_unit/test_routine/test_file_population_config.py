@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import patch
-import logging
 import pandas as pd
 from packaging import version
 
