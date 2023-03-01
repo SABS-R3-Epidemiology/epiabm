@@ -130,20 +130,20 @@ class TestSpatialSweep(TestMockedLogs):
 
         self.assertEqual(self.cell_inf.nearest_neighbours, {})
 
-        # # test the assert that the distance weights has correct length
+        # test the assert that the distance weights has correct length
         # mock_dist.side_effect = [0, 2]
         # mock_nan.return_value = [1]
-        # self.assertRaises(AssertionError, test_sweep.find_infectees,
-        #                   self.cell_inf, [self.cell_susc], 1)
+        # self.assertRaises(AssertionError, test_sweep.find_infectees(
+        #                   self.cell_inf, [self.cell_susc], 1))
 
-        # # test value error is raised if all cells too far away
-        # Parameters.instance().infection_radius = 0.000001
-        # mock_dist.side_effect = [0, 2]
-        # mock_nan.return_value = [1, 1]
-        # test_list = test_sweep.\
-        #   find_infectees(self.cell_inf, [self.cell_susc], 1)
-        # mock_logger.assert_called
-        # # test logger is called here
+        # test value error is raised if all cells too far away
+        Parameters.instance().infection_radius = 0.000001
+        mock_dist.side_effect = [0, 2]
+        mock_nan.return_value = [1, 1]
+        test_list = test_sweep.\
+          find_infectees(self.cell_inf, [self.cell_susc], 1)
+        mock_logger.assert_called
+        # test logger is called here
 
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     def test_find_infectees_Covidsim(self, mock_dist):
