@@ -15,12 +15,13 @@ class TestPlaceClosure(TestPyEpiabm):
         one infector.
         """
         super(TestPlaceClosure, self).setUp()  # Sets up parameters
+
         self.time = 1
-        self._population = pe.Population()
-        self._population.add_cells(1)
-        self._population.cells[0].add_microcells(1)
+        self.pop_factory = pe.routine.ToyPopulationFactory()
+        self.pop_params = {"population_size": 1, "cell_number": 1,
+                           "microcell_number": 1}
+        self._population = self.pop_factory.make_pop(self.pop_params)
         self._microcell = self._population.cells[0].microcells[0]
-        self._microcell.add_people(1)
         self._microcell.persons[0].update_status(InfectionStatus(7))
 
         self.params = pe.Parameters.instance().intervention_params[
