@@ -147,8 +147,7 @@ class HostProgressionSweep(AbstractSweep):
 
         """
         if person.infection_status in [InfectionStatus.Recovered,
-                                       InfectionStatus.Dead,
-                                       InfectionStatus.Vaccinated]:
+                                       InfectionStatus.Dead]:
             person.next_infection_status = None
         else:
             row_index = person.infection_status.name
@@ -192,8 +191,7 @@ class HostProgressionSweep(AbstractSweep):
             raise ValueError("Method should not be used to infect people")
 
         if person.infection_status in [InfectionStatus.Recovered,
-                                       InfectionStatus.Dead,
-                                       InfectionStatus.Vaccinated]:
+                                       InfectionStatus.Dead]:
             transition_time = np.inf
         else:
             row_index = person.infection_status.name
@@ -256,8 +254,7 @@ class HostProgressionSweep(AbstractSweep):
         # sets its infection start time to None again.
         elif person.infectiousness != 0:
             if person.infection_status in [InfectionStatus.Recovered,
-                                           InfectionStatus.Dead,
-                                           InfectionStatus.Vaccinated]:
+                                           InfectionStatus.Dead]:
                 person.infectiousness = 0
                 person.infection_start_time = None
 

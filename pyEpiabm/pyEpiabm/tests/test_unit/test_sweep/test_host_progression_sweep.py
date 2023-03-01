@@ -133,8 +133,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         for person in self.people:
             with self.subTest(person=person):
                 test_sweep.update_next_infection_status(person)
-                if person.infection_status.name in ['Recovered', 'Dead',
-                                                    'Vaccinated']:
+                if person.infection_status.name in ['Recovered', 'Dead']:
                     self.assertEqual(person.next_infection_status, None)
                 else:
                     self.assertEqual(person.infection_status,
@@ -154,8 +153,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         for person in self.people:
             with self.subTest(person=person):
                 test_sweep.update_next_infection_status(person)
-                if person.infection_status.name in ['Recovered', 'Dead',
-                                                    'Vaccinated']:
+                if person.infection_status.name in ['Recovered', 'Dead']:
                     self.assertEqual(person.next_infection_status, None)
                 else:
                     self.assertEqual(person.next_infection_status,
@@ -173,8 +171,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         for person in self.people:
             with self.subTest(person=person):
                 test_sweep.update_next_infection_status(person)
-                if person.infection_status.name in ['Recovered', 'Dead',
-                                                    'Vaccinated']:
+                if person.infection_status.name in ['Recovered', 'Dead']:
                     self.assertEqual(person.next_infection_status, None)
                 else:
                     current_enum_value = person.infection_status.value

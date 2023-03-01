@@ -49,8 +49,6 @@ class Person:
         self.infection_start_time = None
         self.care_home_resident = False
         self.key_worker = False
-        self.isolation_start_time = None
-        self.is_vaccinated = False
 
         self.set_random_age()
 

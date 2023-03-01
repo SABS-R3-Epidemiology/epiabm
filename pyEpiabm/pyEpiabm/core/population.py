@@ -18,7 +18,6 @@ class Population:
 
         """
         self.cells = []
-        self.vaccine_queue = PriorityQueue()
 
     def __repr__(self):
         """Returns a string representation of a Population.
@@ -54,22 +53,3 @@ class Population:
         for cell in self.cells:
             count += len(cell.persons)
         return count
-
-    def enqueue_vaccine(self, priority, counter, person: Person):
-        """Add person to queue for processing when mass vaccination
-        begins.
-
-        Parameters
-        ----------
-        priority : int
-            Priority level of 1, 2, 3, or 4 to prioritise by age and
-            whether carehome resident.
-        counter : int
-            Counter to prioritise by order of addition within each
-            priority group
-        person : Person
-            Person to enqueue
-
-        """
-        priority_value = int(priority)
-        self.vaccine_queue.put((priority_value, counter, person))

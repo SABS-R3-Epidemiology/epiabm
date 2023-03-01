@@ -21,11 +21,7 @@ class TestHouseholdInfection(TestPyEpiabm):
         cls.microcell = pe.Microcell(cls.cell)
         cls.infector = pe.Person(cls.microcell)
         cls.infector.infectiousness = 1.0
-        cls.infector.date_vaccinated = 0
         cls.infectee = pe.Person(cls.microcell)
-        cls.infectee.date_vaccinated = 0
-        cls.infectee.is_vaccinated = True
-        cls.infector.is_vaccinated = True
         cls.time = 1
 
     def test_house_inf(self):
@@ -44,7 +40,7 @@ class TestHouseholdInfection(TestPyEpiabm):
         result = HouseholdInfection.household_foi(self.infector,
                                                   self.infectee,
                                                   self.time)
-        self.assertEqual(result, 0.05)
+        self.assertEqual(result, 0.1)
         self.assertIsInstance(result, float)
 
 
