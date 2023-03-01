@@ -95,6 +95,18 @@ class TestSpatialSweep(TestMockedLogs):
         test_sweep.bind_population(test_pop)
         self.assertEqual(self.cell_inf.nearest_neighbours, {1: 2})
 
+
+    @mock.patch("logging.exception")
+    @mock.patch("numpy.nan_to_num")
+    @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
+    def test_bind_population(self, mock_dist, mock_nan, mock_logger):
+        Parameters.instance().infection_radius = 1000
+        test_pop = self.pop
+        test_sweep = SpatialSweep()
+        mock_dist.return_value = 2.2
+        self.assertEqual(test_sweep.bind_population(test_pop), None)
+
+    
     @mock.patch("logging.exception")
     @mock.patch("numpy.nan_to_num")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
