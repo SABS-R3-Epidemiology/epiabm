@@ -100,6 +100,16 @@ class TestSpatialSweep(TestMockedLogs):
     @mock.patch("numpy.nan_to_num")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     def test_bind_population(self, mock_dist, mock_nan, mock_logger):
+        Parameters.instance().infection_radius = 0.0001
+        print('radius', Parameters.instance().infection_radius)
+        # Assert a basic population
+        test_pop = self.pop
+        test_sweep = SpatialSweep()
+        mock_dist.return_value = 2.2
+        test_sweep.bind_population(test_pop)
+
+        self.assertEqual(self.cell_inf.nearest_neighbours, {})
+
         Parameters.instance().infection_radius = 1000
         test_pop = self.pop
         test_sweep = SpatialSweep()
@@ -134,8 +144,6 @@ class TestSpatialSweep(TestMockedLogs):
         test_sweep = SpatialSweep()
         mock_dist.return_value = 2.2
         test_sweep.bind_population(test_pop)
-
-        self.assertEqual(self.cell_inf.nearest_neighbours, {})
 
         # test the assert that the distance weights has correct length
         # mock_dist.side_effect = [0, 2]
