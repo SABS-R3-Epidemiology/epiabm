@@ -96,7 +96,13 @@ class PlaceInfection:
             Force of infection parameter of place
 
         """
+        carehome_scale_susc = 1
+        if place.place_type.value == 5 and (infectee.key_worker
+                                            or infector.key_worker):
+            carehome_scale_susc = Parameters.instance()\
+                .carehome_params["carehome_worker_group_scaling"]
         infectiousness = PlaceInfection.place_inf(place, infector, time)
-        susceptibility = PlaceInfection.place_susc(place, infector, infectee,
-                                                   time)
+        susceptibility = (PlaceInfection.place_susc(place, infector,
+                                                    infectee, time)
+                          * carehome_scale_susc)
         return (infectiousness * susceptibility)

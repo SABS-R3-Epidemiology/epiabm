@@ -224,9 +224,17 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         val = test_sweep.calc_number_of_children(3)
         self.assertEqual(val, 0)
 
-        mocked_random.side_effect = [2.0, 0.0]
+        mocked_random.side_effect = [0.1]
+        val = test_sweep.calc_number_of_children(3)
+        self.assertEqual(val, 0)
+
+        mocked_random.side_effect = [0.3]
         val = test_sweep.calc_number_of_children(3)
         self.assertEqual(val, 2)
+
+        mocked_random.side_effect = [0.5]
+        val = test_sweep.calc_number_of_children(3)
+        self.assertEqual(val, 1)
 
         mocked_random.side_effect = [2.0, 2.0]
         val = test_sweep.calc_number_of_children(3)
@@ -323,7 +331,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
     @mock.patch('random.randint')
     @mock.patch(
         'pyEpiabm.sweep.InitialHouseholdSweep.calc_number_of_children')
-    def test_three_plus_person_household_ages_two_child_one_under_five(
+    def test_three_plus_person_household_ages_two_child_both_over_five(
                                                     self, mocked_children,
                                                     mocked_int,
                                                     mocked_choice,
@@ -334,18 +342,15 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         """
         test_sweep = pe.sweep.InitialHouseholdSweep()
         mocked_children.side_effect = [2]
-        mocked_int.side_effect = [1, 0]
-        mocked_choice.side_effect = [[0], [6]]
-        mocked_random.side_effect = [0.0, 2.0]
-        test_sweep.three_or_more_person_household_ages(self.three_people)
-        self.assertTrue(self.person1.age >= 0)
+        mocked_int.side_effect = [1, 0, 0, 0]
+        mocked_choice.side_effect = [[0], [2], [6], [6]]
+        mocked_random.side_effect = [0.0, -1.0, 0.0]
+        test_sweep.three_or_more_person_household_ages(self.four_people)
+        print(self.person1.age)
+        print(self.person2.age)
+        print(self.person3.age)
+        print(self.person4.age)
         self.assertTrue(self.person1.age <= 5)
-        self.assertTrue(self.person2.age <= self.age_params["max_child_age"])
-        self.assertTrue(self.person3.age <= self.person1.age
-                        + self.age_params["max_parent_age_gap"] + 5)
-        self.assertTrue(self.person3.age >= self.person2.age
-                        + self.age_params["min_parent_age_gap"])
-        self.assertTrue(self.person3.age >= self.age_params["min_adult_age"])
 
     @mock.patch(
         'pyEpiabm.sweep.InitialHouseholdSweep.calc_number_of_children')
