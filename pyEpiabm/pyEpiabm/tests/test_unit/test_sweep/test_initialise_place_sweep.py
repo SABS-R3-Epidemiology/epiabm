@@ -70,9 +70,11 @@ class TestInitialisePlaceSweep(TestPyEpiabm):
                                        mean_capacity=1010)
 
         place.place_type = PlaceType.CareHome
-        mock_update.side_effect = place.add_person(person)
         test_sweep()
-        mock_update.assert_called_with(place)
+        mock_update.assert_called_with(place, group_size=20,
+                                       person_list=[person],
+                                       person_weights=[1],
+                                       mean_capacity=40)
 
     def test_weights_func(self):
         test_pop = self.pop
