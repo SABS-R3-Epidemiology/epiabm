@@ -244,7 +244,7 @@ class InitialHouseholdSweep(AbstractSweep):
         r = random.random()
 
         if n < 3:
-            raise ValueError("Household must be greater than 3 people for " +
+            raise ValueError("household_size must be greater than 3 people for " +
                              "calc_number_of_children to be called")
 
         # Calculate the number of children in a 3 person household
