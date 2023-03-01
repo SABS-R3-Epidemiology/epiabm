@@ -124,12 +124,19 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         q = [1 / household_number] * household_number
         for cell in population.cells:
             for microcell in cell.microcells:
-                people_number = len(microcell.persons)
+                people_list = microcell.persons.copy()
+                people_number = len(people_list)
                 household_split = np.random.multinomial(people_number, q,
                                                         size=1)[0]
+                
                 for j in range(household_number):
                     people_in_household = household_split[j]
-                    microcell.add_household(people_in_household)
+                    household_people = []
+                    for i in range(people_in_household):
+                        person_choice = people_list[0]
+                        people_list.remove(person_choice)
+                        household_people.append(person_choice)
+                    microcell.add_household(household_people)
 
     @staticmethod
     def add_places(population: Population, place_number: float):

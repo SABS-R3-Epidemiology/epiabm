@@ -432,16 +432,13 @@ class InitialHouseholdSweep(AbstractSweep):
                 for microcell in cell.microcells:
                     microcell.compartment_counter.clear_counter()
                     for household in microcell.households:
-                        if len(household.persons) == 0:
-                            continue
-
-                        elif len(household.persons) == 1:
+                        if len(household.persons) == 1:
                             self.one_person_household_age(household.persons[0])
 
                         elif len(household.persons) == 2:
                             self.two_person_household_ages(household.persons)
 
-                        else:
+                        elif len(household.persons) >= 3:
                             self.three_or_more_person_household_ages(
                                 household.persons)
 

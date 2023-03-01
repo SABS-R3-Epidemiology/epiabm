@@ -383,6 +383,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         microcell.add_household([self.person1])
         microcell.add_household([self.person2, self.person3])
         microcell.add_household([self.person4, self.person5, self.person6])
+        microcell.add_household([])
 
         for cell in self.test_population.cells:
             for person in cell.persons:
