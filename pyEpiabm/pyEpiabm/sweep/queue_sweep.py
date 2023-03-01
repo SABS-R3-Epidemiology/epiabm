@@ -2,6 +2,7 @@
 # Sweeps for enqueued persons to update infection status
 #
 import random
+import numpy as np
 
 from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
@@ -32,8 +33,10 @@ class QueueSweep(AbstractSweep):
                 if person.is_vaccinated:
                     vacc_params = Parameters.instance().\
                         intervention_params['vaccine_params']
+                    delay = np.random.poisson(vacc_params['time_to_efficacy'],
+                                              1)
                     if time > (person.date_vaccinated +
-                               vacc_params['time_to_efficacy']):
+                               delay):
                         r = random.random()
                         if r < vacc_params['vacc_protectiveness']:
                             person.next_infection_status = InfectionStatus.\
