@@ -112,8 +112,8 @@ class SpatialSweep(AbstractSweep):
         """
         infectee_list = []
         # Chooses a list of cells (with replacement) for each infection
-        # event to occur in. Specifically inter-cell infections
-        # so can't be the same cell.
+        # event to occur in. 
+        # Specifically inter-cell infections so can't be the same cell.
         distance_weights = []
         # Use of the cutoff distance idea from CovidSim.
         cutoff = Parameters.instance().infection_radius
