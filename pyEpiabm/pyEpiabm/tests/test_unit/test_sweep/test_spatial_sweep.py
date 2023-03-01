@@ -1,12 +1,10 @@
 import unittest
 from unittest import mock
 from queue import Queue
-# import numpy as np
 
 from pyEpiabm.core import Population, Parameters
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import SpatialSweep
-# from pyEpiabm.utility import DistanceFunctions
 from pyEpiabm.tests.test_unit.mocked_logging_tests import TestMockedLogs
 
 
@@ -16,12 +14,11 @@ class TestSpatialSweep(TestMockedLogs):
 
     def setUp(self):
         # 1st Population
-        # 3 cell population
+        # 2 cell population
         # 1st cell: 1 microcell, 100 people, includes the infector
         # who has InfectionStatus of mildly infected
         # 2nd cell: 1 microcell, 1 person, includes the infectee
         # who is Susceptible
-        # 3rd cell: 1 microcell, 1 person who has the status recovered
         self.pop = Population()
         self.pop.add_cells(2)
         self.cell_inf = self.pop.cells[0]
@@ -34,19 +31,13 @@ class TestSpatialSweep(TestMockedLogs):
         self.cell_susc.add_microcells(1)
         self.microcell_susc = self.cell_susc.microcells[0]
 
-        # self.cell_non_susc.add_microcells(1)
-        # self.microcell_non_susc = self.cell_non_susc.microcells[0]
-
-        self.microcell_inf.add_people(100)
+        self.microcell_inf.add_people(1)
         self.infector = self.microcell_inf.persons[0]
         self.infector.update_status(InfectionStatus.InfectMild)
 
         self.microcell_susc.add_people(1)
         self.infectee = self.microcell_susc.persons[0]
-
-        # self.microcell_non_susc.add_people(1)
-        # self.non_infectee = self.microcell_non_susc.persons[0]
-        # self.non_infectee.update_status(InfectionStatus.Recovered)
+        self.infectee.update_status(InfectionStatus.Susceptible)
 
         self.infector.infectiousness = 1.0
         Parameters.instance().time_steps_per_day = 1
@@ -64,6 +55,7 @@ class TestSpatialSweep(TestMockedLogs):
 
         self.microcell_inf_only1.add_people(100)
         self.infector_only1 = self.microcell_inf_only1.persons[0]
+        self.infector_only1.update_status(InfectionStatus.InfectMild)
 
         self.infector_only1.infectiousness = 1.0
         Parameters.instance().time_steps_per_day = 1
@@ -71,8 +63,8 @@ class TestSpatialSweep(TestMockedLogs):
 
         # 3rd Population
         # 2 cells each with a single microcell with a single person
-        # 1 cell has a mildly infected individual
-        # the other has a recovered individual
+        # cell 1: 1 microcel with a mildly infected individual
+        # cell 2: 1 microcell with a recovered individual
         self.pop_no_infectees = Population()
         self.pop_no_infectees.add_cells(2)
         self.cell_no_infectees_inf = self.pop_no_infectees.cells[0]
@@ -244,20 +236,11 @@ class TestSpatialSweep(TestMockedLogs):
         test_pop_no_infectees = self.pop_no_infectees
         test_sweep = SpatialSweep()
 
-        # Assert a population with one cell doesn't do anything
-        test_sweep.bind_population(test_pop_no_infectees)
-        test_sweep(time)
-        self.assertTrue(self.cell_inf.person_queue.empty())
-
-        test_pop_no_infectees = self.pop_no_infectees
-        self.no_infectees_non_infectee_queue = Queue()
-        test_sweep = SpatialSweep()
         # Assert a population with two cells one with infected person
         # one with recovered person
         test_sweep.bind_population(test_pop_no_infectees)
-
         test_sweep(time)
-
+        self.assertTrue(self.cell_inf.person_queue.empty())
         self.assertEqual(self.cell_no_infectees_rec.person_queue.qsize(), 0)
 
     @mock.patch("random.random")
