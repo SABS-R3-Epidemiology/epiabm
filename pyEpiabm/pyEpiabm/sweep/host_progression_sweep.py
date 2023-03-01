@@ -139,6 +139,8 @@ class HostProgressionSweep(AbstractSweep):
         are taken from row in state transition matrix that corresponds to
         the person's current infection status. Weights are then used in
         random.choices method to select person's next infection status.
+        Exception is carehome residents who die with probability=1 if reach ICU
+        and probability=1-'carehome_rel_prob_hosp' if reach hospital.
 
         Parameters
         ----------
@@ -149,6 +151,15 @@ class HostProgressionSweep(AbstractSweep):
         if person.infection_status in [InfectionStatus.Recovered,
                                        InfectionStatus.Dead]:
             person.next_infection_status = None
+        elif (person.care_home_resident and
+              person.infection_status == InfectionStatus.InfectICU):
+            person.next_infection_status = InfectionStatus.Dead
+        elif (person.care_home_resident and
+              person.infection_status == InfectionStatus.InfectHosp):
+            carehome_params = Parameters.instance().carehome_params
+            carehome_hosp = carehome_params['carehome_rel_prob_hosp']
+            if random.uniform(0, 1) > carehome_hosp:
+                person.next_infection_status = InfectionStatus.Dead
         else:
             row_index = person.infection_status.name
             weights = self.state_transition_matrix.loc[row_index].to_numpy()

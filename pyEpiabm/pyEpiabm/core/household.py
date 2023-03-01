@@ -40,6 +40,9 @@ class Household:
                 isinstance(loc[1], Number)):
             raise ValueError("Location must be a tuple of float-type")
 
+        microcell.households.append(self)
+        microcell.cell.households.append(self)
+
     def __repr__(self):
         """Returns a string representation of Household.
 
