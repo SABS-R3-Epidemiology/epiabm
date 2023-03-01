@@ -10,31 +10,30 @@ class TestHouseholdQuarantine(TestPyEpiabm):
     """Test the 'HouseholdQuarantine' class.
     """
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        super(TestHouseholdQuarantine, cls).setUpClass()
+    def setUp(self) -> None:
+        super(TestHouseholdQuarantine, self).setUp()
 
         # Construct a population with 3 persons in 1 household.
         # One symptomatic and two susceptible.
-        cls.pop_factory = pe.routine.ToyPopulationFactory()
-        cls.pop_params = {"population_size": 3, "cell_number": 1,
-                          "microcell_number": 1, "household_number": 1}
-        cls.test_population = cls.pop_factory.make_pop(cls.pop_params)
-        cls.sympt_person = cls.test_population.cells[0].microcells[
+        self.pop_factory = pe.routine.ToyPopulationFactory()
+        self.pop_params = {"population_size": 3, "cell_number": 1,
+                           "microcell_number": 1, "household_number": 1}
+        self.test_population = self.pop_factory.make_pop(self.pop_params)
+        self.sympt_person = self.test_population.cells[0].microcells[
             0].persons[0]
-        cls.sympt_person.update_status(InfectionStatus.InfectMild)
-        cls.susc_person1 = \
-            cls.test_population.cells[0].microcells[0].persons[1]
-        cls.susc_person1.update_status(InfectionStatus.Susceptible)
-        cls.susc_person2 = \
-            cls.test_population.cells[0].microcells[0].persons[2]
-        cls.susc_person2.update_status(InfectionStatus.Susceptible)
+        self.sympt_person.update_status(InfectionStatus.InfectMild)
+        self.susc_person1 = \
+            self.test_population.cells[0].microcells[0].persons[1]
+        self.susc_person1.update_status(InfectionStatus.Susceptible)
+        self.susc_person2 = \
+            self.test_population.cells[0].microcells[0].persons[2]
+        self.susc_person2.update_status(InfectionStatus.Susceptible)
 
         params = pe.Parameters.instance().intervention_params[
             'household_quarantine']
         params['quarantine_house_compliant'] = 1.0
-        cls.householdquarantine = HouseholdQuarantine(
-            population=cls.test_population, **params)
+        self.householdquarantine = HouseholdQuarantine(
+            population=self.test_population, **params)
 
     def test__init__(self):
         self.assertEqual(self.householdquarantine.start_time, 6)
@@ -69,6 +68,8 @@ class TestHouseholdQuarantine(TestPyEpiabm):
 
     def test_turn_off(self):
         self.susc_person1.quarantine_start_time = 370
+        self.householdquarantine(time=370)
+
         self.householdquarantine.turn_off()
         self.assertIsNone(self.susc_person1.quarantine_start_time)
 
