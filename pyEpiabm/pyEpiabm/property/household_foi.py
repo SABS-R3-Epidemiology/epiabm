@@ -63,22 +63,18 @@ class HouseholdInfection:
             Susceptibility parameter of household
 
         """
+        household_susceptibility = PersonalInfection.person_susc(
+            infector, infectee, time)
         if (hasattr(infector.microcell, 'distancing_start_time') is True) and (
                 infector.microcell.distancing_start_time is not None):
             if infector.distancing_enhanced is True:
-                distancing = Parameters.instance().\
-                             intervention_params[
-                             'social_distancing'][
-                             'distancing_house_enhanced_susc']
+                household_susceptibility *= Parameters.instance().\
+                    intervention_params['social_distancing'][
+                        'distancing_house_enhanced_susc']
             else:
-                distancing = Parameters.instance().\
-                             intervention_params[
-                             'social_distancing'][
-                             'distancing_house_susc']
-        else:
-            distancing = 1
-        household_susceptibility = PersonalInfection.person_susc(
-            infector, infectee, time) * distancing
+                household_susceptibility *= Parameters.instance().\
+                    intervention_params['social_distancing'][
+                        'distancing_house_susc']
         return household_susceptibility
 
     @staticmethod

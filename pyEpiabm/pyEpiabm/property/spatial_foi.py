@@ -98,7 +98,7 @@ class SpatialInfection:
             spatial_susc = pyEpiabm.core.Parameters.instance().\
                 age_contact[infectee.age_group]
 
-        closure_susc = Parameters.instance().\
+        spatial_susc *= Parameters.instance().\
             intervention_params['place_closure']['closure_spatial_params'] \
             if infector.close_place(
                 Parameters.instance().intervention_params['place_closure'][
@@ -107,16 +107,14 @@ class SpatialInfection:
         if (hasattr(infector.microcell, 'distancing_start_time') is True) and (
                 infector.microcell.distancing_start_time is not None):
             if infector.distancing_enhanced is True:
-                distancing_susc = Parameters.instance().\
+                spatial_susc *= Parameters.instance().\
                     intervention_params['social_distancing'][
                         'distancing_spatial_enhanced_susc']
             else:
-                distancing_susc = Parameters.instance().\
+                spatial_susc *= Parameters.instance().\
                     intervention_params['social_distancing'][
                         'distancing_spatial_susc']
-        else:
-            distancing_susc = 1
-        return spatial_susc * closure_susc * distancing_susc
+        return spatial_susc
 
     @staticmethod
     def spatial_foi(inf_cell, susc_cell, infector,

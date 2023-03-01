@@ -67,7 +67,8 @@ class TestPlaceInfection(TestPyEpiabm):
                          result_isolating)
 
     def test_place_place_closure(self):
-        # Not place closure (closure_start_time = None)
+        # Update place type, not place closure (closure_start_time = None)
+        self.infector.place_types.append(PlaceType.PrimarySchool)
         result = PlaceInfection.place_inf(self.place, self.infector, self.time)
         self.assertNotEqual(result, 0)
 
@@ -79,7 +80,6 @@ class TestPlaceInfection(TestPyEpiabm):
 
     def test_place_household_quarantine(self):
         # Update place type, not in quarantine (quarantine_start_time = None)
-        self.infector.place_types.append(PlaceType.PrimarySchool)
         result = PlaceInfection.place_foi(self.place, self.infector,
                                           self.infectee, self.time)
 
