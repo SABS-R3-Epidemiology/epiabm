@@ -75,7 +75,7 @@ class TestInitialisePlaceSweep(TestPyEpiabm):
                                        person_list=[person],
                                        person_weights=[1],
                                        mean_capacity=40)
-    
+
     @mock.patch("pyEpiabm.sweep.UpdatePlaceSweep.update_place_group")
     @mock.patch('pyEpiabm.core.Parameters.instance')
     def test_carehomes_no_params(self, mock_params, mock_update):

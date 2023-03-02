@@ -115,7 +115,7 @@ class FilePopulationFactory:
                                                                     time)
 
             # Add households and places to microcell
-            if Parameters.instance().household_size_distribution == []:
+            if not Parameters.instance().household_size_distribution:
                 if (('household_number' in line) and
                         (line["household_number"]) > 0):
                     households = int(line["household_number"])
