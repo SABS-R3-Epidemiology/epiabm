@@ -16,7 +16,7 @@ class SocialDistancing(AbstractIntervention):
     by the age group (with probability to take enhanced social distancing).
     Social distancing is stopped after the distancing period or
     after the end of the policy.
-    Detailed description of parameters is given in github wiki:
+    Detailed description of the implementation can be found in github wiki:
     https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions.
     """
 

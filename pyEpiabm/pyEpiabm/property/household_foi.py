@@ -36,8 +36,9 @@ class HouseholdInfection:
             intervention_params['place_closure'][
                 'closure_household_infectiousness'] \
             if (hasattr(infector.microcell, 'closure_start_time')) and (
-                infector.close_place(Parameters.instance().intervention_params[
-                    'place_closure']['closure_place_type'])) else 1
+                infector.is_place_closed(
+                    Parameters.instance().intervention_params[
+                        'place_closure']['closure_place_type'])) else 1
         household_infectiousness = PersonalInfection.person_inf(
             infector, time) * closure_inf
         return household_infectiousness

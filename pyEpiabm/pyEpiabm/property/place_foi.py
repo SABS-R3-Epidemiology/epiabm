@@ -45,7 +45,7 @@ class PlaceInfection:
             num_groups = 1
         # Use group-wise capacity not max_capacity once implemented
         place_inf = 0 if ((hasattr(infector.microcell, 'closure_start_time'))
-                          ) and (infector.close_place(
+                          ) and (infector.is_place_closed(
                             Parameters.instance().intervention_params[
                                 'place_closure']['closure_place_type'])) else \
             (transmission / num_groups

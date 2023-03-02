@@ -66,8 +66,9 @@ class SpatialInfection:
         closure_spatial = Parameters.instance().\
             intervention_params['place_closure']['closure_spatial_params'] \
             if ((hasattr(infector.microcell, 'closure_start_time'))) and (
-                infector.close_place(Parameters.instance().intervention_params[
-                    'place_closure']['closure_place_type'])) else 1
+                infector.is_place_closed(
+                    Parameters.instance().intervention_params[
+                        'place_closure']['closure_place_type'])) else 1
         return infector.infectiousness * age * closure_spatial
 
     @staticmethod
@@ -101,8 +102,9 @@ class SpatialInfection:
         spatial_susc *= Parameters.instance().\
             intervention_params['place_closure']['closure_spatial_params'] \
             if ((hasattr(infector.microcell, 'closure_start_time'))) and (
-                infector.close_place(Parameters.instance().intervention_params[
-                    'place_closure']['closure_place_type'])) else 1
+                infector.is_place_closed(
+                    Parameters.instance().intervention_params[
+                        'place_closure']['closure_place_type'])) else 1
 
         if (hasattr(infector.microcell, 'distancing_start_time')) and (
                 infector.microcell.distancing_start_time is not None):

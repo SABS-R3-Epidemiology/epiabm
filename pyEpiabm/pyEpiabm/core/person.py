@@ -168,7 +168,7 @@ class Person:
             self.places.pop(ind)
             self.place_types.pop(ind)
 
-    def close_place(self, closure_place_type):
+    def is_place_closed(self, closure_place_type):
         """Method to check if any of the place in the person's place list
         will be closed based on the place type, to be
         used when place closure intervention is active.

@@ -5,7 +5,8 @@
 
 class AbstractIntervention:
     """Abstract class for Interventions.
-
+    Detailed description of interventions can be found in github wiki:
+    https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions.
     """
     def __init__(self, start_time, policy_duration, case_threshold,
                  population, **kwargs):

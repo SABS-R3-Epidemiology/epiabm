@@ -13,6 +13,8 @@ class HouseholdQuarantine(AbstractIntervention):
     stay home based on the household and individual compliance, if
     intervention is active. Quarantine stops after the quarantine period
     or after the end of the policy.
+    Detailed description of the implementation can be found in github wiki:
+    https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions.
     """
 
     def __init__(

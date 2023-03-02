@@ -13,7 +13,8 @@ from .abstract_sweep import AbstractSweep
 
 class InterventionSweep(AbstractSweep):
     """Class to sweep through all possible interventions.
-    Check if intervention should take place based on time (and/or threshold).
+    Check if intervention should be active based on policy time and number
+    of infected individuals.
 
     Possible interventions:
 
