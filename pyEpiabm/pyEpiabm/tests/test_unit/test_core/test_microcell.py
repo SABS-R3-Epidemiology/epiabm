@@ -75,7 +75,7 @@ class TestMicrocell(TestPyEpiabm):
         household = self.microcell.households[0]
         self.assertEqual(len(household.persons), 1)
 
-    @mock.patch('logging.warning')
+    @mock.patch('logging.info')
     def test_logging(self, mock_log):
         self.microcell.add_household(self.microcell.persons)
         mock_log.assert_called_once()

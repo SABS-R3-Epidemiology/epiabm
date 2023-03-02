@@ -137,7 +137,7 @@ class Microcell:
             for person in people:
                 household.add_person(person)
         else:
-            logging.warning("Cannot create empty household")
+            logging.info("Cannot create empty household")
 
     def notify_person_status_change(
             self,
