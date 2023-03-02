@@ -504,9 +504,9 @@
             "case_threshold": 0,
             "closure_delay": 0,
             "closure_duration": 100,
+            "closure_place_type": [1, 2, 3],
             "closure_household_infectiousness": 1,
             "closure_spatial_params": 1,
-            "icu_microcell_threshold": 0,
             "case_microcell_threshold": 0
         }
         }

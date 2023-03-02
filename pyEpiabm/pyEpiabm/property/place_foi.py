@@ -44,8 +44,10 @@ class PlaceInfection:
         except IndexError:  # For place types not in parameters
             num_groups = 1
         # Use group-wise capacity not max_capacity once implemented
-        place_inf = 0 if infector.microcell. \
-            closure_start_time is not None else \
+        place_inf = 0 if ((hasattr(infector.microcell, 'closure_start_time'))
+                          ) and (infector.close_place(
+                            Parameters.instance().intervention_params[
+                                'place_closure']['closure_place_type'])) else \
             (transmission / num_groups
                 * PersonalInfection.person_inf(infector, time))
         return place_inf
@@ -74,7 +76,21 @@ class PlaceInfection:
             Susceptibility parameter of place
 
         """
-        return 1.0
+        place_susc = 1.0
+        place_idx = place.place_type.value - 1
+        if (hasattr(infector.microcell, 'distancing_start_time')) and (
+                infector.microcell.distancing_start_time is not None):
+            if infector.distancing_enhanced is True:
+                place_susc *= Parameters.instance().\
+                             intervention_params[
+                             'social_distancing'][
+                             'distancing_place_enhanced_susc'][place_idx]
+            else:
+                place_susc *= Parameters.instance().\
+                             intervention_params[
+                             'social_distancing'][
+                             'distancing_place_susc'][place_idx]
+        return place_susc
 
     @staticmethod
     def place_foi(place, infector, infectee,
@@ -101,12 +117,14 @@ class PlaceInfection:
         """
         isolating = Parameters.instance().\
             intervention_params['case_isolation']['isolation_effectiveness']\
-            if infector.isolation_start_time is not None else 1
+            if (hasattr(infector, 'isolation_start_time')) and (
+                infector.isolation_start_time is not None)else 1
         place_idx = place.place_type.value - 1
         quarantine = Parameters.instance().\
             intervention_params['household_quarantine'][
                 'quarantine_place_effectiveness'][place_idx]\
-            if infector.quarantine_start_time is not None else 1
+            if (hasattr(infector, 'quarantine_start_time')) and (
+                infector.quarantine_start_time is not None) else 1
         infectiousness = (PlaceInfection.place_inf(place, infector, time)
                           * isolating * quarantine)
         susceptibility = (PlaceInfection.place_susc(place, infector, infectee,

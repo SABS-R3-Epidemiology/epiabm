@@ -5,7 +5,7 @@ from pyEpiabm.sweep import InterventionSweep
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 from pyEpiabm.intervention import CaseIsolation, HouseholdQuarantine, \
-    PlaceClosure
+    PlaceClosure, SocialDistancing
 
 
 class TestInterventionSweep(TestPyEpiabm):
@@ -36,8 +36,10 @@ class TestInterventionSweep(TestPyEpiabm):
                              intervention_params['place_closure']), 9)
         self.assertEqual(len(self.interventionsweep.
                              intervention_params['household_quarantine']), 10)
+        self.assertEqual(len(self.interventionsweep.
+                             intervention_params['social_distancing']), 13)
         self.assertEqual(len(
-            self.interventionsweep.intervention_active_status.keys()), 3)
+            self.interventionsweep.intervention_active_status.keys()), 4)
 
     def test___call__(self):
         self.interventionsweep(time=10)
@@ -57,10 +59,17 @@ class TestInterventionSweep(TestPyEpiabm):
                 [key for key in
                  self.interventionsweep.intervention_active_status.keys()
                  if isinstance(key, PlaceClosure)][0]])
+        self.assertTrue(
+            self.interventionsweep.intervention_active_status[
+                [key for key in
+                 self.interventionsweep.intervention_active_status.keys()
+                 if isinstance(key, SocialDistancing)][0]])
 
-        # Place is closed
+        # Place is closed and social distancing ends
         self.assertIsNotNone(self.interventionsweep._population.cells[0].
                              microcells[0].closure_start_time)
+        self.assertIsNotNone(self.interventionsweep._population.cells[0].
+                             microcells[0].distancing_start_time)
 
         # Infector in case isolation, infectee in quarantine as
         # isolation_start_time = 100 as evaluated at this time (see above)

@@ -1,7 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.property import PlaceInfection
+from pyEpiabm.property import PlaceInfection, PlaceType
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
@@ -67,15 +67,19 @@ class TestPlaceInfection(TestPyEpiabm):
                          result_isolating)
 
     def test_place_place_closure(self):
+        # Update place type, not place closure (closure_start_time = None)
+        self.infector.place_types.append(PlaceType.PrimarySchool)
         result = PlaceInfection.place_inf(self.place, self.infector, self.time)
         self.assertNotEqual(result, 0)
+
+        # Place closure
         self.infector.microcell.closure_start_time = 1
         result_closure = PlaceInfection.place_inf(self.place, self.infector,
                                                   self.time)
         self.assertEqual(result_closure, 0)
 
     def test_place_household_quarantine(self):
-        # Not in quarantine (quarantine_start_time = None)
+        # Update place type, not in quarantine (quarantine_start_time = None)
         result = PlaceInfection.place_foi(self.place, self.infector,
                                           self.infectee, self.time)
 
@@ -91,6 +95,32 @@ class TestPlaceInfection(TestPyEpiabm):
         self.assertEqual(result*quarantine_place_effectiveness[place_idx]
                          * quarantine_place_effectiveness[place_idx],
                          result_isolating)
+
+    def test_place_social_distancing(self):
+        # Not in social distancing (distancing_start_time = None)
+        result = PlaceInfection.place_susc(self.place, self.infector,
+                                           self.infectee, self.time)
+        place_idx = self.place.place_type.value - 1
+
+        # Normal social distancing
+        self.infector.microcell.distancing_start_time = 1
+        self.infector.distancing_enhanced = False
+        distancing_place_susc = pe.Parameters.instance().\
+            intervention_params['social_distancing'][
+                'distancing_place_susc']
+        result_distancing = PlaceInfection.place_susc(
+            self.place, self.infector, self.infectee, self.time)
+        self.assertEqual(result*distancing_place_susc[place_idx],
+                         result_distancing)
+        # Enhanced social distancing
+        self.infector.distancing_enhanced = True
+        distancing_place_enhanced_susc = pe.Parameters.instance().\
+            intervention_params['social_distancing'][
+                'distancing_place_enhanced_susc']
+        result_distancing_enhanced = PlaceInfection.place_susc(
+            self.place, self.infector, self.infectee, self.time)
+        self.assertEqual(result*distancing_place_enhanced_susc[place_idx],
+                         result_distancing_enhanced)
 
 
 if __name__ == '__main__':

@@ -15,28 +15,37 @@ class TestPlaceClosure(TestPyEpiabm):
         one infector.
         """
         super(TestPlaceClosure, self).setUp()  # Sets up parameters
+
         self.time = 1
-        self._population = pe.Population()
-        self._population.add_cells(1)
-        self._population.cells[0].add_microcells(1)
+        self.pop_factory = pe.routine.ToyPopulationFactory()
+        self.pop_params = {"population_size": 1, "cell_number": 1,
+                           "microcell_number": 1}
+        self._population = self.pop_factory.make_pop(self.pop_params)
         self._microcell = self._population.cells[0].microcells[0]
-        self._microcell.add_people(1)
         self._microcell.persons[0].update_status(InfectionStatus(7))
 
-        params = pe.Parameters.instance().intervention_params['place_closure']
-        self.placeclosure = PlaceClosure(population=self._population, **params)
+        self.params = pe.Parameters.instance().intervention_params[
+            'place_closure']
+        self.placeclosure = PlaceClosure(population=self._population,
+                                         **self.params)
 
     def test__init__(self):
-        self.assertEqual(self.placeclosure.start_time, 6)
-        self.assertEqual(self.placeclosure.policy_duration, 365)
-        self.assertEqual(self.placeclosure.case_threshold, 0)
-        self.assertEqual(self.placeclosure.closure_delay, 0)
-        self.assertEqual(self.placeclosure.closure_duration, 100)
-        self.assertEqual(self.placeclosure.icu_microcell_threshold, 1)
-        self.assertEqual(self.placeclosure.case_microcell_threshold, 1)
+        # Test the parameter values from params file (testing_parameters.json)
+        self.assertEqual(self.placeclosure.start_time,
+                         self.params['start_time'])
+        self.assertEqual(self.placeclosure.policy_duration,
+                         self.params['policy_duration'])
+        self.assertEqual(self.placeclosure.case_threshold,
+                         self.params['case_threshold'])
+        self.assertEqual(self.placeclosure.closure_delay,
+                         self.params['closure_delay'])
+        self.assertEqual(self.placeclosure.closure_duration,
+                         self.params['closure_duration'])
+        self.assertEqual(self.placeclosure.case_microcell_threshold,
+                         self.params['case_microcell_threshold'])
 
     def test___call__(self):
-        self.assertIsNone(self._microcell.closure_start_time)
+        self.assertFalse(hasattr(self._microcell, 'closure_start_time'))
         self.placeclosure(time=5)
         self.assertIsNotNone(self._microcell.closure_start_time)
         self.placeclosure(time=150)

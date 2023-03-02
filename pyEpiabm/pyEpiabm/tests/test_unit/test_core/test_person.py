@@ -85,6 +85,20 @@ class TestPerson(TestPyEpiabm):
         self.assertEqual(len(self.person.places), 0)
         self.assertRaises(KeyError, self.person.remove_place, test_place_2)
 
+    def test_close_place(self):
+        closure_place_type = pe.Parameters.instance().intervention_params[
+            'place_closure']['closure_place_type']
+        # Not in place closure
+        self.assertFalse(hasattr(self.person.microcell, 'closure_start_time'))
+        self.assertFalse(self.person.close_place(closure_place_type))
+        # Place closure time starts but the place is not in closure_place_type
+        self.person.microcell.closure_start_time = 1
+        self.person.place_types.append(pe.property.PlaceType.Workplace)
+        self.assertFalse(self.person.close_place(closure_place_type))
+        # Place closure time starts and the place is in closure_place_type
+        self.person.place_types.append(pe.property.PlaceType.PrimarySchool)
+        self.assertTrue(self.person.close_place(closure_place_type))
+
 
 if __name__ == '__main__':
     unittest.main()

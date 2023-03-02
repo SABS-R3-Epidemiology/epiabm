@@ -1,7 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.property import HouseholdInfection
+from pyEpiabm.property import HouseholdInfection, PlaceType
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
@@ -61,7 +61,8 @@ class TestHouseholdInfection(TestPyEpiabm):
                          result_isolating)
 
     def test_house_place_closure(self):
-        # No place closure (closure_start_time = None)
+        # Update place type, no place closure (closure_start_time = None)
+        self.infector.place_types.append(PlaceType.PrimarySchool)
         result = HouseholdInfection.household_inf(
             self.infector, self.time)
 
@@ -90,6 +91,32 @@ class TestHouseholdInfection(TestPyEpiabm):
                                                             self.time)
         self.assertEqual(result*quarantine_house_effectiveness,
                          result_isolating)
+
+    def test_house_social_distancing(self):
+        # Not in social distancing (distancing_start_time = None)
+        result = HouseholdInfection.household_susc(
+            self.infector, self.infectee, self.time)
+
+        # Normal social distancing
+        self.infector.microcell.distancing_start_time = 1
+        self.infector.distancing_enhanced = False
+        distancing_house_susc = pe.Parameters.instance().\
+            intervention_params['social_distancing'][
+                'distancing_house_susc']
+        result_distancing = HouseholdInfection.household_susc(
+            self.infector, self.infectee, self.time)
+        self.assertEqual(result*distancing_house_susc,
+                         result_distancing)
+
+        # Enhanced social distancing
+        self.infector.distancing_enhanced = True
+        distancing_house_enhanced_susc = pe.Parameters.instance().\
+            intervention_params['social_distancing'][
+                'distancing_house_enhanced_susc']
+        result_distancing_enhanced = HouseholdInfection.household_susc(
+            self.infector, self.infectee, self.time)
+        self.assertEqual(result*distancing_house_enhanced_susc,
+                         result_distancing_enhanced)
 
 
 if __name__ == '__main__':

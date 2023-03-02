@@ -65,7 +65,9 @@ class SpatialInfection:
             if pyEpiabm.core.Parameters.instance().use_ages is True else 1
         closure_spatial = Parameters.instance().\
             intervention_params['place_closure']['closure_spatial_params'] \
-            if infector.microcell.closure_start_time is not None else 1
+            if ((hasattr(infector.microcell, 'closure_start_time'))) and (
+                infector.close_place(Parameters.instance().intervention_params[
+                    'place_closure']['closure_place_type'])) else 1
         return infector.infectiousness * age * closure_spatial
 
     @staticmethod
@@ -96,10 +98,22 @@ class SpatialInfection:
             spatial_susc = pyEpiabm.core.Parameters.instance().\
                 age_contact[infectee.age_group]
 
-        if infector.microcell.closure_start_time is not None:
-            spatial_susc *= Parameters.instance().\
-                intervention_params['place_'
-                                    'closure']['closure_spatial_params']
+        spatial_susc *= Parameters.instance().\
+            intervention_params['place_closure']['closure_spatial_params'] \
+            if ((hasattr(infector.microcell, 'closure_start_time'))) and (
+                infector.close_place(Parameters.instance().intervention_params[
+                    'place_closure']['closure_place_type'])) else 1
+
+        if (hasattr(infector.microcell, 'distancing_start_time')) and (
+                infector.microcell.distancing_start_time is not None):
+            if infector.distancing_enhanced is True:
+                spatial_susc *= Parameters.instance().\
+                    intervention_params['social_distancing'][
+                        'distancing_spatial_enhanced_susc']
+            else:
+                spatial_susc *= Parameters.instance().\
+                    intervention_params['social_distancing'][
+                        'distancing_spatial_susc']
         return spatial_susc
 
     @staticmethod
@@ -129,11 +143,13 @@ class SpatialInfection:
         """
         isolating = Parameters.instance().\
             intervention_params['case_isolation']['isolation_effectiveness']\
-            if infector.isolation_start_time is not None else 1
+            if (hasattr(infector, 'isolation_start_time')) and (
+                infector.isolation_start_time is not None) else 1
         quarantine = Parameters.instance().\
             intervention_params['household_quarantine'][
                 'quarantine_spatial_effectiveness']\
-            if infector.quarantine_start_time is not None else 1
+            if (hasattr(infector, 'quarantine_start_time')) and (
+                infector.quarantine_start_time is not None) else 1
         infectiousness = (SpatialInfection.spatial_inf(
             inf_cell, infector, time) * isolating * quarantine)
         susceptibility = (SpatialInfection.spatial_susc(

@@ -36,16 +36,19 @@ class HouseholdQuarantine(AbstractIntervention):
     def __call__(self, time):
         for cell in self._population.cells:
             for person in cell.persons:
-                if person.quarantine_start_time is not None:
-                    if time > person.quarantine_start_time + \
-                       self.quarantine_duration:
+                if (hasattr(person, 'quarantine_start_time')) and (
+                        person.quarantine_start_time is not None):
+                    if time > person.quarantine_start_time + self.\
+                              quarantine_duration:
                         # Stop quarantine after quarantine period
                         person.quarantine_start_time = None
-                    if person.isolation_start_time is not None:
+                    if (hasattr(person, 'isolation_start_time')) and (
+                            person.isolation_start_time is not None):
                         # Isolated individual should not quarantine
                         person.quarantine_start_time = None
 
-                if person.isolation_start_time == time:
+                if (hasattr(person, 'isolation_start_time')) and (
+                        person.isolation_start_time == time):
                     # Require household of symptomatic/isolating individuals to
                     # quarantine with given household compliance and individual
                     # compliance. Only check when infector starts its isolation
@@ -54,7 +57,10 @@ class HouseholdQuarantine(AbstractIntervention):
                     r_house = random.random()
                     if r_house < self.quarantine_house_compliant:
                         for household_person in person.household.persons:
-                            if household_person.isolation_start_time is None:
+                            if (not hasattr(household_person,
+                                'isolation_start_time')) or (
+                                    household_person.isolation_start_time
+                                    is None):
                                 # isolated individuals don't quarantine
                                 r_indiv = random.random()
                                 if r_indiv < \
@@ -66,5 +72,6 @@ class HouseholdQuarantine(AbstractIntervention):
     def turn_off(self):
         for cell in self._population.cells:
             for person in cell.persons:
-                if person.quarantine_start_time is not None:
+                if (hasattr(person, 'quarantine_start_time')) and (
+                        person.quarantine_start_time is not None):
                     person.quarantine_start_time = None

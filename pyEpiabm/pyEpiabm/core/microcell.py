@@ -40,7 +40,6 @@ class Microcell:
         self.location = cell.location
         self.compartment_counter = _CompartmentCounter(
             f"Microcell {id(self)}")
-        self.closure_start_time = None
 
     def __repr__(self):
         """Returns a string representation of Microcell.
