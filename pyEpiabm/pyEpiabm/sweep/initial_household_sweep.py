@@ -434,9 +434,7 @@ class InitialHouseholdSweep(AbstractSweep):
                 cell.compartment_counter.clear_counter()
                 for microcell in cell.microcells:
                     microcell.compartment_counter.clear_counter()
-                    print(len(microcell.households))
                     for household in microcell.households:
-                        print(len(household.persons))
                         if len(household.persons) == 1:
                             self.one_person_household_age(household.persons[0])
 
@@ -448,7 +446,6 @@ class InitialHouseholdSweep(AbstractSweep):
                                 household.persons)
 
                         else:
-                            print("yes")
                             logging.warning("Empty households should not be " +
                                             "used in this method")
 

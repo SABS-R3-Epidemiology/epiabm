@@ -204,10 +204,10 @@ class TestPopConfig(TestPyEpiabm):
 
             pd.testing.assert_frame_equal(actual_df,
                                           expected_df, check_dtype=False)
-            household_list = self.df.loc[:, 'household_number']
-            actual_household = actual_df.loc[:, 'household_number']
-            for i in range(len(household_list)):
-                self.assertLessEqual(actual_household[i], household_list[i])
+        household_list = self.df.loc[:, 'household_number']
+        actual_household = actual_df.loc[:, 'household_number']
+        for i in range(len(household_list)):
+            self.assertLessEqual(actual_household[i], household_list[i])
         else:
             self.skipTest("Test requires pandas version 1.4 - skipped")
 
