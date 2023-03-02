@@ -3,6 +3,7 @@
 #
 
 import random
+import logging
 import numpy as np
 
 from pyEpiabm.core import Parameters, Person, Population
@@ -433,7 +434,9 @@ class InitialHouseholdSweep(AbstractSweep):
                 cell.compartment_counter.clear_counter()
                 for microcell in cell.microcells:
                     microcell.compartment_counter.clear_counter()
+                    print(len(microcell.households))
                     for household in microcell.households:
+                        print(len(household.persons))
                         if len(household.persons) == 1:
                             self.one_person_household_age(household.persons[0])
 
@@ -443,6 +446,11 @@ class InitialHouseholdSweep(AbstractSweep):
                         elif len(household.persons) >= 3:
                             self.three_or_more_person_household_ages(
                                 household.persons)
+
+                        else:
+                            print("yes")
+                            logging.warning("Empty households should not be " +
+                                            "used in this method")
 
                         for person in household.persons:
                             status = person.infection_status

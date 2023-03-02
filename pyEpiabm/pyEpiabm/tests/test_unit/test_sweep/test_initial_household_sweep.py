@@ -372,7 +372,8 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         test_sweep.age_proportions = Parameters.instance().age_proportions
         test_sweep.age_group_width = 5
 
-    def test_call(self):
+    @mock.patch('logging.warning')
+    def test_call(self, mock_log):
         """Tests the main function of the assign household ages
         sweep. People are put into households of different sizes, each
         being passed to a different method of the sweep. Their ages are then
@@ -400,6 +401,19 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
             self.assertTrue(0 <= person.age <= 100)
         for person in microcell.households[2].persons:
             self.assertTrue(0 <= person.age <= 100)
+
+    @mock.patch('logging.warning')
+    #@mock.patch('pyEpiabm.core.microcell.add_household')
+    def test_log_warning(self, mock_log):
+        test_sweep = pe.sweep.InitialHouseholdSweep()
+        test_sweep.bind_population(self.test_population)
+        microcell = self.test_population.cells[0].microcells[0]
+        pe.core.Household(microcell, microcell.location)
+
+        params = {}
+        test_sweep(params)
+
+        mock_log.assert_called_once()
 
     def test_error(self):
         """Tests the check that households have already been created
