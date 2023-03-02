@@ -141,6 +141,15 @@ class SpatialInfection:
             Force of infection parameter of cell
 
         """
+        carehome_scale_inf = 1
+        if infector.care_home_resident:
+            carehome_scale_inf = pyEpiabm.core.Parameters.instance()\
+                .carehome_params["carehome_resident_spatial_scaling"]
+        carehome_scale_susc = 1
+        if infectee.care_home_resident or infector.care_home_resident:
+            carehome_scale_susc = pyEpiabm.core.Parameters.instance()\
+                .carehome_params["carehome_resident_spatial_scaling"]
+
         isolating = Parameters.instance().\
             intervention_params['case_isolation']['isolation_effectiveness']\
             if (hasattr(infector, 'isolation_start_time')) and (
@@ -151,7 +160,9 @@ class SpatialInfection:
             if (hasattr(infector, 'quarantine_start_time')) and (
                 infector.quarantine_start_time is not None) else 1
         infectiousness = (SpatialInfection.spatial_inf(
-            inf_cell, infector, time) * isolating * quarantine)
+            inf_cell, infector, time) * carehome_scale_inf
+            * isolating * quarantine)
         susceptibility = (SpatialInfection.spatial_susc(
-            susc_cell, infector, infectee, time) * quarantine)
+            susc_cell, infector, infectee, time)
+            * carehome_scale_susc * quarantine)
         return (infectiousness * susceptibility)

@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 import pyEpiabm as pe
 from pyEpiabm.property import PlaceInfection, PlaceType
@@ -121,6 +122,24 @@ class TestPlaceInfection(TestPyEpiabm):
             self.place, self.infector, self.infectee, self.time)
         self.assertEqual(result*distancing_place_enhanced_susc[place_idx],
                          result_distancing_enhanced)
+
+    @patch('pyEpiabm.property.PlaceInfection.place_susc')
+    @patch('pyEpiabm.property.PlaceInfection.place_inf')
+    @patch('pyEpiabm.core.Parameters.instance')
+    def test_carehome_scaling(self, mock_params, mock_inf, mock_susc):
+        mock_inf.return_value = 1
+        mock_susc.return_value = 1
+        mock_params.return_value.carehome_params\
+            = {'carehome_worker_group_scaling': 2}
+        self.place.place_type = pe.property.PlaceType.CareHome
+        self.infector.key_worker = True
+        self.infectee.key_worker = False
+        result = PlaceInfection.place_foi(self.place, self.infector,
+                                          self.infectee, self.time)
+        self.assertEqual(result, 2)
+
+        self.assertEqual(mock_inf.call_count, 1)
+        self.assertEqual(mock_susc.call_count, 1)
 
 
 if __name__ == '__main__':

@@ -47,6 +47,8 @@ class Person:
         self.next_infection_status = None
         self.time_of_status_change = None
         self.infection_start_time = None
+        self.care_home_resident = False
+        self.key_worker = False
 
         self.set_random_age()
 
@@ -164,7 +166,7 @@ class Person:
         else:
             ind = place_list.index(place)
             self.places.pop(ind)
-            self.place_types.remove(place.place_type)
+            self.place_types.pop(ind)
 
     def close_place(self, closure_place_type):
         """Method to check if any of the place in the person's place list

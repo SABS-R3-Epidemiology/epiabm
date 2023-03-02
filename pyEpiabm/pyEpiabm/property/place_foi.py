@@ -115,6 +115,11 @@ class PlaceInfection:
             Force of infection parameter of place
 
         """
+        carehome_scale_susc = 1
+        if place.place_type.value == 5 and (infectee.key_worker
+                                            or infector.key_worker):
+            carehome_scale_susc = Parameters.instance()\
+                .carehome_params["carehome_worker_group_scaling"]
         isolating = Parameters.instance().\
             intervention_params['case_isolation']['isolation_effectiveness']\
             if (hasattr(infector, 'isolation_start_time')) and (
@@ -128,5 +133,5 @@ class PlaceInfection:
         infectiousness = (PlaceInfection.place_inf(place, infector, time)
                           * isolating * quarantine)
         susceptibility = (PlaceInfection.place_susc(place, infector, infectee,
-                          time) * quarantine)
+                          time) * carehome_scale_susc * quarantine)
         return (infectiousness * susceptibility)
