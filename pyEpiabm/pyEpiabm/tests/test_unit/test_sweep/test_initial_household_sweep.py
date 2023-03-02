@@ -403,7 +403,6 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
             self.assertTrue(0 <= person.age <= 100)
 
     @mock.patch('logging.warning')
-    #@mock.patch('pyEpiabm.core.microcell.add_household')
     def test_log_warning(self, mock_log):
         test_sweep = pe.sweep.InitialHouseholdSweep()
         test_sweep.bind_population(self.test_population)
