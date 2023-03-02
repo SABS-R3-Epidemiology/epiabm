@@ -147,6 +147,8 @@ class TestIntegrationWorkflows(unittest.TestCase):
     @patch('logging.error')
     def test_spatial_workflow_file_pop(self, mock_err, mock_warn,
                                        mock_mkdir, mock_output):
+        
+        pe.Parameters.instance().household_size_distribution = []
         TestIntegrationWorkflows.spatial_workflow_main(True)
         folder = os.path.join(os.getcwd(),
                               "test_folder/integration_tests")
