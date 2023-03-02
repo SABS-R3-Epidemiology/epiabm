@@ -162,8 +162,8 @@ class TestSpatialInfection(TestPyEpiabm):
         self.assertEqual(result*distancing_spatial_enhanced_susc,
                          result_distancing_enhanced)
 
-    @patch('pyEpiabm.property.SpatialInfection.space_susc')
-    @patch('pyEpiabm.property.SpatialInfection.space_inf')
+    @patch('pyEpiabm.property.SpatialInfection.spatial_susc')
+    @patch('pyEpiabm.property.SpatialInfection.spatial_inf')
     @patch('pyEpiabm.core.Parameters.instance')
     def test_carehome_scaling(self, mock_params, mock_inf, mock_susc):
         mock_inf.return_value = 1
@@ -172,23 +172,23 @@ class TestSpatialInfection(TestPyEpiabm):
             = {'carehome_resident_spatial_scaling': 2}
         self.infector.care_home_resident = True
         self.infectee.care_home_resident = False
-        result = SpatialInfection.space_foi(self.cell, self.cell,
-                                            self.infector, self.infectee,
-                                            self.time)
+        result = SpatialInfection.spatial_foi(self.cell, self.cell,
+                                              self.infector, self.infectee,
+                                              self.time)
         self.assertEqual(result, 4)
 
         self.infector.care_home_resident = False
         self.infectee.care_home_resident = True
-        result = SpatialInfection.space_foi(self.cell, self.cell,
-                                            self.infector, self.infectee,
-                                            self.time)
+        result = SpatialInfection.spatial_foi(self.cell, self.cell,
+                                              self.infector, self.infectee,
+                                              self.time)
         self.assertEqual(result, 2)
 
         self.infector.care_home_resident = True
         self.infectee.care_home_resident = True
-        result = SpatialInfection.space_foi(self.cell, self.cell,
-                                            self.infector, self.infectee,
-                                            self.time)
+        result = SpatialInfection.spatial_foi(self.cell, self.cell,
+                                              self.infector, self.infectee,
+                                              self.time)
         self.assertEqual(result, 4)
 
         self.assertEqual(mock_inf.call_count, 3)
