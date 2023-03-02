@@ -49,6 +49,14 @@ class InitialisePlaceSweep(AbstractSweep):
                     ave_group_size = params["mean_group_size"][param_ind]
                     [person_list, weights] = self.create_age_weights(place,
                                                                      params)
+                else:
+                    mean_cap = 0
+                    max_size = None
+                    offset = None
+                    power = None
+                    ave_group_size = 0
+                    person_list = None
+                    weights = None
 
                 if place.place_type.name in schools:
                     # Initialise the fixed population
@@ -67,10 +75,14 @@ class InitialisePlaceSweep(AbstractSweep):
                                               power_law_params=power_list)
 
                 elif place.place_type.name == "CareHome":
+                    if person_list is not None:
+                        person_list_use = person_list.copy()
+                    else:
+                        person_list_use = None
                     helper.update_place_group(
                         place,
                         group_size=ave_group_size,
-                        person_list=person_list.copy(),
+                        person_list=person_list_use,
                         person_weights=weights,
                         mean_capacity=mean_cap
                     )
