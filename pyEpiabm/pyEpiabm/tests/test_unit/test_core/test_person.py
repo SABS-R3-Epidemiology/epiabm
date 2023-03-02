@@ -66,6 +66,7 @@ class TestPerson(TestPyEpiabm):
         self.assertEqual(
             self.person.infection_status,
             pe.property.InfectionStatus.Exposed)
+        self.assertEqual(len(self.person.household.susceptible_persons),0)
 
     def test_configure_place(self):
         # Tests both the add and remove functions

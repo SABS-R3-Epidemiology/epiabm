@@ -42,8 +42,7 @@ population = pe.routine.FilePopulationFactory.make_pop(file_loc,
 
 
 # Configure population with input data
-# pe.routine.ToyPopulationFactory.assign_cell_locations
-#   (population, method='grid')
+# pe.routine.ToyPopulationFactory.assign_cell_locations(population, method='grid')
 pe.routine.ToyPopulationFactory.add_places(population, 1)
 # pe.routine.FilePopulationFactory.print_population(population, file_loc)
 
