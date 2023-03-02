@@ -196,20 +196,20 @@ class TestPopConfig(TestPyEpiabm):
         self.assertEqual(test_pop.total_people(), 22)
 
         FilePopulationFactory.print_population(test_pop, 'output.csv')
+        actual_df = mock_copy.call_args.args[0]
         if version.parse(pd.__version__) >= version.parse("1.4.0"):
             expected_df = self.df.copy()
             expected_df.drop('household_number', axis=1)
 
-            actual_df = mock_copy.call_args.args[0]
-
             pd.testing.assert_frame_equal(actual_df,
                                           expected_df, check_dtype=False)
+        else:
+            self.skipTest("Test requires pandas version 1.4 - skipped")
+
         household_list = self.df.loc[:, 'household_number']
         actual_household = actual_df.loc[:, 'household_number']
         for i in range(len(household_list)):
             self.assertLessEqual(actual_household[i], household_list[i])
-        else:
-            self.skipTest("Test requires pandas version 1.4 - skipped")
 
     @patch('logging.exception')
     @patch("pandas.DataFrame.to_csv")
