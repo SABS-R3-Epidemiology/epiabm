@@ -50,7 +50,7 @@ class InitialisePlaceSweep(AbstractSweep):
                     [person_list, weights] = self.create_age_weights(place,
                                                                      params)
                 else:
-                    mean_cap = 0
+                    mean_cap = 25
                     max_size = None
                     offset = None
                     power = None
@@ -78,7 +78,7 @@ class InitialisePlaceSweep(AbstractSweep):
                     if person_list is not None:
                         person_list_use = person_list.copy()
                     else:
-                        person_list_use = []
+                        person_list_use = None
                     helper.update_place_group(
                         place,
                         group_size=ave_group_size,

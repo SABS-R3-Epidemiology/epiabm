@@ -173,3 +173,11 @@ class Microcell:
                 isinstance(loc[1], Number)):
             raise ValueError("Location must be a tuple of float-type")
         self.location = loc
+
+    def count_icu(self):
+        return sum(map(lambda person: person.infection_status ==
+                   InfectionStatus.InfectICU, self.persons))
+
+    def count_infectious(self):
+        return sum(map(lambda person: person.is_infectious() is
+                   True, self.persons))

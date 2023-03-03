@@ -45,6 +45,12 @@ class TestPerson(TestPyEpiabm):
                          f"Person, Age = {self.person.age}, "
                          + f"Status = {self.person.infection_status}.")
 
+    def test_is_symptomatic(self):
+        self.person.update_status(pe.property.InfectionStatus.InfectMild)
+        self.assertTrue(self.person.is_symptomatic())
+        self.person.update_status(pe.property.InfectionStatus.InfectASympt)
+        self.assertFalse(self.person.is_symptomatic())
+
     def test_is_infectious(self):
         self.assertFalse(self.person.is_infectious())
         self.person.update_status(pe.property.InfectionStatus.InfectMild)
@@ -78,6 +84,20 @@ class TestPerson(TestPyEpiabm):
         self.person.remove_place(test_place)
         self.assertEqual(len(self.person.places), 0)
         self.assertRaises(KeyError, self.person.remove_place, test_place_2)
+
+    def test_is_place_closed(self):
+        closure_place_type = pe.Parameters.instance().intervention_params[
+            'place_closure']['closure_place_type']
+        # Not in place closure
+        self.assertFalse(hasattr(self.person.microcell, 'closure_start_time'))
+        self.assertFalse(self.person.is_place_closed(closure_place_type))
+        # Place closure time starts but the place is not in closure_place_type
+        self.person.microcell.closure_start_time = 1
+        self.person.place_types.append(pe.property.PlaceType.Workplace)
+        self.assertFalse(self.person.is_place_closed(closure_place_type))
+        # Place closure time starts and the place is in closure_place_type
+        self.person.place_types.append(pe.property.PlaceType.PrimarySchool)
+        self.assertTrue(self.person.is_place_closed(closure_place_type))
 
 
 if __name__ == '__main__':
