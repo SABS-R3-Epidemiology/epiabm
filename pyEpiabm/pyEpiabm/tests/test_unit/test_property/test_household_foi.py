@@ -27,21 +27,21 @@ class TestHouseholdInfection(TestPyEpiabm):
 
     def test_house_inf(self):
         result = HouseholdInfection.household_inf(self.infector, self.time)
-        self.assertTrue(result > 0)
+        self.assertEqual(result, 1)
         self.assertIsInstance(result, float)
 
     def test_house_susc(self):
         result = HouseholdInfection.household_susc(self.infector,
                                                    self.infectee,
                                                    self.time)
-        self.assertTrue(result > 0)
+        self.assertEqual(result, 1.0)
         self.assertIsInstance(result, float)
 
     def test_house_inf_force(self):
         result = HouseholdInfection.household_foi(self.infector,
                                                   self.infectee,
                                                   self.time)
-        self.assertTrue(result > 0)
+        self.assertEqual(result, 0.1)
         self.assertIsInstance(result, float)
 
     @patch('pyEpiabm.property.HouseholdInfection.household_susc')

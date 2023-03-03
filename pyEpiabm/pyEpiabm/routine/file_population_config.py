@@ -9,9 +9,9 @@ import copy
 import logging
 from packaging import version
 
-from pyEpiabm.core import Cell, Household, Microcell, Person, Population
+from pyEpiabm.core import Cell, Microcell, Person, Population, Parameters
 from pyEpiabm.property import InfectionStatus, PlaceType
-from pyEpiabm.sweep import HostProgressionSweep
+from pyEpiabm.sweep import HostProgressionSweep, InitialHouseholdSweep
 from pyEpiabm.utility import log_exceptions
 
 
@@ -115,15 +115,22 @@ class FilePopulationFactory:
                                                                     time)
 
             # Add households and places to microcell
-            if ('household_number' in line) and (line["household_number"]) > 0:
-                households = int(line["household_number"])
-                FilePopulationFactory.add_households(new_microcell,
-                                                     households)
+            if len(Parameters.instance().household_size_distribution) == 0:
+                if (('household_number' in line) and
+                        (line["household_number"]) > 0):
+                    households = int(line["household_number"])
+                    FilePopulationFactory.add_households(new_microcell,
+                                                         households)
 
             if ('place_number' in line) and (line["place_number"]) > 0:
                 new_microcell.add_place(int(line["place_number"]),
                                         cell.location,
                                         random.choice(list(PlaceType)))
+
+        # if household_size_distribution parameters are available use
+        # appropriate function
+        if len(Parameters.instance().household_size_distribution) != 0:
+            InitialHouseholdSweep().household_allocation(new_pop)
 
         # Verify all people are logged in cell
         for cell in new_pop.cells:
@@ -175,18 +182,18 @@ class FilePopulationFactory:
         """
         # Initialises another multinomial distribution
         q = [1 / household_number] * household_number
-        people_number = len(microcell.persons)
+        people_list = microcell.persons.copy()
+        people_number = len(people_list)
         household_split = np.random.multinomial(people_number, q,
                                                 size=1)[0]
-        person_index = 0
         for j in range(household_number):
             people_in_household = household_split[j]
-            new_household = Household(microcell,
-                                      loc=microcell.location)
-            for _ in range(people_in_household):
-                person = microcell.persons[person_index]
-                new_household.add_person(person)
-                person_index += 1
+            household_people = []
+            for i in range(people_in_household):
+                person_choice = people_list[0]
+                people_list.remove(person_choice)
+                household_people.append(person_choice)
+            microcell.add_household(household_people)
 
     @staticmethod
     @log_exceptions()
