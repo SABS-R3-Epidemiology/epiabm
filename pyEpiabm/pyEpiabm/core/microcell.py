@@ -4,6 +4,7 @@
 
 import typing
 from numbers import Number
+import logging
 
 from pyEpiabm.property import InfectionStatus
 
@@ -131,9 +132,12 @@ class Microcell:
             List of :class:`People` to add to household
 
         """
-        household = Household(self, loc=self.location)
-        for person in people:
-            household.add_person(person)
+        if len(people) != 0:
+            household = Household(self, loc=self.location)
+            for person in people:
+                household.add_person(person)
+        else:
+            logging.info("Cannot create an empty household")
 
     def notify_person_status_change(
             self,
