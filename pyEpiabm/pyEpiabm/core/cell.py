@@ -36,7 +36,7 @@ class Cell:
         self.households = []
         self.person_queue = Queue()
         self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
-        self.nearest_neighbours = dict()
+        self.nearby_cells = dict()
 
         if not (len(loc) == 2 and isinstance(loc[0], Number) and
                 isinstance(loc[1], Number)):
