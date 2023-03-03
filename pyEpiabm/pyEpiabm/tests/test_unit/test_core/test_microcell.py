@@ -95,6 +95,19 @@ class TestMicrocell(TestPyEpiabm):
         self.assertRaises(ValueError, microcell.set_location, (1, (8, 6)))
         self.assertRaises(ValueError, microcell.set_location, ('1', 1))
 
+    def test_count_icu(self):
+        self.microcell.add_people(6)
+        for person in self.microcell.persons[:4]:
+            person.update_status(InfectionStatus(7))
+        self.assertEqual(self.microcell.count_icu(), 4)
+
+    def test_count_infectious(self):
+        self.microcell.add_people(6)
+        for i in range(4):
+            person = self.microcell.persons[i]
+            person.update_status(InfectionStatus(i+3))
+        self.assertEqual(self.microcell.count_infectious(), 4)
+
 
 if __name__ == '__main__':
     unittest.main()
