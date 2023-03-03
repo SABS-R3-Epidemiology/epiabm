@@ -4,6 +4,7 @@
 
 import typing
 from numbers import Number
+
 from pyEpiabm.property import InfectionStatus
 
 
@@ -83,7 +84,7 @@ class Household:
             self.susceptible_persons.append(susceptible_person)
 
     def remove_susceptible_person(self, non_susceptible_person):
-        """Removes an susceptible person from the list of susceptible people
+        """Removes a susceptible person from the list of susceptible people
         in the household.
 
         Parameters
