@@ -4,6 +4,7 @@
 
 import typing
 from numbers import Number
+
 from pyEpiabm.property import InfectionStatus
 
 
