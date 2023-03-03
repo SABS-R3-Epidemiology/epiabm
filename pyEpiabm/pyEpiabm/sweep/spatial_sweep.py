@@ -119,21 +119,18 @@ class SpatialSweep(AbstractSweep):
         cutoff = Parameters.instance().infection_radius
         # Will catch the case if distance weights isn't configured
         # correctly and returns the wrong length.
+        actual_infectee_cells = []
         for cell2 in possible_infectee_cells:
             if cell2.id in infector_cell.nearby_cells.keys():
                 distance_weights.append(
-                    infector_cell.nearby_cells[cell2.id])
-            else:
-                distance_weights.append(0)
-
-        assert len(distance_weights) == len(possible_infectee_cells), (
-            "Distance weights are not the same length as cell list")
+                    1/infector_cell.nearby_cells[cell2.id])
+                actual_infectee_cells.append(cell2)
 
         try:
             # Will catch a list of zeros
             if sum(distance_weights) == 0:
                 raise ValueError
-            cell_list = random.choices(possible_infectee_cells,
+            cell_list = random.choices(actual_infectee_cells,
                                        weights=distance_weights,
                                        k=number_to_infect)
         except ValueError as e:
