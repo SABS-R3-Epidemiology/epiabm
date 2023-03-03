@@ -27,6 +27,7 @@ class PersonalInfection:
             Infectiousness parameter of person
 
         """
+
         return infector.infectiousness
 
     @staticmethod
@@ -53,4 +54,5 @@ class PersonalInfection:
             Susceptibility parameter of household
 
         """
+
         return 1.0

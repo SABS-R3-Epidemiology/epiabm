@@ -407,6 +407,7 @@
         "place_transmission": 0.1
     },
     "household_transmission": 0.1,
+    "household_size_distribution": [],
     "false_positive_rate": 0,
     "place_transmission": 0.1,
     "use_ages": 0,

@@ -168,7 +168,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         # Set ICU recovery infection status column values to 1. This way
         # everyone who is not recovered or dead will have their next
         # infection status set as ICURecov
-        matrix[:, -3] = 1
+        matrix[:, InfectionStatus.InfectICURecov.value - 1] = 1
         matrix = pd.DataFrame(matrix,
                               columns=[status.name for
                                        status in InfectionStatus],

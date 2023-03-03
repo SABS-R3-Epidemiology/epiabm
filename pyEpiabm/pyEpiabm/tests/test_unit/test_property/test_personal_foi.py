@@ -26,15 +26,14 @@ class TestPersonalInfection(TestPyEpiabm):
 
     def test_person_inf(self):
         result = PersonalInfection.person_inf(self.infector, self.time)
-        self.assertTrue(result > 0)
+        self.assertEqual(result, 1.0)
         self.assertIsInstance(result, float)
-        self.assertEqual(result, self.infector.infectiousness)
 
     def test_person_susc(self):
         result = PersonalInfection.person_susc(self.infector,
                                                self.infectee,
                                                self.time)
-        self.assertTrue(result > 0)
+        self.assertEqual(result, 1.0)
         self.assertIsInstance(result, float)
 
 
