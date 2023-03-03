@@ -16,14 +16,16 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.abspath(''),
-                       "simple_parameters.json"))
+                       "spatial_parameters.json"))
 
 
 # Method to set the seed at the start of the simulation, for reproducibility
 
 pe.routine.Simulation.set_random_seed(seed=42)
 
-pop_sizes = np.array([int(1000), int(2000), int(4000), int(8000), int(10000)])
+pop_sizes = np.array([int(1000), int(2000), int(4000), int(8000),
+                      int(10000), int(20000), int(40000), int(80000),
+                      int(100000), int(200000)])
 sim_times = []
 
 for i in range(len(pop_sizes)):
@@ -51,34 +53,23 @@ for i in range(len(pop_sizes)):
 
     # Create a simulation object, configure it with the parameters given, then
     # run the simulation.
-    # sim = pe.routine.Simulation()
-    # sim.configure(
-    #     population,
-    #     [pe.sweep.InitialInfectedSweep(),
-    #      pe.sweep.InitialisePlaceSweep(),
-    #      pe.sweep.InitialHouseholdSweep()],
-    #     [pe.sweep.UpdatePlaceSweep(),
-    #      pe.sweep.HouseholdSweep(),
-    #      pe.sweep.PlaceSweep(),
-    #      pe.sweep.SpatialSweep(),
-    #      pe.sweep.QueueSweep(),
-    #      pe.sweep.HostProgressionSweep()],
-    #     sim_params,
-    #     file_params)
-    # print('Marker 1')
-    # sim.run_sweeps()
-    # print('Marker 2')
-
     sim = pe.routine.Simulation()
     sim.configure(
         population,
-        [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialHouseholdSweep()],
-        [pe.sweep.HouseholdSweep(), pe.sweep.QueueSweep(),
+        [pe.sweep.InitialInfectedSweep(),
+         pe.sweep.InitialisePlaceSweep(),
+         pe.sweep.InitialHouseholdSweep()],
+        [pe.sweep.UpdatePlaceSweep(),
+         pe.sweep.HouseholdSweep(),
+         pe.sweep.PlaceSweep(),
+         pe.sweep.SpatialSweep(),
+         pe.sweep.QueueSweep(),
          pe.sweep.HostProgressionSweep()],
         sim_params,
         file_params)
+    print('Marker 1')
     sim.run_sweeps()
-    # Store end time
+    print('Marker 2')
     et = time.time()
 
     this_sim_time = et - st
