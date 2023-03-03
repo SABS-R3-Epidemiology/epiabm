@@ -48,7 +48,7 @@ class PlaceInfection:
                           ) and (infector.is_place_closed(
                             Parameters.instance().intervention_params[
                                 'place_closure']['closure_place_type'])) and (
-                                infector.microcell.closure_start_time >= time
+                                infector.microcell.closure_start_time <= time
                                 ) else \
             (transmission / num_groups
                 * PersonalInfection.person_inf(infector, time))
@@ -82,7 +82,7 @@ class PlaceInfection:
         place_idx = place.place_type.value - 1
         if (hasattr(infector.microcell, 'distancing_start_time')) and (
                 infector.microcell.distancing_start_time is not None) and (
-                    infector.microcell.distancing_start_time >= time):
+                    infector.microcell.distancing_start_time <= time):
             if infector.distancing_enhanced is True:
                 place_susc *= Parameters.instance().\
                              intervention_params[
@@ -127,14 +127,14 @@ class PlaceInfection:
             intervention_params['case_isolation']['isolation_effectiveness']\
             if (hasattr(infector, 'isolation_start_time')) and (
                 infector.isolation_start_time is not None) and (
-                    infector.isolation_start_time >= time) else 1
+                    infector.isolation_start_time <= time) else 1
         place_idx = place.place_type.value - 1
         quarantine = Parameters.instance().\
             intervention_params['household_quarantine'][
                 'quarantine_place_effectiveness'][place_idx]\
             if (hasattr(infector, 'quarantine_start_time')) and (
                 infector.quarantine_start_time is not None) and (
-                    infector.quarantine_start_time >= time) else 1
+                    infector.quarantine_start_time <= time) else 1
         infectiousness = (PlaceInfection.place_inf(place, infector, time)
                           * isolating * quarantine)
         susceptibility = (PlaceInfection.place_susc(place, infector, infectee,
