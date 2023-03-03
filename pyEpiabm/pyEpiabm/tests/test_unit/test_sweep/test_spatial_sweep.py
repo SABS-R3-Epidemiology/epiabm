@@ -241,7 +241,7 @@ class TestSpatialSweep(TestMockedLogs):
     @mock.patch("pyEpiabm.sweep.SpatialSweep.find_infectees_Covidsim")
     @mock.patch("pyEpiabm.sweep.SpatialSweep.find_infectees")
     @mock.patch("numpy.random.poisson")
-    @mock.patch("pyEpiabm.property.SpatialInfection.space_foi")
+    @mock.patch("pyEpiabm.property.SpatialInfection.spatial_foi")
     @mock.patch("pyEpiabm.property.SpatialInfection.cell_inf")
     def test_call_possible_infectee_number_0(self, mock_inf, mock_foi,
                                              mock_poisson, mock_inf_list,
