@@ -115,7 +115,7 @@ class FilePopulationFactory:
                                                                     time)
 
             # Add households and places to microcell
-            if not Parameters.instance().household_size_distribution:
+            if len(Parameters.instance().household_size_distribution) == 0:
                 if (('household_number' in line) and
                         (line["household_number"]) > 0):
                     households = int(line["household_number"])
@@ -129,7 +129,7 @@ class FilePopulationFactory:
 
         # if household_size_distribution parameters are available use
         # appropriate function
-        if Parameters.instance().household_size_distribution != []:
+        if len(Parameters.instance().household_size_distribution) != 0:
             InitialHouseholdSweep().household_allocation(new_pop)
 
         # Verify all people are logged in cell

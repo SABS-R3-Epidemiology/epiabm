@@ -78,7 +78,7 @@ class InitialisePlaceSweep(AbstractSweep):
                     if person_list is not None:
                         person_list_use = person_list.copy()
                     else:
-                        person_list_use = None
+                        person_list_use = []
                     helper.update_place_group(
                         place,
                         group_size=ave_group_size,
