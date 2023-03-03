@@ -87,7 +87,7 @@ class TestSpatialSweep(TestMockedLogs):
         self.no_infectees_rec.update_status(InfectionStatus.Recovered)
 
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
-    def test_near_neighbour(self, mock_dist):
+    def test_nearby_cells(self, mock_dist):
         Parameters.instance().infection_radius = 1000
         test_pop = self.pop
         test_sweep = SpatialSweep()
