@@ -30,8 +30,8 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
 # Parameter to change
-to_modify_parameter_values = {'distancing_enhanced_prob': [1, 0.5, 0],
-                              'distancing_spatial_susc': [0.1, 0.3, 0.9]}
+to_modify_parameter_values = {'distancing_enhanced_prob': [0, 0.5, 1],
+                              'distancing_spatial_susc': [0.9, 0.3, 0.1]}
 for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         items():
     for parameter_value in parameter_values:
@@ -44,6 +44,8 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
             pe.Parameters.instance().intervention_params['social_distancing'][
                 to_modify_parameter] = [parameter_value] * num_age_group
         else:
+            pe.Parameters.instance().intervention_params['social_distancing'][
+                'distancing_enhanced_prob'] = [0] * num_age_group
             pe.Parameters.instance().intervention_params['social_distancing'][
                 to_modify_parameter] = parameter_value
 

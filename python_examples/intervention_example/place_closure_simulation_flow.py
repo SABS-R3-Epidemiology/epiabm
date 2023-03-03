@@ -32,7 +32,7 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 # Parameter to change
 to_modify_parameter = ['closure_household_infectiousness',
                        'closure_spatial_params']
-parameter_values = [[2, 10, 20], [0.2, 0.5, 0.8]]
+parameter_values = [[2, 10, 20], [0.8, 0.5, 0.2]]
 
 for j in range(len(to_modify_parameter)):
     for i in range(len(parameter_values[j])):
