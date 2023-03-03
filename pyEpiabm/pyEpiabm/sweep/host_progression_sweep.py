@@ -175,6 +175,7 @@ class HostProgressionSweep(AbstractSweep):
             next_infection_status_number = random.choices(outcomes, weights)[0]
             next_infection_status =\
                 InfectionStatus(next_infection_status_number)
+
             person.next_infection_status = next_infection_status
 
     def update_time_status_change(self, person: Person, time: float):

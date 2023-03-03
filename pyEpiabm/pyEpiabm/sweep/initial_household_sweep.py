@@ -3,6 +3,7 @@
 #
 
 import random
+import logging
 import numpy as np
 
 from pyEpiabm.core import Parameters, Person, Population
@@ -242,6 +243,11 @@ class InitialHouseholdSweep(AbstractSweep):
 
         n = household_size
         r = random.random()
+
+        if n < 3:
+            raise ValueError("household_size must be greater than 3 people" +
+                             " for calc_number_of_children() to be called")
+
         # Calculate the number of children in a 3 person household
         if n == 3:
             if ((self.age_params["zero_child_three_pers_prob"] > 0) or
@@ -416,14 +422,10 @@ class InitialHouseholdSweep(AbstractSweep):
         them an age dependant on their household size.
         """
 
-        # Call method to put people into households and check to see
-        # if people are already in households (this check makes testing
-        # this method easier)
-        for cell in self._population.cells:
-            for microcell in cell.microcells:
-                if len(microcell.households) == 0:
-                    self.household_allocation(self._population)
-                    break
+        if all([len(microcell.households) == 0
+                for cell in self._population.cells
+                for microcell in cell.microcells]):
+            raise ValueError("Cannot find any microcells with households")
 
         # If ages need to be set call method to assign
         # ages of people in households
@@ -439,9 +441,13 @@ class InitialHouseholdSweep(AbstractSweep):
                         elif len(household.persons) == 2:
                             self.two_person_household_ages(household.persons)
 
-                        else:
+                        elif len(household.persons) >= 3:
                             self.three_or_more_person_household_ages(
                                 household.persons)
+
+                        else:
+                            logging.warning("Empty households should not be " +
+                                            "used in this method")
 
                         for person in household.persons:
                             status = person.infection_status

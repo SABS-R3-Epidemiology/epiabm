@@ -26,6 +26,7 @@ class TestPopulationRandomSeeds(unittest.TestCase):
         filepath = os.path.join(os.path.dirname(__file__),
                                 os.pardir, 'testing_parameters.json')
         pe.Parameters.set_file(filepath)
+        pe.Parameters.instance().household_size_distribution = []
 
     def setUp(self) -> None:
         self.input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],

@@ -16,8 +16,7 @@ class HouseholdInfection:
     @staticmethod
     def household_inf(infector, time: float):
         """Calculate the infectiousness of a person in a given
-        household. Does not include interventions such as isolation,
-        or whether individual is a carehome resident.
+        household.
 
         Parameters
         ----------
@@ -32,13 +31,12 @@ class HouseholdInfection:
             Infectiousness parameter of household
 
         """
-        return PersonalInfection.person_inf(infector, time)
+        return infector.infectiousness
 
     @staticmethod
     def household_susc(infector, infectee, time: float):
         """Calculate the susceptibility of one person to another in a given
-        household. Does not include interventions such as isolation,
-        or whether individual is a carehome resident.
+        household.
 
         Parameters
         ----------
@@ -86,6 +84,7 @@ class HouseholdInfection:
             carehome_scale_susc = Parameters.instance()\
                 .carehome_params["carehome_resident_household_scaling"]
         seasonality = 1.0  # Not yet implemented
+
         infectiousness = (HouseholdInfection.household_inf(infector, time)
                           * seasonality
                           * pyEpiabm.core.Parameters.instance().
