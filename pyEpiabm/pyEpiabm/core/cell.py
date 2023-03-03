@@ -7,7 +7,6 @@ import numpy as np
 from queue import Queue
 from numbers import Number
 
-# from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
 # from pyEpiabm.utility import DistanceFunctions
 
