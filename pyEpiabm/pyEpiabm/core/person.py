@@ -70,6 +70,18 @@ class Person:
             # same age group (to conserve same output structure)
             self.age_group = 0
 
+    def is_symptomatic(self):
+        """Query if the person is currently symptomatic.
+
+        Returns
+        -------
+        bool
+            Whether person is currently symptomatic
+
+        """
+        return Person.is_infectious(self) and self.infection_status != \
+            InfectionStatus.InfectASympt
+
     def is_infectious(self):
         """Query if the person is currently infectious.
 
@@ -155,3 +167,21 @@ class Person:
             ind = place_list.index(place)
             self.places.pop(ind)
             self.place_types.pop(ind)
+
+    def is_place_closed(self, closure_place_type):
+        """Method to check if any of the place in the person's place list
+        will be closed based on the place type, to be
+        used when place closure intervention is active.
+
+        Parameters
+        ----------
+        closure_place_type: a list of PlaceType
+            PlaceType should be closed if in place closure intervention
+
+        """
+        if (hasattr(self.microcell, 'closure_start_time')) and (
+                self.microcell.closure_start_time is not None):
+            for place_type in self.place_types:
+                if place_type.value in closure_place_type:
+                    return True
+        return False
