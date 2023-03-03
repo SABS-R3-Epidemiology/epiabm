@@ -12,21 +12,21 @@ class TestHouseholdInfection(TestPyEpiabm):
     determine whether infection events occur within households.
     Each function should return a number greater than 0.
     """
-    @classmethod
-    def setUpClass(cls) -> None:
+
+    def setUp(self) -> None:
         """Intialise a population with one infector and one
         infectee, both in the same place and household.
         """
-        super(TestHouseholdInfection, cls).setUpClass()  # Sets up parameters
-        cls.time = 1
-        cls._population = pe.Population()
-        cls._population.add_cells(1)
-        cls._population.cells[0].add_microcells(1)
-        cls._population.cells[0].microcells[0].add_people(2)
-        for person in cls._population.cells[0].microcells[0].persons:
+        super(TestHouseholdInfection, self).setUp()  # Sets up parameters
+        self.time = 1
+        self._population = pe.Population()
+        self._population.add_cells(1)
+        self._population.cells[0].add_microcells(1)
+        self._population.cells[0].microcells[0].add_people(2)
+        for person in self._population.cells[0].microcells[0].persons:
             person.infectiousness = 1.0
-        cls.infector = cls._population.cells[0].microcells[0].persons[0]
-        cls.infectee = cls._population.cells[0].microcells[0].persons[1]
+        self.infector = self._population.cells[0].microcells[0].persons[0]
+        self.infectee = self._population.cells[0].microcells[0].persons[1]
 
     def test_house_inf(self):
         result = HouseholdInfection.household_inf(self.infector, self.time)
