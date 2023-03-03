@@ -93,7 +93,7 @@ class TestSpatialSweep(TestMockedLogs):
         test_sweep = SpatialSweep()
         mock_dist.return_value = 2
         test_sweep.bind_population(test_pop)
-        self.assertEqual(self.cell_inf.neighbouring_cells, {1: 2})
+        self.assertEqual(self.cell_inf.nearby_cells, {1: 2})
 
     @mock.patch("logging.exception")
     @mock.patch("numpy.nan_to_num")
@@ -107,7 +107,7 @@ class TestSpatialSweep(TestMockedLogs):
         mock_dist.return_value = 2.2
         test_sweep.bind_population(test_pop)
 
-        self.assertEqual(self.cell_inf.neighbouring_cells, {})
+        self.assertEqual(self.cell_inf.nearby_cells, {})
 
         Parameters.instance().infection_radius = 1000
         test_pop = self.pop
