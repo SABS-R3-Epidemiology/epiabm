@@ -6,6 +6,7 @@ import random
 
 from pyEpiabm.property import HouseholdInfection
 from pyEpiabm.core import Person
+
 from .abstract_sweep import AbstractSweep
 
 
