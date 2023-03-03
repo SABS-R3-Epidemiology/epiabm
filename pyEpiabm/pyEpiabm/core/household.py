@@ -81,7 +81,6 @@ class Household:
         """
         if susceptible_person not in self.susceptible_persons:
             self.susceptible_persons.append(susceptible_person)
-            susceptible_person.household = self
 
     def remove_susceptible_person(self, non_susceptible_person):
         """Removes an susceptible person from the list of susceptible people
@@ -94,4 +93,3 @@ class Household:
 
         """
         self.susceptible_persons.remove(non_susceptible_person)
-        non_susceptible_person.household = self
