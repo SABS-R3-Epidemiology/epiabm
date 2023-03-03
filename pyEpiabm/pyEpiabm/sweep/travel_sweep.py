@@ -26,8 +26,10 @@ class TravelSweep(AbstractSweep):
         """
         self.travel_params = Parameters.instance().travel_params
         self.introduce_population = Population()
-        self.initial_cell = self.introduce_population.add_cells(1)
-        self.initial_microcell = self.initial_cell.add_microcells(1)
+        self.introduce_population.add_cells(1)
+        self.initial_cell = self.introduce_population.cells[0]
+        self.initial_cell.add_microcells(1)
+        self.initial_microcell = self.initial_cell.microcells[0]
 
     def __call__(self, time: float):
         """ Based on number of infected cases in population, infected
@@ -45,8 +47,10 @@ class TravelSweep(AbstractSweep):
         # Introduce number of individuals
         num_cases = sum(map(lambda cell: cell.number_infectious(),
                         self._population.cells))
-        number_individuals_introduced = num_cases * self.travel_params[
-            'ratio_introduce_cases']
+        number_individuals_introduced = math.floor(
+            num_cases * self.travel_params['ratio_introduce_cases'])
+        print('number of individuals introduced: {}'.format(
+            number_individuals_introduced))
 
         # Make individuals
         # Assign age and infectious status based on age
@@ -56,11 +60,18 @@ class TravelSweep(AbstractSweep):
             asymp_prop = Parameters.instance().host_progression_lists[
                 "prob_exposed_to_asympt"]
             # travellers are between 15-80 years
-            add_to_proportions = sum(age_prop[:3]+[age_prop[-1]]) / 13
+
+            ## ADJUST weights does not work at the moment
+            print(sum(age_prop))
+            add_to_proportions = round(sum(age_prop[:3]+[age_prop[-1]]) / 13, 1)
             age_prop_adjusted = [0.0 if i in [0, 1, 2, 16] else
                                  prop+add_to_proportions for
                                  i, prop in enumerate(age_prop)]
+            print(age_prop)
+            print(add_to_proportions)
+            print(age_prop_adjusted)
             w = age_prop_adjusted / sum(age_prop_adjusted)
+            print(w)
             print(sum(age_prop_adjusted))
             microcell_split = np.random.multinomial(
                 number_individuals_introduced, w, size=1)[0]
