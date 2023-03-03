@@ -84,7 +84,7 @@ class Household:
             susceptible_person.household = self
 
     def remove_susceptible_person(self, non_susceptible_person):
-        """Removes an susceptible person from the list of susceptible people
+        """Removes a susceptible person from the list of susceptible people
         in the household.
 
         Parameters
