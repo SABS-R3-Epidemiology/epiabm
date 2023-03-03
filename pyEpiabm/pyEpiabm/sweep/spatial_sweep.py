@@ -138,7 +138,7 @@ class SpatialSweep(AbstractSweep):
                               + f" within radius {cutoff} of"
                               + f" cell {infector_cell.id} at location"
                               + f" {infector_cell.location} - skipping cell.")
-            # This returns an empty list so no infection events tested.
+            # This returns an empty list so no infection events are tested.
             return infectee_list
 
         # Each infection event corresponds to a infectee cell
