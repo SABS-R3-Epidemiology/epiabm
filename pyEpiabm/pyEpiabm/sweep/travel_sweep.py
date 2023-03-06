@@ -133,7 +133,9 @@ class TravelSweep(AbstractSweep):
         for person in self.initial_cell.persons:
             selected_microcell = random.choice(list(
                 microcells_to_choose_dict.keys()))
+            # Assign person to microcell and microcell to person
             selected_microcell.add_person(person)
+            person.microcell = selected_microcell
             r = random.random()
             if r < self.travel_params['prob_existing_household']:
                 # Assign to existing household
@@ -154,8 +156,9 @@ class TravelSweep(AbstractSweep):
                     # Remove from household and microcell
                     person.microcell.persons.pop(person)
                     person.household.persons.pop(person)
-                    print('Remove individual: {}, as its end time is {}'.format(person), person.travel_end_time)
-        
+                    print('Remove individual: {}, as its end time is {}'
+                          .format(person, person.travel_end_time))
+
         pop_size = 0
         for cell in self._population.cells:
             pop_size += len(cell.persons)
