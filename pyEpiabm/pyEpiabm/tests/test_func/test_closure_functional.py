@@ -213,7 +213,7 @@ class TestClosureFunctional(unittest.TestCase):
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
     @patch("pandas.read_csv")
-    def test_closure_type(self, mock_read, mock_csv):
+    def test_closure_type_large(self, mock_read, mock_csv):
         """Place closure functional test to ensure more people will be
         susceptible when more types of places are closed.
         """
@@ -272,7 +272,7 @@ class TestClosureFunctional(unittest.TestCase):
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
     @patch("pandas.read_csv")
-    def test_spatial_params(self, mock_read, mock_csv):
+    def test_spatial_params_large(self, mock_read, mock_csv):
         """Place closure functional test to ensure less people will be
         susceptible when closure spatial params increases due to
         place closure.
