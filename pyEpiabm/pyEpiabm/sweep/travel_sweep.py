@@ -7,6 +7,7 @@ import math
 
 from pyEpiabm.core import Population, Parameters, Microcell
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.sweep import HostProgressionSweep
 from .abstract_sweep import AbstractSweep
 
 
@@ -100,9 +101,14 @@ class TravelSweep(AbstractSweep):
                     number_indiv_InfectedMild,
                     status=InfectionStatus.InfectMild)
 
-        # Assigne introduced individuals a time to stay
         for person in self.initial_cell.persons:
+            # Assign introduced individuals a time to stay
             person.travel_end_time = random.randint(2, 14)
+            # Assigns them their next infection status and the time of their
+            # next status change. Also updates their infectiousness.
+            person.next_infection_status = InfectionStatus.Recovered
+            HostProgressionSweep.set_infectiousness(person, time)
+            HostProgressionSweep().update_time_status_change(person, time)
 
         # Assign introduced individuals to microcells based on population
         # density of micorcells. Take a number of microcells equal to the
@@ -146,12 +152,6 @@ class TravelSweep(AbstractSweep):
             else:
                 # Create new household
                 selected_microcell.add_household([person])
-
-            print(person)
-            print(person.infection_status)
-        
-        print(self._population.cells[0].persons[0])
-        print(self._population.cells[0].persons[0].infection_status)
 
         # Remove travelling people from population if their
         # travel_end_time reached
