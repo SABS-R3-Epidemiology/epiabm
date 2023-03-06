@@ -59,11 +59,11 @@ class TravelSweep(AbstractSweep):
 
         # Make individuals
         # Assign age and infectious status based on age
+        asymp_prop = Parameters.instance().host_progression_lists[
+            "prob_exposed_to_asympt"]
         # if age is used in model
         if Parameters.instance().use_ages:
             age_prop = Parameters.instance().age_proportions
-            asymp_prop = Parameters.instance().host_progression_lists[
-                "prob_exposed_to_asympt"]
             # travellers are between 15-80 years
             age_prop_adjusted = [0.0 if i in [0, 1, 2, 16] else
                                  prop for i, prop in
@@ -87,8 +87,8 @@ class TravelSweep(AbstractSweep):
                     status=InfectionStatus.InfectMild,
                     age_group=age)
         else:
-            asymp_prop = Parameters.instance().host_progression_lists[
-                "prob_exposed_to_asympt"]
+            if isinstance(asymp_prop, list):
+                asymp_prop = asymp_prop[0]
             number_indiv_InfectedAsympt = \
                 math.floor(asymp_prop * number_individuals_introduced)
             number_indiv_InfectedMild = number_individuals_introduced - \
@@ -146,6 +146,12 @@ class TravelSweep(AbstractSweep):
             else:
                 # Create new household
                 selected_microcell.add_household([person])
+
+            print(person)
+            print(person.infection_status)
+        
+        print(self._population.cells[0].persons[0])
+        print(self._population.cells[0].persons[0].infection_status)
 
         # Remove travelling people from population if their
         # travel_end_time reached
