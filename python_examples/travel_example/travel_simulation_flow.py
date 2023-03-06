@@ -31,7 +31,7 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 # Parameter to change
 to_modify_parameter = 'ratio_introduce_cases'
 # parameter_values = [0.0, 0.1, 0.5]
-parameter_values = [0.1]
+parameter_values = [0.5]
 
 
 for i in range(len(parameter_values)):

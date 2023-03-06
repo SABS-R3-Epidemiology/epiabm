@@ -5,7 +5,7 @@ import numpy as np
 import random
 import math
 
-from pyEpiabm.core import Population, Parameters
+from pyEpiabm.core import Population, Parameters, Microcell
 from pyEpiabm.property import InfectionStatus
 from .abstract_sweep import AbstractSweep
 
@@ -44,6 +44,11 @@ class TravelSweep(AbstractSweep):
             Simulation time
         """
 
+        pop_size = 0
+        for cell in self._population.cells:
+            pop_size += len(cell.persons)
+        print('Old population size: {}'.format(pop_size))
+
         # Introduce number of individuals
         num_cases = sum(map(lambda cell: cell.number_infectious(),
                         self._population.cells))
@@ -60,19 +65,10 @@ class TravelSweep(AbstractSweep):
             asymp_prop = Parameters.instance().host_progression_lists[
                 "prob_exposed_to_asympt"]
             # travellers are between 15-80 years
-
-            ## ADJUST weights does not work at the moment
-            print(sum(age_prop))
-            add_to_proportions = round(sum(age_prop[:3]+[age_prop[-1]]) / 13, 1)
             age_prop_adjusted = [0.0 if i in [0, 1, 2, 16] else
-                                 prop+add_to_proportions for
-                                 i, prop in enumerate(age_prop)]
-            print(age_prop)
-            print(add_to_proportions)
-            print(age_prop_adjusted)
+                                 prop for i, prop in
+                                 enumerate(age_prop)]
             w = age_prop_adjusted / sum(age_prop_adjusted)
-            print(w)
-            print(sum(age_prop_adjusted))
             microcell_split = np.random.multinomial(
                 number_individuals_introduced, w, size=1)[0]
             for age in range(len(age_prop_adjusted)):
@@ -116,10 +112,10 @@ class TravelSweep(AbstractSweep):
         microcells_to_choose_dict = {}
         for i in range(number_individuals_introduced):
             # initialise with default microcell
-            microcells_to_choose_dict[self.initial_microcell] = 0
+            microcells_to_choose_dict[Microcell(self.initial_cell)] = 0
         # Find highest density microcells
         for possible_cell in self._population.cells:
-            for possible_microcell in possible_cell:
+            for possible_microcell in possible_cell.microcells:
                 density_microcells_list = list(
                     microcells_to_choose_dict.values())
                 if min(density_microcells_list) < len(
@@ -151,10 +147,16 @@ class TravelSweep(AbstractSweep):
 
         # Remove travelling people from population if their
         # travel_end_time reached
-        for cells in self._population:
-            for person in cells.persons:
+        for cell in self._population.cells:
+            for person in cell.persons:
                 if (hasattr(person, 'travel_end_time')) and (
                         time > person.travel_end_time):
                     # Remove from household and microcell
                     person.microcell.persons.pop(person)
                     person.household.persons.pop(person)
+                    print('Remove individual: {}, as its end time is {}'.format(person), person.travel_end_time)
+        
+        pop_size = 0
+        for cell in self._population.cells:
+            pop_size += len(cell.persons)
+        print('new population size: {}'.format(pop_size))
