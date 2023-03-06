@@ -84,7 +84,8 @@ class Microcell:
         self.cell.persons.append(person)
         self.persons.append(person)
 
-    def add_people(self, n, status=InfectionStatus.Susceptible, age_group=0):
+    def add_people(self, n, status=InfectionStatus.Susceptible,
+                   age_group=None):
         """Adds n default :class:`Person` of given status to Microcell.
 
         Parameters
@@ -97,15 +98,15 @@ class Microcell:
             Person's associated age group
 
         """
-        self.compartment_counter._increment_compartment(n, status, age_group)
-        self.cell.compartment_counter._increment_compartment(n, status,
-                                                             age_group)
         for _ in range(n):
-            p = Person(self)
+            p = Person(self, age_group)
             self.cell.persons.append(p)
             self.persons.append(p)
             p.infection_status = status
-            p.age_group = age_group
+            self.compartment_counter._increment_compartment(
+                1, p.infection_status, p.age_group)
+            self.cell.compartment_counter._increment_compartment(
+                1, p.infection_status, p.age_group)
 
     def add_place(self, n: int, loc: typing.Tuple[float, float],
                   place_type):
