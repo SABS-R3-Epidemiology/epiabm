@@ -103,12 +103,14 @@ class TravelSweep(AbstractSweep):
 
         for person in self.initial_cell.persons:
             # Assign introduced individuals a time to stay
-            person.travel_end_time = random.randint(2, 14)
+            person.travel_end_time = time + random.randint(2, 14)
             # Assigns them their next infection status and the time of their
             # next status change. Also updates their infectiousness.
             person.next_infection_status = InfectionStatus.Recovered
             HostProgressionSweep.set_infectiousness(person, time)
             HostProgressionSweep().update_time_status_change(person, time)
+            print(person)
+            print(person.age_group)
 
         # Assign introduced individuals to microcells based on population
         # density of micorcells. Take a number of microcells equal to the
@@ -155,15 +157,22 @@ class TravelSweep(AbstractSweep):
 
         # Remove travelling people from population if their
         # travel_end_time reached
+        persons_to_remove = []
         for cell in self._population.cells:
             for person in cell.persons:
                 if (hasattr(person, 'travel_end_time')) and (
                         time > person.travel_end_time):
-                    # Remove from household and microcell
-                    person.microcell.persons.pop(person)
-                    person.household.persons.pop(person)
+                    persons_to_remove.append(person)
+                    # Remove from cell, microcell and household
+                    person.microcell.cell.persons.remove(person)
+                    person.microcell.persons.remove(person)
+                    person.household.persons.remove(person)
                     print('Remove individual: {}, as its end time is {}'
                           .format(person, person.travel_end_time))
+        
+        # Remove introduced individuals from introduce population
+        self.initial_cell.persons = []
+        self.initial_microcell.persons = []
 
         pop_size = 0
         for cell in self._population.cells:
