@@ -44,7 +44,7 @@ class TestIsolationFunctional(unittest.TestCase):
             "policy_duration": 365,
             "case_threshold": 0,
             "isolation_delay": 0,
-            "isolation_duration": 30,
+            "isolation_duration": 12,
             "isolation_probability": 0.2,
             "isolation_effectiveness": 0,
             "isolation_house_effectiveness": 0}
@@ -95,7 +95,7 @@ class TestIsolationFunctional(unittest.TestCase):
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
     @patch("pandas.read_csv")
-    def test_intervention_present(self, mock_read, mock_csv):
+    def test_isolation_present(self, mock_read, mock_csv):
         """Case isolation functional test to ensure more people will be
         susceptible when case isolation intervention is present.
         """
