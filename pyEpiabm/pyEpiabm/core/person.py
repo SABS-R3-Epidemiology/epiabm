@@ -31,10 +31,13 @@ class Person:
     def __init__(self, microcell, age_group=None):
         """Constructor Method.
 
-        Parameterse_group=0)
+        Parameters
         ----------
         microcell : Microcell
             Person's parent :class:`Microcell` instance
+        age_group : int or None
+            Integer identifying persons age group or None if random age should
+            be assigned
 
         """
         self.initial_infectiousness = 0
