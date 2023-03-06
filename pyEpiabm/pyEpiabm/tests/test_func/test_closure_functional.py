@@ -7,14 +7,14 @@ import pyEpiabm as pe
 from pyEpiabm.property.infection_status import InfectionStatus
 
 
-class TestIsolationFunctional(unittest.TestCase):
-    """Functional testing of case isolation intervention. Conducts
-    case isolation intervention simulations with known
+class TestClosureFunctional(unittest.TestCase):
+    """Functional testing of place closure intervention. Conducts
+    place closure intervention simulations with known
     results/properties to ensure code functions as desired.
     """
     @classmethod
     def setUpClass(cls) -> None:
-        super(TestIsolationFunctional, cls).setUpClass()
+        super(TestClosureFunctional, cls).setUpClass()
         cls.warning_patcher = patch('logging.warning')
         cls.error_patcher = patch('logging.error')
 
@@ -55,7 +55,7 @@ class TestIsolationFunctional(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        super(TestIsolationFunctional, cls).tearDownClass()
+        super(TestClosureFunctional, cls).tearDownClass()
         cls.warning_patcher.stop()
         cls.error_patcher.stop()
         if pe.Parameters._instance:
@@ -116,10 +116,10 @@ class TestIsolationFunctional(unittest.TestCase):
             pe.sweep.QueueSweep(),
             pe.sweep.HostProgressionSweep(),
         ]
-        pop = TestIsolationFunctional.file_simulation(
+        pop = TestClosureFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params, sweep_list)
 
-        # Enable case isolation
+        # Enable place closure
         pe.Parameters.instance().intervention_params = self.intervention
         sweep_list = [
             pe.sweep.InterventionSweep(),
@@ -130,7 +130,7 @@ class TestIsolationFunctional(unittest.TestCase):
             pe.sweep.QueueSweep(),
             pe.sweep.HostProgressionSweep(),
         ]
-        pop_closure = TestIsolationFunctional.file_simulation(
+        pop_closure = TestClosureFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params, sweep_list)
 
         mock_read.assert_called_with('test_input.csv')
@@ -174,7 +174,7 @@ class TestIsolationFunctional(unittest.TestCase):
             pe.sweep.QueueSweep(),
             pe.sweep.HostProgressionSweep(),
         ]
-        pop = TestIsolationFunctional.file_simulation(
+        pop = TestClosureFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params, sweep_list)
 
         pe.Parameters.instance().intervention_params = self.intervention
@@ -188,7 +188,7 @@ class TestIsolationFunctional(unittest.TestCase):
             pe.sweep.QueueSweep(),
             pe.sweep.HostProgressionSweep(),
         ]
-        pop_closure = TestIsolationFunctional.file_simulation(
+        pop_closure = TestClosureFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params, sweep_list)
 
         mock_read.assert_called_with('test_input.csv')
@@ -233,7 +233,7 @@ class TestIsolationFunctional(unittest.TestCase):
             pe.sweep.QueueSweep(),
             pe.sweep.HostProgressionSweep(),
         ]
-        pop_standard = TestIsolationFunctional.file_simulation(
+        pop_standard = TestClosureFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params, sweep_list)
 
         self.intervention['place_closure']['closure_place_type'] = [
@@ -247,7 +247,7 @@ class TestIsolationFunctional(unittest.TestCase):
             pe.sweep.QueueSweep(),
             pe.sweep.HostProgressionSweep(),
         ]
-        pop = TestIsolationFunctional.file_simulation(
+        pop = TestClosureFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params, sweep_list)
 
         mock_read.assert_called_with('test_input.csv')
@@ -293,7 +293,7 @@ class TestIsolationFunctional(unittest.TestCase):
             pe.sweep.QueueSweep(),
             pe.sweep.HostProgressionSweep(),
         ]
-        pop_standard = TestIsolationFunctional.file_simulation(
+        pop_standard = TestClosureFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params, sweep_list)
 
         self.intervention['place_closure'][
@@ -307,7 +307,7 @@ class TestIsolationFunctional(unittest.TestCase):
             pe.sweep.QueueSweep(),
             pe.sweep.HostProgressionSweep(),
         ]
-        pop = TestIsolationFunctional.file_simulation(
+        pop = TestClosureFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params, sweep_list)
 
         mock_read.assert_called_with('test_input.csv')
@@ -352,7 +352,7 @@ class TestIsolationFunctional(unittest.TestCase):
             pe.sweep.QueueSweep(),
             pe.sweep.HostProgressionSweep(),
         ]
-        pop = TestIsolationFunctional.file_simulation(
+        pop = TestClosureFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params, sweep_list)
 
         pe.Parameters.instance().intervention_params = self.intervention
@@ -367,7 +367,7 @@ class TestIsolationFunctional(unittest.TestCase):
             pe.sweep.QueueSweep(),
             pe.sweep.HostProgressionSweep(),
         ]
-        pop_closure = TestIsolationFunctional.file_simulation(
+        pop_closure = TestClosureFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params, sweep_list)
 
         mock_read.assert_called_with('test_input.csv')
@@ -412,7 +412,7 @@ class TestIsolationFunctional(unittest.TestCase):
             pe.sweep.QueueSweep(),
             pe.sweep.HostProgressionSweep(),
         ]
-        pop_standard = TestIsolationFunctional.file_simulation(
+        pop_standard = TestClosureFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params, sweep_list)
 
         self.intervention['place_closure'][
@@ -426,7 +426,7 @@ class TestIsolationFunctional(unittest.TestCase):
             pe.sweep.QueueSweep(),
             pe.sweep.HostProgressionSweep(),
         ]
-        pop = TestIsolationFunctional.file_simulation(
+        pop = TestClosureFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params, sweep_list)
 
         mock_read.assert_called_with('test_input.csv')
