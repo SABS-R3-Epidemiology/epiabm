@@ -86,11 +86,7 @@ class TravelSweep(AbstractSweep):
             # travellers are between 15-80 years
             age_prop_adjusted = [0.0 if i in [0, 1, 2, 16] else prop for
                                  i, prop in enumerate(age_prop)]
-            print(age_prop_adjusted)
-            print(type(age_prop_adjusted))
-            print(sum(age_prop_adjusted))
             w = age_prop_adjusted / sum(age_prop_adjusted)
-            print('w: {}'.format(w))
             microcell_split = np.random.multinomial(
                 number_individuals_introduced, w, size=1)[0]
             for age in range(len(age_prop_adjusted)):
@@ -197,8 +193,27 @@ class TravelSweep(AbstractSweep):
         Person : Person
             Instance of Person class
         """
-        return (hasattr(person, 'travel_end_time')) and \
-            (time > person.travel_end_time)
+        remove_individual = False
+        if (hasattr(person, 'travel_end_time')) and \
+                (time > person.travel_end_time):
+            if all([hasattr(person, 'isolation_start_time'),
+                    hasattr(person, 'quarantine_start_time')]):
+                if (person.isolation_start_time and
+                        person.quarantine_start_time is None) or \
+                        (person.isolation_start_time and
+                         person.quarantine_start_time <= time):
+                    remove_individual = True
+            elif hasattr(person, 'isolation_start_time'):
+                if (person.isolation_start_time is None) or \
+                        (person.isolation_start_time <= time):
+                    remove_individual = True
+            elif hasattr(person, 'quarantine_start_time'):
+                if (person.quarantine_start_time is None) or \
+                        (person.quarantine_start_time <= time):
+                    remove_individual = True
+            else:
+                remove_individual = True
+        return remove_individual
 
     def remove_leaving_individuals(self, time):
         """
