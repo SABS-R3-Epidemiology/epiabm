@@ -354,7 +354,7 @@ class HostProgressionSweep(AbstractSweep):
                     person.date_positive = None
 
     def asympt_uninf_testing_queue(self, person_list: list, time):
-        """ Adds asymptomatic and uninfected people to a testing queue 
+        """ Adds asymptomatic and uninfected people to a testing queue
         with a given probability depedent on their status.
 
         Parameters

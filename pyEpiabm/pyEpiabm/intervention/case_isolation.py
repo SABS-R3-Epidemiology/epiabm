@@ -30,7 +30,6 @@ class CaseIsolation(AbstractIntervention):
         self.isolation_probability = isolation_probability
         self.criterion = criterion
 
-
         super(CaseIsolation, self).__init__(population=population, **kwargs)
 
     def __call__(self, time):
@@ -56,7 +55,7 @@ class CaseIsolation(AbstractIntervention):
                                     self._population.test_isolate_count[0] += 1
                                 else:
                                     self._population.test_isolate_count[1] += 1
-                            
+
     def person_selection_method(self, person):
         if self.criterion == 0:
             return person.is_symptomatic()

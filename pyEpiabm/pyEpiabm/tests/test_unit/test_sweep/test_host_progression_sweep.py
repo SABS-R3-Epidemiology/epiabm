@@ -660,7 +660,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
 
         person_list = [(self.cell, self.person1), (self.cell, self.person2),
                        (self.cell, self.person3)]
-        
+
         test_sweep.asympt_uninf_testing_queue(person_list, 1.0)
 
         self.assertEqual(self.cell.PCR_queue.qsize(), 3)
@@ -674,7 +674,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
 
         self.person1.update_status(InfectionStatus.InfectMild)
         person_list_3 = [(self.cell, self.person1)]
-        self.assertRaises(ValueError, test_sweep.asympt_uninf_testing_queue, 
+        self.assertRaises(ValueError, test_sweep.asympt_uninf_testing_queue,
                           person_list_3, 1.0)
 
         self.assertEqual(mock_random.call_count, 8)

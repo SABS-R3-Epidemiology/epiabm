@@ -44,7 +44,7 @@ class TestCaseIsolation(TestPyEpiabm):
         self.assertEqual(self.caseisolation.isolation_probability,
                          self.params['isolation_probability'])
         self.assertEqual(self.caseisolation.criterion,
-                          self.params['criterion'])
+                         self.params['criterion'])
 
     @mock.patch('random.random')
     def test___call__(self, mock_random):

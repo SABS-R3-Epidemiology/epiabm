@@ -13,6 +13,7 @@ Overview:
 - :class:`PlaceClosure`
 - :class:`HouseholdQuarantine`
 - :class:`SocialDistancing`
+- :class:`Testing`
 
 .. autoclass:: AbstractIntervention
     :members:
@@ -31,5 +32,9 @@ Overview:
     :special-members: __init__, __call__
 
 .. autoclass:: SocialDistancing
+    :members:
+    :special-members: __init__, __call__
+
+.. autoclass:: Testing
     :members:
     :special-members: __init__, __call__

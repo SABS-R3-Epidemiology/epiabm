@@ -64,7 +64,7 @@ class TestCell(TestPyEpiabm):
         self.assertEqual(self.cell.location, (0, 0))
         self.cell.set_location((3.0, 2.0))
         self.assertEqual(self.cell.location, (3.0, 2.0))
-    
+
     def test_testing_queue(self):
         self.cell.add_microcells(1)
         self.cell.microcells[0].add_people(1)
