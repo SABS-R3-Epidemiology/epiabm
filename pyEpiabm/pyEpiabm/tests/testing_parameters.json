@@ -487,5 +487,9 @@
             "distancing_place_susc": [0.8, 0.8, 0.8, 0.8, 0.8, 0.8],
             "distancing_spatial_susc": 0.8
         }
+    },
+    "travel_params": {
+        "ratio_introduce_cases": 0.1,
+        "prob_existing_household": 0.8
     }
 }
