@@ -174,7 +174,6 @@ class TravelSweep(AbstractSweep):
             r = random.random()
             if r < self.travel_params['prob_existing_household']:
                 # Assign to existing household
-                # Q: Do we need to check if household not full?
                 selected_household = random.choice(
                     selected_microcell.households)
                 selected_household.add_person(person)
