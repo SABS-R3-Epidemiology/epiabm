@@ -9,20 +9,26 @@ from pyEpiabm.property.infection_status import InfectionStatus
 
 
 class CompareList(unittest.TestCase):
-    """Class to calculate methods in a style similar to CovidSim.
+    """Class to compare each element in the list.
 
     """
 
     def assert_greater_equal(self, small_pop, large_pop,
                              status=InfectionStatus.Susceptible,
                              method='greater'):
-        """Reproduction of the ranf_mt method in the Rand.cpp from CovidSim.
-        In covid-sim, they would use the thread number to generate the output.
+        """Compare all elements in the list to verify if they are all
+         larger or equal to elements in the other list.
 
-        Returns
-        -------
-        float
-            Returns random number between 0 and 1
+        Parameters
+        ----------
+        small_pop : list
+            The population with fewer individuals
+        large_pop: list
+            The population with more individuals
+        status: InfectionStatus
+            The infection status wants to be compared
+        method: string
+            Specify if the comparing is for greater or equal or only equal
 
         """
         for age_group in range(len(pe.Parameters.instance().age_proportions)):
