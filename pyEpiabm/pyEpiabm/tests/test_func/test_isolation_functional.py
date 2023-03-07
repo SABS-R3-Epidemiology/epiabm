@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import patch, mock_open, Mock
 
 import pyEpiabm as pe
-from compare_list import CompareList
+from helper_func import HelperFunc
 
 
 class TestIsolationFunctional(unittest.TestCase):
@@ -105,36 +105,22 @@ class TestIsolationFunctional(unittest.TestCase):
         pe.routine.Simulation.set_random_seed(seed=30)
         pe.Parameters.instance().infection_radius = 1.6
 
-        sweep_list = [
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
+        # Without intervention
         pop = TestIsolationFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise()[1:])
 
         # Enable case isolation
         pe.Parameters.instance().intervention_params = self.intervention
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop_isolation = TestIsolationFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        CompareList().assert_greater_equal(
+        HelperFunc().assert_greater_equal(
              pop.cells, pop_isolation.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -154,36 +140,20 @@ class TestIsolationFunctional(unittest.TestCase):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop_standard = TestIsolationFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         self.intervention['case_isolation']['case_threshold'] = 20
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop = TestIsolationFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        CompareList().assert_greater_equal(
+        HelperFunc().assert_greater_equal(
              pop.cells, pop_standard.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -202,36 +172,20 @@ class TestIsolationFunctional(unittest.TestCase):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop_standard = TestIsolationFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_delay'] = 10
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop = TestIsolationFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        CompareList().assert_greater_equal(
+        HelperFunc().assert_greater_equal(
              pop.cells, pop_standard.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -251,36 +205,20 @@ class TestIsolationFunctional(unittest.TestCase):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop_standard = TestIsolationFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_duration'] = 1
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop = TestIsolationFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        CompareList().assert_greater_equal(
+        HelperFunc().assert_greater_equal(
              pop.cells, pop_standard.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -299,36 +237,20 @@ class TestIsolationFunctional(unittest.TestCase):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop_standard = TestIsolationFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_probability'] = 1
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop = TestIsolationFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        CompareList().assert_greater_equal(
+        HelperFunc().assert_greater_equal(
              pop_standard.cells, pop.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -347,36 +269,20 @@ class TestIsolationFunctional(unittest.TestCase):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop_standard = TestIsolationFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_effectiveness'] = 0.5
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop = TestIsolationFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        CompareList().assert_greater_equal(
+        HelperFunc().assert_greater_equal(
              pop.cells, pop_standard.cells)
 
 

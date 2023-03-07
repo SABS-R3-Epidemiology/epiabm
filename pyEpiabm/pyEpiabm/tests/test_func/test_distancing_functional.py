@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import patch, mock_open, Mock
 
 import pyEpiabm as pe
-from compare_list import CompareList
+from helper_func import HelperFunc
 
 
 class TestDistancingFunctional(unittest.TestCase):
@@ -113,36 +113,22 @@ class TestDistancingFunctional(unittest.TestCase):
         pe.routine.Simulation.set_random_seed(seed=30)
         pe.Parameters.instance().infection_radius = 1.6
 
-        sweep_list = [
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
+        # Without intervention
         pop = TestDistancingFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise()[1:])
 
         # Enable social distancing
         pe.Parameters.instance().intervention_params = self.intervention
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop_distancing = TestDistancingFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        CompareList().assert_greater_equal(
+        HelperFunc().assert_greater_equal(
              pop.cells, pop_distancing.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -161,37 +147,21 @@ class TestDistancingFunctional(unittest.TestCase):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop_standard = TestDistancingFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         self.intervention['social_distancing'][
             'distancing_spatial_enhanced_susc'] = 0.8
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop = TestDistancingFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        CompareList().assert_greater_equal(
+        HelperFunc().assert_greater_equal(
              pop.cells, pop_standard.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -211,37 +181,21 @@ class TestDistancingFunctional(unittest.TestCase):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop_standard = TestDistancingFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         self.intervention['social_distancing'][
             'distancing_enhanced_prob'] = [0.1]*17
-        sweep_list = [
-            pe.sweep.InterventionSweep(),
-            pe.sweep.UpdatePlaceSweep(),
-            pe.sweep.HouseholdSweep(),
-            pe.sweep.PlaceSweep(),
-            pe.sweep.SpatialSweep(),
-            pe.sweep.QueueSweep(),
-            pe.sweep.HostProgressionSweep(),
-        ]
         pop = TestDistancingFunctional.file_simulation(
-            "test_input.csv", self.sim_params, self.file_params, sweep_list)
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc().sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        CompareList().assert_greater_equal(
+        HelperFunc().assert_greater_equal(
              pop.cells, pop_standard.cells)
 
 
