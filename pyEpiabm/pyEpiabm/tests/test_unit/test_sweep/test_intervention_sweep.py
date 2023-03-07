@@ -5,7 +5,7 @@ from pyEpiabm.sweep import InterventionSweep
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 from pyEpiabm.intervention import CaseIsolation, HouseholdQuarantine, \
-    PlaceClosure, SocialDistancing
+    PlaceClosure, SocialDistancing, Testing
 
 
 class TestInterventionSweep(TestPyEpiabm):
@@ -31,15 +31,17 @@ class TestInterventionSweep(TestPyEpiabm):
 
     def test_bind_population(self):
         self.assertEqual(len(self.interventionsweep.
-                             intervention_params['case_isolation']), 8)
+                             intervention_params['case_isolation']), 9)
         self.assertEqual(len(self.interventionsweep.
                              intervention_params['place_closure']), 9)
         self.assertEqual(len(self.interventionsweep.
                              intervention_params['household_quarantine']), 10)
         self.assertEqual(len(self.interventionsweep.
                              intervention_params['social_distancing']), 13)
+        self.assertEqual(len(self.interventionsweep.
+                             intervention_params['testing']), 10)
         self.assertEqual(len(
-            self.interventionsweep.intervention_active_status.keys()), 4)
+            self.interventionsweep.intervention_active_status.keys()), 5)
 
     def test___call__(self):
         self.interventionsweep(time=10)
@@ -64,6 +66,11 @@ class TestInterventionSweep(TestPyEpiabm):
                 [key for key in
                  self.interventionsweep.intervention_active_status.keys()
                  if isinstance(key, SocialDistancing)][0]])
+        self.assertTrue(
+            self.interventionsweep.intervention_active_status[
+                [key for key in
+                 self.interventionsweep.intervention_active_status.keys()
+                 if isinstance(key, Testing)][0]])
 
         # Place is closed and social distancing ends
         self.assertIsNotNone(self.interventionsweep._population.cells[0].
