@@ -83,7 +83,7 @@ class InitialInfectedSweep(AbstractSweep):
 
         if carehome_inf == 0:
             for person in all_persons:
-                if person.care_home_resident or person.key_worker:
+                if person.care_home_resident: # or person.key_worker:
                     all_persons.remove(person)
 
         if len(all_persons) < sim_params["initial_infected_number"]:

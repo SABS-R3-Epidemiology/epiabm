@@ -7,6 +7,7 @@ from pyEpiabm.intervention import CaseIsolation
 from pyEpiabm.intervention import PlaceClosure
 from pyEpiabm.intervention import HouseholdQuarantine
 from pyEpiabm.intervention import SocialDistancing
+from pyEpiabm.intervention import Testing
 
 from .abstract_sweep import AbstractSweep
 
@@ -39,7 +40,8 @@ class InterventionSweep(AbstractSweep):
         intervention_dict = {'case_isolation': CaseIsolation,
                              'place_closure': PlaceClosure,
                              'household_quarantine': HouseholdQuarantine,
-                             'social_distancing': SocialDistancing}
+                             'social_distancing': SocialDistancing,
+                             'testing': Testing}
         for intervention in self.intervention_params.keys():
             params = self.intervention_params[intervention]
             self.intervention_active_status[(intervention_dict[intervention](
