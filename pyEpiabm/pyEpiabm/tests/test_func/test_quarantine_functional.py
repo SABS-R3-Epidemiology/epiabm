@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import patch, mock_open, Mock
 
 import pyEpiabm as pe
-from pyEpiabm.property.infection_status import InfectionStatus
+from compare_list import CompareList
 
 
 class TestQuarantineFunctional(unittest.TestCase):
@@ -150,25 +150,9 @@ class TestQuarantineFunctional(unittest.TestCase):
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
-        print('isolation')
-        print(pop_isolation.cells[0].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible])
-        print(pop_quarantine.cells[0].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible])
-
         # Compare number of susceptible individuals for each age group
-        for age_group in range(len(pe.Parameters.instance().age_proportions)):
-            with self.subTest(age_group=age_group):
-                self.assertLessEqual(
-                    pop_isolation.cells[0].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group],
-                    pop_quarantine.cells[0].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group])
-                self.assertLessEqual(
-                    pop_isolation.cells[1].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group],
-                    pop_quarantine.cells[1].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group])
+        CompareList().assert_greater_equal(
+             pop_isolation.cells, pop_quarantine.cells)
 
 
 if __name__ == '__main__':

@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import patch, mock_open, Mock
 
 import pyEpiabm as pe
-from pyEpiabm.property.infection_status import InfectionStatus
+from compare_list import CompareList
 
 
 class TestDistancingFunctional(unittest.TestCase):
@@ -142,18 +142,8 @@ class TestDistancingFunctional(unittest.TestCase):
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        for age_group in range(len(pe.Parameters.instance().age_proportions)):
-            with self.subTest(age_group=age_group):
-                self.assertLessEqual(
-                    pop.cells[0].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group],
-                    pop_distancing.cells[0].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group])
-                self.assertLessEqual(
-                    pop.cells[1].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group],
-                    pop_distancing.cells[1].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group])
+        CompareList().assert_greater_equal(
+             pop.cells, pop_distancing.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
@@ -201,18 +191,8 @@ class TestDistancingFunctional(unittest.TestCase):
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        for age_group in range(len(pe.Parameters.instance().age_proportions)):
-            with self.subTest(age_group=age_group):
-                self.assertGreaterEqual(
-                    pop_standard.cells[0].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group],
-                    pop.cells[0].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group])
-                self.assertGreaterEqual(
-                    pop_standard.cells[1].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group],
-                    pop.cells[1].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group])
+        CompareList().assert_greater_equal(
+             pop.cells, pop_standard.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
@@ -261,18 +241,8 @@ class TestDistancingFunctional(unittest.TestCase):
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        for age_group in range(len(pe.Parameters.instance().age_proportions)):
-            with self.subTest(age_group=age_group):
-                self.assertGreaterEqual(
-                    pop_standard.cells[0].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group],
-                    pop.cells[0].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group])
-                self.assertGreaterEqual(
-                    pop_standard.cells[1].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group],
-                    pop.cells[1].compartment_counter.retrieve()[
-                        InfectionStatus.Susceptible][age_group])
+        CompareList().assert_greater_equal(
+             pop.cells, pop_standard.cells)
 
 
 if __name__ == '__main__':
