@@ -20,6 +20,7 @@ class TravelSweep(AbstractSweep):
     on population density of the microcells. Individuals will
     be removed from the population after a certain number of days
     depening on if they are isolated or quarantined.
+
     """
 
     def __init__(self):
