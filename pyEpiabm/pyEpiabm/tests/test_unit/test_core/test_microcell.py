@@ -84,7 +84,8 @@ class TestMicrocell(TestPyEpiabm):
         self.microcell.add_people(5)
         self.microcell.notify_person_status_change(
             pe.property.InfectionStatus.Susceptible,
-            pe.property.InfectionStatus.Recovered, 0)
+            pe.property.InfectionStatus.Recovered,
+            self.microcell.persons[0].age_group)
 
     def test_set_location(self):
         local_cell = pe.Cell(loc=(-2, 3.2))
