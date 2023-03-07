@@ -141,12 +141,6 @@ class TestSpatialSweep(TestMockedLogs):
         mock_dist.return_value = 2.2
         test_sweep.bind_population(test_pop)
 
-        # test the assert that the distance weights has correct length
-        # mock_dist.side_effect = [0, 2]
-        # mock_nan.return_value = [1]
-        # self.assertRaises(AssertionError, test_sweep.find_infectees(
-        #                   self.cell_inf, [self.cell_susc], 1))
-
         # test value error is raised if all cells too far away
         Parameters.instance().infection_radius = 0.000001
         mock_dist.side_effect = [0, 2]
