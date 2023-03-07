@@ -1,5 +1,5 @@
 #
-# Compare if the first element is larger or equal than the second element
+# Help to run functionl tests for interventions.
 #
 
 import unittest
@@ -8,8 +8,8 @@ import pyEpiabm as pe
 from pyEpiabm.property.infection_status import InfectionStatus
 
 
-class CompareList(unittest.TestCase):
-    """Class to compare each element in the list.
+class HelperFunc(unittest.TestCase):
+    """Class to help running functional tests for interventions.
 
     """
 
@@ -55,3 +55,16 @@ class CompareList(unittest.TestCase):
                             InfectionStatus.Susceptible][age_group],
                         small_pop[1].compartment_counter.retrieve()[
                             InfectionStatus.Susceptible][age_group])
+
+    def sweep_list_initialise(self):
+        """Initialise and return a sweep list for simulation.
+        """
+        return [
+            pe.sweep.InterventionSweep(),
+            pe.sweep.UpdatePlaceSweep(),
+            pe.sweep.HouseholdSweep(),
+            pe.sweep.PlaceSweep(),
+            pe.sweep.SpatialSweep(),
+            pe.sweep.QueueSweep(),
+            pe.sweep.HostProgressionSweep(),
+        ]
