@@ -31,11 +31,10 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 # Parameter to change
 to_modify_parameter = 'ratio_introduce_cases'
 parameter_values = [0.0, 0.05, 0.1]
-# parameter_values = [0.1]
 
 for i in range(len(parameter_values)):
     name_output_file = 'output_{}_{}.csv'.format(
-        int(parameter_values[i]*100), to_modify_parameter)
+        parameter_values[i], to_modify_parameter)
 
     pe.Parameters.instance().travel_params[
         to_modify_parameter] = parameter_values[i]
@@ -93,7 +92,7 @@ for i in range(len(parameter_values)):
     file_name = os.path.join(os.path.dirname(__file__),
                              "travelling_outputs",
                              'output_{}_{}.csv'.format(
-                                int(parameter_values[i]*100),
+                                parameter_values[i],
                                 to_modify_parameter))
     df = pd.read_csv(file_name)
     total_df = \
