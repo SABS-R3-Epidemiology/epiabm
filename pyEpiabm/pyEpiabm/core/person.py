@@ -28,13 +28,16 @@ class Person:
 
     """
 
-    def __init__(self, microcell):
+    def __init__(self, microcell, age_group=None):
         """Constructor Method.
 
         Parameters
         ----------
         microcell : Microcell
             Person's parent :class:`Microcell` instance
+        age_group : int or None
+            Integer identifying persons age group or None if random age should
+            be assigned
 
         """
         self.initial_infectiousness = 0
@@ -50,9 +53,9 @@ class Person:
         self.care_home_resident = False
         self.key_worker = False
 
-        self.set_random_age()
+        self.set_random_age(age_group)
 
-    def set_random_age(self):
+    def set_random_age(self, age_group=None):
         """Set random age of person, and save index of their age group.
         Note that the max age in the 80+ group is 84 here, however the precise
         age of 80+ people is never used (exact ages are only used to assign
@@ -60,9 +63,12 @@ class Person:
 
         """
         if Parameters.instance().use_ages:
-            group_probs = Parameters.instance().age_proportions
-            self.age_group = random.choices(range(len(group_probs)),
-                                            weights=group_probs)[0]
+            if age_group is None:
+                group_probs = Parameters.instance().age_proportions
+                self.age_group = random.choices(range(len(group_probs)),
+                                                weights=group_probs)[0]
+            else:
+                self.age_group = age_group
             self.age = random.randint(0, 4) + 5 * self.age_group
         else:
             self.age = None
