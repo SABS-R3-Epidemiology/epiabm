@@ -503,10 +503,10 @@
         "testing_capacity": [100,1000],
         "false_positive": [0.1, 0.1],
         "false_negative": [0.1, 0.1],
-        "testing_asympt_uninf": [1, 1, 1],
-        "asympt_uninf_pcr": [0.5, 0.5, 0.5],
-        "testing_sympt": [0.5, 0.5, 0.5],
-        "sympt_pcr": [0.2, 0.2, 0.2]
+        "testing_asympt_uninf": [0.5, 0.5, 0.5],
+        "asympt_uninf_pcr": [0.2, 0.2, 0.2],
+        "testing_sympt": [1, 1, 1],
+        "sympt_pcr": [0.5, 0.5, 0.5]
         },
     "case_isolation": {
         "start_time": 6,
