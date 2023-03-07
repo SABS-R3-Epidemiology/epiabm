@@ -35,6 +35,8 @@ class Cell:
         self.places = []
         self.households = []
         self.person_queue = Queue()
+        self.PCR_queue = Queue()
+        self.LFT_queue = Queue()
         self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
 
         if not (len(loc) == 2 and isinstance(loc[0], Number) and
@@ -86,6 +88,27 @@ class Cell:
 
         """
         self.person_queue.put(person)
+
+    def enqueue_testing(self, person: Person, test: str):
+        """Add person to testing queue for processing in testing
+         sweep.
+
+        Parameters
+        ----------
+        person : Person
+            Person to enqueue
+        test: str
+            Either 'PCR' or 'LFT' depending on the testing modality
+            to apply to that person.
+
+        """
+        if test == 'PCR':
+            self.PCR_queue.put(person)
+        elif test == 'LFT':
+            self.LFT_queue.put(person)
+        else:
+            raise ValueError("Testing modality specified is not allowed. " +
+                             "Should be 'PCR' or 'LFT'.")
 
     def notify_person_status_change(
             self,
