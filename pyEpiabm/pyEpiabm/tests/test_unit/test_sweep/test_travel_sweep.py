@@ -1,6 +1,7 @@
 import unittest
 
 import pyEpiabm as pe
+from pyEpiabm.core import Parameters
 from pyEpiabm.sweep import TravelSweep
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
@@ -23,9 +24,11 @@ class TestTravelSweep(TestPyEpiabm):
         cls._population = cls.pop_factory.make_pop(cls.pop_params)
         for person in cls._population.cells[0].persons:
             person.update_status(InfectionStatus(1))
-        initial_infected_person1 = cls._population.cells[0].microcells[0].persons[0]
+        initial_infected_person1 = \
+            cls._population.cells[0].microcells[0].persons[0]
         initial_infected_person1.update_status(InfectionStatus(4))
-        initial_infected_person2 = cls._population.cells[0].microcells[1].persons[0]
+        initial_infected_person2 = \
+            cls._population.cells[0].microcells[1].persons[0]
         initial_infected_person2.update_status(InfectionStatus(4))
 
         cls.travelsweep.bind_population(cls._population)
@@ -43,27 +46,22 @@ class TestTravelSweep(TestPyEpiabm):
         self.travelsweep.travel_params['ratio_introduce_cases'] = 1.0
         self.travelsweep(time=1)
         self.assertEqual(len(self._population.cells[0].persons), 22)
-        for person in self._population.cells[0].persons:
-            if (hasattr(person, 'travel_end_time')):
-                print(person.travel_end_time)
         self.travelsweep.travel_params['ratio_introduce_cases'] = 0.0
-        # self.travelsweep(time=10)
-        # print(len(self._population.cells[0].persons))
         self.travelsweep(time=16)
-        self.travelsweep(time=14)
-        # self.assertEqual(len(self._population.cells[0].persons), 20)
-        print(self.travelsweep.travel_params['ratio_introduce_cases'])
-        for person in self._population.cells[0].persons:
-            if (hasattr(person, 'travel_end_time')):
-                print(person.travel_end_time)
+        self.assertEqual(len(self._population.cells[0].persons), 20)
 
-    # def create_introduced_individuals(self):
-
-    # def test_check_leaving_individuals(self):
-    #     self.test_sweep = pe.sweep.TravelSweep()
-    #     self.travelsweep.travel_params['ratio_introduce_cases'] = 1.0
-    #     self.travelsweep(time=1)
-    #     print(self.test_sweep.introduce_population.cells[0].persons)
+    def test_create_introduced_individuals(self):
+        Parameters.instance().use_ages = 1
+        Parameters.instance().age_proportions = \
+            [0.0, 0.0, 0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+             0.0, 0.0, 0.0, 0.0]
+        Parameters.instance().host_progression_lists[
+            "prob_exposed_to_asympt"] = 1.0
+        self.test_sweep = pe.sweep.TravelSweep()
+        self.test_sweep.create_introduced_idividuals(
+            time=1, number_individuals_introduced=2)
+        print(self.test_sweep.initial_microcell.persons)
+        self.assertEqual(len(self.test_sweep.initial_microcell.persons), 2)
 
 
 if __name__ == '__main__':

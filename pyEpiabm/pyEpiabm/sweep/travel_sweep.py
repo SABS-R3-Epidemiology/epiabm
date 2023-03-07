@@ -61,7 +61,7 @@ class TravelSweep(AbstractSweep):
             self.initial_microcell.persons = []
 
         # Remove individuals if duration of stay passed
-        self.check_leaving_individuals(time)
+        self.remove_leaving_individuals(time)
 
     def create_introduced_idividuals(self, time,
                                      number_individuals_introduced):
@@ -86,7 +86,11 @@ class TravelSweep(AbstractSweep):
             # travellers are between 15-80 years
             age_prop_adjusted = [0.0 if i in [0, 1, 2, 16] else prop for
                                  i, prop in enumerate(age_prop)]
+            print(age_prop_adjusted)
+            print(type(age_prop_adjusted))
+            print(sum(age_prop_adjusted))
             w = age_prop_adjusted / sum(age_prop_adjusted)
+            print('w: {}'.format(w))
             microcell_split = np.random.multinomial(
                 number_individuals_introduced, w, size=1)[0]
             for age in range(len(age_prop_adjusted)):
@@ -182,10 +186,24 @@ class TravelSweep(AbstractSweep):
                 # Create new household
                 selected_microcell.add_household([person])
 
-    def check_leaving_individuals(self, time):
+    def check_leaving_individuals(self, time, person):
         """
-        Remove travelling people from population if their
-        travel_end_time reached
+        Check if individuals travel_end_time is reached
+
+        Parameters
+        ----------
+        time : float
+            Simulation time
+        Person : Person
+            Instance of Person class
+        """
+        return (hasattr(person, 'travel_end_time')) and \
+            (time > person.travel_end_time)
+
+    def remove_leaving_individuals(self, time):
+        """
+        Remove individuals after their travel_end_time is reached
+        from cell, microcell and household.
 
         Parameters
         ----------
@@ -193,10 +211,14 @@ class TravelSweep(AbstractSweep):
             Simulation time
         """
         for cell in self._population.cells:
-            for person in cell.persons:
-                if (hasattr(person, 'travel_end_time')) and (
-                        time > person.travel_end_time):
-                    # Remove from cell, microcell and household
-                    person.microcell.cell.persons.remove(person)
-                    person.microcell.persons.remove(person)
-                    person.household.persons.remove(person)
+            cell.persons = [person for person in cell.persons if not
+                            self.check_leaving_individuals(time, person)]
+            for microcell in cell.microcells:
+                microcell.persons = [person for person in microcell.persons if
+                                     not self.check_leaving_individuals(
+                                        time, person)]
+                for household in microcell.households:
+                    household.persons = [person for person in
+                                         household.persons if not
+                                         self.check_leaving_individuals(
+                                            time, person)]
