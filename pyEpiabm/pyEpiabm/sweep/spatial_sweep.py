@@ -249,38 +249,8 @@ class SpatialSweep(AbstractSweep):
         if r < force_of_infection:
             infectee.microcell.cell.enqueue_person(infectee)
 
-    def nearby_cells(self, cell, other_cells):
-        '''
-        Helper function which takes in a given cell and the list of all cells
-        and generates a list of nearby cells which are the cells that are
-        closer than the cutoff for cross-cell infection.
-
-        Parameters
-        ----------
-        cell : Cell
-            Cell to check for nearby cells
-        other_cells : typing.List[Cell]
-            List of all cells except cell
-
-        Returns
-        -------
-        cell.nearby_cells
-            Dictionary of all cells with distance below cutoff.
-            Dictionary stores cell.id and distance between the 2 cells
-            These are stored in the form:
-            cell.id: distance
-        '''
-        cutoff = Parameters.instance().infection_radius
-
-        for cell2 in other_cells:
-            distance = DistanceFunctions.dist(cell.location, cell2.location)
-            if distance < cutoff:
-                cell.nearby_cells[cell2.id] = distance
-                # List of near neghbours, cells which are closer than the
-                # cutoff for cross-cell infection
-
     def bind_population(self, population):
         super().bind_population(population)
         for cell in population.cells:
             other_cells = [x for x in population.cells if x != cell]
-            self.nearby_cells(cell, other_cells)
+            cell.find_nearby_cells(other_cells)
