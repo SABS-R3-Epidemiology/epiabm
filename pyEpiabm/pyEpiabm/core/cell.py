@@ -143,7 +143,7 @@ class Cell:
         and generates a list of nearby cells which are the cells that are
         closer than the cutoff for cross-cell infection.
 
-        Populates: cell.nearby_cells
+        Populates: self.find_nearby_cells
         Dictionary of all cells with distance below cutoff.
         Dictionary stores cell.id and distance between the 2 cells
         These are stored in the form:

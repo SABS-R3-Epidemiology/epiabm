@@ -63,7 +63,7 @@ class TestHouseholdSweep(TestPyEpiabm):
         new_person = pe.Person(self.microcell)
         new_person.household = self.house
         self.house.persons.append(new_person)
-        self.house.susceptible_persons.add(new_person)
+        self.house.susceptible_persons.append(new_person)
         self.pop.cells[0].persons.append(new_person)
 
         test_queue.put(new_person)
