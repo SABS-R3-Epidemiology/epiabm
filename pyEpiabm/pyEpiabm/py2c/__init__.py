@@ -3,7 +3,7 @@
 #
 
 """ pyEpiabm.py2c provides methods used to convert python
-classes to C, for speeding up simulations
+classes to C, for use in speeding up simulations
 """
 
 
