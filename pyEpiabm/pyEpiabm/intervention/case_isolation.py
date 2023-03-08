@@ -21,14 +21,14 @@ class CaseIsolation(AbstractIntervention):
         isolation_duration,
         isolation_probability,
         isolation_delay,
-        criterion,
+        use_testing,
         population,
         **kwargs
     ):
         self.isolation_duration = isolation_duration
         self.isolation_delay = isolation_delay
         self.isolation_probability = isolation_probability
-        self.criterion = criterion
+        self.use_testing = use_testing
 
         super(CaseIsolation, self).__init__(population=population, **kwargs)
 
@@ -57,7 +57,7 @@ class CaseIsolation(AbstractIntervention):
                                     self._population.test_isolate_count[1] += 1
 
     def person_selection_method(self, person):
-        if self.criterion == 0:
+        if self.use_testing == 0:
             return person.is_symptomatic()
         else:
             if person.date_positive is not None:
