@@ -9,9 +9,9 @@ from collections import defaultdict
 import pyEpiabm as pe
 from pyEpiabm.core import Parameters, Person
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.utility import StateTransitionMatrix, TransitionTimeMatrix
 
 from .abstract_sweep import AbstractSweep
+from .transition_matrices import StateTransitionMatrix, TransitionTimeMatrix
 
 
 class HostProgressionSweep(AbstractSweep):
