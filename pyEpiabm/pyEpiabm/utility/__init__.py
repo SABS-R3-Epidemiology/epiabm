@@ -4,7 +4,7 @@
 
 """ pyEpiabm.utility provides methods used to calculate infection
 and host progression parameters, and other calculations and
-algorithms called throughout pyEpiabm.
+algorithms that are called throughout pyEpiabm.
 """
 
 from .distance_metrics import DistanceFunctions
