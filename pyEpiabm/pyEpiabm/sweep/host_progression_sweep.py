@@ -283,17 +283,18 @@ class HostProgressionSweep(AbstractSweep):
             Current simulation time
 
         """
-        asympt_uninf = []
+        # store list of uninfected or asymptomatic people for processing
+        # for disease testing.
+        asympt_or_uninf_people = []
         for cell in self._population.cells:
             for person in cell.persons:
                 if person.time_of_status_change is None:
-                    assert person.infection_status \
-                                    in [InfectionStatus.Susceptible]
-                    asympt_uninf.append((cell, person))
+                    assert person.is_susceptible()
+                    asympt_or_uninf_people.append((cell, person))
                     continue  # pragma: no cover
                 if person.infection_status in [InfectionStatus.Recovered,
                                                InfectionStatus.Vaccinated]:
-                    asympt_uninf.append((cell, person))
+                    asympt_or_uninf_people.append((cell, person))
                 while person.time_of_status_change <= time:
                     person.update_status(person.next_infection_status)
                     if person.infection_status in \
@@ -302,17 +303,18 @@ class HostProgressionSweep(AbstractSweep):
                              InfectionStatus.InfectGP]:
                         self.set_infectiousness(person, time)
                         if not person.is_symptomatic():
-                            asympt_uninf.append((cell, person))
+                            asympt_or_uninf_people.append((cell, person))
                         self.sympt_testing_queue(cell, person)
                     self.update_next_infection_status(person)
                     self.update_time_status_change(person, time)
                 self._updates_infectiousness(person, time)
 
-        self.asympt_uninf_testing_queue(asympt_uninf, time)
+        self.asympt_uninf_testing_queue(asympt_or_uninf_people, time)
 
     def sympt_testing_queue(self, cell, person: Person):
         """ Adds symptomatic people to a testing queue with a given
-        probability depedent on their status.
+        probability depedent on their status as either a care home
+        resident or a key worker.
 
         Parameters
         ----------
@@ -320,7 +322,7 @@ class HostProgressionSweep(AbstractSweep):
             cell for which the person is a member of and therefore
             will be added to the testing queue of.
         person : Person
-            symptomatic inndividual to be added to a testing queue
+            symptomatic inndividual to be added to a testing queue.
 
         """
         if hasattr(Parameters.instance(), 'intervention_params'):
@@ -328,25 +330,32 @@ class HostProgressionSweep(AbstractSweep):
               intervention_params.keys():
                 testing_params = Parameters.instance().\
                     intervention_params['testing']
-                testing_prob = testing_params['testing_sympt']
-                testing_type = testing_params['sympt_pcr']
+                testing_prob_care_home = testing_params['testing_sympt'][0]
+                testing_prob_key_worker = testing_params['testing_sympt'][1]
+                testing_prob_general_pop = testing_params['testing_sympt'][2]
+                testing_type_care_home = testing_params['sympt_pcr'][0]
+                testing_type_key_worker = testing_params['sympt_pcr'][1]
+                testing_type_general_pop = testing_params['sympt_pcr'][2]
                 r = random.random()
                 type_r = random.random()
-                type = 'LFT'
 
                 if (person.is_symptomatic() and
                    person.date_positive is None):
                     if person.care_home_resident:
-                        index = 0
+                        test_probability = testing_prob_care_home
+                        type_probability = testing_type_care_home
                     elif person.key_worker:
-                        index = 1
+                        test_probability = testing_prob_key_worker
+                        type_probability = testing_type_key_worker
                     else:
-                        index = 2
+                        test_probability = testing_prob_general_pop
+                        type_probability = testing_type_general_pop
 
-                    if r < testing_prob[index]:
-                        if type_r < testing_type[index]:
-                            type = 'PCR'
-                        cell.enqueue_testing(person, type)
+                    if r < test_probability:
+                        if type_r < type_probability:
+                            cell.enqueue_PCR_testing(person)
+                        else:
+                            cell.enqueue_LFT_testing(person)
 
                 if (person.date_positive is not None and
                     (person.infection_status in
@@ -355,13 +364,17 @@ class HostProgressionSweep(AbstractSweep):
 
     def asympt_uninf_testing_queue(self, person_list: list, time):
         """ Adds asymptomatic and uninfected people to a testing queue
-        with a given probability depedent on their status.
+        with a given probability depedent on their status as either a care
+        home resident or key worker.
 
         Parameters
         ----------
         person_list : list
             list of (cell, person) tuples giving the list of people
-            to be added to a testing queue and their cell
+            to be added to a testing queue and their cell.
+        time : float
+            current time point to determine whether uninfected indivuals
+            should stop being considered as positive.
 
         """
         if hasattr(Parameters.instance(), 'intervention_params'):
@@ -369,8 +382,18 @@ class HostProgressionSweep(AbstractSweep):
                intervention_params.keys():
                 testing_params = Parameters.instance().\
                     intervention_params['testing']
-                testing_prob = testing_params['testing_asympt_uninf']
-                testing_type = testing_params['asympt_uninf_pcr']
+                testing_prob_care_home = testing_params[
+                    'testing_asympt_uninf'][0]
+                testing_prob_key_worker = testing_params[
+                    'testing_asympt_uninf'][1]
+                testing_prob_general_pop = testing_params[
+                    'testing_asympt_uninf'][2]
+                testing_type_care_home = testing_params[
+                    'asympt_uninf_pcr'][0]
+                testing_type_key_worker = testing_params[
+                    'asympt_uninf_pcr'][1]
+                testing_type_general_pop = testing_params[
+                    'asympt_uninf_pcr'][2]
                 for item in person_list:
                     cell = item[0]
                     person = item[1]
@@ -379,20 +402,23 @@ class HostProgressionSweep(AbstractSweep):
                                          "symptomatic individuals.")
                     r = random.random()
                     type_r = random.random()
-                    type = 'LFT'
 
                     if person.care_home_resident:
-                        index = 0
+                        test_probability = testing_prob_care_home
+                        type_probability = testing_type_care_home
                     elif person.key_worker:
-                        index = 1
+                        test_probability = testing_prob_key_worker
+                        type_probability = testing_type_key_worker
                     else:
-                        index = 2
+                        test_probability = testing_prob_general_pop
+                        type_probability = testing_type_general_pop
 
-                    if (r < testing_prob[index] and
+                    if (r < test_probability and
                        person.date_positive is None):
-                        if type_r < testing_type[index]:
-                            type = 'PCR'
-                        cell.enqueue_testing(person, type)
+                        if type_r < type_probability:
+                            cell.enqueue_PCR_testing(person)
+                        else:
+                            cell.enqueue_LFT_testing(person)
 
                     elif (person.date_positive is not None and
                           person.date_positive + 10 >= time):

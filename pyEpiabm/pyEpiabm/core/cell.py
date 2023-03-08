@@ -89,26 +89,29 @@ class Cell:
         """
         self.person_queue.put(person)
 
-    def enqueue_testing(self, person: Person, test: str):
-        """Add person to testing queue for processing in testing
+    def enqueue_PCR_testing(self, person: Person):
+        """Add person to PCR testing queue for processing in testing
          sweep.
 
         Parameters
         ----------
         person : Person
-            Person to enqueue
-        test: str
-            Either 'PCR' or 'LFT' depending on the testing modality
-            to apply to that person.
+            Person to enqueue.
 
         """
-        if test == 'PCR':
-            self.PCR_queue.put(person)
-        elif test == 'LFT':
-            self.LFT_queue.put(person)
-        else:
-            raise ValueError("Testing modality specified is not allowed. " +
-                             "Should be 'PCR' or 'LFT'.")
+        self.PCR_queue.put(person)
+
+    def enqueue_LFT_testing(self, person: Person):
+        """Add person to LFT testing queue for processing in testing
+         sweep.
+
+        Parameters
+        ----------
+        person : Person
+            Person to enqueue.
+
+        """
+        self.LFT_queue.put(person)
 
     def notify_person_status_change(
             self,

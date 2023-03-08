@@ -642,6 +642,24 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.assertEqual(mock_random.call_count, 8)
 
     @mock.patch('random.random')
+    def test_LFT_queue(self, mock_random):
+        mock_random.return_value = 0
+        test_sweep = pe.sweep.HostProgressionSweep()
+
+        self.person2.update_status(InfectionStatus.InfectMild)
+        self.person2.date_positive = None
+
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.\
+                intervention_params = {'testing': {'sympt_pcr': [-1, -1, -1],
+                                       'testing_sympt': [0.5, 0.5, 0.5]}}
+
+            test_sweep.sympt_testing_queue(self.cell, self.person2)
+            self.assertEqual(self.cell.LFT_queue.qsize(), 1)
+
+        self.assertEqual(mock_random.call_count, 2)
+
+    @mock.patch('random.random')
     def test_asympt_queue(self, mock_random):
         mock_random.return_value = 0
         test_sweep = pe.sweep.HostProgressionSweep()
