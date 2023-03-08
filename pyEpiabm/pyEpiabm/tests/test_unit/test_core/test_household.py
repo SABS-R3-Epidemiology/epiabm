@@ -39,19 +39,19 @@ class TestHousehold(TestPyEpiabm):
     def test_add_susceptible_person(self):
         subject = pe.Household(self.microcell, (1, 1))
         self.assertEqual(len(subject.susceptible_persons), 0)
-        self.assertEqual(subject.susceptible_persons, [])
+        self.assertEqual(subject.susceptible_persons, set())
         subject.add_susceptible_person(self.person)
         self.assertEqual(len(subject.susceptible_persons), 1)
-        self.assertEqual(subject.susceptible_persons, [self.person])
+        self.assertEqual(subject.susceptible_persons, {self.person})
 
     def test_remove_susceptible_person(self):
         subject = pe.Household(self.microcell, (1, 1))
-        subject.susceptible_persons.append(self.person)
+        subject.susceptible_persons.add(self.person)
         self.assertEqual(len(subject.susceptible_persons), 1)
-        self.assertEqual(subject.susceptible_persons, [self.person])
+        self.assertEqual(subject.susceptible_persons, {self.person})
         subject.remove_susceptible_person(self.person)
         self.assertEqual(len(subject.susceptible_persons), 0)
-        self.assertEqual(subject.susceptible_persons, [])
+        self.assertEqual(subject.susceptible_persons, set())
 
 
 if __name__ == '__main__':
