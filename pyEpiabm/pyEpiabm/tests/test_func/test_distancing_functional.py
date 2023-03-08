@@ -4,6 +4,7 @@ import unittest
 from unittest.mock import patch, mock_open, Mock
 
 import pyEpiabm as pe
+
 from helper_func import HelperFunc
 
 
@@ -116,19 +117,19 @@ class TestDistancingFunctional(unittest.TestCase):
         # Without intervention
         pop = TestDistancingFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise()[1:])
+            HelperFunc.sweep_list_initialise()[1:])
 
         # Enable social distancing
         pe.Parameters.instance().intervention_params = self.intervention
         pop_distancing = TestDistancingFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        HelperFunc().assert_greater_equal(
+        HelperFunc().compare_susceptible_groups(
              pop.cells, pop_distancing.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -137,7 +138,7 @@ class TestDistancingFunctional(unittest.TestCase):
     @patch("pandas.DataFrame.to_csv")
     @patch("pandas.read_csv")
     def test_spatial_enhanced_large(self, mock_read, mock_csv):
-        """Social distancing functional test to ensure less people will be
+        """Social distancing functional test to ensure fewer people will be
         susceptible when spatial enhanced susceptibility increases.
         """
         mock_read.return_value = pd.DataFrame(self.pop_params)
@@ -149,19 +150,19 @@ class TestDistancingFunctional(unittest.TestCase):
         pe.Parameters.instance().intervention_params = self.intervention
         pop_standard = TestDistancingFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         self.intervention['social_distancing'][
             'distancing_spatial_enhanced_susc'] = 0.8
         pop = TestDistancingFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        HelperFunc().assert_greater_equal(
+        HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -172,7 +173,7 @@ class TestDistancingFunctional(unittest.TestCase):
     def test_prob_lower(self, mock_read, mock_csv):
         """Social distancing functional test to ensure people within the
         age group of lower enhanced social distancing probability
-        will have less susceptible individuals.
+        will have fewer susceptible individuals.
         """
         mock_read.return_value = pd.DataFrame(self.pop_params)
 
@@ -183,19 +184,19 @@ class TestDistancingFunctional(unittest.TestCase):
         pe.Parameters.instance().intervention_params = self.intervention
         pop_standard = TestDistancingFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         self.intervention['social_distancing'][
             'distancing_enhanced_prob'] = [0.1]*17
         pop = TestDistancingFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        HelperFunc().assert_greater_equal(
+        HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
 

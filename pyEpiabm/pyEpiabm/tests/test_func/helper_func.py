@@ -13,9 +13,9 @@ class HelperFunc(unittest.TestCase):
 
     """
 
-    def assert_greater_equal(self, small_pop, large_pop,
-                             status=InfectionStatus.Susceptible,
-                             method='greater'):
+    def compare_susceptible_groups(self, small_pop, large_pop,
+                                   status=InfectionStatus.Susceptible,
+                                   method='greater'):
         """Compare all elements in the list to verify if they are all
          larger or equal to elements in the other list.
 
@@ -36,27 +36,28 @@ class HelperFunc(unittest.TestCase):
                 if method == 'greater':
                     self.assertGreaterEqual(
                         large_pop[0].compartment_counter.retrieve()[
-                            InfectionStatus.Susceptible][age_group],
+                            status][age_group],
                         small_pop[0].compartment_counter.retrieve()[
-                            InfectionStatus.Susceptible][age_group])
+                            status][age_group])
                     self.assertGreaterEqual(
                         large_pop[1].compartment_counter.retrieve()[
-                            InfectionStatus.Susceptible][age_group],
+                            status][age_group],
                         small_pop[1].compartment_counter.retrieve()[
-                            InfectionStatus.Susceptible][age_group])
+                            status][age_group])
                 elif method == 'equal':
                     self.assertEqual(
                         large_pop[0].compartment_counter.retrieve()[
-                            InfectionStatus.Susceptible][age_group],
+                            status][age_group],
                         small_pop[0].compartment_counter.retrieve()[
-                            InfectionStatus.Susceptible][age_group])
+                            status][age_group])
                     self.assertEqual(
                         large_pop[1].compartment_counter.retrieve()[
-                            InfectionStatus.Susceptible][age_group],
+                            status][age_group],
                         small_pop[1].compartment_counter.retrieve()[
-                            InfectionStatus.Susceptible][age_group])
+                            status][age_group])
 
-    def sweep_list_initialise(self):
+    @classmethod
+    def sweep_list_initialise(cls):
         """Initialise and return a sweep list for simulation.
         """
         return [

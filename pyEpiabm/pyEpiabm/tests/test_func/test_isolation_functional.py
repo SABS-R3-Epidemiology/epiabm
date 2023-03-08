@@ -4,6 +4,7 @@ import unittest
 from unittest.mock import patch, mock_open, Mock
 
 import pyEpiabm as pe
+
 from helper_func import HelperFunc
 
 
@@ -108,19 +109,19 @@ class TestIsolationFunctional(unittest.TestCase):
         # Without intervention
         pop = TestIsolationFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise()[1:])
+            HelperFunc.sweep_list_initialise()[1:])
 
         # Enable case isolation
         pe.Parameters.instance().intervention_params = self.intervention
         pop_isolation = TestIsolationFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        HelperFunc().assert_greater_equal(
+        HelperFunc().compare_susceptible_groups(
              pop.cells, pop_isolation.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -142,18 +143,18 @@ class TestIsolationFunctional(unittest.TestCase):
         pe.Parameters.instance().intervention_params = self.intervention
         pop_standard = TestIsolationFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         self.intervention['case_isolation']['case_threshold'] = 20
         pop = TestIsolationFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        HelperFunc().assert_greater_equal(
+        HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -163,7 +164,7 @@ class TestIsolationFunctional(unittest.TestCase):
     @patch("pandas.read_csv")
     def test_delay_days(self, mock_read, mock_csv):
         """Case isolation functional test to ensure more people will be
-        susceptible when the number of delay days is less than the other.
+        susceptible when the number of delay days is fewer than the other.
         """
         mock_read.return_value = pd.DataFrame(self.pop_params)
 
@@ -185,7 +186,7 @@ class TestIsolationFunctional(unittest.TestCase):
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        HelperFunc().assert_greater_equal(
+        HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -207,18 +208,18 @@ class TestIsolationFunctional(unittest.TestCase):
         pe.Parameters.instance().intervention_params = self.intervention
         pop_standard = TestIsolationFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_duration'] = 1
         pop = TestIsolationFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        HelperFunc().assert_greater_equal(
+        HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -227,7 +228,7 @@ class TestIsolationFunctional(unittest.TestCase):
     @patch("pandas.DataFrame.to_csv")
     @patch("pandas.read_csv")
     def test_isolation_prob(self, mock_read, mock_csv):
-        """Case isolation functional test to ensure less people will be
+        """Case isolation functional test to ensure fewer people will be
         susceptible when its isolation probability is less than the other.
         """
         mock_read.return_value = pd.DataFrame(self.pop_params)
@@ -239,18 +240,18 @@ class TestIsolationFunctional(unittest.TestCase):
         pe.Parameters.instance().intervention_params = self.intervention
         pop_standard = TestIsolationFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_probability'] = 1
         pop = TestIsolationFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        HelperFunc().assert_greater_equal(
+        HelperFunc().compare_susceptible_groups(
              pop_standard.cells, pop.cells)
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
@@ -271,18 +272,18 @@ class TestIsolationFunctional(unittest.TestCase):
         pe.Parameters.instance().intervention_params = self.intervention
         pop_standard = TestIsolationFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_effectiveness'] = 0.5
         pop = TestIsolationFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        HelperFunc().assert_greater_equal(
+        HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
 

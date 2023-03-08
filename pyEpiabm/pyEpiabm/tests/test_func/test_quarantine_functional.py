@@ -4,6 +4,7 @@ import unittest
 from unittest.mock import patch, mock_open, Mock
 
 import pyEpiabm as pe
+
 from helper_func import HelperFunc
 
 
@@ -123,19 +124,19 @@ class TestQuarantineFunctional(unittest.TestCase):
             "case_isolation": self.intervention['case_isolation']}
         pop_isolation = TestQuarantineFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         # Enable both case isolation and household quarantine
         pe.Parameters.instance().intervention_params = self.intervention
         pop_quarantine = TestQuarantineFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
-            HelperFunc().sweep_list_initialise())
+            HelperFunc.sweep_list_initialise())
 
         mock_read.assert_called_with('test_input.csv')
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
-        HelperFunc().assert_greater_equal(
+        HelperFunc().compare_susceptible_groups(
              pop_isolation.cells, pop_quarantine.cells)
 
 
