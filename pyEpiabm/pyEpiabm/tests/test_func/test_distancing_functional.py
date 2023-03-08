@@ -137,7 +137,7 @@ class TestDistancingFunctional(unittest.TestCase):
     @patch("pandas.DataFrame.to_csv")
     @patch("pandas.read_csv")
     def test_spatial_enhanced_large(self, mock_read, mock_csv):
-        """Social distancing functional test to ensure less people will be
+        """Social distancing functional test to ensure fewer people will be
         susceptible when spatial enhanced susceptibility increases.
         """
         mock_read.return_value = pd.DataFrame(self.pop_params)
