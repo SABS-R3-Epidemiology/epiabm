@@ -6,7 +6,7 @@ import numpy as np
 import random
 import math
 
-from pyEpiabm.core import Population, Parameters, Microcell
+from pyEpiabm.core import Population, Parameters, Microcell, Person
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import HostProgressionSweep
 
@@ -34,6 +34,7 @@ class TravelSweep(AbstractSweep):
         self.initial_cell = self.introduce_population.cells[0]
         self.initial_cell.add_microcells(1)
         self.initial_microcell = self.initial_cell.microcells[0]
+        self.travellers = []
 
     def __call__(self, time: float):
         """ Based on number of infected cases in population, infected
@@ -134,6 +135,8 @@ class TravelSweep(AbstractSweep):
             person.next_infection_status = InfectionStatus.Recovered
             HostProgressionSweep.set_infectiousness(person, time)
             HostProgressionSweep().update_time_status_change(person, time)
+            # Store travellers
+            self.travellers.append(person)
 
     def assign_microcell_household(self, number_individuals_introduced):
         """
@@ -237,15 +240,12 @@ class TravelSweep(AbstractSweep):
             Simulation time
 
         """
-        for cell in self._population.cells:
-            cell.persons = [person for person in cell.persons if not
-                            self.check_leaving_individuals(time, person)]
-            for microcell in cell.microcells:
-                microcell.persons = [person for person in microcell.persons if
-                                     not self.check_leaving_individuals(
-                                        time, person)]
-                for household in microcell.households:
-                    household.persons = [person for person in
-                                         household.persons if not
-                                         self.check_leaving_individuals(
-                                            time, person)]
+        someone_is_leaving = False
+        for person in self.travellers:
+            if self.check_leaving_individuals(time, person):
+                someone_is_leaving = True
+                Person.remove_person(person)
+
+        if someone_is_leaving:
+            self.travellers = [person for person in self.travellers if not
+                               self.check_leaving_individuals(time, person)]

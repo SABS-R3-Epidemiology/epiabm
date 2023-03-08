@@ -191,3 +191,11 @@ class Person:
                 if place_type.value in closure_place_type:
                     return True
         return False
+
+    def remove_person(self):
+        """ Method to remove Person object from population
+
+        """
+        self.microcell.cell.persons.remove(self)
+        self.microcell.persons.remove(self)
+        self.household.persons.remove(self)
