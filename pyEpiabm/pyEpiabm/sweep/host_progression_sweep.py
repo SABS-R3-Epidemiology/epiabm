@@ -229,7 +229,7 @@ class HostProgressionSweep(AbstractSweep):
         # statuses (InfectMild or InfectGP), as is done in CovidSim.
         if person.infection_status in [InfectionStatus.InfectMild,
                                        InfectionStatus.InfectGP]:
-            transition_time += HostProgressionSweep().delay
+            transition_time += self.delay
         # Assigns the time of status change using current time and transition
         # time:
         if transition_time < 0:
