@@ -5,6 +5,8 @@
 import typing
 from numbers import Number
 
+from pyEpiabm.property import InfectionStatus
+
 
 class Household:
     """Class representing a household,
@@ -28,6 +30,7 @@ class Household:
 
         """
         self.persons = []
+        self.susceptible_persons = []
         self.location = loc
         self.susceptibility = susceptibility
         self.infectiousness = infectiousness
@@ -65,3 +68,29 @@ class Household:
         """
         self.persons.append(person)
         person.household = self
+        if person.infection_status == InfectionStatus.Susceptible:
+            self.add_susceptible_person(person)
+
+    def add_susceptible_person(self, susceptible_person):
+        """Adds a person to the list of susceptible people in the household.
+
+        Parameters
+        ----------
+        susceptible_person : Person
+            Person to be added
+
+        """
+        if susceptible_person not in self.susceptible_persons:
+            self.susceptible_persons.append(susceptible_person)
+
+    def remove_susceptible_person(self, non_susceptible_person):
+        """Removes a susceptible person from the list of susceptible people
+        in the household.
+
+        Parameters
+        ----------
+        non_susceptible_person : Person
+            Person to be removed
+
+        """
+        self.susceptible_persons.remove(non_susceptible_person)
