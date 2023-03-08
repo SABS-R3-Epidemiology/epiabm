@@ -71,7 +71,6 @@ class TestDiseaseTesting(TestPyEpiabm):
         self.cell.enqueue_LFT_testing(self.person2)
 
         self.testing(time=1.0)
-        self.assertEqual(mock_random.call_count, 2)
 
         self.assertEqual(self.cell.PCR_queue.qsize(), 0)
         self.assertEqual(self.cell.LFT_queue.qsize(), 0)

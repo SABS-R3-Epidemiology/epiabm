@@ -111,7 +111,7 @@ for i in range(len(parameter_values)):
         int(label[i])))
 
 plt.legend()
-plt.title("Infection curves for case isolation following testing or not")
+plt.title("Infection curves for case isolation following testing (1) or not (0)")
 plt.ylabel("Infected Population")
 plt.savefig(
     os.path.join(os.path.dirname(__file__),

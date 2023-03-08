@@ -333,26 +333,20 @@ class HostProgressionSweep(AbstractSweep):
               intervention_params.keys():
                 testing_params = Parameters.instance().\
                     intervention_params['testing']
-                testing_prob_care_home = testing_params['testing_sympt'][0]
-                testing_prob_key_worker = testing_params['testing_sympt'][1]
-                testing_prob_general_pop = testing_params['testing_sympt'][2]
-                testing_type_care_home = testing_params['sympt_pcr'][0]
-                testing_type_key_worker = testing_params['sympt_pcr'][1]
-                testing_type_general_pop = testing_params['sympt_pcr'][2]
                 r = random.random()
                 type_r = random.random()
 
                 if (person.is_symptomatic() and
                    person.date_positive is None):
                     if person.care_home_resident:
-                        test_probability = testing_prob_care_home
-                        type_probability = testing_type_care_home
+                        test_probability = testing_params['testing_sympt'][0]
+                        type_probability = testing_params['sympt_pcr'][0]
                     elif person.key_worker:
-                        test_probability = testing_prob_key_worker
-                        type_probability = testing_type_key_worker
+                        test_probability = testing_params['testing_sympt'][1]
+                        type_probability = testing_params['testing_sympt'][2]
                     else:
-                        test_probability = testing_prob_general_pop
-                        type_probability = testing_type_general_pop
+                        test_probability = testing_params['testing_sympt'][2]
+                        type_probability = testing_params['sympt_pcr'][2]
 
                     if r < test_probability:
                         if type_r < type_probability:
@@ -388,18 +382,6 @@ class HostProgressionSweep(AbstractSweep):
                intervention_params.keys():
                 testing_params = Parameters.instance().\
                     intervention_params['testing']
-                testing_prob_care_home = testing_params[
-                    'testing_asympt_uninf'][0]
-                testing_prob_key_worker = testing_params[
-                    'testing_asympt_uninf'][1]
-                testing_prob_general_pop = testing_params[
-                    'testing_asympt_uninf'][2]
-                testing_type_care_home = testing_params[
-                    'asympt_uninf_pcr'][0]
-                testing_type_key_worker = testing_params[
-                    'asympt_uninf_pcr'][1]
-                testing_type_general_pop = testing_params[
-                    'asympt_uninf_pcr'][2]
                 for item in person_list:
                     cell = item[0]
                     person = item[1]
@@ -410,14 +392,20 @@ class HostProgressionSweep(AbstractSweep):
                     type_r = random.random()
 
                     if person.care_home_resident:
-                        test_probability = testing_prob_care_home
-                        type_probability = testing_type_care_home
+                        test_probability = testing_params[
+                            'testing_asympt_uninf'][0]
+                        type_probability = testing_params[
+                            'asympt_uninf_pcr'][0]
                     elif person.key_worker:
-                        test_probability = testing_prob_key_worker
-                        type_probability = testing_type_key_worker
+                        test_probability = testing_params[
+                            'testing_asympt_uninf'][1]
+                        type_probability = testing_params[
+                            'asympt_uninf_pcr'][1]
                     else:
-                        test_probability = testing_prob_general_pop
-                        type_probability = testing_type_general_pop
+                        test_probability = testing_params[
+                            'testing_asympt_uninf'][2]
+                        type_probability = testing_params[
+                            'asympt_uninf_pcr'][2]
 
                     if (r < test_probability and
                        person.date_positive is None):

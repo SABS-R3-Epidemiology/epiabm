@@ -57,6 +57,11 @@ class CaseIsolation(AbstractIntervention):
                                     self._population.test_isolate_count[1] += 1
 
     def person_selection_method(self, person):
+        """ Method to determine whether a person is eligible for isolation
+        based on whether they are symptomatic or have tested positive depending
+        on the value of the use_testing parameter.
+
+        """
         if self.use_testing == 0:
             return person.is_symptomatic()
         else:
