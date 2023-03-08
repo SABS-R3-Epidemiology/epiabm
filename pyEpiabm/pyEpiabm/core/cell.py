@@ -140,7 +140,7 @@ class Cell:
     def find_nearby_cells(self, other_cells):
         '''
         Helper function which takes in a given cell and the list of all cells
-        and generates a list of nearby cells which are the cells that are
+        and generates a list of nearby cells which are
         closer than the cutoff for cross-cell infection.
 
         Populates: self.find_nearby_cells
