@@ -269,7 +269,7 @@ class TestClosureFunctional(unittest.TestCase):
     @patch("pandas.DataFrame.to_csv")
     @patch("pandas.read_csv")
     def test_microcell_threshold_large(self, mock_read, mock_csv):
-        """Place closure functional test to ensure less people will be
+        """Place closure functional test to ensure fewer people will be
         susceptible when setting larger case threshold at microcell level.
         """
         mock_read.return_value = pd.DataFrame(self.pop_params)
