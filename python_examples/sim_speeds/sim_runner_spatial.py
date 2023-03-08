@@ -23,9 +23,8 @@ pe.Parameters.set_file(os.path.join(os.path.abspath(''),
 
 pe.routine.Simulation.set_random_seed(seed=42)
 
-pop_sizes = np.array([int(1000), int(2000), int(4000), int(8000),
-                      int(10000), int(20000), int(40000), int(80000),
-                      int(100000), int(200000)])
+pop_sizes = np.array([1000, 2000, 4000, 8000, 10000, 20000,
+                      40000, 80000, 100000, 200000])
 sim_times = []
 
 for i in range(len(pop_sizes)):
@@ -39,9 +38,12 @@ for i in range(len(pop_sizes)):
     # Create a population based on the parameters given.
     population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
 
+    pe.routine.ToyPopulationFactory.assign_cell_locations(population, method='grid')
+    pe.routine.ToyPopulationFactory.add_places(population, 1)
+
     # sim_ and file_params give details for the running of the simulations and
     # where output should be written to.
-    sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
+    sim_params = {"simulation_start_time": 0, "simulation_end_time": 30,
                   "initial_infected_number": int(pop_sizes[i]/1000)}
 
     file_params = {"output_file": "output.csv",
@@ -67,9 +69,7 @@ for i in range(len(pop_sizes)):
          pe.sweep.HostProgressionSweep()],
         sim_params,
         file_params)
-    print('Marker 1')
     sim.run_sweeps()
-    print('Marker 2')
     et = time.time()
 
     this_sim_time = et - st

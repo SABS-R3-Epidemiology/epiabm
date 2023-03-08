@@ -23,7 +23,7 @@ pe.Parameters.set_file(os.path.join(os.path.abspath(''),
 
 pe.routine.Simulation.set_random_seed(seed=42)
 
-pop_sizes = np.array([int(1000), int(2000), int(4000), int(8000), int(10000)])
+pop_sizes = np.array([1000, 2000, 4000, 8000, 10000])
 sim_times = []
 
 for i in range(len(pop_sizes)):
