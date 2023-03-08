@@ -100,7 +100,6 @@ class TestSpatialSweep(TestMockedLogs):
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     def test_bind_population(self, mock_dist, mock_nan, mock_logger):
         Parameters.instance().infection_radius = 0.0001
-        print('radius', Parameters.instance().infection_radius)
         # Assert a basic population
         test_pop = self.pop
         test_sweep = SpatialSweep()
@@ -255,6 +254,12 @@ class TestSpatialSweep(TestMockedLogs):
         test_sweep(time)
         self.assertTrue(self.cell_inf.person_queue.empty())
         self.assertEqual(self.cell_no_infectees_rec.person_queue.qsize(), 0)
+
+        mock_inf.assert_not_called
+        mock_foi.assert_not_called
+        mock_poisson.assert_not_called
+        mock_inf_list.assert_not_called
+        mock_list_covid.assert_not_called
 
     @mock.patch("random.random")
     def test_do_infection_event(self, mock_random):
