@@ -18,8 +18,8 @@ Overview:
 - :class:`PlaceSweep`
 - :class:`QueueSweep`
 - :class:`SpatialSweep`
-- :class:`UpdatePlaceSweep`
 - :class:`TravelSweep`
+- :class:`UpdatePlaceSweep`
 
 .. autoclass:: AbstractSweep
     :members:
@@ -61,10 +61,10 @@ Overview:
     :members:
     :special-members: __call__
 
-.. autoclass:: UpdatePlaceSweep
+.. autoclass:: TravelSweep
     :members:
     :special-members: __call__
 
-.. autoclass:: TravelSweep
+.. autoclass:: UpdatePlaceSweep
     :members:
     :special-members: __call__

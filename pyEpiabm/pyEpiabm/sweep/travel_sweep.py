@@ -1,6 +1,7 @@
 #
 # Introduce to and remove individuals from population due to travelling
 #
+
 import numpy as np
 import random
 import math
@@ -8,6 +9,7 @@ import math
 from pyEpiabm.core import Population, Parameters, Microcell
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import HostProgressionSweep
+
 from .abstract_sweep import AbstractSweep
 
 
@@ -44,6 +46,7 @@ class TravelSweep(AbstractSweep):
         ----------
         time : float
             Simulation time
+
         """
         # Introduce number of individuals
         num_cases = sum(map(lambda cell: cell.number_infectious(),
@@ -52,7 +55,7 @@ class TravelSweep(AbstractSweep):
             num_cases * self.travel_params['ratio_introduce_cases'])
 
         if number_individuals_introduced >= 1:
-            self.create_introduced_idividuals(
+            self.create_introduced_individuals(
                 time, number_individuals_introduced)
             self.assign_microcell_household(
                 number_individuals_introduced)
@@ -64,8 +67,8 @@ class TravelSweep(AbstractSweep):
         # Remove individuals if duration of stay passed
         self.remove_leaving_individuals(time)
 
-    def create_introduced_idividuals(self, time,
-                                     number_individuals_introduced):
+    def create_introduced_individuals(self, time,
+                                      number_individuals_introduced):
         """
         Create individuals and assign them an age and infectious status. This
         is done based on age proportions if age is used in the model.
@@ -78,6 +81,7 @@ class TravelSweep(AbstractSweep):
             Simulation time
         number_individuals_introduced: int
             Infected individuals added to population at certain time step
+
         """
         asymp_prop = Parameters.instance().host_progression_lists[
             "prob_exposed_to_asympt"]
@@ -122,7 +126,9 @@ class TravelSweep(AbstractSweep):
 
         for person in self.initial_cell.persons:
             # Assign introduced individuals a time to stay
-            person.travel_end_time = time + random.randint(2, 14)
+            person.travel_end_time = time + random.randint(
+                self.travel_params["duration_travel_stay"][0],
+                self.travel_params["duration_travel_stay"][1])
             # Assigns them their next infection status and the time of
             # their next status change. Also updates their infectiousness.
             person.next_infection_status = InfectionStatus.Recovered
@@ -132,15 +138,16 @@ class TravelSweep(AbstractSweep):
     def assign_microcell_household(self, number_individuals_introduced):
         """
         Assign introduced individuals to microcells based on population
-        density of micorcells. Take a number of microcells equal to the
+        density of micorcells. Takes a number of microcells equal to the
         the number_individuals_introduced (or max number of microcells)
-        and assign individuals randomly to one of these microcells,
+        and assigns individuals randomly to one of these microcells,
         such that individuals can end up in the same microcell.
 
         Parameters
         ----------
         number_individuals_introduced: int
             Infected individuals added to population at certain time step
+
         """
         num_microcells_population = sum(len(cell.microcells) for cell in
                                         self._population.cells)
@@ -184,7 +191,10 @@ class TravelSweep(AbstractSweep):
 
     def check_leaving_individuals(self, time, person):
         """
-        Check if individuals travel_end_time is reached
+        Check if individuals travel_end_time is reached. If interventions
+        are active and travelling individual is in isolation and/or quarantine
+        individuals leave after their travel_end_time is reached and they are
+        out of isolation and/or quarantine.
 
         Parameters
         ----------
@@ -192,6 +202,7 @@ class TravelSweep(AbstractSweep):
             Simulation time
         Person : Person
             Instance of Person class
+
         """
         remove_individual = False
         if (hasattr(person, 'travel_end_time')) and \
@@ -224,6 +235,7 @@ class TravelSweep(AbstractSweep):
         ----------
         time : float
             Simulation time
+
         """
         for cell in self._population.cells:
             cell.persons = [person for person in cell.persons if not

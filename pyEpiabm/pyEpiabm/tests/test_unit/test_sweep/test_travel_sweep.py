@@ -40,7 +40,7 @@ class TestTravelSweep(TestPyEpiabm):
 
     def test_bind_population(self):
         self.assertEqual(len(self.travelsweep.
-                             travel_params), 2)
+                             travel_params), 3)
         self.test_sweep = pe.sweep.TravelSweep()
         self.test_sweep.bind_population(self._population)
         self.assertEqual(self.test_sweep._population.cells[0]
@@ -64,7 +64,7 @@ class TestTravelSweep(TestPyEpiabm):
         Parameters.instance().host_progression_lists[
             "prob_exposed_to_asympt"] = [1.0]*17
         self.test_sweep = pe.sweep.TravelSweep()
-        self.test_sweep.create_introduced_idividuals(
+        self.test_sweep.create_introduced_individuals(
             time=1, number_individuals_introduced=2)
         self.assertEqual(len(self.test_sweep.initial_microcell.persons), 2)
         for person in self.test_sweep.initial_microcell.persons:
@@ -78,7 +78,7 @@ class TestTravelSweep(TestPyEpiabm):
         Parameters.instance().host_progression_lists[
             "prob_exposed_to_asympt"] = [1.0]*17
         self.test_sweep = pe.sweep.TravelSweep()
-        self.test_sweep.create_introduced_idividuals(
+        self.test_sweep.create_introduced_individuals(
             time=1, number_individuals_introduced=2)
         self.assertEqual(len(self.test_sweep.initial_microcell.persons), 2)
         for person in self.test_sweep.initial_microcell.persons:
