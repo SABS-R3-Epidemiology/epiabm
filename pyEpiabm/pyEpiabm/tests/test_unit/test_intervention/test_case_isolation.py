@@ -43,8 +43,8 @@ class TestCaseIsolation(TestPyEpiabm):
                          self.params['isolation_duration'])
         self.assertEqual(self.caseisolation.isolation_probability,
                          self.params['isolation_probability'])
-        self.assertEqual(self.caseisolation.criterion,
-                         self.params['criterion'])
+        self.assertEqual(self.caseisolation.use_testing,
+                         self.params['use_testing'])
 
     @mock.patch('random.random')
     def test___call__(self, mock_random):
@@ -66,7 +66,7 @@ class TestCaseIsolation(TestPyEpiabm):
     @mock.patch('random.random')
     def test_person_selection(self, mock_random):
         mock_random.return_value = 0
-        self.caseisolation.criterion = 1
+        self.caseisolation.use_testing = 1
         self.person_symp.date_positive = 0
         self.caseisolation(time=1)
 
@@ -78,7 +78,7 @@ class TestCaseIsolation(TestPyEpiabm):
     @mock.patch('random.random')
     def test_false_isolation_count(self, mock_random):
         mock_random.return_value = 0
-        self.caseisolation.criterion = 1
+        self.caseisolation.use_testing = 1
         self.person_susc.date_positive = 0
         self.caseisolation(time=1)
 

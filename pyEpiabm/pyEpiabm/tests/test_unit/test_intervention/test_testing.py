@@ -3,16 +3,16 @@ from unittest import mock
 
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.intervention import Testing
+from pyEpiabm.intervention import DiseaseTesting
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
-class TestTesting(TestPyEpiabm):
-    """Test the 'Testing' class.
+class TestDiseaseTesting(TestPyEpiabm):
+    """Test the 'DiseaseTesting' class.
 
     """
     def setUp(self) -> None:
-        super(TestTesting, self).setUp()  # Sets up patch on logging
+        super(TestDiseaseTesting, self).setUp()  # Sets up patch on logging
 
         # Construct a population with 2 persons
         self.pop_factory = pe.routine.ToyPopulationFactory()
@@ -26,7 +26,7 @@ class TestTesting(TestPyEpiabm):
         self.params = pe.Parameters.instance().intervention_params[
             'testing']
         self.testing = \
-            Testing(population=self._population, **self.params)
+            DiseaseTesting(population=self._population, **self.params)
 
     def test__init__(self):
         # Test the parameter values from params file (testing_parameters.json)
@@ -48,8 +48,8 @@ class TestTesting(TestPyEpiabm):
         mock_random.return_value = 1
         self.person1.infection_status = InfectionStatus.InfectMild
         self.person2.infection_status = InfectionStatus.InfectMild
-        self.cell.enqueue_testing(self.person1, 'PCR')
-        self.cell.enqueue_testing(self.person2, 'LFT')
+        self.cell.enqueue_PCR_testing(self.person1)
+        self.cell.enqueue_LFT_testing(self.person2)
 
         self.testing(time=1.0)
 
@@ -67,8 +67,8 @@ class TestTesting(TestPyEpiabm):
         self.person1.infection_status = InfectionStatus.Susceptible
         self.person2.infection_status = InfectionStatus.Susceptible
 
-        self.cell.enqueue_testing(self.person1, 'PCR')
-        self.cell.enqueue_testing(self.person2, 'LFT')
+        self.cell.enqueue_PCR_testing(self.person1)
+        self.cell.enqueue_LFT_testing(self.person2)
 
         self.testing(time=1.0)
         self.assertEqual(mock_random.call_count, 2)

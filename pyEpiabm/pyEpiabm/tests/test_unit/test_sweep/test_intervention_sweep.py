@@ -5,7 +5,7 @@ from pyEpiabm.sweep import InterventionSweep
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 from pyEpiabm.intervention import CaseIsolation, HouseholdQuarantine, \
-    PlaceClosure, SocialDistancing, Testing
+    PlaceClosure, SocialDistancing, DiseaseTesting
 
 
 class TestInterventionSweep(TestPyEpiabm):
@@ -70,7 +70,7 @@ class TestInterventionSweep(TestPyEpiabm):
             self.interventionsweep.intervention_active_status[
                 [key for key in
                  self.interventionsweep.intervention_active_status.keys()
-                 if isinstance(key, Testing)][0]])
+                 if isinstance(key, DiseaseTesting)][0]])
 
         # Place is closed and social distancing ends
         self.assertIsNotNone(self.interventionsweep._population.cells[0].

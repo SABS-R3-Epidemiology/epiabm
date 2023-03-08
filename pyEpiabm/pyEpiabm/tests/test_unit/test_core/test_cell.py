@@ -69,14 +69,11 @@ class TestCell(TestPyEpiabm):
         self.cell.add_microcells(1)
         self.cell.microcells[0].add_people(1)
         person = self.cell.microcells[0].persons[0]
-        self.cell.enqueue_testing(person, "PCR")
-        self.cell.enqueue_testing(person, "LFT")
+        self.cell.enqueue_PCR_testing(person)
+        self.cell.enqueue_LFT_testing(person)
 
         self.assertEqual(self.cell.PCR_queue.qsize(), 1)
         self.assertEqual(self.cell.LFT_queue.qsize(), 1)
-
-        self.assertRaises(ValueError, self.cell.enqueue_testing,
-                          person, 'test')
 
 
 if __name__ == '__main__':
