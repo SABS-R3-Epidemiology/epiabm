@@ -531,7 +531,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.assertEqual(mock_next_time.call_count, 2)
 
         mock_asympt.assert_called_once_with([(self.cell, self.person3)], 1.0)
-        mock_sympt.assert_called_once_with(self.cell, self.person2)
+        self.assertEqual(mock_sympt.call_count, 2)
 
     def test_call_specific(self):
         """Tests the specific cases in the call method such as people
@@ -633,7 +633,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.assertEqual(self.cell.LFT_queue.qsize(), 0)
 
         self.person1.date_positive = 1
-        self.person1.update_status(InfectionStatus.Recovered)
+        self.person1.next_infection_status = InfectionStatus.Recovered
 
         test_sweep.sympt_testing_queue(self.cell, self.person1)
 

@@ -304,9 +304,9 @@ class HostProgressionSweep(AbstractSweep):
                         self.set_infectiousness(person, time)
                         if not person.is_symptomatic():
                             asympt_or_uninf_people.append((cell, person))
-                        self.sympt_testing_queue(cell, person)
                     self.update_next_infection_status(person)
                     self.update_time_status_change(person, time)
+                    self.sympt_testing_queue(cell, person)
                 self._updates_infectiousness(person, time)
 
         self.asympt_uninf_testing_queue(asympt_or_uninf_people, time)
@@ -361,7 +361,7 @@ class HostProgressionSweep(AbstractSweep):
                             cell.enqueue_LFT_testing(person)
 
                 if (person.date_positive is not None and
-                    (person.infection_status in
+                    (person.next_infection_status in
                      [InfectionStatus.Dead, InfectionStatus.Recovered])):
                     person.date_positive = None
 
