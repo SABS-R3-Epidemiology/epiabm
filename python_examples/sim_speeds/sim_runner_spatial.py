@@ -38,7 +38,8 @@ for i in range(len(pop_sizes)):
     # Create a population based on the parameters given.
     population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
 
-    pe.routine.ToyPopulationFactory.assign_cell_locations(population, method='grid')
+    pe.routine.ToyPopulationFactory.assign_cell_locations(population,
+                                                          method='grid')
     pe.routine.ToyPopulationFactory.add_places(population, 1)
 
     # sim_ and file_params give details for the running of the simulations and
