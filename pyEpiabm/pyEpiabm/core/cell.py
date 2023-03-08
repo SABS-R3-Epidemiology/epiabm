@@ -9,7 +9,7 @@ from numbers import Number
 
 from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
-# from pyEpiabm.utility import DistanceFunctions
+from pyEpiabm.utility import DistanceFunctions
 
 from .microcell import Microcell
 from .person import Person
@@ -155,7 +155,7 @@ class Cell:
             List of all cells except cell
 
         '''
-        from pyEpiabm.utility import DistanceFunctions
+        # from pyEpiabm.utility import DistanceFunctions
         cutoff = Parameters.instance().infection_radius
 
         for cell2 in other_cells:
