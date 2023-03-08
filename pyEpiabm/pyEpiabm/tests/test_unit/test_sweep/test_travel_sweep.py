@@ -146,7 +146,7 @@ class TestTravelSweep(TestPyEpiabm):
         # Introduce individual staying untill day 27
         self.travelsweep(time=25)
         introduced_person = self.cell.persons[-1]
-        introduced_person.isolation_start_time = 29
+        introduced_person.quarantine_start_time = 29
         self.travelsweep.travel_params['ratio_introduce_cases'] = 0.0
         self.travelsweep(time=28)
         self.assertEqual(len(self._population.cells[0].persons), 21)

@@ -207,27 +207,26 @@ class TravelSweep(AbstractSweep):
             Instance of Person class
 
         """
-        remove_individual = False
         if (hasattr(person, 'travel_end_time')) and \
                 (time > person.travel_end_time):
             if all([hasattr(person, 'isolation_start_time'),
                     hasattr(person, 'quarantine_start_time')]):
-                if (person.isolation_start_time and
+                if (person.isolation_start_time is None and
                         person.quarantine_start_time is None) or \
-                        (person.isolation_start_time and
+                        (person.isolation_start_time <= time and
                          person.quarantine_start_time <= time):
-                    remove_individual = True
+                    return True
             elif hasattr(person, 'isolation_start_time'):
                 if (person.isolation_start_time is None) or \
                         (person.isolation_start_time <= time):
-                    remove_individual = True
+                    return True
             elif hasattr(person, 'quarantine_start_time'):
                 if (person.quarantine_start_time is None) or \
                         (person.quarantine_start_time <= time):
-                    remove_individual = True
+                    return True
             else:
-                remove_individual = True
-        return remove_individual
+                return True
+        return False
 
     def remove_leaving_individuals(self, time):
         """
