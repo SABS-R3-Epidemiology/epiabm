@@ -1,13 +1,14 @@
 #
 # Gives people a positive or negatie test status
 #
+
 import random
 
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.intervention import AbstractIntervention
 
 
-class Testing(AbstractIntervention):
+class DiseaseTesting(AbstractIntervention):
     """ Class to move through testing queue and assign
     positive test results depending on true/false positive rates.
 
@@ -26,7 +27,7 @@ class Testing(AbstractIntervention):
 
         population.test_count = [0, 0]
 
-        super(Testing, self).__init__(population=population, **kwargs)
+        super(DiseaseTesting, self).__init__(population=population, **kwargs)
 
     def __call__(self, time):
         for cell in self._population.cells:
@@ -37,8 +38,7 @@ class Testing(AbstractIntervention):
                 r = random.random()
                 person = cell.PCR_queue.get()
                 num_pcr += 1
-                if (person.is_symptomatic() or
-                   person.infection_status == InfectionStatus.InfectASympt):
+                if person.is_infectious():
                     if r > self.false_negative[0]:
                         person.date_positive = time
                         self._population.test_count[0] += 1
@@ -51,8 +51,7 @@ class Testing(AbstractIntervention):
                 r = random.random()
                 person = cell.LFT_queue.get()
                 num_lft += 1
-                if (person.is_symptomatic() or
-                   person.infection_status == InfectionStatus.InfectASympt):
+                if person.is_infectious():
                     if r > self.false_negative[1]:
                         person.date_positive = time
                         self._population.test_count[0] += 1

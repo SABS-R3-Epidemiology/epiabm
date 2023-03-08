@@ -23,7 +23,7 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
 # Set parameter file
-name_parameter_file = 'testing_parameters.json'
+name_parameter_file = 'disease_testing_parameters.json'
 
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
@@ -111,7 +111,7 @@ for i in range(len(parameter_values)):
         int(label[i])))
 
 plt.legend()
-plt.title("Infection curves for different case isolating probabilities")
+plt.title("Infection curves for case isolation following testing or not")
 plt.ylabel("Infected Population")
 plt.savefig(
     os.path.join(os.path.dirname(__file__),
