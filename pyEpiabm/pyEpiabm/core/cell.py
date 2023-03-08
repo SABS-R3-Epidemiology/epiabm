@@ -162,5 +162,5 @@ class Cell:
             distance = DistanceFunctions.dist(self.location, cell2.location)
             if distance < cutoff:
                 self.nearby_cells[cell2.id] = distance
-                # List of near neghbours, cells which are closer than the
+                # Dict of near neighbours, cells which are closer than the
                 # cutoff for cross-cell infection
