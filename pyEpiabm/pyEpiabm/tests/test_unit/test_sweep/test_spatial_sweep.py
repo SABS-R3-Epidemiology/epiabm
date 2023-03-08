@@ -63,7 +63,7 @@ class TestSpatialSweep(TestMockedLogs):
 
         # 3rd Population
         # 2 cells each with a single microcell with a single person
-        # cell 1: 1 microcel with a mildly infected individual
+        # cell 1: 1 microcell with a mildly infected individual
         # cell 2: 1 microcell with a recovered individual
         self.pop_no_infectees = Population()
         self.pop_no_infectees.add_cells(2)
