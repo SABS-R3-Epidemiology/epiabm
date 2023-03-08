@@ -93,6 +93,9 @@ class Cell:
         """Add person to PCR testing queue for processing in testing
          sweep.
 
+        Detailed description of the implementation can be found in github wiki:
+        https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#testing
+
         Parameters
         ----------
         person : Person
@@ -104,6 +107,9 @@ class Cell:
     def enqueue_LFT_testing(self, person: Person):
         """Add person to LFT testing queue for processing in testing
          sweep.
+
+        Detailed description of the implementation can be found in github wiki:
+        https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#testing
 
         Parameters
         ----------

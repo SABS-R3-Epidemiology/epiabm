@@ -13,7 +13,7 @@ Overview:
 - :class:`PlaceClosure`
 - :class:`HouseholdQuarantine`
 - :class:`SocialDistancing`
-- :class:`Testing`
+- :class:`DiseaseTesting`
 
 .. autoclass:: AbstractIntervention
     :members:
@@ -35,6 +35,6 @@ Overview:
     :members:
     :special-members: __init__, __call__
 
-.. autoclass:: Testing
+.. autoclass:: DiseaseTesting
     :members:
     :special-members: __init__, __call__

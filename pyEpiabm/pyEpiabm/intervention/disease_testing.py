@@ -4,13 +4,14 @@
 
 import random
 
-from pyEpiabm.property import InfectionStatus
 from pyEpiabm.intervention import AbstractIntervention
 
 
 class DiseaseTesting(AbstractIntervention):
     """ Class to move through testing queue and assign
     positive test results depending on true/false positive rates.
+    Detailed description of the implementation can be found in github wiki:
+    https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#testing
 
     """
 

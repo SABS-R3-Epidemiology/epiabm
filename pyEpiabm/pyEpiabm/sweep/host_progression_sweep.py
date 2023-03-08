@@ -316,6 +316,9 @@ class HostProgressionSweep(AbstractSweep):
         probability depedent on their status as either a care home
         resident or a key worker.
 
+        Detailed description of the implementation can be found in github wiki:
+        https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#testing
+
         Parameters
         ----------
         cell : Cell
@@ -366,6 +369,9 @@ class HostProgressionSweep(AbstractSweep):
         """ Adds asymptomatic and uninfected people to a testing queue
         with a given probability depedent on their status as either a care
         home resident or key worker.
+
+        Detailed description of the implementation can be found in github wiki:
+        https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#testing
 
         Parameters
         ----------
