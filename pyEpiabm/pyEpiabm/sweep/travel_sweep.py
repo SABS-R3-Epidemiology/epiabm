@@ -1,5 +1,5 @@
 #
-# Introduce to and remove individuals from population due to travelling
+# Introduce and remove individuals from population due to travelling
 #
 
 import numpy as np
@@ -14,19 +14,20 @@ from .abstract_sweep import AbstractSweep
 
 
 class TravelSweep(AbstractSweep):
-    """Class to run the introduction and removing of
-    individuals. The number of introduced individuals
+    """Class to manage the introduction and removing of
+    individuals. The number of individuals introduced
     depends on the number of total infectious cases in the
-    population. All indivuals are infectious when entering
-    the population and will distributed over microcells based
+    population. All individuals are infectious when entering
+    the population and will be distributed over microcells based
     on population density of the microcells. Individuals will
     be removed from the population after a certain number of days
-    depening on if they are isolated or quarantined.
+    if they are isolated or quarantined.
 
     """
 
     def __init__(self):
         """Call in variables from the parameters file
+
         """
         self.travel_params = Parameters.instance().travel_params
         self.introduce_population = Population()
@@ -40,8 +41,8 @@ class TravelSweep(AbstractSweep):
         """ Based on number of infected cases in population, infected
         individuals are introduced to the population for a certain
         period. They are distributed over the microcells based on
-        population density. They are not assigned perminently to
-        a place for the durationg of their visit.
+        population density. They are not assigned permanently to
+        a place for the duration of their visit.
 
         Parameters
         ----------
@@ -61,7 +62,7 @@ class TravelSweep(AbstractSweep):
             self.assign_microcell_household(
                 number_individuals_introduced)
 
-            # Remove introduced individuals from introduce population
+            # Remove individuals introduced from introduce_population
             self.initial_cell.persons = []
             self.initial_microcell.persons = []
 
@@ -72,7 +73,7 @@ class TravelSweep(AbstractSweep):
                                       number_individuals_introduced):
         """
         Create individuals and assign them an age and infectious status. This
-        is done based on age proportions if age is used in the model.
+        is based on age proportions if age is used in the model.
         Individuals are assigned an age between 15-80 years and are all
         infected (mild or asymptomatic).
 
@@ -89,7 +90,7 @@ class TravelSweep(AbstractSweep):
         if Parameters.instance().use_ages:
             # Age used in model
             age_prop = Parameters.instance().age_proportions
-            # travellers are between 15-80 years
+            # Travellers are between 15-80 years
             age_prop_adjusted = [0.0 if i in [0, 1, 2, 16] else prop for
                                  i, prop in enumerate(age_prop)]
             w = age_prop_adjusted / sum(age_prop_adjusted)
@@ -140,11 +141,13 @@ class TravelSweep(AbstractSweep):
 
     def assign_microcell_household(self, number_individuals_introduced):
         """
-        Assign introduced individuals to microcells based on population
-        density of micorcells. Takes a number of microcells equal to the
-        the number_individuals_introduced (or max number of microcells)
-        and assigns individuals randomly to one of these microcells,
-        such that individuals can end up in the same microcell.
+        Assign individuals introduced to microcells based on population
+        density of micorcells in the general population. Takes a number of
+        microcells equal to the number_individuals_introduced (or max number
+        of microcells) and assigns individuals randomly to one of these
+        microcells, such that individuals can end up in the same microcell.
+        Individuals are also assigned to an existing or new household within
+        the selected microcell.
 
         Parameters
         ----------
