@@ -200,6 +200,7 @@ class TestPopConfig(TestPyEpiabm):
         if version.parse(pd.__version__) >= version.parse("1.4.0"):
             expected_df = self.df.copy()
             expected_df.drop('household_number', axis=1)
+            actual_df.drop('household_number', axis=1)
 
             pd.testing.assert_frame_equal(actual_df,
                                           expected_df, check_dtype=False)
