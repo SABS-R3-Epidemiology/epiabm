@@ -15,6 +15,7 @@ class QueueSweep(AbstractSweep):
     in each cell and update their infection status.
 
     """
+
     def __call__(self, time: float):
         """Function to run through the queue of people to be exposed.
 

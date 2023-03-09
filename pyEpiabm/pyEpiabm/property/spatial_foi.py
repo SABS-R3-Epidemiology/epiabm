@@ -1,6 +1,7 @@
 #
 # Calculate spatial force of infection based on Covidsim code
 #
+from pyEpiabm.core import Parameters
 
 import pyEpiabm.core
 
@@ -13,7 +14,7 @@ class SpatialInfection:
     @staticmethod
     def cell_inf(inf_cell, time: float):
         """Calculate the infectiousness of one cell
-        towards its neighbouring cells. Does not include interventions such
+        towards its nearby cells. Does not include interventions such
         as isolation, or whether individual is a carehome resident.
 
         Parameters
@@ -38,11 +39,10 @@ class SpatialInfection:
         return average_number_to_infect
 
     @staticmethod
-    def space_inf(inf_cell, infector,
-                  time: float):
+    def spatial_inf(inf_cell, infector,
+                    time: float):
         """Calculate the infectiousness between cells, dependent on the
-        infectious people in it. Does not include interventions such as
-        isolation, whether individual is a carehome resident.
+        infectious people in it.
 
         Parameters
         ----------
@@ -59,23 +59,29 @@ class SpatialInfection:
             Infectiousness parameter of cell
 
         """
-        space_inf = infector.infectiousness
-        if pyEpiabm.core.Parameters.instance().use_ages:
-            space_inf *= pyEpiabm.core.Parameters.instance().\
-                age_contact[infector.age_group]
-        return space_inf
+        age = pyEpiabm.core.Parameters.instance().\
+            age_contact[infector.age_group] \
+            if pyEpiabm.core.Parameters.instance().use_ages is True else 1
+        closure_spatial = Parameters.instance().\
+            intervention_params['place_closure']['closure_spatial_params'] \
+            if ((hasattr(infector.microcell, 'closure_start_time'))) and (
+                infector.is_place_closed(
+                    Parameters.instance().intervention_params[
+                        'place_closure']['closure_place_type'])) and (
+                        infector.microcell.closure_start_time <= time) else 1
+        return infector.infectiousness * age * closure_spatial
 
     @staticmethod
-    def space_susc(susc_cell, infectee,
-                   time: float):
+    def spatial_susc(susc_cell, infector, infectee, time: float):
         """Calculate the susceptibility of one cell towards its neighbouring
-        cells. Does not include interventions such as isolation,
-        or whether individual is a carehome resident.
+        cells.
 
         Parameters
         ----------
         susc_cell : Cell
             Cell receiving infections
+        infector : Person
+            Infector
         infectee : Person
             Infectee
         time : float
@@ -87,15 +93,35 @@ class SpatialInfection:
             Susceptibility parameter of cell
 
         """
+        spatial_susc = 1.0
         if pyEpiabm.core.Parameters.instance().use_ages:
-            return pyEpiabm.core.Parameters.instance().\
+            spatial_susc = pyEpiabm.core.Parameters.instance().\
                 age_contact[infectee.age_group]
-        else:
-            return 1.0
+
+        spatial_susc *= Parameters.instance().\
+            intervention_params['place_closure']['closure_spatial_params'] \
+            if ((hasattr(infector.microcell, 'closure_start_time'))) and (
+                infector.is_place_closed(
+                    Parameters.instance().intervention_params[
+                        'place_closure']['closure_place_type'])) and (
+                        infector.microcell.closure_start_time <= time) else 1
+
+        if (hasattr(infector.microcell, 'distancing_start_time')) and (
+                infector.microcell.distancing_start_time is not None) and (
+                    infector.microcell.distancing_start_time <= time):
+            if infector.distancing_enhanced is True:
+                spatial_susc *= Parameters.instance().\
+                    intervention_params['social_distancing'][
+                        'distancing_spatial_enhanced_susc']
+            else:
+                spatial_susc *= Parameters.instance().\
+                    intervention_params['social_distancing'][
+                        'distancing_spatial_susc']
+        return spatial_susc
 
     @staticmethod
-    def space_foi(inf_cell, susc_cell, infector,
-                  infectee, time: float):
+    def spatial_foi(inf_cell, susc_cell, infector,
+                    infectee, time: float):
         """Calculate the force of infection between cells, for a particular
         infector and infectee.
 
@@ -118,7 +144,6 @@ class SpatialInfection:
             Force of infection parameter of cell
 
         """
-
         carehome_scale_inf = 1
         if infector.care_home_resident:
             carehome_scale_inf = pyEpiabm.core.Parameters.instance()\
@@ -127,10 +152,22 @@ class SpatialInfection:
         if infectee.care_home_resident or infector.care_home_resident:
             carehome_scale_susc = pyEpiabm.core.Parameters.instance()\
                 .carehome_params["carehome_resident_spatial_scaling"]
-        infectiousness = ((SpatialInfection.space_inf(inf_cell, infector,
-                                                      time))
-                          * carehome_scale_inf)
-        susceptibility = ((SpatialInfection.space_susc(susc_cell,
-                                                       infectee, time))
-                          * carehome_scale_susc)
+
+        isolating = Parameters.instance().\
+            intervention_params['case_isolation']['isolation_effectiveness']\
+            if (hasattr(infector, 'isolation_start_time')) and (
+                infector.isolation_start_time is not None) and (
+                    infector.isolation_start_time <= time) else 1
+        quarantine = Parameters.instance().\
+            intervention_params['household_quarantine'][
+                'quarantine_spatial_effectiveness']\
+            if (hasattr(infector, 'quarantine_start_time')) and (
+                infector.quarantine_start_time is not None) and (
+                    infector.quarantine_start_time <= time) else 1
+        infectiousness = (SpatialInfection.spatial_inf(
+            inf_cell, infector, time) * carehome_scale_inf
+            * isolating * quarantine)
+        susceptibility = (SpatialInfection.spatial_susc(
+            susc_cell, infector, infectee, time)
+            * carehome_scale_susc * quarantine)
         return (infectiousness * susceptibility)

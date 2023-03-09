@@ -95,6 +95,25 @@ class TestInitialisePlaceSweep(TestPyEpiabm):
                                        person_weights=None,
                                        mean_capacity=0)
 
+    @mock.patch("pyEpiabm.sweep.UpdatePlaceSweep.update_place_group")
+    @mock.patch('pyEpiabm.core.Parameters.instance')
+    def test_carehomes_no_params(self, mock_params, mock_update):
+        mock_params.return_value['place_params'] = {'carehome_params': {}}
+
+        test_pop = self.pop
+        place = test_pop.cells[0].places[0]
+        mock_update.return_value = None
+
+        test_sweep = pe.sweep.InitialisePlaceSweep()
+        test_sweep.bind_population(test_pop)
+
+        place.place_type = PlaceType.CareHome
+        test_sweep()
+        mock_update.assert_called_with(place, group_size=0,
+                                       person_list=None,
+                                       person_weights=None,
+                                       mean_capacity=25)
+
     def test_weights_func(self):
         test_pop = self.pop
         place = test_pop.cells[0].places[0]

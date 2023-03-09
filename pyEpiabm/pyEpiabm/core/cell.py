@@ -7,7 +7,9 @@ import numpy as np
 from queue import Queue
 from numbers import Number
 
+from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.utility import DistanceFunctions
 
 from .microcell import Microcell
 from .person import Person
@@ -36,8 +38,7 @@ class Cell:
         self.households = []
         self.person_queue = Queue()
         self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
-        self.isolation_effectiveness = None
-        self.isolation_house_effectiveness = None
+        self.nearby_cells = dict()
 
         if not (len(loc) == 2 and isinstance(loc[0], Number) and
                 isinstance(loc[1], Number)):
@@ -135,3 +136,30 @@ class Cell:
 
         """
         self.location = loc
+
+    def find_nearby_cells(self, other_cells):
+        '''
+        Helper function which takes in a given cell and the list of all cells
+        and generates a list of nearby cells which are
+        closer than the cutoff for cross-cell infection.
+
+        Populates: self.find_nearby_cells
+        Dictionary of all cells with distance below cutoff.
+        Dictionary stores cell.id and distance between the 2 cells
+        These are stored in the form:
+        cell.id: distance
+
+        Parameters
+        ----------
+        other_cells : typing.List[Cell]
+            List of all cells except cell
+
+        '''
+        cutoff = Parameters.instance().infection_radius
+
+        for cell2 in other_cells:
+            distance = DistanceFunctions.dist(self.location, cell2.location)
+            if distance < cutoff:
+                self.nearby_cells[cell2.id] = distance
+                # Dict of near neighbours, cells which are closer than the
+                # cutoff for cross-cell infection

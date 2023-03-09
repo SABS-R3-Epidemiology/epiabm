@@ -214,6 +214,7 @@ class TestSimFunctional(unittest.TestCase):
         sweep_list = [pe.sweep.HouseholdSweep(), pe.sweep.QueueSweep(),
                       pe.sweep.HostProgressionSweep()]
 
+        pe.Parameters.instance().household_size_distribution = []
         pop = TestSimFunctional.file_simulation("test_input.csv",
                                                 self.sim_params,
                                                 self.file_params,

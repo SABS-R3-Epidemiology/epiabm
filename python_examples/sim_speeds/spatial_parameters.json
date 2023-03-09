@@ -1,7 +1,7 @@
 {
     "basic_reproduction_num": 2.8,
     "do_CovidSim": false,
-    "infection_radius": 1,
+    "infection_radius": 0.2,
     "latent_period": 4.59,
     "asympt_infect_period": 14,
     "mean_mild_to_recov": 7,
@@ -407,9 +407,10 @@
         "place_transmission": 0.1
     },
     "household_transmission": 0.1,
+    "household_size_distribution": [],
     "false_positive_rate": 0,
     "place_transmission": 0.1,
-    "use_ages": 1,
+    "use_ages": 0,
     "age_proportions": [6.2, 5.6, 5.8, 6.3, 6.8, 6.8, 6.5, 6.6,
                         7.3, 7.3, 6.5, 5.7, 6, 4.8, 3.9, 3.2, 4.7],
     "age_contact": [0.6, 0.7, 0.75, 1, 1, 1, 1, 1,
@@ -467,6 +468,7 @@
                                     0.47651, 0.47651, 0.47651, 0.47651,
                                     0.47651]
     },
+    "max_household_size": 10,
     "household_age_params": {
         "mean_child_age_gap": 2,
         "min_adult_age": 19,
@@ -493,18 +495,5 @@
         "three_child_five_pers_prob": 0.5,
         "older_gen_gap": 19,
         "prop_other_parent_away": 0.0
-    },
-    "intervention_params": {
-        "vaccine_params": {
-            "start_time": 1,
-            "policy_duration": 1,
-            "case_threshold": 0,
-            "vacc_inf_drop": 0.2,
-            "vacc_protectiveness": 0.8,
-            "time_to_efficacy": 0,
-            "min_ages": [80, 65, 50, 18],
-            "prob_vaccinated": [0.9, 0.9, 0.9, 0.9],
-            "daily_doses": 5000
-        }
     }
 }

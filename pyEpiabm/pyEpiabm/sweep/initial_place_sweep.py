@@ -50,7 +50,7 @@ class InitialisePlaceSweep(AbstractSweep):
                     [person_list, weights] = self.create_age_weights(place,
                                                                      params)
                 else:
-                    mean_cap = 0
+                    mean_cap = 25
                     max_size = None
                     offset = None
                     power = None

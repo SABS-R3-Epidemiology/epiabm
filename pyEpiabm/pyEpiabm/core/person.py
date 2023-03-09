@@ -28,13 +28,16 @@ class Person:
 
     """
 
-    def __init__(self, microcell):
+    def __init__(self, microcell, age_group=None):
         """Constructor Method.
 
         Parameters
         ----------
         microcell : Microcell
             Person's parent :class:`Microcell` instance
+        age_group : int or None
+            Integer identifying persons age group or None if random age should
+            be assigned
 
         """
         self.initial_infectiousness = 0
@@ -49,12 +52,11 @@ class Person:
         self.infection_start_time = None
         self.care_home_resident = False
         self.key_worker = False
-        self.isolation_start_time = None
         self.is_vaccinated = False
 
-        self.set_random_age()
+        self.set_random_age(age_group)
 
-    def set_random_age(self):
+    def set_random_age(self, age_group=None):
         """Set random age of person, and save index of their age group.
         Note that the max age in the 80+ group is 84 here, however the precise
         age of 80+ people is never used (exact ages are only used to assign
@@ -62,9 +64,12 @@ class Person:
 
         """
         if Parameters.instance().use_ages:
-            group_probs = Parameters.instance().age_proportions
-            self.age_group = random.choices(range(len(group_probs)),
-                                            weights=group_probs)[0]
+            if age_group is None:
+                group_probs = Parameters.instance().age_proportions
+                self.age_group = random.choices(range(len(group_probs)),
+                                                weights=group_probs)[0]
+            else:
+                self.age_group = age_group
             self.age = random.randint(0, 4) + 5 * self.age_group
         else:
             self.age = None
@@ -132,6 +137,13 @@ class Person:
             self.infection_status, new_status, self.age_group)
         self.infection_status = new_status
 
+        if self.infection_status == InfectionStatus.Susceptible and \
+                self.household is not None:
+            self.household.add_susceptible_person(self)
+        if self.infection_status == InfectionStatus.Exposed and \
+                self.household is not None:
+            self.household.remove_susceptible_person(self)
+
     def add_place(self, place, person_group: int = 0):
         """Method adds a place to the place list if the person visits
         or is associated with this place. Places are saved as a tuple
@@ -169,6 +181,24 @@ class Person:
             ind = place_list.index(place)
             self.places.pop(ind)
             self.place_types.pop(ind)
+
+    def is_place_closed(self, closure_place_type):
+        """Method to check if any of the place in the person's place list
+        will be closed based on the place type, to be
+        used when place closure intervention is active.
+
+        Parameters
+        ----------
+        closure_place_type: a list of PlaceType
+            PlaceType should be closed if in place closure intervention
+
+        """
+        if (hasattr(self.microcell, 'closure_start_time')) and (
+                self.microcell.closure_start_time is not None):
+            for place_type in self.place_types:
+                if place_type.value in closure_place_type:
+                    return True
+        return False
 
     def vaccinate(self, time):
         self.is_vaccinated = True

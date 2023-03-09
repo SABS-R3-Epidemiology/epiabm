@@ -15,7 +15,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         """Sets up two populations we can use throughout the test.
         3 people are located in one microcell.
         """
-        # Example coefficients for StateTransition<atrix
+        # Example coefficients for StateTransitionMatrix
 
         self.coefficients = {
             "prob_exposed_to_asympt": 0.4,
@@ -228,7 +228,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
                 test_sweep.update_next_infection_status(person)
                 test_sweep.update_time_status_change(person, current_time)
                 time_of_status_change = person.time_of_status_change
-                if person.infection_status.name in ['Recovered', 'Dead']:
+                if person.infection_status.name in ['Recovered', 'Dead',
+                                                    'Vaccinated']:
                     self.assertEqual(time_of_status_change, np.inf)
                 elif person.infection_status.name in ['InfectMild',
                                                       'InfectGP']:
@@ -246,7 +247,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         test_sweep.update_next_infection_status(person)
 
         test_sweep.transition_time_matrix =\
-            pe.utility.TransitionTimeMatrix().matrix
+            pe.sweep.TransitionTimeMatrix().matrix
         with self.assertRaises(ValueError):
             test_sweep.update_time_status_change(person, 1.0)
 

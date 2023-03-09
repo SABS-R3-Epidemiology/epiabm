@@ -26,7 +26,6 @@ class SpatialSweep(AbstractSweep):
     exposed person is added to an infection queue.
 
     """
-
     def __call__(self, time: float):
         """
         Given a population structure, loops over cells and generates
@@ -113,40 +112,25 @@ class SpatialSweep(AbstractSweep):
         """
         infectee_list = []
         # Chooses a list of cells (with replacement) for each infection
-        # event to occur in. Specifically inter-cell infections
-        # so can't be the same cell.
+        # event to occur in.
+        # Specifically inter-cell infections so can't be the same cell.
         distance_weights = []
-        for cell2 in possible_infectee_cells:
-            try:
-                distance_weights.append(1/DistanceFunctions.dist(
-                            infector_cell.location, cell2.location))
-            except ZeroDivisionError:
-                # If cells are on top of each other use nan placeholder
-                distance_weights.append(np.nan)
-        # Cells on top of each currently have a distance weight equal
-        # to the maximum of all other weights.
-        # Possibly want to do twice this.
-        number_of_nans = sum(np.isnan(distance_weights))
-        if number_of_nans == len(distance_weights):
-            distance_weights = [1 for _ in distance_weights]
-        elif number_of_nans > 0:
-            max_weight = np.nanmax(distance_weights)
-            distance_weights = np.nan_to_num(distance_weights,
-                                             nan=max_weight)
         # Use of the cutoff distance idea from CovidSim.
         cutoff = Parameters.instance().infection_radius
-        distance_weights = [weight if (cutoff > 1/weight) else 0
-                            for weight in distance_weights]
         # Will catch the case if distance weights isn't configured
         # correctly and returns the wrong length.
-        assert len(distance_weights) == len(possible_infectee_cells), (
-            "Distance weights are not the same length as cell list")
+        actual_infectee_cells = []
+        for cell2 in possible_infectee_cells:
+            if cell2.id in infector_cell.nearby_cells.keys():
+                distance_weights.append(
+                    1/infector_cell.nearby_cells.get(cell2.id))
+                actual_infectee_cells.append(cell2)
 
         try:
             # Will catch a list of zeros
             if sum(distance_weights) == 0:
                 raise ValueError
-            cell_list = random.choices(possible_infectee_cells,
+            cell_list = random.choices(actual_infectee_cells,
                                        weights=distance_weights,
                                        k=number_to_infect)
         except ValueError as e:
@@ -154,7 +138,7 @@ class SpatialSweep(AbstractSweep):
                               + f" within radius {cutoff} of"
                               + f" cell {infector_cell.id} at location"
                               + f" {infector_cell.location} - skipping cell.")
-            # This returns an empty list so no infection events tested.
+            # This returns an empty list so no infection events are tested.
             return infectee_list
 
         # Each infection event corresponds to a infectee cell
@@ -254,8 +238,8 @@ class SpatialSweep(AbstractSweep):
         # force of infection specific to cells and people
         # involved in the infection event
         force_of_infection = SpatialInfection.\
-            space_foi(infector.microcell.cell, infectee.microcell.cell,
-                      infector, infectee, time)
+            spatial_foi(infector.microcell.cell, infectee.microcell.cell,
+                        infector, infectee, time)
 
         # Compare a uniform random number to the force of
         # infection to see whether an infection event
@@ -264,3 +248,9 @@ class SpatialSweep(AbstractSweep):
         r = random.random()
         if r < force_of_infection:
             infectee.microcell.cell.enqueue_person(infectee)
+
+    def bind_population(self, population):
+        super().bind_population(population)
+        for cell in population.cells:
+            other_cells = [x for x in population.cells if x != cell]
+            cell.find_nearby_cells(other_cells)

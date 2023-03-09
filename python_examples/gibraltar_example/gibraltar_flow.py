@@ -85,6 +85,7 @@ SIRdf = SIRdf.groupby(["time"]).agg(
 SIRdf.rename(columns={"InfectionStatus.Susceptible": "Susceptible",
                       "InfectionStatus.Recovered": "Recovered"},
              inplace=True)
+
 # Create plot to show SIR curves against time
 SIRdf.plot(y=["Susceptible", "Infected", "Recovered"])
 plt.savefig(os.path.join(os.path.dirname(__file__),

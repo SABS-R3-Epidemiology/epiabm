@@ -48,3 +48,6 @@ class Vaccination(AbstractIntervention):
             person = self._population.vaccine_queue.get()[2]
             person.vaccinate(time)
             number_vaccinated += 1
+
+    def turn_off(self):
+        return

@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 import pyEpiabm as pe
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
@@ -67,6 +67,12 @@ class TestPerson(TestPyEpiabm):
         self.assertEqual(
             self.person.infection_status,
             pe.property.InfectionStatus.InfectMild)
+        self.person.household = MagicMock()
+        self.person.update_status(pe.property.InfectionStatus.Exposed)
+        self.assertEqual(
+            self.person.infection_status,
+            pe.property.InfectionStatus.Exposed)
+        self.assertEqual(len(self.person.household.susceptible_persons), 0)
 
     def test_configure_place(self):
         # Tests both the add and remove functions
@@ -84,6 +90,20 @@ class TestPerson(TestPyEpiabm):
         self.person.remove_place(test_place)
         self.assertEqual(len(self.person.places), 0)
         self.assertRaises(KeyError, self.person.remove_place, test_place_2)
+
+    def test_is_place_closed(self):
+        closure_place_type = pe.Parameters.instance().intervention_params[
+            'place_closure']['closure_place_type']
+        # Not in place closure
+        self.assertFalse(hasattr(self.person.microcell, 'closure_start_time'))
+        self.assertFalse(self.person.is_place_closed(closure_place_type))
+        # Place closure time starts but the place is not in closure_place_type
+        self.person.microcell.closure_start_time = 1
+        self.person.place_types.append(pe.property.PlaceType.Workplace)
+        self.assertFalse(self.person.is_place_closed(closure_place_type))
+        # Place closure time starts and the place is in closure_place_type
+        self.person.place_types.append(pe.property.PlaceType.PrimarySchool)
+        self.assertTrue(self.person.is_place_closed(closure_place_type))
 
     def test_vaccinate(self):
         self.person.vaccinate(time=5)

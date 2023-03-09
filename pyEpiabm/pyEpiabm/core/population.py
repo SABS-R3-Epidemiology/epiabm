@@ -1,16 +1,14 @@
 #
 # Population Class
 #
-
 from queue import PriorityQueue
 
 from .cell import Cell
 from .person import Person
 
-
 class Population:
     """Class representing a Population.
-    Collection of :class:`Cell` s.
+    Collection of :class:`Cell` s.
 
     """
     def __init__(self):
