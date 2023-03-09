@@ -7,6 +7,11 @@ from pyEpiabm.tests import TestFunctional
 from pyEpiabm.tests.test_func import HelperFunc
 
 
+@patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
+@patch('pyEpiabm.output._CsvDictWriter.write', Mock())
+@patch('os.makedirs', Mock())
+@patch("pandas.DataFrame.to_csv")
+@patch("pandas.read_csv")
 class TestIsolationFunctional(TestFunctional):
     """Functional testing of case isolation intervention. Conducts
     case isolation intervention simulations with known
@@ -27,11 +32,6 @@ class TestIsolationFunctional(TestFunctional):
             "isolation_house_effectiveness": 0}
         }
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_isolation_present(self, mock_read, mock_csv):
         """Case isolation functional test to ensure more people will be
         susceptible when case isolation intervention is present.
@@ -60,11 +60,6 @@ class TestIsolationFunctional(TestFunctional):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_isolation.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_threshold_num(self, mock_read, mock_csv):
         """Case isolation functional test to ensure more people will be
         susceptible when the threshold of infectious individuals to start
@@ -93,11 +88,6 @@ class TestIsolationFunctional(TestFunctional):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_delay_days(self, mock_read, mock_csv):
         """Case isolation functional test to ensure more people will be
         susceptible when the number of delay days is fewer than the other.
@@ -125,11 +115,6 @@ class TestIsolationFunctional(TestFunctional):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_duration_days(self, mock_read, mock_csv):
         """Case isolation functional test to ensure more people will be
         susceptible when the number of case isolation duration days is
@@ -158,11 +143,6 @@ class TestIsolationFunctional(TestFunctional):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_isolation_prob(self, mock_read, mock_csv):
         """Case isolation functional test to ensure fewer people will be
         susceptible when its isolation probability is less than the other.
@@ -190,11 +170,6 @@ class TestIsolationFunctional(TestFunctional):
         HelperFunc().compare_susceptible_groups(
              pop_standard.cells, pop.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_isolation_effectiveness(self, mock_read, mock_csv):
         """Case isolation functional test to ensure more people will be
         susceptible when its isolation effectiveness is lower than the other.

@@ -7,6 +7,11 @@ from pyEpiabm.tests import TestFunctional
 from pyEpiabm.tests.test_func import HelperFunc
 
 
+@patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
+@patch('pyEpiabm.output._CsvDictWriter.write', Mock())
+@patch('os.makedirs', Mock())
+@patch("pandas.DataFrame.to_csv")
+@patch("pandas.read_csv")
 class TestQuarantineFunctional(TestFunctional):
     """Functional testing of household quarantine intervention. Conducts
     household quarantine intervention simulations with known
@@ -39,11 +44,6 @@ class TestQuarantineFunctional(TestFunctional):
         }
         }
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_quarantine_present(self, mock_read, mock_csv):
         """Household quarantine functional test to ensure more people will be
         susceptible when household quarantine intervention is present.

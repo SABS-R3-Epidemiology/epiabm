@@ -7,6 +7,11 @@ from pyEpiabm.tests import TestFunctional
 from pyEpiabm.tests.test_func import HelperFunc
 
 
+@patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
+@patch('pyEpiabm.output._CsvDictWriter.write', Mock())
+@patch('os.makedirs', Mock())
+@patch("pandas.DataFrame.to_csv")
+@patch("pandas.read_csv")
 class TestDistancingFunctional(TestFunctional):
     """Functional testing of social distancing intervention. Conducts
     social distancing intervention simulations with known
@@ -34,11 +39,6 @@ class TestDistancingFunctional(TestFunctional):
         }
         }
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_distancing_present(self, mock_read, mock_csv):
         """Social distancing functional test to ensure more people will be
         susceptible when social distancing intervention is present.
@@ -67,11 +67,6 @@ class TestDistancingFunctional(TestFunctional):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_distancing.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_spatial_enhanced_large(self, mock_read, mock_csv):
         """Social distancing functional test to ensure fewer people will be
         susceptible when spatial enhanced susceptibility increases.
@@ -100,11 +95,6 @@ class TestDistancingFunctional(TestFunctional):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_prob_lower(self, mock_read, mock_csv):
         """Social distancing functional test to ensure people within the
         age group of lower enhanced social distancing probability

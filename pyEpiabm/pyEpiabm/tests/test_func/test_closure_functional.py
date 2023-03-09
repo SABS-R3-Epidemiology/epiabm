@@ -7,6 +7,11 @@ from pyEpiabm.tests import TestFunctional
 from pyEpiabm.tests.test_func import HelperFunc
 
 
+@patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
+@patch('pyEpiabm.output._CsvDictWriter.write', Mock())
+@patch('os.makedirs', Mock())
+@patch("pandas.DataFrame.to_csv")
+@patch("pandas.read_csv")
 class TestClosureFunctional(TestFunctional):
     """Functional testing of place closure intervention. Conducts
     place closure intervention simulations with known
@@ -28,11 +33,6 @@ class TestClosureFunctional(TestFunctional):
         }
         }
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_closure_present(self, mock_read, mock_csv):
         """Place closure functional test to ensure more people will be
         susceptible when place closure intervention is present.
@@ -61,11 +61,6 @@ class TestClosureFunctional(TestFunctional):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_closure.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_no_closure_type(self, mock_read, mock_csv):
         """Place closure functional test to ensure when no place
         closed type is specified, there is no effect of place closure
@@ -95,11 +90,6 @@ class TestClosureFunctional(TestFunctional):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_closure.cells, method='equal')
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_closure_type_large(self, mock_read, mock_csv):
         """Place closure functional test to ensure more people will be
         susceptible when more types of places are closed.
@@ -128,11 +118,6 @@ class TestClosureFunctional(TestFunctional):
         HelperFunc().compare_susceptible_groups(
              pop_standard.cells, pop.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_spatial_params_large(self, mock_read, mock_csv):
         """Place closure functional test to ensure fewer people will be
         susceptible when closure spatial params increases due to
@@ -162,11 +147,6 @@ class TestClosureFunctional(TestFunctional):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_microcell_threshold_extreme(self, mock_read, mock_csv):
         """Place closure functional test to ensure when the case
         threshold at microcell level exceeds the number of individuals,
@@ -198,11 +178,6 @@ class TestClosureFunctional(TestFunctional):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_closure.cells, method='equal')
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_microcell_threshold_large(self, mock_read, mock_csv):
         """Place closure functional test to ensure fewer people will be
         susceptible when setting larger case threshold at microcell level.
