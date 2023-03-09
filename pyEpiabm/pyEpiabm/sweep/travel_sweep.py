@@ -38,7 +38,8 @@ class TravelSweep(AbstractSweep):
         self.travellers = []
 
     def __call__(self, time: float):
-        """ Based on number of infected cases in population, infected
+        """
+        Based on number of infected cases in population, infected
         individuals are introduced to the population for a certain
         period. They are distributed over the microcells based on
         population density. They are not assigned permanently to

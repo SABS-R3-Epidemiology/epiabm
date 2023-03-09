@@ -25,10 +25,12 @@ class InterventionSweep(AbstractSweep):
                                       is symptomatic.
             * `social distancing`: Social distancing if number of infectious
                                people exceeds the threshold.
+
     """
 
     def __init__(self):
         """Call in variables from the parameters file and set flags.
+
         """
         # Implemented interventions and their activity status
         self.intervention_active_status = {}
@@ -53,6 +55,7 @@ class InterventionSweep(AbstractSweep):
         ----------
         time : float
             Simulation time
+
         """
         for intervention in self.intervention_active_status.keys():
             # TODO:
