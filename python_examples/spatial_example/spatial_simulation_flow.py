@@ -42,27 +42,28 @@ population = pe.routine.FilePopulationFactory.make_pop(file_loc,
 
 
 # Configure population with input data
-# pe.routine.ToyPopulationFactory.assign_cell_locations(population)
 pe.routine.ToyPopulationFactory.add_places(population, 1)
 # pe.routine.FilePopulationFactory.print_population(population, file_loc)
 
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 30,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
 file_params = {"output_file": "output.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
                                           "spatial_outputs"),
-               "spatial_output": True}
+               "spatial_output": True, "age_stratified": False}
 
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.
 sim = pe.routine.Simulation()
 sim.configure(
     population,
-    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
+    [pe.sweep.InitialInfectedSweep(),
+     pe.sweep.InitialisePlaceSweep(),
+     pe.sweep.InitialHouseholdSweep()],
     [
         pe.sweep.UpdatePlaceSweep(),
         pe.sweep.HouseholdSweep(),

@@ -12,8 +12,6 @@ Overview:
 - :class:`InverseCdf`
 - :class:`RandomMethods`
 - :class:`SpatialKernel`
-- :class:`StateTransitionMatrix`
-- :class:`TransitionTimeMatrix`
 
 .. autoclass:: DistanceFunctions
     :members:
@@ -27,12 +25,5 @@ Overview:
 .. autoclass:: SpatialKernel
     :members:
 
-.. autoclass:: StateTransitionMatrix
-    :members:
-
-.. autoclass:: TransitionTimeMatrix
-    :members:
-
 .. autofunction:: log_exceptions
 
-.. autofunction:: py2c_population

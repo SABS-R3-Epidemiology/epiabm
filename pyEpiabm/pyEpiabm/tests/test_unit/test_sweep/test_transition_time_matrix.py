@@ -4,7 +4,7 @@ from enum import Enum
 
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.utility import TransitionTimeMatrix
+from pyEpiabm.sweep import TransitionTimeMatrix
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
