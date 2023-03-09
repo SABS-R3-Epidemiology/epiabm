@@ -7,7 +7,6 @@ from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 class TestVaccination(TestPyEpiabm):
     """ Test the 'Vaccination' class
-        This class takes people from the queue and vaccinates them.
     """
 
     def setUp(self) -> None:
