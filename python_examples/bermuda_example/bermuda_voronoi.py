@@ -15,6 +15,7 @@ from scipy.spatial import Voronoi, voronoi_plot_2d
 
 import geopandas as gpd
 from shapely import Polygon
+
 import glob
 from PIL import Image
 
@@ -302,10 +303,24 @@ def generate_animation(
     times = np.unique(times)
 
     fig = plt.figure()
-    ax = plt.axes(
-        xlim=(grid_lim[0][0], grid_lim[0][1]),
-        ylim=(grid_lim[1][0], grid_lim[1][1])
-    )
+    # ax = plt.axes(
+    #     xlim=(grid_lim[0][0], grid_lim[0][1]),
+    #     ylim=(grid_lim[1][0], grid_lim[1][1])
+    # )
+    img_extent = (-65, -64.5, 32, 32.45)
+    # img = plt.imread(fname)
+
+    ax = plt.axes(projection=ccrs.PlateCarree())
+    plt.title('Bermuda Outline')
+
+    ax.use_sticky_edges = False
+    # set a margin around the data
+    ax.set_xmargin(0.05)
+    ax.set_ymargin(0.10)
+    ax.set_extent([-65, -64.5, 32, 32.45], crs=ccrs.PlateCarree())
+
+    # ax.add_feature(cartopy.feature.OCEAN, color='cornflowerblue', alpha=1, zorder=1000)
+    # ax.add_feature(cartopy.feature.COASTLINE, color='black', alpha=1, zorder=1001)
 
     def animate(i):
         temp_fig, temp_ax = plot_time_point(df, vor, name, i, grid_lim, ax,
