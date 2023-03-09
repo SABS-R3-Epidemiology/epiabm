@@ -6,25 +6,15 @@ from unittest.mock import patch, mock_open, Mock
 
 import pyEpiabm as pe
 from pyEpiabm.property.infection_status import InfectionStatus
+from pyEpiabm.tests import TestFunctional
+from pyEpiabm.tests.test_func import HelperFunc
 
 
-class TestSimFunctional(unittest.TestCase):
+class TestSimFunctional(TestFunctional):
     """Functional testing of basic simulations. Conducts basic
     simulations with known results/properties to ensure code functions as
     desired.
     """
-    @classmethod
-    def setUpClass(cls) -> None:
-        super(TestSimFunctional, cls).setUpClass()
-        cls.warning_patcher = patch('logging.warning')
-        cls.error_patcher = patch('logging.error')
-
-        cls.warning_patcher.start()
-        cls.error_patcher.start()
-
-        filepath = os.path.join(os.path.dirname(__file__),
-                                os.pardir, 'testing_parameters.json')
-        pe.Parameters.set_file(filepath)
 
     def setUp(self) -> None:
         self.pop_params = {"population_size": 100, "cell_number": 1,
@@ -39,19 +29,6 @@ class TestSimFunctional(unittest.TestCase):
                             "spatial_output": False,
                             "age_stratified": True}
 
-    @classmethod
-    def tearDownClass(cls):
-        super(TestSimFunctional, cls).tearDownClass()
-        cls.warning_patcher.stop()
-        cls.error_patcher.stop()
-        if pe.Parameters._instance:
-            pe.Parameters._instance = None
-
-    def notqdm(iterable, *args, **kwargs):
-        """Replacement for tqdm that just passes back the iterable
-        useful to silence `tqdm` in tests
-        """
-        return iterable
 
     def toy_simulation(pop_params, sim_params, file_params):
         # Create a population based on the parameters given.
@@ -97,7 +74,7 @@ class TestSimFunctional(unittest.TestCase):
         del sim
         return population
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write')
     @patch('os.makedirs')
     def test_population_conservation(self, mock_mkdir, mock_output):
@@ -142,7 +119,7 @@ class TestSimFunctional(unittest.TestCase):
         mock_output_count = iter_num * nb_age_group * cell_count
         self.assertEqual(mock_output.call_count, mock_output_count)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs')
     def test_total_infection(self, mock_mkdir):
@@ -174,7 +151,7 @@ class TestSimFunctional(unittest.TestCase):
                               "test_folder/integration_tests")
         mock_mkdir.assert_called_with(folder)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     def test_no_infection(self):
@@ -196,7 +173,7 @@ class TestSimFunctional(unittest.TestCase):
                 if status != InfectionStatus.Susceptible:
                     self.assertEqual(np.sum(count), 0)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
@@ -235,7 +212,7 @@ class TestSimFunctional(unittest.TestCase):
                          file_input['Susceptible'][1])
         self.assertEqual(np.sum(cell_data_1[InfectionStatus.Recovered]), 0)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")

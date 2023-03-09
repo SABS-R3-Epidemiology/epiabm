@@ -32,7 +32,7 @@ class TestFunctional(TestPyEpiabm):
         cls.warning_patcher.stop()
         cls.error_patcher.stop()
 
-    @classmethod
+    @staticmethod
     def notqdm(iterable, *args, **kwargs):
         """Replacement for tqdm that just passes back the iterable
         useful to silence `tqdm` in tests

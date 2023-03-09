@@ -41,7 +41,8 @@ class TestClosureFunctional(TestFunctional):
         }
 
 
-    def file_simulation(pop_file, sim_params, file_params, sweep_list):
+    @classmethod
+    def file_simulation(self, pop_file, sim_params, file_params, sweep_list):
         # Create a population based on the parameters given.
         population = pe.routine.FilePopulationFactory.make_pop(
             pop_file, random_seed=42)

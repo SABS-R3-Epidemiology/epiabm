@@ -4,27 +4,15 @@ import unittest
 from unittest.mock import patch, mock_open, Mock
 
 import pyEpiabm as pe
+from pyEpiabm.tests import TestFunctional
+from pyEpiabm.tests.test_func import HelperFunc
 
-from helper_func import HelperFunc
 
-
-class TestIsolationFunctional(unittest.TestCase):
+class TestIsolationFunctional(TestFunctional):
     """Functional testing of case isolation intervention. Conducts
     case isolation intervention simulations with known
     results/properties to ensure code functions as desired.
     """
-    @classmethod
-    def setUpClass(cls) -> None:
-        super(TestIsolationFunctional, cls).setUpClass()
-        cls.warning_patcher = patch('logging.warning')
-        cls.error_patcher = patch('logging.error')
-
-        cls.warning_patcher.start()
-        cls.error_patcher.start()
-
-        filepath = os.path.join(os.path.dirname(__file__),
-                                os.pardir, 'testing_parameters.json')
-        pe.Parameters.set_file(filepath)
 
     def setUp(self) -> None:
         self.pop_params = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
@@ -50,20 +38,6 @@ class TestIsolationFunctional(unittest.TestCase):
             "isolation_effectiveness": 0,
             "isolation_house_effectiveness": 0}
         }
-
-    @classmethod
-    def tearDownClass(cls):
-        super(TestIsolationFunctional, cls).tearDownClass()
-        cls.warning_patcher.stop()
-        cls.error_patcher.stop()
-        if pe.Parameters._instance:
-            pe.Parameters._instance = None
-
-    def notqdm(iterable, *args, **kwargs):
-        """Replacement for tqdm that just passes back the iterable
-        useful to silence `tqdm` in tests
-        """
-        return iterable
 
     def file_simulation(pop_file, sim_params, file_params, sweep_list):
         # Create a population based on the parameters given.
@@ -91,7 +65,7 @@ class TestIsolationFunctional(unittest.TestCase):
         del sim
         return population
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
@@ -124,7 +98,7 @@ class TestIsolationFunctional(unittest.TestCase):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_isolation.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
@@ -157,7 +131,7 @@ class TestIsolationFunctional(unittest.TestCase):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
@@ -189,7 +163,7 @@ class TestIsolationFunctional(unittest.TestCase):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
@@ -222,7 +196,7 @@ class TestIsolationFunctional(unittest.TestCase):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
@@ -254,7 +228,7 @@ class TestIsolationFunctional(unittest.TestCase):
         HelperFunc().compare_susceptible_groups(
              pop_standard.cells, pop.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
