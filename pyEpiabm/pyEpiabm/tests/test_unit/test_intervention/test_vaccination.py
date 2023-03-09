@@ -29,6 +29,8 @@ class TestVaccination(TestPyEpiabm):
             person = self._population.cells[0].microcells[0].persons[i]
             person.age = ages[i]
 
+        self.person_90_yo = self._population.cells[0].persons[0]
+
         test_sweep = pe.sweep.InitialVaccineQueue()
         test_sweep.bind_population(self._population)
         for per in self._population.cells[0].microcells[0].persons:
@@ -41,7 +43,7 @@ class TestVaccination(TestPyEpiabm):
         # check the first person in the queue is the 90 year old
         # queue[0][2] takes the data stored in the first element of the queue
         self.assertEqual(self._population.vaccine_queue.queue[0][2],
-                         self._population.cells[0].persons[0])
+                         self.person_90_yo)
 
     def test__init__(self):
         self.assertEqual(self.vaccination.daily_doses,
@@ -56,11 +58,10 @@ class TestVaccination(TestPyEpiabm):
     def test__call__(self):
         self.vaccination(time=5)
         self.assertEqual(self._population.vaccine_queue.qsize(), 3)
-        self.assertTrue(self._population.cells[0].persons[0]
+        self.assertTrue(self.person_90_yo
                         not in self._population.vaccine_queue.queue)
-        self.assertTrue(self._population.cells[0].persons[0].is_vaccinated)
-        self.assertEqual(self._population.cells[0].persons[0].date_vaccinated,
-                         5)
+        self.assertTrue(self.person_90_yo.is_vaccinated)
+        self.assertEqual(self.person_90_yo.date_vaccinated, 5)
 
 
 if __name__ == '__main__':

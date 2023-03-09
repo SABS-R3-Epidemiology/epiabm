@@ -6,7 +6,8 @@ from pyEpiabm.intervention import AbstractIntervention
 
 
 class Vaccination(AbstractIntervention):
-    """Vaccination intervention
+    """Vaccination intervention to vaccinate people in the vaccination queue
+    according to the per day national vaccination capacity.
     For a description of this intervention see
     https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#vaccination
 
