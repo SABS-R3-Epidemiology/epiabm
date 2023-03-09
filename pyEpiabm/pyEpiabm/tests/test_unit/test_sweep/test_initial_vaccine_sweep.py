@@ -49,7 +49,7 @@ class TestVaccinationSweep(TestPyEpiabm):
         self.assertIsNone(priority_list[4])
 
     @mock.patch("pyEpiabm.core.Parameters.instance")
-    @mock.patch("logging.warning")
+    @mock.patch("logging.error")
     def test_warning(self, mock_log, mock_params):
         mock_params.return_value.intervention_params = {}
         pe.sweep.InitialVaccineQueue()

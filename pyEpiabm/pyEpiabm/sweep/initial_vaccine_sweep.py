@@ -30,7 +30,7 @@ class InitialVaccineQueue(AbstractSweep):
             self.prob_by_age = vaccine_params["prob_vaccinated"]
 
         else:
-            logging.warning("InitialVaccineQueue is being run but no " +
+            logging.error("InitialVaccineQueue is being run but no " +
                             "vaccination parameters are provided")
 
     def assign_priority_group(self, person, age_thresholds):
