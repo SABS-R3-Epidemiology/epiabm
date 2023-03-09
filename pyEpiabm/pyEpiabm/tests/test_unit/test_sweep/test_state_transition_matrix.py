@@ -7,7 +7,7 @@ import unittest
 from unittest import mock
 
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.utility import StateTransitionMatrix
+from pyEpiabm.sweep import StateTransitionMatrix
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
