@@ -250,4 +250,4 @@ class TravelSweep(AbstractSweep):
 
         if someone_is_leaving:
             self.travellers = [person for person in self.travellers if not
-                              self.check_leaving_individuals(time, person)]
+                               self.check_leaving_individuals(time, person)]
