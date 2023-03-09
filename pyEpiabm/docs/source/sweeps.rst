@@ -48,11 +48,11 @@ Overview:
     :members:
     :special-members: __call__
 
-.. autoclass:: InterventionSweep
+.. autoclass:: InitialVaccineQueue
     :members:
     :special-members: __call__
 
-.. autoclass:: InitialVaccineQueue
+.. autoclass:: InterventionSweep
     :members:
     :special-members: __call__
 

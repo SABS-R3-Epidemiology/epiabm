@@ -19,7 +19,7 @@ class Vaccination(AbstractIntervention):
         population,
         **kwargs
     ):
-        """ Set the parameters for vaccinations.
+        """Set the parameters for vaccinations.
 
         Parameters
         ----------
@@ -34,8 +34,8 @@ class Vaccination(AbstractIntervention):
         super(Vaccination, self).__init__(**kwargs, population=population)
 
     def __call__(self, time):
-        """ Move down the priority queue removing people and
-            vaccinating them.
+        """Move down the priority queue removing people and
+        vaccinating them.
 
         Parameters
         ----------
@@ -51,4 +51,7 @@ class Vaccination(AbstractIntervention):
             number_vaccinated += 1
 
     def turn_off(self):
+        # empty function since, unlike non-pharmacietical interventions, if
+        # mass vaccination ends already vaccinated individuals remain
+        # vaccinated.
         return

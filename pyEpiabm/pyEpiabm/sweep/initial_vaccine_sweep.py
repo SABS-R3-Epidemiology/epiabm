@@ -11,7 +11,7 @@ from .abstract_sweep import AbstractSweep
 
 
 class InitialVaccineQueue(AbstractSweep):
-    """ Runs through the eligible population and adds people to a priority
+    """Runs through the eligible population and adds people to a priority
     queue for vaccination, prioritised by age and added according to the
     uptake in each age group.
     For a description of how the method functions in the context of vaccination
@@ -20,8 +20,9 @@ class InitialVaccineQueue(AbstractSweep):
 
     """
     def __init__(self):
-        """ Call in age group and uptake parameters if vaccination parameters
-            are given.
+        """Call in age group and uptake parameters if vaccination parameters
+        are given.
+
         """
         if 'vaccine_params' in Parameters.instance().intervention_params:
             vaccine_params = Parameters.instance()\
@@ -34,9 +35,9 @@ class InitialVaccineQueue(AbstractSweep):
                           "vaccination parameters are provided")
 
     def assign_priority_group(self, person, age_thresholds):
-        """ Assigns priority group to each person based on age and whether
-            they are a carehome resident.
-            Lower numbers denote higher priority
+        """Assigns priority group to each person based on age and whether
+        they are a carehome resident.
+        Lower numbers denote higher priority
 
         Parameters
         ----------
@@ -49,6 +50,7 @@ class InitialVaccineQueue(AbstractSweep):
         ----------
         level : int
             Priority level of 1, 2, 3, or 4
+
         """
 
         level = None
@@ -67,10 +69,11 @@ class InitialVaccineQueue(AbstractSweep):
         return level
 
     def __call__(self, sim_params):
-        """ If vaccinations are to be performed, runs through the population
-            and adds people to a priority queue if elligible for vaccination
-            based on their priority level and the vaccination uptake in their
-            age group.
+        """If vaccinations are to be performed, runs through the population
+        and adds people to a priority queue if elligible for vaccination
+        based on their priority level and the vaccination uptake in their
+        age group.
+
         """
         if 'vaccine_params' in Parameters.instance().intervention_params:
             all_persons = [pers for cell in self._population.cells

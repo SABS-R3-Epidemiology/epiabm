@@ -201,5 +201,9 @@ class Person:
         return False
 
     def vaccinate(self, time):
+        """Used to set a persons vaccination status to vaccinated
+        if they are drawn from the vaccine queue.
+
+        """
         self.is_vaccinated = True
         self.date_vaccinated = time
