@@ -9,9 +9,9 @@ from collections import defaultdict
 import pyEpiabm as pe
 from pyEpiabm.core import Parameters, Person
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.utility import StateTransitionMatrix, TransitionTimeMatrix
 
 from .abstract_sweep import AbstractSweep
+from .transition_matrices import StateTransitionMatrix, TransitionTimeMatrix
 
 
 class HostProgressionSweep(AbstractSweep):
@@ -229,7 +229,7 @@ class HostProgressionSweep(AbstractSweep):
         # statuses (InfectMild or InfectGP), as is done in CovidSim.
         if person.infection_status in [InfectionStatus.InfectMild,
                                        InfectionStatus.InfectGP]:
-            transition_time += HostProgressionSweep().delay
+            transition_time += self.delay
         # Assigns the time of status change using current time and transition
         # time:
         if transition_time < 0:

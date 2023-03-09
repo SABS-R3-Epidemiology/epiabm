@@ -54,7 +54,9 @@ class DistanceFunctions:
             Euclidean distance between the two locations
 
         """
-        return np.linalg.norm(np.abs(np.asarray(loc1) - np.asarray(loc2)))
+        x1, y1 = loc1
+        x2, y2 = loc2
+        return ((x1-x2)**2+(y1-y2)**2)**(1/2)
 
     @staticmethod
     def dist_periodic(loc1: typing.Tuple[int, int],
