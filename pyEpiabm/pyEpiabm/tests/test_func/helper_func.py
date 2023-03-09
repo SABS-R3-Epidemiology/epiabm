@@ -13,6 +13,24 @@ class HelperFunc(unittest.TestCase):
 
     """
 
+    def assertNonZeroGreater(self, val_1, val_2):
+        """Require groups with nonzero populations to increase
+        in magnitude, but check for equality in groups with
+        zero values.
+
+        Parameters
+        ----------
+        val_1 : Numeric
+            Expected to be the larger value in comparison
+        val_2 : Numeric
+            Expected to be the smaller value in comparison
+            
+        """
+        if val_1 == 0:
+            self.assertEqual(val_1, val_2)
+        else:
+            self.assertGreater(val_1, val_2)
+
     def compare_susceptible_groups(self, small_pop, large_pop,
                                    status=InfectionStatus.Susceptible,
                                    method='greater'):
@@ -23,23 +41,23 @@ class HelperFunc(unittest.TestCase):
         ----------
         small_pop : list
             The population with fewer individuals
-        large_pop: list
+        large_pop : list
             The population with more individuals
-        status: InfectionStatus
+        status : InfectionStatus
             The infection status wants to be compared
-        method: string
+        method : string
             Specify if the comparing is for greater or equal or only equal
 
         """
         for age_group in range(len(pe.Parameters.instance().age_proportions)):
             with self.subTest(age_group=age_group):
                 if method == 'greater':
-                    self.assertGreaterEqual(
+                    self.assertNonZeroGreater(
                         large_pop[0].compartment_counter.retrieve()[
                             status][age_group],
                         small_pop[0].compartment_counter.retrieve()[
                             status][age_group])
-                    self.assertGreaterEqual(
+                    self.assertNonZeroGreater(
                         large_pop[1].compartment_counter.retrieve()[
                             status][age_group],
                         small_pop[1].compartment_counter.retrieve()[
