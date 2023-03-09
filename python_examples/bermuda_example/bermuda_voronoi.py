@@ -325,14 +325,18 @@ def generate_animation(
 # Read in the data from simulation output
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
                         "output_bermuda.csv")
-df = pd.read_csv(filename)
+df_old = pd.read_csv(filename)
+
+df = df_old.groupby(['time','location_x','location_y'], as_index=False).sum()
+df.to_csv('testy_testy.csv')
+
 
 locations = np.unique(
     np.transpose(np.stack((df["location_x"], df["location_y"]))), axis=0
 )
 
-max_x, max_y = np.ceil(np.amax(locations, axis=0))
-min_x, min_y = np.floor(np.amin(locations, axis=0))
+max_x, max_y = np.amax(locations, axis=0)
+min_x, min_y = np.amin(locations, axis=0)
 grid_limits = [[min_x, max_x], [min_y, max_y]]
 
 
@@ -345,7 +349,7 @@ locations = np.append(
 vor = Voronoi(locations)
 
 # Plot grid of time points
-fig_loc = ("python_examples/bermuda_example/bermuda_outputs/"
+fig_loc = ("python_examples/bermuda_example/simulation_outputs/"
            + "voronoi_grid_img.png")
 plot_time_grid(
     df,
@@ -357,7 +361,7 @@ plot_time_grid(
 )
 
 # Plot animation of simulation
-animation_path = ("python_examples/bermuda_example/bermuda_outputs/")
+animation_path = ("python_examples/bermuda_example/simulation_outputs/")
 anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
                           grid_lim=grid_limits, save_path=animation_path,
                           use_pillow=False)
