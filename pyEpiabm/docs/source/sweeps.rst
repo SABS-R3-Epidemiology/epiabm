@@ -19,6 +19,9 @@ Overview:
 - :class:`QueueSweep`
 - :class:`SpatialSweep`
 - :class:`UpdatePlaceSweep`
+- :class:`StateTransitionMatrix`
+- :class:`TransitionTimeMatrix`
+
 
 .. autoclass:: AbstractSweep
     :members:
@@ -61,5 +64,13 @@ Overview:
     :special-members: __call__
 
 .. autoclass:: UpdatePlaceSweep
+    :members:
+    :special-members: __call__
+
+.. autoclass:: StateTransitionMatrix
+    :members:
+    :special-members: __call__
+
+.. autoclass:: TransitionTimeMatrix
     :members:
     :special-members: __call__

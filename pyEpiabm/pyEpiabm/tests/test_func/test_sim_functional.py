@@ -2,14 +2,18 @@ import os
 import pandas as pd
 import numpy as np
 import unittest
-from unittest.mock import patch, mock_open, Mock
+from unittest.mock import patch, mock_open
 
 import pyEpiabm as pe
 from pyEpiabm.property.infection_status import InfectionStatus
 from pyEpiabm.tests import TestFunctional
-from pyEpiabm.tests.test_func import HelperFunc
 
 
+@patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
+@patch('pyEpiabm.output._CsvDictWriter.write')
+@patch('os.makedirs')
+@patch("pandas.DataFrame.to_csv")
+@patch("pandas.read_csv")
 class TestSimFunctional(TestFunctional):
     """Functional testing of basic simulations. Conducts basic
     simulations with known results/properties to ensure code functions as
@@ -29,7 +33,7 @@ class TestSimFunctional(TestFunctional):
                             "spatial_output": False,
                             "age_stratified": True}
 
-
+    @staticmethod
     def toy_simulation(pop_params, sim_params, file_params):
         # Create a population based on the parameters given.
         population = pe.routine.ToyPopulationFactory().make_pop(pop_params)
@@ -51,6 +55,7 @@ class TestSimFunctional(TestFunctional):
         del sim
         return population
 
+    @staticmethod
     def file_simulation(pop_file, sim_params, file_params, sweep_list):
         # Create a population based on the parameters given.
         population = pe.routine.FilePopulationFactory.make_pop(pop_file)
@@ -74,10 +79,7 @@ class TestSimFunctional(TestFunctional):
         del sim
         return population
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write')
-    @patch('os.makedirs')
-    def test_population_conservation(self, mock_mkdir, mock_output):
+    def test_population_conservation(self, *mocks):
         """Basic functional test with a more complex population
         to ensure the simulation conserves basic population properties
         such as cell number.
@@ -114,15 +116,12 @@ class TestSimFunctional(TestFunctional):
 
         folder = os.path.join(os.getcwd(),
                               "test_folder/integration_tests")
-        mock_mkdir.assert_called_with(folder)
+        mocks[2].assert_called_with(folder)  # Mock for mkdir()
         nb_age_group = len(pe.Parameters.instance().age_proportions)
         mock_output_count = iter_num * nb_age_group * cell_count
-        self.assertEqual(mock_output.call_count, mock_output_count)
+        self.assertEqual(mocks[3].call_count, mock_output_count)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs')
-    def test_total_infection(self, mock_mkdir):
+    def test_total_infection(self, *mocks):
         """Basic functional test to ensure everyone is infected when the entire
         population is placed in one large household.
         """
@@ -149,12 +148,9 @@ class TestSimFunctional(TestFunctional):
 
         folder = os.path.join(os.getcwd(),
                               "test_folder/integration_tests")
-        mock_mkdir.assert_called_with(folder)
+        mocks[2].assert_called_with(folder)  # Mock for mkdir()
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    def test_no_infection(self):
+    def test_no_infection(self, *mocks):
         """Basic functional test to ensure noone is infected when there are
         no initial cases in the entire population
         """
@@ -173,15 +169,11 @@ class TestSimFunctional(TestFunctional):
                 if status != InfectionStatus.Susceptible:
                     self.assertEqual(np.sum(count), 0)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
-    def test_segmented_infection(self, mock_read, mock_csv):
+    def test_segmented_infection(self, *mocks):
         """Basic functional test to ensure people cannot infect those
         outside their household (or microcell) without a spatial sweep.
         """
+        mock_read, mock_csv = mocks[:2]
         file_input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
                       'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
                       'household_number': [1, 1],
@@ -212,15 +204,11 @@ class TestSimFunctional(TestFunctional):
                          file_input['Susceptible'][1])
         self.assertEqual(np.sum(cell_data_1[InfectionStatus.Recovered]), 0)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
-    def test_small_cutoff(self, mock_read, mock_csv):
+    def test_small_cutoff(self, *mocks):
         """Basic functional test to ensure people cannot infect those
         outside theircell when the cut-off is sufficiently small.
         """
+        mock_read, mock_csv = mocks[:2]
         file_input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
                       'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
                       'household_number': [1, 1],

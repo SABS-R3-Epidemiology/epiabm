@@ -1,31 +1,24 @@
-import os
 import pandas as pd
 import unittest
-from unittest.mock import patch, mock_open, Mock
+from unittest.mock import patch, Mock
 
 import pyEpiabm as pe
 from pyEpiabm.tests import TestFunctional
 from pyEpiabm.tests.test_func import HelperFunc
 
 
+@patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
+@patch('pyEpiabm.output._CsvDictWriter.write', Mock())
+@patch('os.makedirs', Mock())
+@patch("pandas.DataFrame.to_csv")
+@patch("pandas.read_csv")
 class TestQuarantineFunctional(TestFunctional):
     """Functional testing of household quarantine intervention. Conducts
     household quarantine intervention simulations with known
     results/properties to ensure code functions as desired.
     """
     def setUp(self) -> None:
-        self.pop_params = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
-                           'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
-                           'household_number': [1, 1],
-                           'Susceptible': [800, 900], 'InfectMild': [10, 0]}
-        self.sim_params = {"simulation_start_time": 0,
-                           "simulation_end_time": 12,
-                           "initial_infected_number": 0}
-
-        self.file_params = {"output_file": "output.csv",
-                            "output_dir": "test_folder/integration_tests",
-                            "spatial_output": False,
-                            "age_stratified": True}
+        TestFunctional.setUpPopulation()
 
         self.intervention = {"case_isolation": {
             "start_time": 0,
@@ -51,37 +44,6 @@ class TestQuarantineFunctional(TestFunctional):
         }
         }
 
-    def file_simulation(pop_file, sim_params, file_params, sweep_list):
-        # Create a population based on the parameters given.
-        population = pe.routine.FilePopulationFactory.make_pop(
-            pop_file, random_seed=42)
-        pe.routine.FilePopulationFactory.print_population(population,
-                                                          "test.csv")
-
-        mo = mock_open()
-        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-            sim = pe.routine.Simulation()
-            sim.configure(
-                population,
-                [pe.sweep.InitialInfectedSweep(),
-                 pe.sweep.InitialisePlaceSweep(),
-                 pe.sweep.InitialHouseholdSweep()],
-                sweep_list,
-                sim_params,
-                file_params)
-
-            sim.run_sweeps()
-
-        # Need to close the writer object at the end of each simulation.
-        del sim.writer
-        del sim
-        return population
-
-    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
-    @patch('os.makedirs', Mock())
-    @patch("pandas.DataFrame.to_csv")
-    @patch("pandas.read_csv")
     def test_quarantine_present(self, mock_read, mock_csv):
         """Household quarantine functional test to ensure more people will be
         susceptible when household quarantine intervention is present.
@@ -95,13 +57,13 @@ class TestQuarantineFunctional(TestFunctional):
         # Enable case isolation
         pe.Parameters.instance().intervention_params = {
             "case_isolation": self.intervention['case_isolation']}
-        pop_isolation = TestQuarantineFunctional.file_simulation(
+        pop_isolation = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
         # Enable both case isolation and household quarantine
         pe.Parameters.instance().intervention_params = self.intervention
-        pop_quarantine = TestQuarantineFunctional.file_simulation(
+        pop_quarantine = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
