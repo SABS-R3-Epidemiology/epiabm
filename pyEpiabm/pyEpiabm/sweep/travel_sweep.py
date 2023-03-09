@@ -35,7 +35,7 @@ class TravelSweep(AbstractSweep):
         self.initial_cell = self.introduce_population.cells[0]
         self.initial_cell.add_microcells(1)
         self.initial_microcell = self.initial_cell.microcells[0]
-        self.travellers = []
+        self.travelers = []
 
     def __call__(self, time: float):
         """
@@ -91,7 +91,7 @@ class TravelSweep(AbstractSweep):
         if Parameters.instance().use_ages:
             # Age used in model
             age_prop = Parameters.instance().age_proportions
-            # Travellers are between 15-80 years
+            # Travelers are between 15-80 years
             age_prop_adjusted = [0.0 if i in [0, 1, 2, 16] else prop for
                                  i, prop in enumerate(age_prop)]
             w = age_prop_adjusted / sum(age_prop_adjusted)
@@ -137,8 +137,8 @@ class TravelSweep(AbstractSweep):
             person.next_infection_status = InfectionStatus.Recovered
             HostProgressionSweep.set_infectiousness(person, time)
             HostProgressionSweep().update_time_status_change(person, time)
-            # Store travellers
-            self.travellers.append(person)
+            # Store travelers
+            self.travelers.append(person)
 
     def assign_microcell_household(self, number_individuals_introduced):
         """
@@ -243,11 +243,11 @@ class TravelSweep(AbstractSweep):
 
         """
         someone_is_leaving = False
-        for person in self.travellers:
+        for person in self.travelers:
             if self.check_leaving_individuals(time, person):
                 someone_is_leaving = True
                 Person.remove_person(person)
 
         if someone_is_leaving:
-            self.travellers = [person for person in self.travellers if not
+            self.travelers = [person for person in self.travelers if not
                                self.check_leaving_individuals(time, person)]
