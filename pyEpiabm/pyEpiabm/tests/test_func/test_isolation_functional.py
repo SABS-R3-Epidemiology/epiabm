@@ -1,7 +1,6 @@
-import os
 import pandas as pd
 import unittest
-from unittest.mock import patch, mock_open, Mock
+from unittest.mock import patch, Mock
 
 import pyEpiabm as pe
 from pyEpiabm.tests import TestFunctional
@@ -15,18 +14,7 @@ class TestIsolationFunctional(TestFunctional):
     """
 
     def setUp(self) -> None:
-        self.pop_params = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
-                           'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
-                           'household_number': [1, 1],
-                           'Susceptible': [800, 900], 'InfectMild': [10, 0]}
-        self.sim_params = {"simulation_start_time": 0,
-                           "simulation_end_time": 15,
-                           "initial_infected_number": 0}
-
-        self.file_params = {"output_file": "output.csv",
-                            "output_dir": "test_folder/integration_tests",
-                            "spatial_output": False,
-                            "age_stratified": True}
+        TestFunctional.setUpPopulation()
 
         self.intervention = {"case_isolation": {
             "start_time": 0,
@@ -38,32 +26,6 @@ class TestIsolationFunctional(TestFunctional):
             "isolation_effectiveness": 0,
             "isolation_house_effectiveness": 0}
         }
-
-    def file_simulation(pop_file, sim_params, file_params, sweep_list):
-        # Create a population based on the parameters given.
-        population = pe.routine.FilePopulationFactory.make_pop(
-            pop_file, random_seed=42)
-        pe.routine.FilePopulationFactory.print_population(population,
-                                                          "test.csv")
-
-        mo = mock_open()
-        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-            sim = pe.routine.Simulation()
-            sim.configure(
-                population,
-                [pe.sweep.InitialInfectedSweep(),
-                 pe.sweep.InitialisePlaceSweep(),
-                 pe.sweep.InitialHouseholdSweep()],
-                sweep_list,
-                sim_params,
-                file_params)
-
-            sim.run_sweeps()
-
-        # Need to close the writer object at the end of each simulation.
-        del sim.writer
-        del sim
-        return population
 
     @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
@@ -81,13 +43,13 @@ class TestIsolationFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         # Without intervention
-        pop = TestIsolationFunctional.file_simulation(
+        pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise()[1:])
 
         # Enable case isolation
         pe.Parameters.instance().intervention_params = self.intervention
-        pop_isolation = TestIsolationFunctional.file_simulation(
+        pop_isolation = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
@@ -115,12 +77,12 @@ class TestIsolationFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        pop_standard = TestIsolationFunctional.file_simulation(
+        pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
         self.intervention['case_isolation']['case_threshold'] = 20
-        pop = TestIsolationFunctional.file_simulation(
+        pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
@@ -147,12 +109,12 @@ class TestIsolationFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        pop_standard = TestIsolationFunctional.file_simulation(
+        pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc().sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_delay'] = 10
-        pop = TestIsolationFunctional.file_simulation(
+        pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc().sweep_list_initialise())
 
@@ -180,12 +142,12 @@ class TestIsolationFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        pop_standard = TestIsolationFunctional.file_simulation(
+        pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_duration'] = 1
-        pop = TestIsolationFunctional.file_simulation(
+        pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
@@ -212,12 +174,12 @@ class TestIsolationFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        pop_standard = TestIsolationFunctional.file_simulation(
+        pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_probability'] = 1
-        pop = TestIsolationFunctional.file_simulation(
+        pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
@@ -244,12 +206,12 @@ class TestIsolationFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        pop_standard = TestIsolationFunctional.file_simulation(
+        pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_effectiveness'] = 0.5
-        pop = TestIsolationFunctional.file_simulation(
+        pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 

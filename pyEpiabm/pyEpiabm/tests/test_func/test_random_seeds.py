@@ -7,7 +7,6 @@ from unittest.mock import patch, mock_open
 
 import pyEpiabm as pe
 from pyEpiabm.tests import TestFunctional
-from pyEpiabm.tests.test_func import HelperFunc
 
 numReps = 2
 
@@ -138,7 +137,6 @@ class TestSimulationRandomSeeds(TestFunctional):
 
         cls.initial_sweeps = [pe.sweep.InitialInfectedSweep()]
         cls.sweeps = [pe.sweep.PlaceSweep()]
-
 
     @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write')

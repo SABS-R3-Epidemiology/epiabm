@@ -7,7 +7,6 @@ from unittest.mock import patch, mock_open, Mock
 import pyEpiabm as pe
 from pyEpiabm.property.infection_status import InfectionStatus
 from pyEpiabm.tests import TestFunctional
-from pyEpiabm.tests.test_func import HelperFunc
 
 
 class TestSimFunctional(TestFunctional):
@@ -28,7 +27,6 @@ class TestSimFunctional(TestFunctional):
                             "output_dir": "test_folder/integration_tests",
                             "spatial_output": False,
                             "age_stratified": True}
-
 
     def toy_simulation(pop_params, sim_params, file_params):
         # Create a population based on the parameters given.
