@@ -166,6 +166,8 @@ def plot_time_point(
             continue
         if -1 not in region:
             point_idx = np.where(vor.point_region == r)[0]
+            if len(vor.points[point_idx]) == 0:
+                continue
             point = vor.points[point_idx][0]
             if point_in_region(point, grid_lim):
                 value = find_value_for_region(current_data, point, name=name)
@@ -341,13 +343,12 @@ grid_limits = [[min_x, max_x], [min_y, max_y]]
 
 
 # Add 4 distant dummy points to ensure all cells are finite
-locations = np.append(
-    locations, [[999, 999], [-999, 999], [999, -999], [-999, -999]], axis=0
-)
+# locations = np.append(
+#     locations, [[999, 999], [-999, 999], [999, -999], [-999, -999]], axis=0
+# )
 
 # Compute and plot Tesselation
 vor = Voronoi(locations)
-
 # Plot grid of time points
 fig_loc = ("python_examples/bermuda_example/simulation_outputs/"
            + "voronoi_grid_img.png")
