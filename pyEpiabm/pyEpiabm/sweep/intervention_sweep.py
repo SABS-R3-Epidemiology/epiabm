@@ -48,8 +48,7 @@ class InterventionSweep(AbstractSweep):
                 population=self._population, **params))] = False
 
     def __call__(self, time):
-        """
-        Perform interventions that should take place.
+        """Perform interventions that should take place.
 
         Parameters
         ----------

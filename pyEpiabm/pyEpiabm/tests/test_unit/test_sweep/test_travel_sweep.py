@@ -13,8 +13,7 @@ class TestTravelSweep(TestPyEpiabm):
     """
 
     def setUp(self) -> None:
-        """
-        Construct a population with 20 individuals in 1 cells,
+        """Construct a population with 20 individuals in 1 cells,
         2 microcells and 4 households with 2 infectors. Note,
         ratio_introduce_cases can be used to introduce a certain
         number of individuals.
@@ -54,14 +53,14 @@ class TestTravelSweep(TestPyEpiabm):
                          pe.property.InfectionStatus.InfectMild)
 
     def test__call__(self):
-        """
-        Introduce 3 infected individuals. Of them, 2 are introduced due to
+        """Introduce 3 infected individuals. Of them, 2 are introduced due to
         ratio_introduce_cases and 1 due to constant_introduce_cases. All
         three individuals stay until a day between day 3 and 15. Introduce 0
         individuals at day 2 and remove the 3 individuals after their
         travel_end_time has passed. Set ratio_introduced_cases to zero after
         introducing these 2 individuals to prevent introducing more
-        individuals.
+        individuals and check if the population size is as expected at the
+        considered time points.
 
         """
         self.travelsweep.travel_params['ratio_introduce_cases'] = 1.0
@@ -77,11 +76,10 @@ class TestTravelSweep(TestPyEpiabm):
         self.assertEqual(len(self._population.cells[0].persons), 20)
 
     def test_create_introduced_individuals(self):
-        """
-        Create Person objects for the two infected individuals introduced with
-        and without using age in the model. When using age, their age_group
-        should be 5 and they should be asymptomatic. When age is not used,
-        their age should be None and they should still be asymptomatic.
+        """Create Person objects for the two infected individuals introduced
+        with and without using age in the model. When using age, their
+        age_group should be 5 and they should be asymptomatic. When age is not
+        used, their age should be None and they should still be asymptomatic.
 
         """
         # Using age
@@ -118,8 +116,7 @@ class TestTravelSweep(TestPyEpiabm):
                              InfectionStatus.InfectASympt)
 
     def test_assign_microcell_household(self):
-        """
-        Introduce one individual and assign to the microcell with the
+        """Introduce one individual and assign to the microcell with the
         highest population density. Individual starts their own household.
 
         """
@@ -133,8 +130,7 @@ class TestTravelSweep(TestPyEpiabm):
         self.assertEqual(len(self.microcell1.households), 3)
 
     def test_remove_leaving_individual(self):
-        """
-        Remove individuals introduced after their travel_end_time is
+        """Remove individuals introduced after their travel_end_time is
         passed and check if they are not in isolation and/or quarantine.
         If so, keep them in the population until isolation_start_time and/or
         quaratine_start_time has also passed.

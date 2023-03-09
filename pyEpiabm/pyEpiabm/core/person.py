@@ -201,14 +201,15 @@ class Person:
 
     def remove_person(self):
         """ Method to remove Person object from population.
+        Used to remove travellers from the population.
 
         """
         self.microcell.cell.compartment_counter.\
-            _increment_compartment(1, self.infection_status,
-                                   self.age_group, add_or_remove=False)
+            _increment_compartment(-1, self.infection_status,
+                                   self.age_group)
         self.microcell.compartment_counter.\
-            _increment_compartment(1, self.infection_status,
-                                   self.age_group, add_or_remove=False)
+            _increment_compartment(-1, self.infection_status,
+                                   self.age_group)
         self.microcell.cell.persons.remove(self)
         self.microcell.persons.remove(self)
         self.household.persons.remove(self)

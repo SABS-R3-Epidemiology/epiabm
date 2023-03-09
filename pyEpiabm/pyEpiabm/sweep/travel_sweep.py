@@ -14,7 +14,7 @@ from .abstract_sweep import AbstractSweep
 
 
 class TravelSweep(AbstractSweep):
-    """Class to manage the introduction and removing of
+    """Class to manage the introduction and removal of
     individuals. The number of individuals introduced
     depends on the number of total infectious cases in the
     population. All individuals are infectious when entering
@@ -26,7 +26,7 @@ class TravelSweep(AbstractSweep):
     """
 
     def __init__(self):
-        """Call in variables from the parameters file
+        """Call in variables from the parameters file.
 
         """
         self.travel_params = Parameters.instance().travel_params
@@ -38,8 +38,7 @@ class TravelSweep(AbstractSweep):
         self.travellers = []
 
     def __call__(self, time: float):
-        """
-        Based on number of infected cases in population, infected
+        """Based on number of infected cases in population, infected
         individuals are introduced to the population for a certain
         period. They are distributed over the microcells based on
         population density. They are not assigned permanently to
@@ -75,14 +74,13 @@ class TravelSweep(AbstractSweep):
             self.initial_cell.persons = []
             self.initial_microcell.persons = []
 
-        # Remove individuals if duration of stay passed
+        # Remove individuals if the duration of their stay has passed
         self.remove_leaving_individuals(time)
 
     def create_introduced_individuals(self, time,
                                       number_individuals_introduced):
-        """
-        Create individuals and assign them an age and infectious status. This
-        is based on age proportions if age is used in the model.
+        """Create individuals and assign them an age and infectious status.
+        This is based on age proportions if age is used in the model.
         Individuals are assigned an age between 15-80 years and are all
         infected (mild or asymptomatic).
 
@@ -149,8 +147,7 @@ class TravelSweep(AbstractSweep):
             self.travellers.append(person)
 
     def assign_microcell_household(self, number_individuals_introduced):
-        """
-        Assign individuals introduced to microcells based on population
+        """Assign individuals introduced to microcells based on population
         density of micorcells in the general population. Takes a number of
         microcells equal to the number_individuals_introduced (or max number
         of microcells) and assigns individuals randomly to one of these
@@ -204,8 +201,7 @@ class TravelSweep(AbstractSweep):
                 selected_microcell.add_household([person])
 
     def check_leaving_individuals(self, time, person):
-        """
-        Check if individuals travel_end_time is reached. If interventions
+        """Check if individuals travel_end_time is reached. If interventions
         are active and travelling individual is in isolation and/or quarantine
         individuals leave after their travel_end_time is reached and they are
         out of isolation and/or quarantine.
@@ -240,8 +236,7 @@ class TravelSweep(AbstractSweep):
         return False
 
     def remove_leaving_individuals(self, time):
-        """
-        Remove individuals after their travel_end_time is reached
+        """Remove individuals after their travel_end_time is reached
         from cell, microcell and household.
 
         Parameters
