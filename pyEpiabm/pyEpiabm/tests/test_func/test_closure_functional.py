@@ -1,36 +1,22 @@
-import os
 import pandas as pd
 import unittest
 from unittest.mock import patch, mock_open, Mock
 
 import pyEpiabm as pe
+from pyEpiabm.tests import TestFunctional
+from pyEpiabm.tests.test_func import HelperFunc
 
-from helper_func import HelperFunc
 
-
-class TestClosureFunctional(unittest.TestCase):
+class TestClosureFunctional(TestFunctional):
     """Functional testing of place closure intervention. Conducts
     place closure intervention simulations with known
     results/properties to ensure code functions as desired.
     """
-    @classmethod
-    def setUpClass(cls) -> None:
-        super(TestClosureFunctional, cls).setUpClass()
-        cls.warning_patcher = patch('logging.warning')
-        cls.error_patcher = patch('logging.error')
-
-        cls.warning_patcher.start()
-        cls.error_patcher.start()
-
-        filepath = os.path.join(os.path.dirname(__file__),
-                                os.pardir, 'testing_parameters.json')
-        pe.Parameters.set_file(filepath)
-
     def setUp(self) -> None:
         self.pop_params = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
                            'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
                            'household_number': [1, 1],
-                           'Susceptible': [800, 900], 'InfectMild': [10, 0],
+                           'Susceptible': [80, 90], 'InfectMild': [10, 0],
                            'place_number': 6}
         self.sim_params = {"simulation_start_time": 0,
                            "simulation_end_time": 15,
@@ -54,19 +40,6 @@ class TestClosureFunctional(unittest.TestCase):
         }
         }
 
-    @classmethod
-    def tearDownClass(cls):
-        super(TestClosureFunctional, cls).tearDownClass()
-        cls.warning_patcher.stop()
-        cls.error_patcher.stop()
-        if pe.Parameters._instance:
-            pe.Parameters._instance = None
-
-    def notqdm(iterable, *args, **kwargs):
-        """Replacement for tqdm that just passes back the iterable
-        useful to silence `tqdm` in tests
-        """
-        return iterable
 
     def file_simulation(pop_file, sim_params, file_params, sweep_list):
         # Create a population based on the parameters given.
@@ -94,7 +67,7 @@ class TestClosureFunctional(unittest.TestCase):
         del sim
         return population
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
@@ -127,7 +100,7 @@ class TestClosureFunctional(unittest.TestCase):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_closure.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
@@ -161,7 +134,7 @@ class TestClosureFunctional(unittest.TestCase):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_closure.cells, method='equal')
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
@@ -194,7 +167,7 @@ class TestClosureFunctional(unittest.TestCase):
         HelperFunc().compare_susceptible_groups(
              pop_standard.cells, pop.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
@@ -228,7 +201,7 @@ class TestClosureFunctional(unittest.TestCase):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_standard.cells)
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
@@ -264,7 +237,7 @@ class TestClosureFunctional(unittest.TestCase):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_closure.cells, method='equal')
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
     @patch('os.makedirs', Mock())
     @patch("pandas.DataFrame.to_csv")
