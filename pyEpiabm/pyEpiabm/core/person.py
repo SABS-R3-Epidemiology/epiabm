@@ -137,6 +137,13 @@ class Person:
             self.infection_status, new_status, self.age_group)
         self.infection_status = new_status
 
+        if self.infection_status == InfectionStatus.Susceptible and \
+                self.household is not None:
+            self.household.add_susceptible_person(self)
+        if self.infection_status == InfectionStatus.Exposed and \
+                self.household is not None:
+            self.household.remove_susceptible_person(self)
+
     def add_place(self, place, person_group: int = 0):
         """Method adds a place to the place list if the person visits
         or is associated with this place. Places are saved as a tuple

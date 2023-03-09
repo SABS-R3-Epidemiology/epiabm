@@ -23,6 +23,7 @@ Contents
     routines
     sweeps
     utility
+    py2c
 
 
 Search
