@@ -54,8 +54,16 @@ class TravelSweep(AbstractSweep):
         # Introduce number of individuals
         num_cases = sum(map(lambda cell: cell.number_infectious(),
                         self._population.cells))
-        number_individuals_introduced = math.floor(
+        num_individuals_introduced_ratio = math.floor(
             num_cases * self.travel_params['ratio_introduce_cases'])
+        if len(self.travel_params['constant_introduce_cases']) > 1:
+            num_individuals_introduced_constant = self.travel_params[
+                'constant_introduce_cases'][int(time)]
+        else:
+            num_individuals_introduced_constant = self.travel_params[
+                'constant_introduce_cases'][0]
+        number_individuals_introduced = num_individuals_introduced_ratio + \
+            num_individuals_introduced_constant
 
         if number_individuals_introduced >= 1:
             self.create_introduced_individuals(

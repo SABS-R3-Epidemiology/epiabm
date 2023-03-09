@@ -72,7 +72,7 @@ class _CompartmentCounter:
 
     def _increment_compartment(self, n_persons: int,
                                infection_status: InfectionStatus,
-                               age_group=0) -> None:
+                               age_group=0, add_or_remove=True) -> None:
         """Function to add a block of people with the same infection status
         and age group (if age is used) to a compartment.
 
@@ -85,12 +85,17 @@ class _CompartmentCounter:
             Status of people being added
         age_group : Age group index
             Person's associated age group
+        add_or_remove : bool
+            True means adding, False will subtract
 
         """
         # Initialisation of the age_counter array
         age_counter = np.zeros(self.nb_age_groups, dtype=int)
         age_counter[age_group] = n_persons
-        self._compartments[infection_status] += age_counter
+        if add_or_remove:
+            self._compartments[infection_status] += age_counter
+        else:
+            self._compartments[infection_status] -= age_counter
 
     def retrieve(self) -> typing.Dict[InfectionStatus, np.array]:
         """Get Compartment Counts.

@@ -40,12 +40,13 @@ class TestTravelSweep(TestPyEpiabm):
         self.initial_infected_person1.update_status(InfectionStatus(4))
         self.initial_infected_person2 = self.microcell2.persons[0]
         self.initial_infected_person2.update_status(InfectionStatus(4))
+        self.travelsweep.travel_params['constant_introduce_cases'] = [0]
 
         self.travelsweep.bind_population(self._population)
 
     def test_bind_population(self):
         self.assertEqual(len(self.travelsweep.
-                             travel_params), 3)
+                             travel_params), 4)
         self.test_sweep = pe.sweep.TravelSweep()
         self.test_sweep.bind_population(self._population)
         self.assertEqual(self.test_sweep._population.cells[0]
@@ -54,17 +55,24 @@ class TestTravelSweep(TestPyEpiabm):
 
     def test__call__(self):
         """
-        Introduce 2 infected individuals that stay until a day between
-        day 3 and 15 and remove them after their travel_end_time has passed.
-        Set ratio_introduced_cases to zero after introducing these 2
-        individuals to prevent introducing more individuals.
+        Introduce 3 infected individuals. Of them, 2 are introduced due to
+        ratio_introduce_cases and 1 due to constant_introduce_cases. All
+        three individuals stay until a day between day 3 and 15. Introduce 0
+        individuals at day 2 and remove the 3 individuals after their
+        travel_end_time has passed. Set ratio_introduced_cases to zero after
+        introducing these 2 individuals to prevent introducing more
+        individuals.
 
         """
         self.travelsweep.travel_params['ratio_introduce_cases'] = 1.0
+        self.travelsweep.travel_params['constant_introduce_cases'] = [1]
         self.travelsweep.travel_params['duration_travel_stay'] = [2, 14]
         self.travelsweep(time=1)
-        self.assertEqual(len(self._population.cells[0].persons), 22)
+        self.assertEqual(len(self._population.cells[0].persons), 23)
         self.travelsweep.travel_params['ratio_introduce_cases'] = 0.0
+        self.travelsweep.travel_params['constant_introduce_cases'] = [1, 1, 0]
+        self.travelsweep(time=2)
+        self.travelsweep.travel_params['constant_introduce_cases'] = [0]
         self.travelsweep(time=16)
         self.assertEqual(len(self._population.cells[0].persons), 20)
 

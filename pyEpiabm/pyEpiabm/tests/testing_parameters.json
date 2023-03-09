@@ -490,6 +490,7 @@
     },
     "travel_params": {
         "ratio_introduce_cases": 0.1,
+        "constant_introduce_cases": [2],
         "duration_travel_stay": [2, 14],
         "prob_existing_household": 0.8
     }
