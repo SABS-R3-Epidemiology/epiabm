@@ -11,7 +11,7 @@ from collections import defaultdict
 import pyEpiabm as pe
 from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.utility import StateTransitionMatrix, TransitionTimeMatrix
+from pyEpiabm.sweep import StateTransitionMatrix, TransitionTimeMatrix
 # csv input files should have the column headers:
 # time, infection_Status1, infection_status2, ..., age_range
 # so there will be multiple entries for each timepoint.

@@ -14,7 +14,7 @@ class SpatialInfection:
     @staticmethod
     def cell_inf(inf_cell, time: float):
         """Calculate the infectiousness of one cell
-        towards its neighbouring cells. Does not include interventions such
+        towards its nearby cells. Does not include interventions such
         as isolation, or whether individual is a carehome resident.
 
         Parameters
