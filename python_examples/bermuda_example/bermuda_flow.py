@@ -1,5 +1,5 @@
 #
-# Example simulation script running with Gibraltar parameters
+# Example simulation script running with Bermuda parameters
 # Incorporates both age and spatial stratification.
 #
 
@@ -39,7 +39,7 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
               "initial_infected_number": 100, "initial_infect_cell": True,
               "simulation_seed": 42}
 
-file_params = {"output_file": "output_gibraltar.csv",
+file_params = {"output_file": "output_bermuda.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
                                           "simulation_outputs"),
                "spatial_output": True,
@@ -73,7 +73,7 @@ del (sim)
 # Creation of a plot of results (plotter from spatial_simulation_flow)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
-                        "output_gibraltar.csv")
+                        "output_bermuda.csv")
 SIRdf = pd.read_csv(filename)
 total = SIRdf[list(SIRdf.filter(regex='InfectionStatus.Infect'))]
 SIRdf["Infected"] = total.sum(axis=1)
@@ -93,11 +93,11 @@ plt.savefig(os.path.join(os.path.dirname(__file__),
 # Creation of a plot of results with age stratification
 # if file_params["age_stratified"]:
 p = Plotter(os.path.join(os.path.dirname(__file__),
-            "simulation_outputs/output_gibraltar.csv"),
+            "simulation_outputs/output_bermuda.csv"),
             start_date='18-03-2022', sum_weekly=True)
 p.barchart(os.path.join(os.path.dirname(__file__),
            "simulation_outputs/age_stratify.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
-           "simulation_outputs/gibraltar_weeky_cases.csv"),
+           "simulation_outputs/bermuda_weeky_cases.csv"),
            param_file=os.path.join(os.path.dirname(__file__),
-           "gibraltar_parameters.json"))
+           "bermuda_parameters.json"))
