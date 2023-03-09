@@ -24,7 +24,7 @@ class HelperFunc(unittest.TestCase):
             Expected to be the larger value in comparison
         val_2 : Numeric
             Expected to be the smaller value in comparison
-            
+
         """
         if val_1 == 0:
             self.assertEqual(val_1, val_2)
