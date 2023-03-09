@@ -159,15 +159,14 @@ class TravelSweep(AbstractSweep):
         num_microcells_population = sum(len(cell.microcells) for cell in
                                         self._population.cells)
         microcells_to_choose_dict = {}
-        for i in range(min(number_individuals_introduced,
+        for _ in range(min(number_individuals_introduced,
                            num_microcells_population)):
             # Initialise with default microcell
             microcells_to_choose_dict[Microcell(self.initial_cell)] = 0
         # Find highest density microcells
         for possible_cell in self._population.cells:
             for possible_microcell in possible_cell.microcells:
-                density_microcells_list = list(
-                    microcells_to_choose_dict.values())
+                density_microcells_list = microcells_to_choose_dict.values()
                 if min(density_microcells_list) < len(
                         possible_microcell.persons):
                     # Remove old object
