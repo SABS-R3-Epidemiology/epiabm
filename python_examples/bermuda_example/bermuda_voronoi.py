@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from scipy.spatial import Voronoi, voronoi_plot_2d
 
+import geopandas as gpd
+from shapely import Polygon
 import glob
 from PIL import Image
 
@@ -158,8 +160,14 @@ def plot_time_point(
 
     """
     current_data = df.loc[df["time"] == time]
-    fig = voronoi_plot_2d(vor, ax=ax, show_points=False, show_vertices=False)
+    # fig = voronoi_plot_2d(vor, ax=ax, show_points=False, show_vertices=False)
+    from matplotlib.collections import LineCollection
+    fig = ax.figure
+    ax.set_facecolor('lightgrey')
+    df = gpd.read_file("ne_10m_admin_0_countries_lakes.zip")
+    ber = df.loc[df['ADMIN'] == 'Bermuda'].geometry.to_list()
 
+    finite_segments = []
     # Colourcode each region according to infection rate
     for r, region in enumerate(vor.regions):
         if r == 0:  # Vor.regions indexes from 1
@@ -171,9 +179,32 @@ def plot_time_point(
             point = vor.points[point_idx][0]
             if point_in_region(point, grid_lim):
                 value = find_value_for_region(current_data, point, name=name)
-                polygon = [vor.vertices[i] for i in region]
-                ax.fill(*zip(*polygon), color=mapper.to_rgba(value))
+                polygon = Polygon([vor.vertices[i] for i in region])
+                intersect = polygon.intersection(ber)[0]
+                if type(intersect) == Polygon:
+                    polygon = intersect.exterior.coords
+                    finite_segments.append(polygon)
+                    ax.fill(*zip(*polygon), color=mapper.to_rgba(value))
+                else:
+                    for polygon in intersect.geoms:
+                        polygon = polygon.exterior.coords
+                        finite_segments.append(polygon)
+                        ax.fill(*zip(*polygon), color=mapper.to_rgba(value))
 
+    ax.add_collection(LineCollection(finite_segments,
+                                     colors='k',
+                                     lw=0.25,
+                                     alpha=1.0,
+                                     linestyle='solid'))
+    border_segments = []
+    for mp in ber:
+        for polygon in mp.geoms:
+            border_segments.append(polygon.exterior.coords)
+    ax.add_collection(LineCollection(border_segments,
+                                     colors='k',
+                                     lw=1.0,
+                                     alpha=1.0,
+                                     linestyle='solid'))
     ax.set_aspect("equal")
     ax.set_title(f"t = {time:.2f}")
     ax.set_xlim(grid_lim[0][0], grid_lim[0][1])
@@ -343,14 +374,16 @@ grid_limits = [[min_x, max_x], [min_y, max_y]]
 
 
 # Add 4 distant dummy points to ensure all cells are finite
-# locations = np.append(
-#     locations, [[999, 999], [-999, 999], [999, -999], [-999, -999]], axis=0
-# )
+locations = np.append(
+    locations, [[999, 999], [-999, 999], [999, -999], [-999, -999]], axis=0
+)
 
 # Compute and plot Tesselation
 vor = Voronoi(locations)
 # Plot grid of time points
-fig_loc = ("python_examples/bermuda_example/simulation_outputs/"
+# fig_loc = ("python_examples/bermuda_example/simulation_outputs/"
+#            + "voronoi_grid_img.png")
+fig_loc = ("simulation_outputs/"
            + "voronoi_grid_img.png")
 plot_time_grid(
     df,
@@ -362,7 +395,7 @@ plot_time_grid(
 )
 
 # Plot animation of simulation
-animation_path = ("python_examples/bermuda_example/simulation_outputs/")
+animation_path = ("simulation_outputs/")
 anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
                           grid_lim=grid_limits, save_path=animation_path,
                           use_pillow=False)
