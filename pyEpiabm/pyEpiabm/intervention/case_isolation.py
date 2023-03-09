@@ -14,7 +14,7 @@ class CaseIsolation(AbstractIntervention):
     or after the end of the policy.
     Detailed description of the implementation can be found in github wiki:
     https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions.
-    
+
     """
 
     def __init__(
