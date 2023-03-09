@@ -31,7 +31,7 @@ class InitialVaccineQueue(AbstractSweep):
 
         else:
             logging.error("InitialVaccineQueue is being run but no " +
-                            "vaccination parameters are provided")
+                          "vaccination parameters are provided")
 
     def assign_priority_group(self, person, age_thresholds):
         """ Assigns priority group to each person based on age and whether

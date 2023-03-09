@@ -4,6 +4,7 @@
 
 from pyEpiabm.core import Parameters
 
+
 class PersonalInfection:
     """Class to calculate the infectiousness and susceptibility
     parameters of a :class:`Person`.
