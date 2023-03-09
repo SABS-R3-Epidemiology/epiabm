@@ -40,7 +40,7 @@ for i in range(len(parameter_values)):
 
     pe.Parameters.instance().intervention_params['testing'][
         to_modify_parameter] = parameter_values[i]
-    print('Set isolation_probability to: {}'.format(
+    print('Set testing_capacity to: {}'.format(
         pe.Parameters.instance().intervention_params['testing'][
             to_modify_parameter]))
 
@@ -107,11 +107,10 @@ for i in range(len(parameter_values)):
                  "InfectionStatus.Dead": 'sum'})
     df = df.reset_index(level=0)
 
-    plt.plot(df['time'], df['Infected'], label='testing: {}'.format(
-        int(label[i])))
+    plt.plot(df['time'], df['Infected'])
 
-plt.legend()
-plt.title("Infection curves for case isolation following testing (1) or not (0)")
+plt.legend(['No Testing', 'Testing and Isolation'])
+plt.title("Infection curves for case isolation following testing or not")
 plt.ylabel("Infected Population")
 plt.savefig(
     os.path.join(os.path.dirname(__file__),

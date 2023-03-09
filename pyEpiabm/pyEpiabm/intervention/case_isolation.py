@@ -14,6 +14,7 @@ class CaseIsolation(AbstractIntervention):
     or after the end of the policy.
     Detailed description of the implementation can be found in github wiki:
     https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions.
+    
     """
 
     def __init__(
@@ -60,6 +61,16 @@ class CaseIsolation(AbstractIntervention):
         """ Method to determine whether a person is eligible for isolation
         based on whether they are symptomatic or have tested positive depending
         on the value of the use_testing parameter.
+
+        Parameters
+        ----------
+        person : Person
+
+        Returns
+        -------
+        bool
+            True if the individual is eligible for case isolation (either
+            symptomatic or has tested positive)
 
         """
         if self.use_testing == 0:
