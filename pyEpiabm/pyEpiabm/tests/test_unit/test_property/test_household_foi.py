@@ -23,10 +23,11 @@ class TestHouseholdInfection(TestPyEpiabm):
         self._population.add_cells(1)
         self._population.cells[0].add_microcells(1)
         self._population.cells[0].microcells[0].add_people(2)
-        for person in self._population.cells[0].microcells[0].persons:
-            person.infectiousness = 1.0
+        # for person in self._population.cells[0].microcells[0].persons:
+        #     person.infectiousness = 1.0
         self.infector = self._population.cells[0].microcells[0].persons[0]
         self.infectee = self._population.cells[0].microcells[0].persons[1]
+        self.infector.infectiousness = 1.0
 
     def test_house_inf(self):
         result = HouseholdInfection.household_inf(self.infector, self.time)
@@ -41,10 +42,28 @@ class TestHouseholdInfection(TestPyEpiabm):
         self.assertIsInstance(result, float)
 
     def test_house_inf_force(self):
-        result = HouseholdInfection.household_foi(
-            self.infector, self.infectee, self.time)
+        result = HouseholdInfection.household_foi(self.infector,
+                                                  self.infectee,
+                                                  self.time)
+
         self.assertEqual(result, 0.1)
+        # expected value based on infectiousness(1) * susceptibiliy (1)
+        # * household transmission (0.1)
         self.assertIsInstance(result, float)
+
+    def test_vaccine_inf_drop(self):
+        self.infectee.is_vaccinated = True
+        self.infector.is_vaccinated = True
+        self.infectee.date_vaccinated = 0
+        self.infector.date_vaccinated = 0
+
+        result = HouseholdInfection.household_foi(self.infector,
+                                                  self.infectee,
+                                                  self.time)
+
+        self.assertEqual(result, 0.05)
+        # expected value based on infectiousness(1) * susceptibiliy (1) *
+        # vaccine infectiouness drop (0.5) * household transmission (0.1)
 
     def test_house_case_isolation(self):
         # Not isolating (isolation_start_time = None)
@@ -130,6 +149,9 @@ class TestHouseholdInfection(TestPyEpiabm):
             = {'carehome_resident_household_scaling': 2}
         mock_params.return_value.household_transmission = 1
         mock_params.return_value.false_positive_rate = 0
+        mock_params.return_value.intervention_params\
+            = {"vaccine_params": {'vacc_inf_drop': 0,
+                                  'time_to_efficacy': 0}}
         self.infector.care_home_resident = True
         self.infectee.care_home_resident = False
         result = HouseholdInfection.household_foi(self.infector,
