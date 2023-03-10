@@ -43,7 +43,7 @@ class TestInterventionSweep(TestPyEpiabm):
         self.assertEqual(len(self.interventionsweep.
                              intervention_params['disease_testing']), 10)
         self.assertEqual(len(
-            self.interventionsweep.intervention_active_status.keys()), 5)
+            self.interventionsweep.intervention_active_status.keys()), 6)
 
     def test___call__(self):
         self.interventionsweep(time=10)

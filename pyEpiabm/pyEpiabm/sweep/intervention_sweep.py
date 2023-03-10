@@ -40,7 +40,7 @@ class InterventionSweep(AbstractSweep):
                              'place_closure': PlaceClosure,
                              'household_quarantine': HouseholdQuarantine,
                              'social_distancing': SocialDistancing,
-                             'disease_testing': DiseaseTesting}
+                             'disease_testing': DiseaseTesting,
                              'vaccine_params': Vaccination}
 
         for intervention in self.intervention_params.keys():
