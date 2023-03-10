@@ -11,7 +11,11 @@ from pyEpiabm.tests.test_unit import TestMockedLogs
 class TestFunctional(TestMockedLogs):
     """Inherits from the custom testing class, which is
     the unittest.TestCase class with a parameters file bolted
-    on, but with mocked logging functions to prevent printing.
+    on and mocked logging functions to prevent printing.
+
+    Contains class methods to silence tqdm progress bars and
+    set up populations for ease of use when running repeated
+    simulations to evaluate intervention effectiveness.
 
     """
     @staticmethod
