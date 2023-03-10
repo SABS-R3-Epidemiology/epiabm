@@ -55,7 +55,7 @@ class TravelIsolation(AbstractIntervention):
                                 _increment_compartment(
                                     -1, person.infection_status,
                                     person.age_group)
-                            person.household.persons.remove(self)
+                            person.household.persons.remove(person)
                             # Assign to existing household (and implicit add
                             # to microcell counter)
                             selected_household = random.choice(

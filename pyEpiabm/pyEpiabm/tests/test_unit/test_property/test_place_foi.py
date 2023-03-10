@@ -123,6 +123,21 @@ class TestPlaceInfection(TestPyEpiabm):
         self.assertEqual(result*distancing_place_enhanced_susc[place_idx],
                          result_distancing_enhanced)
 
+    def test_place_travel_isolation(self):
+        # Not travel isolating (travel_isolation_start_time = None)
+        result = PlaceInfection.place_foi(self.place, self.infector,
+                                          self.infectee, self.time)
+
+        # Case isolate
+        isolation_effectiveness = pe.Parameters.instance().intervention_params[
+            'travel_isolation']['isolation_effectiveness']
+        self.infector.isolation_start_time = 1
+        self.infector.travel_isolation_start_time = 1
+        result_isolating = PlaceInfection.place_foi(self.place, self.infector,
+                                                    self.infectee, self.time)
+        self.assertEqual(result*isolation_effectiveness,
+                         result_isolating)
+
     @patch('pyEpiabm.property.PlaceInfection.place_susc')
     @patch('pyEpiabm.property.PlaceInfection.place_inf')
     @patch('pyEpiabm.core.Parameters.instance')

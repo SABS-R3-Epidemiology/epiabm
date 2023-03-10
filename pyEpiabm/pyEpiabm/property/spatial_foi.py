@@ -153,7 +153,7 @@ class SpatialInfection:
             carehome_scale_susc = pyEpiabm.core.Parameters.instance()\
                 .carehome_params["carehome_resident_spatial_scaling"]
         travel_isolating = Parameters.instance().\
-            intervention_params['travel_isolation']['isolation_'
+            intervention_params['travel_isolation']['isolation'
                                                     '_effectiveness'] \
             if (hasattr(infector, 'travel_isolation_start_time')) and (
                 infector.travel_isolation_start_time is not None) and (
