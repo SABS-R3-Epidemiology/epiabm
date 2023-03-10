@@ -1,5 +1,5 @@
 #
-# Custom testing class to patching logging
+# Custom testing class to patch logging
 #
 
 from unittest.mock import patch, mock_open
