@@ -130,10 +130,11 @@ class TestTravelSweep(TestPyEpiabm):
         self.assertEqual(len(self.microcell1.households), 3)
 
     def test_remove_leaving_individual(self):
-        """Remove individuals introduced after their travel_end_time is
+        """Remove individuals introduced after their travel_end_time has
         passed and check if they are not in isolation and/or quarantine.
         If so, keep them in the population until isolation_start_time and/or
-        quaratine_start_time has also passed.
+        quaratine_start_time has also passed. Check if the population size
+        is as expected at the considered time points.
 
         """
         # Introduce one traveller staying for 2 days
