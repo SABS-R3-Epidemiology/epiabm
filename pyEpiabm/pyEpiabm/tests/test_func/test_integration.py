@@ -3,8 +3,14 @@ import unittest
 from unittest.mock import patch, mock_open
 
 import pyEpiabm as pe
+from pyEpiabm.tests import TestFunctional
 
 
+@patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
+@patch('pyEpiabm.output._CsvDictWriter.write')
+@patch('os.makedirs')
+@patch('logging.warning')
+@patch('logging.error')
 class TestIntegrationWorkflows(unittest.TestCase):
     """Integration tests replicating example workflows
     with small population sizes (to minimise runtime).
@@ -22,12 +28,7 @@ class TestIntegrationWorkflows(unittest.TestCase):
         if pe.Parameters._instance:
             pe.Parameters._instance = None
 
-    def notqdm(iterable, *args, **kwargs):
-        """Replacement for tqdm that just passes back the iterable
-        useful to silence `tqdm` in tests
-        """
-        return iterable
-
+    @staticmethod
     def basic_workflow_main():
         pop_params = {"population_size": 100, "cell_number": 1,
                       "microcell_number": 1, "household_number": 5,
@@ -60,6 +61,7 @@ class TestIntegrationWorkflows(unittest.TestCase):
         del sim
         return
 
+    @staticmethod
     def spatial_workflow_main(generate_from_file: bool):
         pop_params = {
             "population_size": 500,
@@ -109,13 +111,8 @@ class TestIntegrationWorkflows(unittest.TestCase):
         del sim
         return
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write')
-    @patch('os.makedirs')
-    @patch('logging.warning')
-    @patch('logging.error')
-    def test_basic_workflow(self, mock_err, mock_warn,
-                            mock_mkdir, mock_output):
+    def test_basic_workflow(self, *mocks):
+        mock_err, mock_warn, mock_mkdir = mocks[:3]
         TestIntegrationWorkflows.basic_workflow_main()
         folder = os.path.join(os.getcwd(),
                               "test_folder/integration_tests")
@@ -123,14 +120,9 @@ class TestIntegrationWorkflows(unittest.TestCase):
         mock_err.assert_not_called()
         mock_warn.assert_not_called()
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write')
     @patch('pandas.DataFrame.to_csv')
-    @patch('os.makedirs')
-    @patch('logging.warning')
-    @patch('logging.error')
-    def test_spatial_workflow(self, mock_err, mock_warn,
-                              mock_mkdir, mock_csv, mock_output):
+    def test_spatial_workflow(self, mock_csv, *mocks):
+        mock_err, mock_warn, mock_mkdir = mocks[:3]
         TestIntegrationWorkflows.spatial_workflow_main(False)
         folder = os.path.join(os.getcwd(),
                               "test_folder/integration_tests")
@@ -140,13 +132,8 @@ class TestIntegrationWorkflows(unittest.TestCase):
         mock_err.assert_not_called()
         mock_warn.assert_not_called()
 
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
-    @patch('pyEpiabm.output._CsvDictWriter.write')
-    @patch('os.makedirs')
-    @patch('logging.warning')
-    @patch('logging.error')
-    def test_spatial_workflow_file_pop(self, mock_err, mock_warn,
-                                       mock_mkdir, mock_output):
+    def test_spatial_workflow_file_pop(self, *mocks):
+        mock_err, mock_warn, mock_mkdir = mocks[:3]
         pe.Parameters.instance().household_size_distribution = []
         TestIntegrationWorkflows.spatial_workflow_main(True)
         folder = os.path.join(os.getcwd(),
