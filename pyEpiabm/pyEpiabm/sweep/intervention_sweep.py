@@ -24,6 +24,8 @@ class InterventionSweep(AbstractSweep):
             * `social distancing`: Social distancing if number of infectious
                                people exceeds the threshold.
             * `vaccination`: Implement mass vaccination
+            * `disease_testing`: PCR and LFT disease testing.
+
     """
 
     def __init__(self):
