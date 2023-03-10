@@ -29,30 +29,31 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
 # Parameter to change
-to_modify_parameter = ['ratio_introduce_cases', 'constant_introduce_cases']
-parameter_values = [[0.0, 0.05, 0.1], [[0], [0]*4+[100]+[0]*46]]
-
-for j in range(len(to_modify_parameter)):
+to_modify_parameter_values = {'ratio_introduce_cases': [0.0, 0.05, 0.1],
+                              'constant_introduce_cases': [[0],
+                                                           [0]*4+[100]+[0]*46]}
+for to_modify_parameter, parameter_values in to_modify_parameter_values.\
+        items():
     # Only study one way to introduce cases
-    if to_modify_parameter[j] == 'ratio_introduce_cases':
+    if to_modify_parameter == 'ratio_introduce_cases':
         pe.Parameters.instance().travel_params['constant_introduce_cases'] = \
             [0]
     else:
         pe.Parameters.instance().travel_params['ratio_introduce_cases'] = 0.0
-    for i in range(len(parameter_values[j])):
-        if isinstance(parameter_values[j][i], float):
-            parameter_value_name = parameter_values[j][i]
+    for parameter_value in parameter_values:
+        if isinstance(parameter_value, float):
+            parameter_value_name = parameter_value
         else:
-            parameter_value_name = sum(parameter_values[j][i])
+            parameter_value_name = sum(parameter_value)
         name_output_file = 'output_{}_{}.csv'.format(
-            to_modify_parameter[j], parameter_value_name)
+            to_modify_parameter, parameter_value_name)
 
         pe.Parameters.instance().travel_params[
-            to_modify_parameter[j]] = parameter_values[j][i]
-        print('Set {} to: {}'.format(to_modify_parameter[j],
+            to_modify_parameter] = parameter_value
+        print('Set {} to: {}'.format(to_modify_parameter,
                                      pe.Parameters.instance(
                                      ).travel_params[
-                                        to_modify_parameter[j]]))
+                                        to_modify_parameter]))
 
         # Method to set the seed at the start of the simulation,
         # for reproducibility
@@ -100,17 +101,17 @@ for j in range(len(to_modify_parameter)):
 # Creation of a plot of results
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 
-for j in range(len(to_modify_parameter)):
-    for i in range(len(parameter_values[j])):
-        if isinstance(parameter_values[j][i], float):
-            parameter_value_name = parameter_values[j][i]
+for to_modify_parameter, parameter_values in to_modify_parameter_values.\
+        items():
+    for parameter_value in parameter_values:
+        if isinstance(parameter_value, float):
+            parameter_value_name = parameter_value
         else:
-            parameter_value_name = sum(parameter_values[j][i])
+            parameter_value_name = sum(parameter_value)
         file_name = os.path.join(os.path.dirname(__file__),
                                  "travelling_outputs",
                                  'output_{}_{}.csv'.format(
-                                    to_modify_parameter[j],
-                                    parameter_value_name))
+                                    to_modify_parameter, parameter_value_name))
         df = pd.read_csv(file_name)
         total_df = \
             df[list(df.filter(regex='InfectionStatus.Infect'))]
@@ -123,16 +124,16 @@ for j in range(len(to_modify_parameter)):
         df = df.reset_index(level=0)
 
         plt.plot(df['time'], df['Infected'], label='{}: {}'.format(
-            to_modify_parameter[j], parameter_value_name))
+            to_modify_parameter, parameter_value_name))
 
     plt.legend()
     plt.title("Infection curves for different {}".format(
-        to_modify_parameter[j]))
+        to_modify_parameter))
     plt.ylabel("Infected Population")
     plt.savefig(
         os.path.join(os.path.dirname(__file__),
                      "travelling_outputs",
                      "travelling_{}_Icurve_plot.png".format(
-                        to_modify_parameter[j]))
+                        to_modify_parameter))
     )
     plt.clf()

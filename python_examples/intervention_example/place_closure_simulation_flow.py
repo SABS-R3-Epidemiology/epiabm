@@ -30,22 +30,21 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
 # Parameter to change
-to_modify_parameter = ['closure_household_infectiousness',
-                       'closure_spatial_params']
-parameter_values = [[2, 10, 20], [0.8, 0.5, 0.2]]
-
-for j in range(len(to_modify_parameter)):
-    for i in range(len(parameter_values[j])):
+to_modify_parameter_values = {'closure_household_infectiousness': [2, 10, 20],
+                              'closure_spatial_params': [0.8, 0.5, 0.2]}
+for to_modify_parameter, parameter_values in to_modify_parameter_values.\
+        items():
+    for parameter_value in parameter_values:
         name_output_file = 'output_{}_{}.csv'.format(
-            parameter_values[j][i], to_modify_parameter[j])
+            parameter_value, to_modify_parameter)
 
         pe.Parameters.instance().intervention_params['place_closure'][
-            to_modify_parameter[j]] = parameter_values[j][i]
-        print('Set {} to: {}'.format(to_modify_parameter[j],
+            to_modify_parameter] = parameter_value
+        print('Set {} to: {}'.format(to_modify_parameter,
                                      pe.Parameters.instance(
                                      ).intervention_params[
                                         'place_closure'][
-                                        to_modify_parameter[j]]))
+                                        to_modify_parameter]))
 
         # Method to set the seed at the start of the simulation,
         # for reproducibility
@@ -92,13 +91,14 @@ for j in range(len(to_modify_parameter)):
 # Creation of a plot of results
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 
-for j in range(len(to_modify_parameter)):
-    for i in range(len(parameter_values[j])):
+for to_modify_parameter, parameter_values in to_modify_parameter_values.\
+        items():
+    for parameter_value in parameter_values:
         file_name = os.path.join(os.path.dirname(__file__),
                                  "intervention_outputs",
                                  'output_{}_{}.csv'.format(
-                                 parameter_values[j][i],
-                                 to_modify_parameter[j]))
+                                 parameter_value,
+                                 to_modify_parameter))
         df = pd.read_csv(file_name)
         total_df = \
             df[list(df.filter(regex='InfectionStatus.Infect'))]
@@ -111,16 +111,16 @@ for j in range(len(to_modify_parameter)):
         df = df.reset_index(level=0)
 
         plt.plot(df['time'], df['Infected'], label='{}: {}'.format(
-            to_modify_parameter[j], parameter_values[j][i]))
+            to_modify_parameter, parameter_value))
 
     plt.legend()
     plt.title("Infection curves for different {}".format(
-        to_modify_parameter[j]))
+        to_modify_parameter))
     plt.ylabel("Infected Population")
     plt.savefig(
         os.path.join(os.path.dirname(__file__),
                      "intervention_outputs",
                      "place_closure_{}_Icurve_plot.png".format(
-                        to_modify_parameter[j]))
+                        to_modify_parameter))
     )
     plt.clf()
