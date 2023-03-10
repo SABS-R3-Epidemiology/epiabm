@@ -329,10 +329,10 @@ class HostProgressionSweep(AbstractSweep):
 
         """
         if hasattr(Parameters.instance(), 'intervention_params'):
-            if 'testing' in Parameters.instance().\
+            if 'disease_testing' in Parameters.instance().\
               intervention_params.keys():
                 testing_params = Parameters.instance().\
-                    intervention_params['testing']
+                    intervention_params['disease_testing']
                 r = random.random()
                 type_r = random.random()
 
@@ -378,10 +378,10 @@ class HostProgressionSweep(AbstractSweep):
 
         """
         if hasattr(Parameters.instance(), 'intervention_params'):
-            if 'testing' in Parameters.instance().\
+            if 'disease_testing' in Parameters.instance().\
                intervention_params.keys():
                 testing_params = Parameters.instance().\
-                    intervention_params['testing']
+                    intervention_params['disease_testing']
                 for item in person_list:
                     cell = item[0]
                     person = item[1]

@@ -496,7 +496,7 @@
         "prop_other_parent_away": 0.0
     },
     "intervention_params": {
-    "testing": {
+    "disease_testing": {
         "start_time": 6,
         "policy_duration": 365,
         "case_threshold": 0,

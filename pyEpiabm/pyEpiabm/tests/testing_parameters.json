@@ -488,7 +488,7 @@
             "distancing_place_susc": [0.8, 0.8, 0.8, 0.8, 0.8, 0.8],
             "distancing_spatial_susc": 0.8
         },
-        "testing": {
+        "disease_testing": {
             "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,

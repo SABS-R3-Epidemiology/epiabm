@@ -38,10 +38,10 @@ for i in range(len(parameter_values)):
     name_output_file = 'output_{}_{}.csv'.format(
         int(label[i]), to_modify_parameter)
 
-    pe.Parameters.instance().intervention_params['testing'][
+    pe.Parameters.instance().intervention_params['disease_testing'][
         to_modify_parameter] = parameter_values[i]
     print('Set testing_capacity to: {}'.format(
-        pe.Parameters.instance().intervention_params['testing'][
+        pe.Parameters.instance().intervention_params['disease_testing'][
             to_modify_parameter]))
 
     # Method to set the seed at the start of the simulation, for

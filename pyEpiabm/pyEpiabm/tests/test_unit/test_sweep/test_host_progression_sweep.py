@@ -651,7 +651,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
 
         with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
             mock_param.return_value.\
-                intervention_params = {'testing': {'sympt_pcr': [-1, -1, -1],
+                intervention_params = {'disease_testing': {'sympt_pcr': [-1, -1, -1],
                                        'testing_sympt': [0.5, 0.5, 0.5]}}
 
             test_sweep.sympt_testing_queue(self.cell, self.person2)

@@ -41,7 +41,7 @@ class InterventionSweep(AbstractSweep):
                              'place_closure': PlaceClosure,
                              'household_quarantine': HouseholdQuarantine,
                              'social_distancing': SocialDistancing,
-                             'testing': DiseaseTesting}
+                             'disease_testing': DiseaseTesting}
         for intervention in self.intervention_params.keys():
             params = self.intervention_params[intervention]
             self.intervention_active_status[(intervention_dict[intervention](
