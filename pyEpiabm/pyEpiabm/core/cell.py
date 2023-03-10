@@ -37,6 +37,8 @@ class Cell:
         self.places = []
         self.households = []
         self.person_queue = Queue()
+        self.PCR_queue = Queue()
+        self.LFT_queue = Queue()
         self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
         self.nearby_cells = dict()
 
@@ -89,6 +91,36 @@ class Cell:
 
         """
         self.person_queue.put(person)
+
+    def enqueue_PCR_testing(self, person: Person):
+        """Add person to PCR testing queue for processing in testing
+         sweep.
+
+        Detailed description of the implementation can be found in github wiki:
+        https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#testing
+
+        Parameters
+        ----------
+        person : Person
+            Person to enqueue.
+
+        """
+        self.PCR_queue.put(person)
+
+    def enqueue_LFT_testing(self, person: Person):
+        """Add person to LFT testing queue for processing in testing
+         sweep.
+
+        Detailed description of the implementation can be found in github wiki:
+        https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#testing
+
+        Parameters
+        ----------
+        person : Person
+            Person to enqueue.
+
+        """
+        self.LFT_queue.put(person)
 
     def notify_person_status_change(
             self,

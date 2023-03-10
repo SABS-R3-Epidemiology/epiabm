@@ -28,6 +28,7 @@ class TestIsolationFunctional(TestFunctional):
             "isolation_delay": 0,
             "isolation_duration": 12,
             "isolation_probability": 0.2,
+            "use_testing": 0,
             "isolation_effectiveness": 0,
             "isolation_house_effectiveness": 0}
         }

@@ -149,7 +149,8 @@ class HostProgressionSweep(AbstractSweep):
 
         """
         if person.infection_status in [InfectionStatus.Recovered,
-                                       InfectionStatus.Dead]:
+                                       InfectionStatus.Dead,
+                                       InfectionStatus.Vaccinated]:
             person.next_infection_status = None
         elif (person.care_home_resident and
               person.infection_status == InfectionStatus.InfectICU):
@@ -202,7 +203,8 @@ class HostProgressionSweep(AbstractSweep):
             raise ValueError("Method should not be used to infect people")
 
         if person.infection_status in [InfectionStatus.Recovered,
-                                       InfectionStatus.Dead]:
+                                       InfectionStatus.Dead,
+                                       InfectionStatus.Vaccinated]:
             transition_time = np.inf
         else:
             row_index = person.infection_status.name
@@ -261,11 +263,12 @@ class HostProgressionSweep(AbstractSweep):
                                         / self.model_time_step))
             person.infectiousness = person.initial_infectiousness *\
                 scale_infectiousness[time_since_infection]
-        # Sets infectiousness to 0 if person just became Recovered or Dead, and
-        # sets its infection start time to None again.
+        # Sets infectiousness to 0 if person just became Recovered, Dead, or
+        # Vaccinated, and sets its infection start time to None again.
         elif person.infectiousness != 0:
             if person.infection_status in [InfectionStatus.Recovered,
-                                           InfectionStatus.Dead]:
+                                           InfectionStatus.Dead,
+                                           InfectionStatus.Vaccinated]:
                 person.infectiousness = 0
                 person.infection_start_time = None
 
@@ -281,12 +284,18 @@ class HostProgressionSweep(AbstractSweep):
             Current simulation time
 
         """
+        # store list of uninfected or asymptomatic people for processing
+        # for disease testing.
+        asympt_or_uninf_people = []
         for cell in self._population.cells:
             for person in cell.persons:
                 if person.time_of_status_change is None:
-                    assert person.infection_status \
-                                    in [InfectionStatus.Susceptible]
+                    assert person.is_susceptible()
+                    asympt_or_uninf_people.append((cell, person))
                     continue  # pragma: no cover
+                if person.infection_status in [InfectionStatus.Recovered,
+                                               InfectionStatus.Vaccinated]:
+                    asympt_or_uninf_people.append((cell, person))
                 while person.time_of_status_change <= time:
                     person.update_status(person.next_infection_status)
                     if person.infection_status in \
@@ -294,6 +303,118 @@ class HostProgressionSweep(AbstractSweep):
                              InfectionStatus.InfectMild,
                              InfectionStatus.InfectGP]:
                         self.set_infectiousness(person, time)
+                        if not person.is_symptomatic():
+                            asympt_or_uninf_people.append((cell, person))
                     self.update_next_infection_status(person)
                     self.update_time_status_change(person, time)
+                    self.sympt_testing_queue(cell, person)
                 self._updates_infectiousness(person, time)
+
+        self.asympt_uninf_testing_queue(asympt_or_uninf_people, time)
+
+    def sympt_testing_queue(self, cell, person: Person):
+        """ Adds symptomatic people to a testing queue with a given
+        probability depedent on their status as either a care home
+        resident or a key worker.
+
+        Detailed description of the implementation can be found in github wiki:
+        https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#testing
+
+        Parameters
+        ----------
+        cell : Cell
+            cell for which the person is a member of and therefore
+            will be added to the testing queue of.
+        person : Person
+            symptomatic inndividual to be added to a testing queue.
+
+        """
+        if hasattr(Parameters.instance(), 'intervention_params'):
+            if 'disease_testing' in Parameters.instance().\
+              intervention_params.keys():
+                testing_params = Parameters.instance().\
+                    intervention_params['disease_testing']
+                r = random.random()
+                type_r = random.random()
+
+                if (person.is_symptomatic() and
+                   person.date_positive is None):
+                    if person.care_home_resident:
+                        test_probability = testing_params['testing_sympt'][0]
+                        type_probability = testing_params['sympt_pcr'][0]
+                    elif person.key_worker:
+                        test_probability = testing_params['testing_sympt'][1]
+                        type_probability = testing_params['testing_sympt'][2]
+                    else:
+                        test_probability = testing_params['testing_sympt'][2]
+                        type_probability = testing_params['sympt_pcr'][2]
+
+                    if r < test_probability:
+                        if type_r < type_probability:
+                            cell.enqueue_PCR_testing(person)
+                        else:
+                            cell.enqueue_LFT_testing(person)
+
+                if (person.date_positive is not None and
+                    (person.next_infection_status in
+                     [InfectionStatus.Dead, InfectionStatus.Recovered])):
+                    person.date_positive = None
+
+    def asympt_uninf_testing_queue(self, person_list: list, time):
+        """ Adds asymptomatic and uninfected people to a testing queue
+        with a given probability depedent on their status as either a care
+        home resident or key worker.
+
+        Detailed description of the implementation can be found in github wiki:
+        https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#testing
+
+        Parameters
+        ----------
+        person_list : list
+            list of (cell, person) tuples giving the list of people
+            to be added to a testing queue and their cell.
+        time : float
+            current time point to determine whether uninfected indivuals
+            should stop being considered as positive.
+
+        """
+        if hasattr(Parameters.instance(), 'intervention_params'):
+            if 'disease_testing' in Parameters.instance().\
+               intervention_params.keys():
+                testing_params = Parameters.instance().\
+                    intervention_params['disease_testing']
+                for item in person_list:
+                    cell = item[0]
+                    person = item[1]
+                    if person.is_symptomatic():
+                        raise ValueError("Function should not be called on" +
+                                         "symptomatic individuals.")
+                    r = random.random()
+                    type_r = random.random()
+
+                    if person.care_home_resident:
+                        test_probability = testing_params[
+                            'testing_asympt_uninf'][0]
+                        type_probability = testing_params[
+                            'asympt_uninf_pcr'][0]
+                    elif person.key_worker:
+                        test_probability = testing_params[
+                            'testing_asympt_uninf'][1]
+                        type_probability = testing_params[
+                            'asympt_uninf_pcr'][1]
+                    else:
+                        test_probability = testing_params[
+                            'testing_asympt_uninf'][2]
+                        type_probability = testing_params[
+                            'asympt_uninf_pcr'][2]
+
+                    if (r < test_probability and
+                       person.date_positive is None):
+                        if type_r < type_probability:
+                            cell.enqueue_PCR_testing(person)
+                        else:
+                            cell.enqueue_LFT_testing(person)
+
+                    elif (person.date_positive is not None and
+                          person.date_positive + 10 >= time):
+                        person.date_positive = None

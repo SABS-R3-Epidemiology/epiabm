@@ -27,6 +27,7 @@ class TestQuarantineFunctional(TestFunctional):
             "isolation_delay": 0,
             "isolation_duration": 3,
             "isolation_probability": 1,
+            "use_testing": 0,
             "isolation_effectiveness": 1,
             "isolation_house_effectiveness": 1},
 

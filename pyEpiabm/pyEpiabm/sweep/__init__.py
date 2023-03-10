@@ -18,3 +18,4 @@ from .spatial_sweep import SpatialSweep
 from .update_place_sweep import UpdatePlaceSweep
 from .intervention_sweep import InterventionSweep
 from .transition_matrices import StateTransitionMatrix, TransitionTimeMatrix
+from .initial_vaccine_sweep import InitialVaccineQueue

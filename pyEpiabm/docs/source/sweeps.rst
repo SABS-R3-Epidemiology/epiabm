@@ -14,6 +14,7 @@ Overview:
 - :class:`InitialInfectedSweep`
 - :class:`InitialisePlaceSweep`
 - :class:`InitialHouseholdSweep`
+- :class:`InitialVaccineQueue`
 - :class:`InterventionSweep`
 - :class:`PlaceSweep`
 - :class:`QueueSweep`
@@ -44,6 +45,10 @@ Overview:
     :special-members: __call__
 
 .. autoclass:: InitialHouseholdSweep
+    :members:
+    :special-members: __call__
+
+.. autoclass:: InitialVaccineQueue
     :members:
     :special-members: __call__
 

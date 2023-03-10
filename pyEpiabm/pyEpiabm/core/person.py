@@ -52,6 +52,8 @@ class Person:
         self.infection_start_time = None
         self.care_home_resident = False
         self.key_worker = False
+        self.date_positive = None
+        self.is_vaccinated = False
 
         self.set_random_age(age_group)
 
@@ -198,3 +200,11 @@ class Person:
                 if place_type.value in closure_place_type:
                     return True
         return False
+
+    def vaccinate(self, time):
+        """Used to set a persons vaccination status to vaccinated
+        if they are drawn from the vaccine queue.
+
+        """
+        self.is_vaccinated = True
+        self.date_vaccinated = time
