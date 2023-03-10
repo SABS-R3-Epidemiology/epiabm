@@ -45,7 +45,7 @@ class HelperFunc(unittest.TestCase):
             The population with more individuals
         status : InfectionStatus
             The infection status wants to be compared
-        method : string
+        method : {'greater', 'equal'}
             Specify if the comparing is for greater or equal or only equal
 
         """
