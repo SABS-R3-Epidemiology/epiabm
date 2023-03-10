@@ -3,11 +3,9 @@
 #
 
 from pyEpiabm.core import Parameters
-from pyEpiabm.intervention import CaseIsolation
-from pyEpiabm.intervention import PlaceClosure
-from pyEpiabm.intervention import HouseholdQuarantine
-from pyEpiabm.intervention import SocialDistancing
-
+from pyEpiabm.intervention import CaseIsolation, Vaccination, PlaceClosure
+from pyEpiabm.intervention import HouseholdQuarantine, SocialDistancing
+from pyEpiabm.intervention import DiseaseTesting
 from .abstract_sweep import AbstractSweep
 
 
@@ -25,11 +23,13 @@ class InterventionSweep(AbstractSweep):
                                       is symptomatic.
             * `social distancing`: Social distancing if number of infectious
                                people exceeds the threshold.
+            * `vaccination`: Implement mass vaccination
+            * `disease_testing`: PCR and LFT disease testing.
 
     """
 
     def __init__(self):
-        """Call in variables from the parameters file and set flags.
+        """Read in variables from the parameters file
 
         """
         # Implemented interventions and their activity status
@@ -41,7 +41,10 @@ class InterventionSweep(AbstractSweep):
         intervention_dict = {'case_isolation': CaseIsolation,
                              'place_closure': PlaceClosure,
                              'household_quarantine': HouseholdQuarantine,
-                             'social_distancing': SocialDistancing}
+                             'social_distancing': SocialDistancing,
+                             'disease_testing': DiseaseTesting,
+                             'vaccine_params': Vaccination}
+
         for intervention in self.intervention_params.keys():
             params = self.intervention_params[intervention]
             self.intervention_active_status[(intervention_dict[intervention](

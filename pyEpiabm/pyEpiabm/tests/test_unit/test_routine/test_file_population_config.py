@@ -199,10 +199,11 @@ class TestPopConfig(TestPyEpiabm):
         actual_df = mock_copy.call_args.args[0]
         if version.parse(pd.__version__) >= version.parse("1.4.0"):
             expected_df = self.df.copy()
-            expected_df.drop('household_number', axis=1)
+            expected = expected_df.drop('household_number', axis=1)
+            actual = actual_df.drop('household_number', axis=1)
 
-            pd.testing.assert_frame_equal(actual_df,
-                                          expected_df, check_dtype=False)
+            pd.testing.assert_frame_equal(actual,
+                                          expected, check_dtype=False)
         else:
             self.skipTest("Test requires pandas version 1.4 - skipped")
 

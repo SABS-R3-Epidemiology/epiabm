@@ -115,6 +115,22 @@ class TestUpdatePlaceSweep(TestPyEpiabm):
         self.assertDictEqual(place.person_groups, {0: [person], 1: []})
         self.assertTrue(person.key_worker)
 
+    @mock.patch('random.random')
+    def test_key_worker_assignment(self, mock_random):
+        mock_random.return_value = 0
+
+        Parameters.instance().use_key_workers = 0.5
+
+        test_pop = self.pop
+        place = test_pop.cells[0].places[0]
+        person = test_pop.cells[0].persons[0]
+        test_sweep = UpdatePlaceSweep()
+        test_sweep.bind_population(test_pop)
+
+        test_sweep.update_place_group(place, person_list=[person],
+                                      group_size=1)
+        self.assertTrue(person.key_worker)
+
     @mock.patch("numpy.random.poisson")
     def test_update_place_no_groups(self, mock_poisson):
         """Test handling of zero groups from poisson distribution.
