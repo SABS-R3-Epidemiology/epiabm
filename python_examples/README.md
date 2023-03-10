@@ -1,6 +1,6 @@
 # Python Examples
 
-This directory contains a number of examples of python workflows to run simulations with pEpiabm. New users are suggested to use the `basic_example/simulation_flow.py` script to run a basic simulation with little initial configuration. More complex examples are given in subdirectories of this folder.
+This directory contains a number of examples of python workflows to run simulations with pyEpiabm. New users are suggested to use the `basic_example/simulation_flow.py` script to run a basic simulation with little initial configuration. More complex examples are given in subdirectories of this folder.
 
 ## Basic Example
 
