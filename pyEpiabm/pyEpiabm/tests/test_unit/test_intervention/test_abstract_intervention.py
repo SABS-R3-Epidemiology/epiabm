@@ -6,7 +6,6 @@ from pyEpiabm.intervention import AbstractIntervention
 
 class TestAbstractIntervention(unittest.TestCase):
     """Test the 'AbstractIntervention' class.
-
     """
 
     @classmethod
@@ -24,7 +23,8 @@ class TestAbstractIntervention(unittest.TestCase):
         self.assertEqual(self.intervention_object.start_time, 1)
         self.assertEqual(self.intervention_object.policy_duration, 10)
         self.assertEqual(self.intervention_object.case_threshold, 20)
-        self.assertEqual(self.intervention_object._population, self.population)
+        self.assertEqual(self.intervention_object._population,
+                         self.population)
 
     def test_is_active(self):
         self.assertTrue(self.intervention_object.is_active(time=5,

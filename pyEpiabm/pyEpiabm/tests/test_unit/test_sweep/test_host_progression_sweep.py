@@ -158,7 +158,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
         for person in self.people:
             with self.subTest(person=person):
                 test_sweep.update_next_infection_status(person)
-                if person.infection_status.name in ['Recovered', 'Dead']:
+                if person.infection_status.name in ['Recovered', 'Dead',
+                                                    'Vaccinated']:
                     self.assertEqual(person.next_infection_status, None)
                 else:
                     self.assertEqual(person.infection_status,
@@ -178,7 +179,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
         for person in self.people:
             with self.subTest(person=person):
                 test_sweep.update_next_infection_status(person)
-                if person.infection_status.name in ['Recovered', 'Dead']:
+                if person.infection_status.name in ['Recovered', 'Dead',
+                                                    'Vaccinated']:
                     self.assertEqual(person.next_infection_status, None)
                 else:
                     self.assertEqual(person.next_infection_status,
@@ -196,7 +198,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
         for person in self.people:
             with self.subTest(person=person):
                 test_sweep.update_next_infection_status(person)
-                if person.infection_status.name in ['Recovered', 'Dead']:
+                if person.infection_status.name in ['Recovered', 'Dead',
+                                                    'Vaccinated']:
                     self.assertEqual(person.next_infection_status, None)
                 else:
                     current_enum_value = person.infection_status.value
@@ -225,7 +228,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
                 test_sweep.update_next_infection_status(person)
                 test_sweep.update_time_status_change(person, current_time)
                 time_of_status_change = person.time_of_status_change
-                if person.infection_status.name in ['Recovered', 'Dead']:
+                if person.infection_status.name in ['Recovered', 'Dead',
+                                                    'Vaccinated']:
                     self.assertEqual(time_of_status_change, np.inf)
                 elif person.infection_status.name in ['InfectMild',
                                                       'InfectGP']:

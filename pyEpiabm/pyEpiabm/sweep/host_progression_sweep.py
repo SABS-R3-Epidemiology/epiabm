@@ -149,7 +149,8 @@ class HostProgressionSweep(AbstractSweep):
 
         """
         if person.infection_status in [InfectionStatus.Recovered,
-                                       InfectionStatus.Dead]:
+                                       InfectionStatus.Dead,
+                                       InfectionStatus.Vaccinated]:
             person.next_infection_status = None
         elif (person.care_home_resident and
               person.infection_status == InfectionStatus.InfectICU):
@@ -202,7 +203,8 @@ class HostProgressionSweep(AbstractSweep):
             raise ValueError("Method should not be used to infect people")
 
         if person.infection_status in [InfectionStatus.Recovered,
-                                       InfectionStatus.Dead]:
+                                       InfectionStatus.Dead,
+                                       InfectionStatus.Vaccinated]:
             transition_time = np.inf
         else:
             row_index = person.infection_status.name
@@ -261,11 +263,12 @@ class HostProgressionSweep(AbstractSweep):
                                         / self.model_time_step))
             person.infectiousness = person.initial_infectiousness *\
                 scale_infectiousness[time_since_infection]
-        # Sets infectiousness to 0 if person just became Recovered or Dead, and
-        # sets its infection start time to None again.
+        # Sets infectiousness to 0 if person just became Recovered, Dead, or
+        # Vaccinated, and sets its infection start time to None again.
         elif person.infectiousness != 0:
             if person.infection_status in [InfectionStatus.Recovered,
-                                           InfectionStatus.Dead]:
+                                           InfectionStatus.Dead,
+                                           InfectionStatus.Vaccinated]:
                 person.infectiousness = 0
                 person.infection_start_time = None
 

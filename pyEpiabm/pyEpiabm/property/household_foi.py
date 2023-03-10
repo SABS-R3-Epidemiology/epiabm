@@ -1,9 +1,8 @@
 #
 # Calculate household force of infection based on Covidsim code
 #
-
-from pyEpiabm.core import Parameters
 import pyEpiabm.core
+from pyEpiabm.core import Parameters
 
 from .personal_foi import PersonalInfection
 
@@ -41,8 +40,7 @@ class HouseholdInfection:
                         'place_closure']['closure_place_type'])) and (
                             infector.microcell.closure_start_time <= time
                         ) else 1
-        household_infectiousness = PersonalInfection.person_inf(
-            infector, time) * closure_inf
+        household_infectiousness = infector.infectiousness * closure_inf
         return household_infectiousness
 
     @staticmethod
@@ -122,8 +120,17 @@ class HouseholdInfection:
             if (hasattr(infector, 'quarantine_start_time')) and (
                 infector.quarantine_start_time is not None) and (
                     infector.quarantine_start_time <= time) else 1
+        vacc_inf_drop = 1
+        if infector.is_vaccinated:
+            vacc_params = Parameters.instance()\
+                .intervention_params['vaccine_params']
+            if time > (infector.date_vaccinated +
+                       vacc_params['time_to_efficacy']):
+                vacc_inf_drop *= (1 - vacc_params['vacc_inf_drop'])
+
         infectiousness = (HouseholdInfection.household_inf(infector, time)
                           * seasonality
+                          * vacc_inf_drop
                           * pyEpiabm.core.Parameters.instance().
                           household_transmission
                           * carehome_scale_inf

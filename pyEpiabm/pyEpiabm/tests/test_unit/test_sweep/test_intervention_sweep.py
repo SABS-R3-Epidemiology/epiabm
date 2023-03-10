@@ -33,13 +33,15 @@ class TestInterventionSweep(TestPyEpiabm):
         self.assertEqual(len(self.interventionsweep.
                              intervention_params['case_isolation']), 8)
         self.assertEqual(len(self.interventionsweep.
+                             intervention_params['vaccine_params']), 9)
+        self.assertEqual(len(self.interventionsweep.
                              intervention_params['place_closure']), 9)
         self.assertEqual(len(self.interventionsweep.
                              intervention_params['household_quarantine']), 10)
         self.assertEqual(len(self.interventionsweep.
                              intervention_params['social_distancing']), 13)
         self.assertEqual(len(
-            self.interventionsweep.intervention_active_status.keys()), 4)
+            self.interventionsweep.intervention_active_status.keys()), 5)
 
     def test___call__(self):
         self.interventionsweep(time=10)

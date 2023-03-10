@@ -93,6 +93,7 @@ class StateTransitionMatrix:
         matrix.loc['InfectICURecov', 'Recovered'] = 1
         matrix.loc['Recovered', 'Recovered'] = 1
         matrix.loc['Dead', 'Dead'] = 1
+        matrix.loc['Vaccinated', 'Vaccinated'] = 1
         return matrix
 
     def update_probability(self, current_infection_status_row: InfectionStatus,
