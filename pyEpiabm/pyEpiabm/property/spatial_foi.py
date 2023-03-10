@@ -152,7 +152,12 @@ class SpatialInfection:
         if infectee.care_home_resident or infector.care_home_resident:
             carehome_scale_susc = pyEpiabm.core.Parameters.instance()\
                 .carehome_params["carehome_resident_spatial_scaling"]
-
+        travel_isolating = Parameters.instance().\
+            intervention_params['travel_isolation']['isolation_'
+                                                    '_effectiveness'] \
+            if (hasattr(infector, 'travel_isolation_start_time')) and (
+                infector.travel_isolation_start_time is not None) and (
+                    infector.travel_isolation_start_time <= time) else 1
         isolating = Parameters.instance().\
             intervention_params['case_isolation']['isolation_effectiveness']\
             if (hasattr(infector, 'isolation_start_time')) and (
@@ -161,12 +166,20 @@ class SpatialInfection:
         quarantine = Parameters.instance().\
             intervention_params['household_quarantine'][
                 'quarantine_spatial_effectiveness']\
-            if (hasattr(infector, 'quarantine_start_time')) and (
-                infector.quarantine_start_time is not None) and (
-                    infector.quarantine_start_time <= time) else 1
+            if (hasattr(infectee, 'quarantine_start_time')) and (
+                infectee.quarantine_start_time is not None) and (
+                    infectee.quarantine_start_time <= time) else 1
+
+        # Dominant interventions: 1) travel_isolate; 2) case_isolate
+        isolation_scale_inf = 1
+        if isolating != 1:
+            isolation_scale_inf = isolating
+        if travel_isolating != 1:
+            isolation_scale_inf = travel_isolating
+
         infectiousness = (SpatialInfection.spatial_inf(
             inf_cell, infector, time) * carehome_scale_inf
-            * isolating * quarantine)
+            * isolation_scale_inf * quarantine)
         susceptibility = (SpatialInfection.spatial_susc(
             susc_cell, infector, infectee, time)
             * carehome_scale_susc * quarantine)

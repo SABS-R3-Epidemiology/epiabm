@@ -108,6 +108,12 @@ class HouseholdInfection:
             carehome_scale_susc = Parameters.instance()\
                 .carehome_params["carehome_resident_household_scaling"]
         seasonality = 1.0  # Not yet implemented
+        travel_isolating = Parameters.instance().\
+            intervention_params['travel_isolation']['isolation_house'
+                                                    '_effectiveness'] \
+            if (hasattr(infector, 'travel_isolation_start_time')) and (
+                infector.travel_isolation_start_time is not None) and (
+                    infector.travel_isolation_start_time <= time) else 1
         isolating = Parameters.instance().\
             intervention_params['case_isolation']['isolation_house'
                                                   '_effectiveness'] \
@@ -117,9 +123,9 @@ class HouseholdInfection:
         quarantine = Parameters.instance().\
             intervention_params['household_quarantine']['quarantine_house'
                                                         '_effectiveness'] \
-            if (hasattr(infector, 'quarantine_start_time')) and (
-                infector.quarantine_start_time is not None) and (
-                    infector.quarantine_start_time <= time) else 1
+            if (hasattr(infectee, 'quarantine_start_time')) and (
+                infectee.quarantine_start_time is not None) and (
+                    infectee.quarantine_start_time <= time) else 1
         vacc_inf_drop = 1
         if infector.is_vaccinated:
             vacc_params = Parameters.instance()\
@@ -128,13 +134,20 @@ class HouseholdInfection:
                        vacc_params['time_to_efficacy']):
                 vacc_inf_drop *= (1 - vacc_params['vacc_inf_drop'])
 
+        # Dominant interventions: 1) travel_isolate; 2) case_isolate
+        isolation_scale_inf = 1
+        if isolating != 1:
+            isolation_scale_inf = isolating
+        if travel_isolating != 1:
+            isolation_scale_inf = travel_isolating
+
         infectiousness = (HouseholdInfection.household_inf(infector, time)
                           * seasonality
                           * vacc_inf_drop
                           * pyEpiabm.core.Parameters.instance().
                           household_transmission
                           * carehome_scale_inf
-                          * isolating * quarantine)
+                          * isolation_scale_inf * quarantine)
         susceptibility = (HouseholdInfection.household_susc(infector,
                                                             infectee, time)
                           * carehome_scale_susc)

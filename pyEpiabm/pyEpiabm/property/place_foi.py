@@ -124,6 +124,12 @@ class PlaceInfection:
                                             or infector.key_worker):
             carehome_scale_susc = Parameters.instance()\
                 .carehome_params["carehome_worker_group_scaling"]
+        travel_isolating = Parameters.instance().\
+            intervention_params['travel_isolation']['isolation_'
+                                                    '_effectiveness'] \
+            if (hasattr(infector, 'travel_isolation_start_time')) and (
+                infector.travel_isolation_start_time is not None) and (
+                    infector.travel_isolation_start_time <= time) else 1
         isolating = Parameters.instance().\
             intervention_params['case_isolation']['isolation_effectiveness']\
             if (hasattr(infector, 'isolation_start_time')) and (
@@ -133,11 +139,19 @@ class PlaceInfection:
         quarantine = Parameters.instance().\
             intervention_params['household_quarantine'][
                 'quarantine_place_effectiveness'][place_idx]\
-            if (hasattr(infector, 'quarantine_start_time')) and (
-                infector.quarantine_start_time is not None) and (
-                    infector.quarantine_start_time <= time) else 1
+            if (hasattr(infectee, 'quarantine_start_time')) and (
+                infectee.quarantine_start_time is not None) and (
+                    infectee.quarantine_start_time <= time) else 1
+
+        # Dominant interventions: 1) travel_isolate; 2) case_isolate;
+        isolation_scale_inf = 1
+        if isolating != 1:
+            isolation_scale_inf = isolating
+        if travel_isolating != 1:
+            isolation_scale_inf = travel_isolating
+
         infectiousness = (PlaceInfection.place_inf(place, infector, time)
-                          * isolating * quarantine)
+                          * isolation_scale_inf * quarantine)
         susceptibility = (PlaceInfection.place_susc(place, infector, infectee,
                           time) * carehome_scale_susc * quarantine)
         return (infectiousness * susceptibility)
