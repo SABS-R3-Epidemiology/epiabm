@@ -10,10 +10,11 @@ Overview:
 
 - :class:`AbstractIntervention`
 - :class:`CaseIsolation`
-- :class:`PlaceClosure`
-- :class:`HouseholdQuarantine`
-- :class:`SocialDistancing`
 - :class:`DiseaseTesting`
+- :class:`HouseholdQuarantine`
+- :class:`PlaceClosure`
+- :class:`SocialDistancing`
+- :class:`Vaccination`
 
 .. autoclass:: AbstractIntervention
     :members:
@@ -22,8 +23,8 @@ Overview:
 .. autoclass:: CaseIsolation
     :members:
     :special-members: __init__, __call__
-
-.. autoclass:: PlaceClosure
+   
+.. autoclass:: DiseaseTesting
     :members:
     :special-members: __init__, __call__
 
@@ -31,10 +32,14 @@ Overview:
     :members:
     :special-members: __init__, __call__
 
+.. autoclass:: PlaceClosure
+    :members:
+    :special-members: __init__, __call__
+
 .. autoclass:: SocialDistancing
     :members:
     :special-members: __init__, __call__
 
-.. autoclass:: DiseaseTesting
+.. autoclass:: Vaccination
     :members:
     :special-members: __init__, __call__

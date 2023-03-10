@@ -118,6 +118,7 @@ class PlaceInfection:
             Force of infection parameter of place
 
         """
+
         carehome_scale_susc = 1
         if place.place_type.value == 5 and (infectee.key_worker
                                             or infector.key_worker):

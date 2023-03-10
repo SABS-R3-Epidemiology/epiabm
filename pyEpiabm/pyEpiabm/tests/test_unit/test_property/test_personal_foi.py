@@ -21,12 +21,16 @@ class TestPersonalInfection(TestPyEpiabm):
         cls.microcell = pe.Microcell(cls.cell)
         cls.infector = pe.Person(cls.microcell)
         cls.infector.infectiousness = 1.0
+        cls.infector.date_vaccinated = 0
         cls.infectee = pe.Person(cls.microcell)
+        cls.infectee.date_vaccinated = 0
+        cls.infectee.is_vaccinated = True
+        cls.infector.is_vaccinated = True
         cls.time = 1
 
     def test_person_inf(self):
         result = PersonalInfection.person_inf(self.infector, self.time)
-        self.assertEqual(result, 1.0)
+        self.assertEqual(result, 0.5)
         self.assertIsInstance(result, float)
 
     def test_person_susc(self):
