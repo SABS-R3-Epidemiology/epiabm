@@ -143,6 +143,12 @@ class UpdatePlaceSweep(AbstractSweep):
                              "carehome_minimum_age"]:
                             group_index = 0
                             person.key_worker = True
+                elif (hasattr(Parameters.instance(), 'use_key_workers') and
+                      Parameters.instance().use_key_workers != 0):
+                    r = random.random()
+                    if r < Parameters.instance().use_key_workers:
+                        person.key_worker = True
+
                 if group_index is not None:
                     # If the index is specified
                     place.add_person(person, group_index)

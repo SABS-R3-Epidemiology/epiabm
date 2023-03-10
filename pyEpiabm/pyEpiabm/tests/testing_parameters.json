@@ -445,6 +445,7 @@
             "isolation_delay": 0,
             "isolation_duration": 100,
             "isolation_probability": 1,
+            "use_testing": 0,
             "isolation_effectiveness": 0.5,
             "isolation_house_effectiveness": 0.5
         },
@@ -486,6 +487,18 @@
             "distancing_house_susc": 0.8,
             "distancing_place_susc": [0.8, 0.8, 0.8, 0.8, 0.8, 0.8],
             "distancing_spatial_susc": 0.8
+        },
+        "disease_testing": {
+            "start_time": 6,
+            "policy_duration": 365,
+            "case_threshold": 0,
+            "testing_capacity": [2, 2],
+            "false_positive": [0.1, 0.1],
+            "false_negative": [0.1, 0.1],
+            "testing_asympt_uninf": [0.5, 0.5, 0.5],
+            "asympt_uninf_pcr": [0.2, 0.2, 0.2],
+            "testing_sympt": [1, 1, 1],
+            "sympt_pcr": [0.5, 0.5, 0.5]
         },
         "vaccine_params": {
             "start_time": 6,

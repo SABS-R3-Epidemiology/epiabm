@@ -54,6 +54,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         #  methods except update status
         self.test_population1 = pe.Population()
         self.test_population1.add_cells(1)
+        self.cell = self.test_population1.cells[0]
         self.test_population1.cells[0].add_microcells(1)
         self.test_population1.cells[0].microcells[0].add_people(3)
         self.test_population1.cells[0].microcells[0].add_place(1, [1, 1],
@@ -472,9 +473,13 @@ class TestHostProgressionSweep(TestPyEpiabm):
             np.testing.assert_almost_equal(person_infectiousness_ts1,
                                            person_infectiousness_ts2, 4)
 
+    @mock.patch('pyEpiabm.sweep.HostProgressionSweep.sympt_testing_queue')
+    @mock.patch(
+        'pyEpiabm.sweep.HostProgressionSweep.asympt_uninf_testing_queue')
     @mock.patch('pyEpiabm.Parameters.instance')
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
-    def test_call_main(self, mock_next_time, mock_param):
+    def test_call_main(self, mock_next_time, mock_param,
+                       mock_asympt, mock_sympt):
         """Tests the main function of the Host Progression Sweep.
         Person 1 is set to susceptible and becoming exposed. Person 2 is set to
         exposed and becoming infectious in one time step. Checks the
@@ -526,6 +531,9 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.assertTrue(0.0 <= self.person1.time_of_status_change)
         self.assertEqual(mock_next_time.call_count, 2)
 
+        mock_asympt.assert_called_once_with([(self.cell, self.person3)], 1.0)
+        self.assertEqual(mock_sympt.call_count, 2)
+
     def test_call_specific(self):
         """Tests the specific cases in the call method such as people
         with None as their time to next infection status are the correct
@@ -563,6 +571,25 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.assertEqual(self.person1.infectiousness, 0)
         self.assertEqual(self.person1.infection_start_time, None)
 
+    @mock.patch(
+        'pyEpiabm.sweep.HostProgressionSweep.asympt_uninf_testing_queue')
+    def test_asymptomatic_list(self, mock_asympt):
+        self.person1.time_of_status_change = None
+        self.person1.update_status(InfectionStatus.Susceptible)
+        self.person2.time_of_status_change = np.inf
+        self.person2.update_status(InfectionStatus.Recovered)
+        self.person3.time_of_status_change = 1.0
+        self.person3.update_status(InfectionStatus.Exposed)
+        self.person3.next_infection_status = InfectionStatus.InfectASympt
+
+        test_sweep = pe.sweep.HostProgressionSweep()
+        test_sweep.bind_population(self.test_population1)
+        test_sweep(1.0)
+
+        mock_asympt.assert_called_with([(self.cell, self.person1),
+                                        (self.cell, self.person2),
+                                        (self.cell, self.person3)], 1.0)
+
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
     def test_multiple_transitions_in_one_time_step(self, mock_next_time):
         """Reconfigure population and check that a person is able to progress
@@ -582,6 +609,95 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.assertIn(self.person1.infection_status,
                       [InfectionStatus.Recovered,
                        InfectionStatus.Dead])
+
+    @mock.patch('random.random')
+    def test_sympt_queue(self, mock_random):
+        mock_random.return_value = 0
+        test_sweep = pe.sweep.HostProgressionSweep()
+        test_sweep.bind_population(self.test_population1)
+
+        self.person1.update_status(InfectionStatus.InfectMild)
+        self.person2.update_status(InfectionStatus.InfectMild)
+        self.person3.update_status(InfectionStatus.InfectMild)
+        self.person1.date_positive = None
+        self.person2.date_positive = None
+        self.person3.date_positive = None
+
+        self.person1.care_home_resident = True
+        self.person2.key_worker = True
+
+        test_sweep.sympt_testing_queue(self.cell, self.person1)
+        test_sweep.sympt_testing_queue(self.cell, self.person2)
+        test_sweep.sympt_testing_queue(self.cell, self.person3)
+
+        self.assertEqual(self.cell.PCR_queue.qsize(), 3)
+        self.assertEqual(self.cell.LFT_queue.qsize(), 0)
+
+        self.person1.date_positive = 1
+        self.person1.next_infection_status = InfectionStatus.Recovered
+
+        test_sweep.sympt_testing_queue(self.cell, self.person1)
+
+        self.assertIsNone(self.person1.date_positive)
+
+        self.assertEqual(mock_random.call_count, 8)
+
+    @mock.patch('random.random')
+    def test_LFT_queue(self, mock_random):
+        mock_random.return_value = 0
+        test_sweep = pe.sweep.HostProgressionSweep()
+
+        self.person2.update_status(InfectionStatus.InfectMild)
+        self.person2.date_positive = None
+
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.\
+                intervention_params = {'disease_testing':
+                                       {'sympt_pcr': [-1, -1, -1],
+                                        'testing_sympt': [0.5, 0.5, 0.5]}}
+
+            test_sweep.sympt_testing_queue(self.cell, self.person2)
+            self.assertEqual(self.cell.LFT_queue.qsize(), 1)
+
+        self.assertEqual(mock_random.call_count, 2)
+
+    @mock.patch('random.random')
+    def test_asympt_queue(self, mock_random):
+        mock_random.return_value = 0
+        test_sweep = pe.sweep.HostProgressionSweep()
+        test_sweep.bind_population(self.test_population1)
+
+        self.person1.update_status(InfectionStatus.InfectASympt)
+        self.person2.update_status(InfectionStatus.InfectASympt)
+        self.person3.update_status(InfectionStatus.InfectASympt)
+
+        self.person1.date_positive = None
+        self.person2.date_positive = None
+        self.person3.date_positive = None
+
+        self.person1.care_home_resident = True
+        self.person2.key_worker = True
+
+        person_list = [(self.cell, self.person1), (self.cell, self.person2),
+                       (self.cell, self.person3)]
+
+        test_sweep.asympt_uninf_testing_queue(person_list, 1.0)
+
+        self.assertEqual(self.cell.PCR_queue.qsize(), 3)
+        self.assertEqual(self.cell.LFT_queue.qsize(), 0)
+
+        self.person3.date_positive = 0
+        person_list_2 = [(self.cell, self.person3)]
+
+        test_sweep.asympt_uninf_testing_queue(person_list_2, 10.0)
+        self.assertIsNone(self.person3.date_positive)
+
+        self.person1.update_status(InfectionStatus.InfectMild)
+        person_list_3 = [(self.cell, self.person1)]
+        self.assertRaises(ValueError, test_sweep.asympt_uninf_testing_queue,
+                          person_list_3, 1.0)
+
+        self.assertEqual(mock_random.call_count, 8)
 
 
 if __name__ == "__main__":

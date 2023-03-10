@@ -52,6 +52,7 @@ class Person:
         self.infection_start_time = None
         self.care_home_resident = False
         self.key_worker = False
+        self.date_positive = None
         self.is_vaccinated = False
 
         self.set_random_age(age_group)

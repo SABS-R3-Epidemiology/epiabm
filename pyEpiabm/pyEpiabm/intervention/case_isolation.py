@@ -14,6 +14,7 @@ class CaseIsolation(AbstractIntervention):
     or after the end of the policy.
     Detailed description of the implementation can be found in github wiki:
     https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions.
+
     """
 
     def __init__(
@@ -21,12 +22,14 @@ class CaseIsolation(AbstractIntervention):
         isolation_duration,
         isolation_probability,
         isolation_delay,
+        use_testing,
         population,
         **kwargs
     ):
         self.isolation_duration = isolation_duration
         self.isolation_delay = isolation_delay
         self.isolation_probability = isolation_probability
+        self.use_testing = use_testing
 
         super(CaseIsolation, self).__init__(population=population, **kwargs)
 
@@ -40,13 +43,41 @@ class CaseIsolation(AbstractIntervention):
                         # Stop isolating people after their isolation period
                         person.isolation_start_time = None
                 else:
-                    if person.is_symptomatic():
+                    if self.person_selection_method(person):
                         r = random.random()
                         # Require symptomatic individuals to self-isolate
                         # with given probability
                         if r < self.isolation_probability:
                             person.isolation_start_time = time + self.\
                                                           isolation_delay
+                            if person.date_positive is not None:
+                                self._population.test_isolate_count = [0, 0]
+                                if person.is_symptomatic():
+                                    self._population.test_isolate_count[0] += 1
+                                else:
+                                    self._population.test_isolate_count[1] += 1
+
+    def person_selection_method(self, person):
+        """ Method to determine whether a person is eligible for isolation
+        based on whether they are symptomatic or have tested positive depending
+        on the value of the use_testing parameter.
+
+        Parameters
+        ----------
+        person : Person
+
+        Returns
+        -------
+        bool
+            True if the individual is eligible for case isolation (either
+            symptomatic or has tested positive)
+
+        """
+        if self.use_testing == 0:
+            return person.is_symptomatic()
+        else:
+            if person.date_positive is not None:
+                return True
 
     def turn_off(self):
         for cell in self._population.cells:
