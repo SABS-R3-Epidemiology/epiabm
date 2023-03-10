@@ -55,12 +55,13 @@ class HouseholdQuarantine(AbstractIntervention):
                     r_house = random.random()
                     if r_house < self.quarantine_house_compliant:
                         for household_person in person.household.persons:
-                            r_indiv = random.random()
-                            if r_indiv < \
-                                    self.quarantine_individual_compliant:
-                                household_person.\
-                                    quarantine_start_time = \
-                                    time + self.quarantine_delay
+                            if household_person != person:
+                                r_indiv = random.random()
+                                if r_indiv < \
+                                        self.quarantine_individual_compliant:
+                                    household_person.\
+                                        quarantine_start_time = \
+                                        time + self.quarantine_delay
 
     def turn_off(self):
         for cell in self._population.cells:

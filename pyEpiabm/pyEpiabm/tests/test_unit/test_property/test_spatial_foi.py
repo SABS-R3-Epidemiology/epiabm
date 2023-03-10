@@ -127,7 +127,7 @@ class TestSpatialInfection(TestPyEpiabm):
         quarantine_spatial_effectiveness = \
             pe.Parameters.instance().intervention_params[
                 'household_quarantine']['quarantine_spatial_effectiveness']
-        self.infector.quarantine_start_time = 1
+        self.infectee.quarantine_start_time = 1
         result_isolating = SpatialInfection.spatial_foi(
             self.cell, self.cell,
             self.infector, self.infectee, self.time)

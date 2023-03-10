@@ -6,7 +6,6 @@ import random
 
 from pyEpiabm.intervention import AbstractIntervention
 from pyEpiabm.core import Parameters
-from pyEpiabm.sweep import TravelSweep
 
 
 class TravelIsolation(AbstractIntervention):
@@ -114,7 +113,9 @@ class TravelIsolation(AbstractIntervention):
                 return True
 
     def turn_off(self):
-        for person in TravelSweep.travellers():
-            if (hasattr(person, 'travel_isolation_start_time')) and (
-                    person.travel_isolation_start_time is not None):
-                person.travel_isolation_start_time = None
+        # To do: loop over travellers list in TravelSweep
+        for cell in self._population.cells:
+            for person in cell.persons:
+                if (hasattr(person, 'travel_isolation_start_time')) and (
+                        person.travel_isolation_start_time is not None):
+                    person.travel_isolation_start_time = None

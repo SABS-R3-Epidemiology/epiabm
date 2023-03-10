@@ -88,7 +88,7 @@ class TestPlaceInfection(TestPyEpiabm):
         quarantine_place_effectiveness = \
             pe.Parameters.instance().intervention_params[
                 'household_quarantine']['quarantine_place_effectiveness']
-        self.infector.quarantine_start_time = 1
+        self.infectee.quarantine_start_time = 1
         result_isolating = PlaceInfection.place_foi(self.place, self.infector,
                                                     self.infectee, self.time)
         place_idx = self.place.place_type.value - 1

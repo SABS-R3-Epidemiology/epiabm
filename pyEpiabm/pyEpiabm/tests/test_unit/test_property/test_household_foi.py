@@ -106,7 +106,7 @@ class TestHouseholdInfection(TestPyEpiabm):
         quarantine_house_effectiveness = \
             pe.Parameters.instance().intervention_params[
                 'household_quarantine']['quarantine_house_effectiveness']
-        self.infector.quarantine_start_time = 1
+        self.infectee.quarantine_start_time = 1
         result_isolating = HouseholdInfection.household_foi(self.infector,
                                                             self.infectee,
                                                             self.time)
