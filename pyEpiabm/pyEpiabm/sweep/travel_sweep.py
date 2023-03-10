@@ -9,7 +9,6 @@ import math
 from pyEpiabm.core import Population, Parameters, Microcell, Person
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import HostProgressionSweep
-
 from .abstract_sweep import AbstractSweep
 
 

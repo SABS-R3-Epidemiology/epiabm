@@ -5,3 +5,4 @@ from .place_closure import PlaceClosure
 from .household_quarantine import HouseholdQuarantine
 from .social_distancing import SocialDistancing
 from .vaccination import Vaccination
+from .travel_isolation import TravelIsolation

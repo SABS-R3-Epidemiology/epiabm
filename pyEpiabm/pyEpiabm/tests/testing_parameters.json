@@ -510,6 +510,18 @@
             "min_ages": [80, 65, 50, 18],
             "prob_vaccinated": [1, 1, 1, 1],
             "daily_doses": 1
+        },
+        "travel_isolation": {
+            "start_time": 6,
+            "policy_duration": 365,
+            "case_threshold": 0,
+            "isolation_delay": 0,
+            "isolation_duration": 5,
+            "isolation_probability": 0.5,
+            "use_testing": 0,
+            "hotel_isolate": 0,
+            "isolation_effectiveness": 0.5,
+            "isolation_house_effectiveness": 0.5
         }
     },
     "travel_params": {
