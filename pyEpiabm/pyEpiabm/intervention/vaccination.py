@@ -51,7 +51,7 @@ class Vaccination(AbstractIntervention):
             number_vaccinated += 1
 
     def turn_off(self):
-        # empty function since, unlike non-pharmacietical interventions, if
+        # empty function since, unlike non-pharmaceutical interventions, if
         # mass vaccination ends already vaccinated individuals remain
         # vaccinated.
         return
