@@ -360,7 +360,6 @@ df_old = pd.read_csv(filename)
 print('location old:', df_old["location_x"])
 df = df_old.groupby(
     ['time', 'cell', 'location_x', 'location_y'], as_index=False).sum()
-df.to_csv('testy_testy.csv')
 print('location:', df["location_x"])
 print('Filename:', filename)
 
