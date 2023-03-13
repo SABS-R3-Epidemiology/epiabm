@@ -513,6 +513,6 @@
         "ratio_introduce_cases": 0.0,
         "constant_introduce_cases": [0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
         "duration_travel_stay": [2, 14],
-        "prob_existing_household": 0.8
+        "prob_existing_household": 1.0
     }
 }

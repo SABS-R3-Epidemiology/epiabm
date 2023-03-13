@@ -47,11 +47,9 @@ class TravelIsolation(AbstractIntervention):
                                     isolation_duration:
                                 print('stop travel isolating me')
                                 print(person)
-                                print(person.travel_isolation_start_time)
                                 # Stop isolating people after their isolation
                                 # period
                                 person.travel_isolation_start_time = None
-                                print(person.travel_isolation_start_time)
 
                                 # Check if need to assign to new household
                                 if self.hotel_isolate == 1:
@@ -60,33 +58,20 @@ class TravelIsolation(AbstractIntervention):
                                             'prob_existing_household']:
                                         print('before removing')
                                         # Remove from current household
-                                        print(len(person.microcell.households))
-                                        print(person.household)
-                                        print(person.microcell.households)
                                         person.household.persons.remove(person)
                                         # Remove the empty household from microcell
-                                        print('person removed from household list')
-                                        print(person.microcell.households)
                                         person.microcell.households.remove(
                                             person.household)
-                                        print('household removed from household list')
-                                        print(person.microcell.households)
                                         # Assign to existing household (not
                                         # to household containing isolating
                                         # individual)
                                         existing_households = [hh for hh in person.microcell.
                                             households if not self.is_hotel_isolation_household(
                                             hh)]
-                                        print(existing_households)
                                         selected_household = random.choice(existing_households)
-                                        print('selected household')
-                                        print(selected_household)
                                         selected_household.add_person(person)
-                                        print(selected_household)
                                         print('this is my new household')
                                         print(person.household)
-                                        print(len(person.microcell.households))
-                                        print(person.microcell.households)
                     else:
                         if self.person_selection_method(person):
                             r = random.random()
