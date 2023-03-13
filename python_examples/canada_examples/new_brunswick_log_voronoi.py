@@ -294,7 +294,7 @@ def generate_animation(
     fig = plt.figure()
 
     ax = plt.axes(projection=ccrs.PlateCarree())
-    plt.title('Luxembourg Outline')
+    plt.title('New Brunswick Outline')
 
     ax.use_sticky_edges = False
     # set a margin around the data
@@ -315,8 +315,8 @@ def generate_animation(
             fig, animate, frames=times, init_func=lambda *args: None
         )
         writer = matplotlib.animation.PillowWriter(fps=30)
-        ani.save((save_path + str("voronoi_log_animation.gif")), writer=writer,
-                 dpi=200)
+        ani.save((save_path + str("new_brunswick_voronoi_log_animation.gif")),
+                 writer=writer, dpi=200)
     else:
         file_names = []
         for i, t in enumerate(times):
@@ -333,7 +333,7 @@ def generate_animation(
             plt.close(t_fig)
 
         fp_in = save_path + "image" + "*d_log.png"
-        fp_out = save_path + "voronoi_log_animation.gif"
+        fp_out = save_path + "new_brunswick_voronoi_log_animation.gif"
         img, *imgs = [Image.open(f).convert("RGB")
                       for f in sorted(glob.glob(fp_in))]
         img.save(
@@ -351,11 +351,11 @@ def generate_animation(
 
 
 df = gpd.read_file("ne_10m_admin_0_countries_lakes.zip")
-lux = df.loc[df['ADMIN'] == 'Luxembourg'].geometry.to_list()
+lux = df.loc[df['ADMIN'] == 'New Brunswick'].geometry.to_list()
 
 # Read in the data from simulation output
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
-                        "output_luxembourg.csv")
+                        "output_new_brunswick.csv")
 df_old = pd.read_csv(filename)
 print('location old:', df_old["location_x"])
 df = df_old.groupby(
@@ -383,7 +383,7 @@ vor = Voronoi(locations)
 # Plot grid of time points
 
 fig_loc = ("simulation_outputs/"
-           + "voronoi_grid_log_img.png")
+           + "new_brunswick_voronoi_grid_log_img.png")
 plot_time_grid(
     df,
     vor,
