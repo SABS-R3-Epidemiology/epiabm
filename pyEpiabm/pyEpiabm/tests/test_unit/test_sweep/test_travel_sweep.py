@@ -123,6 +123,7 @@ class TestTravelSweep(TestPyEpiabm):
         self.travelsweep.travel_params['ratio_introduce_cases'] = 0.5
         self.travelsweep.travel_params['prob_existing_household'] = 0.0
         self.travelsweep.travel_params['duration_travel_stay'] = [2, 2]
+
         self.assertEqual(len(self.microcell1.persons), 15)
         self.assertEqual(len(self.microcell1.households), 2)
         self.travelsweep(time=1)
@@ -154,38 +155,18 @@ class TestTravelSweep(TestPyEpiabm):
         introduced_person = self.cell.persons[-1]
         introduced_person.isolation_start_time = 18
         introduced_person.quarantine_start_time = 19
+        introduced_person.travel_isolation_start_time = 18
         self.travelsweep.travel_params['ratio_introduce_cases'] = 0.0
         self.travelsweep(time=17)
         self.assertEqual(len(self._population.cells[0].persons), 21)
         self.travelsweep(time=18)
         self.assertEqual(len(self._population.cells[0].persons), 21)
-        self.travelsweep(time=19)
-        self.assertEqual(len(self._population.cells[0].persons), 20)
-
-        # Remove after end time and isolation is over
-        self.travelsweep.travel_params['ratio_introduce_cases'] = 0.5
-        self.travelsweep.travel_params['duration_travel_stay'] = [2, 2]
-        # Introduce individual staying untill day 22
-        self.travelsweep(time=20)
-        introduced_person = self.cell.persons[-1]
-        introduced_person.isolation_start_time = 24
-        self.travelsweep.travel_params['ratio_introduce_cases'] = 0.0
+        introduced_person.isolation_start_time = None
+        introduced_person.quarantine_start_time = None
+        self.travelsweep(time=22)
+        self.assertEqual(len(self._population.cells[0].persons), 21)
+        introduced_person.travel_isolation_start_time = None
         self.travelsweep(time=23)
-        self.assertEqual(len(self._population.cells[0].persons), 21)
-        self.travelsweep(time=24)
-        self.assertEqual(len(self._population.cells[0].persons), 20)
-
-        # Remove after end time and quarantine is over
-        self.travelsweep.travel_params['ratio_introduce_cases'] = 0.5
-        self.travelsweep.travel_params['duration_travel_stay'] = [2, 2]
-        # Introduce individual staying untill day 27
-        self.travelsweep(time=25)
-        introduced_person = self.cell.persons[-1]
-        introduced_person.quarantine_start_time = 29
-        self.travelsweep.travel_params['ratio_introduce_cases'] = 0.0
-        self.travelsweep(time=28)
-        self.assertEqual(len(self._population.cells[0].persons), 21)
-        self.travelsweep(time=29)
         self.assertEqual(len(self._population.cells[0].persons), 20)
 
 

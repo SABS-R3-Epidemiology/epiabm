@@ -215,24 +215,31 @@ class TravelSweep(AbstractSweep):
         """
         if (hasattr(person, 'travel_end_time')) and \
                 (time > person.travel_end_time):
-            if all([hasattr(person, 'isolation_start_time'),
-                    hasattr(person, 'quarantine_start_time')]):
-                if (person.isolation_start_time is None and
-                        person.quarantine_start_time is None) or \
-                        (person.isolation_start_time <= time and
-                         person.quarantine_start_time <= time):
-                    return True
-            elif hasattr(person, 'isolation_start_time'):
-                if (person.isolation_start_time is None) or \
-                        (person.isolation_start_time <= time):
-                    return True
-            elif hasattr(person, 'quarantine_start_time'):
-                if (person.quarantine_start_time is None) or \
-                        (person.quarantine_start_time <= time):
-                    return True
+            interventions_list = {'isolation_start_time': hasattr(
+                                  person, 'isolation_start_time'),
+                                  'quarantine_start_time': hasattr(
+                                  person, 'quarantine_start_time'),
+                                  'travel_isolation_start_time': hasattr(
+                                  person, 'travel_isolation_start_time')}
+            if any(interventions_list.values()):
+                interventions_not_active = True
+                for intervention in interventions_list.keys():
+                    if interventions_list[intervention]:
+                        if intervention == 'isolation_start_time':
+                            if (person.isolation_start_time is not None):
+                                interventions_not_active = False
+                        if intervention == 'quarantine_start_time':
+                            if (person.quarantine_start_time is not None):
+                                interventions_not_active = False
+                        if intervention == 'travel_isolation_start_time':
+                            if (person.travel_isolation_start_time is
+                                    not None):
+                                interventions_not_active = False
+                return interventions_not_active
             else:
                 return True
-        return False
+        else:
+            return False
 
     def remove_leaving_individuals(self, time):
         """Remove individuals after their travel_end_time is reached
