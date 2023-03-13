@@ -79,6 +79,9 @@ class Simulation:
 
         self.age_stratified = file_params["age_stratified"] \
             if "age_stratified" in file_params else False
+        
+        self.inf_scale = self.sim_params['switch_variant'][0]
+        self.time_change = self.sim_params['switch_variant'][1]
 
         Parameters.instance().use_ages = self.age_stratified
 
@@ -140,12 +143,16 @@ class Simulation:
         for t in tqdm(np.arange(self.sim_params["simulation_start_time"] + ts,
                                 self.sim_params["simulation_end_time"] + ts,
                                 ts)):
+            if t == self.time_change:
+                Parameters.instance().sympt_infectiousness = self.new_r0 * Parameters.instance().sympt_infectiousness
+                Parameters.instance().asympt_infectiousness = self.new_r0 * Parameters.instance().asympt_infectiousness
             for sweep in self.sweeps:
                 sweep(t)
             self.write_to_file(t)
             for writer in self.writers:
                 writer.write(t, self.population)
             logging.debug(f'Iteration at time {t} days completed')
+            logging.debug(f'R0 of {Parameters.instance().infectiousness_prof} used')
 
         logging.info(f"Final time {t} days reached")
 
