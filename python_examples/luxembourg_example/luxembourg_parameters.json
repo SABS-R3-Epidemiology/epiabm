@@ -436,7 +436,7 @@
     },
     "carehome_params": {
       "carehome_minimum_age": 1000,
-      "carehome_allow_initial_infections": 0,
+      "carehome_allow_initial_infections": 1,
       "carehome_resident_household_scaling": 1,
       "carehome_resident_place_scaling": 1,
       "carehome_resident_spatial_scaling": 1,

@@ -146,6 +146,8 @@ class SpatialSweep(AbstractSweep):
         for infectee_cell in cell_list:
             # Sample at random from the infectee cell to find
             # an infectee
+            if len(infectee_cell.persons) == 0:
+                continue
             infectee_list.append(random.sample(infectee_cell.persons, 1)[0])
         return infectee_list
 
