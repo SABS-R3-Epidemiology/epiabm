@@ -36,6 +36,7 @@ class Household:
         self.infectiousness = infectiousness
         self.cell = microcell.cell
         self.microcell = microcell
+        self.isolation_location = False
 
         if not (len(loc) == 2 and isinstance(loc[0], Number) and
                 isinstance(loc[1], Number)):
@@ -94,3 +95,12 @@ class Household:
 
         """
         self.susceptible_persons.remove(non_susceptible_person)
+
+    def remove_household(self):
+        """ Method to remove Household object from population.
+        Used to remove household in which a traveller was hotel
+        isolating.
+
+        """
+        self.microcell.households.remove(self)
+        self.cell.households.remove(self)

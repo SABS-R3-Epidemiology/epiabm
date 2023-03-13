@@ -19,7 +19,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 
 # sim_params give details for the running of the simulations
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 10,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
 # Set parameter file
@@ -30,11 +30,13 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
 # Parameter to change
-# to_modify_parameter_values = {'isolation_probability': [0.0, 1.0],
-#                               'hotel_isolate': [0, 1]}
-to_modify_parameter_values = {'isolation_probability': [1.0]}
+to_modify_parameter_values = {'isolation_probability': [0.0, 1.0],
+                              'hotel_isolate': [1]}
+# to_modify_parameter_values = {'hotel_isolate': [1.0]}
 for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         items():
+    # if to_modify_parameter == 'isolation_probability':
+
     for parameter_value in parameter_values:
         name_output_file = 'output_{}_{}.csv'.format(
             parameter_value, to_modify_parameter)
@@ -113,8 +115,18 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
                      "InfectionStatus.Dead": 'sum'})
         df = df.reset_index(level=0)
 
-        plt.plot(df['time'], df['Infected'], label='{}: {}'.format(
-            to_modify_parameter, parameter_value))
+        label = 'hotel_isolate:'
+        if to_modify_parameter == 'hotel_isolate':
+            label += ' {}, '.format(parameter_value)
+            label += 'isolation_probability: {}'.format(
+                pe.Parameters.instance().intervention_params[
+                                        'travel_isolation'][
+                                        'isolation_probability'])
+        else:
+            label += ' 0, '
+            label += 'isolation_probability: {}'.format(parameter_value)
+
+        plt.plot(df['time'], df['Infected'], label=label)
 
 plt.legend()
 plt.title("Infection curves for different {}".format(

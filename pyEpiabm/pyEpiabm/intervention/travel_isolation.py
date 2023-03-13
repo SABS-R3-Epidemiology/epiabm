@@ -5,7 +5,7 @@
 import random
 
 from pyEpiabm.intervention import AbstractIntervention
-from pyEpiabm.core import Parameters
+from pyEpiabm.core import Parameters, Household
 
 
 class TravelIsolation(AbstractIntervention):
@@ -45,8 +45,6 @@ class TravelIsolation(AbstractIntervention):
                         if person.travel_isolation_start_time is not None:
                             if time > person.travel_isolation_start_time + self.\
                                     isolation_duration:
-                                print('stop travel isolating me')
-                                print(person)
                                 # Stop isolating people after their isolation
                                 # period
                                 person.travel_isolation_start_time = None
@@ -56,22 +54,18 @@ class TravelIsolation(AbstractIntervention):
                                     r = random.random()
                                     if r < Parameters.instance().travel_params[
                                             'prob_existing_household']:
-                                        print('before removing')
-                                        # Remove from current household
-                                        person.household.persons.remove(person)
-                                        # Remove the empty household from microcell
-                                        person.microcell.households.remove(
+                                        # Remove the household
+                                        Household.remove_household(
                                             person.household)
                                         # Assign to existing household (not
                                         # to household containing isolating
                                         # individual)
-                                        existing_households = [hh for hh in person.microcell.
-                                            households if not self.is_hotel_isolation_household(
-                                            hh)]
-                                        selected_household = random.choice(existing_households)
+                                        existing_households = \
+                                            [h for h in person.microcell.
+                                             households if not h.isolation_location]
+                                        selected_household = random.choice(
+                                            existing_households)
                                         selected_household.add_person(person)
-                                        print('this is my new household')
-                                        print(person.household)
                     else:
                         if self.person_selection_method(person):
                             r = random.random()
@@ -83,24 +77,15 @@ class TravelIsolation(AbstractIntervention):
                                 if self.hotel_isolate == 1:
                                     if len(person.household.persons) > 1:
                                         # Remove from old household
-                                        print('i start isolating')
-                                        print(person)
                                         person.household.persons.remove(person)
                                         # Put in new household
                                         person.microcell.add_household([
                                             person])
-                                        print(person.household)
+                                        person.household.isolation_location = \
+                                            True
 
                                 person.travel_isolation_start_time = time + \
                                     self.isolation_delay
-
-    def is_hotel_isolation_household(self, household):
-        if len(household.persons) == 1:
-            if (hasattr(household.persons[0], 'travel_isolation_start_time')) \
-                    and (household.persons[0].travel_isolation_start_time
-                         is not None):
-                return True
-        return False
 
     def person_selection_method(self, person):
         """ Method to determine whether a person is eligible for isolation.

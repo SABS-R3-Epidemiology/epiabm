@@ -63,8 +63,6 @@ class TravelSweep(AbstractSweep):
         number_individuals_introduced = num_individuals_introduced_ratio + \
             num_individuals_introduced_constant
 
-        print('introduce {} individuals'.format(number_individuals_introduced))
-
         if number_individuals_introduced >= 1:
             self.create_introduced_individuals(
                 time, number_individuals_introduced)
@@ -195,7 +193,8 @@ class TravelSweep(AbstractSweep):
             if r < self.travel_params['prob_existing_household']:
                 # Assign to existing household
                 selected_household = random.choice(
-                    selected_microcell.households)
+                    [h for h in selected_microcell.households if not
+                     h.isolation_location])
                 selected_household.add_person(person)
             else:
                 # Create new household
@@ -259,7 +258,5 @@ class TravelSweep(AbstractSweep):
         """
         for person in list(reversed(self.travellers)):
             if self.check_leaving_individuals(time, person):
-                print('remove me: {}'.format(person))
-                print(person.household)
                 Person.remove_person(person)
                 self.travellers.remove(person)
