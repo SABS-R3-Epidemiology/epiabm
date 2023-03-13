@@ -17,7 +17,7 @@ class TestInitialInfectedSweep(TestPyEpiabm):
         """
         self.pop_factory = pe.routine.ToyPopulationFactory()
         self.pop_params = {"population_size": 2, "cell_number": 1,
-                          "microcell_number": 1, "household_number": 1}
+                           "microcell_number": 1, "household_number": 1}
         self.test_population = self.pop_factory.make_pop(self.pop_params)
         self.cell = self.test_population.cells[0]
         self.microcell = self.cell.microcells[0]
