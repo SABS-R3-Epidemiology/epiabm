@@ -170,3 +170,6 @@ python_examples/intervention_example/intervention_outputs/*.csv
 kernprof.py
 *.prof
 *.lprof
+
+# Large csv output files
+large_csv/
