@@ -19,7 +19,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 
 # sim_params give details for the running of the simulations
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 10,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
 # Set parameter file
@@ -30,8 +30,9 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
 # Parameter to change
-to_modify_parameter_values = {'isolation_probability': [0.0, 1.0],
-                              'hotel_isolate': [0, 1]}
+# to_modify_parameter_values = {'isolation_probability': [0.0, 1.0],
+#                               'hotel_isolate': [0, 1]}
+to_modify_parameter_values = {'isolation_probability': [1.0]}
 for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         items():
     for parameter_value in parameter_values:
@@ -61,7 +62,8 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         file_params = {"output_file": name_output_file,
                        "output_dir": os.path.join(os.path.dirname(__file__),
                                                   "intervention_outputs"),
-                       "spatial_output": True}
+                       "spatial_output": True,
+                       "age_stratified": True}
 
         # Create a simulation object, configure it with the parameters given,
         # then run the simulation.

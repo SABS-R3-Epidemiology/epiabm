@@ -41,32 +41,52 @@ class TravelIsolation(AbstractIntervention):
             for person in cell.persons:
                 # Apply only to travelling individuals
                 if (hasattr(person, 'travel_end_time')):
-                    if (hasattr(person, 'travel_isolation_start_time')) and (
-                            person.travel_isolation_start_time is not None):
-                        if time > person.travel_isolation_start_time + self.\
-                                isolation_duration:
-                            # Stop isolating people after their isolation
-                            # period
-                            person.travel_isolation_start_time = None
+                    if hasattr(person, 'travel_isolation_start_time'):
+                        if person.travel_isolation_start_time is not None:
+                            if time > person.travel_isolation_start_time + self.\
+                                    isolation_duration:
+                                print('stop travel isolating me')
+                                print(person)
+                                print(person.travel_isolation_start_time)
+                                # Stop isolating people after their isolation
+                                # period
+                                person.travel_isolation_start_time = None
+                                print(person.travel_isolation_start_time)
 
-                            # Check if need to assign to new household
-                            r = random.random()
-                            if r < Parameters.instance().travel_params[
-                                    'prob_existing_household']:
-                                # Remove from current household and microcell
-                                # counter
-                                person.microcell.compartment_counter.\
-                                    _increment_compartment(
-                                        -1, person.infection_status,
-                                        person.age_group)
-                                person.household.persons.remove(person)
-                                person.microcell.households.remove(
-                                    person.household)
-                                # Assign to existing household (and implicit
-                                # add to microcell counter)
-                                selected_household = random.choice(
-                                    person.microcell.households)
-                                selected_household.add_person(person)
+                                # Check if need to assign to new household
+                                if self.hotel_isolate == 1:
+                                    r = random.random()
+                                    if r < Parameters.instance().travel_params[
+                                            'prob_existing_household']:
+                                        print('before removing')
+                                        # Remove from current household
+                                        print(len(person.microcell.households))
+                                        print(person.household)
+                                        print(person.microcell.households)
+                                        person.household.persons.remove(person)
+                                        # Remove the empty household from microcell
+                                        print('person removed from household list')
+                                        print(person.microcell.households)
+                                        person.microcell.households.remove(
+                                            person.household)
+                                        print('household removed from household list')
+                                        print(person.microcell.households)
+                                        # Assign to existing household (not
+                                        # to household containing isolating
+                                        # individual)
+                                        existing_households = [hh for hh in person.microcell.
+                                            households if not self.is_hotel_isolation_household(
+                                            hh)]
+                                        print(existing_households)
+                                        selected_household = random.choice(existing_households)
+                                        print('selected household')
+                                        print(selected_household)
+                                        selected_household.add_person(person)
+                                        print(selected_household)
+                                        print('this is my new household')
+                                        print(person.household)
+                                        print(len(person.microcell.households))
+                                        print(person.microcell.households)
                     else:
                         if self.person_selection_method(person):
                             r = random.random()
@@ -77,19 +97,25 @@ class TravelIsolation(AbstractIntervention):
                                 # household (if not already staying alone)
                                 if self.hotel_isolate == 1:
                                     if len(person.household.persons) > 1:
-                                        # Remove from old household and counter
-                                        person.microcell.compartment_counter.\
-                                            _increment_compartment(
-                                                -1, person.infection_status,
-                                                person.age_group)
+                                        # Remove from old household
+                                        print('i start isolating')
+                                        print(person)
                                         person.household.persons.remove(person)
-                                        # Put in new household (implicitly
-                                        # added to counter)
+                                        # Put in new household
                                         person.microcell.add_household([
                                             person])
+                                        print(person.household)
 
                                 person.travel_isolation_start_time = time + \
                                     self.isolation_delay
+
+    def is_hotel_isolation_household(self, household):
+        if len(household.persons) == 1:
+            if (hasattr(household.persons[0], 'travel_isolation_start_time')) \
+                    and (household.persons[0].travel_isolation_start_time
+                         is not None):
+                return True
+        return False
 
     def person_selection_method(self, person):
         """ Method to determine whether a person is eligible for isolation.
