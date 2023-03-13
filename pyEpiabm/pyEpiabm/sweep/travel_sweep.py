@@ -245,12 +245,7 @@ class TravelSweep(AbstractSweep):
             Simulation time
 
         """
-        someone_is_leaving = False
-        for person in self.travellers:
+        for person in list(reversed(self.travellers)):
             if self.check_leaving_individuals(time, person):
-                someone_is_leaving = True
                 Person.remove_person(person)
-
-        if someone_is_leaving:
-            self.travellers = [person for person in self.travellers if not
-                               self.check_leaving_individuals(time, person)]
+                self.travellers.remove(person)
