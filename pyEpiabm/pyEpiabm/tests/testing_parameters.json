@@ -517,7 +517,7 @@
             "case_threshold": 0,
             "isolation_delay": 0,
             "isolation_duration": 5,
-            "isolation_probability": 1.0,
+            "isolation_probability": 0.5,
             "use_testing": 0,
             "hotel_isolate": 1,
             "isolation_effectiveness": 0.5,

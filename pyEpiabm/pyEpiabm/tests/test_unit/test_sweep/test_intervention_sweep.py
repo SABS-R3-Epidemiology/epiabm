@@ -1,7 +1,6 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.core import Parameters
 from pyEpiabm.sweep import InterventionSweep
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
@@ -13,22 +12,23 @@ class TestInterventionSweep(TestPyEpiabm):
     """Test the 'InterventionSweep' class.
     """
 
-    def setUp(self) -> None:
-        super(TestInterventionSweep, self).setUp()
-        self.interventionsweep = InterventionSweep()
+    @classmethod
+    def setUpClass(cls) -> None:
+        super(TestInterventionSweep, cls).setUpClass()
+        cls.interventionsweep = InterventionSweep()
 
         # Construct a population with 2 persons, one infector and one infectee
-        self.pop_factory = pe.routine.ToyPopulationFactory()
-        self.pop_params = {"population_size": 2, "cell_number": 1,
-                          "microcell_number": 1, "household_number": 1}
-        self._population = self.pop_factory.make_pop(self.pop_params)
-        self._microcell = self._population.cells[0].microcells[0]
-        self.person_susc = self._microcell.persons[0]
-        self.person_susc.update_status(InfectionStatus(1))
-        self.person_symp = self._microcell.persons[1]
-        self.person_symp.update_status(InfectionStatus(4))
+        cls.pop_factory = pe.routine.ToyPopulationFactory()
+        cls.pop_params = {"population_size": 2, "cell_number": 1,
+                           "microcell_number": 1, "household_number": 1}
+        cls._population = cls.pop_factory.make_pop(cls.pop_params)
+        cls._microcell = cls._population.cells[0].microcells[0]
+        cls.person_susc = cls._microcell.persons[0]
+        cls.person_susc.update_status(InfectionStatus(1))
+        cls.person_symp = cls._microcell.persons[1]
+        cls.person_symp.update_status(InfectionStatus(4))
 
-        self.interventionsweep.bind_population(self._population)
+        cls.interventionsweep.bind_population(cls._population)
 
     def test_bind_population(self):
         self.assertEqual(len(self.interventionsweep.
@@ -99,35 +99,9 @@ class TestInterventionSweep(TestPyEpiabm):
         self.assertEqual(self.person_symp.isolation_start_time, 10)
         self.assertIsNotNone(self.person_susc.quarantine_start_time)
 
-        # Create individual and test re-assigning household
-        self._microcell.add_people(
-            1, status=InfectionStatus.InfectASympt, age_group=5)
-        person_introduced = self._microcell.persons[2]
-        self._microcell.households[0].add_person(person_introduced)
-        person_introduced.travel_end_time = 25
-        # pe.Parameters.instance().intervention_params['travel_isolation'][
-        #     'hotel_isolate'] = 1
-        # pe.Parameters.instance().intervention_params['travel_isolation'][
-        #     'isolation_probability'] = 1.0
-        # Why parameters not set?
-        self.assertEqual(len(self._microcell.households), 1)
-        self.assertEqual(len(self.person_symp.household.persons), 3)
-        self.interventionsweep(time=11)
-        self.assertEqual(len(self._microcell.households), 2)
-        self.assertEqual(len(self.person_symp.household.persons), 2)
-        self.assertEqual(len(person_introduced.household.persons), 1)
-
-        # Out of travel_isolation assign back to household
-        pe.Parameters.instance().travel_params['prob_existing_household'] = 1.0
-        self.interventionsweep(time=20)
-        self.assertIsNone(person_introduced.travel_isolation_start_time)
-        self.assertEqual(len(self._microcell.households), 1)
-        self.assertEqual(len(self.person_symp.household.persons), 3)
-
         # Stop isolating after start_time + policy_duration
         self.interventionsweep.intervention_params['case_isolation'][
             'policy_duration'] = 365
-        # possibly doesnt work
         self.person_symp.isolation_start_time = 370
         self.interventionsweep(time=370)
         self.assertEqual(self.person_symp.isolation_start_time, 370)

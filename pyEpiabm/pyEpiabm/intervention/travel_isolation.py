@@ -90,15 +90,6 @@ class TravelIsolation(AbstractIntervention):
 
                                 person.travel_isolation_start_time = time + \
                                     self.isolation_delay
-                                if person.date_positive is not None:
-                                    self._population.test_isolate_count = \
-                                        [0, 0]
-                                    if person.is_symptomatic():
-                                        self._population.test_isolate_count[
-                                            0] += 1
-                                    else:
-                                        self._population.test_isolate_count[
-                                            1] += 1
 
     def person_selection_method(self, person):
         """ Method to determine whether a person is eligible for isolation.
