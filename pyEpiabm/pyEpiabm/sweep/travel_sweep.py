@@ -226,14 +226,18 @@ class TravelSweep(AbstractSweep):
                 for intervention in interventions_list.keys():
                     if interventions_list[intervention]:
                         if intervention == 'isolation_start_time':
-                            if (person.isolation_start_time is not None):
+                            if (person.isolation_start_time is not None) and \
+                                    (person.isolation_start_time <= time):
                                 interventions_not_active = False
                         if intervention == 'quarantine_start_time':
-                            if (person.quarantine_start_time is not None):
+                            if (person.quarantine_start_time is not None) and \
+                                    (person.quarantine_start_time <= time):
                                 interventions_not_active = False
                         if intervention == 'travel_isolation_start_time':
                             if (person.travel_isolation_start_time is
-                                    not None):
+                                    not None) and \
+                                    (person.travel_isolation_start_time
+                                     <= time):
                                 interventions_not_active = False
                 return interventions_not_active
             else:
@@ -251,12 +255,7 @@ class TravelSweep(AbstractSweep):
             Simulation time
 
         """
-        someone_is_leaving = False
-        for person in self.travellers:
+        for person in list(reversed(self.travellers)):
             if self.check_leaving_individuals(time, person):
-                someone_is_leaving = True
                 Person.remove_person(person)
-
-        if someone_is_leaving:
-            self.travellers = [person for person in self.travellers if not
-                               self.check_leaving_individuals(time, person)]
+                self.travellers.remove(person)
