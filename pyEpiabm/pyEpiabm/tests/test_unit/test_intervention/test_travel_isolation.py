@@ -29,6 +29,7 @@ class TestTravelIsolation(TestPyEpiabm):
         self._microcell.add_people(
             1, status=InfectionStatus.InfectASympt, age_group=5)
         self.person_introduced = self._microcell.persons[2]
+        self._population.travellers.append(self.person_introduced)
         self._microcell.households[0].add_person(self.person_introduced)
         self.person_introduced.travel_end_time = 25
 
