@@ -151,9 +151,8 @@ class TestSpatialSweep(TestMockedLogs):
         # test logger is called here
 
     @mock.patch("logging.exception")
-    @mock.patch("numpy.nan_to_num")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
-    def test_find_infectees_fails_2(self, mock_dist, mock_nan, mock_logger):
+    def test_find_infectees_fails_2(self, mock_dist, mock_logger):
         Parameters.instance().infection_radius = 1000
         test_pop = self.pop
         test_sweep = SpatialSweep()
