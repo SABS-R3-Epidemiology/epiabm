@@ -152,7 +152,7 @@ class TravelSweep(AbstractSweep):
         equal to the number_individuals_introduced (or max number of
         microcells) with highest population density are selected. The
         individuals are assigned to one of these microcells by a uniform random
-        choice between them. Individuals can end up in the same microcell. 
+        choice between them. Individuals can end up in the same microcell.
         Next, individuals are assigned to an wxisting or a new household within
         the selected microcell.
 
