@@ -6,26 +6,17 @@ import unittest
 from unittest.mock import patch, mock_open
 
 import pyEpiabm as pe
-
+from pyEpiabm.tests import TestFunctional
 
 numReps = 2
 
 
-class TestPopulationRandomSeeds(unittest.TestCase):
+class TestPopulationRandomSeeds(TestFunctional):
     """Test random seed usage in population generation
     """
     @classmethod
     def setUpClass(cls) -> None:
         super(TestPopulationRandomSeeds, cls).setUpClass()
-
-        cls.warning_patcher = patch('logging.warning')
-        cls.error_patcher = patch('logging.error')
-        cls.warning_patcher.start()
-        cls.error_patcher.start()
-
-        filepath = os.path.join(os.path.dirname(__file__),
-                                os.pardir, 'testing_parameters.json')
-        pe.Parameters.set_file(filepath)
         pe.Parameters.instance().household_size_distribution = []
 
     def setUp(self) -> None:
@@ -121,22 +112,12 @@ class TestPopulationRandomSeeds(unittest.TestCase):
         self.assertNotEqual(seed_microcells, diff_microcells)
 
 
-class TestSimulationRandomSeeds(unittest.TestCase):
+class TestSimulationRandomSeeds(TestFunctional):
     """Test random seed usage in simulation evaluation
     """
     @classmethod
     def setUpClass(cls) -> None:
         super(TestSimulationRandomSeeds, cls).setUpClass()
-
-        cls.warning_patcher = patch('logging.warning')
-        cls.error_patcher = patch('logging.error')
-        cls.warning_patcher.start()
-        cls.error_patcher.start()
-
-        filepath = os.path.join(os.path.dirname(__file__),
-                                os.pardir, 'testing_parameters.json')
-        pe.Parameters.set_file(filepath)
-
         cls.pop_factory = pe.routine.ToyPopulationFactory()
         cls.pop_params = {"population_size": 0, "cell_number": 1,
                           "microcell_number": 1, "household_number": 1}
@@ -157,20 +138,7 @@ class TestSimulationRandomSeeds(unittest.TestCase):
         cls.initial_sweeps = [pe.sweep.InitialInfectedSweep()]
         cls.sweeps = [pe.sweep.PlaceSweep()]
 
-    @classmethod
-    def tearDownClass(cls):
-        """Inherits from the unittest teardown, and remove all patches"""
-        super(TestSimulationRandomSeeds, cls).tearDownClass()
-        cls.warning_patcher.stop()
-        cls.error_patcher.stop()
-
-    def notqdm(iterable, *args, **kwargs):
-        """Replacement for tqdm that just passes back the iterable
-        useful to silence `tqdm` in tests
-        """
-        return iterable
-
-    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
     @patch('pyEpiabm.output._CsvDictWriter.write')
     @patch('os.makedirs')
     def test_random_seed(self, mock_mkdir, mock_write):
