@@ -43,8 +43,8 @@ class TravelIsolation(AbstractIntervention):
                 if (hasattr(person, 'travel_end_time')):
                     if hasattr(person, 'travel_isolation_start_time'):
                         if person.travel_isolation_start_time is not None:
-                            if time > person.travel_isolation_start_time + self.\
-                                    isolation_duration:
+                            if time > person.travel_isolation_start_time + \
+                                    self.isolation_duration:
                                 # Stop isolating people after their isolation
                                 # period
                                 person.travel_isolation_start_time = None
@@ -62,7 +62,8 @@ class TravelIsolation(AbstractIntervention):
                                         # individual)
                                         existing_households = \
                                             [h for h in person.microcell.
-                                             households if not h.isolation_location]
+                                             households if not
+                                             h.isolation_location]
                                         selected_household = random.choice(
                                             existing_households)
                                         selected_household.add_person(person)

@@ -129,8 +129,7 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         plt.plot(df['time'], df['Infected'], label=label)
 
 plt.legend()
-plt.title("Infection curves for different {}".format(
-    to_modify_parameter))
+plt.title("Infection curves for travel isolation")
 plt.ylabel("Infected Population")
 plt.savefig(
     os.path.join(os.path.dirname(__file__),

@@ -501,17 +501,17 @@
         "policy_duration": 365,
         "case_threshold": 0,
         "isolation_delay": 0,
-        "isolation_duration": 20,
+        "isolation_duration": 14,
         "isolation_probability": 1.0,
         "use_testing": 0,
         "hotel_isolate": 0,
-        "isolation_effectiveness": 0.2,
-        "isolation_house_effectiveness": 0.2
+        "isolation_effectiveness": 0.1,
+        "isolation_house_effectiveness": 0.5
     }
     },
     "travel_params": {
         "ratio_introduce_cases": 0.0,
-        "constant_introduce_cases": [2],
+        "constant_introduce_cases": [100],
         "duration_travel_stay": [10, 21],
         "prob_existing_household": 0.8
     }
