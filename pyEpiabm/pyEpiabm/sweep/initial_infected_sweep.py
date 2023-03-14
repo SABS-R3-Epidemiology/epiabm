@@ -69,17 +69,25 @@ class InitialInfectedSweep(AbstractSweep):
             care_param = Parameters.instance().carehome_params
             carehome_inf = care_param["carehome_allow_initial_infections"]
 
-        if ("initial_infected_cell" not in sim_params
-                or not sim_params["initial_infected_cell"]):
+        if ("initial_infect_cell" not in sim_params
+                or not sim_params["initial_infect_cell"]):
             all_persons = [pers for cell in self._population.cells for pers
                            in cell.persons if
                            (pers.infection_status ==
                             InfectionStatus.Susceptible)]
         else:
-            cell = random.choice(self._population.cells)
-            all_persons = [pers for pers in cell.persons if
-                           (pers.infection_status ==
-                            InfectionStatus.Susceptible)]
+            cells_list = []
+            for cell in self._population.cells:
+                if len(cell.persons) >= sim_params["initial_infected_number"]:
+                    cells_list.append(cell)
+            if len(cells_list) == 0:
+                raise ValueError('There are no cells with enough people\
+                                    to seed initial infections')
+            else:
+                cell = random.choice(cells_list)
+                all_persons = [pers for pers in cell.persons if
+                               (pers.infection_status ==
+                                InfectionStatus.Susceptible)]
 
         if carehome_inf == 0:
             for person in all_persons:
