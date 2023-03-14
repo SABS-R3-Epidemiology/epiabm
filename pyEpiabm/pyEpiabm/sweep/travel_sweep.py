@@ -6,7 +6,7 @@ import numpy as np
 import random
 import math
 
-from pyEpiabm.core import Population, Parameters, Microcell, Person
+from pyEpiabm.core import Population, Parameters, Microcell
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import HostProgressionSweep
 from .abstract_sweep import AbstractSweep
@@ -258,5 +258,5 @@ class TravelSweep(AbstractSweep):
         """
         for person in list(reversed(self.travellers)):
             if self.check_leaving_individuals(time, person):
-                Person.remove_person(person)
+                person.remove_person()
                 self.travellers.remove(person)

@@ -4,7 +4,7 @@
 
 import random
 
-from pyEpiabm.core import Parameters, Household
+from pyEpiabm.core import Parameters
 
 from .abstract_intervention import AbstractIntervention
 
@@ -64,8 +64,7 @@ class TravelIsolation(AbstractIntervention):
                                     if r < Parameters.instance().travel_params[
                                             'prob_existing_household']:
                                         # Remove the household
-                                        Household.remove_household(
-                                            person.household)
+                                        person.household.remove_household()
                                         # Assign to existing household (not
                                         # to household containing isolating
                                         # individual)
