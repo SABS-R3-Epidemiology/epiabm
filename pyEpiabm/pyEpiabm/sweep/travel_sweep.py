@@ -67,7 +67,7 @@ class TravelSweep(AbstractSweep):
         if number_individuals_introduced >= 1:
             self.create_introduced_individuals(
                 time, number_individuals_introduced)
-            self.assign_microcell_household(
+            self.assign_microcell_and_household(
                 number_individuals_introduced)
 
             # Remove individuals introduced from introduce_population
@@ -146,13 +146,14 @@ class TravelSweep(AbstractSweep):
             # Store travellers
             self.travellers.append(person)
 
-    def assign_microcell_household(self, number_individuals_introduced):
+    def assign_microcell_and_household(self, number_individuals_introduced):
         """Assign individuals introduced to microcells based on population
-        density of micorcells in the general population. Takes a number of
-        microcells equal to the number_individuals_introduced (or max number
-        of microcells) and assigns individuals randomly to one of these
-        microcells, such that individuals can end up in the same microcell.
-        Individuals are also assigned to an existing or new household within
+        density of micorcells in the general population. A number of microcells
+        equal to the number_individuals_introduced (or max number of
+        microcells) with highest population density are selected. The
+        individuals are assigned to one of these microcells by a uniform random
+        choice between them. Individuals can end up in the same microcell. 
+        Next, individuals are assigned to an wxisting or a new household within
         the selected microcell.
 
         Parameters
@@ -163,12 +164,9 @@ class TravelSweep(AbstractSweep):
         """
         num_microcells_population = sum(len(cell.microcells) for cell in
                                         self._population.cells)
-        microcells_to_choose_dict = {}
-        for _ in range(min(number_individuals_introduced,
-                           num_microcells_population)):
-            # Initialise with default microcell
-            microcells_to_choose_dict[Microcell(self.initial_cell)] = 0
-        # Find highest density microcells
+        microcells_to_choose_dict = {Microcell(self.initial_cell): 0 for _ in
+                                     range(min(number_individuals_introduced,
+                                               num_microcells_population))}
         for possible_cell in self._population.cells:
             for possible_microcell in possible_cell.microcells:
                 density_microcells_list = microcells_to_choose_dict.values()
