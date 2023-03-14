@@ -4,15 +4,16 @@
 
 import random
 
-from pyEpiabm.intervention import AbstractIntervention
 from pyEpiabm.core import Parameters, Household
+
+from .abstract_intervention import AbstractIntervention
 
 
 class TravelIsolation(AbstractIntervention):
     """Travel isolation intervention.
-    Isolate symptomatic travelling individual based on the
-    isolation_probability and stop isolating isolated individuals after their
-    isolation period or after the end of the policy.
+    Isolate travelling individual based on the isolation_probability
+    and stop isolating isolated individuals after their isolation period or
+    after the end of the policy.
     Detailed description of the implementation can be found in github wiki:
     https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions.
 
@@ -37,6 +38,14 @@ class TravelIsolation(AbstractIntervention):
         super(TravelIsolation, self).__init__(population=population, **kwargs)
 
     def __call__(self, time):
+        """Run travel isolation intervention.
+
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+
+        """
         for cell in self._population.cells:
             for person in cell.persons:
                 # Apply only to travelling individuals
@@ -89,7 +98,7 @@ class TravelIsolation(AbstractIntervention):
                                     self.isolation_delay
 
     def person_selection_method(self, person):
-        """ Method to determine whether a person is eligible for isolation.
+        """Method to determine whether a person is eligible for isolation.
         Depending on the value of the use_testing parameter person always
         isolates or isolates after testing positive.
 
@@ -100,8 +109,8 @@ class TravelIsolation(AbstractIntervention):
         Returns
         -------
         bool
-            True if the individual is eligible for travel isolation (either
-            symptomatic or has tested positive)
+            Whether the individual is eligible for travel isolation (either
+            always or has tested positive)
 
         """
         if self.use_testing == 0:
@@ -111,6 +120,9 @@ class TravelIsolation(AbstractIntervention):
                 return True
 
     def turn_off(self):
+        """Turn off intervention after intervention stops being active.
+
+        """
         # To do: loop over travellers list in TravelSweep
         for cell in self._population.cells:
             for person in cell.persons:

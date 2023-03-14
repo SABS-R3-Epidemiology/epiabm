@@ -31,6 +31,14 @@ class DiseaseTesting(AbstractIntervention):
         super(DiseaseTesting, self).__init__(population=population, **kwargs)
 
     def __call__(self, time):
+        """Run disease testing intervention.
+
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+
+        """
         for cell in self._population.cells:
             num_pcr = 0
             num_lft = 0
@@ -50,6 +58,15 @@ class DiseaseTesting(AbstractIntervention):
         depending on the false positive and false negative rates for
         PCR tests (index = 0) or LFTs (index = 1).
 
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+        person : Person
+            Instance of a Person class
+        index : int
+            To indicate whether test is PCR or LFT
+
         """
         r = random.random()
         if person.is_infectious():
@@ -62,6 +79,9 @@ class DiseaseTesting(AbstractIntervention):
                 self._population.test_count[1] += 1
 
     def turn_off(self):
+        """Turn off intervention after intervention stops being active.
+
+        """
         for cell in self._population.cells:
             for person in cell.persons:
                 if person.date_positive is not None:

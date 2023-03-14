@@ -210,7 +210,7 @@ class Person:
         self.date_vaccinated = time
 
     def remove_person(self):
-        """ Method to remove Person object from population.
+        """Method to remove Person object from population.
         Used to remove travellers from the population.
 
         """

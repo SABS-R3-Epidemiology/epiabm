@@ -1,11 +1,11 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.sweep import InterventionSweep
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
+from pyEpiabm.sweep import InterventionSweep
 from pyEpiabm.intervention import CaseIsolation, HouseholdQuarantine, \
     PlaceClosure, SocialDistancing, DiseaseTesting, TravelIsolation
+from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
 class TestInterventionSweep(TestPyEpiabm):

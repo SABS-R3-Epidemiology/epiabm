@@ -65,5 +65,6 @@ class AbstractIntervention:
 
     def turn_off(self):
         """Turn off intervention after intervention stops being active.
+
         """
         raise NotImplementedError

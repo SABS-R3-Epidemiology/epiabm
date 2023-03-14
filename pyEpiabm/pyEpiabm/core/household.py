@@ -97,7 +97,7 @@ class Household:
         self.susceptible_persons.remove(non_susceptible_person)
 
     def remove_household(self):
-        """ Method to remove Household object from population.
+        """Method to remove Household object from population.
         Used to remove household in which a traveller was hotel
         isolating.
 

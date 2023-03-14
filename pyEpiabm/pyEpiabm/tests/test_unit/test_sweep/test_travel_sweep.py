@@ -3,8 +3,8 @@ import numpy as np
 
 import pyEpiabm as pe
 from pyEpiabm.core import Parameters
-from pyEpiabm.sweep import TravelSweep
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.sweep import TravelSweep
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
