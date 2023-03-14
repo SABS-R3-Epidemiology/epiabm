@@ -150,6 +150,23 @@ class TestSpatialSweep(TestMockedLogs):
         mock_logger.assert_called
         # test logger is called here
 
+    @mock.patch("logging.exception")
+    @mock.patch("numpy.nan_to_num")
+    @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
+    def test_find_infectees_fails_2(self, mock_dist, mock_nan, mock_logger):
+        Parameters.instance().infection_radius = 1000
+        test_pop = self.pop
+        test_sweep = SpatialSweep()
+        mock_dist.return_value = 2.2
+        test_sweep.bind_population(test_pop)
+
+        self.cell_susc.persons = []
+        test_list = test_sweep.\
+            find_infectees(self.cell_inf, [self.cell_susc], 1)
+        self.assertEqual(test_list, [])
+        mock_logger.assert_called
+        # test logger is called here
+
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     def test_find_infectees_Covidsim(self, mock_dist):
         Parameters.instance().infection_radius = 100
