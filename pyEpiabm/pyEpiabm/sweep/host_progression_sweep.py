@@ -344,7 +344,7 @@ class HostProgressionSweep(AbstractSweep):
                         type_probability = testing_params['sympt_pcr'][0]
                     elif person.key_worker:
                         test_probability = testing_params['testing_sympt'][1]
-                        type_probability = testing_params['testing_sympt'][2]
+                        type_probability = testing_params['sympt_pcr'][1]
                     else:
                         test_probability = testing_params['testing_sympt'][2]
                         type_probability = testing_params['sympt_pcr'][2]
