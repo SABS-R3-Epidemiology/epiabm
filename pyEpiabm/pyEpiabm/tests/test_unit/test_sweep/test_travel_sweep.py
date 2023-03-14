@@ -171,6 +171,22 @@ class TestTravelSweep(TestPyEpiabm):
         self.travelsweep(time=23)
         self.assertEqual(len(self._population.cells[0].persons), 20)
 
+        # Remove after travel_isolation and before household_quarantine
+        # started
+        self.travelsweep.travel_params['ratio_introduce_cases'] = 0.5
+        self.travelsweep.travel_params['duration_travel_stay'] = [2, 2]
+        self.travelsweep(time=25)
+        self.assertEqual(len(self._population.cells[0].persons), 21)
+        introduced_person = self.cell.persons[-1]
+        introduced_person.travel_isolation_start_time = 25
+        introduced_person.quarantine_start_time = 29
+        self.travelsweep.travel_params['ratio_introduce_cases'] = 0.0
+        self.travelsweep(time=27)
+        self.assertEqual(len(self._population.cells[0].persons), 21)
+        introduced_person.travel_isolation_start_time = None
+        self.travelsweep(time=28)
+        self.assertEqual(len(self._population.cells[0].persons), 20)
+
 
 if __name__ == '__main__':
     unittest.main()
