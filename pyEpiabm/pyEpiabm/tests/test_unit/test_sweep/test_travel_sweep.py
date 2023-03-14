@@ -46,9 +46,9 @@ class TestTravelSweep(TestPyEpiabm):
     def test_bind_population(self):
         self.assertEqual(len(self.travelsweep.
                              travel_params), 4)
-        self.test_sweep = pe.sweep.TravelSweep()
-        self.test_sweep.bind_population(self._population)
-        self.assertEqual(self.test_sweep._population.cells[0]
+        test_sweep = pe.sweep.TravelSweep()
+        test_sweep.bind_population(self._population)
+        self.assertEqual(test_sweep._population.cells[0]
                          .persons[0].infection_status,
                          pe.property.InfectionStatus.InfectMild)
 
@@ -75,14 +75,12 @@ class TestTravelSweep(TestPyEpiabm):
         self.travelsweep(time=16)
         self.assertEqual(len(self._population.cells[0].persons), 20)
 
-    def test_create_introduced_individuals(self):
+    def test_create_introduced_individuals_with_age(self):
         """Create Person objects for the two infected individuals introduced
-        with and without using age in the model. When using age, their
-        age_group should be 5 and they should be asymptomatic. When age is not
-        used, their age should be None and they should still be asymptomatic.
+        with and without using age in the model. Their
+        age_group should be 5 and they should be asymptomatic.
 
         """
-        # Using age
         Parameters.instance().use_ages = 1
         Parameters.instance().age_proportions = np.array(
             [0.0, 0.0, 0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -90,11 +88,10 @@ class TestTravelSweep(TestPyEpiabm):
         Parameters.instance().host_progression_lists[
             "prob_exposed_to_asympt"] = [1.0]*17
         self.travelsweep.travel_params['duration_travel_stay'] = [2, 2]
-        self.test_sweep = pe.sweep.TravelSweep()
-        self.test_sweep.create_introduced_individuals(
+        self.travelsweep.create_introduced_individuals(
             time=1, number_individuals_introduced=2)
-        self.assertEqual(len(self.test_sweep.initial_microcell.persons), 2)
-        for person in self.test_sweep.initial_microcell.persons:
+        self.assertEqual(len(self.travelsweep.initial_microcell.persons), 2)
+        for person in self.travelsweep.initial_microcell.persons:
             # Both staying 1+2=3 days, in age_group 5, age between 25-30 years,
             # and infectionstatus is asymptomatic.
             self.assertEqual(person.travel_end_time, 3)
@@ -102,15 +99,20 @@ class TestTravelSweep(TestPyEpiabm):
             self.assertTrue(person.age >= 25 and person.age < 30)
             self.assertEqual(person.infection_status,
                              InfectionStatus.InfectASympt)
-        # Not using age
+            
+    def test_create_introduced_individuals_without_age(self):
+        """Create Person objects for the two infected individuals introduced
+        with and without using age in the model. Their age should be None and 
+        they should still be asymptomatic.
+
+        """
         Parameters.instance().use_ages = False
         Parameters.instance().host_progression_lists[
             "prob_exposed_to_asympt"] = [1.0]*17
-        self.test_sweep = pe.sweep.TravelSweep()
-        self.test_sweep.create_introduced_individuals(
+        self.travelsweep.create_introduced_individuals(
             time=1, number_individuals_introduced=2)
-        self.assertEqual(len(self.test_sweep.initial_microcell.persons), 2)
-        for person in self.test_sweep.initial_microcell.persons:
+        self.assertEqual(len(self.travelsweep.initial_microcell.persons), 2)
+        for person in self.travelsweep.initial_microcell.persons:
             self.assertEqual(person.age, None)
             self.assertEqual(person.infection_status,
                              InfectionStatus.InfectASympt)
