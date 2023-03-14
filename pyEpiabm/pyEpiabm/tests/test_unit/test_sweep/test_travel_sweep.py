@@ -99,10 +99,10 @@ class TestTravelSweep(TestPyEpiabm):
             self.assertTrue(person.age >= 25 and person.age < 30)
             self.assertEqual(person.infection_status,
                              InfectionStatus.InfectASympt)
-            
+
     def test_create_introduced_individuals_without_age(self):
         """Create Person objects for the two infected individuals introduced
-        with and without using age in the model. Their age should be None and 
+        with and without using age in the model. Their age should be None and
         they should still be asymptomatic.
 
         """
