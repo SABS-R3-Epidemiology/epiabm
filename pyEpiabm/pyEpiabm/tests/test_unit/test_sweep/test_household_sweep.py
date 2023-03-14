@@ -42,7 +42,7 @@ class TestHouseholdSweep(TestPyEpiabm):
     def test__call__(self, mock_force):
         """Test whether the household sweep function correctly
         adds persons to the queue.
-        
+
         """
         mock_force.return_value = 100.0
 
