@@ -115,7 +115,7 @@ class TestTravelSweep(TestPyEpiabm):
             self.assertEqual(person.infection_status,
                              InfectionStatus.InfectASympt)
 
-    def test_assign_microcell_household(self):
+    def test_assign_microcell_and_household(self):
         """Introduce one individual and assign to the microcell with the
         highest population density. Individual starts their own household.
 

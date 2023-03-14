@@ -28,7 +28,7 @@ The pyEpiabm backend is written in python, chosen for its readability and user-f
 
 ## Installation of pyEpiabm
 
-pyEpiabm is not yet avaliable on [PyPI](https://pypi.org/), but the module can be pip installed locally. The directory should first be downloaded to your local machine, and can then be installed using the command:
+pyEpiabm is not yet available on [PyPI](https://pypi.org/), but the module can be pip installed locally. The directory should first be downloaded to your local machine, and can then be installed using the command:
 
 ```console
 pip install -e .

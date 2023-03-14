@@ -12,3 +12,6 @@
 #   `coverage run pyEpiabm/run_tests.py --unit`  (from the epiabm/ directory)
 # Report coverage with `coverage report -m`, or build html with `coverage html`
 #
+
+from .test_func import TestFunctional
+from .test_unit import TestMockedLogs, TestPyEpiabm
