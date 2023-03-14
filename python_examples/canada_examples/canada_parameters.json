@@ -450,6 +450,7 @@
             "isolation_delay": 0,
             "isolation_duration": 14,
             "isolation_probability": 1,
+            "use_testing": 1,
             "isolation_effectiveness": 0.25,
             "isolation_house_effectiveness": 0.5
         },

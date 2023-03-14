@@ -36,7 +36,7 @@ population = pe.routine.FilePopulationFactory.make_pop(file_loc,
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
-              "initial_infected_number": 10, "initial_infect_cell": True,
+              "initial_infected_number": 1, "initial_infect_cell": True,
               "simulation_seed": 42}
 
 file_params = {"output_file": "output_winnipeg.csv",
@@ -68,7 +68,7 @@ sim.configure(
 sim.run_sweeps()
 
 # Need to close the writer object at the end of each simulation.
-# del (sim.writer)
+del (sim.writer)
 del (sim)
 
 # Creation of a plot of results (plotter from spatial_simulation_flow)
