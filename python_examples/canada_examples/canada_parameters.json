@@ -3,7 +3,7 @@
     "do_CovidSim": false,
     "mcell_num_per_cell": 81,
     "ave_places_per_mcell": 5,
-    "infection_radius": 0.0075,
+    "infection_radius": 0.015,
     "latent_period": 4.59,
     "asympt_infect_period": 14,
     "mean_mild_to_recov": 7,

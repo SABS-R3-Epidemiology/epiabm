@@ -23,23 +23,23 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                                    "luxembourg_parameters.json"))
+                                    "canada_parameters.json"))
 
 # Generate population from input file
 # (Input converted from CovidSim with `microcell_conversion.py`)
 file_loc = os.path.join(os.path.dirname(__file__),
-                        "luxembourg_inputs", "luxembourg_input_file.csv")
+                        "canada_inputs", "winnipeg_input_file.csv")
 population = pe.routine.FilePopulationFactory.make_pop(file_loc,
                                                        random_seed=42)
 
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 40,
-              "initial_infected_number": 100, "initial_infect_cell": True,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
+              "initial_infected_number": 10, "initial_infect_cell": True,
               "simulation_seed": 42}
 
-file_params = {"output_file": "output_luxembourg.csv",
+file_params = {"output_file": "output_winnipeg.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
                                           "simulation_outputs"),
                "spatial_output": True,
@@ -54,6 +54,7 @@ sim.configure(
      pe.sweep.InitialInfectedSweep(),
      pe.sweep.InitialisePlaceSweep()],
     [
+        pe.sweep.InterventionSweep(),
         pe.sweep.UpdatePlaceSweep(),
         pe.sweep.HouseholdSweep(),
         pe.sweep.PlaceSweep(),
@@ -67,13 +68,13 @@ sim.configure(
 sim.run_sweeps()
 
 # Need to close the writer object at the end of each simulation.
-del (sim.writer)
+# del (sim.writer)
 del (sim)
 
 # Creation of a plot of results (plotter from spatial_simulation_flow)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
-                        "output_luxembourg.csv")
+                        "output_winnipeg.csv")
 SIRdf = pd.read_csv(filename)
 total = SIRdf[list(SIRdf.filter(regex='InfectionStatus.Infect'))]
 SIRdf["Infected"] = total.sum(axis=1)
@@ -93,11 +94,11 @@ plt.savefig(os.path.join(os.path.dirname(__file__),
 # Creation of a plot of results with age stratification
 # if file_params["age_stratified"]:
 p = Plotter(os.path.join(os.path.dirname(__file__),
-            "simulation_outputs/output_luxembourg.csv"),
+            "simulation_outputs/output_winnipeg.csv"),
             start_date='18-03-2022', sum_weekly=True)
 p.barchart(os.path.join(os.path.dirname(__file__),
-           "simulation_outputs/age_stratify.png"),
+           "simulation_outputs/age_stratify_winnipeg.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
-           "simulation_outputs/luxembourg_weeky_cases.csv"),
+           "simulation_outputs/winnipeg_weeky_cases.csv"),
            param_file=os.path.join(os.path.dirname(__file__),
-           "luxembourg_parameters.json"))
+           "canada_parameters.json"))

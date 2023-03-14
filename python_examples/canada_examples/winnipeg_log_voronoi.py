@@ -341,7 +341,7 @@ def generate_animation(
             format="GIF",
             append_images=imgs,
             save_all=True,
-            duration=20,
+            duration=50,
             loop=0,
             optimise=True,
         )
