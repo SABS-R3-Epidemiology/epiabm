@@ -46,55 +46,54 @@ class TravelIsolation(AbstractIntervention):
             Current simulation time
 
         """
-        for cell in self._population.cells:
-            for person in cell.persons:
-                # Apply only to travelling individuals
-                if (hasattr(person, 'travel_end_time')):
-                    if hasattr(person, 'travel_isolation_start_time'):
-                        if person.travel_isolation_start_time is not None:
-                            if time > person.travel_isolation_start_time + \
-                                    self.isolation_duration:
-                                # Stop isolating people after their isolation
-                                # period
-                                person.travel_isolation_start_time = None
+        for person in self._population.travellers:
+            # Apply only to travelling individuals
+            if (hasattr(person, 'travel_end_time')):
+                if hasattr(person, 'travel_isolation_start_time'):
+                    if person.travel_isolation_start_time is not None:
+                        if time > person.travel_isolation_start_time + \
+                                self.isolation_duration:
+                            # Stop isolating people after their isolation
+                            # period
+                            person.travel_isolation_start_time = None
 
-                                # Check if need to assign to new household
-                                if self.hotel_isolate == 1:
-                                    r = random.random()
-                                    if r < Parameters.instance().travel_params[
-                                            'prob_existing_household']:
-                                        # Remove the household
-                                        person.household.remove_household()
-                                        # Assign to existing household (not
-                                        # to household containing isolating
-                                        # individual)
-                                        existing_households = \
-                                            [h for h in person.microcell.
-                                             households if not
-                                             h.isolation_location]
-                                        selected_household = random.choice(
-                                            existing_households)
-                                        selected_household.add_person(person)
-                    else:
-                        if self.person_selection_method(person):
-                            r = random.random()
-                            # Require travelling symptomatic individuals to
-                            # self-isolate with given probability
-                            if r < self.isolation_probability:
-                                # Check if they need to isolate outside
-                                # household (if not already staying alone)
-                                if self.hotel_isolate == 1:
-                                    if len(person.household.persons) > 1:
-                                        # Remove from old household
-                                        person.household.persons.remove(person)
-                                        # Put in new household
-                                        person.microcell.add_household([
-                                            person])
-                                        person.household.isolation_location = \
-                                            True
+                            # Check if need to assign to new household
+                            if self.hotel_isolate == 1:
+                                r = random.random()
+                                if r < Parameters.instance().travel_params[
+                                        'prob_existing_household']:
+                                    # Remove the household
+                                    person.household.remove_household()
+                                    # Assign to existing household (not
+                                    # to household containing isolating
+                                    # individual)
+                                    existing_households = \
+                                        [h for h in person.microcell.
+                                            households if not
+                                            h.isolation_location]
+                                    selected_household = random.choice(
+                                        existing_households)
+                                    selected_household.add_person(person)
+                else:
+                    if self.person_selection_method(person):
+                        r = random.random()
+                        # Require travelling symptomatic individuals to
+                        # self-isolate with given probability
+                        if r < self.isolation_probability:
+                            # Check if they need to isolate outside
+                            # household (if not already staying alone)
+                            if self.hotel_isolate == 1:
+                                if len(person.household.persons) > 1:
+                                    # Remove from old household
+                                    person.household.persons.remove(person)
+                                    # Put in new household
+                                    person.microcell.add_household([
+                                        person])
+                                    person.household.isolation_location = \
+                                        True
 
-                                person.travel_isolation_start_time = time + \
-                                    self.isolation_delay
+                            person.travel_isolation_start_time = time + \
+                                self.isolation_delay
 
     def person_selection_method(self, person):
         """Method to determine whether a person is eligible for isolation.
@@ -122,9 +121,7 @@ class TravelIsolation(AbstractIntervention):
         """Turn off intervention after intervention stops being active.
 
         """
-        # To do: loop over travellers list in TravelSweep
-        for cell in self._population.cells:
-            for person in cell.persons:
-                if (hasattr(person, 'travel_isolation_start_time')) and (
-                        person.travel_isolation_start_time is not None):
-                    person.travel_isolation_start_time = None
+        for person in self._population.travellers:
+            if (hasattr(person, 'travel_isolation_start_time')) and (
+                    person.travel_isolation_start_time is not None):
+                person.travel_isolation_start_time = None

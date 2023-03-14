@@ -18,6 +18,7 @@ class Population:
         """
         self.cells = []
         self.vaccine_queue = PriorityQueue()
+        self.travellers = []
 
     def __repr__(self):
         """Returns a string representation of a Population.

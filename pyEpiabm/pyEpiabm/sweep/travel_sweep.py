@@ -34,7 +34,6 @@ class TravelSweep(AbstractSweep):
         self.initial_cell = self.introduce_population.cells[0]
         self.initial_cell.add_microcells(1)
         self.initial_microcell = self.initial_cell.microcells[0]
-        self.travellers = []
 
     def __call__(self, time: float):
         """Based on number of infected cases in population, infected
@@ -143,7 +142,7 @@ class TravelSweep(AbstractSweep):
             HostProgressionSweep.set_infectiousness(person, time)
             HostProgressionSweep().update_time_status_change(person, time)
             # Store travellers
-            self.travellers.append(person)
+            self._population.travellers.append(person)
 
     def assign_microcell_household(self, number_individuals_introduced):
         """Assign individuals introduced to microcells based on population
@@ -256,7 +255,7 @@ class TravelSweep(AbstractSweep):
             Simulation time
 
         """
-        for person in list(reversed(self.travellers)):
+        for person in list(reversed(self._population.travellers)):
             if self.check_leaving_individuals(time, person):
                 person.remove_person()
-                self.travellers.remove(person)
+                self._population.travellers.remove(person)
