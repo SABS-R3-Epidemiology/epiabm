@@ -14,6 +14,8 @@ class Population:
     """
     def __init__(self):
         """Constructor Method.
+        List of travellers is used when introducing individuals in TravelSweep
+        and when isolating them in TravelIsolation.
 
         """
         self.cells = []

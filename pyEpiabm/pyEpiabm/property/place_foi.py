@@ -124,19 +124,19 @@ class PlaceInfection:
                                             or infector.key_worker):
             carehome_scale_susc = Parameters.instance()\
                 .carehome_params["carehome_worker_group_scaling"]
-        travel_isolating = Parameters.instance().\
+        travel_isolation_scale = Parameters.instance().\
             intervention_params['travel_isolation']['isolation'
                                                     '_effectiveness'] \
             if (hasattr(infector, 'travel_isolation_start_time')) and (
                 infector.travel_isolation_start_time is not None) and (
                     infector.travel_isolation_start_time <= time) else 1
-        isolating = Parameters.instance().\
+        isolation_scale = Parameters.instance().\
             intervention_params['case_isolation']['isolation_effectiveness']\
             if (hasattr(infector, 'isolation_start_time')) and (
                 infector.isolation_start_time is not None) and (
                     infector.isolation_start_time <= time) else 1
         place_idx = place.place_type.value - 1
-        quarantine = Parameters.instance().\
+        quarantine_scale = Parameters.instance().\
             intervention_params['household_quarantine'][
                 'quarantine_place_effectiveness'][place_idx]\
             if (hasattr(infectee, 'quarantine_start_time')) and (
@@ -145,13 +145,13 @@ class PlaceInfection:
 
         # Dominant interventions: 1) travel_isolate; 2) case_isolate;
         isolation_scale_inf = 1
-        if isolating != 1:
-            isolation_scale_inf = isolating
-        if travel_isolating != 1:
-            isolation_scale_inf = travel_isolating
+        if travel_isolation_scale != 1:
+            isolation_scale_inf = travel_isolation_scale
+        elif isolation_scale != 1:
+            isolation_scale_inf = isolation_scale
 
         infectiousness = (PlaceInfection.place_inf(place, infector, time)
-                          * isolation_scale_inf * quarantine)
+                          * isolation_scale_inf * quarantine_scale)
         susceptibility = (PlaceInfection.place_susc(place, infector, infectee,
-                          time) * carehome_scale_susc * quarantine)
+                          time) * carehome_scale_susc * quarantine_scale)
         return (infectiousness * susceptibility)
