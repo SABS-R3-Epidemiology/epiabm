@@ -64,6 +64,8 @@ class FilePopulationFactory:
         # Read file into pandas dataframe
         input = pd.read_csv(input_file)
         loc_given = ("location_x" and "location_y" in input.columns.values)
+        # Sort csv on cell id
+        input = input.sort_values(by=["cell", "microcell"])
 
         # Validate all column names in input
         valid_names = ["cell", "microcell", "location_x",
@@ -78,10 +80,13 @@ class FilePopulationFactory:
         # Initialise sweep to assign new people their next infection status
         host_sweep = HostProgressionSweep()
 
+        # Current cell
+        current_cell = None
         # Iterate through lines (one per microcell)
         for _, line in input.iterrows():
             # Check if cell exists, or create it
-            cell = FilePopulationFactory.find_cell(new_pop, line["cell"])
+            cell = FilePopulationFactory.find_cell(new_pop, line["cell"], current_cell)
+            current_cell = cell
 
             if loc_given:
                 location = (line["location_x"], line["location_y"])
@@ -143,7 +148,7 @@ class FilePopulationFactory:
         return new_pop
 
     @staticmethod
-    def find_cell(population: Population, cell_id: float):
+    def find_cell(population: Population, cell_id: float, current_cell: Cell or None):
         """Returns cell with given ID in population, creates one if
         no cell with that ID exists.
 
@@ -160,9 +165,8 @@ class FilePopulationFactory:
             Cell with given ID in population
 
         """
-        for cell in population.cells:
-            if cell.id == cell_id:
-                return cell
+        if (current_cell is not None) and (current_cell.id == cell_id):
+            return current_cell
         new_cell = Cell()
         population.cells.append(new_cell)
         new_cell.set_id(cell_id)
