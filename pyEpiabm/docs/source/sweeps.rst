@@ -19,6 +19,7 @@ Overview:
 - :class:`PlaceSweep`
 - :class:`QueueSweep`
 - :class:`SpatialSweep`
+- :class:`TravelSweep`
 - :class:`UpdatePlaceSweep`
 - :class:`StateTransitionMatrix`
 - :class:`TransitionTimeMatrix`
@@ -65,6 +66,10 @@ Overview:
     :special-members: __call__
 
 .. autoclass:: SpatialSweep
+    :members:
+    :special-members: __call__
+
+.. autoclass:: TravelSweep
     :members:
     :special-members: __call__
 

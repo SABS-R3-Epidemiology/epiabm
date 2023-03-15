@@ -36,6 +36,14 @@ class HouseholdQuarantine(AbstractIntervention):
                                                   **kwargs)
 
     def __call__(self, time):
+        """Run household quarantine intervention.
+
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+
+        """
         for cell in self._population.cells:
             for person in cell.persons:
                 if (hasattr(person, 'quarantine_start_time')) and (
@@ -43,10 +51,6 @@ class HouseholdQuarantine(AbstractIntervention):
                     if time > person.quarantine_start_time + self.\
                               quarantine_duration:
                         # Stop quarantine after quarantine period
-                        person.quarantine_start_time = None
-                    if (hasattr(person, 'isolation_start_time')) and (
-                            person.isolation_start_time is not None):
-                        # Isolated individual should not quarantine
                         person.quarantine_start_time = None
 
                 if (hasattr(person, 'isolation_start_time')) and (
@@ -59,19 +63,18 @@ class HouseholdQuarantine(AbstractIntervention):
                     r_house = random.random()
                     if r_house < self.quarantine_house_compliant:
                         for household_person in person.household.persons:
-                            if (not hasattr(household_person,
-                                'isolation_start_time')) or (
-                                    household_person.isolation_start_time
-                                    is None):
-                                # isolated individuals don't quarantine
+                            if household_person != person:
                                 r_indiv = random.random()
                                 if r_indiv < \
-                                   self.quarantine_individual_compliant:
+                                        self.quarantine_individual_compliant:
                                     household_person.\
                                         quarantine_start_time = \
                                         time + self.quarantine_delay
 
     def turn_off(self):
+        """Turn off intervention after intervention stops being active.
+
+        """
         for cell in self._population.cells:
             for person in cell.persons:
                 if (hasattr(person, 'quarantine_start_time')) and (
