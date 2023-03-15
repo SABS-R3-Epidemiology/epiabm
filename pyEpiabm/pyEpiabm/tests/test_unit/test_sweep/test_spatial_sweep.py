@@ -15,7 +15,7 @@ class TestSpatialSweep(TestMockedLogs):
     def setUp(self):
         # 1st Population
         # 2 cell population
-        # 1st cell: 1 microcell, 1 people, includes the infector
+        # 1st cell: 1 microcell, 1 person, includes the infector
         # who has InfectionStatus of mildly infected
         # 2nd cell: 1 microcell, 1 person, includes the infectee
         # who is Susceptible
