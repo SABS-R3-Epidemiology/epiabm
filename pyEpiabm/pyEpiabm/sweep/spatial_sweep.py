@@ -124,6 +124,7 @@ class SpatialSweep(AbstractSweep):
             if cell2.id in infector_cell.nearby_cells.keys():
                 distance_weights.append(
                     1/infector_cell.nearby_cells.get(cell2.id))
+                distance_weights *= len(cell2.persons)
                 actual_infectee_cells.append(cell2)
 
         try:
@@ -144,8 +145,6 @@ class SpatialSweep(AbstractSweep):
         # Each infection event corresponds to a infectee cell
         # on the cell list
         for infectee_cell in cell_list:
-            if len(infectee_cell.persons) == 0:
-                continue
             # Sample at random from the infectee cell to find
             # an infectee
             infectee_list.append(random.sample(infectee_cell.persons, 1)[0])
