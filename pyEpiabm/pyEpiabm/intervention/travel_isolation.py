@@ -74,6 +74,10 @@ class TravelIsolation(AbstractIntervention):
                                     selected_household = random.choice(
                                         existing_households)
                                     selected_household.add_person(person)
+                                else:
+                                    person.household.isolation_location = \
+                                        False
+
                 else:
                     if self.person_selection_method(person):
                         r = random.random()
@@ -91,6 +95,11 @@ class TravelIsolation(AbstractIntervention):
                                         person])
                                     person.household.isolation_location = \
                                         True
+                                else:
+                                    # Current single household is my isolation
+                                    # household
+                                    person.household.isolation_location = \
+                                        True
 
                             person.travel_isolation_start_time = time + \
                                 self.isolation_delay
@@ -103,6 +112,7 @@ class TravelIsolation(AbstractIntervention):
         Parameters
         ----------
         person : Person
+            Instance of the Person class
 
         Returns
         -------

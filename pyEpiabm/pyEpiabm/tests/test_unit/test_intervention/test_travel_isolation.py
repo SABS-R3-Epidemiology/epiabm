@@ -72,11 +72,24 @@ class TestTravelIsolation(TestPyEpiabm):
         self.assertEqual(len(self.person_symp.household.persons), 2)
         self.assertEqual(len(self.person_introduced.household.persons), 1)
 
-        # Out of travel_isolation assign back to household
+        # Out of travel_isolation (after 5 days) assign back to household
         self.travelisolation(time=20)
         self.assertIsNone(self.person_introduced.travel_isolation_start_time)
         self.assertEqual(len(self._microcell.households), 1)
         self.assertEqual(len(self.person_symp.household.persons), 3)
+
+        # Introduce individual in single household
+        self._microcell.add_people(
+            1, status=InfectionStatus.InfectASympt, age_group=7)
+        person_introduced2 = self._microcell.persons[3]
+        self._population.travellers.append(person_introduced2)
+        self._microcell.add_household([person_introduced2])
+        person_introduced2.travel_end_time = 40
+        self.travelisolation(time=21)
+        self.assertTrue(person_introduced2.household.isolation_location)
+        mock_random.return_value = 1
+        self.travelisolation(time=28)
+        self.assertFalse(person_introduced2.household.isolation_location)
 
     @mock.patch('random.random')
     def test_person_selection(self, mock_random):
