@@ -129,10 +129,9 @@ class TestSpatialSweep(TestMockedLogs):
         self.assertFalse(mock_nan.called)
         self.assertEqual(test_list, [self.infectee])
 
-    @mock.patch("logging.exception")
     @mock.patch("numpy.nan_to_num")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
-    def test_find_infectees_fails(self, mock_dist, mock_nan, mock_logger):
+    def test_find_infectees_fails(self, mock_dist, mock_nan):
         Parameters.instance().infection_radius = 0.0001
         # Assert a basic population
         test_pop = self.pop
@@ -147,8 +146,6 @@ class TestSpatialSweep(TestMockedLogs):
         test_list = test_sweep.\
             find_infectees(self.cell_inf, [self.cell_susc], 1)
         self.assertEqual(test_list, [])
-        mock_logger.assert_called
-        # test logger is called here
 
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     def test_find_infectees_fails_empty_cells(self, mock_dist):
