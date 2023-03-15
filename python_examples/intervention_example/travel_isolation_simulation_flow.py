@@ -32,7 +32,6 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 # Parameter to change
 to_modify_parameter_values = {'isolation_probability': [0.0, 1.0],
                               'hotel_isolate': [1]}
-# to_modify_parameter_values = {'hotel_isolate': [1]}
 for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         items():
     for parameter_value in parameter_values:
