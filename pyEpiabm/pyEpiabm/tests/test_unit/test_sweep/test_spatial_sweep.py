@@ -93,7 +93,7 @@ class TestSpatialSweep(TestMockedLogs):
         test_sweep = SpatialSweep()
         mock_dist.return_value = 2
         test_sweep.bind_population(test_pop)
-        self.assertEqual(self.cell_inf.nearby_cells, {1: 2})
+        self.assertEqual(self.cell_inf.nearby_cell_distances, {1: 2})
 
     @mock.patch("logging.exception")
     @mock.patch("numpy.nan_to_num")
@@ -106,7 +106,7 @@ class TestSpatialSweep(TestMockedLogs):
         mock_dist.return_value = 2.2
         test_sweep.bind_population(test_pop)
 
-        self.assertEqual(self.cell_inf.nearby_cells, {})
+        self.assertEqual(self.cell_inf.nearby_cell_distances, {})
 
         Parameters.instance().infection_radius = 1000
         test_pop = self.pop
@@ -129,10 +129,9 @@ class TestSpatialSweep(TestMockedLogs):
         self.assertFalse(mock_nan.called)
         self.assertEqual(test_list, [self.infectee])
 
-    @mock.patch("logging.exception")
     @mock.patch("numpy.nan_to_num")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
-    def test_find_infectees_fails(self, mock_dist, mock_nan, mock_logger):
+    def test_find_infectees_fails(self, mock_dist, mock_nan):
         Parameters.instance().infection_radius = 0.0001
         # Assert a basic population
         test_pop = self.pop
@@ -147,8 +146,19 @@ class TestSpatialSweep(TestMockedLogs):
         test_list = test_sweep.\
             find_infectees(self.cell_inf, [self.cell_susc], 1)
         self.assertEqual(test_list, [])
-        mock_logger.assert_called
-        # test logger is called here
+
+    @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
+    def test_find_infectees_fails_empty_cells(self, mock_dist):
+        Parameters.instance().infection_radius = 1000
+        test_pop = self.pop
+        test_sweep = SpatialSweep()
+        mock_dist.return_value = 2.2
+        test_sweep.bind_population(test_pop)
+
+        self.cell_susc.persons = []
+        test_list = test_sweep.\
+            find_infectees(self.cell_inf, [self.cell_susc], 1)
+        self.assertEqual(test_list, [])
 
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     def test_find_infectees_Covidsim(self, mock_dist):

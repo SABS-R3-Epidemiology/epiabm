@@ -106,7 +106,7 @@ class TestHouseholdInfection(TestPyEpiabm):
         quarantine_house_effectiveness = \
             pe.Parameters.instance().intervention_params[
                 'household_quarantine']['quarantine_house_effectiveness']
-        self.infector.quarantine_start_time = 1
+        self.infectee.quarantine_start_time = 1
         result_isolating = HouseholdInfection.household_foi(self.infector,
                                                             self.infectee,
                                                             self.time)
@@ -138,6 +138,23 @@ class TestHouseholdInfection(TestPyEpiabm):
             self.infector, self.infectee, self.time)
         self.assertEqual(result*distancing_house_enhanced_susc,
                          result_distancing_enhanced)
+
+    def test_house_travel_isolation(self):
+        # Not travel isolating (travel_isolation_start_time = None)
+        result = HouseholdInfection.household_foi(
+            self.infector, self.infectee, self.time)
+
+        # Case isolate
+        isolation_house_effectiveness = \
+            pe.Parameters.instance().intervention_params[
+                'travel_isolation']['isolation_house_effectiveness']
+        self.infector.isolation_start_time = 1
+        self.infector.travel_isolation_start_time = 1
+        result_isolating = HouseholdInfection.household_foi(self.infector,
+                                                            self.infectee,
+                                                            self.time)
+        self.assertEqual(result*isolation_house_effectiveness,
+                         result_isolating)
 
     @patch('pyEpiabm.property.HouseholdInfection.household_susc')
     @patch('pyEpiabm.property.HouseholdInfection.household_inf')
