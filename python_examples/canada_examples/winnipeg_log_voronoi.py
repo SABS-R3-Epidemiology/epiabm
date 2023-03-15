@@ -19,8 +19,6 @@ from shapely import Polygon
 import glob
 from PIL import Image
 
-import cartopy.crs as ccrs
-
 
 def point_in_region(point: np.ndarray,
                     grid_lim: typing.List[typing.List[float]]):
@@ -100,7 +98,7 @@ def generate_colour_map(
         Mappable object to colour cells
 
     """
-    max_inf = np.log(max(df[name])+1)
+    max_inf = max(df[name])
     norm = matplotlib.colors.Normalize(vmin=min_value, vmax=max_inf, clip=True)
     return cm.ScalarMappable(norm=norm, cmap=cmap)
 
@@ -135,7 +133,6 @@ def plot_time_point(
     grid_lim: typing.List[typing.List[float]],
     ax: plt.Axes,
     mapper: plt.cm.ScalarMappable,
-    country
 ):
     """Returns figure object with a spatial plot of all cells in the Voronoi
     tesselation, colour coded by their value in column 'name' at a given time.
@@ -166,6 +163,8 @@ def plot_time_point(
     current_data = df.loc[df["time"] == time]
     fig = ax.figure
     ax.set_facecolor('lightgrey')
+    df = gpd.read_file("ne_10m_admin_0_countries_lakes.zip")
+    ber = df.loc[df['ADMIN'] == 'Canada'].geometry.to_list()
 
     finite_segments = []
     # Colourcode each region according to infection rate
@@ -178,11 +177,9 @@ def plot_time_point(
                 continue
             point = vor.points[point_idx][0]
             if point_in_region(point, grid_lim):
-                old_value = find_value_for_region(
-                    current_data, point, name=name)
-                value = np.log(old_value+1)
+                value = find_value_for_region(current_data, point, name=name)
                 polygon = Polygon([vor.vertices[i] for i in region])
-                intersect = polygon.intersection(country)[0]
+                intersect = polygon.intersection(ber)[0]
                 if type(intersect) == Polygon:
                     polygon = intersect.exterior.coords
                     finite_segments.append(polygon)
@@ -207,7 +204,6 @@ def plot_time_grid(
     grid_dim: typing.Tuple[float, float],
     grid_lim: typing.List[typing.List[float]],
     save_loc: str,
-    country
 ):
     """Plots a grid of spatial plot of all cells in the Voronoi
     tesselation, colour coded by their value in column 'name',
@@ -242,7 +238,7 @@ def plot_time_grid(
 
     # Add each subplot
     for i, t in enumerate(times):
-        plot_time_point(df, vor, name, t, grid_lim, axs[i], mapper, country)
+        plot_time_point(df, vor, name, t, grid_lim, axs[i], mapper)
 
     cbar = plt.colorbar(mapper, ax=axs.tolist())
     cbar.set_label("Number of " + str(name))
@@ -257,7 +253,6 @@ def generate_animation(
     name: str,
     grid_lim: typing.List[typing.List[float]],
     save_path: str,
-    country,
     use_pillow: bool = True,
 ):
     """Plots a grid of spatial plot of all cells in the Voronoi
@@ -292,19 +287,19 @@ def generate_animation(
     times = np.unique(times)
 
     fig = plt.figure()
+    plt.title('Winnipeg Outline')
 
-    ax = plt.axes(projection=ccrs.PlateCarree())
+    ax = plt.axes()
     plt.title('Winnipeg Outline')
 
     ax.use_sticky_edges = False
     # set a margin around the data
     ax.set_xmargin(0.05)
     ax.set_ymargin(0.10)
-    ax.set_extent([-65.2, -64.3, 31.9, 32.7], crs=ccrs.PlateCarree())
 
     def animate(i):
-        temp_fig, temp_ax = plot_time_point(df, vor, name, i, grid_lim, ax,
-                                            mapper, country)
+        temp_fig, temp_ax = plot_time_point(df, vor, name, i, grid_lim,
+                                            ax, mapper)
         if i == 0:
             cbar = temp_fig.colorbar(mapper)
             cbar.set_label("Number of " + str(name))
@@ -315,25 +310,24 @@ def generate_animation(
             fig, animate, frames=times, init_func=lambda *args: None
         )
         writer = matplotlib.animation.PillowWriter(fps=30)
-        ani.save((save_path + str("winnipeg_voronoi_log_animation.gif")),
-                 writer=writer, dpi=200)
+        ani.save((save_path + str("voronoi_animation.gif")), writer=writer,
+                 dpi=200)
     else:
         file_names = []
         for i, t in enumerate(times):
-            t_fig, t_ax = plot_time_point(df, vor, name, t, grid_lim, ax,
-                                          mapper, country)
+            t_fig, t_ax = plot_time_point(df, vor, name, t, grid_lim, ax, mapper)
             if t == times[0]:
                 cbar = t_fig.colorbar(mapper)
                 cbar.set_label("Number of " + str(name))
             t_ax.set_xlim(grid_lim[0][0], grid_lim[0][1])
             t_ax.set_ylim(grid_lim[1][0], grid_lim[1][1])
-            file_name = ("image" + f'{i:03d}' + "d_log.png")
+            file_name = ("image" + f'{i:03d}' + "d.png")
             file_names.append(file_name)
             t_fig.savefig(save_path + file_name)
             plt.close(t_fig)
 
-        fp_in = save_path + "image" + "*d_log.png"
-        fp_out = save_path + "winnipeg_voronoi_log_animation.gif"
+        fp_in = save_path + "image" + "*d.png"
+        fp_out = save_path + "voronoi_animation.gif"
         img, *imgs = [Image.open(f).convert("RGB")
                       for f in sorted(glob.glob(fp_in))]
         img.save(
@@ -341,7 +335,7 @@ def generate_animation(
             format="GIF",
             append_images=imgs,
             save_all=True,
-            duration=50,
+            duration=20,
             loop=0,
             optimise=True,
         )
@@ -350,18 +344,14 @@ def generate_animation(
                 os.remove(os.path.join(save_path, file))
 
 
-df = gpd.read_file("ne_10m_admin_0_countries_lakes.zip")
-lux = df.loc[df['ADMIN'] == 'Winnipeg'].geometry.to_list()
-
 # Read in the data from simulation output
-filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
+filename = os.path.join(os.path.dirname(__file__),
+                        "simulation_outputs/large_csv",
                         "output_winnipeg.csv")
 df_old = pd.read_csv(filename)
-print('location old:', df_old["location_x"])
-df = df_old.groupby(
-    ['time', 'cell', 'location_x', 'location_y'], as_index=False).sum()
-print('location:', df["location_x"])
-print('Filename:', filename)
+
+df = df_old.groupby(['time', 'location_x', 'location_y'], as_index=False).sum()
+
 
 locations = np.unique(
     np.transpose(np.stack((df["location_x"], df["location_y"]))), axis=0
@@ -380,9 +370,8 @@ locations = np.append(
 # Compute and plot Tesselation
 vor = Voronoi(locations)
 # Plot grid of time points
-
 fig_loc = ("simulation_outputs/"
-           + "winnipeg_voronoi_grid_log_img.png")
+           + "voronoi_grid_img.png")
 plot_time_grid(
     df,
     vor,
@@ -390,11 +379,10 @@ plot_time_grid(
     grid_dim=(3, 3),
     grid_lim=grid_limits,
     save_loc=fig_loc,
-    country=lux
 )
 
 # Plot animation of simulation
 animation_path = ("simulation_outputs/")
 anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
                           grid_lim=grid_limits, save_path=animation_path,
-                          country=lux, use_pillow=False)
+                          use_pillow=False)

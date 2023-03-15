@@ -41,7 +41,7 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
 
 file_params = {"output_file": "output_winnipeg.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
-                                          "simulation_outputs"),
+                                          "simulation_outputs/large_csv"),
                "spatial_output": True,
                "age_stratified": True}
 
