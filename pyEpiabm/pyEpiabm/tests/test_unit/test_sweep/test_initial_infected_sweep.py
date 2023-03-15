@@ -64,7 +64,7 @@ class TestInitialInfectedSweep(TestPyEpiabm):
 
         # Test functions when initial infected cell given.
         params = {"initial_infected_number": 1, "simulation_start_time": 0,
-                  "initial_infected_cell": 1}
+                  "initial_infect_cell": 1}
         self.person1.update_status(pe.property.InfectionStatus.Susceptible)
         self.person2.update_status(pe.property.InfectionStatus.Susceptible)
         test_sweep(params)
@@ -149,7 +149,7 @@ class TestInitialInfectedSweep(TestPyEpiabm):
         # with all infectious people in one cell
         params = {"simulation_start_time": 0,
                   "initial_infected_number": 4,
-                  "initial_infected_cell": True}
+                  "initial_infect_cell": True}
         test_sweep(params)
         status = pe.property.InfectionStatus.InfectMild
         num_infectious = []
