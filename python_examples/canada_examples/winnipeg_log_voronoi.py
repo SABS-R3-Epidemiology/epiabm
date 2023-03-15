@@ -163,8 +163,10 @@ def plot_time_point(
     current_data = df.loc[df["time"] == time]
     fig = ax.figure
     ax.set_facecolor('lightgrey')
-    df = gpd.read_file("ne_10m_admin_0_countries_lakes.zip")
-    ber = df.loc[df['ADMIN'] == 'Canada'].geometry.to_list()
+    # df = gpd.read_file("ne_10m_admin_0_countries_lakes.zip")
+    df = gpd.read_file("ne_10m_urban_areas_landscan.zip")
+    # ber = df.loc[df['ADMIN'] == 'Canada'].geometry.to_list()
+    wpg = df.loc[df['name_conve'] == 'Winnipeg'].geometry.to_list()
 
     finite_segments = []
     # Colourcode each region according to infection rate
@@ -179,7 +181,7 @@ def plot_time_point(
             if point_in_region(point, grid_lim):
                 value = find_value_for_region(current_data, point, name=name)
                 polygon = Polygon([vor.vertices[i] for i in region])
-                intersect = polygon.intersection(ber)[0]
+                intersect = polygon.intersection(wpg)[0]
                 if type(intersect) == Polygon:
                     polygon = intersect.exterior.coords
                     finite_segments.append(polygon)
