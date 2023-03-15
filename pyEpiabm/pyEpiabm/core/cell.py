@@ -40,7 +40,7 @@ class Cell:
         self.PCR_queue = Queue()
         self.LFT_queue = Queue()
         self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
-        self.nearby_cells = dict()
+        self.nearby_cell_distances = dict()
 
         if not (len(loc) == 2 and isinstance(loc[0], Number) and
                 isinstance(loc[1], Number)):
@@ -192,6 +192,6 @@ class Cell:
         for cell2 in other_cells:
             distance = DistanceFunctions.dist(self.location, cell2.location)
             if distance < cutoff:
-                self.nearby_cells[cell2.id] = distance
+                self.nearby_cell_distances[cell2.id] = distance
                 # Dict of near neighbours, cells which are closer than the
                 # cutoff for cross-cell infection
