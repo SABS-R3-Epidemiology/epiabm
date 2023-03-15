@@ -14,10 +14,13 @@ class Population:
     """
     def __init__(self):
         """Constructor Method.
+        List of travellers is used when introducing individuals in TravelSweep
+        and when isolating them in TravelIsolation.
 
         """
         self.cells = []
         self.vaccine_queue = PriorityQueue()
+        self.travellers = []
 
     def __repr__(self):
         """Returns a string representation of a Population.

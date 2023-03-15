@@ -6,10 +6,9 @@ import numpy as np
 import random
 import math
 
-from pyEpiabm.core import Population, Parameters, Microcell, Person
+from pyEpiabm.core import Population, Parameters, Microcell
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import HostProgressionSweep
-
 from .abstract_sweep import AbstractSweep
 
 
@@ -35,7 +34,6 @@ class TravelSweep(AbstractSweep):
         self.initial_cell = self.introduce_population.cells[0]
         self.initial_cell.add_microcells(1)
         self.initial_microcell = self.initial_cell.microcells[0]
-        self.travellers = []
 
     def __call__(self, time: float):
         """Based on number of infected cases in population, infected
@@ -144,7 +142,7 @@ class TravelSweep(AbstractSweep):
             HostProgressionSweep.set_infectiousness(person, time)
             HostProgressionSweep().update_time_status_change(person, time)
             # Store travellers
-            self.travellers.append(person)
+            self._population.travellers.append(person)
 
     def assign_microcell_and_household(self, number_individuals_introduced):
         """Assign individuals introduced to microcells based on population
@@ -192,7 +190,8 @@ class TravelSweep(AbstractSweep):
             if r < self.travel_params['prob_existing_household']:
                 # Assign to existing household
                 selected_household = random.choice(
-                    selected_microcell.households)
+                    [h for h in selected_microcell.households if not
+                     h.isolation_location])
                 selected_household.add_person(person)
             else:
                 # Create new household
@@ -214,24 +213,35 @@ class TravelSweep(AbstractSweep):
         """
         if (hasattr(person, 'travel_end_time')) and \
                 (time > person.travel_end_time):
-            if all([hasattr(person, 'isolation_start_time'),
-                    hasattr(person, 'quarantine_start_time')]):
-                if (person.isolation_start_time is None and
-                        person.quarantine_start_time is None) or \
-                        (person.isolation_start_time <= time and
-                         person.quarantine_start_time <= time):
-                    return True
-            elif hasattr(person, 'isolation_start_time'):
-                if (person.isolation_start_time is None) or \
-                        (person.isolation_start_time <= time):
-                    return True
-            elif hasattr(person, 'quarantine_start_time'):
-                if (person.quarantine_start_time is None) or \
-                        (person.quarantine_start_time <= time):
-                    return True
+            interventions_list = {'isolation_start_time': hasattr(
+                                  person, 'isolation_start_time'),
+                                  'quarantine_start_time': hasattr(
+                                  person, 'quarantine_start_time'),
+                                  'travel_isolation_start_time': hasattr(
+                                  person, 'travel_isolation_start_time')}
+            if any(interventions_list.values()):
+                interventions_not_active = True
+                for intervention in interventions_list.keys():
+                    if interventions_list[intervention]:
+                        if intervention == 'isolation_start_time':
+                            if (person.isolation_start_time is not None) and \
+                                    (person.isolation_start_time <= time):
+                                interventions_not_active = False
+                        if intervention == 'quarantine_start_time':
+                            if (person.quarantine_start_time is not None) and \
+                                    (person.quarantine_start_time <= time):
+                                interventions_not_active = False
+                        if intervention == 'travel_isolation_start_time':
+                            if (person.travel_isolation_start_time is
+                                    not None) and \
+                                    (person.travel_isolation_start_time
+                                     <= time):
+                                interventions_not_active = False
+                return interventions_not_active
             else:
                 return True
-        return False
+        else:
+            return False
 
     def remove_leaving_individuals(self, time):
         """Remove individuals after their travel_end_time is reached
@@ -243,7 +253,7 @@ class TravelSweep(AbstractSweep):
             Simulation time
 
         """
-        for person in list(reversed(self.travellers)):
+        for person in list(reversed(self._population.travellers)):
             if self.check_leaving_individuals(time, person):
-                Person.remove_person(person)
-                self.travellers.remove(person)
+                person.remove_person()
+                self._population.travellers.remove(person)

@@ -5,7 +5,7 @@
 from pyEpiabm.core import Parameters
 from pyEpiabm.intervention import CaseIsolation, Vaccination, PlaceClosure
 from pyEpiabm.intervention import HouseholdQuarantine, SocialDistancing
-from pyEpiabm.intervention import DiseaseTesting
+from pyEpiabm.intervention import DiseaseTesting, TravelIsolation
 from .abstract_sweep import AbstractSweep
 
 
@@ -22,9 +22,11 @@ class InterventionSweep(AbstractSweep):
             * `household quarantine`: Household quarantine if member
                                       is symptomatic.
             * `social distancing`: Social distancing if number of infectious
-                               people exceeds the threshold.
-            * `vaccination`: Implement mass vaccination
+                                   people exceeds the threshold.
+            * `vaccination`: Implement mass vaccination.
             * `disease_testing`: PCR and LFT disease testing.
+            * `travel_isolation`: Isolate travelling individuals when
+                                  introduced to population.
 
     """
 
@@ -43,7 +45,8 @@ class InterventionSweep(AbstractSweep):
                              'household_quarantine': HouseholdQuarantine,
                              'social_distancing': SocialDistancing,
                              'disease_testing': DiseaseTesting,
-                             'vaccine_params': Vaccination}
+                             'vaccine_params': Vaccination,
+                             'travel_isolation': TravelIsolation}
 
         for intervention in self.intervention_params.keys():
             params = self.intervention_params[intervention]

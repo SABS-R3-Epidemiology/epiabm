@@ -3,8 +3,8 @@ import numpy as np
 
 import pyEpiabm as pe
 from pyEpiabm.core import Parameters
-from pyEpiabm.sweep import TravelSweep
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.sweep import TravelSweep
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
@@ -46,9 +46,9 @@ class TestTravelSweep(TestPyEpiabm):
     def test_bind_population(self):
         self.assertEqual(len(self.travelsweep.
                              travel_params), 4)
-        self.test_sweep = pe.sweep.TravelSweep()
-        self.test_sweep.bind_population(self._population)
-        self.assertEqual(self.test_sweep._population.cells[0]
+        test_sweep = pe.sweep.TravelSweep()
+        test_sweep.bind_population(self._population)
+        self.assertEqual(test_sweep._population.cells[0]
                          .persons[0].infection_status,
                          pe.property.InfectionStatus.InfectMild)
 
@@ -75,14 +75,12 @@ class TestTravelSweep(TestPyEpiabm):
         self.travelsweep(time=16)
         self.assertEqual(len(self._population.cells[0].persons), 20)
 
-    def test_create_introduced_individuals(self):
+    def test_create_introduced_individuals_with_age(self):
         """Create Person objects for the two infected individuals introduced
-        with and without using age in the model. When using age, their
-        age_group should be 5 and they should be asymptomatic. When age is not
-        used, their age should be None and they should still be asymptomatic.
+        with and without using age in the model. Their
+        age_group should be 5 and they should be asymptomatic.
 
         """
-        # Using age
         Parameters.instance().use_ages = 1
         Parameters.instance().age_proportions = np.array(
             [0.0, 0.0, 0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -90,11 +88,10 @@ class TestTravelSweep(TestPyEpiabm):
         Parameters.instance().host_progression_lists[
             "prob_exposed_to_asympt"] = [1.0]*17
         self.travelsweep.travel_params['duration_travel_stay'] = [2, 2]
-        self.test_sweep = pe.sweep.TravelSweep()
-        self.test_sweep.create_introduced_individuals(
+        self.travelsweep.create_introduced_individuals(
             time=1, number_individuals_introduced=2)
-        self.assertEqual(len(self.test_sweep.initial_microcell.persons), 2)
-        for person in self.test_sweep.initial_microcell.persons:
+        self.assertEqual(len(self.travelsweep.initial_microcell.persons), 2)
+        for person in self.travelsweep.initial_microcell.persons:
             # Both staying 1+2=3 days, in age_group 5, age between 25-30 years,
             # and infectionstatus is asymptomatic.
             self.assertEqual(person.travel_end_time, 3)
@@ -102,15 +99,20 @@ class TestTravelSweep(TestPyEpiabm):
             self.assertTrue(person.age >= 25 and person.age < 30)
             self.assertEqual(person.infection_status,
                              InfectionStatus.InfectASympt)
-        # Not using age
+
+    def test_create_introduced_individuals_without_age(self):
+        """Create Person objects for the two infected individuals introduced
+        with and without using age in the model. Their age should be None and
+        they should still be asymptomatic.
+
+        """
         Parameters.instance().use_ages = False
         Parameters.instance().host_progression_lists[
             "prob_exposed_to_asympt"] = [1.0]*17
-        self.test_sweep = pe.sweep.TravelSweep()
-        self.test_sweep.create_introduced_individuals(
+        self.travelsweep.create_introduced_individuals(
             time=1, number_individuals_introduced=2)
-        self.assertEqual(len(self.test_sweep.initial_microcell.persons), 2)
-        for person in self.test_sweep.initial_microcell.persons:
+        self.assertEqual(len(self.travelsweep.initial_microcell.persons), 2)
+        for person in self.travelsweep.initial_microcell.persons:
             self.assertEqual(person.age, None)
             self.assertEqual(person.infection_status,
                              InfectionStatus.InfectASympt)
@@ -123,6 +125,7 @@ class TestTravelSweep(TestPyEpiabm):
         self.travelsweep.travel_params['ratio_introduce_cases'] = 0.5
         self.travelsweep.travel_params['prob_existing_household'] = 0.0
         self.travelsweep.travel_params['duration_travel_stay'] = [2, 2]
+
         self.assertEqual(len(self.microcell1.persons), 15)
         self.assertEqual(len(self.microcell1.households), 2)
         self.travelsweep(time=1)
@@ -152,40 +155,38 @@ class TestTravelSweep(TestPyEpiabm):
         # Introduce individual staying untill day 16
         self.travelsweep(time=14)
         introduced_person = self.cell.persons[-1]
-        introduced_person.isolation_start_time = 18
-        introduced_person.quarantine_start_time = 19
+        introduced_person.travel_isolation_start_time = 18
+        introduced_person.isolation_start_time = 19
+        introduced_person.quarantine_start_time = 21
         self.travelsweep.travel_params['ratio_introduce_cases'] = 0.0
-        self.travelsweep(time=17)
-        self.assertEqual(len(self._population.cells[0].persons), 21)
         self.travelsweep(time=18)
         self.assertEqual(len(self._population.cells[0].persons), 21)
-        self.travelsweep(time=19)
-        self.assertEqual(len(self._population.cells[0].persons), 20)
-
-        # Remove after end time and isolation is over
-        self.travelsweep.travel_params['ratio_introduce_cases'] = 0.5
-        self.travelsweep.travel_params['duration_travel_stay'] = [2, 2]
-        # Introduce individual staying untill day 22
         self.travelsweep(time=20)
-        introduced_person = self.cell.persons[-1]
-        introduced_person.isolation_start_time = 24
-        self.travelsweep.travel_params['ratio_introduce_cases'] = 0.0
-        self.travelsweep(time=23)
         self.assertEqual(len(self._population.cells[0].persons), 21)
-        self.travelsweep(time=24)
+        introduced_person.isolation_start_time = None
+        self.travelsweep(time=21)
+        self.assertEqual(len(self._population.cells[0].persons), 21)
+        introduced_person.quarantine_start_time = None
+        self.travelsweep(time=22)
+        self.assertEqual(len(self._population.cells[0].persons), 21)
+        introduced_person.travel_isolation_start_time = None
+        self.travelsweep(time=23)
         self.assertEqual(len(self._population.cells[0].persons), 20)
 
-        # Remove after end time and quarantine is over
+        # Remove after travel_isolation and before household_quarantine
+        # started
         self.travelsweep.travel_params['ratio_introduce_cases'] = 0.5
         self.travelsweep.travel_params['duration_travel_stay'] = [2, 2]
-        # Introduce individual staying untill day 27
         self.travelsweep(time=25)
+        self.assertEqual(len(self._population.cells[0].persons), 21)
         introduced_person = self.cell.persons[-1]
+        introduced_person.travel_isolation_start_time = 25
         introduced_person.quarantine_start_time = 29
         self.travelsweep.travel_params['ratio_introduce_cases'] = 0.0
-        self.travelsweep(time=28)
+        self.travelsweep(time=27)
         self.assertEqual(len(self._population.cells[0].persons), 21)
-        self.travelsweep(time=29)
+        introduced_person.travel_isolation_start_time = None
+        self.travelsweep(time=28)
         self.assertEqual(len(self._population.cells[0].persons), 20)
 
 
