@@ -185,6 +185,7 @@ class TestSpatialSweep(TestMockedLogs):
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
     def test_find_infectees_Covidsim(self, mock_dist, mock_norm_distance):
         Parameters.instance().infection_radius = 100
+        Parameters.instance().do_CovidSim = True
         test_pop = self.pop
         test_sweep = SpatialSweep()
         mock_dist.return_value = 0
@@ -206,7 +207,7 @@ class TestSpatialSweep(TestMockedLogs):
 
         # Test that the infectee is not listed if distance is large
         mock_dist.return_value = 100
-        mock_norm_distance.return_value = 1  # Less thar mock_dist
+        mock_norm_distance.return_value = 1  # Less than mock_dist
         test_list = test_sweep.find_infectees_Covidsim(self.infector,
                                                        [self.cell_susc], 1)
         self.assertEqual(test_list, [])
