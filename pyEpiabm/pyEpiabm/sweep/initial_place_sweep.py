@@ -11,6 +11,7 @@ from .update_place_sweep import UpdatePlaceSweep
 class InitialisePlaceSweep(AbstractSweep):
     """Class to initialise people in the "Place"
     class.
+
     """
     def __call__(self, *args):
         """Given a population structure, updates the people

@@ -80,7 +80,8 @@ class _CompartmentCounter:
         Parameters
         ----------
         n_person : int
-            Number of people being added to cell or microcell
+            Number of people being added to cell or microcell.
+            If negative people will be removed.
         infection_status : InfectionStatus
             Status of people being added
         age_group : Age group index
