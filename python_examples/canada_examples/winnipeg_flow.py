@@ -89,7 +89,7 @@ SIRdf.rename(columns={"InfectionStatus.Susceptible": "Susceptible",
 # Create plot to show SIR curves against time
 SIRdf.plot(y=["Susceptible", "Infected", "Recovered"])
 plt.savefig(os.path.join(os.path.dirname(__file__),
-            "simulation_outputs/simulation_flow_SIR_plot.png"))
+            "simulation_outputs/winnipeg_simulation_flow_SIR_plot.png"))
 
 # Creation of a plot of results with age stratification
 # if file_params["age_stratified"]:

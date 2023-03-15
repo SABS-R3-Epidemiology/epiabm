@@ -65,6 +65,10 @@ class FilePopulationFactory:
         input = pd.read_csv(input_file)
         loc_given = ("location_x" and "location_y" in input.columns.values)
 
+        print(len(input["location_x"]))
+        input = input.loc[input['Susceptible'] != 0]
+        print(len(input["location_x"]))
+
         # Validate all column names in input
         valid_names = ["cell", "microcell", "location_x",
                        "location_y", "household_number", "place_number"]

@@ -73,7 +73,8 @@ del (sim)
 
 # Creation of a plot of results (plotter from spatial_simulation_flow)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
-filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
+filename = os.path.join(os.path.dirname(__file__),
+                        "simulation_outputs/large_csv",
                         "output_new_brunswick.csv")
 SIRdf = pd.read_csv(filename)
 total = SIRdf[list(SIRdf.filter(regex='InfectionStatus.Infect'))]
@@ -94,7 +95,7 @@ plt.savefig(os.path.join(os.path.dirname(__file__),
 # Creation of a plot of results with age stratification
 # if file_params["age_stratified"]:
 p = Plotter(os.path.join(os.path.dirname(__file__),
-            "simulation_outputs/output_new_brunswick.csv"),
+            "simulation_outputs/large_csv/output_new_brunswick.csv"),
             start_date='18-03-2022', sum_weekly=True)
 p.barchart(os.path.join(os.path.dirname(__file__),
            "simulation_outputs/age_stratify_new_brunswick.png"),
