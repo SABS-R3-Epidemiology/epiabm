@@ -152,7 +152,7 @@ class TestSpatialSweep(TestMockedLogs):
 
     @mock.patch("logging.exception")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
-    def test_find_infectees_fails_2(self, mock_dist, mock_logger):
+    def test_find_infectees_fails_empty_cells(self, mock_dist, mock_logger):
         Parameters.instance().infection_radius = 1000
         test_pop = self.pop
         test_sweep = SpatialSweep()
