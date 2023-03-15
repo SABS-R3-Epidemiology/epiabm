@@ -80,6 +80,7 @@ class UpdatePlaceSweep(AbstractSweep):
             List of people that may be present in the place
         person_weights : list
             Weights for people in list
+
         """
         if place.place_type == 5 and hasattr(Parameters.instance(),
                                              'carehome_params'):

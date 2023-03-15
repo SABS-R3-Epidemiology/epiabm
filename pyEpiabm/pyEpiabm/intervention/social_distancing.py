@@ -37,6 +37,14 @@ class SocialDistancing(AbstractIntervention):
                                                **kwargs)
 
     def __call__(self, time):
+        """Run social distancing intervention.
+
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+
+        """
         for cell in self._population.cells:
             for microcell in cell.microcells:
                 if (hasattr(microcell, 'distancing_start_time')) and (
@@ -62,6 +70,9 @@ class SocialDistancing(AbstractIntervention):
                                 person.distancing_enhanced = False
 
     def turn_off(self):
+        """Turn off intervention after intervention stops being active.
+
+        """
         for cell in self._population.cells:
             for microcell in cell.microcells:
                 if (hasattr(microcell, 'distancing_start_time')) and (
