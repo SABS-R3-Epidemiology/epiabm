@@ -173,3 +173,6 @@ python_examples/travel_example/travelling_outputs/*.csv
 kernprof.py
 *.prof
 *.lprof
+
+# Large output files
+large_csv/
