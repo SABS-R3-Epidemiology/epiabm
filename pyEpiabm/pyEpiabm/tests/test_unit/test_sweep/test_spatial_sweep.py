@@ -181,15 +181,19 @@ class TestSpatialSweep(TestMockedLogs):
         mock_log.assert_called_once()
         self.assertTrue(mock_log.call_args[0][0].startswith("ValueError"))
 
+    @mock.patch("random.random")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.minimum_between_cells")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
-    def test_find_infectees_Covidsim(self, mock_dist, mock_norm_distance):
+    def test_find_infectees_Covidsim(self, mock_dist, mock_norm_distance,
+                                     mock_random):
         Parameters.instance().infection_radius = 100
         Parameters.instance().do_CovidSim = True
         test_pop = self.pop
         test_sweep = SpatialSweep()
+
         mock_dist.return_value = 0
         mock_norm_distance.return_value = 0
+        mock_random.return_value = 0.5  # Acts as a deterministic cutoff
         test_sweep.bind_population(test_pop)
         mock_dist.assert_called_with(self.cell_inf.location,
                                      self.cell_susc.location)
@@ -202,6 +206,7 @@ class TestSpatialSweep(TestMockedLogs):
         test_list = test_sweep.find_infectees_Covidsim(self.infector,
                                                        [self.cell_susc], 1)
         self.assertEqual(test_list, [self.infectee])
+        mock_random.assert_called_once()
         mock_dist.assert_called_with(self.cell_inf.location,
                                      self.cell_susc.location)
 
