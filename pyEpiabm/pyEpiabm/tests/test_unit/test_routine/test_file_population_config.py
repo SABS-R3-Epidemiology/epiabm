@@ -117,12 +117,12 @@ class TestPopConfig(TestPyEpiabm):
         pop.add_cells(2)
         pop.cells[1].set_id(42)
 
-        target_cell = FilePopulationFactory.find_cell(pop, 42)
+        target_cell = FilePopulationFactory.find_cell(pop, 42, pop.cells[1])
         self.assertEqual(target_cell.id, 42)
         self.assertEqual(hash(target_cell), hash(pop.cells[1]))
         self.assertEqual(len(pop.cells), 2)  # No new cell created
 
-        new_cell = FilePopulationFactory.find_cell(pop, 43)
+        new_cell = FilePopulationFactory.find_cell(pop, 43, pop.cells[1])
         self.assertEqual(new_cell.id, 43)
         self.assertEqual(len(pop.cells), 3)  # New cell created
 
