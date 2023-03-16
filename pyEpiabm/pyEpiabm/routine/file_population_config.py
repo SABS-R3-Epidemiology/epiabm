@@ -150,8 +150,7 @@ class FilePopulationFactory:
         return new_pop
 
     @staticmethod
-    def find_cell(population: Population, cell_id: float,
-                  current_cell: Cell | None):
+    def find_cell(population: Population, cell_id: float, current_cell: Cell):
         """Returns cell with given ID in population, creates one if
         current cell has another ID. As input is sorted on cell no
         cell will exist with that ID.
