@@ -19,7 +19,7 @@ from shapely import Polygon
 import glob
 from PIL import Image
 
-import cartopy.crs as ccrs
+# import cartopy.crs as ccrs
 
 
 def point_in_region(point: np.ndarray,
@@ -293,14 +293,15 @@ def generate_animation(
 
     fig = plt.figure()
 
-    ax = plt.axes(projection=ccrs.PlateCarree())
+    # ax = plt.axes(projection=ccrs.PlateCarree())
+    ax = plt.axes()
     plt.title('New Brunswick Outline')
 
     ax.use_sticky_edges = False
     # set a margin around the data
     ax.set_xmargin(0.05)
     ax.set_ymargin(0.10)
-    ax.set_extent([-65.2, -64.3, 31.9, 32.7], crs=ccrs.PlateCarree())
+    # ax.set_extent([-65.2, -64.3, 31.9, 32.7], crs=ccrs.PlateCarree())
 
     def animate(i):
         temp_fig, temp_ax = plot_time_point(df, vor, name, i, grid_lim, ax,
@@ -350,8 +351,10 @@ def generate_animation(
                 os.remove(os.path.join(save_path, file))
 
 
-df = gpd.read_file("ne_10m_admin_0_countries_lakes.zip")
-lux = df.loc[df['ADMIN'] == 'New Brunswick'].geometry.to_list()
+# df = gpd.read_file("ne_10m_admin_0_countries_lakes.zip")
+df = gpd.read_file("ne_10m_admin_1_states_provinces.zip")
+# lux = df.loc[df['ADMIN'] == 'New Brunswick'].geometry.to_list()
+nb = df.loc[df['iso_3166_2'] == 'New Brunswick'].geometry.to_list()
 
 # Read in the data from simulation output
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
@@ -390,11 +393,11 @@ plot_time_grid(
     grid_dim=(3, 3),
     grid_lim=grid_limits,
     save_loc=fig_loc,
-    country=lux
+    country=nb
 )
 
 # Plot animation of simulation
 animation_path = ("simulation_outputs/")
 anim = generate_animation(df, vor, name="InfectionStatus.InfectMild",
                           grid_lim=grid_limits, save_path=animation_path,
-                          country=lux, use_pillow=False)
+                          country=nb, use_pillow=False)
