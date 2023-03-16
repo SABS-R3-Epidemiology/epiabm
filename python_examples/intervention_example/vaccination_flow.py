@@ -43,10 +43,16 @@ for i in range(len(parameter_values)):
     name_output_file = 'output_{}.csv'.format(
         labels[i])
 
-    pe.Parameters.instance().intervention_params['vaccine_params'][
+    if isinstance(pe.Parameters.instance().intervention_params[
+                'vaccine_params'], dict):
+        pe.Parameters.instance().intervention_params[
+            'vaccine_params'] = [pe.Parameters.instance().
+                                 intervention_params['vaccine_params']]
+
+    pe.Parameters.instance().intervention_params['vaccine_params'][0][
         to_modify_parameter] = parameter_values[i]
     print('Set vaccine_uptake to: {}'.format(
-        pe.Parameters.instance().intervention_params['vaccine_params'][
+        pe.Parameters.instance().intervention_params['vaccine_params'][0][
             to_modify_parameter]))
 
     # Method to set the seed at the start of the simulation,

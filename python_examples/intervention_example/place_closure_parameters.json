@@ -495,7 +495,7 @@
         "prop_other_parent_away": 0.0
     },
     "intervention_params": {
-        "place_closure": {
+        "place_closure": [{
             "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
@@ -505,7 +505,7 @@
             "closure_household_infectiousness": 1,
             "closure_spatial_params": 1,
             "case_microcell_threshold": 0
-        }
+        }]
         }
     
     

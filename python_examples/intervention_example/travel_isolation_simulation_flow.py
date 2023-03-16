@@ -38,12 +38,18 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         name_output_file = 'output_{}_{}.csv'.format(
             parameter_value, to_modify_parameter)
 
-        pe.Parameters.instance().intervention_params['travel_isolation'][
+        if isinstance(pe.Parameters.instance().intervention_params[
+                'travel_isolation'], dict):
+            pe.Parameters.instance().intervention_params[
+                'travel_isolation'] = [pe.Parameters.instance().
+                                       intervention_params['travel_isolation']]
+
+        pe.Parameters.instance().intervention_params['travel_isolation'][0][
             to_modify_parameter] = parameter_value
         print('Set {} to: {}'.format(to_modify_parameter,
                                      pe.Parameters.instance(
                                      ).intervention_params[
-                                        'travel_isolation'][
+                                        'travel_isolation'][0][
                                         to_modify_parameter]))
 
         # Method to set the seed at the start of the simulation,

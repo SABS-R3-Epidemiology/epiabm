@@ -496,7 +496,7 @@
         "prop_other_parent_away": 0.0
     },
     "intervention_params": {
-        "case_isolation": {
+        "case_isolation": [{
             "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
@@ -506,8 +506,8 @@
             "use_testing": 0,
             "isolation_effectiveness": 0.1,
             "isolation_house_effectiveness": 0.2
-        },
-        "household_quarantine": {
+        }],
+        "household_quarantine": [{
             "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
@@ -518,6 +518,6 @@
             "quarantine_house_effectiveness": 1.5,
             "quarantine_spatial_effectiveness": 0.25,
             "quarantine_place_effectiveness": [0.25, 0.25, 0.25, 0.25, 0.25, 0.25]
-        }
+        }]
     }
 }

@@ -496,7 +496,7 @@
         "prop_other_parent_away": 0.0
     },
     "intervention_params": {
-        "vaccine_params": {
+        "vaccine_params": [{
             "start_time": 0,
             "policy_duration": 1,
             "case_threshold": 0,
@@ -506,6 +506,6 @@
             "min_ages": [80, 65, 50, 18],
             "prob_vaccinated": [0.9, 0.9, 0.9, 0.9],
             "daily_doses": 5000
-        }
+        }]
     }
 }

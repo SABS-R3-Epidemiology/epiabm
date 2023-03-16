@@ -38,21 +38,30 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         name_output_file = 'output_{}_{}.csv'.format(
                 parameter_value, to_modify_parameter)
 
+        if isinstance(pe.Parameters.instance().intervention_params[
+                'social_distancing'], dict):
+            pe.Parameters.instance().\
+                intervention_params['social_distancing'] = [
+                    pe.Parameters.instance().intervention_params[
+                        'social_distancing']]
+
         if to_modify_parameter == 'distancing_enhanced_prob':
             num_age_group = len(pe.Parameters.instance().intervention_params[
-                'social_distancing'][to_modify_parameter])
-            pe.Parameters.instance().intervention_params['social_distancing'][
-                to_modify_parameter] = [parameter_value] * num_age_group
+                'social_distancing'][0][to_modify_parameter])
+            pe.Parameters.instance().intervention_params[
+                'social_distancing'][0][to_modify_parameter] = [
+                    parameter_value] * num_age_group
         else:
-            pe.Parameters.instance().intervention_params['social_distancing'][
-                'distancing_enhanced_prob'] = [0] * num_age_group
-            pe.Parameters.instance().intervention_params['social_distancing'][
-                to_modify_parameter] = parameter_value
+            pe.Parameters.instance().intervention_params[
+                'social_distancing'][0]['distancing_enhanced_prob'] = [
+                    0] * num_age_group
+            pe.Parameters.instance().intervention_params[
+                'social_distancing'][0][to_modify_parameter] = parameter_value
 
         print('Set {} to: {}'.format(to_modify_parameter,
                                      pe.Parameters.instance(
                                      ).intervention_params[
-                                      'social_distancing'][
+                                      'social_distancing'][0][
                                       to_modify_parameter]))
 
         # Method to set the seed at the start of the simulation,

@@ -39,11 +39,16 @@ for i in range(len(parameter_values)):
     name_output_file = 'output_{}_{}.csv'.format(
         int(parameter_values[i]*100), to_modify_parameter)
 
-    pe.Parameters.instance().intervention_params['household_quarantine'][
+    for key in pe.Parameters.instance().intervention_params.keys():
+        if isinstance(pe.Parameters.instance().intervention_params[key], dict):
+            pe.Parameters.instance().intervention_params[key] = \
+                [pe.Parameters.instance().intervention_params[key]]
+
+    pe.Parameters.instance().intervention_params['household_quarantine'][0][
         to_modify_parameter] = parameter_values[i]
     print('Set quarantine_house_compliant to: {}'.format(
-        pe.Parameters.instance().intervention_params['household_quarantine'][
-            to_modify_parameter]))
+        pe.Parameters.instance().intervention_params[
+            'household_quarantine'][0][to_modify_parameter]))
 
     # Method to set the seed at the start of the simulation,
     # for reproducibility

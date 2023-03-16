@@ -496,7 +496,7 @@
         "prop_other_parent_away": 0.0
     },
     "intervention_params": {
-    "travel_isolation": {
+    "travel_isolation": [{
         "start_time": 1,
         "policy_duration": 365,
         "case_threshold": 0,
@@ -507,7 +507,7 @@
         "hotel_isolate": 0,
         "isolation_effectiveness": 0.1,
         "isolation_house_effectiveness": 0.5
-    }
+    }]
     },
     "travel_params": {
         "ratio_introduce_cases": 0.0,

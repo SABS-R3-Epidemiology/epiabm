@@ -38,12 +38,17 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         name_output_file = 'output_{}_{}.csv'.format(
             parameter_value, to_modify_parameter)
 
-        pe.Parameters.instance().intervention_params['place_closure'][
+        if isinstance(pe.Parameters.instance().intervention_params[
+                'place_closure'], dict):
+            pe.Parameters.instance().intervention_params['place_closure'] = \
+                [pe.Parameters.instance().intervention_params['place_closure']]
+
+        pe.Parameters.instance().intervention_params['place_closure'][0][
             to_modify_parameter] = parameter_value
         print('Set {} to: {}'.format(to_modify_parameter,
                                      pe.Parameters.instance(
                                      ).intervention_params[
-                                        'place_closure'][
+                                        'place_closure'][0][
                                         to_modify_parameter]))
 
         # Method to set the seed at the start of the simulation,

@@ -495,7 +495,7 @@
         "prop_other_parent_away": 0.0
     },
     "intervention_params": {
-        "social_distancing": {
+        "social_distancing": [{
             "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
@@ -510,7 +510,7 @@
             "distancing_house_susc": 0.7,
             "distancing_place_susc": [0.7, 0.7, 0.7, 0.7, 0.7, 0.7],
             "distancing_spatial_susc": 0.7
-        }
+        }]
         }
     
     
