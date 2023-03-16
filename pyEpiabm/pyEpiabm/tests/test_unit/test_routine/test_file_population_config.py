@@ -96,6 +96,24 @@ class TestPopConfig(TestPyEpiabm):
                                          + "Factory.make_pop()")
         mock_read.assert_called_once_with('test_input.csv')
 
+    @patch("pandas.read_csv")
+    def test_disorderd_input(self, mock_read):
+        """Test ordering input and setting up correct number of cells
+        and microcells.
+        """
+        # Read in disordered data
+        dict_extra = {'cell': [1.0, 3.0], 'microcell': [2.0, 1.0],
+                      'location_x': [0.0, 2.0], 'location_y': [0.0, 2.0],
+                      'household_number': [1, 1], 'place_number': [1, 1],
+                      'Susceptible': [8, 9], 'InfectMild': [2, 3]}
+        data_extended = pd.concat(
+            [self.df, pd.DataFrame.from_dict(dict_extra)])
+        mock_read.return_value = data_extended
+
+        test_pop = FilePopulationFactory.make_pop('test_input.csv')
+        self.assertEqual(len(test_pop.cells), 3)
+        self.assertEqual(len(test_pop.cells[0].microcells), 2)
+
     @patch('logging.exception')
     @patch("pandas.read_csv")
     def test_duplicate_microcell(self, mock_read, mock_log):
