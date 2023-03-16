@@ -24,12 +24,6 @@ class TestQueueSweep(TestPyEpiabm):
 
         self.time = 1
 
-        if isinstance(pe.Parameters.instance().
-                      intervention_params['vaccine_params'], list):
-            pe.Parameters.instance().intervention_params['vaccine_params'] = \
-                pe.Parameters.instance().intervention_params[
-                    'vaccine_params'][0]
-
     def test_bind(self):
         """Test population binds correctly.
         """
@@ -99,8 +93,8 @@ class TestQueueSweep(TestPyEpiabm):
         is not effective.
         """
         mock_params.return_value.\
-            intervention_params = {'vaccine_params': {'time_to_efficacy': 0,
-                                                      'vacc_protectiveness': 0}
+            intervention_params = {'vaccine_params': [{'time_to_efficacy': 0,
+                                   'vacc_protectiveness': 0}]
                                    }
         self.person2.is_vaccinated = True
         self.person2.date_vaccinated = 0
@@ -132,8 +126,8 @@ class TestQueueSweep(TestPyEpiabm):
         time to efficacy has not yet passes.
         """
         mock_params.return_value.\
-            intervention_params = {'vaccine_params': {'time_to_efficacy': 14,
-                                                      'vacc_protectiveness': 1}
+            intervention_params = {'vaccine_params': [{'time_to_efficacy': 14,
+                                   'vacc_protectiveness': 1}]
                                    }
         self.person2.is_vaccinated = True
         self.person2.date_vaccinated = 0
