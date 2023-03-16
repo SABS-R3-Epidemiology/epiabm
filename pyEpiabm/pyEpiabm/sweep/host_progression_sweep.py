@@ -334,6 +334,9 @@ class HostProgressionSweep(AbstractSweep):
               intervention_params.keys():
                 testing_params = Parameters.instance().\
                     intervention_params['disease_testing']
+                if isinstance(pe.Parameters.instance().
+                              intervention_params['disease_testing'], list):
+                    testing_params = testing_params[0]
                 r = random.random()
                 type_r = random.random()
 
@@ -383,6 +386,9 @@ class HostProgressionSweep(AbstractSweep):
                intervention_params.keys():
                 testing_params = Parameters.instance().\
                     intervention_params['disease_testing']
+                if isinstance(pe.Parameters.instance().
+                              intervention_params['disease_testing'], list):
+                    testing_params = testing_params[0]
                 for item in person_list:
                     cell = item[0]
                     person = item[1]

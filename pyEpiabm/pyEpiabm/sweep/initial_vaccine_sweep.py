@@ -27,6 +27,9 @@ class InitialVaccineQueue(AbstractSweep):
         if 'vaccine_params' in Parameters.instance().intervention_params:
             vaccine_params = Parameters.instance()\
                 .intervention_params['vaccine_params']
+            if isinstance(Parameters.instance().
+                          intervention_params['vaccine_params'], list):
+                vaccine_params = vaccine_params[0]
             self.age_thresholds = vaccine_params["min_ages"]
             self.prob_by_age = vaccine_params["prob_vaccinated"]
 

@@ -34,6 +34,9 @@ class QueueSweep(AbstractSweep):
                 if person.is_vaccinated:
                     vacc_params = Parameters.instance().\
                         intervention_params['vaccine_params']
+                    if isinstance(Parameters.instance().
+                                  intervention_params['vaccine_params'], list):
+                        vacc_params = vacc_params[0]
                     delay = np.random.poisson(vacc_params['time_to_efficacy'],
                                               1)
                     if time > (person.date_vaccinated +
