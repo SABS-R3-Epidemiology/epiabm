@@ -32,15 +32,20 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 # Parameter to change
 to_modify_parameter = 'isolation_probability'
 parameter_values = [0.0, 0.5, 1.0]
+intervention_param = pe.Parameters.instance().\
+    intervention_params['case_isolation'].copy()
 
 for i in range(len(parameter_values)):
     name_output_file = 'output_{}_{}.csv'.format(
         int(parameter_values[i]*100), to_modify_parameter)
 
-    pe.Parameters.instance().intervention_params['case_isolation'][
-        to_modify_parameter] = parameter_values[i]
+    pe.Parameters.instance().intervention_params[
+        'case_isolation'] = intervention_param
+    for intervention in pe.Parameters.instance().\
+            intervention_params['case_isolation']:
+        intervention[to_modify_parameter] = parameter_values[i]
     print('Set isolation_probability to: {}'.format(
-        pe.Parameters.instance().intervention_params['case_isolation'][
+        pe.Parameters.instance().intervention_params['case_isolation'][0][
             to_modify_parameter]))
 
     # Method to set the seed at the start of the simulation,

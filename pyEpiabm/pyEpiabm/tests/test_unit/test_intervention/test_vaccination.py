@@ -17,6 +17,11 @@ class TestVaccination(TestPyEpiabm):
         self._population.add_cells(1)
         self._population.cells[0].add_microcells(1)
         self._population.cells[0].microcells[0].add_people(5)
+        if isinstance(pe.Parameters.instance().
+                      intervention_params['vaccine_params'], list):
+            pe.Parameters.instance().intervention_params['vaccine_params'] = \
+                pe.Parameters.instance().intervention_params[
+                    'vaccine_params'][0]
         self.params = pe.Parameters.instance().\
             intervention_params['vaccine_params']
         self.vaccination = Vaccination(**self.params,

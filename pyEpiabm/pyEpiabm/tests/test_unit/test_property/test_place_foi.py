@@ -29,6 +29,12 @@ class TestPlaceInfection(TestPyEpiabm):
         cls.place.add_person(cls.infectee)
         cls.time = 1.0
 
+        for key in pe.Parameters.instance().intervention_params.keys():
+            if isinstance(pe.Parameters.instance().
+                          intervention_params[key], list):
+                pe.Parameters.instance().intervention_params[key] = \
+                    pe.Parameters.instance().intervention_params[key][0]
+
     def test_place_susc(self):
         result = PlaceInfection.place_susc(self.place, self.infector,
                                            self.infectee, self.time)

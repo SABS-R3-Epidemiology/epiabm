@@ -1,6 +1,7 @@
 #
 # Sweeps for taking care of the interventions
 #
+from bidict import bidict
 
 from pyEpiabm.core import Parameters
 from pyEpiabm.intervention import CaseIsolation, Vaccination, PlaceClosure
@@ -36,22 +37,28 @@ class InterventionSweep(AbstractSweep):
         """
         # Implemented interventions and their activity status
         self.intervention_active_status = {}
-        self.intervention_params = Parameters.instance().intervention_params
+        self.intervention_params = Parameters.instance().\
+            intervention_params.copy()
+        self.intervention_dict = bidict(
+            {'case_isolation': CaseIsolation, 'place_closure': PlaceClosure,
+             'household_quarantine': HouseholdQuarantine,
+             'social_distancing': SocialDistancing,
+             'disease_testing': DiseaseTesting,
+             'vaccine_params': Vaccination,
+             'travel_isolation': TravelIsolation})
 
     def bind_population(self, population):
         self._population = population
-        intervention_dict = {'case_isolation': CaseIsolation,
-                             'place_closure': PlaceClosure,
-                             'household_quarantine': HouseholdQuarantine,
-                             'social_distancing': SocialDistancing,
-                             'disease_testing': DiseaseTesting,
-                             'vaccine_params': Vaccination,
-                             'travel_isolation': TravelIsolation}
-
         for intervention in self.intervention_params.keys():
-            params = self.intervention_params[intervention]
-            self.intervention_active_status[(intervention_dict[intervention](
-                population=self._population, **params))] = False
+            for index in range(len(self.intervention_params[intervention])):
+                params = self.intervention_params[intervention][index]
+                intervention_init = self.intervention_dict[intervention](
+                        population=self._population, **params)
+                intervention_init.occurrence_index = index
+                self.intervention_active_status[intervention_init] = False
+                if index == 0:
+                    Parameters.instance().intervention_params[
+                        intervention] = params
 
     def __call__(self, time):
         """Perform interventions that should take place.
@@ -72,9 +79,16 @@ class InterventionSweep(AbstractSweep):
             num_cases = sum(map(lambda cell: cell.number_infectious(),
                             self._population.cells))
             if intervention.is_active(time, num_cases):
-                intervention(time)
                 if self.intervention_active_status[intervention] is False:
+                    # Update with the single intervention
+                    # (with respect to index)
+                    intervention_type = self.intervention_dict.inverse[
+                        type(intervention)]
+                    Parameters.instance().intervention_params[
+                        intervention_type] = self.intervention_params[
+                            intervention_type][intervention.occurrence_index]
                     self.intervention_active_status[intervention] = True
+                intervention(time)
 
             elif self.intervention_active_status[intervention] is True:
                 # turn off intervention

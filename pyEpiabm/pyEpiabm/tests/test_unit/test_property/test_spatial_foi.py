@@ -33,6 +33,12 @@ class TestSpatialInfection(TestPyEpiabm):
         self.time = 1.0
         pe.Parameters.instance().basic_reproduction_num = 2.8
 
+        for key in pe.Parameters.instance().intervention_params.keys():
+            if isinstance(pe.Parameters.instance().
+                          intervention_params[key], list):
+                pe.Parameters.instance().intervention_params[key] = \
+                    pe.Parameters.instance().intervention_params[key][0]
+
     def test_spatial_susc(self):
         result = SpatialInfection.spatial_susc(
             self.cell, self.infector, self.infectee, self.time)

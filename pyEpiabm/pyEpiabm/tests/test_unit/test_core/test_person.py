@@ -93,7 +93,7 @@ class TestPerson(TestPyEpiabm):
 
     def test_is_place_closed(self):
         closure_place_type = pe.Parameters.instance().intervention_params[
-            'place_closure']['closure_place_type']
+            'place_closure'][0]['closure_place_type']
         # Not in place closure
         self.assertFalse(hasattr(self.person.microcell, 'closure_start_time'))
         self.assertFalse(self.person.is_place_closed(closure_place_type))

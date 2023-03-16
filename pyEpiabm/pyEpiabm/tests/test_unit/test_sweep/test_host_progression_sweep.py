@@ -76,6 +76,12 @@ class TestHostProgressionSweep(TestPyEpiabm):
             person.update_status(InfectionStatus(i + 1))
             self.people.append(person)
 
+        if isinstance(pe.Parameters.instance().
+                      intervention_params['disease_testing'], list):
+            pe.Parameters.instance().intervention_params['disease_testing'] = \
+                pe.Parameters.instance().intervention_params[
+                    'disease_testing'][0]
+
     def test_construct(self):
         """Tests that the host progression sweep initialises correctly.
         """

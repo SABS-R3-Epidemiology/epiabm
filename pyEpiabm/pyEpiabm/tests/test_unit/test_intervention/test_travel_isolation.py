@@ -34,7 +34,7 @@ class TestTravelIsolation(TestPyEpiabm):
         self.person_introduced.travel_end_time = 25
 
         self.params = pe.Parameters.instance().intervention_params[
-            'travel_isolation']
+            'travel_isolation'][0]
         self.travelisolation = \
             TravelIsolation(population=self._population, **self.params)
 

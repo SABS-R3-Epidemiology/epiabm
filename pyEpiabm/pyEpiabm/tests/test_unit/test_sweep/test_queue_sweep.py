@@ -24,6 +24,12 @@ class TestQueueSweep(TestPyEpiabm):
 
         self.time = 1
 
+        if isinstance(pe.Parameters.instance().
+                      intervention_params['vaccine_params'], list):
+            pe.Parameters.instance().intervention_params['vaccine_params'] = \
+                pe.Parameters.instance().intervention_params[
+                    'vaccine_params'][0]
+
     def test_bind(self):
         """Test population binds correctly.
         """

@@ -25,7 +25,7 @@ class TestCaseIsolation(TestPyEpiabm):
         self.person_symp.update_status(InfectionStatus.InfectMild)
 
         self.params = pe.Parameters.instance().intervention_params[
-            'case_isolation']
+            'case_isolation'][0]
         self.caseisolation = \
             CaseIsolation(population=self._population, **self.params)
 

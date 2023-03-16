@@ -438,7 +438,7 @@
       "carehome_rel_prob_hosp": 1
     },
     "intervention_params": {
-        "case_isolation": {
+        "case_isolation": [{
             "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
@@ -448,8 +448,8 @@
             "use_testing": 0,
             "isolation_effectiveness": 0.5,
             "isolation_house_effectiveness": 0.5
-        },
-        "place_closure": {
+        }],
+        "place_closure": [{
             "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
@@ -459,8 +459,8 @@
             "closure_household_infectiousness": 5,
             "closure_spatial_params": 0.5,
             "case_microcell_threshold": 1
-        },
-        "household_quarantine": {
+        }],
+        "household_quarantine": [{
             "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
@@ -471,8 +471,8 @@
             "quarantine_house_effectiveness": 1.5,
             "quarantine_spatial_effectiveness": 0.25,
             "quarantine_place_effectiveness": [0.25, 0.25, 0.25, 0.25, 0.25, 0.25]
-        },
-        "social_distancing": {
+        }],
+        "social_distancing": [{
             "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
@@ -487,8 +487,8 @@
             "distancing_house_susc": 0.8,
             "distancing_place_susc": [0.8, 0.8, 0.8, 0.8, 0.8, 0.8],
             "distancing_spatial_susc": 0.8
-        },
-        "disease_testing": {
+        }],
+        "disease_testing": [{
             "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
@@ -499,8 +499,8 @@
             "asympt_uninf_pcr": [0.2, 0.2, 0.2],
             "testing_sympt": [1, 1, 1],
             "sympt_pcr": [0.5, 0.5, 0.5]
-        },
-        "vaccine_params": {
+        }],
+        "vaccine_params": [{
             "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
@@ -510,8 +510,8 @@
             "min_ages": [80, 65, 50, 18],
             "prob_vaccinated": [1, 1, 1, 1],
             "daily_doses": 1
-        },
-        "travel_isolation": {
+        }],
+        "travel_isolation": [{
             "start_time": 6,
             "policy_duration": 365,
             "case_threshold": 0,
@@ -522,7 +522,7 @@
             "hotel_isolate": 1,
             "isolation_effectiveness": 0.5,
             "isolation_house_effectiveness": 0.5
-        }
+        }]
     },
     "travel_params": {
         "ratio_introduce_cases": 0.1,

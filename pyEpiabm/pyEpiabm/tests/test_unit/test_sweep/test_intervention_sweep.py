@@ -32,19 +32,20 @@ class TestInterventionSweep(TestPyEpiabm):
 
     def test_bind_population(self):
         self.assertEqual(len(self.interventionsweep.
-                             intervention_params['case_isolation']), 9)
+                             intervention_params['case_isolation'][0]), 9)
         self.assertEqual(len(self.interventionsweep.
-                             intervention_params['vaccine_params']), 9)
+                             intervention_params['vaccine_params'][0]), 9)
         self.assertEqual(len(self.interventionsweep.
-                             intervention_params['place_closure']), 9)
+                             intervention_params['place_closure'][0]), 9)
         self.assertEqual(len(self.interventionsweep.
-                             intervention_params['household_quarantine']), 10)
+                             intervention_params['household_quarantine'][0]),
+                         10)
         self.assertEqual(len(self.interventionsweep.
-                             intervention_params['social_distancing']), 13)
+                             intervention_params['social_distancing'][0]), 13)
         self.assertEqual(len(self.interventionsweep.
-                             intervention_params['disease_testing']), 10)
+                             intervention_params['disease_testing'][0]), 10)
         self.assertEqual(len(self.interventionsweep.
-                             intervention_params['travel_isolation']), 10)
+                             intervention_params['travel_isolation'][0]), 10)
         self.assertEqual(len(
             self.interventionsweep.intervention_active_status.keys()), 7)
 
@@ -90,18 +91,10 @@ class TestInterventionSweep(TestPyEpiabm):
 
         # Infector in case isolation, infectee in quarantine as
         # isolation_start_time = 100 as evaluated at this time (see above)
-        self.interventionsweep.intervention_params['case_isolation'][
-            'isolation_probability'] = 1.0
-        self.interventionsweep.intervention_params['household_quarantine'][
-            'quarantine_house_compliant'] = 1.0
-        self.interventionsweep.intervention_params['household_quarantine'][
-            'quarantine_individual_compliant'] = 1.0
         self.assertEqual(self.person_symp.isolation_start_time, 10)
         self.assertIsNotNone(self.person_susc.quarantine_start_time)
 
         # Stop isolating after start_time + policy_duration
-        self.interventionsweep.intervention_params['case_isolation'][
-            'policy_duration'] = 365
         self.person_symp.isolation_start_time = 370
         self.interventionsweep(time=370)
         self.assertEqual(self.person_symp.isolation_start_time, 370)

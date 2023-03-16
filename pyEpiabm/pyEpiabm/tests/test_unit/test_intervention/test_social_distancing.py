@@ -25,29 +25,27 @@ class TestSocialDistancing(TestPyEpiabm):
         cls.person = cls.microcell.persons[0]
         cls.person.update_status(InfectionStatus(7))
 
-        params = pe.Parameters.instance().intervention_params[
-            'social_distancing']
+        cls.params = pe.Parameters.instance().intervention_params[
+            'social_distancing'][0]
         cls.socialdistancing = SocialDistancing(population=cls._population,
-                                                **params)
+                                                **cls.params)
 
     def test__init__(self):
         # Test the parameter values from params file (testing_parameters.json)
-        params = pe.Parameters.instance().intervention_params[
-                'social_distancing']
         self.assertEqual(self.socialdistancing.start_time,
-                         params['start_time'])
+                         self.params['start_time'])
         self.assertEqual(self.socialdistancing.policy_duration,
-                         params['policy_duration'])
+                         self.params['policy_duration'])
         self.assertEqual(self.socialdistancing.case_threshold,
-                         params['case_threshold'])
+                         self.params['case_threshold'])
         self.assertEqual(self.socialdistancing.distancing_delay,
-                         params['distancing_delay'])
+                         self.params['distancing_delay'])
         self.assertEqual(self.socialdistancing.distancing_duration,
-                         params['distancing_duration'])
+                         self.params['distancing_duration'])
         self.assertEqual(self.socialdistancing.case_microcell_threshold,
-                         params['case_microcell_threshold'])
+                         self.params['case_microcell_threshold'])
         self.assertEqual(self.socialdistancing.distancing_enhanced_prob,
-                         params['distancing_enhanced_prob'])
+                         self.params['distancing_enhanced_prob'])
 
     def test___call__(self):
         # Social distancing haven't start

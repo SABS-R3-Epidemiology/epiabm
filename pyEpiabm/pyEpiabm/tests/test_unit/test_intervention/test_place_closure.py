@@ -25,7 +25,7 @@ class TestPlaceClosure(TestPyEpiabm):
         self._microcell.persons[0].update_status(InfectionStatus(7))
 
         self.params = pe.Parameters.instance().intervention_params[
-            'place_closure']
+            'place_closure'][0]
         self.placeclosure = PlaceClosure(population=self._population,
                                          **self.params)
 

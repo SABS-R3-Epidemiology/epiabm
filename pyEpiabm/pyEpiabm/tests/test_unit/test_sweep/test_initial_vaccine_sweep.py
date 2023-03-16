@@ -24,11 +24,15 @@ class TestVaccinationSweep(TestPyEpiabm):
         self.person_list = []
         for i in range(6):
             self.person_list.append(self.microcell.persons[i])
+        if isinstance(pe.Parameters.instance().
+                      intervention_params['vaccine_params'], list):
+            pe.Parameters.instance().intervention_params['vaccine_params'] = \
+                pe.Parameters.instance().intervention_params[
+                    'vaccine_params'][0]
 
     def test_priority_group(self):
         test_sweep = pe.sweep.InitialVaccineQueue()
         test_sweep.bind_population(self.test_population)
-        params = pe.Parameters.instance().intervention_params['vaccine_params']
 
         age_list = [90, 70, 55, 30, 15, 80]
         for i in range(len(self.person_list)):
@@ -38,7 +42,9 @@ class TestVaccinationSweep(TestPyEpiabm):
 
         priority_list = []
         for per in self.person_list:
-            level = test_sweep.assign_priority_group(per, params['min_ages'])
+            level = test_sweep.assign_priority_group(
+                per, pe.Parameters.instance().
+                intervention_params['vaccine_params']['min_ages'])
             priority_list.append(level)
 
         self.assertEqual(priority_list[0], 1)

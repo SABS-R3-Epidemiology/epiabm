@@ -30,7 +30,7 @@ class TestHouseholdQuarantine(TestPyEpiabm):
         self.susc_person2.update_status(InfectionStatus.Susceptible)
 
         self.params = pe.Parameters.instance().intervention_params[
-            'household_quarantine']
+            'household_quarantine'][0]
         self.params['quarantine_house_compliant'] = 1.0
         self.householdquarantine = HouseholdQuarantine(
             population=self.test_population, **self.params)

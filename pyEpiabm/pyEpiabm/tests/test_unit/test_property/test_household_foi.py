@@ -29,6 +29,12 @@ class TestHouseholdInfection(TestPyEpiabm):
         self.infectee = self._population.cells[0].microcells[0].persons[1]
         self.infector.infectiousness = 1.0
 
+        for key in pe.Parameters.instance().intervention_params.keys():
+            if isinstance(pe.Parameters.instance().
+                          intervention_params[key], list):
+                pe.Parameters.instance().intervention_params[key] = \
+                    pe.Parameters.instance().intervention_params[key][0]
+
     def test_house_inf(self):
         result = HouseholdInfection.household_inf(self.infector, self.time)
         self.assertEqual(result, 1)

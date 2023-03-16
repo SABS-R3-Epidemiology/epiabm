@@ -27,6 +27,8 @@ class TestPersonalInfection(TestPyEpiabm):
         cls.infectee.is_vaccinated = True
         cls.infector.is_vaccinated = True
         cls.time = 1
+        pe.Parameters.instance().intervention_params['vaccine_params'] = \
+            pe.Parameters.instance().intervention_params['vaccine_params'][0]
 
     def test_person_inf(self):
         result = PersonalInfection.person_inf(self.infector, self.time)

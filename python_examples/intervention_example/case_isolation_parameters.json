@@ -496,7 +496,17 @@
         "prop_other_parent_away": 0.0
     },
     "intervention_params": {
-	"case_isolation": {
+	"case_isolation": [{
+	    "start_time": 0,
+	    "policy_duration": 5,
+	    "case_threshold": 0,
+	    "isolation_delay": 0,
+	    "isolation_duration": 5,
+	    "isolation_probability": 1,
+        "use_testing": 0,
+	    "isolation_effectiveness": 0.8,
+	    "isolation_house_effectiveness": 0.8
+	}, {
 	    "start_time": 6,
 	    "policy_duration": 365,
 	    "case_threshold": 0,
@@ -506,6 +516,6 @@
         "use_testing": 0,
 	    "isolation_effectiveness": 0.1,
 	    "isolation_house_effectiveness": 0.2
-	}
+	}]
     }
 }

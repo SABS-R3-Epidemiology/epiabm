@@ -24,7 +24,7 @@ class TestDiseaseTesting(TestPyEpiabm):
         self.person2 = self._population.cells[0].microcells[0].persons[1]
 
         self.params = pe.Parameters.instance().intervention_params[
-            'disease_testing']
+            'disease_testing'][0]
         self.testing = \
             DiseaseTesting(population=self._population, **self.params)
 
