@@ -15,7 +15,7 @@ class TestSpatialSweep(TestMockedLogs):
     def setUp(self):
         # 1st Population
         # 2 cell population
-        # 1st cell: 1 microcell, 100 people, includes the infector
+        # 1st cell: 1 microcell, 1 person, includes the infector
         # who has InfectionStatus of mildly infected
         # 2nd cell: 1 microcell, 1 person, includes the infectee
         # who is Susceptible
@@ -93,32 +93,37 @@ class TestSpatialSweep(TestMockedLogs):
         test_sweep = SpatialSweep()
         mock_dist.return_value = 2
         test_sweep.bind_population(test_pop)
-        self.assertEqual(self.cell_inf.nearby_cells, {1: 2})
+        self.assertEqual(self.cell_inf.nearby_cell_distances, {1: 2})
+        mock_dist.assert_called_with(self.cell_inf.location,
+                                     self.cell_susc.location)
+        self.assertEqual(mock_dist.call_count,
+                         self.cell_inf.number_infectious() * 2)
 
-    @mock.patch("logging.exception")
-    @mock.patch("numpy.nan_to_num")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
-    def test_bind_population(self, mock_dist, mock_nan, mock_logger):
+    def test_bind_population(self, mock_dist):
         Parameters.instance().infection_radius = 0.0001
         # Assert a basic population
         test_pop = self.pop
         test_sweep = SpatialSweep()
         mock_dist.return_value = 2.2
-        test_sweep.bind_population(test_pop)
 
-        self.assertEqual(self.cell_inf.nearby_cells, {})
+        test_sweep.bind_population(test_pop)
+        self.assertEqual(mock_dist.call_count,
+                         self.cell_inf.number_infectious() * 2)
+
+        self.assertEqual(self.cell_inf.nearby_cell_distances, {})
 
         Parameters.instance().infection_radius = 1000
         test_pop = self.pop
         test_sweep = SpatialSweep()
         mock_dist.return_value = 2.2
         self.assertEqual(test_sweep.bind_population(test_pop), None)
-        self.assertEqual(test_sweep.bind_population(test_pop), None)
+        mock_dist.assert_called_with(self.cell_inf.location,
+                                     self.cell_susc.location)
 
-    @mock.patch("logging.exception")
     @mock.patch("numpy.nan_to_num")
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
-    def test_find_infectees_successful(self, mock_dist, mock_nan, mock_logger):
+    def test_find_infectees_successful(self, mock_dist, mock_nan):
         Parameters.instance().infection_radius = 1000
         test_pop = self.pop
         test_sweep = SpatialSweep()
@@ -128,50 +133,89 @@ class TestSpatialSweep(TestMockedLogs):
             find_infectees(self.cell_inf, [self.cell_susc], 1)
         self.assertFalse(mock_nan.called)
         self.assertEqual(test_list, [self.infectee])
+        mock_dist.assert_called_with(self.cell_inf.location,
+                                     self.cell_susc.location)
+        self.assertEqual(mock_dist.call_count,
+                         self.cell_inf.number_infectious() * 2)
 
-    @mock.patch("logging.exception")
-    @mock.patch("numpy.nan_to_num")
+    @mock.patch('logging.exception')
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
-    def test_find_infectees_fails(self, mock_dist, mock_nan, mock_logger):
+    def test_find_infectees_fails(self, mock_dist, mock_log):
         Parameters.instance().infection_radius = 0.0001
         # Assert a basic population
         test_pop = self.pop
         test_sweep = SpatialSweep()
         mock_dist.return_value = 2.2
         test_sweep.bind_population(test_pop)
+        mock_dist.assert_called_with(self.cell_inf.location,
+                                     self.cell_susc.location)
+        self.assertEqual(mock_dist.call_count,
+                         self.cell_inf.number_infectious() * 2)
 
-        # test value error is raised if all cells too far away
+        # Test Value Error is raised if all cells too far away
         Parameters.instance().infection_radius = 0.000001
-        mock_dist.side_effect = [0, 2]
-        mock_nan.return_value = [1, 1]
+        mock_dist.return_value = 2
         test_list = test_sweep.\
             find_infectees(self.cell_inf, [self.cell_susc], 1)
         self.assertEqual(test_list, [])
-        mock_logger.assert_called
-        # test logger is called here
+        mock_log.assert_called_once()
+        self.assertTrue(mock_log.call_args[0][0].startswith("ValueError"))
 
+    @mock.patch('logging.exception')
     @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
-    def test_find_infectees_Covidsim(self, mock_dist):
-        Parameters.instance().infection_radius = 100
+    def test_find_infectees_fails_empty_cells(self, mock_dist, mock_log):
+        Parameters.instance().infection_radius = 1000
         test_pop = self.pop
         test_sweep = SpatialSweep()
-        mock_dist.return_value = 0
+        mock_dist.return_value = 2.2
         test_sweep.bind_population(test_pop)
 
-        # Test if distance is small, infectee listed
+        self.cell_susc.persons = []  # Empty this target cell
+        test_list = test_sweep.\
+            find_infectees(self.cell_inf, [self.cell_susc], 1)
+        self.assertEqual(test_list, [])
+        mock_dist.assert_called_with(self.cell_inf.location,
+                                     self.cell_susc.location)
+        self.assertEqual(mock_dist.call_count,
+                         self.cell_inf.number_infectious() * 2)
+        mock_log.assert_called_once()
+        self.assertTrue(mock_log.call_args[0][0].startswith("ValueError"))
+
+    @mock.patch("random.random")
+    @mock.patch("pyEpiabm.utility.DistanceFunctions.minimum_between_cells")
+    @mock.patch("pyEpiabm.utility.DistanceFunctions.dist_euclid")
+    def test_find_infectees_Covidsim(self, mock_dist, mock_norm_distance,
+                                     mock_random):
+        Parameters.instance().infection_radius = 100
+        Parameters.instance().do_CovidSim = True
+        test_pop = self.pop
+        test_sweep = SpatialSweep()
+
+        mock_dist.return_value = 0
+        mock_norm_distance.return_value = 0
+        mock_random.return_value = 0.5  # Acts as a deterministic cutoff
+        test_sweep.bind_population(test_pop)
+        mock_dist.assert_called_with(self.cell_inf.location,
+                                     self.cell_susc.location)
+        self.assertEqual(mock_dist.call_count,
+                         self.cell_inf.number_infectious() * 2)
+
+        # Test that the infectee is listed if distance is small
         mock_dist.return_value = 0
         Parameters.instance().infection_radius = 1
         test_list = test_sweep.find_infectees_Covidsim(self.infector,
                                                        [self.cell_susc], 1)
         self.assertEqual(test_list, [self.infectee])
+        mock_random.assert_called_once()
         mock_dist.assert_called_with(self.cell_inf.location,
                                      self.cell_susc.location)
-        # If distance is large infectee not listed
-        # Only this doesn't work now becuase Covidsim is weird
 
-        # mock_dist.return_value = 1000
-        # test_list = test_sweep.find_infectees_Covidsim(self.infector,
-        #                                               [cell_susc], 1)
+        # Test that the infectee is not listed if distance is large
+        mock_dist.return_value = 100
+        mock_norm_distance.return_value = 1  # Less than mock_dist
+        test_list = test_sweep.find_infectees_Covidsim(self.infector,
+                                                       [self.cell_susc], 1)
+        self.assertEqual(test_list, [])
 
     @mock.patch("pyEpiabm.sweep.SpatialSweep.find_infectees_Covidsim")
     @mock.patch("pyEpiabm.sweep.SpatialSweep.find_infectees")
@@ -210,6 +254,12 @@ class TestSpatialSweep(TestMockedLogs):
         test_sweep.bind_population(test_pop)
         test_sweep(time)
         self.assertTrue(self.cell_inf.person_queue.empty())
+
+        mock_inf.assert_called_once_with(self.cell_inf, time)
+        mock_foi.assert_called_once_with(self.cell_inf, self.cell_susc,
+                                         self.infector, self.infectee, time)
+        mock_poisson.assert_called_once_with(mock_inf.return_value)
+
         # Change infector's status to infected
         self.infector.update_status(InfectionStatus.InfectMild)
         test_sweep(time)
@@ -227,22 +277,13 @@ class TestSpatialSweep(TestMockedLogs):
         # Test parameters break-out clause
         Parameters.instance().infection_radius = 0
         test_sweep(time)
-        mock_inf_list.assert_not_called
-        mock_list_covid.assert_not_called
         self.assertEqual(self.cell_susc.person_queue.qsize(), 0)
 
-    @mock.patch("pyEpiabm.sweep.SpatialSweep.find_infectees_Covidsim")
-    @mock.patch("pyEpiabm.sweep.SpatialSweep.find_infectees")
-    @mock.patch("numpy.random.poisson")
-    @mock.patch("pyEpiabm.property.SpatialInfection.spatial_foi")
-    @mock.patch("pyEpiabm.property.SpatialInfection.cell_inf")
-    def test_call_possible_infectee_number_0(self, mock_inf, mock_foi,
-                                             mock_poisson, mock_inf_list,
-                                             mock_list_covid):
-        mock_inf.return_value = 10
-        mock_foi.return_value = 100.0
-        mock_poisson.return_value = 1
-        time = 1
+        mock_inf_list.assert_called_with(self.cell_inf, [self.cell_susc], time)
+        mock_list_covid.assert_called_with(self.infector, [self.cell_susc],
+                                           time)
+
+    def test_call_possible_infectee_number_0(self):
         Parameters.instance().infection_radius = 1000
 
         test_pop_no_infectees = self.pop_no_infectees
@@ -251,15 +292,9 @@ class TestSpatialSweep(TestMockedLogs):
         # Assert a population with two cells one with infected person
         # one with recovered person
         test_sweep.bind_population(test_pop_no_infectees)
-        test_sweep(time)
+        test_sweep(time=1)
         self.assertTrue(self.cell_inf.person_queue.empty())
         self.assertEqual(self.cell_no_infectees_rec.person_queue.qsize(), 0)
-
-        mock_inf.assert_not_called
-        mock_foi.assert_not_called
-        mock_poisson.assert_not_called
-        mock_inf_list.assert_not_called
-        mock_list_covid.assert_not_called
 
     @mock.patch("random.random")
     def test_do_infection_event(self, mock_random):
