@@ -15,6 +15,7 @@ Overview:
 - :class:`PlaceClosure`
 - :class:`SocialDistancing`
 - :class:`Vaccination`
+- :class:`TravelIsolation`
 
 .. autoclass:: AbstractIntervention
     :members:
@@ -41,5 +42,9 @@ Overview:
     :special-members: __init__, __call__
 
 .. autoclass:: Vaccination
+    :members:
+    :special-members: __init__, __call__
+
+.. autoclass:: TravelIsolation
     :members:
     :special-members: __init__, __call__

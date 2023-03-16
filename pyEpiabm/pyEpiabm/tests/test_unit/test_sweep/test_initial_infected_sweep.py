@@ -11,28 +11,38 @@ class TestInitialInfectedSweep(TestPyEpiabm):
     """Test the 'InitialInfectedSweep' class.
     """
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUp(self) -> None:
         """Sets up a population we can use throughout the test.
         2 people are located in one microcell.
         """
-        super(TestInitialInfectedSweep, cls).setUpClass()
-        cls.pop_factory = pe.routine.ToyPopulationFactory()
-        cls.pop_params = {"population_size": 2, "cell_number": 1,
-                          "microcell_number": 1, "household_number": 1}
-        cls.test_population = cls.pop_factory.make_pop(cls.pop_params)
-        cls.cell = cls.test_population.cells[0]
-        cls.microcell = cls.cell.microcells[0]
-        cls.person1 = cls.cell.microcells[0].persons[0]
-        cls.person2 = cls.test_population.cells[0].microcells[0].persons[1]
-
-    def setUp(self) -> None:
-        """This reinitialises the parameters singleton before every test
-        (default behaviour is only once per class). This allows modification
-        of the parameters in each test without side effects to others.
-        """
+        self.pop_factory = pe.routine.ToyPopulationFactory()
+        self.pop_params = {"population_size": 2, "cell_number": 1,
+                           "microcell_number": 1, "household_number": 1}
+        self.test_population = self.pop_factory.make_pop(self.pop_params)
+        self.cell = self.test_population.cells[0]
+        self.microcell = self.cell.microcells[0]
+        self.person1 = self.cell.microcells[0].persons[0]
+        self.person2 = self.test_population.cells[0].microcells[0].persons[1]
         filepath = os.path.join(os.path.dirname(__file__), os.pardir,
                                 os.pardir, 'testing_parameters.json')
         pe.Parameters.set_file(filepath)
+
+    def test_no_cells(self):
+        """Tests that an error is raised when there are no cells large
+        enough to seen initial infections
+        """
+        self.test_population.add_cells(1)
+        self.cell2 = self.test_population.cells[1]
+        self.cell2.add_microcells(1)
+        self.microcell2 = self.cell2.microcells[0]
+        self.microcell2.add_people(2)
+        test_sweep = pe.sweep.InitialInfectedSweep()
+        test_sweep.bind_population(self.test_population)
+        # Test asking for more infected people than any single cell contains
+        # raises an error.
+        params = {"initial_infected_number": 4, "simulation_start_time": 0,
+                  "initial_infect_cell": True}
+        self.assertRaises(ValueError, test_sweep, params)
 
     def test_call(self):
         """Test the main function of the Initial Infected Sweep.

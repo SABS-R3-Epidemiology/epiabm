@@ -206,7 +206,7 @@ class TestSimFunctional(TestFunctional):
 
     def test_small_cutoff(self, *mocks):
         """Basic functional test to ensure people cannot infect those
-        outside theircell when the cut-off is sufficiently small.
+        outside their cell when the cut-off is sufficiently small.
         """
         mock_read, mock_csv = mocks[:2]
         file_input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
@@ -246,7 +246,6 @@ class TestSimFunctional(TestFunctional):
                                                 self.sim_params,
                                                 self.file_params,
                                                 sweep_list)
-
         for i, cell in enumerate(pop.cells):
             with self.subTest(cell=cell):
                 cell_data = pop.cells[i].compartment_counter.retrieve()
