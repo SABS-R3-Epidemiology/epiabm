@@ -17,8 +17,8 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                                     "noInt_params.json"))
 
-input_file_names = ["toy_input_15x15_av5_places.csv", "toy_input_12x12_av5_places.csv", "toy_input_8x8_mid_places.csv", "toy_input_6x6_av5_places.csv", "toy_input_4x4_av5_places.csv"]
-output_file_names = ["output_15x15_av5_{}.csv", "output_12x12_av5_{}.csv", "output_8x8_av5_{}.csv", "output_6x6_av5_{}.csv", "output_4x4_av5_{}.csv"]
+input_file_names = ["toy_input_6x6_av5_places.csv", "toy_input_4x4_av5_places.csv"]#, "toy_input_6x6_av5_places.csv", "toy_input_4x4_av5_places.csv"]
+output_file_names = ["output_6x6_av5_{}.csv", "output_4x4_av5_{}.csv"]#, "output_6x6_av5_{}.csv", "output_4x4_av5_{}.csv"]
 
 #input_file_names = ["toy_input_4x4_low_places.csv"]
 #output_file_names = ["output_4x4_low_{}.csv"]
@@ -30,7 +30,7 @@ for j in range(len(input_file_names)):
     # Generate population from input file
     # (Input converted from CovidSim with `microcell_conversion.py`)
     file_loc = os.path.join(os.path.dirname(__file__),
-                            "uniform_inputs/av5_places",
+                            "uniform_inputs/av5_places_new",
                             input_file)
     for i in range(10):
         set_seed = i
@@ -46,7 +46,7 @@ for j in range(len(input_file_names)):
 
         file_params = {"output_file": output_file.format(i),
                        "output_dir": os.path.join(os.path.dirname(__file__),
-                                                  "simulation_outputs"),
+                                                  "simulation_outputs/new_average"),
                        "spatial_output": True,
                        "age_stratified": False}
 
