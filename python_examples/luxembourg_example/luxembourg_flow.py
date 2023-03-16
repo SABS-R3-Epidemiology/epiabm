@@ -28,7 +28,7 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 # Generate population from input file
 # (Input converted from CovidSim with `microcell_conversion.py`)
 file_loc = os.path.join(os.path.dirname(__file__),
-                        "luxembourg_inputs", "luxembourg_input_file.csv")
+                        "luxembourg_inputs", "luxembourg_adapted_input.csv")
 population = pe.routine.FilePopulationFactory.make_pop(file_loc,
                                                        random_seed=42)
 
@@ -36,7 +36,7 @@ population = pe.routine.FilePopulationFactory.make_pop(file_loc,
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
-              "initial_infected_number": 10, "initial_infect_cell": True,
+              "initial_infected_number": 0, "initial_infect_cell": True,
               "simulation_seed": 42}
 
 file_params = {"output_file": "output_luxembourg.csv",
@@ -95,7 +95,7 @@ plt.savefig(os.path.join(os.path.dirname(__file__),
 # if file_params["age_stratified"]:
 p = Plotter(os.path.join(os.path.dirname(__file__),
             "simulation_outputs/large_csv/output_luxembourg.csv"),
-            start_date='18-03-2022', sum_weekly=True)
+            start_date='29-02-2020', sum_weekly=True)
 p.barchart(os.path.join(os.path.dirname(__file__),
            "simulation_outputs/age_stratify.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),

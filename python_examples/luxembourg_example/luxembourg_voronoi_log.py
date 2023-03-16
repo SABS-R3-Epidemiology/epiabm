@@ -341,13 +341,13 @@ def generate_animation(
             format="GIF",
             append_images=imgs,
             save_all=True,
-            duration=20,
+            duration=50,
             loop=0,
             optimise=True,
         )
-        # for file in os.listdir(save_path):  # Delete images after use
-        #     if file in file_names:
-        #         os.remove(os.path.join(save_path, file))
+        for file in os.listdir(save_path):  # Delete images after use
+            if file in file_names:
+                os.remove(os.path.join(save_path, file))
 
 
 df = gpd.read_file("ne_10m_admin_0_countries_lakes.zip")
