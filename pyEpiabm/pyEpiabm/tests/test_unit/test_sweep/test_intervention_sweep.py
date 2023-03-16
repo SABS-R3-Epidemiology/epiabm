@@ -1,11 +1,11 @@
 import unittest
 
 import pyEpiabm as pe
-from pyEpiabm.sweep import InterventionSweep
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
+from pyEpiabm.sweep import InterventionSweep
 from pyEpiabm.intervention import CaseIsolation, HouseholdQuarantine, \
-    PlaceClosure, SocialDistancing, DiseaseTesting
+    PlaceClosure, SocialDistancing, DiseaseTesting, TravelIsolation
+from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
 class TestInterventionSweep(TestPyEpiabm):
@@ -22,9 +22,10 @@ class TestInterventionSweep(TestPyEpiabm):
         cls.pop_params = {"population_size": 2, "cell_number": 1,
                           "microcell_number": 1, "household_number": 1}
         cls._population = cls.pop_factory.make_pop(cls.pop_params)
-        cls.person_susc = cls._population.cells[0].microcells[0].persons[0]
+        cls._microcell = cls._population.cells[0].microcells[0]
+        cls.person_susc = cls._microcell.persons[0]
         cls.person_susc.update_status(InfectionStatus(1))
-        cls.person_symp = cls._population.cells[0].microcells[0].persons[1]
+        cls.person_symp = cls._microcell.persons[1]
         cls.person_symp.update_status(InfectionStatus(4))
 
         cls.interventionsweep.bind_population(cls._population)
@@ -42,8 +43,10 @@ class TestInterventionSweep(TestPyEpiabm):
                              intervention_params['social_distancing']), 13)
         self.assertEqual(len(self.interventionsweep.
                              intervention_params['disease_testing']), 10)
+        self.assertEqual(len(self.interventionsweep.
+                             intervention_params['travel_isolation']), 10)
         self.assertEqual(len(
-            self.interventionsweep.intervention_active_status.keys()), 6)
+            self.interventionsweep.intervention_active_status.keys()), 7)
 
     def test___call__(self):
         self.interventionsweep(time=10)
@@ -73,6 +76,11 @@ class TestInterventionSweep(TestPyEpiabm):
                 [key for key in
                  self.interventionsweep.intervention_active_status.keys()
                  if isinstance(key, DiseaseTesting)][0]])
+        self.assertTrue(
+            self.interventionsweep.intervention_active_status[
+                [key for key in
+                 self.interventionsweep.intervention_active_status.keys()
+                 if isinstance(key, TravelIsolation)][0]])
 
         # Place is closed and social distancing ends
         self.assertIsNotNone(self.interventionsweep._population.cells[0].

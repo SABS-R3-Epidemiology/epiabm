@@ -407,6 +407,7 @@
         "place_transmission": 0.1
     },
     "household_transmission": 0.1,
+    "household_size_distribution": [],
     "false_positive_rate": 0,
     "place_transmission": 0.1,
     "use_ages": 1,
@@ -414,7 +415,6 @@
                         7.3, 7.3, 6.5, 5.7, 6, 4.8, 3.9, 3.2, 4.7],
     "age_contact": [0.6, 0.7, 0.75, 1, 1, 1, 1, 1,
                     1, 1, 1, 1, 1, 1, 1, 0.75, 0.5],
-    "household_size_distribution": [],
     "host_progression_lists": {
         "prob_gp_to_hosp": [0.001896, 0.001616, 0.002981, 0.006083,
                             0.013513, 0.025793, 0.040294, 0.057278,
@@ -495,17 +495,10 @@
         "older_gen_gap": 19,
         "prop_other_parent_away": 0.0
     },
-    "intervention_params": {
-	"case_isolation": {
-	    "start_time": 6,
-	    "policy_duration": 365,
-	    "case_threshold": 0,
-	    "isolation_delay": 0,
-	    "isolation_duration": 10,
-	    "isolation_probability": 1,
-        "use_testing": 0,
-	    "isolation_effectiveness": 0.1,
-	    "isolation_house_effectiveness": 0.2
-	}
+    "travel_params": {
+        "ratio_introduce_cases": 0.1,
+        "constant_introduce_cases": [0],
+        "duration_travel_stay": [2, 14],
+        "prob_existing_household": 0.8
     }
 }
