@@ -89,3 +89,24 @@ TEST_CASE("dataclasses/microcell: test getPerson", "[Microcell]")
         REQUIRE(cell.microcells()[0].getPerson(cell, i).microcellPos() == i);
     }
 }
+
+TEST_CASE("dataclasses/microcell: test getHouseholds", "[Microcell]")
+{
+    Cell cell = Cell(0);
+    cell.microcells().push_back(Microcell(0));
+    for (size_t i = 0; i < 100; i++)
+    {
+        cell.people().push_back(Person(0, 0, i));
+    }
+    for (size_t i = 0; i < 100; i++)
+    {
+        cell.microcells()[0].households().push_back(
+            std::make_shared<Household>(i));
+    }
+    REQUIRE(cell.microcells()[0].households().size() == 100);
+
+    for (size_t i = 0; i < 100; i++)
+    {
+        REQUIRE(cell.microcells()[0].getHousehold(i)->microcellPos() == i);
+    }
+}

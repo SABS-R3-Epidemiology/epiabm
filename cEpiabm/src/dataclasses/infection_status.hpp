@@ -21,6 +21,12 @@ namespace epiabm
         Dead = 9
     };
 
+    /**
+     * @brief Convert InfectionStatus Enum into a String Representation
+     * 
+     * @param status InfectionStatus Enum to convert
+     * @return constexpr const char* String representation of the status
+     */
     constexpr const char* status_string(InfectionStatus status)
     {
         switch (status)
@@ -39,5 +45,6 @@ namespace epiabm
         }
     }
 }
+
 
 #endif // EPIABM_DATACLASSES_INFECTION_STATUS_HPP

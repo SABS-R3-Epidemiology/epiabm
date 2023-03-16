@@ -4,41 +4,40 @@
 
 import csv
 import typing
+import os
 
 from pyEpiabm.output.abstract_reporter import AbstractReporter
 
 
 class _CsvDictWriter(AbstractReporter):
     def __init__(self, folder: str, filename: str, fieldnames: typing.List,
-                 clear_folder: bool = True):
+                 clear_folder: bool = False):
         """Initialises a file to store output in, and which categories
         to record.
 
-        :param folder: Output folder path
-        :type folder: str
-        :param filename: Output file name
-        :type filename: str
-        :param fieldnames: List of categories to be saved
-        :type fieldnames: list
-        :param clear_folder: Whether to empty the folder before saving results
-        :type time: bool
+        Parameters
+        ----------
+        folder : str
+            Output folder path
+        filename : str
+            Output file name
+        fieldnames : typing.List
+            List of categories to be saved
+        clear_folder : bool
+            Whether to empty the folder before saving results
+
         """
         super().__init__(folder, clear_folder)
 
-        try:
-            self.f = open(filename, 'w')
-            self.writer = csv.DictWriter(
-                self.f, fieldnames=fieldnames, delimiter=',')
-            self.writer.writeheader()
-        except FileNotFoundError as e:
-            self.f = None
-            self.writer = None
-            # TODO: Log file not found error
-            raise e
+        self.f = open(os.path.join(folder, filename), 'w')
+        self.writer = csv.DictWriter(
+            self.f, fieldnames=fieldnames, delimiter=',')
+        self.writer.writeheader()
 
     def __del__(self):
         """Closes the file when the simulation is finished.
         Required for file data to be further used.
+
         """
         if self.f:
             self.f.close()
@@ -46,6 +45,10 @@ class _CsvDictWriter(AbstractReporter):
     def write(self, row: typing.Dict):
         """Writes data to file.
 
-        :param row: Dictionary of data to be saved
-        :type row: dict"""
+        Parameters
+        ----------
+        row : dict
+            Dictionary of data to be saved
+
+        """
         self.writer.writerow(row)

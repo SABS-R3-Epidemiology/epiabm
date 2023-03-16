@@ -8,6 +8,11 @@
 namespace epiabm
 {
 
+    /**
+     * @brief Construct a new Basic Simulation object
+     * 
+     * @param population Population simulation should work on
+     */
     BasicSimulation::BasicSimulation(PopulationPtr population) :
         m_population(population),
         m_sweeps(),
@@ -15,16 +20,37 @@ namespace epiabm
     {
     }
 
+    /**
+     * @brief Destroy the Basic Simulation:: Basic Simulation object
+     * 
+     */
+    BasicSimulation::~BasicSimulation() = default;
+
+    /**
+     * @brief Add a sweep to the population
+     * Sweeps sholud be added in the order they will be run each iteration
+     * @param sweep Sweep to add
+     */
     void BasicSimulation::addSweep(SweepInterfacePtr sweep)
     {
         m_sweeps.push_back(sweep);
     }
 
+    /**
+     * @brief Attach a reporter to the simulation
+     * Timestep Reporter to output information iteration steps
+     * @param reporter Timestep Reporter to add
+     */
     void BasicSimulation::addTimestepReporter(TimestepReporterInterfacePtr timestepReporter)
     {
         m_timestepReporters.push_back(timestepReporter);
     }
 
+    /**
+     * @brief Perform Simulation
+     * Run the configured simulation
+     * @param timesteps Number of timesteps ot run for
+     */
     void BasicSimulation::simulate(const unsigned short timesteps)
     {
         auto t0 = std::chrono::system_clock::now();
@@ -53,7 +79,7 @@ namespace epiabm
         {
             LOG << LOG_LEVEL_ERROR << "Error iterating through timesteps: " << e.what();
         }*/
-        // LCOV_EXCL_END
+        // LCOV_EXCL_STOP
         LOG << LOG_LEVEL_NORMAL << "Completed Iterating through timesteps.";
 
         teardown();

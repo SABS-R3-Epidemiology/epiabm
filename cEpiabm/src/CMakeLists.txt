@@ -1,5 +1,6 @@
 
-
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
 set(
     epiabm_src
@@ -23,14 +24,20 @@ set(
     sweeps/host_progression_sweep.cpp
     sweeps/random_seed_sweep.cpp
     sweeps/spatial_sweep.cpp
+    sweeps/place_sweep.cpp
     reporters/timestep_reporter_interface.cpp
     reporters/cell_compartment_reporter.cpp
     reporters/percell_compartment_reporter.cpp
     reporters/population_compartment_reporter.cpp
+    reporters/new_cases_reporter.cpp
+    reporters/age_stratified_new_cases_reporter.cpp
+    reporters/age_stratified_population_reporter.cpp
     configuration/json_factory.cpp
+    utilities/distance_metrics.cpp
     utilities/inverse_cdf.cpp
     utilities/random_manager.cpp
     simulations/basic_simulation.cpp
+    simulations/threaded_simulation.cpp
 )
 
 set(
@@ -56,19 +63,26 @@ set(
     sweeps/host_progression_sweep.hpp
     sweeps/random_seed_sweep.hpp
     sweeps/spatial_sweep.hpp
+    sweeps/place_sweep.hpp
     reporters/timestep_reporter_interface.hpp
     reporters/cell_compartment_reporter.hpp
     reporters/percell_compartment_reporter.hpp
     reporters/population_compartment_reporter.hpp
+    reporters/new_cases_reporter.hpp
+    reporters/age_stratified_new_cases_reporter.hpp
+    reporters/age_stratified_population_reporter.hpp
     configuration/simulation_config.hpp
     configuration/infection_config.hpp
     configuration/host_progression_config.hpp
     configuration/config_factory_interface.hpp
     configuration/json_factory.hpp
+    utilities/thread_pool.hpp
+    utilities/distance_metrics.hpp
     utilities/inverse_cdf.hpp
     utilities/random_generator.hpp
     utilities/random_manager.hpp
     simulations/basic_simulation.hpp
+    simulations/threaded_simulation.hpp
 )
 
 add_library(epiabm_lib STATIC ${epiabm_src} ${epiabm_hdr})
@@ -80,6 +94,7 @@ target_include_directories(
 )
 
 target_link_libraries(epiabm_lib PRIVATE project_warnings project_settings)
+target_link_libraries(epiabm_lib PRIVATE Threads::Threads)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.4)

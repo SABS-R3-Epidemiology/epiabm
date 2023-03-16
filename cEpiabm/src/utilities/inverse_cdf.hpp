@@ -1,6 +1,8 @@
 #ifndef EPIABM_UTILITIES_INVERSE_CDF_HPP
 #define EPIABM_UTILITIES_INVERSE_CDF_HPP
 
+#include "random_generator.hpp"
+
 #include <array>
 #include <random>
 
@@ -22,10 +24,12 @@ namespace epiabm
         void assignExponent();
         void assignExponent(double value);
 
-        unsigned short choose(double timestepsPerDay, std::mt19937_64 generator);
+        unsigned short choose(double timestepsPerDay, RandomGenerator& generator);
 
         std::array<double, InverseCDF::RES+1>& getValues();
         double& operator[](size_t i);
+
+        double mean();
 
     private:
     };

@@ -26,7 +26,8 @@ namespace epiabm
         void linkHouseholds(
             PopulationPtr population,
             size_t n_households,
-            int percInHousehold);
+            int percInHousehold,
+            std::optional<size_t> seed);
 
     private:
     }; // class HouseholdLinker

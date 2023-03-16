@@ -12,14 +12,23 @@ Overview:
 - :class:`HostProgressionSweep`
 - :class:`HouseholdSweep`
 - :class:`InitialInfectedSweep`
+- :class:`InitialisePlaceSweep`
+- :class:`InitialHouseholdSweep`
+- :class:`InitialVaccineQueue`
+- :class:`InterventionSweep`
 - :class:`PlaceSweep`
 - :class:`QueueSweep`
+- :class:`SpatialSweep`
+- :class:`TravelSweep`
 - :class:`UpdatePlaceSweep`
+- :class:`StateTransitionMatrix`
+- :class:`TransitionTimeMatrix`
+
 
 .. autoclass:: AbstractSweep
     :members:
     :special-members: __call__
-    
+
 .. autoclass:: HostProgressionSweep
     :members:
     :special-members: __call__
@@ -28,7 +37,23 @@ Overview:
     :members:
     :special-members: __call__
 
+.. autoclass:: InitialisePlaceSweep
+    :members:
+    :special-members: __call__
+
 .. autoclass:: InitialInfectedSweep
+    :members:
+    :special-members: __call__
+
+.. autoclass:: InitialHouseholdSweep
+    :members:
+    :special-members: __call__
+
+.. autoclass:: InitialVaccineQueue
+    :members:
+    :special-members: __call__
+
+.. autoclass:: InterventionSweep
     :members:
     :special-members: __call__
 
@@ -40,7 +65,22 @@ Overview:
     :members:
     :special-members: __call__
 
+.. autoclass:: SpatialSweep
+    :members:
+    :special-members: __call__
+
+.. autoclass:: TravelSweep
+    :members:
+    :special-members: __call__
+
 .. autoclass:: UpdatePlaceSweep
     :members:
     :special-members: __call__
-    
+
+.. autoclass:: StateTransitionMatrix
+    :members:
+    :special-members: __call__
+
+.. autoclass:: TransitionTimeMatrix
+    :members:
+    :special-members: __call__

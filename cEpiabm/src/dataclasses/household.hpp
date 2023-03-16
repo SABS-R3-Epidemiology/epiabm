@@ -11,13 +11,20 @@ namespace epiabm
     class Cell;
     class Microcell;
     class Person;
-
+    /**
+     * @brief Structure for household parameters
+     * For parameters which are independent to individual households
+     */
     struct HouseholdParams
     {
         double susceptibility = 0, infectiousness = 0;
         std::pair<double, double> location = {0, 0};
     };
 
+    /**
+     * @brief Class representing a household
+     * 
+     */
     class Household
     {
     private:

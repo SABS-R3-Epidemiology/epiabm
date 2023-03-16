@@ -7,16 +7,19 @@ namespace epiabm
 
 
     NewInfectionSweep::NewInfectionSweep(SimulationConfigPtr cfg) :
-        SweepInterface(cfg)
+        SweepInterface(cfg),
+        m_counter(0)
     {}
 
 
     void NewInfectionSweep::operator()(const unsigned short timestep)
     {
         LOG << LOG_LEVEL_DEBUG << "Beginning New Infection Sweep " << timestep;
+        m_counter = 0;
         m_population->forEachCell(std::bind(
             &NewInfectionSweep::cellCallback, this,
             timestep, std::placeholders::_1));
+        LOG << LOG_LEVEL_INFO << "New Infection Sweep " << timestep << " processed " << m_counter << " new infections.";
         LOG << LOG_LEVEL_DEBUG << "Finished New Infection Sweep " << timestep;
     }
 
@@ -47,17 +50,22 @@ namespace epiabm
     void NewInfectionSweep::cellPersonQueueCallback(unsigned short timestep, Cell* cell, size_t personIndex)
     {
         Person* person = &cell->getPerson(personIndex);
-        LOG << LOG_LEVEL_INFO << "New infection sweep on ("
-            << cell->index() << "," << person->cellPos() << ")";
+        {
+            std::stringstream ss;
+            ss << "New infection sweep on ("
+                << cell->index() << "," << person->cellPos() << ")";
+            LOG << LOG_LEVEL_DEBUG << ss.str();
+        }
         person->updateStatus(cell, InfectionStatus::Exposed, timestep);
         person->params().next_status_time = static_cast<unsigned short>(timestep + latent_time(person));
         cell->markExposed(personIndex);
+        m_counter++;
     }
 
     unsigned short NewInfectionSweep::latent_time(Person* /*person*/)
     {
         return m_cfg->infectionConfig->hostProgressionConfig->latentPeriodICDF.choose(
-            m_cfg->timestepsPerDay, m_cfg->randomManager->g().generator());
+            m_cfg->timestepsPerDay, m_cfg->randomManager->g());
     }
 
 

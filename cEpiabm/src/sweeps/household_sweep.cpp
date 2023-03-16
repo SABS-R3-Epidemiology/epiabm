@@ -10,14 +10,17 @@ namespace epiabm
 {
 
     HouseholdSweep::HouseholdSweep(SimulationConfigPtr cfg) :
-        SweepInterface(cfg)
+        SweepInterface(cfg),
+        m_counter(0)
     {}
 
     void HouseholdSweep::operator()(const unsigned short timestep)
     {
         LOG << LOG_LEVEL_DEBUG << "Beginning Household Sweep " << timestep;
+        m_counter = 0;
         m_population->forEachCell(
             std::bind(&HouseholdSweep::cellCallback, this, timestep, std::placeholders::_1));
+        LOG << LOG_LEVEL_INFO << "Household Sweep " << timestep << " caused " << m_counter << " new infections.";
         LOG << LOG_LEVEL_DEBUG << "Finished Household Sweep " << timestep;
     }
 
@@ -87,19 +90,24 @@ namespace epiabm
 
         if (m_cfg->randomManager->g().randf<double>() < foi)
         {
-            LOG << LOG_LEVEL_INFO << "Household infection in cell " << cell->index()
+            {
+                std::stringstream ss;
+                ss << "Household infection in cell " << cell->index()
                 << " between " << infector->cellPos() << " and " << infectee->cellPos();
+                LOG << LOG_LEVEL_DEBUG << ss.str();
+            }
             // Infection attempt is successful
             cell->enqueuePerson(infectee->cellPos());
+            m_counter++;
         }
         return true;
     }
 
     double HouseholdSweep::calcHouseInf(
-        Person* /*infector*/,
+        Person* infector,
         unsigned short int )
     {
-        return 1.0;
+        return static_cast<double>(infector->params().infectiousness) * m_cfg->infectionConfig->householdTransmission;
     }
 
     double HouseholdSweep::calcHouseSusc(

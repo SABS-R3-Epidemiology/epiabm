@@ -18,9 +18,11 @@ namespace epiabm
     class SpatialSweep : public SweepInterface
     {
     private:
+        unsigned long m_counter;
+
+        RandomGeneratorPtr m_generator;
 
     public:
-        SpatialSweep();
         SpatialSweep(SimulationConfigPtr cfg);
         ~SpatialSweep() = default;
 
@@ -31,23 +33,25 @@ namespace epiabm
          */
         void operator()(const unsigned short timestep) override;
 
-    private:
         bool cellCallback(
             const unsigned short timestep,
-            Cell* cell);
+            Cell* cell) override;
 
         bool cellInfectiousCallback(
             const unsigned short timestep,
             Cell* cell,
             Person* infectious);
 
+    private:
         bool infectAttempt(
             const unsigned short timestep,
             Cell* cell,
             Person* infector, Person* infectee);
 
-        inline std::vector<Cell*> getCellsToInfect(
-            std::vector<Cell>& cells, Cell* currentCell, size_t n);
+        inline std::vector<size_t> getCellsToInfect(
+            std::vector<CellPtr>& cells, Cell* currentCell, size_t n);
+        
+        std::vector<double> getWeightsFromCells(std::vector<CellPtr> &cells, Cell *currentCell);
 
         double calcCellInf(
             Cell* cell,

@@ -7,6 +7,7 @@ from enum import Enum
 
 class InfectionStatus(Enum):
     """Enum representing a person's current infection status.
+
     """
     Susceptible = 1
     Exposed = 2
@@ -18,3 +19,4 @@ class InfectionStatus(Enum):
     InfectICURecov = 8
     Recovered = 9
     Dead = 10
+    Vaccinated = 11

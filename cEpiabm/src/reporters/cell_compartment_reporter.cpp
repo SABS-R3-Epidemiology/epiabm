@@ -6,7 +6,11 @@
 namespace epiabm
 {
 
-
+    /**
+     * @brief Construct a new Cell Compartment Reporter object
+     * 
+     * @param folder Output Folder
+     */
     CellCompartmentReporter::CellCompartmentReporter(const std::string folder) :
         TimestepReporterInterface(folder, true),
         m_compartments(
@@ -24,6 +28,18 @@ namespace epiabm
             })
     {}
 
+    /**
+     * @brief Destroy the Cell Compartment Reporter:: Cell Compartment Reporter object
+     * 
+     */
+    CellCompartmentReporter::~CellCompartmentReporter() = default;
+
+    /**
+     * @brief Report the population state at a timestep
+     * 
+     * @param pop Population to report
+     * @param timestep Timestep of report
+     */
     void CellCompartmentReporter::report(
         const PopulationPtr population,
         const unsigned short timestep)
@@ -59,10 +75,15 @@ namespace epiabm
             LOG << LOG_LEVEL_ERROR << "Cell Compartment Reporter Error writing to file";
             throw e;
         }
-        // LCOV_EXCL_END
+        // LCOV_EXCL_STOP
         ofs->close();
     }
 
+    /**
+     * @brief Getter for set which contains the compartment types to return
+     * This set can be configured to specify which compartments to output
+     * @return std::set<InfectionStatus>& 
+     */
     std::set<InfectionStatus>& CellCompartmentReporter::compartments()
     {
         return m_compartments;

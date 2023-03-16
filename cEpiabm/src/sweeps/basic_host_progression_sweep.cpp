@@ -5,10 +5,26 @@
 namespace epiabm
 {
 
+    /**
+     * @brief Construct a new Basic Host Progression Sweep:: Basic Host Progression Sweep object
+     * 
+     * @param cfg Simulation configuration
+     */
     BasicHostProgressionSweep::BasicHostProgressionSweep(SimulationConfigPtr cfg) :
         SweepInterface(cfg)
     {}
 
+    /**
+     * @brief Destroy the Basic Host Progression Sweep:: Basic Host Progression Sweep object
+     * 
+     */
+    BasicHostProgressionSweep::~BasicHostProgressionSweep() = default;
+
+    /**
+     * @brief Perform Host Progression Sweep
+     * 
+     * @param timestep 
+     */
     void BasicHostProgressionSweep::operator()(const unsigned short timestep)
     {
         LOG << LOG_LEVEL_DEBUG << "Beginning Basic Host Progression Sweep " << timestep;
@@ -82,9 +98,13 @@ namespace epiabm
     {
         if (timestep < person->params().next_status_time) return true;
         InfectionStatus next = next_status(person);
-        LOG << LOG_LEVEL_INFO << "Basic host progression of ("
-            << cell->index() << "," << person->cellPos() << ") from "
-            << status_string(person->status()) << " to " << status_string(next);
+        {
+            std::stringstream ss;
+            ss << "Basic host progression of ("
+                << cell->index() << "," << person->cellPos() << ") from "
+                << status_string(person->status()) << " to " << status_string(next);
+            LOG << LOG_LEVEL_DEBUG << ss.str();
+        }
         person->updateStatus(cell, next, timestep);
 
         if (next == InfectionStatus::Recovered)

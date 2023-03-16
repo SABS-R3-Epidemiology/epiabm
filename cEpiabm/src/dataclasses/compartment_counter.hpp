@@ -12,6 +12,10 @@ namespace epiabm
 {
     class Cell;
 
+    /**
+     * @brief Class to keep count of number of people in each compartment
+     * 
+     */
     class CompartmentCounter
     {
     private:
@@ -22,11 +26,13 @@ namespace epiabm
         ~CompartmentCounter();
 
         void clear();
+
         unsigned int operator()(InfectionStatus status) const;
 
         void notify(InfectionStatus oldStatus, InfectionStatus newStatus);
 
         void initialize(Cell* cell, const std::vector<size_t>& people);
+        
         void initialize(const std::vector<Person>& people);
 
     private:

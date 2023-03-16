@@ -8,6 +8,7 @@
 #include "sweeps/new_infection_sweep.hpp"
 #include "sweeps/random_seed_sweep.hpp"
 #include "sweeps/spatial_sweep.hpp"
+#include "sweeps/place_sweep.hpp"
 
 
 namespace py = pybind11;
@@ -41,6 +42,10 @@ void bind_sweeps(py::module &m)
         .def(py::init<SimulationConfigPtr, int>());
     
     py::class_<SpatialSweep, SpatialSweepPtr>(m, "SpatialSweep",
+        py::base<SweepInterface>())
+        .def(py::init<SimulationConfigPtr>());
+        
+    py::class_<PlaceSweep, PlaceSweepPtr>(m, "PlaceSweep",
         py::base<SweepInterface>())
         .def(py::init<SimulationConfigPtr>());
 }

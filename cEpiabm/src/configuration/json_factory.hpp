@@ -13,7 +13,10 @@ namespace json = nlohmann;
 namespace epiabm
 {
 
-
+    /**
+     * @brief Configuration Factory implementation which reads a json file into a SimulationConfig object
+     * 
+     */
     class JsonFactory : public ConfigurationFactoryInterface
     {
         private:
@@ -30,8 +33,20 @@ namespace epiabm
                 SimulationConfigPtr cfg,
                 const json::json& input);
 
+            bool loadPopulationConfig(
+                PopulationConfigPtr cfg,
+                const json::json& input);
+
             bool loadInfectionConfig(
                 InfectionConfigPtr cfg,
+                const json::json& j);
+            
+            bool loadTransitionTimeConfig(
+                HostProgressionConfigPtr cfg,
+                const json::json& j);
+
+            bool loadTransitionStateConfig(
+                HostProgressionConfigPtr cfg,
                 const json::json& j);
 
             bool loadHostProgressionConfig(

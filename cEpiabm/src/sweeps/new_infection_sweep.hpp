@@ -21,6 +21,7 @@ namespace epiabm
     class NewInfectionSweep : public SweepInterface
     {
         private:
+            unsigned long m_counter;
 
         public:
             NewInfectionSweep(SimulationConfigPtr cfg);
@@ -33,10 +34,9 @@ namespace epiabm
              */
             void operator()(const unsigned short timestep) override;
 
-        private:
             bool cellCallback(
                 const unsigned short timestep,
-                Cell* cell);
+                Cell* cell) override;
 
             void cellPersonQueueCallback(
                 unsigned short timestep,

@@ -15,10 +15,14 @@ namespace epiabm
     class HostProgressionSweep : public SweepInterface
     {
     private:
-        std::array<std::array<double, N_INFECTION_STATES>, N_INFECTION_STATES> m_transitionMatrix;
+        std::array<std::array<std::array<double, N_INFECTION_STATES>, N_INFECTION_STATES>, N_AGE_GROUPS> m_transitionMatrix;
         std::array<std::array<InverseCDF*, N_INFECTION_STATES>, N_INFECTION_STATES> m_transitionTimeMatrix;
+        std::vector<double> m_infectiousnessProfile;
 
         std::mt19937 m_generator;
+        std::gamma_distribution<double> m_initialInfectiousnessDistrib;
+
+        unsigned short delay;
 
     public:
         HostProgressionSweep(SimulationConfigPtr cfg);
@@ -33,7 +37,7 @@ namespace epiabm
 
         bool cellCallback(
             const unsigned short timestep,
-            Cell* cell);
+            Cell* cell) override;
 
         /* For each Exposed Person */
         bool cellExposedCallback(
@@ -56,13 +60,20 @@ namespace epiabm
             Person* person);
 
         InfectionStatus chooseNextStatus(
-            InfectionStatus prev);
+            Person* person, InfectionStatus prev);
 
         unsigned short chooseNextTransitionTime(
             InfectionStatus current, InfectionStatus next);
 
+        double chooseInfectiousness(
+            InfectionStatus status);
+
+        void updateInfectiousness(
+            const unsigned short timestep, Person* person);
+
         void loadTransitionMatrix();
         void loadTransitionTimeMatrix();
+        void loadInfectiousnessProfile();
     }; // class HostProgressionSweep
 
     typedef std::shared_ptr<HostProgressionSweep> HostProgressionSweepPtr;

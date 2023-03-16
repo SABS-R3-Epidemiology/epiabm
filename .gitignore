@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
+.DS_Store
+*/.DS_Store
 
 # Prerequisites
 *.d
@@ -103,7 +105,6 @@ target/
 
 # VS Code
 *.vscode
-*.editorconfig
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -158,3 +159,17 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Epiabm log files
+*.log
+
+# PyEpiabm intervention output files
+python_examples/intervention_example/intervention_outputs/*.csv
+
+# PyEpiabm travelling output files
+python_examples/travel_example/travelling_outputs/*.csv
+
+# Profiling script
+kernprof.py
+*.prof
+*.lprof

@@ -13,7 +13,11 @@
 
 namespace epiabm
 {
-
+    /**
+     * @brief Master Simulation Controlling Class
+     * Links population with sweeps, and runs the sweeps to perform simulation
+     * Reporters can be attached to extract information about the simulation
+     */
     class BasicSimulation
     {
     private:
@@ -24,7 +28,7 @@ namespace epiabm
 
     public:
         BasicSimulation(PopulationPtr population);
-        ~BasicSimulation() = default;
+        ~BasicSimulation();
 
         void addSweep(SweepInterfacePtr sweep);
 
@@ -42,4 +46,4 @@ namespace epiabm
 }
 
 
-#endif // EPIABM_SIMULATINS_BASIC_SIMULATION_HPP
+#endif // EPIABM_SIMULATIONS_BASIC_SIMULATION_HPP

@@ -16,13 +16,17 @@ namespace epiabm
 {
     class Cell;
 
+    /**
+     * @brief Class representing a microcell
+     * 
+     */
     class Microcell
     {
     private:
         std::vector<size_t> m_people;
         std::vector<HouseholdPtr> m_households;
 
-        size_t m_cellPos;
+        size_t m_cellPos; // index of this microcell in parent cell's m_microcells
 
         CompartmentCounter m_compartmentCounter;
 
@@ -37,6 +41,7 @@ namespace epiabm
         void forEachPerson(Cell& cell, std::function<bool(Person*)> callback);
 
         Person& getPerson(Cell& cell, size_t i);
+        HouseholdPtr getHousehold(size_t i);
 
         std::vector<size_t>& people();
         std::vector<HouseholdPtr>& households();

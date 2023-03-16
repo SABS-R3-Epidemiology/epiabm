@@ -18,6 +18,7 @@ namespace epiabm
         std::map<std::thread::id, RandomGeneratorPtr> m_generators;
         unsigned int m_nThreads;
         unsigned int m_seed;
+        std::mutex m_mutex;
 
     public:
         RandomManager(unsigned int seed);

@@ -17,6 +17,8 @@ namespace epiabm
     class HouseholdSweep : public SweepInterface
     {
     private:
+        unsigned long m_counter;
+
     public:
         HouseholdSweep(SimulationConfigPtr cfg);
         ~HouseholdSweep() = default;
@@ -28,16 +30,16 @@ namespace epiabm
          */
         void operator()(const unsigned short timestep) override;
 
-    private:
         bool cellCallback(
             const unsigned short timestep,
-            Cell* cell);
+            Cell* cell) override;
 
         bool cellInfectiousCallback(
             const unsigned short timestep,
             Cell* cell,
             Person* infectious);
 
+    private:
         bool infectAttempt(
             const unsigned short timestep,
             Cell* cell, HouseholdPtr household,
