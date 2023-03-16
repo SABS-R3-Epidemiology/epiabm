@@ -38,6 +38,7 @@ class TestDistancingFunctional(TestFunctional):
             "distancing_spatial_susc": 0.8
         }
         }
+        self.intervention_type = 'social_distancing'
 
     def test_distancing_present(self, mock_read, mock_csv):
         """Social distancing functional test to ensure more people will be
@@ -56,6 +57,7 @@ class TestDistancingFunctional(TestFunctional):
 
         # Enable social distancing
         pe.Parameters.instance().intervention_params = self.intervention
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop_distancing = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
@@ -78,12 +80,14 @@ class TestDistancingFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
         self.intervention['social_distancing'][
             'distancing_spatial_enhanced_susc'] = 0.8
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
@@ -107,12 +111,14 @@ class TestDistancingFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
         self.intervention['social_distancing'][
             'distancing_enhanced_prob'] = [0.1]*17
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())

@@ -64,150 +64,158 @@ class TestClosureFunctional(TestFunctional):
         HelperFunc().compare_susceptible_groups(
              pop.cells, pop_closure.cells)
 
-    # def test_no_closure_type(self, mock_read, mock_csv):
-    #     """Place closure functional test to ensure when no place
-    #     closed type is specified, there is no effect of place closure
-    #     intervention.
-    #     """
-    #     mock_read.return_value = pd.DataFrame(self.pop_params)
+    def test_no_closure_type(self, mock_read, mock_csv):
+        """Place closure functional test to ensure when no place
+        closed type is specified, there is no effect of place closure
+        intervention.
+        """
+        mock_read.return_value = pd.DataFrame(self.pop_params)
 
-    #     # Enable spatial infectious
-    #     pe.routine.Simulation.set_random_seed(seed=30)
-    #     pe.Parameters.instance().infection_radius = 1.6
+        # Enable spatial infectious
+        pe.routine.Simulation.set_random_seed(seed=30)
+        pe.Parameters.instance().infection_radius = 1.6
 
-    #     # Without intervention
-    #     pop = TestFunctional.file_simulation(
-    #         "test_input.csv", self.sim_params, self.file_params,
-    #         HelperFunc.sweep_list_initialise()[1:])
+        # Without intervention
+        pop = TestFunctional.file_simulation(
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc.sweep_list_initialise()[1:])
 
-    #     pe.Parameters.instance().intervention_params = self.intervention
-    #     self.intervention['place_closure'][0]['closure_place_type'] = []
-    #     pop_closure = TestFunctional.file_simulation(
-    #         "test_input.csv", self.sim_params, self.file_params,
-    #         HelperFunc.sweep_list_initialise())
+        self.intervention['place_closure']['closure_place_type'] = []
+        pe.Parameters.instance().intervention_params = self.intervention
+        HelperFunc.intervention_conversion_list(self.intervention_type)
+        pop_closure = TestFunctional.file_simulation(
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc.sweep_list_initialise())
 
-    #     mock_read.assert_called_with('test_input.csv')
-    #     self.assertEqual(mock_csv.call_count, 2)
+        mock_read.assert_called_with('test_input.csv')
+        self.assertEqual(mock_csv.call_count, 2)
 
-    #     # Compare number of susceptible individuals for each age group
-    #     HelperFunc().compare_susceptible_groups(
-    #          pop.cells, pop_closure.cells, method='equal')
+        # Compare number of susceptible individuals for each age group
+        HelperFunc().compare_susceptible_groups(
+             pop.cells, pop_closure.cells, method='equal')
 
-    # def test_closure_type_large(self, mock_read, mock_csv):
-    #     """Place closure functional test to ensure more people will be
-    #     susceptible when more types of places are closed.
-    #     """
-    #     mock_read.return_value = pd.DataFrame(self.pop_params)
+    def test_closure_type_large(self, mock_read, mock_csv):
+        """Place closure functional test to ensure more people will be
+        susceptible when more types of places are closed.
+        """
+        mock_read.return_value = pd.DataFrame(self.pop_params)
 
-    #     # Enable spatial infectious and place closure
-    #     pe.routine.Simulation.set_random_seed(seed=30)
-    #     pe.Parameters.instance().infection_radius = 1.6
+        # Enable spatial infectious and place closure
+        pe.routine.Simulation.set_random_seed(seed=30)
+        pe.Parameters.instance().infection_radius = 1.6
 
-    #     pe.Parameters.instance().intervention_params = self.intervention
-    #     pop_standard = TestFunctional.file_simulation(
-    #         "test_input.csv", self.sim_params, self.file_params,
-    #         HelperFunc.sweep_list_initialise())
+        pe.Parameters.instance().intervention_params = self.intervention
+        HelperFunc.intervention_conversion_list(self.intervention_type)
+        pop_standard = TestFunctional.file_simulation(
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc.sweep_list_initialise())
 
-    #     self.intervention['place_closure'][0]['closure_place_type'] = [
-    #         1, 2, 3, 4, 5, 6]
-    #     pop = TestFunctional.file_simulation(
-    #         "test_input.csv", self.sim_params, self.file_params,
-    #         HelperFunc.sweep_list_initialise())
+        self.intervention['place_closure']['closure_place_type'] = [
+            1, 2, 3, 4, 5, 6]
+        HelperFunc.intervention_conversion_list(self.intervention_type)
+        pop = TestFunctional.file_simulation(
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc.sweep_list_initialise())
 
-    #     mock_read.assert_called_with('test_input.csv')
-    #     self.assertEqual(mock_csv.call_count, 2)
+        mock_read.assert_called_with('test_input.csv')
+        self.assertEqual(mock_csv.call_count, 2)
 
-    #     # Compare number of susceptible individuals for each age group
-    #     HelperFunc().compare_susceptible_groups(
-    #          pop_standard.cells, pop.cells)
+        # Compare number of susceptible individuals for each age group
+        HelperFunc().compare_susceptible_groups(
+             pop_standard.cells, pop.cells)
 
-    # def test_spatial_params_large(self, mock_read, mock_csv):
-    #     """Place closure functional test to ensure fewer people will be
-    #     susceptible when closure spatial params increases due to
-    #     place closure.
-    #     """
-    #     mock_read.return_value = pd.DataFrame(self.pop_params)
+    def test_spatial_params_large(self, mock_read, mock_csv):
+        """Place closure functional test to ensure fewer people will be
+        susceptible when closure spatial params increases due to
+        place closure.
+        """
+        mock_read.return_value = pd.DataFrame(self.pop_params)
 
-    #     # Enable spatial infectious and place closure
-    #     pe.routine.Simulation.set_random_seed(seed=30)
-    #     pe.Parameters.instance().infection_radius = 1.6
+        # Enable spatial infectious and place closure
+        pe.routine.Simulation.set_random_seed(seed=30)
+        pe.Parameters.instance().infection_radius = 1.6
 
-    #     pe.Parameters.instance().intervention_params = self.intervention
-    #     pop_standard = TestFunctional.file_simulation(
-    #         "test_input.csv", self.sim_params, self.file_params,
-    #         HelperFunc.sweep_list_initialise())
+        pe.Parameters.instance().intervention_params = self.intervention
+        HelperFunc.intervention_conversion_list(self.intervention_type)
+        pop_standard = TestFunctional.file_simulation(
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc.sweep_list_initialise())
 
-    #     self.intervention['place_closure'][0][
-    #         'closure_spatial_params'] = 1
-    #     pop = TestFunctional.file_simulation(
-    #         "test_input.csv", self.sim_params, self.file_params,
-    #         HelperFunc.sweep_list_initialise())
+        self.intervention['place_closure'][
+            'closure_spatial_params'] = 1
+        HelperFunc.intervention_conversion_list(self.intervention_type)
+        pop = TestFunctional.file_simulation(
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc.sweep_list_initialise())
 
-    #     mock_read.assert_called_with('test_input.csv')
-    #     self.assertEqual(mock_csv.call_count, 2)
+        mock_read.assert_called_with('test_input.csv')
+        self.assertEqual(mock_csv.call_count, 2)
 
-    #     # Compare number of susceptible individuals for each age group
-    #     HelperFunc().compare_susceptible_groups(
-    #          pop.cells, pop_standard.cells)
+        # Compare number of susceptible individuals for each age group
+        HelperFunc().compare_susceptible_groups(
+             pop.cells, pop_standard.cells)
 
-    # def test_microcell_threshold_extreme(self, mock_read, mock_csv):
-    #     """Place closure functional test to ensure when the case
-    #     threshold at microcell level exceeds the number of individuals,
-    #     there is no effect of place closure
-    #     intervention.
-    #     """
-    #     mock_read.return_value = pd.DataFrame(self.pop_params)
+    def test_microcell_threshold_extreme(self, mock_read, mock_csv):
+        """Place closure functional test to ensure when the case
+        threshold at microcell level exceeds the number of individuals,
+        there is no effect of place closure
+        intervention.
+        """
+        mock_read.return_value = pd.DataFrame(self.pop_params)
 
-    #     # Enable spatial infectious and place closure
-    #     pe.routine.Simulation.set_random_seed(seed=30)
-    #     pe.Parameters.instance().infection_radius = 1.6
+        # Enable spatial infectious and place closure
+        pe.routine.Simulation.set_random_seed(seed=30)
+        pe.Parameters.instance().infection_radius = 1.6
 
-    #     # Without intervention
-    #     pop = TestFunctional.file_simulation(
-    #         "test_input.csv", self.sim_params, self.file_params,
-    #         HelperFunc.sweep_list_initialise()[1:])
+        # Without intervention
+        pop = TestFunctional.file_simulation(
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc.sweep_list_initialise()[1:])
 
-    #     pe.Parameters.instance().intervention_params = self.intervention
-    #     self.intervention['place_closure'][0][
-    #         'case_microcell_threshold'] = 1000
-    #     pop_closure = TestFunctional.file_simulation(
-    #         "test_input.csv", self.sim_params, self.file_params,
-    #         HelperFunc.sweep_list_initialise())
+        self.intervention['place_closure'][
+            'case_microcell_threshold'] = 1000
+        pe.Parameters.instance().intervention_params = self.intervention
+        HelperFunc.intervention_conversion_list(self.intervention_type)
+        pop_closure = TestFunctional.file_simulation(
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc.sweep_list_initialise())
 
-    #     mock_read.assert_called_with('test_input.csv')
-    #     self.assertEqual(mock_csv.call_count, 2)
+        mock_read.assert_called_with('test_input.csv')
+        self.assertEqual(mock_csv.call_count, 2)
 
-    #     # Compare number of susceptible individuals for each age group
-    #     HelperFunc().compare_susceptible_groups(
-    #          pop.cells, pop_closure.cells, method='equal')
+        # Compare number of susceptible individuals for each age group
+        HelperFunc().compare_susceptible_groups(
+             pop.cells, pop_closure.cells, method='equal')
 
-    # def test_microcell_threshold_large(self, mock_read, mock_csv):
-    #     """Place closure functional test to ensure fewer people will be
-    #     susceptible when setting larger case threshold at microcell level.
-    #     """
-    #     mock_read.return_value = pd.DataFrame(self.pop_params)
+    def test_microcell_threshold_large(self, mock_read, mock_csv):
+        """Place closure functional test to ensure fewer people will be
+        susceptible when setting larger case threshold at microcell level.
+        """
+        mock_read.return_value = pd.DataFrame(self.pop_params)
 
-    #     # Enable spatial infectious and place closure
-    #     pe.routine.Simulation.set_random_seed(seed=30)
-    #     pe.Parameters.instance().infection_radius = 1.6
+        # Enable spatial infectious and place closure
+        pe.routine.Simulation.set_random_seed(seed=30)
+        pe.Parameters.instance().infection_radius = 1.6
 
-    #     pe.Parameters.instance().intervention_params = self.intervention
-    #     pop_standard = TestFunctional.file_simulation(
-    #         "test_input.csv", self.sim_params, self.file_params,
-    #         HelperFunc.sweep_list_initialise())
+        pe.Parameters.instance().intervention_params = self.intervention
+        HelperFunc.intervention_conversion_list(self.intervention_type)
+        pop_standard = TestFunctional.file_simulation(
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc.sweep_list_initialise())
 
-    #     self.intervention['place_closure'][0][
-    #         'case_microcell_threshold'] = 15
-    #     pop = TestFunctional.file_simulation(
-    #         "test_input.csv", self.sim_params, self.file_params,
-    #         HelperFunc.sweep_list_initialise())
+        self.intervention['place_closure'][
+            'case_microcell_threshold'] = 15
+        HelperFunc.intervention_conversion_list(self.intervention_type)
+        pop = TestFunctional.file_simulation(
+            "test_input.csv", self.sim_params, self.file_params,
+            HelperFunc.sweep_list_initialise())
 
-    #     mock_read.assert_called_with('test_input.csv')
-    #     self.assertEqual(mock_csv.call_count, 2)
+        mock_read.assert_called_with('test_input.csv')
+        self.assertEqual(mock_csv.call_count, 2)
 
-    #     # Compare number of susceptible individuals for each age group
-    #     HelperFunc().compare_susceptible_groups(
-    #          pop.cells, pop_standard.cells)
+        # Compare number of susceptible individuals for each age group
+        HelperFunc().compare_susceptible_groups(
+             pop.cells, pop_standard.cells)
 
 
 if __name__ == '__main__':

@@ -32,6 +32,7 @@ class TestIsolationFunctional(TestFunctional):
             "isolation_effectiveness": 0,
             "isolation_house_effectiveness": 0}
         }
+        self.intervention_type = 'case_isolation'
 
     def test_isolation_present(self, mock_read, mock_csv):
         """Case isolation functional test to ensure more people will be
@@ -50,6 +51,7 @@ class TestIsolationFunctional(TestFunctional):
 
         # Enable case isolation
         pe.Parameters.instance().intervention_params = self.intervention
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop_isolation = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
@@ -73,11 +75,13 @@ class TestIsolationFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
         self.intervention['case_isolation']['case_threshold'] = 20
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
@@ -100,11 +104,13 @@ class TestIsolationFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc().sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_delay'] = 10
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc().sweep_list_initialise())
@@ -128,11 +134,13 @@ class TestIsolationFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_duration'] = 1
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
@@ -155,11 +163,13 @@ class TestIsolationFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_probability'] = 1
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
@@ -182,11 +192,13 @@ class TestIsolationFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
         self.intervention['case_isolation']['isolation_effectiveness'] = 0.5
+        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
