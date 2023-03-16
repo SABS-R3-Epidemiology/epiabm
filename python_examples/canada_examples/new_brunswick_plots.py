@@ -17,7 +17,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 # Creation of a plot of results (plotter from spatial_simulation_flow)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 filename = os.path.join(os.path.dirname(__file__),
-                        "simulation_outputs/large_csv/",
+                        "simulation_outputs/large_csv",
                         "output_new_brunswick.csv")
 print('Marker 1')
 SIRdf = pd.read_csv(filename)
