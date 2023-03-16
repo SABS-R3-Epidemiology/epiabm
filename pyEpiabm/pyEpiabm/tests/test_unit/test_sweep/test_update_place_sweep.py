@@ -25,6 +25,7 @@ class TestUpdatePlaceSweep(TestPyEpiabm):
         self.microcell.add_place(1, (1, 1), PlaceType.Workplace)
         self.place = self.cell.places[0]
         Parameters.instance().time_steps_per_day = 1
+        Parameters.instance().carehome_params['carehome_minimum_age'] = 65
         self.time = 1.0
 
     def test_bind(self):
@@ -91,6 +92,44 @@ class TestUpdatePlaceSweep(TestPyEpiabm):
         test_sweep.update_place_group(place, person_list=[person],
                                       person_weights=[0])
         log_mock.assert_called
+
+        # Change to care homes
+        self.place.place_type = 5
+
+        # Test for care home resident
+        self.place.empty_place()
+        person.age = 70
+        mock_random.return_value = 1
+        test_sweep.update_place_group(place, person_list=[person],
+                                      group_size=1)
+        self.assertDictEqual(place.person_groups,
+                             {0: [], 1: [person]})
+        self.assertTrue(person.care_home_resident)
+
+        # Test for key worker
+        self.place.empty_place()
+        person.age = 45
+        mock_random.return_value = 1
+        test_sweep.update_place_group(place, person_list=[person],
+                                      group_size=1)
+        self.assertDictEqual(place.person_groups, {0: [person], 1: []})
+        self.assertTrue(person.key_worker)
+
+    @mock.patch('random.random')
+    def test_key_worker_assignment(self, mock_random):
+        mock_random.return_value = 0
+
+        Parameters.instance().use_key_workers = 0.5
+
+        test_pop = self.pop
+        place = test_pop.cells[0].places[0]
+        person = test_pop.cells[0].persons[0]
+        test_sweep = UpdatePlaceSweep()
+        test_sweep.bind_population(test_pop)
+
+        test_sweep.update_place_group(place, person_list=[person],
+                                      group_size=1)
+        self.assertTrue(person.key_worker)
 
     @mock.patch("numpy.random.poisson")
     def test_update_place_no_groups(self, mock_poisson):

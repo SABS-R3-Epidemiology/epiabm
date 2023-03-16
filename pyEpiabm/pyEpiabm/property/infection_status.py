@@ -19,3 +19,4 @@ class InfectionStatus(Enum):
     InfectICURecov = 8
     Recovered = 9
     Dead = 10
+    Vaccinated = 11

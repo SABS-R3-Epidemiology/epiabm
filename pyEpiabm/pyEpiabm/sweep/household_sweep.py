@@ -5,6 +5,7 @@
 import random
 
 from pyEpiabm.property import HouseholdInfection
+from pyEpiabm.core import Person
 
 from .abstract_sweep import AbstractSweep
 
@@ -17,7 +18,6 @@ class HouseholdSweep(AbstractSweep):
     exposed person is added to an infection queue.
 
     """
-
     def __call__(self, time: float):
         """Given a population structure, loops over infected members
         and considers whether they infected household members based
@@ -32,18 +32,15 @@ class HouseholdSweep(AbstractSweep):
         # Double loop over the whole population, checking infectiousness
         # status, and whether they are absent from their household.
         for cell in self._population.cells:
-            for infector in cell.persons:
-                if not infector.is_infectious():
-                    continue
+            infectious_persons = filter(Person.is_infectious, cell.persons)
+            for infector in infectious_persons:
 
                 if infector.household is None:
                     raise AttributeError(f"{infector} is not part of a "
                                          + "household")
 
-                # Check to see whether a household member is susceptible.
-                for infectee in infector.household.persons:
-                    if not infectee.is_susceptible():
-                        continue
+                # Loop over susceptible household members.
+                for infectee in infector.household.susceptible_persons:
 
                     # Calculate "force of infection" parameter which will
                     # determine the likelihood of an infection event.

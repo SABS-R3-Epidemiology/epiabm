@@ -224,9 +224,17 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         val = test_sweep.calc_number_of_children(3)
         self.assertEqual(val, 0)
 
-        mocked_random.side_effect = [2.0, 0.0]
+        mocked_random.side_effect = [0.1]
+        val = test_sweep.calc_number_of_children(3)
+        self.assertEqual(val, 0)
+
+        mocked_random.side_effect = [0.3]
         val = test_sweep.calc_number_of_children(3)
         self.assertEqual(val, 2)
+
+        mocked_random.side_effect = [0.5]
+        val = test_sweep.calc_number_of_children(3)
+        self.assertEqual(val, 1)
 
         mocked_random.side_effect = [2.0, 2.0]
         val = test_sweep.calc_number_of_children(3)
@@ -262,6 +270,10 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         mocked_random.side_effect = [1]
         val = test_sweep.calc_number_of_children(6)
         self.assertTrue(val == 1)
+
+    def test_number_children_error(self):
+        test_sweep = pe.sweep.InitialHouseholdSweep()
+        self.assertRaises(ValueError, test_sweep.calc_number_of_children, 2)
 
     @mock.patch(
         'pyEpiabm.sweep.InitialHouseholdSweep.calc_number_of_children')
@@ -321,7 +333,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
     @mock.patch('random.randint')
     @mock.patch(
         'pyEpiabm.sweep.InitialHouseholdSweep.calc_number_of_children')
-    def test_three_plus_person_household_ages_two_child_one_under_five(
+    def test_three_plus_person_household_ages_two_child_both_over_five(
                                                     self, mocked_children,
                                                     mocked_int,
                                                     mocked_choice,
@@ -332,18 +344,11 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         """
         test_sweep = pe.sweep.InitialHouseholdSweep()
         mocked_children.side_effect = [2]
-        mocked_int.side_effect = [1, 0]
-        mocked_choice.side_effect = [[0], [6]]
-        mocked_random.side_effect = [0.0, 2.0]
-        test_sweep.three_or_more_person_household_ages(self.three_people)
-        self.assertTrue(self.person1.age >= 0)
+        mocked_int.side_effect = [1, 0, 0, 0]
+        mocked_choice.side_effect = [[0], [2], [6], [6]]
+        mocked_random.side_effect = [0.0, -1.0, 0.0]
+        test_sweep.three_or_more_person_household_ages(self.four_people)
         self.assertTrue(self.person1.age <= 5)
-        self.assertTrue(self.person2.age <= self.age_params["max_child_age"])
-        self.assertTrue(self.person3.age <= self.person1.age
-                        + self.age_params["max_parent_age_gap"] + 5)
-        self.assertTrue(self.person3.age >= self.person2.age
-                        + self.age_params["min_parent_age_gap"])
-        self.assertTrue(self.person3.age >= self.age_params["min_adult_age"])
 
     @mock.patch(
         'pyEpiabm.sweep.InitialHouseholdSweep.calc_number_of_children')
@@ -367,23 +372,8 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         test_sweep.age_proportions = Parameters.instance().age_proportions
         test_sweep.age_group_width = 5
 
-    def test_household_allocation_in_call(self):
-        """Tests that the household allocation method
-        is called correctly within the call method.
-        """
-
-        test_sweep = pe.sweep.InitialHouseholdSweep()
-        test_sweep.bind_population(self.test_population)
-        microcell = self.test_population.cells[0].microcells[0]
-        microcell.households.clear()
-        params = {}
-        test_sweep(params)
-        for cell in self.test_population.cells:
-            for microcell in cell.microcells:
-                for household in microcell.households:
-                    self.assertNotEqual(0, len(household.persons))
-
-    def test_call(self):
+    @mock.patch('logging.warning')
+    def test_call(self, mock_log):
         """Tests the main function of the assign household ages
         sweep. People are put into households of different sizes, each
         being passed to a different method of the sweep. Their ages are then
@@ -397,6 +387,7 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         microcell.add_household([self.person1])
         microcell.add_household([self.person2, self.person3])
         microcell.add_household([self.person4, self.person5, self.person6])
+        microcell.add_household([])
 
         for cell in self.test_population.cells:
             for person in cell.persons:
@@ -410,6 +401,30 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
             self.assertTrue(0 <= person.age <= 100)
         for person in microcell.households[2].persons:
             self.assertTrue(0 <= person.age <= 100)
+
+    @mock.patch('logging.warning')
+    def test_log_warning(self, mock_log):
+        test_sweep = pe.sweep.InitialHouseholdSweep()
+        test_sweep.bind_population(self.test_population)
+        microcell = self.test_population.cells[0].microcells[0]
+        pe.core.Household(microcell, microcell.location)
+
+        params = {}
+        test_sweep(params)
+
+        mock_log.assert_called_once()
+
+    def test_error(self):
+        """Tests the check that households have already been created
+        before this function is called.
+        """
+
+        # Set up population and put people in households
+        test_sweep = pe.sweep.InitialHouseholdSweep()
+        test_sweep.bind_population(self.test_population)
+
+        params = {}
+        self.assertRaises(ValueError, test_sweep, params)
 
 
 if __name__ == "__main__":

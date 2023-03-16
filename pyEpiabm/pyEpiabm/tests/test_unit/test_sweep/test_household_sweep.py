@@ -14,6 +14,7 @@ class TestHouseholdSweep(TestPyEpiabm):
     def setUpClass(cls) -> None:
         """Initialises a population with one infected person. Sets up a
         single household containing this person.
+
         """
         super(TestHouseholdSweep, cls).setUpClass()
         cls.pop = pe.Population()
@@ -41,6 +42,7 @@ class TestHouseholdSweep(TestPyEpiabm):
     def test__call__(self, mock_force):
         """Test whether the household sweep function correctly
         adds persons to the queue.
+
         """
         mock_force.return_value = 100.0
 
@@ -63,6 +65,7 @@ class TestHouseholdSweep(TestPyEpiabm):
         new_person = pe.Person(self.microcell)
         new_person.household = self.house
         self.house.persons.append(new_person)
+        self.house.susceptible_persons.append(new_person)
         self.pop.cells[0].persons.append(new_person)
 
         test_queue.put(new_person)
@@ -75,6 +78,7 @@ class TestHouseholdSweep(TestPyEpiabm):
         new_person.infection_status = pe.property.InfectionStatus.Recovered
         self.cell.persons.append(new_person)
         self.cell.person_queue = Queue()
+        self.house.susceptible_persons.remove(new_person)
         self.test_sweep.bind_population(self.pop)
         self.test_sweep(self.time)
         self.assertTrue(self.cell.person_queue.empty())

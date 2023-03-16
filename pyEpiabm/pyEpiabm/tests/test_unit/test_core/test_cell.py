@@ -20,6 +20,8 @@ class TestCell(TestPyEpiabm):
         self.assertEqual(self.cell.persons, [])
         self.assertEqual(self.cell.places, [])
         self.assertIsInstance(self.cell.person_queue, Queue)
+        self.assertIsInstance(self.cell.PCR_queue, Queue)
+        self.assertIsInstance(self.cell.LFT_queue, Queue)
         self.assertRaises(ValueError, pe.Cell, (.2, .3, .4))
 
     def test_repr(self):
@@ -49,7 +51,6 @@ class TestCell(TestPyEpiabm):
         self.cell.add_microcells(1)
         self.cell.microcells[0].add_people(1)
         person = self.cell.microcells[0].persons[0]
-        person.age_group = 0
         self.assertEqual(self.cell.number_infectious(), 0)
         person.update_status(InfectionStatus.InfectMild)
         self.assertEqual(self.cell.number_infectious(), 1)
@@ -62,6 +63,16 @@ class TestCell(TestPyEpiabm):
         self.assertEqual(self.cell.location, (0, 0))
         self.cell.set_location((3.0, 2.0))
         self.assertEqual(self.cell.location, (3.0, 2.0))
+
+    def test_testing_queue(self):
+        self.cell.add_microcells(1)
+        self.cell.microcells[0].add_people(1)
+        person = self.cell.microcells[0].persons[0]
+        self.cell.enqueue_PCR_testing(person)
+        self.cell.enqueue_LFT_testing(person)
+
+        self.assertEqual(self.cell.PCR_queue.qsize(), 1)
+        self.assertEqual(self.cell.LFT_queue.qsize(), 1)
 
 
 if __name__ == '__main__':
