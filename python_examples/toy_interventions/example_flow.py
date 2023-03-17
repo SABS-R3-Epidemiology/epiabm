@@ -19,7 +19,7 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 
 input_file_names = ["toy_input_15x15_av5_places.csv",
                     "toy_input_4x4_av5_places.csv"]
-output_file_names = ["output_15x15_av5_{}{}_{}.csv", "output_4x4_av5_{}{}_{}.csv"]
+output_file_names = ["output_15x15_av5_{}_{}_{}.csv", "output_4x4_av5_{}_{}_{}.csv"]
 
 # Parameters to change
 intervention = 'case_isolation'

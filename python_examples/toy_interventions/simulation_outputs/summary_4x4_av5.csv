@@ -1,4 +1,4 @@
-av_infections_4,sd_infections_4,av_susceptible_4,sd_susceptible_4,av_recovered_4,sd_recovered_4,time
+av_infections,sd_infections,av_susceptible,sd_susceptible,av_recovered,sd_recovered,time
 10.0,0.0,9926.0,0.0,0.0,0.0,0
 9.9,0.31622776601683794,9926.0,0.0,0.1,0.31622776601683794,1
 13.8,4.685675570881488,9858.8,49.881637681393116,0.2,0.42163702135578396,2
