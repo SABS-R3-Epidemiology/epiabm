@@ -1,5 +1,5 @@
 #
-# Example simulation script with place closure intervention data output
+# Example simulation script with travel isolaton data output
 # and visualisation
 #
 
@@ -23,27 +23,27 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
 # Set parameter file
-name_parameter_file = 'place_closure_parameters.json'
+name_parameter_file = 'travel_isolation_parameters.json'
 
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
 # Parameter to change
-to_modify_parameter_values = {'closure_household_infectiousness': [2, 10, 20],
-                              'closure_spatial_params': [0.8, 0.5, 0.2]}
+to_modify_parameter_values = {'isolation_probability': [0.0, 1.0],
+                              'hotel_isolate': [1]}
 for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         items():
     for parameter_value in parameter_values:
         name_output_file = 'output_{}_{}.csv'.format(
             parameter_value, to_modify_parameter)
 
-        pe.Parameters.instance().intervention_params['place_closure'][
+        pe.Parameters.instance().intervention_params['travel_isolation'][
             to_modify_parameter] = parameter_value
         print('Set {} to: {}'.format(to_modify_parameter,
                                      pe.Parameters.instance(
                                      ).intervention_params[
-                                        'place_closure'][
+                                        'travel_isolation'][
                                         to_modify_parameter]))
 
         # Method to set the seed at the start of the simulation,
@@ -61,7 +61,8 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         file_params = {"output_file": name_output_file,
                        "output_dir": os.path.join(os.path.dirname(__file__),
                                                   "intervention_outputs"),
-                       "spatial_output": True}
+                       "spatial_output": True,
+                       "age_stratified": True}
 
         # Create a simulation object, configure it with the parameters given,
         # then run the simulation.
@@ -70,6 +71,7 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
             population,
             [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
             [
+                pe.sweep.TravelSweep(),
                 pe.sweep.InterventionSweep(),
                 pe.sweep.UpdatePlaceSweep(),
                 pe.sweep.HouseholdSweep(),
@@ -110,17 +112,24 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
                      "InfectionStatus.Dead": 'sum'})
         df = df.reset_index(level=0)
 
-        plt.plot(df['time'], df['Infected'], label='{}: {}'.format(
-            to_modify_parameter, parameter_value))
+        label = 'hotel_isolate:'
+        if to_modify_parameter == 'hotel_isolate':
+            label += ' {}, '.format(parameter_value)
+            label += 'isolation_probability: {}'.format(
+                pe.Parameters.instance().intervention_params[
+                                        'travel_isolation'][
+                                        'isolation_probability'])
+        else:
+            label += ' 0, '
+            label += 'isolation_probability: {}'.format(parameter_value)
 
-    plt.legend()
-    plt.title("Infection curves for different {}".format(
-        to_modify_parameter))
-    plt.ylabel("Infected Population")
-    plt.savefig(
-        os.path.join(os.path.dirname(__file__),
-                     "intervention_outputs",
-                     "place_closure_{}_Icurve_plot.png".format(
-                        to_modify_parameter))
-    )
-    plt.clf()
+        plt.plot(df['time'], df['Infected'], label=label)
+
+plt.legend()
+plt.title("Infection curves for travel isolation")
+plt.ylabel("Infected Population")
+plt.savefig(
+    os.path.join(os.path.dirname(__file__),
+                 "intervention_outputs",
+                 "travel_isolation_Icurve_plot.png")
+)

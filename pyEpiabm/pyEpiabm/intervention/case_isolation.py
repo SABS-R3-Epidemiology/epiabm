@@ -34,6 +34,14 @@ class CaseIsolation(AbstractIntervention):
         super(CaseIsolation, self).__init__(population=population, **kwargs)
 
     def __call__(self, time):
+        """Run case isolation intervention.
+
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+
+        """
         for cell in self._population.cells:
             for person in cell.persons:
                 if (hasattr(person, 'isolation_start_time')) and (
@@ -65,11 +73,12 @@ class CaseIsolation(AbstractIntervention):
         Parameters
         ----------
         person : Person
+            Instance of a Person class
 
         Returns
         -------
         bool
-            True if the individual is eligible for case isolation (either
+            Whether the individual is eligible for case isolation (either
             symptomatic or has tested positive)
 
         """
@@ -80,6 +89,9 @@ class CaseIsolation(AbstractIntervention):
                 return True
 
     def turn_off(self):
+        """Turn off intervention after intervention stops being active.
+
+        """
         for cell in self._population.cells:
             for person in cell.persons:
                 if (hasattr(person, 'isolation_start_time')) and (

@@ -29,6 +29,14 @@ class PlaceClosure(AbstractIntervention):
                                            **kwargs)
 
     def __call__(self, time):
+        """Run place closure intervention.
+
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+
+        """
         for cell in self._population.cells:
             for microcell in cell.microcells:
                 if (hasattr(microcell, 'closure_start_time')) and (
@@ -44,6 +52,9 @@ class PlaceClosure(AbstractIntervention):
                                                         closure_delay
 
     def turn_off(self):
+        """Turn off intervention after intervention stops being active.
+
+        """
         for cell in self._population.cells:
             for microcell in cell.microcells:
                 if (hasattr(microcell, 'closure_start_time')) and (
