@@ -441,7 +441,7 @@
 	    "case_threshold": 0,
 	    "isolation_delay": 0,
 	    "isolation_duration": 7,
-	    "isolation_probability": 1,
+	    "isolation_probability": 1.0,
         "use_testing": 0,
 	    "isolation_effectiveness": 0.1,
 	    "isolation_house_effectiveness": 0.2

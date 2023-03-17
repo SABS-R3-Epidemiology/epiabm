@@ -19,7 +19,13 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 
 input_file_names = ["toy_input_15x15_av5_places.csv",
                     "toy_input_4x4_av5_places.csv"]
-output_file_names = ["output_15x15_av5_{}.csv", "output_4x4_av5_{}.csv"]
+output_file_names = ["output_15x15_av5_{}{}_{}.csv", "output_4x4_av5_{}{}_{}.csv"]
+
+# Parameters to change
+intervention = 'case_isolation'
+parameter = 'isolation_probability'
+parameter_value = 1.0
+pe.Parameters.instance().intervention_params['case_isolation'][parameter] = parameter_value
 
 for j in range(len(input_file_names)):
     input_file = input_file_names[j]
@@ -42,11 +48,17 @@ for j in range(len(input_file_names)):
                       "initial_infect_cell": True,
                       "simulation_seed": i}
 
-        file_params = {"output_file": output_file.format(i),
+        file_params = {"output_file": output_file.format(parameter, parameter_value, i),
                        "output_dir": os.path.join(os.path.dirname(__file__),
                                                   "simulation_outputs"),
                        "spatial_output": True,
                        "age_stratified": False}
+
+        # Check parameter set correctly
+        if pe.Parameters.instance().intervention_params[intervention][parameter] != parameter_value:
+            print('not correct value')
+        assert pe.Parameters.instance().intervention_params[intervention][parameter] == parameter_value
+
 
         # Create a simulation object, configure it with the parameters given,
         # then run the simulation.
