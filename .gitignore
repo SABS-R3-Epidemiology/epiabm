@@ -169,6 +169,9 @@ python_examples/intervention_example/intervention_outputs/*.csv
 # PyEpiabm travelling output files
 python_examples/travel_example/travelling_outputs/*.csv
 
+# PyEpiabm toy intervention outputs
+python_examples/toy_interventions/simulation_outputs/*
+
 # Profiling script
 kernprof.py
 *.prof
