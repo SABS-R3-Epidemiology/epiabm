@@ -11,28 +11,33 @@ import os
 class Plotter():
     """Class to take a csv file and return various plots.
     """
-    def __init__(self, foldername: str, grid_sizes: list, avplaces: int, repeats: int, parameter: int, parameter_values: list):
+    def __init__(self, foldername: str, grid_sizes: list, avplaces: int,
+                 repeats: int, intervention: str, parameter: str,
+                 parameter_values: list):
         self.folder = foldername
         self.grid_sizes = grid_sizes
         self.avplaces = avplaces
         self.repeats = repeats
+        self.intervention = intervention
         self.parameter = parameter
         self.parameter_values = parameter_values
 
     def _summarise_outputs(self):
         for grid_size in self.grid_sizes:
-            if self.parameter is not None:
+            if self.parameter:
                 for parameter_value in self.parameter_values:
-                    file_names = ["output_{}x{}_av{}_{}{}_{}.csv".format(
-                        grid_size, grid_size, self.avplaces, self.parameter,
-                        parameter_value, i)
+                    file_names = ["output_{}x{}_av{}_{}_{}_{}_{}.csv".format(
+                        grid_size, grid_size, self.avplaces, self.intervention,
+                        self.parameter, parameter_value, i)
                         for i in range(self.repeats)]
-                    combined_output_name = 'combined_{}x{}_av{}_{}_{}.csv'.\
+                    combined_output_name = 'combined_{}x{}_av{}_{}_{}_{}.csv'.\
                         format(grid_size, grid_size, self.avplaces,
-                               self.parameter, parameter_value)
-                    summary_output_name = 'summary_{}x{}_av{}_{}_{}.csv'.\
+                               self.intervention, self.parameter,
+                               parameter_value)
+                    summary_output_name = 'summary_{}x{}_av{}_{}_{}_{}.csv'.\
                         format(grid_size, grid_size, self.avplaces,
-                               self.parameter, parameter_value)
+                               self.intervention, self.parameter,
+                               parameter_value)
 
                     self._make_and_save_outputs(
                         file_names, combined_output_name, summary_output_name)
@@ -124,7 +129,7 @@ class Plotter():
 
         # Create plot to show SIR curves against time
         y_list = []
-        for i in range(10):
+        for i in range(self.repeats):
             y_list.append("Infected_{}".format(i))
 
         combined_df.plot(y=y_list)
@@ -135,17 +140,19 @@ class Plotter():
         color_list = list(mcolors.BASE_COLORS.keys())
         count = 0
         for grid_size in self.grid_sizes:
-            if self.parameter is not None:
+            if self.parameter:
                 for parameter_value in self.parameter_values:
-                    summary_output_name = 'summary_{}x{}_av{}_{}_{}.csv'.\
+                    summary_output_name = 'summary_{}x{}_av{}_{}_{}_{}.csv'.\
                         format(grid_size, grid_size, self.avplaces,
-                               self.parameter, parameter_value)
+                               self.intervention, self.parameter,
+                               parameter_value)
                     label = '{}x{}, {}:{}'.format(
                         grid_size, grid_size, self.parameter, parameter_value)
-                
+
                     plot = self._make_multiple_curve_plot(
                         summary_output_name, color_list[count], label)
                     count += 1
+                title = ' {}'.format(self.intervention)
             else:
                 summary_output_name = 'summary_{}x{}_av{}.csv'.format(
                         grid_size, grid_size, self.avplaces)
@@ -154,11 +161,15 @@ class Plotter():
                 plot = self._make_multiple_curve_plot(
                     summary_output_name, color_list[count], label)
                 count += 1
+                title = ''
 
         if name_fig is None:
             name_fig = 'plot_summary'
 
         plot.legend()
+        plot.xlabel('time (days)')
+        plot.ylabel('Infections')
+        plot.title('Infection curve{}'.format(title))
         plot.savefig(os.path.join(os.path.dirname(__file__), self.folder,
                      '{}.png'.format(name_fig)))
 
