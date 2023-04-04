@@ -28,8 +28,10 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 
 # Parameter to change
 diagonal_dist = 0.015
-parameter_values = [2*diagonal_dist, 5*diagonal_dist,
+parameter_values = [5*diagonal_dist,
                     10*diagonal_dist, 25*diagonal_dist]
+# parameter_values = [2*diagonal_dist, 5*diagonal_dist,
+#                     10*diagonal_dist, 25*diagonal_dist]
 
 for i in range(len(parameter_values)):
     name_output_file = 'output_{}.csv'.format(
@@ -45,22 +47,22 @@ for i in range(len(parameter_values)):
     # Generate population from input file
     # (Input converted from CovidSim with `microcell_conversion.py`)
     file_loc = os.path.join(os.path.dirname(__file__),
-                            "luxembourg_inputs", "luxembourg_adapted_input.csv")
+                            "luxembourg_inputs",
+                            "luxembourg_adapted_input.csv")
     population = pe.routine.FilePopulationFactory.make_pop(file_loc,
-                                                        random_seed=42)
-
+                                                           random_seed=42)
 
     # sim_ and file_params give details for the running of the simulations and
     # where output should be written to.
-    sim_params = {"simulation_start_time": 0, "simulation_end_time": 1,
-                "initial_infected_number": 0, "initial_infect_cell": True,
-                "simulation_seed": 42}
+    sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
+                  "initial_infected_number": 0, "initial_infect_cell": True,
+                  "simulation_seed": 42}
 
     file_params = {"output_file": name_output_file,
-                "output_dir": os.path.join(os.path.dirname(__file__),
-                                            "simulation_outputs/large_csv"),
-                "spatial_output": True,
-                "age_stratified": True}
+                   "output_dir": os.path.join(os.path.dirname(__file__),
+                                              "simulation_outputs/large_csv"),
+                   "spatial_output": True,
+                   "age_stratified": True}
 
     # Create a simulation object, configure it with the parameters given, then
     # run the simulation.
@@ -68,8 +70,8 @@ for i in range(len(parameter_values)):
     sim.configure(
         population,
         [pe.sweep.InitialHouseholdSweep(),
-        pe.sweep.InitialInfectedSweep(),
-        pe.sweep.InitialisePlaceSweep()],
+         pe.sweep.InitialInfectedSweep(),
+         pe.sweep.InitialisePlaceSweep()],
         [
             pe.sweep.UpdatePlaceSweep(),
             pe.sweep.HouseholdSweep(),
@@ -92,9 +94,9 @@ logging.getLogger("matplotlib").setLevel(logging.WARNING)
 
 for i in range(len(parameter_values)):
     file_name = os.path.join(os.path.dirname(__file__),
-                                "simulation_outputs/large_csv",
-                                'output_{}.csv'.format(
-                                parameter_values[i]))
+                             "simulation_outputs/large_csv",
+                             'output_{}.csv'.format(
+                             parameter_values[i]))
     df = pd.read_csv(file_name)
     total_df = \
         df[list(df.filter(regex='InfectionStatus.Infect'))]
@@ -106,13 +108,14 @@ for i in range(len(parameter_values)):
                     "InfectionStatus.Dead": 'sum'})
     df = df.reset_index(level=0)
 
-    plt.plot(df['time'], df['Infected'], label='radius: {}'.format(parameter_values[i]))
+    plt.plot(df['time'], df['Infected'],
+             label='radius: {}'.format(parameter_values[i]))
 
 plt.legend()
 plt.title("Infection curves for different radii")
 plt.ylabel("Infected Population")
 plt.savefig(
     os.path.join(os.path.dirname(__file__),
-                    "simulation_outputs",
-                    "place_closure_radius_Icurve_plot.png"))
+                 "simulation_outputs",
+                 "place_closure_radius_Icurve_plot.png"))
 plt.clf()
