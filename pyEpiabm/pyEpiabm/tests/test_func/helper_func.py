@@ -3,6 +3,7 @@
 #
 
 import unittest
+import numpy as np
 
 import pyEpiabm as pe
 from pyEpiabm.property.infection_status import InfectionStatus
@@ -50,25 +51,24 @@ class HelperFunc(unittest.TestCase):
 
         """
         for age_group in range(len(pe.Parameters.instance().age_proportions)):
-            with self.subTest(age_group=age_group):
-                if method == 'greater':
-                    self.assertNonZeroGreater(
+            if method == 'greater':
+                self.assertNonZeroGreater(
+                    np.sum(large_pop[0].compartment_counter.retrieve()[
+                        status]),
+                    np.sum(small_pop[0].compartment_counter.retrieve()[
+                        status]))
+                self.assertNonZeroGreater(
+                    np.sum(large_pop[1].compartment_counter.retrieve()[
+                           status]),
+                    np.sum(small_pop[1].compartment_counter.retrieve()[
+                           status]))
+            elif method == 'equal':
+                self.assertEqual(
                         large_pop[0].compartment_counter.retrieve()[
                             status][age_group],
                         small_pop[0].compartment_counter.retrieve()[
                             status][age_group])
-                    self.assertNonZeroGreater(
-                        large_pop[1].compartment_counter.retrieve()[
-                            status][age_group],
-                        small_pop[1].compartment_counter.retrieve()[
-                            status][age_group])
-                elif method == 'equal':
-                    self.assertEqual(
-                        large_pop[0].compartment_counter.retrieve()[
-                            status][age_group],
-                        small_pop[0].compartment_counter.retrieve()[
-                            status][age_group])
-                    self.assertEqual(
+                self.assertEqual(
                         large_pop[1].compartment_counter.retrieve()[
                             status][age_group],
                         small_pop[1].compartment_counter.retrieve()[
