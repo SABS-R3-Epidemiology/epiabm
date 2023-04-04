@@ -1,9 +1,11 @@
 #
 # Calculate spatial force of infection based on Covidsim code
 #
-from pyEpiabm.core import Parameters
+
+import numpy as np
 
 import pyEpiabm.core
+from pyEpiabm.core import Parameters
 
 
 class SpatialInfection:
@@ -30,23 +32,17 @@ class SpatialInfection:
             Average number of infection events from the cell
 
         """
-        # R_0 = pyEpiabm.core.Parameters.instance().basic_reproduction_num
-        # # total_infectors = inf_cell.number_infectious()
-        
-        # infect_profile = pyEpiabm.core.Parameters.instance().infectiousness_prof
-        # total_infectiousness = np.sum(infect_profile)
-
-        # average_number_to_infect = 0
-        # for status in InfectionStatus:
-        #     if str(status).startswith('InfectionStatus.Infect'):
-        #         current_infectiousness = ###########
-        #         infectiousness_prop = current_infectiousness/total_infectiousness
-        #         average_number_to_infect += infectiousness_prop * R_0
         R_0 = pyEpiabm.core.Parameters.instance().basic_reproduction_num
-        # average_infection_time = pyEpiabm.core.Parameters.instance().average_infection_time
-        average_infection_time = 17
-        total_infectors = inf_cell.number_infectious()
-        average_number_to_infect = (total_infectors/average_infection_time) * R_0
+
+        infect_profile = pyEpiabm.core.Parameters.instance()\
+            .infectiousness_prof
+        total_infectiousness = np.sum(infect_profile)
+
+        summed_infectiousness = sum([person.infectiousness
+                                    for person in inf_cell.persons])
+        average_number_to_infect = R_0 *\
+            (summed_infectiousness/total_infectiousness)
+
         # This gives the expected number of infection events
         # caused by people within this cell.
         return average_number_to_infect
