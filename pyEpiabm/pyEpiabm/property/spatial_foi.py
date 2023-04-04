@@ -41,9 +41,10 @@ class SpatialInfection:
 
         summed_infectiousness = sum([person.infectiousness
                                     for person in inf_cell.persons])
-        # This calculates the proportion of the total infections of each infected individual
-        # that should be caused at a given timestep which is then multiplied by R_0 the total
-        # expected number of infections of a given individual over their whole infection.
+        # This calculates the proportion of the total infections of each
+        # infected individual that should be caused at a given timestep
+        # which is then multiplied by R_0 the total expected number
+        # of infections of a given individual over their whole infection.
         average_number_to_infect = R_0 *\
             (summed_infectiousness/total_infectiousness)
 
