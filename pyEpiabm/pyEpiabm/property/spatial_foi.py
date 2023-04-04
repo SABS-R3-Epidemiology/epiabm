@@ -18,6 +18,7 @@ class SpatialInfection:
         """Calculate the infectiousness of one cell
         towards its nearby cells. Does not include interventions such
         as isolation, or whether individual is a carehome resident.
+        Returns the expected number of infections for a given timestep.
 
         Parameters
         ----------
@@ -29,7 +30,7 @@ class SpatialInfection:
         Returns
         -------
         int
-            Average number of infection events from the cell
+            Average number of infection events from the cell per timestep
 
         """
         R_0 = pyEpiabm.core.Parameters.instance().basic_reproduction_num
@@ -40,11 +41,14 @@ class SpatialInfection:
 
         summed_infectiousness = sum([person.infectiousness
                                     for person in inf_cell.persons])
+        # This calculates the proportion of the total infections of each infected individual
+        # that should be caused at a given timestep which is then multiplied by R_0 the total
+        # expected number of infections of a given individual over their whole infection.
         average_number_to_infect = R_0 *\
             (summed_infectiousness/total_infectiousness)
 
         # This gives the expected number of infection events
-        # caused by people within this cell.
+        # caused by people within this cell at a given timestep.
         return average_number_to_infect
 
     @staticmethod
