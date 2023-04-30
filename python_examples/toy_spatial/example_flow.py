@@ -17,60 +17,70 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                                     "noInt_params.json"))
 
-input_file_names = ["toy_input_6x6_av5_places.csv", "toy_input_4x4_av5_places.csv"]#, "toy_input_6x6_av5_places.csv", "toy_input_4x4_av5_places.csv"]
-output_file_names = ["output_6x6_av5_{}.csv", "output_4x4_av5_{}.csv"]#, "output_6x6_av5_{}.csv", "output_4x4_av5_{}.csv"]
+input_file_names = ["toy_input_15x15_av5_places.csv"]#, "toy_input_12x12_av5_places.csv", "toy_input_8x8_av5_places.csv", "toy_input_6x6_av5_places.csv", "toy_input_4x4_av5_places.csv"]
+output_file_names = ["output_15x15_av5_{}_rad{}.csv"]#, "output_12x12_av5_{}_rad{}.csv", "output_8x8_av5_{}_rad{}.csv", "output_6x6_av5_{}_rad{}.csv", "output_4x4_av5_{}_rad{}.csv"]
+#"basic_reproduction_num": 
+r0 = [2, 4, 10]
 
-#input_file_names = ["toy_input_4x4_low_places.csv"]
-#output_file_names = ["output_4x4_low_{}.csv"]
+for r in r0:
 
-for j in range(len(input_file_names)):
-    input_file = input_file_names[j]
-    output_file = output_file_names[j]
+    print("Set rad to:", r)
 
-    # Generate population from input file
-    # (Input converted from CovidSim with `microcell_conversion.py`)
-    file_loc = os.path.join(os.path.dirname(__file__),
-                            "uniform_inputs/av5_places_new",
-                            input_file)
-    for i in range(10):
-        set_seed = i
-        population = pe.routine.FilePopulationFactory.make_pop(file_loc,
-                                                               random_seed=i)
+    for j in range(len(input_file_names)):
+        
+        input_file = input_file_names[j]
+        output_file = output_file_names[j]
 
-        # sim_ and file_params give details for the running of the simulations
-        # and where output should be written to.
-        sim_params = {"simulation_start_time": 0, "simulation_end_time": 60,
-                      "initial_infected_number": 10,
-                      "initial_infect_cell": True,
-                      "simulation_seed": i}
+        print("Set file to:", input_file)
 
-        file_params = {"output_file": output_file.format(i),
-                       "output_dir": os.path.join(os.path.dirname(__file__),
-                                                  "simulation_outputs/new_average"),
-                       "spatial_output": True,
-                       "age_stratified": False}
+        # Generate population from input file
+        # (Input converted from CovidSim with `microcell_conversion.py`)
+        file_loc = os.path.join(os.path.dirname(__file__),
+                                "uniform_inputs/av5_places_new",
+                                input_file)
+        for i in range(1):
+            print("Set seed to:", i)
+            set_seed = i
+            population = pe.routine.FilePopulationFactory.make_pop(file_loc,
+                                                                random_seed=i)
+            
+            pe.Parameters.instance().infection_radius = r
+            print("Set rad to:", pe.Parameters.instance().infection_radius)
 
-        # Create a simulation object, configure it with the parameters given,
-        # then run the simulation.
-        sim = pe.routine.Simulation()
-        sim.configure(
-            population,
-            [pe.sweep.InitialHouseholdSweep(),
-                pe.sweep.InitialInfectedSweep(),
-                pe.sweep.InitialisePlaceSweep()],
-            [
-                pe.sweep.UpdatePlaceSweep(),
-                pe.sweep.HouseholdSweep(),
-                pe.sweep.PlaceSweep(),
-                pe.sweep.SpatialSweep(),
-                pe.sweep.QueueSweep(),
-                pe.sweep.HostProgressionSweep(),
-            ],
-            sim_params,
-            file_params,
-        )
-        sim.run_sweeps()
+            # sim_ and file_params give details for the running of the simulations
+            # and where output should be written to.
+            sim_params = {"simulation_start_time": 0, "simulation_end_time":1,
+                        "initial_infected_number": 10,
+                        "initial_infect_cell": True,
+                        "simulation_seed": i}
 
-        # Need to close the writer object at the end of each simulation.
-        del (sim.writer)
-        del (sim)
+            file_params = {"output_file": output_file.format(i, r),
+                        "output_dir": os.path.join(os.path.dirname(__file__),
+                                                    "simulation_outputs/change_inf_rad"),
+                        "spatial_output": True,
+                        "age_stratified": False}
+
+            # Create a simulation object, configure it with the parameters given,
+            # then run the simulation.
+            sim = pe.routine.Simulation()
+            sim.configure(
+                population,
+                [pe.sweep.InitialHouseholdSweep(),
+                    pe.sweep.InitialInfectedSweep(),
+                    pe.sweep.InitialisePlaceSweep()],
+                [
+                    pe.sweep.UpdatePlaceSweep(),
+                    pe.sweep.HouseholdSweep(),
+                    pe.sweep.PlaceSweep(),
+                    pe.sweep.SpatialSweep(),
+                    pe.sweep.QueueSweep(),
+                    pe.sweep.HostProgressionSweep(),
+                ],
+                sim_params,
+                file_params,
+            )
+            sim.run_sweeps()
+
+            # Need to close the writer object at the end of each simulation.
+            del (sim.writer)
+            del (sim)

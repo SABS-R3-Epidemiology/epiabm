@@ -325,8 +325,8 @@ def generate_animation(
 
 # Read in the data from simulation output
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
-                        "output_15x15_av5_0.csv")
-gif_name = '15x15_av5.gif'
+                        "output_4x4_av5_0.csv")
+gif_name = '4x4_av5.gif'
 df = pd.read_csv(filename)
 
 locations = np.unique(
@@ -348,7 +348,7 @@ vor = Voronoi(locations)
 
 # Plot grid of time points
 fig_loc = ("voronoi_outputs/"
-           + "15x15_av5_img.png")
+           + "4x4_av5_img.png")
 plot_time_grid(
     df,
     vor,
