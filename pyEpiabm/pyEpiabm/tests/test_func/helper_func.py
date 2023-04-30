@@ -3,6 +3,7 @@
 #
 
 import unittest
+import numpy as np
 
 import pyEpiabm as pe
 from pyEpiabm.property.infection_status import InfectionStatus
@@ -36,6 +37,10 @@ class HelperFunc(unittest.TestCase):
                                    method='greater'):
         """Compare all elements in the list to verify if they are all
          larger or equal to elements in the other list.
+         Sums over all age groups when using the 'greater' method
+         as small infection numbers mean that some interventions may
+         increase infection groups in given age groups, but not overall.
+         We therefore sum over all age groups instead.
 
         Parameters
         ----------
@@ -49,30 +54,23 @@ class HelperFunc(unittest.TestCase):
             Specify if the comparing is for greater or equal or only equal
 
         """
-        for age_group in range(len(pe.Parameters.instance().age_proportions)):
-            with self.subTest(age_group=age_group):
-                if method == 'greater':
-                    self.assertNonZeroGreater(
-                        large_pop[0].compartment_counter.retrieve()[
-                            status][age_group],
-                        small_pop[0].compartment_counter.retrieve()[
-                            status][age_group])
-                    self.assertNonZeroGreater(
-                        large_pop[1].compartment_counter.retrieve()[
-                            status][age_group],
-                        small_pop[1].compartment_counter.retrieve()[
-                            status][age_group])
-                elif method == 'equal':
-                    self.assertEqual(
-                        large_pop[0].compartment_counter.retrieve()[
-                            status][age_group],
-                        small_pop[0].compartment_counter.retrieve()[
-                            status][age_group])
-                    self.assertEqual(
-                        large_pop[1].compartment_counter.retrieve()[
-                            status][age_group],
-                        small_pop[1].compartment_counter.retrieve()[
-                            status][age_group])
+        if method == 'greater':
+            self.assertNonZeroGreater(
+                np.sum(large_pop[0].compartment_counter.retrieve()[status]),
+                np.sum(small_pop[0].compartment_counter.retrieve()[status]))
+            self.assertNonZeroGreater(
+                np.sum(large_pop[1].compartment_counter.retrieve()[status]),
+                np.sum(small_pop[1].compartment_counter.retrieve()[
+                           status]))
+        elif method == 'equal':
+            for age_group in range(len(pe.Parameters.instance().
+                                   age_proportions)):
+                self.assertEqual(large_pop[0].compartment_counter.retrieve()[
+                    status][age_group], small_pop[0].compartment_counter.
+                    retrieve()[status][age_group])
+                self.assertEqual(large_pop[1].compartment_counter.retrieve()[
+                    status][age_group], small_pop[1].compartment_counter.
+                    retrieve()[status][age_group])
 
     @classmethod
     def sweep_list_initialise(cls):

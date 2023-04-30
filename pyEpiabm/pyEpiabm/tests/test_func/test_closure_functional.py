@@ -101,6 +101,7 @@ class TestClosureFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
+        self.intervention['place_closure']['closure_place_type'] = [6]
         pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
