@@ -32,7 +32,6 @@ class TestClosureFunctional(TestFunctional):
             "case_microcell_threshold": 0
         }
         }
-        self.intervention_type = "place_closure"
 
     def test_closure_present(self, mock_read, mock_csv):
         """Place closure functional test to ensure more people will be
@@ -51,8 +50,6 @@ class TestClosureFunctional(TestFunctional):
 
         # Enable place closure
         pe.Parameters.instance().intervention_params = self.intervention
-        HelperFunc.intervention_conversion_list(self.intervention_type)
-
         pop_closure = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
@@ -80,9 +77,8 @@ class TestClosureFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise()[1:])
 
-        self.intervention['place_closure']['closure_place_type'] = []
         pe.Parameters.instance().intervention_params = self.intervention
-        HelperFunc.intervention_conversion_list(self.intervention_type)
+        self.intervention['place_closure']['closure_place_type'] = []
         pop_closure = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
@@ -105,14 +101,13 @@ class TestClosureFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        HelperFunc.intervention_conversion_list(self.intervention_type)
+        self.intervention['place_closure']['closure_place_type'] = [6]
         pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
         self.intervention['place_closure']['closure_place_type'] = [
             1, 2, 3, 4, 5, 6]
-        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
@@ -136,14 +131,12 @@ class TestClosureFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
         self.intervention['place_closure'][
             'closure_spatial_params'] = 1
-        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
@@ -172,10 +165,9 @@ class TestClosureFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise()[1:])
 
+        pe.Parameters.instance().intervention_params = self.intervention
         self.intervention['place_closure'][
             'case_microcell_threshold'] = 1000
-        pe.Parameters.instance().intervention_params = self.intervention
-        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop_closure = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
@@ -198,14 +190,12 @@ class TestClosureFunctional(TestFunctional):
         pe.Parameters.instance().infection_radius = 1.6
 
         pe.Parameters.instance().intervention_params = self.intervention
-        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop_standard = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
         self.intervention['place_closure'][
             'case_microcell_threshold'] = 15
-        HelperFunc.intervention_conversion_list(self.intervention_type)
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())

@@ -2,7 +2,6 @@
 # Help to run functionl tests for interventions.
 #
 
-
 import unittest
 import numpy as np
 
