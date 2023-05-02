@@ -20,29 +20,30 @@ class TestQuarantineFunctional(TestFunctional):
     def setUp(self) -> None:
         TestFunctional.setUpPopulation()
 
-        self.intervention = {"case_isolation": {
-            "start_time": 0,
-            "policy_duration": 365,
-            "case_threshold": 0,
-            "isolation_delay": 0,
-            "isolation_duration": 3,
-            "isolation_probability": 0.5,
-            "use_testing": 0,
-            "isolation_effectiveness": 1,
-            "isolation_house_effectiveness": 1},
+        self.intervention = {"case_isolation": [{
+                "start_time": 0,
+                "policy_duration": 365,
+                "case_threshold": 0,
+                "isolation_delay": 0,
+                "isolation_duration": 3,
+                "isolation_probability": 1,
+                "use_testing": 0,
+                "isolation_effectiveness": 1,
+                "isolation_house_effectiveness": 1}],
 
-            "household_quarantine": {
-            "start_time": 0,
-            "policy_duration": 365,
-            "case_threshold": 0,
-            "quarantine_delay": 0,
-            "quarantine_duration": 10,
-            "quarantine_house_compliant": 1.0,
-            "quarantine_individual_compliant": 1.0,
-            "quarantine_house_effectiveness": 1.1,
-            "quarantine_spatial_effectiveness": 0.1,
-            "quarantine_place_effectiveness": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
-        }
+            "household_quarantine": [{
+                "start_time": 0,
+                "policy_duration": 365,
+                "case_threshold": 0,
+                "quarantine_delay": 0,
+                "quarantine_duration": 10,
+                "quarantine_house_compliant": 1.0,
+                "quarantine_individual_compliant": 1.0,
+                "quarantine_house_effectiveness": 1.1,
+                "quarantine_spatial_effectiveness": 0.1,
+                "quarantine_place_effectiveness": [0.1, 0.1, 0.1,
+                                                   0.1, 0.1, 0.1]
+                }]
         }
 
     def test_quarantine_present(self, mock_read, mock_csv):

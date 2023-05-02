@@ -1,11 +1,9 @@
 #
 # Calculate spatial force of infection based on Covidsim code
 #
-
-import numpy as np
+from pyEpiabm.core import Parameters
 
 import pyEpiabm.core
-from pyEpiabm.core import Parameters
 
 
 class SpatialInfection:
@@ -18,7 +16,6 @@ class SpatialInfection:
         """Calculate the infectiousness of one cell
         towards its nearby cells. Does not include interventions such
         as isolation, or whether individual is a carehome resident.
-        Returns the expected number of infections for a given timestep.
 
         Parameters
         ----------
@@ -30,26 +27,15 @@ class SpatialInfection:
         Returns
         -------
         int
-            Average number of infection events from the cell per timestep
+            Average number of infection events from the cell
 
         """
         R_0 = pyEpiabm.core.Parameters.instance().basic_reproduction_num
+        total_infectors = inf_cell.number_infectious()
 
-        infect_profile = pyEpiabm.core.Parameters.instance()\
-            .infectiousness_prof
-        total_infectiousness = np.sum(infect_profile)
-
-        summed_infectiousness = sum([person.infectiousness
-                                    for person in inf_cell.persons])
-        # This calculates the proportion of the total infections of each
-        # infected individual that should be caused at a given timestep
-        # which is then multiplied by R_0 the total expected number
-        # of infections of a given individual over their whole infection.
-        average_number_to_infect = R_0 *\
-            (summed_infectiousness/total_infectiousness)
-
+        average_number_to_infect = total_infectors * R_0
         # This gives the expected number of infection events
-        # caused by people within this cell at a given timestep.
+        # caused by people within this cell.
         return average_number_to_infect
 
     @staticmethod

@@ -33,7 +33,7 @@ class TestFunctional(TestMockedLogs):
         self.pop_params = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
                            'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
                            'household_number': [1, 1],
-                           'Susceptible': [800, 900], 'InfectMild': [10, 0],
+                           'Susceptible': [80, 90], 'InfectMild': [10, 0],
                            'place_number': 6}
         self.sim_params = {"simulation_start_time": 0,
                            "simulation_end_time": 15,
