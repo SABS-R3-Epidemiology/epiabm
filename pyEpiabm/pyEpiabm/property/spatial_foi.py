@@ -1,9 +1,11 @@
 #
 # Calculate spatial force of infection based on Covidsim code
 #
-from pyEpiabm.core import Parameters
+
+import numpy as np
 
 import pyEpiabm.core
+from pyEpiabm.core import Parameters
 
 
 class SpatialInfection:
@@ -16,6 +18,7 @@ class SpatialInfection:
         """Calculate the infectiousness of one cell
         towards its nearby cells. Does not include interventions such
         as isolation, or whether individual is a carehome resident.
+        Returns the expected number of infections for a given timestep.
 
         Parameters
         ----------
@@ -27,15 +30,26 @@ class SpatialInfection:
         Returns
         -------
         int
-            Average number of infection events from the cell
+            Average number of infection events from the cell per timestep
 
         """
         R_0 = pyEpiabm.core.Parameters.instance().basic_reproduction_num
-        total_infectors = inf_cell.number_infectious()
 
-        average_number_to_infect = total_infectors * R_0
+        infect_profile = pyEpiabm.core.Parameters.instance()\
+            .infectiousness_prof
+        total_infectiousness = np.sum(infect_profile)
+
+        summed_infectiousness = sum([person.infectiousness
+                                    for person in inf_cell.persons])
+        # This calculates the proportion of the total infections of each
+        # infected individual that should be caused at a given timestep
+        # which is then multiplied by R_0 the total expected number
+        # of infections of a given individual over their whole infection.
+        average_number_to_infect = R_0 *\
+            (summed_infectiousness/total_infectiousness)
+
         # This gives the expected number of infection events
-        # caused by people within this cell.
+        # caused by people within this cell at a given timestep.
         return average_number_to_infect
 
     @staticmethod
@@ -109,7 +123,8 @@ class SpatialInfection:
         if (hasattr(infector.microcell, 'distancing_start_time')) and (
                 infector.microcell.distancing_start_time is not None) and (
                     infector.microcell.distancing_start_time <= time):
-            if infector.distancing_enhanced is True:
+            if (hasattr(infector, 'distancing_enhanced')) and (
+                        infector.distancing_enhanced is True):
                 spatial_susc *= Parameters.instance().\
                     intervention_params['social_distancing'][
                         'distancing_spatial_enhanced_susc']
