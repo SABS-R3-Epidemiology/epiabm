@@ -91,7 +91,7 @@ class HelperFunc(unittest.TestCase):
     @classmethod
     def intervention_conversion_list(cls, intervention_type):
         """If the intervention parameters is in the dictionary format,
-        then convert it to dictionary to make consistent with the
+        then convert it to list to make consistent with the
         original parameter file.
         """
         if isinstance(pe.Parameters.instance().intervention_params[
