@@ -1,6 +1,7 @@
 #
 # Calculate household force of infection based on Covidsim code
 #
+
 import pyEpiabm.core
 from pyEpiabm.core import Parameters
 
