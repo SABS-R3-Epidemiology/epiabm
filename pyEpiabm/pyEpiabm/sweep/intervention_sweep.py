@@ -2,6 +2,7 @@
 # Sweeps for taking care of the interventions
 #
 
+
 from pyEpiabm.core import Parameters
 from pyEpiabm.intervention import CaseIsolation, Vaccination, PlaceClosure
 from pyEpiabm.intervention import HouseholdQuarantine, SocialDistancing
