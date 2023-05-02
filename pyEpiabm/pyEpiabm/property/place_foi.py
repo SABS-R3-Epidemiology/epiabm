@@ -83,7 +83,8 @@ class PlaceInfection:
         if (hasattr(infector.microcell, 'distancing_start_time')) and (
                 infector.microcell.distancing_start_time is not None) and (
                     infector.microcell.distancing_start_time <= time):
-            if infector.distancing_enhanced is True:
+            if (hasattr(infector, 'distancing_enhanced')) and (
+                        infector.distancing_enhanced is True):
                 place_susc *= Parameters.instance().\
                              intervention_params[
                              'social_distancing'][
