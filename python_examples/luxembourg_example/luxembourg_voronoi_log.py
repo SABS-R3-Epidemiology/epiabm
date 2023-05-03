@@ -248,7 +248,7 @@ def plot_time_grid(
     cbar.set_label("Number of " + str(name))
     plt.xlim(grid_lim[0][0], grid_lim[0][1])
     plt.ylim(grid_lim[1][0], grid_lim[1][1])
-    plt.savefig(save_loc)
+    plt.savefig(save_loc, dpi=300)
 
 
 def generate_animation(
@@ -344,6 +344,7 @@ def generate_animation(
             duration=50,
             loop=0,
             optimise=True,
+            dpi=300
         )
         for file in os.listdir(save_path):  # Delete images after use
             if file in file_names:
@@ -388,7 +389,7 @@ plot_time_grid(
     grid_dim=(3, 3),
     grid_lim=grid_limits,
     save_loc=fig_loc,
-    country=lux
+    country=lux,
 )
 
 # Plot animation of simulation

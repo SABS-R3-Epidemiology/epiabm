@@ -28,7 +28,7 @@ SIRdf.rename(columns={"InfectionStatus.Susceptible": "Susceptible",
 # Create plot to show SIR curves against time
 SIRdf.plot(y=["Susceptible", "Infected", "Recovered"])
 plt.savefig(os.path.join(os.path.dirname(__file__),
-            "simulation_outputs/simulation_flow_SIR_plot.png"))
+            "simulation_outputs/simulation_flow_SIR_plot.png"), dpi=300)
 
 p = Plotter(os.path.join(os.path.dirname(__file__),
             "simulation_outputs/large_csv/output_0.375.csv"),
