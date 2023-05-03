@@ -17,10 +17,10 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                                     "noInt_params.json"))
 
-input_file_names = ["toy_input_15x15_av5_places.csv"]#, "toy_input_12x12_av5_places.csv", "toy_input_8x8_av5_places.csv", "toy_input_6x6_av5_places.csv", "toy_input_4x4_av5_places.csv"]
-output_file_names = ["output_15x15_av5_{}_rad{}.csv"]#, "output_12x12_av5_{}_rad{}.csv", "output_8x8_av5_{}_rad{}.csv", "output_6x6_av5_{}_rad{}.csv", "output_4x4_av5_{}_rad{}.csv"]
+input_file_names = ["toy_input_15x15_av5_places.csv", "toy_input_12x12_av5_places.csv", "toy_input_8x8_av5_places.csv", "toy_input_6x6_av5_places.csv", "toy_input_4x4_av5_places.csv"]
+output_file_names = ["output_15x15_av5_{}_r{}.csv", "output_12x12_av5_{}_r{}.csv", "output_8x8_av5_{}_r{}.csv", "output_6x6_av5_{}_r{}.csv", "output_4x4_av5_{}_r{}.csv"]
 #"basic_reproduction_num": 
-r0 = [2, 4, 10]
+r0 = [2, 3, 4, 10]
 
 for r in r0:
 
@@ -38,7 +38,7 @@ for r in r0:
         file_loc = os.path.join(os.path.dirname(__file__),
                                 "uniform_inputs/av5_places_new",
                                 input_file)
-        for i in range(1):
+        for i in range(5):
             print("Set seed to:", i)
             set_seed = i
             population = pe.routine.FilePopulationFactory.make_pop(file_loc,
@@ -49,14 +49,14 @@ for r in r0:
 
             # sim_ and file_params give details for the running of the simulations
             # and where output should be written to.
-            sim_params = {"simulation_start_time": 0, "simulation_end_time":1,
+            sim_params = {"simulation_start_time": 0, "simulation_end_time":150,
                         "initial_infected_number": 10,
                         "initial_infect_cell": True,
                         "simulation_seed": i}
 
             file_params = {"output_file": output_file.format(i, r),
                         "output_dir": os.path.join(os.path.dirname(__file__),
-                                                    "simulation_outputs/change_inf_rad"),
+                                                    "simulation_outputs/R0"),
                         "spatial_output": True,
                         "age_stratified": False}
 
