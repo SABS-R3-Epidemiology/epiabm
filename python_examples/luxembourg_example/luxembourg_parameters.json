@@ -339,9 +339,9 @@
         "place_transmission": 0.1
     },
     "household_transmission": 0.1,
-    "household_size_distribution": [0.255000, 0.304000, 0.209000, 0.177000,
-                                	0.041000, 0.010164, 0.002218, 0.000871,
-                                    0.000408, 0.000339],
+    "household_size_distribution": [0.3334, 0.21635, 0.21635, 0.1044,
+                                    0.1044,	0.00502, 0.00502, 0.00502,
+                                    0.00502, 0.00502],
     "false_positive_rate": 0,
     "place_transmission": 0.1,
     "use_ages": 1,
