@@ -123,7 +123,8 @@ class SpatialInfection:
         if (hasattr(infector.microcell, 'distancing_start_time')) and (
                 infector.microcell.distancing_start_time is not None) and (
                     infector.microcell.distancing_start_time <= time):
-            if infector.distancing_enhanced is True:
+            if (hasattr(infector, 'distancing_enhanced')) and (
+                        infector.distancing_enhanced is True):
                 spatial_susc *= Parameters.instance().\
                     intervention_params['social_distancing'][
                         'distancing_spatial_enhanced_susc']
