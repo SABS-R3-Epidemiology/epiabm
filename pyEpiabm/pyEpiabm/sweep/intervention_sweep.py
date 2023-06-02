@@ -48,23 +48,25 @@ class InterventionSweep(AbstractSweep):
 
     def bind_population(self, population):
         self._population = population
-        for intervention in self.intervention_params.keys():
-            if isinstance(self.intervention_params[intervention],
-                          list):
-                for index in range(len(self.intervention_params[
-                        intervention])):
-                    params = self.intervention_params[intervention][index]
-                    intervention_init = self.intervention_dict[intervention](
-                            population=self._population, **params)
+        for intervention_type, intervention_object in self.\
+                intervention_params.items():
+            if isinstance(intervention_object, list):
+                for index, single_object in enumerate(intervention_object):
+                    intervention_init = self.intervention_dict[
+                        intervention_type](
+                        population=self._population, **single_object)
                     intervention_init.occurrence_index = index
                     self.intervention_active_status[intervention_init] = False
+                    # If there are multiple same class of interventions,
+                    # initialise it with the first invervention.
+                    # Other interventions will be activated and updated
+                    # with corrpesonding parameters in the __call__ function
                     if index == 0:
                         Parameters.instance().intervention_params[
-                            intervention] = params
+                            intervention_type] = single_object
             else:
-                params = self.intervention_params[intervention]
-                intervention_init = self.intervention_dict[intervention](
-                            population=self._population, **params)
+                intervention_init = self.intervention_dict[intervention_type](
+                            population=self._population, **intervention_object)
                 self.intervention_active_status[intervention_init] = False
 
     def __call__(self, time):
@@ -87,13 +89,16 @@ class InterventionSweep(AbstractSweep):
                             self._population.cells))
             if intervention.is_active(time, num_cases):
                 if self.intervention_active_status[intervention] is False:
-                    # Update with the single intervention
-                    # (with respect to index)
+                    # If the next same type intervention is activated,
+                    # update the parameter values with this new intervention
+                    # whose values could be retrieved with respect to index
                     if hasattr(intervention, 'occurrence_index'):
+                        # Get the intervention type
                         intervention_type = \
                             list(self.intervention_dict.keys())[list(
                                 self.intervention_dict.values()).index(
                                 type(intervention))]
+                        # Update parameter values
                         Parameters.instance().intervention_params[
                             intervention_type] = self.intervention_params[
                             intervention_type][

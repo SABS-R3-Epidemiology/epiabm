@@ -129,8 +129,15 @@ class TestInterventionSweep(TestPyEpiabm):
                  if isinstance(key, CaseIsolation)][0]])
         self.assertIsNone(self.person_symp.isolation_start_time)
 
-        # The second place closure is active after its starting time
         self.interventionsweep(time=200)
+        # The first place closure is inactive after
+        # the activation of the second place closure
+        self.assertTrue(
+            self.interventionsweep.intervention_active_status[
+                [key for key in
+                 self.interventionsweep.intervention_active_status.keys()
+                 if isinstance(key, PlaceClosure)][0]])
+        # The second place closure is active after its starting time
         self.assertTrue(
             self.interventionsweep.intervention_active_status[
                 [key for key in
