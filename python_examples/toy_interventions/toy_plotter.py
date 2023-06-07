@@ -3,44 +3,63 @@
 #
 
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
+import matplotlib as mpl
 import os
-
 
 class Plotter():
     """Class to take a csv file and return various plots.
     """
     def __init__(self, foldername: str, grid_sizes: list, avplaces: int,
-                 repeats: int, intervention: str, parameter: str,
-                 parameter_values: list):
+                 repeats: int, parameter_sets_list: list,
+                 parameter_sets_labels: list):
         self.folder = foldername
         self.grid_sizes = grid_sizes
         self.avplaces = avplaces
         self.repeats = repeats
-        self.intervention = intervention
-        self.parameter = parameter
-        self.parameter_values = parameter_values
+        # self.intervention = intervention
+        # self.parameter = parameter
+        # self.parameter_values = parameter_values
+        self.parameter_sets_list = parameter_sets_list
+        self.parameter_sets_labels = parameter_sets_labels
+
 
     def _summarise_outputs(self):
         for grid_size in self.grid_sizes:
-            if self.parameter:
-                for parameter_value in self.parameter_values:
-                    file_names = ["output_{}x{}_av{}_{}_{}_{}_{}.csv".format(
-                        grid_size, grid_size, self.avplaces, self.intervention,
-                        self.parameter, parameter_value, i)
-                        for i in range(self.repeats)]
-                    combined_output_name = 'combined_{}x{}_av{}_{}_{}_{}.csv'.\
-                        format(grid_size, grid_size, self.avplaces,
-                               self.intervention, self.parameter,
-                               parameter_value)
-                    summary_output_name = 'summary_{}x{}_av{}_{}_{}_{}.csv'.\
-                        format(grid_size, grid_size, self.avplaces,
-                               self.intervention, self.parameter,
-                               parameter_value)
+            # if self.parameter:
+            #     for parameter_value in self.parameter_values:
+            #         file_names = ["output_{}x{}_av{}_{}_{}_{}_{}.csv".format(
+            #             grid_size, grid_size, self.avplaces, self.intervention,
+            #             self.parameter, parameter_value, i)
+            #             for i in range(self.repeats)]
+            #         combined_output_name = 'combined_{}x{}_av{}_{}_{}_{}.csv'.\
+            #             format(grid_size, grid_size, self.avplaces,
+            #                    self.intervention, self.parameter,
+            #                    parameter_value)
+            #         summary_output_name = 'summary_{}x{}_av{}_{}_{}_{}.csv'.\
+            #             format(grid_size, grid_size, self.avplaces,
+            #                    self.intervention, self.parameter,
+            #                    parameter_value)
 
+            #         self._make_and_save_outputs(
+            #             file_names, combined_output_name, summary_output_name)
+            if len(self.parameter_sets_list) > 0:
+                for j in range(len(self.parameter_sets_list)):
+                    file_names = ["output_{}x{}_av{}_{}_{}.csv".format(
+                            grid_size, grid_size, self.avplaces,
+                            self.parameter_sets_labels[j], i)
+                            for i in range(self.repeats)]
+                    combined_output_name = 'combined_{}x{}_av{}_{}.csv'.format(
+                        grid_size, grid_size, self.avplaces,
+                        self.parameter_sets_labels[j])
+                    summary_output_name = 'summary_{}x{}_av{}_{}.csv'.format(
+                        grid_size, grid_size, self.avplaces,
+                        self.parameter_sets_labels[j])
                     self._make_and_save_outputs(
                         file_names, combined_output_name, summary_output_name)
+            
             else:
                 file_names = ["output_{}x{}_av{}_{}.csv".format(
                         grid_size, grid_size, self.avplaces, i)
@@ -137,22 +156,36 @@ class Plotter():
                     plot_name))
 
     def _multiple_curve_plotter(self, name_fig=None):
-        color_list = list(mcolors.BASE_COLORS.keys())
-        count = 0
+        color_dict = {4: ['blue', 'darkblue', 'deepskyblue', 'slategrey', 'turquoise'],
+                      15: ['red', 'darkred', 'mediumvioletred', 'violet', 'hotpink']}
         for grid_size in self.grid_sizes:
-            if self.parameter:
-                for parameter_value in self.parameter_values:
-                    summary_output_name = 'summary_{}x{}_av{}_{}_{}_{}.csv'.\
-                        format(grid_size, grid_size, self.avplaces,
-                               self.intervention, self.parameter,
-                               parameter_value)
-                    label = '{}x{}, {}:{}'.format(
-                        grid_size, grid_size, self.parameter, parameter_value)
+            color_list = color_dict[grid_size]
+            count = 0
+            # if self.parameter:
+            #     for parameter_value in self.parameter_values:
+            #         summary_output_name = 'summary_{}x{}_av{}_{}_{}_{}.csv'.\
+            #             format(grid_size, grid_size, self.avplaces,
+            #                    self.intervention, self.parameter,
+            #                    parameter_value)
+            #         label = '{}x{}, {}:{}'.format(
+            #             grid_size, grid_size, self.parameter, parameter_value)
 
+            #         plot = self._make_multiple_curve_plot(
+            #             summary_output_name, color_list[count], label)
+            #         count += 1
+            #     title = ' {}'.format(self.intervention)
+            if len(self.parameter_sets_list) > 0:
+                for j in range(len(self.parameter_sets_list)):
+                    summary_output_name = 'summary_{}x{}_av{}_{}.csv'.\
+                        format(grid_size, grid_size, self.avplaces,
+                               self.parameter_sets_labels[j])
+                    label = '{}x{}, {}'.format(
+                        grid_size, grid_size, self.parameter_sets_labels[j])
                     plot = self._make_multiple_curve_plot(
                         summary_output_name, color_list[count], label)
                     count += 1
-                title = ' {}'.format(self.intervention)
+                # title = ' {}'.format(self.intervention)
+                title = ''
             else:
                 summary_output_name = 'summary_{}x{}_av{}.csv'.format(
                         grid_size, grid_size, self.avplaces)
@@ -166,7 +199,8 @@ class Plotter():
         if name_fig is None:
             name_fig = 'plot_summary'
 
-        plot.legend()
+        plot.legend(loc='upper right', fontsize=8)
+        # plot.legend(fontsize=8)
         plot.xlabel('time (days)')
         plot.ylabel('Infections')
         plot.title('Infection curve{}'.format(title))
@@ -178,10 +212,68 @@ class Plotter():
                                  self.folder, summary_output_name))
 
         plt.plot(summary_df['time'], summary_df['av_infections'],
-                 '{}-'.format(color), label=label)
+                 color=color, linestyle='-', label=label)
         plt.fill_between(
             summary_df['time'],
             summary_df['av_infections'] - summary_df['sd_infections'],
             summary_df['av_infections'] + summary_df['sd_infections'],
             color=color, alpha=0.2)
         return plt
+
+    def _total_recovered_bars(self, name_fig, pop_size =10000):
+        color_dict = {4: ['blue', 'darkblue', 'deepskyblue', 'slategrey'],
+                      15: ['red', 'darkred', 'mediumvioletred', 'violet']}
+        
+        grids = [f'{str(x)}x{str(x)}' for x in self.grid_sizes]
+        dict_info = {}
+        for j in range(len(self.parameter_sets_list)):
+            dict_info[self.parameter_sets_labels[j]] = {'mean': [], 'stdev': []}
+
+        for grid_size in self.grid_sizes:
+            if len(self.parameter_sets_list) > 0:
+                for j in range(len(self.parameter_sets_list)):
+                    summary_output_name = 'summary_{}x{}_av{}_{}.csv'.\
+                        format(grid_size, grid_size, self.avplaces,
+                               self.parameter_sets_labels[j])
+                    mean, stdev = self._store_recovered_bar_plot(summary_output_name)
+                    dict_info[self.parameter_sets_labels[j]]['mean'].append(100/pop_size*mean)
+                    dict_info[self.parameter_sets_labels[j]]['stdev'].append(100/pop_size*stdev)
+        if name_fig is None:
+            name_fig = 'plot_summary'
+
+        x = np.arange(len(grids))  # the label locations
+        width = 1/(len(self.parameter_sets_labels)+1)  # the width of the bars
+        multiplier = 0
+
+        fig, ax = plt.subplots()
+
+        highest_value = 0
+        for sim_name, dict_ms in dict_info.items():
+            offset = width * multiplier
+            rects = ax.bar(x + offset, dict_ms['mean'], width, yerr=dict_ms['stdev'], label=[sim_name, sim_name], color=[color_dict[4][multiplier],color_dict[15][multiplier]])
+            ax.bar_label(rects, padding=3, fontsize=8)
+            multiplier += 1
+            if max(dict_ms['mean'].tolist()) > highest_value:
+                highest_value = max(dict_ms['mean'].values.tolist())
+
+        # Add some text for labels, title and custom x-axis tick labels, etc.
+        ax.set_ylabel('Total number infections')
+        ax.set_title('Total infections')
+        ax.set_xticks(x + width, grids)
+        # Set only y range when highest value above 50%
+        if highest_value > 50: 
+            ax.set_ylim(0, 110)
+        # ax.legend()
+        # ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
+        #   fancybox=True, shadow=True, ncol=len(self.parameter_sets_labels)*2)
+        box = ax.get_position()
+        ax.set_position([box.x0, box.y0, box.width * 0.85, box.height])
+        ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize=8)
+        plt.savefig(os.path.join(os.path.dirname(__file__), self.folder,
+                    '{}.png'.format(name_fig)))
+
+    def _store_recovered_bar_plot(self, input_file):
+        summary_df = pd.read_csv(os.path.join(os.path.dirname(__file__),
+                                 self.folder, input_file))
+        return summary_df['av_recovered'].iloc[-1], summary_df['sd_recovered'].iloc[-1]
+
