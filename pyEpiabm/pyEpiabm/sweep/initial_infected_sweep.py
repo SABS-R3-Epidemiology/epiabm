@@ -103,6 +103,7 @@ class InitialInfectedSweep(AbstractSweep):
                                        int(sim_params
                                            ["initial_infected_number"]))
         for person in pers_to_infect:
+            print(f'age selected initial infect person: {person.age}')
             person.update_status(InfectionStatus.InfectMild)
             person.next_infection_status = InfectionStatus.Recovered
             HostProgressionSweep.set_infectiousness(person, start_time)
