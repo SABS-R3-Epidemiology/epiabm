@@ -32,7 +32,7 @@ for j in np.arange(0.0, 5.0, 0.5):
     file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 
     number_deads = []
-    for i in range(100):
+    for i in range(50):
         # Create a population based on the parameters given.
         population = pe.routine.FilePopulationFactory.make_pop(
                 file_loc,  random_seed=i)
