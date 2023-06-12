@@ -19,15 +19,18 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 
 input_file_names = ["toy_input_15x15_av5_places.csv", "toy_input_12x12_av5_places.csv", "toy_input_8x8_av5_places.csv", "toy_input_6x6_av5_places.csv", "toy_input_4x4_av5_places.csv"]
 output_file_names = ["output_15x15_av5_{}_r{}.csv", "output_12x12_av5_{}_r{}.csv", "output_8x8_av5_{}_r{}.csv", "output_6x6_av5_{}_r{}.csv", "output_4x4_av5_{}_r{}.csv"]
+
+#output_file_names = ["output_15x15_av5_{}.csv", "output_12x12_av5_{}.csv", "output_8x8_av5_{}.csv", "output_6x6_av5_{}.csv", "output_4x4_av5_{}.csv"]
+
 #"basic_reproduction_num": 
-r0 = [2, 3, 4, 10]
+r0 = [1, 1.5, 2, 4]
 
 for r in r0:
 
     print("Set rad to:", r)
 
     for j in range(len(input_file_names)):
-        
+
         input_file = input_file_names[j]
         output_file = output_file_names[j]
 

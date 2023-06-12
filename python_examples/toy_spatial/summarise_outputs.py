@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 grid_sizes = [4, 6, 8, 12, 15]
-r0 = [1.2, 1.5, 2]
+r0 = [1, 1.5, 2, 4]
 
 combined_summary_df = pd.DataFrame()
 for r in r0:
@@ -11,8 +11,10 @@ for r in r0:
         size = element
         file_names = ["output_{}x{}_av5_0_{}.csv".format(size, size,r), "output_{}x{}_av5_1_{}.csv".format(size, size,r), "output_{}x{}_av5_2_{}.csv".format(size, size,r), "output_{}x{}_av5_3_{}.csv".format(size, size,r), "output_{}x{}_av5_4_{}.csv".format(size, size,r)]#, "output_{}x{}_av5_5_{}.csv".format(size, size,r),
         #             "output_{}x{}_av5_6_{}.csv".format(size, size,r), "output_{}x{}_av5_7_{}.csv".format(size, size,r), "output_{}x{}_av5_8_{}.csv".format(size, size,r), "output_{}x{}_av5_9_{}.csv".format(size, size,r)]
-        output_name = "simulation_outputs/change_r0/summary_{}x{}_av5_r0{}.csv".format(size, size,r)
-        infection_curve_output = "simulation_outputs/change_r0/{}x{}_av5_r0{}_places_plot_infections.png".format(size, size, r)
+        #file_names = ["output_{}x{}_av5_0.csv".format(size, size), "output_{}x{}_av5_1.csv".format(size, size), "output_{}x{}_av5_2.csv".format(size, size), "output_{}x{}_av5_3.csv".format(size, size), "output_{}x{}_av5_4.csv".format(size, size)]#, "output_{}x{}_av5_5_{}.csv".format(size, size,r),
+        
+        output_name = "simulation_outputs/new/summary_{}x{}_av5_r{}.csv".format(size, size, r)
+        infection_curve_output = "simulation_outputs/new/{}x{}_av5_places_plot_infections_r{}.png".format(size, size, r)
         
 
         combined_df = pd.DataFrame()
@@ -20,7 +22,7 @@ for r in r0:
 
         count = 0
         for file in file_names:
-            filename = os.path.join(os.path.dirname(__file__), "simulation_outputs/change_r0",
+            filename = os.path.join(os.path.dirname(__file__), "simulation_outputs/R0",
                                     file)
             SIRdf = pd.read_csv(filename)
             total = SIRdf[list(SIRdf.filter(regex='InfectionStatus.Infect'))]
@@ -70,4 +72,4 @@ for r in r0:
                     infection_curve_output))
 
     combined_summary_df["time"] = time_list
-    combined_summary_df.to_csv("simulation_outputs/change_r0/combined_summary_r0{}.csv".format(r), index=False)
+    combined_summary_df.to_csv("simulation_outputs/R0/combined_summary_r{}.csv".format(r), index=False)

@@ -2,10 +2,10 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
-r0 = [1.2, 1.5, 2]
+r0 = [1, 1.5, 2, 4]
 for r in r0:
-    file_name = "simulation_outputs/change_r0/combined_summary_r0{}.csv".format(r)
-    average_output = "simulation_outputs/change_r0/combined_innf_r0{}.png".format(r)
+    file_name = "simulation_outputs/R0/combined_summary_{}.csv".format(r)
+    average_output = "simulation_outputs/R0/combined_inf_r{}.png".format(r)
 
     combined_df = pd.read_csv(file_name)
     plt.figure()
