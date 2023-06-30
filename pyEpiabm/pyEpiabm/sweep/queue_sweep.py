@@ -15,6 +15,8 @@ class QueueSweep(AbstractSweep):
     in each cell and update their infection status.
 
     """
+    def __init__(self, dead):
+        self.dead = dead
 
     def __call__(self, time: float):
         """Function to run through the queue of people to be exposed.
@@ -25,7 +27,9 @@ class QueueSweep(AbstractSweep):
             Simulation time
 
         """
+        dead_count = 0
         for cell in self._population.cells:
+            dead_count += cell.person_queue.qsize()
             while not cell.person_queue.empty():
                 person = cell.person_queue.get()
                 # Get takes person from the queue and removes them, so clears
@@ -51,3 +55,4 @@ class QueueSweep(AbstractSweep):
                     person.next_infection_status = InfectionStatus.Dead
 
                 person.time_of_status_change = time
+        self.dead.append(dead_count)
