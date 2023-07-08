@@ -20,6 +20,7 @@ def main():
     output_folder = 'simulation_outputs'
 
     # PARAMETERS TO STUDY
+    # Note: always use age (use_age = 1, age_stratified = True)
     ##### CI
     # parameter_list = [{'case_isolation': {'isolation_probability': 0.0}},
     #                   {'case_isolation': {'isolation_probability': 0.5}},
@@ -27,11 +28,11 @@ def main():
     # parameter_sets_labels = ['no_int', '0.5CI', 'CI']
 
     ##### HQ
-    # parameter_list = [{'household_quarantine': {'quarantine_house_compliant': 0}, 'case_isolation': {'isolation_probability': 0}},
-    #                   {'household_quarantine': {'quarantine_house_compliant': 0}, 'case_isolation': {'isolation_probability': 1}},
-    #                   {'household_quarantine': {'quarantine_house_compliant': 0.5}, 'case_isolation': {'isolation_probability': 1}},
-    #                   {'household_quarantine': {'quarantine_house_compliant': 1.0}, 'case_isolation': {'isolation_probability': 1}}]
-    # parameter_sets_labels = ['no_int', 'CI', 'CI_0.5HQ', 'CI_HQ']
+    parameter_list = [{'household_quarantine': {'quarantine_house_compliant': 0}, 'case_isolation': {'isolation_probability': 0}},
+                      {'household_quarantine': {'quarantine_house_compliant': 0}, 'case_isolation': {'isolation_probability': 1}},
+                      {'household_quarantine': {'quarantine_house_compliant': 0.5}, 'case_isolation': {'isolation_probability': 1}},
+                      {'household_quarantine': {'quarantine_house_compliant': 1.0}, 'case_isolation': {'isolation_probability': 1}}]
+    parameter_sets_labels = ['no_int', 'CI', 'CI_0.5HQ', 'CI_HQ']
     
     #####  SD
     # parameter_list = [{'social_distancing': {'distancing_enhanced_prob': [0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0]}},
@@ -48,15 +49,18 @@ def main():
     # NOTE: set use_age to 1 and age_tratiefied to True
 
     ##### NZ
-    parameter_list = [{'case_isolation': {'start_time': 360}, 'place_closure': {'start_time': 360}, 'household_quarantine': {'start_time': 360}, 'social_distancing': {'start_time': 360}, 'travel_isolation': {'start_time': 360}},
-                  {'case_isolation': {'start_time': 0}, 'place_closure': {'start_time': 25}, 'household_quarantine': {'start_time': 0}, 'social_distancing': {'start_time': 49}, 'travel_isolation': {'start_time': 14}}]
-    parameter_sets_labels = ['no_int', 'NZ_int']
+    # parameter_list = [{'case_isolation': {'start_time': 360}, 'place_closure': {'start_time': 360}, 'household_quarantine': {'start_time': 360}, 'social_distancing': {'start_time': 360}, 'travel_isolation': {'start_time': 360}},
+    #               {'case_isolation': {'start_time': 0}, 'place_closure': {'start_time': 25}, 'household_quarantine': {'start_time': 0}, 'social_distancing': {'start_time': 49}, 'travel_isolation': {'start_time': 14}}]
+    # parameter_sets_labels = ['no_int', 'NZ_int']
     # NOTE: set use_age to 1 and age_tratiefied to True
     # NOTE: read in the NZ parameters
     # NOTE: 90 days now instead of 120
 
-    name_plot_multiple = 'MP_4_15_5av_NZ_90d_csparam'
-    name_plot_bar = 'BP_4_15_5av_NZ_90d_csparam'
+    # Name output
+    # name_plot_multiple = 'MP_4_15_5av_NZ_90d_csparam'
+    # name_plot_bar = 'BP_4_15_5av_NZ_90d_csparam'
+    name_plot_multiple = 'MP_4_15_5av_HQCI_90d'
+    name_plot_bar = 'BP_4_15_5av_HQCI_90d'
 
     # Setup output for logging file
     logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
@@ -65,7 +69,7 @@ def main():
 
     # Set config file for Parameters
     pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                           "Int_NZ_params.json"))
+                           "Int_params.json"))
 
     for grid_size in grid_sizes:
         input_file_name = "toy_input_{}x{}_av{}_places.csv".format(
@@ -124,6 +128,9 @@ def main():
 def run_simulation(seed, file_loc, output_folder, output_file_name):
     population = pe.routine.FilePopulationFactory.make_pop(
                 file_loc, random_seed=seed)
+
+    # Assign places
+    pe.routine.ToyPopulationFactory.add_places(population, 1)
 
     # sim_ and file_params give details for the running of the
     # simulationsand where output should be written to.

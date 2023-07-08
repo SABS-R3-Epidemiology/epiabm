@@ -253,8 +253,8 @@ class Plotter():
             rects = ax.bar(x + offset, dict_ms['mean'], width, yerr=dict_ms['stdev'], label=[sim_name, sim_name], color=[color_dict[4][multiplier],color_dict[15][multiplier]])
             ax.bar_label(rects, padding=3, fontsize=8)
             multiplier += 1
-            if max(dict_ms['mean'].tolist()) > highest_value:
-                highest_value = max(dict_ms['mean'].values.tolist())
+            if max(dict_ms['mean']) > highest_value:
+                highest_value = max(dict_ms['mean'])
 
         # Add some text for labels, title and custom x-axis tick labels, etc.
         ax.set_ylabel('Total number infections')
