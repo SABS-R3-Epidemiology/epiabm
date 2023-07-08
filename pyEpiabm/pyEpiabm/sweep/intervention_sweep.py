@@ -98,7 +98,8 @@ class InterventionSweep(AbstractSweep):
                             list(self.intervention_dict.keys())[list(
                                 self.intervention_dict.values()).index(
                                 type(intervention))]
-                        # Update parameter values
+                        # Update parameter values with current
+                        # active intervention
                         Parameters.instance().intervention_params[
                             intervention_type] = self.intervention_params[
                             intervention_type][

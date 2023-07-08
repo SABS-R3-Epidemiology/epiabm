@@ -16,14 +16,22 @@ class TestInterventionSweep(TestPyEpiabm):
     def setUpClass(cls) -> None:
         super(TestInterventionSweep, cls).setUpClass()
 
-        # Construct a sequence of case isolation
+        # Construct a sequence of place closure
         pe.Parameters.instance().intervention_params['place_closure'] = [
+            pe.Parameters.instance().intervention_params[
+                'place_closure'].copy(),
             pe.Parameters.instance().intervention_params[
                 'place_closure'].copy(),
             pe.Parameters.instance().intervention_params[
                 'place_closure'].copy()]
         pe.Parameters.instance().intervention_params[
-            'place_closure'][1]['start_time'] = 200
+            'place_closure'][1]['start_time'] = 150
+        pe.Parameters.instance().intervention_params[
+            'place_closure'][1]['closure_place_type'] = [1, 2, 3, 4, 5]
+        pe.Parameters.instance().intervention_params[
+            'place_closure'][2]['start_time'] = 200
+        pe.Parameters.instance().intervention_params[
+            'place_closure'][2]['closure_place_type'] = [4, 5]
         cls.interventionsweep = InterventionSweep()
 
         # Construct a population with 2 persons, one infector and one infectee
@@ -45,7 +53,7 @@ class TestInterventionSweep(TestPyEpiabm):
         self.assertEqual(len(self.interventionsweep.
                              intervention_params['vaccine_params']), 9)
         self.assertEqual(len(self.interventionsweep.
-                             intervention_params['place_closure']), 2)
+                             intervention_params['place_closure']), 3)
         self.assertEqual(len(pe.Parameters.instance().intervention_params[
                             'place_closure']), 9)
         self.assertEqual(len(self.interventionsweep.
@@ -57,7 +65,7 @@ class TestInterventionSweep(TestPyEpiabm):
         self.assertEqual(len(self.interventionsweep.
                              intervention_params['travel_isolation']), 10)
         self.assertEqual(len(
-            self.interventionsweep.intervention_active_status.keys()), 8)
+            self.interventionsweep.intervention_active_status.keys()), 9)
 
     def test___call__(self):
         self.interventionsweep(time=10)
@@ -115,6 +123,32 @@ class TestInterventionSweep(TestPyEpiabm):
         self.assertEqual(self.person_symp.isolation_start_time, 10)
         self.assertIsNotNone(self.person_susc.quarantine_start_time)
 
+        # Parameters for the first place closure
+        self.assertEqual(self.interventionsweep._population.cells[0].
+                         microcells[0].closure_start_time, 10)
+        self.assertEqual(pe.Parameters.instance().intervention_params[
+            'place_closure']['closure_place_type'], [1, 2, 3])
+
+        # Closure_start_time is None after the end of the first place closure
+        # and before the start of the second place closure
+        self.interventionsweep(time=120)
+        self.assertIsNone(self.interventionsweep._population.cells[0].
+                          microcells[0].closure_start_time)
+
+        # Place closure parameters are changed after activating
+        # the second place closure
+        self.interventionsweep(time=150)
+        self.assertEqual(self.interventionsweep._population.cells[0].
+                         microcells[0].closure_start_time, 150)
+        self.assertEqual(pe.Parameters.instance().intervention_params[
+            'place_closure']['closure_place_type'], [1, 2, 3, 4, 5])
+
+        # Place closure parameters are changed after activating
+        # the third place closure
+        self.interventionsweep(time=200)
+        self.assertEqual(pe.Parameters.instance().intervention_params[
+            'place_closure']['closure_place_type'], [4, 5])
+
         # Stop isolating after start_time + policy_duration
         self.interventionsweep.intervention_params['case_isolation'][
             'policy_duration'] = 365
@@ -128,21 +162,6 @@ class TestInterventionSweep(TestPyEpiabm):
                  self.interventionsweep.intervention_active_status.keys()
                  if isinstance(key, CaseIsolation)][0]])
         self.assertIsNone(self.person_symp.isolation_start_time)
-
-        self.interventionsweep(time=200)
-        # The first place closure is inactive after
-        # the activation of the second place closure
-        self.assertTrue(
-            self.interventionsweep.intervention_active_status[
-                [key for key in
-                 self.interventionsweep.intervention_active_status.keys()
-                 if isinstance(key, PlaceClosure)][0]])
-        # The second place closure is active after its starting time
-        self.assertTrue(
-            self.interventionsweep.intervention_active_status[
-                [key for key in
-                 self.interventionsweep.intervention_active_status.keys()
-                 if isinstance(key, PlaceClosure)][1]])
 
 
 if __name__ == '__main__':
