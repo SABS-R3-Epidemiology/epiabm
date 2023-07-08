@@ -11,124 +11,124 @@ import matplotlib.pyplot as plt
 import pyEpiabm as pe
 
 
-# # Setup output for logging file
-# logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
-#                     format=('%(asctime)s - %(name)s'
-#                             + '- %(levelname)s - %(message)s'))
+# Setup output for logging file
+logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
+                    format=('%(asctime)s - %(name)s'
+                            + '- %(levelname)s - %(message)s'))
 
-# # Set config file for Parameters
-# pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-#                                     "simple_parameters_with_age.json"))
+# Set config file for Parameters
+pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
+                                    "simple_parameters_with_age.json"))
 
-# dict_info = {'number_places': [],
-#              'mean_infected': [],
-#              'stdev_infected': [],
-#              'mean_house': [],
-#              'sd_house': [],
-#              'mean_place': [],
-#              'sd_place': [],
-#              'mean_space': [],
-#              'sd_space': []}
-# for j in np.arange(0, 11, 1):
-#     pe.Parameters.instance().basic_reproduction_num = 3.0
+dict_info = {'number_places': [],
+             'mean_infected': [],
+             'stdev_infected': [],
+             'mean_house': [],
+             'sd_house': [],
+             'mean_place': [],
+             'sd_place': [],
+             'mean_space': [],
+             'sd_space': []}
+for j in np.arange(0, 11, 1):
+    pe.Parameters.instance().basic_reproduction_num = 3.0
 
-#     # Set population input file
-#     file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
+    # Set population input file
+    file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 
-#     number_deads = []
-#     house = []
-#     place = []
-#     space = []
-#     for i in range(10):
-#         # Create a population based on the parameters given.
-#         population = pe.routine.FilePopulationFactory.make_pop(
-#                 file_loc,  random_seed=i)
+    number_deads = []
+    house = []
+    place = []
+    space = []
+    for i in range(10):
+        # Create a population based on the parameters given.
+        population = pe.routine.FilePopulationFactory.make_pop(
+                file_loc,  random_seed=i)
         
-#         # Assign places
-#         pe.routine.ToyPopulationFactory.add_places(population, j)
+        # Assign places
+        pe.routine.ToyPopulationFactory.add_places(population, j)
 
 
-#         # sim_params give details for the running of the simulations
-#         sim_params = {"simulation_start_time": 0, "simulation_end_time": 21,
-#                     "initial_infected_number": 1, "simulation_seed": i}
+        # sim_params give details for the running of the simulations
+        sim_params = {"simulation_start_time": 0, "simulation_end_time": 21,
+                    "initial_infected_number": 1, "simulation_seed": i}
 
-#         file_params = {"output_file": "output_r0.csv",
-#                     "output_dir": os.path.join(os.path.dirname(__file__),
-#                                                 "simulation_outputs"),
-#                     "spatial_output": True,
-#                     "age_stratified": True}
+        file_params = {"output_file": "output_r0.csv",
+                    "output_dir": os.path.join(os.path.dirname(__file__),
+                                                "simulation_outputs"),
+                    "spatial_output": True,
+                    "age_stratified": True}
         
-#         dead_house = []
-#         dead_place = []
-#         dead_space = []
+        dead_house = []
+        dead_place = []
+        dead_space = []
 
-#         # Create a simulation object, configure it with the parameters given, then
-#         # run the simulation.
-#         sim = pe.routine.Simulation()
-#         sim.configure(
-#             population,
-#             [pe.sweep.InitialInfectedSweep(),
-#             pe.sweep.InitialisePlaceSweep()],
-#             [   
-#                 pe.sweep.UpdatePlaceSweep(),
-#                 pe.sweep.HouseholdSweep(),
-#                 pe.sweep.QueueSweep(dead_house),
-#                 pe.sweep.PlaceSweep(),
-#                 pe.sweep.QueueSweep(dead_place),
-#                 pe.sweep.SpatialSweep(),
-#                 pe.sweep.QueueSweep(dead_space),
-#                 pe.sweep.HostProgressionSweep(),
-#             ],
-#             sim_params,
-#             file_params,
-#         )
-#         sim.run_sweeps()
+        # Create a simulation object, configure it with the parameters given, then
+        # run the simulation.
+        sim = pe.routine.Simulation()
+        sim.configure(
+            population,
+            [pe.sweep.InitialInfectedSweep(),
+            pe.sweep.InitialisePlaceSweep()],
+            [   
+                pe.sweep.UpdatePlaceSweep(),
+                pe.sweep.HouseholdSweep(),
+                pe.sweep.QueueSweep(dead_house),
+                pe.sweep.PlaceSweep(),
+                pe.sweep.QueueSweep(dead_place),
+                pe.sweep.SpatialSweep(),
+                pe.sweep.QueueSweep(dead_space),
+                pe.sweep.HostProgressionSweep(),
+            ],
+            sim_params,
+            file_params,
+        )
+        sim.run_sweeps()
 
-#         # Need to close the writer object at the end of each simulation.
-#         del sim.writer
-#         del sim
+        # Need to close the writer object at the end of each simulation.
+        del sim.writer
+        del sim
 
-#         # Creation of a plot of results (plotter from spatial_simulation_flow)
-#         # logging.getLogger("matplotlib").setLevel(logging.WARNING)
-#         filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
-#                                 "output_r0.csv")
-#         df_sum = pd.read_csv(filename)
-#         df_sum = df_sum.drop(["InfectionStatus.Exposed",
-#                               "InfectionStatus.InfectASympt",
-#                               "InfectionStatus.InfectGP",
-#                               "InfectionStatus.InfectHosp",
-#                               "InfectionStatus.InfectICU",
-#                               "InfectionStatus.InfectICURecov"],
-#                                     axis=1)
-#         df_sum = df_sum.groupby(["time"]).agg(
-#                                         {"InfectionStatus.Susceptible": 'sum',
-#                                         "InfectionStatus.InfectMild": 'sum',
-#                                         "InfectionStatus.Recovered": 'sum',
-#                                         "InfectionStatus.Dead": 'sum'})
-#         number_deads.append(df_sum["InfectionStatus.Dead"].iloc[-1])
+        # Creation of a plot of results (plotter from spatial_simulation_flow)
+        # logging.getLogger("matplotlib").setLevel(logging.WARNING)
+        filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
+                                "output_r0.csv")
+        df_sum = pd.read_csv(filename)
+        df_sum = df_sum.drop(["InfectionStatus.Exposed",
+                              "InfectionStatus.InfectASympt",
+                              "InfectionStatus.InfectGP",
+                              "InfectionStatus.InfectHosp",
+                              "InfectionStatus.InfectICU",
+                              "InfectionStatus.InfectICURecov"],
+                                    axis=1)
+        df_sum = df_sum.groupby(["time"]).agg(
+                                        {"InfectionStatus.Susceptible": 'sum',
+                                        "InfectionStatus.InfectMild": 'sum',
+                                        "InfectionStatus.Recovered": 'sum',
+                                        "InfectionStatus.Dead": 'sum'})
+        number_deads.append(df_sum["InfectionStatus.Dead"].iloc[-1])
 
-#         # Add total number of infections caused by one perso per category
-#         house.append(sum(dead_house))
-#         place.append(sum(dead_place))
-#         space.append(sum(dead_space))
+        # Add total number of infections caused by one perso per category
+        house.append(sum(dead_house))
+        place.append(sum(dead_place))
+        space.append(sum(dead_space))
 
-#     # print(f'mean: {np.mean(number_deads)}')
-#     # print(f'standard devition: {np.std(number_deads)}')
-#     dict_info['number_places'].append(j)
-#     dict_info['mean_infected'].append(np.mean(number_deads))
-#     dict_info['stdev_infected'].append(np.std(number_deads))
-#     dict_info['mean_house'].append(np.mean(house))
-#     dict_info['sd_house'].append(np.std(house))
-#     dict_info['mean_place'].append(np.mean(place))
-#     dict_info['sd_place'].append(np.std(place))
-#     dict_info['mean_space'].append(np.mean(space))
-#     dict_info['sd_space'].append(np.std(space))
+    # print(f'mean: {np.mean(number_deads)}')
+    # print(f'standard devition: {np.std(number_deads)}')
+    dict_info['number_places'].append(j)
+    dict_info['mean_infected'].append(np.mean(number_deads))
+    dict_info['stdev_infected'].append(np.std(number_deads))
+    dict_info['mean_house'].append(np.mean(house))
+    dict_info['sd_house'].append(np.std(house))
+    dict_info['mean_place'].append(np.mean(place))
+    dict_info['sd_place'].append(np.std(place))
+    dict_info['mean_space'].append(np.mean(space))
+    dict_info['sd_space'].append(np.std(space))
 
-# df_sum.to_csv(os.path.join(os.path.dirname(__file__), 'simulation_outputs/SIRD_places.csv'))
+df_sum.to_csv(os.path.join(os.path.dirname(__file__), 'simulation_outputs/SIRD_places.csv'))
 
-# df = pd.DataFrame.from_dict(dict_info)
-# df.to_csv(os.path.join(os.path.dirname(__file__),
-#           f"simulation_outputs/place_infections.csv"))
+df = pd.DataFrame.from_dict(dict_info)
+df.to_csv(os.path.join(os.path.dirname(__file__),
+          f"simulation_outputs/place_infections.csv"))
 
 # Read in dataframe (for plotting)
 df = pd.read_csv(os.path.join(os.path.dirname(__file__),
@@ -191,12 +191,12 @@ def plot_infections_mean_fit(data, infected_columns_mean: list,
 #                 'spatial_infectiousness_number_places_place')
 # plot_infections(df, ['mean_space'], ['sd_space'], ['Spatial'], ['mediumblue'],
 #                 'spatial_infectiousness_number_places_spatial')
-plot_infections(df,
-                ['mean_infected', 'mean_house', 'mean_place', 'mean_space'],
-                ['stdev_infected', 'sd_house', 'sd_place', 'sd_space'],
-                ['Total', 'House', 'Place', 'Spatial'],
-                ['midnightblue', 'slateblue', 'cyan', 'mediumblue'],
-                'spatial_infectiousness_number_places_all_noerror')
+# plot_infections(df,
+#                 ['mean_infected', 'mean_house', 'mean_place', 'mean_space'],
+#                 ['stdev_infected', 'sd_house', 'sd_place', 'sd_space'],
+#                 ['Total', 'House', 'Place', 'Spatial'],
+#                 ['midnightblue', 'slateblue', 'cyan', 'mediumblue'],
+#                 'spatial_infectiousness_number_places_all_noerror')
 
 # plot_infections_mean_fit(df,
 #                          ['mean_infected', 'mean_house', 'mean_place', 'mean_space'],
