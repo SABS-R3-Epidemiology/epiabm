@@ -1,4 +1,5 @@
 import unittest
+from unittest import mock
 
 import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
@@ -63,7 +64,8 @@ class TestInterventionSweep(TestPyEpiabm):
         self.assertEqual(len(
             self.interventionsweep.intervention_active_status.keys()), 9)
 
-    def test___call__(self):
+    @mock.patch('logging.warning')
+    def test___call__(self, mock_log):
         self.interventionsweep(time=10)
         # Interventions are active, except the second place closure
         self.assertTrue(
@@ -142,7 +144,8 @@ class TestInterventionSweep(TestPyEpiabm):
         # Place closure parameters are changed after activating
         # the third place closure, but warning would be raised
         self.interventionsweep(time=260)
-        self.assertWarns(UserWarning)
+        mock_log.assert_called_once_with(
+            "Concurrent place_closure interventions should not occur!")
         self.assertEqual(pe.Parameters.instance().intervention_params[
                 'place_closure']['closure_place_type'], [4, 5])
 

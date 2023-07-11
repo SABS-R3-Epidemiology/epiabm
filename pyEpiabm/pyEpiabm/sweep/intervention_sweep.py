@@ -7,7 +7,7 @@ from pyEpiabm.intervention import CaseIsolation, Vaccination, PlaceClosure
 from pyEpiabm.intervention import HouseholdQuarantine, SocialDistancing
 from pyEpiabm.intervention import DiseaseTesting, TravelIsolation
 from .abstract_sweep import AbstractSweep
-import warnings
+import logging
 
 
 class InterventionSweep(AbstractSweep):
@@ -78,8 +78,9 @@ class InterventionSweep(AbstractSweep):
                     # Raise warning message if concurrent interventions occur
                     else:
                         if previous_end_date > single_object['start_time']:
-                            warnings.warn(
-                                'Concurrent interventions should not occur!')
+                            logging.warning(
+                                f"Concurrent {intervention_key} "
+                                + "interventions should not occur!")
                     previous_end_date = current_end_date
 
             else:
