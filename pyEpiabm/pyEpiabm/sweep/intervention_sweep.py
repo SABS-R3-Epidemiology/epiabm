@@ -2,12 +2,14 @@
 # Sweeps for taking care of the interventions
 #
 
+import logging
+
 from pyEpiabm.core import Parameters
 from pyEpiabm.intervention import CaseIsolation, Vaccination, PlaceClosure
 from pyEpiabm.intervention import HouseholdQuarantine, SocialDistancing
 from pyEpiabm.intervention import DiseaseTesting, TravelIsolation
+
 from .abstract_sweep import AbstractSweep
-import logging
 
 
 class InterventionSweep(AbstractSweep):
@@ -67,9 +69,9 @@ class InterventionSweep(AbstractSweep):
                          'duration' in key][0]
 
                     # If there are multiple same class of interventions,
-                    # initialise it with the first invervention.
+                    # initialise it with the first intervention.
                     # Other interventions will be activated and updated
-                    # with corrpesonding parameters in the __call__ function
+                    # with corresponding parameters in the __call__ function
                     if index == 0:
                         Parameters.instance().intervention_params[
                             intervention_key] = single_object
@@ -100,7 +102,7 @@ class InterventionSweep(AbstractSweep):
         for intervention in self.intervention_active_status.keys():
             # TODO:
             # - Include an alternative way of case-count.
-            #   Idealy this will be a global parameter that we can plot
+            #   Ideally this will be a global parameter that we can plot
             # - Include condition on ICU
             #   Intervention will be activated based on time and cases now.
             #   We would like to implement a threshold based on ICU numbers.
@@ -124,6 +126,6 @@ class InterventionSweep(AbstractSweep):
                 intervention(time)
 
             elif self.intervention_active_status[intervention] is True:
-                # turn off intervention
+                # Turn off intervention
                 self.intervention_active_status[intervention] = False
                 intervention.turn_off()
