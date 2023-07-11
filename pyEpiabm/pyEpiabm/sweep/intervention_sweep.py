@@ -48,12 +48,12 @@ class InterventionSweep(AbstractSweep):
 
     def bind_population(self, population):
         self._population = population
-        for intervention_type, intervention_object in self.\
+        for intervention_key, intervention_object in self.\
                 intervention_params.items():
             if isinstance(intervention_object, list):
                 for index, single_object in enumerate(intervention_object):
                     intervention_init = self.intervention_dict[
-                        intervention_type](
+                        intervention_key](
                         population=self._population, **single_object)
                     intervention_init.occurrence_index = index
                     self.intervention_active_status[intervention_init] = False
@@ -63,9 +63,9 @@ class InterventionSweep(AbstractSweep):
                     # with corrpesonding parameters in the __call__ function
                     if index == 0:
                         Parameters.instance().intervention_params[
-                            intervention_type] = single_object
+                            intervention_key] = single_object
             else:
-                intervention_init = self.intervention_dict[intervention_type](
+                intervention_init = self.intervention_dict[intervention_key](
                             population=self._population, **intervention_object)
                 self.intervention_active_status[intervention_init] = False
 
@@ -94,15 +94,12 @@ class InterventionSweep(AbstractSweep):
                     # whose values could be retrieved with respect to index
                     if hasattr(intervention, 'occurrence_index'):
                         # Get the intervention type
-                        intervention_type = \
-                            list(self.intervention_dict.keys())[list(
-                                self.intervention_dict.values()).index(
-                                type(intervention))]
+                        intervention_key = intervention.name
                         # Update parameter values with current
                         # active intervention
                         Parameters.instance().intervention_params[
-                            intervention_type] = self.intervention_params[
-                            intervention_type][
+                            intervention_key] = self.intervention_params[
+                            intervention_key][
                             intervention.occurrence_index]
                     self.intervention_active_status[intervention] = True
                 intervention(time)
