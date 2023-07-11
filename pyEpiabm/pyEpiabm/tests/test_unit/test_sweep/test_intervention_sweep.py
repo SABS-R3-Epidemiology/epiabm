@@ -19,17 +19,13 @@ class TestInterventionSweep(TestPyEpiabm):
         # Construct a sequence of place closure
         pe.Parameters.instance().intervention_params['place_closure'] = [
             pe.Parameters.instance().intervention_params[
-                'place_closure'].copy(),
-            pe.Parameters.instance().intervention_params[
-                'place_closure'].copy(),
-            pe.Parameters.instance().intervention_params[
-                'place_closure'].copy()]
+                'place_closure'].copy() for _ in range(3)]
         pe.Parameters.instance().intervention_params[
             'place_closure'][1]['start_time'] = 150
         pe.Parameters.instance().intervention_params[
             'place_closure'][1]['closure_place_type'] = [1, 2, 3, 4, 5]
         pe.Parameters.instance().intervention_params[
-            'place_closure'][2]['start_time'] = 200
+            'place_closure'][2]['start_time'] = 160
         pe.Parameters.instance().intervention_params[
             'place_closure'][2]['closure_place_type'] = [4, 5]
         cls.interventionsweep = InterventionSweep()
@@ -144,10 +140,11 @@ class TestInterventionSweep(TestPyEpiabm):
             'place_closure']['closure_place_type'], [1, 2, 3, 4, 5])
 
         # Place closure parameters are changed after activating
-        # the third place closure
-        self.interventionsweep(time=200)
+        # the third place closure, but warning would be raised
+        self.interventionsweep(time=260)
+        self.assertWarns(UserWarning)
         self.assertEqual(pe.Parameters.instance().intervention_params[
-            'place_closure']['closure_place_type'], [4, 5])
+                'place_closure']['closure_place_type'], [4, 5])
 
         # Stop isolating after start_time + policy_duration
         self.interventionsweep.intervention_params['case_isolation'][

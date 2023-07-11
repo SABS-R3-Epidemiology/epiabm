@@ -7,6 +7,7 @@ from pyEpiabm.intervention import CaseIsolation, Vaccination, PlaceClosure
 from pyEpiabm.intervention import HouseholdQuarantine, SocialDistancing
 from pyEpiabm.intervention import DiseaseTesting, TravelIsolation
 from .abstract_sweep import AbstractSweep
+import warnings
 
 
 class InterventionSweep(AbstractSweep):
@@ -57,6 +58,14 @@ class InterventionSweep(AbstractSweep):
                         population=self._population, **single_object)
                     intervention_init.occurrence_index = index
                     self.intervention_active_status[intervention_init] = False
+
+                    # Calculate the current intervention's end date
+                    current_end_date = single_object['start_time'] + \
+                        [value for key, value in single_object.items() if
+                         'delay' in key][0] + \
+                        [value for key, value in single_object.items() if
+                         'duration' in key][0]
+
                     # If there are multiple same class of interventions,
                     # initialise it with the first invervention.
                     # Other interventions will be activated and updated
@@ -64,6 +73,15 @@ class InterventionSweep(AbstractSweep):
                     if index == 0:
                         Parameters.instance().intervention_params[
                             intervention_key] = single_object
+                        previous_end_date = current_end_date
+
+                    # Raise warning message if concurrent interventions occur
+                    else:
+                        if previous_end_date > single_object['start_time']:
+                            warnings.warn(
+                                'Concurrent interventions should not occur!')
+                    previous_end_date = current_end_date
+
             else:
                 intervention_init = self.intervention_dict[intervention_key](
                             population=self._population, **intervention_object)
