@@ -25,6 +25,7 @@ class DiseaseTesting(AbstractIntervention):
         self.testing_capacity = testing_capacity
         self.false_positive = false_positive
         self.false_negative = false_negative
+        self.name = 'disease_testing'
 
         population.test_count = [0, 0]
 

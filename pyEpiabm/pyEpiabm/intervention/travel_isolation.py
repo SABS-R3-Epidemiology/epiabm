@@ -34,6 +34,7 @@ class TravelIsolation(AbstractIntervention):
         self.isolation_probability = isolation_probability
         self.use_testing = use_testing
         self.hotel_isolate = hotel_isolate
+        self.name = 'travel_isolation'
 
         super(TravelIsolation, self).__init__(population=population, **kwargs)
 
