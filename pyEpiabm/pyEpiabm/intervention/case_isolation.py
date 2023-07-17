@@ -30,6 +30,7 @@ class CaseIsolation(AbstractIntervention):
         self.isolation_delay = isolation_delay
         self.isolation_probability = isolation_probability
         self.use_testing = use_testing
+        self.name = 'case_isolation'
 
         super(CaseIsolation, self).__init__(population=population, **kwargs)
 

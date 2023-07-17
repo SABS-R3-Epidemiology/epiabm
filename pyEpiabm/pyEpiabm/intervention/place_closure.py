@@ -25,6 +25,7 @@ class PlaceClosure(AbstractIntervention):
         self.closure_duration = closure_duration
         self.closure_delay = closure_delay
         self.case_microcell_threshold = case_microcell_threshold
+        self.name = 'place_closure'
         super(PlaceClosure, self).__init__(population=population,
                                            **kwargs)
 

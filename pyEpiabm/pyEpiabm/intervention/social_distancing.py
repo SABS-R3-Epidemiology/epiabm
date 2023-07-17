@@ -33,6 +33,7 @@ class SocialDistancing(AbstractIntervention):
         self.distancing_delay = distancing_delay
         self.case_microcell_threshold = case_microcell_threshold
         self.distancing_enhanced_prob = distancing_enhanced_prob
+        self.name = 'social_distancing'
         super(SocialDistancing, self).__init__(population=population,
                                                **kwargs)
 

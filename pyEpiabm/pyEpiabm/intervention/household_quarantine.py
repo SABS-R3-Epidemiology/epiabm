@@ -30,6 +30,7 @@ class HouseholdQuarantine(AbstractIntervention):
         self.quarantine_delay = quarantine_delay
         self.quarantine_house_compliant = quarantine_house_compliant
         self.quarantine_individual_compliant = quarantine_individual_compliant
+        self.name = 'household_quarantine'
 
         # start_time, policy_duration, threshold, population
         super(HouseholdQuarantine, self).__init__(population=population,
