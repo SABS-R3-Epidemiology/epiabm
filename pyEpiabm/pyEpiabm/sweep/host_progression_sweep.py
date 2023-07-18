@@ -174,9 +174,7 @@ class HostProgressionSweep(AbstractSweep):
                 # print('w age group', weights[person.age_group])
                 print('List', list)
                 print('Age group', person.age_group)
-                #check1 = w[person.age_group] for w in weights
-                #print('W age group', check1)
-            outcomes = range(1, self.number_of_states + 1)
+                outcomes = range(1, self.number_of_states + 1)
 
             if len(weights) != len(outcomes):
                 raise AssertionError('The number of infection statuses must' +
