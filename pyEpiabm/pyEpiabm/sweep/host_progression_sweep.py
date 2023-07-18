@@ -164,8 +164,18 @@ class HostProgressionSweep(AbstractSweep):
         else:
             row_index = person.infection_status.name
             weights = self.state_transition_matrix.loc[row_index].to_numpy()
-            weights = [w[person.age_group] if isinstance(w, list) else w
-                       for w in weights]
+#            print('List,', list)
+            try:
+                weights = [w[person.age_group] if isinstance(w, list) else w
+                           for w in weights]
+            except IndexError as e:
+                print('Index causing problems', e.args)
+                print('Weights', weights)
+                # print('w age group', weights[person.age_group])
+                print('List', list)
+                print('Age group', person.age_group)
+                #check1 = w[person.age_group] for w in weights
+                #print('W age group', check1)
             outcomes = range(1, self.number_of_states + 1)
 
             if len(weights) != len(outcomes):
