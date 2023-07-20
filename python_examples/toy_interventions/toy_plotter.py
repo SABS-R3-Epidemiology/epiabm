@@ -257,9 +257,9 @@ class Plotter():
                 highest_value = max(dict_ms['mean'])
 
         # Add some text for labels, title and custom x-axis tick labels, etc.
-        ax.set_ylabel('Total number infections')
-        ax.set_title('Total infections')
-        ax.set_xticks(x + width, grids)
+        ax.set_ylabel('Total percentage population infected')
+        # ax.set_title('Total infections')
+        ax.set_xticks(x + ((len(x)-1)*0.5*width) , grids)
         # Set only y range when highest value above 50%
         if highest_value > 50: 
             ax.set_ylim(0, 110)
@@ -277,3 +277,36 @@ class Plotter():
                                  self.folder, input_file))
         return summary_df['av_recovered'].iloc[-1], summary_df['sd_recovered'].iloc[-1]
 
+    def _summary_table(self, name):
+        pop_size = 10000
+        dict_sum = {'grid': [],
+                    'run': [],
+                    'percentage_mean_infections': [],
+                    'percentage_sd_infections': [],
+                    'height_peak': [],
+                    'time_peak': []}
+        for grid_size in self.grid_sizes:
+            for j in range(len(self.parameter_sets_list)):
+                summary_output_name = 'summary_{}x{}_av{}_{}.csv'.\
+                        format(grid_size, grid_size, self.avplaces,
+                               self.parameter_sets_labels[j])
+                df = pd.read_csv(os.path.join(os.path.dirname(__file__), self.folder, summary_output_name))
+                mean, stdev = self._store_recovered_bar_plot(summary_output_name)
+                df['av_infections'] = df['av_infections'].astype(float)
+                df['time'] = df['time'].astype(int)
+
+                max_height = df['av_infections'].max()
+                max_time = df[df['av_infections']==max_height].iloc[0]['time']
+
+                dict_sum['grid'].append(grid_size)
+                dict_sum['run'].append(self.parameter_sets_labels[j])
+                dict_sum['percentage_mean_infections'].append(100/pop_size*mean)
+                dict_sum['percentage_sd_infections'].append(100/pop_size*stdev)
+                dict_sum['height_peak'].append(max_height)
+                dict_sum['time_peak'].append(max_time)
+        df_sum = pd.DataFrame.from_dict(dict_sum)
+        df_sum.to_csv(os.path.join(os.path.dirname(__file__), self.folder,
+                      '{}.csv'.format(name)), index=False)
+
+
+                

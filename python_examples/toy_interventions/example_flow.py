@@ -21,18 +21,25 @@ def main():
 
     # PARAMETERS TO STUDY
     # Note: always use age (use_age = 1, age_stratified = True)
+    # Note: 120 normally
     ##### CI
     # parameter_list = [{'case_isolation': {'isolation_probability': 0.0}},
     #                   {'case_isolation': {'isolation_probability': 0.5}},
     #                   {'case_isolation': {'isolation_probability': 1.0}}]
     # parameter_sets_labels = ['no_int', '0.5CI', 'CI']
+    parameter_list = [{'case_isolation': {'isolation_probability': 0.0}},
+					  {'case_isolation': {'isolation_probability': 1.0, 'isolation_duration': 5}},
+					  {'case_isolation': {'isolation_probability': 1.0, 'isolation_duration': 7}},
+				      {'case_isolation': {'isolation_probability': 1.0, 'isolation_duration': 10}},
+                      {'case_isolation': {'isolation_probability': 1.0, 'isolation_duration': 14}}]
+    parameter_sets_labels = ['no_int', 'CI_5id', 'CI_7id', 'CI_10id', 'CI_14id']
 
     ##### HQ
-    parameter_list = [{'household_quarantine': {'quarantine_house_compliant': 0}, 'case_isolation': {'isolation_probability': 0}},
-                      {'household_quarantine': {'quarantine_house_compliant': 0}, 'case_isolation': {'isolation_probability': 1}},
-                      {'household_quarantine': {'quarantine_house_compliant': 0.5}, 'case_isolation': {'isolation_probability': 1}},
-                      {'household_quarantine': {'quarantine_house_compliant': 1.0}, 'case_isolation': {'isolation_probability': 1}}]
-    parameter_sets_labels = ['no_int', 'CI', 'CI_0.5HQ', 'CI_HQ']
+    # parameter_list = [{'household_quarantine': {'quarantine_house_compliant': 0}, 'case_isolation': {'isolation_probability': 0}},
+    #                   {'household_quarantine': {'quarantine_house_compliant': 0}, 'case_isolation': {'isolation_probability': 1}},
+    #                   {'household_quarantine': {'quarantine_house_compliant': 0.5}, 'case_isolation': {'isolation_probability': 1}},
+    #                   {'household_quarantine': {'quarantine_house_compliant': 1.0}, 'case_isolation': {'isolation_probability': 1}}]
+    # parameter_sets_labels = ['no_int', 'CI', 'CI_0.5HQ', 'CI_HQ']
     
     #####  SD
     # parameter_list = [{'social_distancing': {'distancing_enhanced_prob': [0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0]}},
@@ -43,9 +50,9 @@ def main():
 
     ##### PC
     # parameter_list = [{'place_closure': {'closure_place_type': []}},
-    #                   {'place_closure': {'closure_place_type': [1, 2, 3]}},
-    #                   {'place_closure': {'closure_place_type': [1, 2, 3, 4, 5, 6]}}]
-    # parameter_sets_labels = ['no_int', 'PC_schools', 'PC']
+    #                   {'place_closure': {'closure_place_type': [4, 6]}},
+    #                   {'place_closure': {'closure_place_type': [1, 2, 3, 4, 6]}}]
+    # parameter_sets_labels = ['no_int', 'PC_work_outdoor', 'PC_work_outdoor_school']
     # NOTE: set use_age to 1 and age_tratiefied to True
 
     ##### NZ
@@ -56,11 +63,19 @@ def main():
     # NOTE: read in the NZ parameters
     # NOTE: 90 days now instead of 120
 
+    #### Travelling
+    # parameter_list = [{'travel_isolation': {'start_time': 360}},
+    #                   {'travel_isolation': {'start_time': 0, 'hotel_isolate': 0}},
+    #                   {'travel_isolation': {'start_time': 0, 'hotel_isolate': 1}}]
+    # parameter_sets_labels = ['no_int', 'TI_household', 'TI_hotel']
+    # Note: include travel sweep
+
     # Name output
-    # name_plot_multiple = 'MP_4_15_5av_NZ_90d_csparam'
-    # name_plot_bar = 'BP_4_15_5av_NZ_90d_csparam'
-    name_plot_multiple = 'MP_4_15_5av_HQCI_90d'
-    name_plot_bar = 'BP_4_15_5av_HQCI_90d'
+    # name_plot_multiple = 'MP_4_15_5av_NZ_90d_sd_csparam'
+    # name_plot_bar = 'BP_4_15_5av_NZ_90d_sd_csparam'
+    name_plot_multiple = 'MP_4_15_5av_CI_dur_120d_sd_strict'
+    name_plot_bar = 'BP_4_15_5av_CI_dur_120d_sd_strict'
+    name_table = 'table_4_15_5av_CI_dur_120d_sd_strict'
 
     # Setup output for logging file
     logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
@@ -69,11 +84,16 @@ def main():
 
     # Set config file for Parameters
     pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                           "Int_params.json"))
+                           "Int_params_strict.json"))
 
     for grid_size in grid_sizes:
         input_file_name = "toy_input_{}x{}_av{}_places.csv".format(
             grid_size, grid_size, avplaces)
+        if grid_size == 4:
+            pe.Parameters.instance().infection_radius = 5.66
+        else: #15
+            pe.Parameters.instance().infection_radius = 21.22
+        print(f'set infection_radius to {pe.Parameters.instance().infection_radius}')
 
         # Generate population from input file
         # (Input converted from CovidSim with `microcell_conversion.py`)
@@ -123,6 +143,7 @@ def main():
 
     p._multiple_curve_plotter(name_plot_multiple)
     p._total_recovered_bars(name_plot_bar)
+    p._summary_table(name_table)
 
 
 def run_simulation(seed, file_loc, output_folder, output_file_name):
@@ -135,7 +156,7 @@ def run_simulation(seed, file_loc, output_folder, output_file_name):
     # sim_ and file_params give details for the running of the
     # simulationsand where output should be written to.
     sim_params = {"simulation_start_time": 0,
-                  "simulation_end_time": 90,
+                  "simulation_end_time": 120,
                   "initial_infected_number": 10,
                   "initial_infect_cell": True,
                   "simulation_seed": seed}
