@@ -30,104 +30,95 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
 # Parameter to change
-to_modify_parameter_values = {'distancing_enhanced_prob': [0, 0.5, 1],
-                              'distancing_spatial_susc': [0.9, 0.3, 0.1]}
-for to_modify_parameter, parameter_values in to_modify_parameter_values.\
-        items():
-    for parameter_value in parameter_values:
-        name_output_file = 'output_{}_{}.csv'.format(
-                parameter_value, to_modify_parameter)
+to_modify_parameter = 'distancing_enhanced_prob'
+parameter_values = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 1.0,
+                     1.0],
+                    [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+                     1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]
+labels = ['no_int', 'SD_elderly', 'SD']
+for i in range(len(parameter_values)):
+    name_output_file = 'output_{}_{}.csv'.format(
+        labels[i], to_modify_parameter)
+    pe.Parameters.instance().intervention_params['social_distancing'][
+        to_modify_parameter] = parameter_values[i]
 
-        if to_modify_parameter == 'distancing_enhanced_prob':
-            num_age_group = len(pe.Parameters.instance().intervention_params[
-                'social_distancing'][to_modify_parameter])
-            pe.Parameters.instance().intervention_params['social_distancing'][
-                to_modify_parameter] = [parameter_value] * num_age_group
-        else:
-            pe.Parameters.instance().intervention_params['social_distancing'][
-                'distancing_enhanced_prob'] = [0] * num_age_group
-            pe.Parameters.instance().intervention_params['social_distancing'][
-                to_modify_parameter] = parameter_value
+    print('Set {} to: {}'.format(to_modify_parameter,
+                                 pe.Parameters.instance(
+                                 ).intervention_params[
+                                    'social_distancing'][
+                                        to_modify_parameter]))
 
-        print('Set {} to: {}'.format(to_modify_parameter,
-                                     pe.Parameters.instance(
-                                     ).intervention_params[
-                                      'social_distancing'][
-                                      to_modify_parameter]))
+    # Method to set the seed at the start of the simulation,
+    # for reproducibility
+    pe.routine.Simulation.set_random_seed(seed=30)
 
-        # Method to set the seed at the start of the simulation,
-        # for reproducibility
-        pe.routine.Simulation.set_random_seed(seed=30)
+    # Create population
+    population = pe.routine.FilePopulationFactory.make_pop(
+        file_loc, random_seed=42)
 
-        # Create population
-        population = pe.routine.FilePopulationFactory.make_pop(
-            file_loc, random_seed=42)
+    # Configure population with input data
+    pe.routine.ToyPopulationFactory.add_places(population, 1)
 
-        # Configure population with input data
-        pe.routine.ToyPopulationFactory.add_places(population, 1)
+    # file_params give details for where output should be written to.
+    file_params = {"output_file": name_output_file,
+                   "output_dir": os.path.join(
+                    os.path.dirname(__file__), "intervention_outputs"),
+                   "spatial_output": True,
+                   "age_stratified": True}
 
-        # file_params give details for where output should be written to.
-        file_params = {"output_file": name_output_file,
-                       "output_dir": os.path.join(
-                        os.path.dirname(__file__), "intervention_outputs"),
-                       "spatial_output": True,
-                       "age_stratified": True}
+    # Create a simulation object, configure it with the parameters given,
+    # then run the simulation.
+    sim = pe.routine.Simulation()
+    sim.configure(
+        population,
+        [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
+        [
+            pe.sweep.InterventionSweep(),
+            pe.sweep.UpdatePlaceSweep(),
+            pe.sweep.HouseholdSweep(),
+            pe.sweep.PlaceSweep(),
+            pe.sweep.SpatialSweep(),
+            pe.sweep.QueueSweep(),
+            pe.sweep.HostProgressionSweep(),
+        ],
+        sim_params,
+        file_params,
+    )
+    sim.run_sweeps()
 
-        # Create a simulation object, configure it with the parameters given,
-        # then run the simulation.
-        sim = pe.routine.Simulation()
-        sim.configure(
-            population,
-            [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
-            [
-                pe.sweep.InterventionSweep(),
-                pe.sweep.UpdatePlaceSweep(),
-                pe.sweep.HouseholdSweep(),
-                pe.sweep.PlaceSweep(),
-                pe.sweep.SpatialSweep(),
-                pe.sweep.QueueSweep(),
-                pe.sweep.HostProgressionSweep(),
-            ],
-            sim_params,
-            file_params,
-        )
-        sim.run_sweeps()
-
-        # Need to close the writer object at the end of each simulation.
-        del sim.writer
-        del sim
+    # Need to close the writer object at the end of each simulation.
+    del sim.writer
+    del sim
 
 ###############################
 # Creation of a plot of results
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 
-for to_modify_parameter, parameter_values in to_modify_parameter_values.\
-        items():
-    for parameter_value in parameter_values:
-        file_name = os.path.join(os.path.dirname(__file__),
-                                 "intervention_outputs",
-                                 "output_{}_{}.csv".format(
-                                 parameter_value, to_modify_parameter))
-        df = pd.read_csv(file_name)
-        total_df = df[list(df.filter(regex='InfectionStatus.Infect'))]
-        df['Infected'] = total_df.sum(axis=1)
-        df = df.groupby(["time"]).agg(
-            {"InfectionStatus.Susceptible": 'sum',
-             "Infected": 'sum',
-             "InfectionStatus.Recovered": 'sum',
-             "InfectionStatus.Dead": 'sum'})
-        df = df.reset_index(level=0)
+for i in range(len(parameter_values)):
+    file_name = os.path.join(os.path.dirname(__file__),
+                             "intervention_outputs",
+                             "output_{}_{}.csv".format(
+                                labels[i], to_modify_parameter))
+    df = pd.read_csv(file_name)
+    total_df = df[list(df.filter(regex='InfectionStatus.Infect'))]
+    df['Infected'] = total_df.sum(axis=1)
+    df = df.groupby(["time"]).agg(
+        {"InfectionStatus.Susceptible": 'sum',
+            "Infected": 'sum',
+            "InfectionStatus.Recovered": 'sum',
+            "InfectionStatus.Dead": 'sum'})
+    df = df.reset_index(level=0)
 
-        plt.plot(df['time'], df['Infected'], label='{}: {}'.format(
-            to_modify_parameter, parameter_value))
+    plt.plot(df['time'], df['Infected'], label='{}'.format(labels[i]))
 
-    plt.legend()
-    plt.title("Infection curves for different {}".format(to_modify_parameter))
-    plt.ylabel("Infected Population")
-    plt.savefig(
-        os.path.join(os.path.dirname(__file__),
-                     "intervention_outputs",
-                     "social_distancing_{}_Icurve_plot.png".format(
-                        to_modify_parameter))
-    )
-    plt.clf()
+plt.legend()
+plt.title("Infection curves for different {}".format(to_modify_parameter))
+plt.ylabel("Infected Population")
+plt.savefig(
+    os.path.join(os.path.dirname(__file__),
+                 "intervention_outputs",
+                 "social_distancing_{}_Icurve_plot.png".format(
+                    to_modify_parameter))
+)
+plt.clf()

@@ -30,8 +30,7 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
 # Parameter to change
-to_modify_parameter_values = {'closure_household_infectiousness': [2, 10, 20],
-                              'closure_spatial_params': [0.8, 0.5, 0.2]}
+to_modify_parameter_values = {'closure_place_type': [[], [4], [1, 2, 3, 4]]}
 for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         items():
     for parameter_value in parameter_values:

@@ -31,7 +31,7 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 
 # Parameter to change
 to_modify_parameter = 'testing_capacity'
-parameter_values = [[0, 0], [100, 1000]]
+parameter_values = [[0, 0], [10000, 10000]]
 label = [0, 1]
 
 for i in range(len(parameter_values)):

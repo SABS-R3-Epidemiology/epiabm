@@ -35,9 +35,9 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 
 # Parameter to change
 to_modify_parameter = 'prob_vaccinated'
-parameter_values = [[0.9, 0.9, 0.9, 0.9], [0.5, 0.5, 0.5, 0.5]]
+parameter_values = [[0, 0, 0, 0], [0.5, 0.5, 0.5, 0.5], [1.0, 1.0, 1.0, 1.0]]
 
-labels = ['uptake_90', 'uptake_50']
+labels = ['no_int', 'uptake_50', 'uptake_100']
 
 for i in range(len(parameter_values)):
     name_output_file = 'output_{}.csv'.format(
@@ -113,7 +113,7 @@ for i in range(len(parameter_values)):
                  "InfectionStatus.Vaccinated": 'sum'})
     df = df.reset_index(level=0)
 
-    plt.plot(df['time'], df['Infected'], colours[index][0],
+    plt.plot(df['time'], df['Infected'],
              label='Number infected with {}% vaccine uptake'.format(
         int(parameter_values[i][0]*100)))
     index += 1
