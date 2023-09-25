@@ -13,8 +13,10 @@ from toy_plotter import Plotter
 
 def main():
     # set parameters
-    repeats = 10
+    # repeats = 10
     grid_sizes = [4, 15]
+    repeats = 1
+    # grid_sizes = [4]
     avplaces = 5
     input_folder = "uniform_inputs/av{}_places".format(avplaces)
     output_folder = 'simulation_outputs'
@@ -27,12 +29,13 @@ def main():
     #                   {'case_isolation': {'isolation_probability': 0.5}},
     #                   {'case_isolation': {'isolation_probability': 1.0}}]
     # parameter_sets_labels = ['no_int', '0.5CI', 'CI']
-    parameter_list = [{'case_isolation': {'isolation_probability': 0.0}},
-					  {'case_isolation': {'isolation_probability': 1.0, 'isolation_duration': 5}},
-					  {'case_isolation': {'isolation_probability': 1.0, 'isolation_duration': 7}},
-				      {'case_isolation': {'isolation_probability': 1.0, 'isolation_duration': 10}},
-                      {'case_isolation': {'isolation_probability': 1.0, 'isolation_duration': 14}}]
-    parameter_sets_labels = ['no_int', 'CI_5id', 'CI_7id', 'CI_10id', 'CI_14id']
+    # parameter_list = [{'case_isolation': {'start_time': 365}},
+	# 				  {'case_isolation': {'start_time': 0, 'isolation_probability': 1.0, 'isolation_duration': 5}},
+	# 				  {'case_isolation': {'start_time': 0, 'isolation_probability': 1.0, 'isolation_duration': 7}},
+	# 			      {'case_isolation': {'start_time': 0, 'isolation_probability': 1.0, 'isolation_duration': 10}},
+    #                   {'case_isolation': {'start_time': 0, 'isolation_probability': 1.0, 'isolation_duration': 14}}]
+    # parameter_sets_labels = ['no_int', 'CI_5id', 'CI_7id', 'CI_10id', 'CI_14id']
+
 
     ##### HQ
     # parameter_list = [{'household_quarantine': {'quarantine_house_compliant': 0}, 'case_isolation': {'isolation_probability': 0}},
@@ -64,18 +67,18 @@ def main():
     # NOTE: 90 days now instead of 120
 
     #### Travelling
-    # parameter_list = [{'travel_isolation': {'start_time': 360}},
-    #                   {'travel_isolation': {'start_time': 0, 'hotel_isolate': 0}},
-    #                   {'travel_isolation': {'start_time': 0, 'hotel_isolate': 1}}]
-    # parameter_sets_labels = ['no_int', 'TI_household', 'TI_hotel']
+    parameter_list = [{'travel_isolation': {'start_time': 360}},
+                      {'travel_isolation': {'start_time': 0, 'hotel_isolate': 0}},
+                      {'travel_isolation': {'start_time': 0, 'hotel_isolate': 1}}]
+    parameter_sets_labels = ['no_int', 'TI_household', 'TI_hotel']
     # Note: include travel sweep
 
     # Name output
     # name_plot_multiple = 'MP_4_15_5av_NZ_90d_sd_csparam'
     # name_plot_bar = 'BP_4_15_5av_NZ_90d_sd_csparam'
-    name_plot_multiple = 'MP_4_15_5av_CI_dur_120d_sd_strict'
-    name_plot_bar = 'BP_4_15_5av_CI_dur_120d_sd_strict'
-    name_table = 'table_4_15_5av_CI_dur_120d_sd_strict'
+    name_plot_multiple = 'MP_4_15_5av_test_TI_0.01_120d_sd_strict'
+    name_plot_bar = 'BP_4_15_5av_test_TI_0.01_120d_sd_strict'
+    name_table = 'table_4_15_5av_test_TI_0.01_120d_sd_strict'
 
     # Setup output for logging file
     logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
@@ -176,6 +179,7 @@ def run_simulation(seed, file_loc, output_folder, output_file_name):
             pe.sweep.InitialInfectedSweep(),
             pe.sweep.InitialisePlaceSweep()],
         [
+            pe.sweep.TravelSweep(),
             pe.sweep.InterventionSweep(),
             pe.sweep.UpdatePlaceSweep(),
             pe.sweep.HouseholdSweep(),

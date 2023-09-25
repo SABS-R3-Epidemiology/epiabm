@@ -156,8 +156,8 @@ class Plotter():
                     plot_name))
 
     def _multiple_curve_plotter(self, name_fig=None):
-        color_dict = {4: ['blue', 'darkblue', 'deepskyblue', 'slategrey', 'turquoise'],
-                      15: ['red', 'darkred', 'mediumvioletred', 'violet', 'hotpink']}
+        color_dict = {4: ['blue', 'darkblue', 'deepskyblue', 'slategrey', 'turquoise', 'teal'],
+                      15: ['red', 'darkred', 'mediumvioletred', 'violet', 'hotpink', 'darkmagenta']}
         for grid_size in self.grid_sizes:
             color_list = color_dict[grid_size]
             count = 0
@@ -221,8 +221,8 @@ class Plotter():
         return plt
 
     def _total_recovered_bars(self, name_fig, pop_size =10000):
-        color_dict = {4: ['blue', 'darkblue', 'deepskyblue', 'slategrey'],
-                      15: ['red', 'darkred', 'mediumvioletred', 'violet']}
+        color_dict = {4: ['blue', 'darkblue', 'deepskyblue', 'slategrey', 'turquoise', 'teal'],
+                      15: ['red', 'darkred', 'mediumvioletred', 'violet', 'hotpink', 'darkmagenta']}
         
         grids = [f'{str(x)}x{str(x)}' for x in self.grid_sizes]
         dict_info = {}
