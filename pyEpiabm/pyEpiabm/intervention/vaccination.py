@@ -28,6 +28,7 @@ class Vaccination(AbstractIntervention):
 
         """
         self.daily_doses = daily_doses
+        self.name = 'vaccine_params'
 
         # kwargs read in by this method are: start_time, policy_duration,
         # and case_threshold

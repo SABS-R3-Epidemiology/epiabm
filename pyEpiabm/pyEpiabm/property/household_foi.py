@@ -69,7 +69,8 @@ class HouseholdInfection:
         if (hasattr(infector.microcell, 'distancing_start_time')) and (
                 infector.microcell.distancing_start_time is not None) and (
                     infector.microcell.distancing_start_time <= time):
-            if infector.distancing_enhanced is True:
+            if (hasattr(infector, 'distancing_enhanced')) and (
+                        infector.distancing_enhanced is True):
                 household_susceptibility *= Parameters.instance().\
                     intervention_params['social_distancing'][
                         'distancing_house_enhanced_susc']
