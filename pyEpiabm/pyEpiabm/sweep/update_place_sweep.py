@@ -124,7 +124,7 @@ class UpdatePlaceSweep(AbstractSweep):
             num_groups = 1
         while count < new_capacity:
             if person_weights is not None:
-                assert len(person_weights) == len(person_list),\
+                assert len(person_weights) == len(person_list), \
                     ('Weights given is a different size to the person list.')
                 person = random.choices(person_list, person_weights, k=1)[0]
             else:

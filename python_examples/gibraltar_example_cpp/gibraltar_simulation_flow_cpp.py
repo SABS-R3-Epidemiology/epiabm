@@ -90,7 +90,8 @@ simulation.add_timestep_reporter(
 simulation.add_timestep_reporter(
     ce.AgeStratifiedNewCasesReporter("output/age_stratified_new_cases.csv"))
 simulation.add_timestep_reporter(
-    ce.AgeStratifiedPopulationReporter("output/age_stratified_population_results.csv"))
+    ce.AgeStratifiedPopulationReporter(
+        "output/age_stratified_population_results.csv"))
 
 logging.info("Started cpp simulation")
 simulation.simulate(sim_params["simulation_end_time"])
