@@ -43,10 +43,17 @@ namespace epiabm
             std::pair<double, double> current_loc = currentCell->location();
             for (CellPtr &cell : cells)
             {
-                double dist = DistanceMetrics::Dist(cell->location(), current_loc);
-                weightVector.push_back(
-                    dist < m_cfg->infectionConfig->infectionRadius ?
-                        1.0/dist : 0);
+                if (cell->index() == currentCell->index())
+                {
+                    weightVector.push_back(0);
+                }
+                else
+                {
+                    double dist = DistanceMetrics::Dist(cell->location(), current_loc);
+                    weightVector.push_back(
+                        dist < m_cfg->infectionConfig->infectionRadius ?
+                            1.0/dist : 0);
+                }
             }
         }
         else if (m_cfg->infectionConfig->spatial_distance_metric == "covidsim")
@@ -78,6 +85,10 @@ namespace epiabm
     {
         std::vector<double> weightVector = getWeightsFromCells(cells, currentCell);
         std::vector<size_t> chosenCellIndices = std::vector<size_t>();
+        if (std::accumulate(weightVector.begin(), weightVector.end(), 0.0) <= 0.0)
+            // LCOV_EXCL_START
+            return chosenCellIndices;
+            // LCOV_EXCL_STOP
         std::discrete_distribution<size_t> distribution(weightVector.begin(), weightVector.end());
 
         for (size_t i = 0; i < n; ++i)
