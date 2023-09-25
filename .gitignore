@@ -163,6 +163,12 @@ dmypy.json
 # Epiabm log files
 *.log
 
+# PyEpiabm intervention output files
+python_examples/intervention_example/intervention_outputs/*.csv
+
+# PyEpiabm travelling output files
+python_examples/travel_example/travelling_outputs/*.csv
+
 # Profiling script
 kernprof.py
 *.prof

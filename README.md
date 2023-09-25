@@ -1,17 +1,18 @@
-# epiabm
+# Epiabm
 
 [![Unit tests (python versions)](https://github.com/SABS-R3-Epidemiology/epiabm/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/SABS-R3-Epidemiology/epiabm/actions/workflows/unit-tests.yml)
 [![Unit tests (cpp versions)](https://github.com/SABS-R3-Epidemiology/epiabm/actions/workflows/cpp-unit-tests-ubuntu.yml/badge.svg)](https://github.com/SABS-R3-Epidemiology/epiabm/actions/workflows/cpp-unit-tests-ubuntu.yml)
 [![Documentation Status](https://readthedocs.org/projects/epiabm/badge/?version=latest)](https://epiabm.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/SABS-R3-Epidemiology/epiabm/branch/main/graph/badge.svg?token=VN4CJ0HT06)](https://codecov.io/gh/SABS-R3-Epidemiology/epiabm)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7327444.svg)](https://doi.org/10.5281/zenodo.7327444)
 
 ## General Information
 
-This programme implements an agent-based SEIR model with added compartments and spatial complexity. It imitates the Imperial CovidSim model, but aims to simplify and clarify the model by using more user friendly software practices. It also provides various sub-models (with elements of the CovidSim model removed) for research and pedagogical investigation into the effect of different aspects of the model.
+This program implements an agent-based SEIR model with added compartments and spatial complexity. It imitates the Imperial [CovidSim](https://github.com/mrc-ide/covid-sim) model, but aims to simplify and clarify the model by using more user-friendly software practices. It also provides various sub-models (with elements such as age-stratification or spatial distribution removed) for research and pedagogical investigation into the effect of different aspects of the model.
 
 ## Model Summary
 
-The model contains two main sections: transmission mechanisms and within host progression.
+The model contains two main sections: spatial infection mechanisms and within-host disease progression.
 
 For each timestep the code loops through the population and records interactions between infected and susceptible people which may lead to infections. Individuals are allocated a susceptibility based on age and location data and pairs of individuals considered to see whether their interaction leads to infection. The likelihood of a pair interacting is weighted by spatial distance and age factors (as people are more likely to socialise with those of the same age, and children maintain close contact with parents). This incorporates the major spatial variation within the model.
 
@@ -27,7 +28,7 @@ The pyEpiabm backend is written in python, chosen for its readability and user-f
 
 ## Installation of pyEpiabm
 
-pyEpiabm is not yet avaliable on [PyPI](https://pypi.org/), but the module can be pip installed locally. The directory should first be downloaded to your local machine, and can then be installed using the command:
+pyEpiabm is not yet available on [PyPI](https://pypi.org/), but the module can be pip installed locally. The directory should first be downloaded to your local machine, and can then be installed using the command:
 
 ```console
 pip install -e .
@@ -93,7 +94,7 @@ Configure a simulation with a number of parameters. These are split into two cat
 
 Two lists of sweeps must also be passed to this function - the first will be executed once at the start of the simulation (i.e. to determine the initial infections in the population), while the second list will be ran at every timestep (i.e. to propagate the infection through the population).
 
-## PyEpiabm Documentation
+## pyEpiabm Documentation
 
 Documentation on the python backend (pyEpiabm) is stored on [Read The Docs](https://epiabm.readthedocs.io/en/latest/).  
 The Wiki for this repo also contains more detail on the Ferguson model itself, and where our implementation might differ from that.
@@ -137,17 +138,16 @@ cmake --build . --parallel 6 --target epiabm
 cEpiabm's python bindings will be compiled to a python module named epiabm, located in ```build_dir/src/epiabm.cpython-(version info).so```.
 
 
-## CEpiabm Documentation
+## cEpiabm Documentation
 
 Documentation on the C++ backend (cEpiabm) is stored on [Read The Docs](https://cepiabm.readthedocs.io/en/latest/).
 
 # References
 
-List of resources that can be useful for the project:
+List of resources that may be useful for the project:
 
-* Knock E et al., 2021. Key epidemiological drivers and impact of interventions in the 2020 SARS-CoV-2 epidemic in England (https://www.science.org/doi/epdf/10.1126/scitranslmed.abg4262)
-* Ferguson N, 2020. Impact  of  non-pharmaceutical  interventions (NPIs) to reduce COVID-19 mortality and healthcare demand (https://www.imperial.ac.uk/media/imperial-college/medicine/sph/ide/gida-fellowships/Imperial-College-COVID19-NPI-modelling-16-03-2020.pdf)
 * Bauer F, 2008. Compartmental models in epidemiology (https://link.springer.com/chapter/10.1007/978-3-540-78911-6_2)
 * Erban R, Chapman J and Maini P, 2007. A practical guide to stochastic simulations of reaction-diffusion processes (https://arxiv.org/abs/0704.1908)
 * Ferguson N et al., 2006. Strategies for mitigating an influenza pandemic (https://pubmed.ncbi.nlm.nih.gov/16642006/)
-* Gillespie D, 1977. Exact stochastic simulation of coupled chemical reactions (https://doi.org/10.1021/j100540a008)
+* Ferguson N, 2020. Impact  of  non-pharmaceutical  interventions (NPIs) to reduce COVID-19 mortality and healthcare demand (https://www.imperial.ac.uk/media/imperial-college/medicine/sph/ide/gida-fellowships/Imperial-College-COVID19-NPI-modelling-16-03-2020.pdf)
+* Knock E et al., 2021. Key epidemiological drivers and impact of interventions in the 2020 SARS-CoV-2 epidemic in England (https://www.science.org/doi/epdf/10.1126/scitranslmed.abg4262)

@@ -11,6 +11,8 @@ Overview:
 - :class:`AbstractReporter`
 - :class:`_CsvDictWriter`
 - :class:`_CsvWriter`
+- :class:`NewCasesWriter`
+- :class:`AgeStratifiedNewCasesWriter`
 
 .. autoclass:: AbstractReporter
     :members:

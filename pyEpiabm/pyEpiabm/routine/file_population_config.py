@@ -9,9 +9,9 @@ import copy
 import logging
 from packaging import version
 
-from pyEpiabm.core import Cell, Household, Microcell, Person, Population
+from pyEpiabm.core import Cell, Microcell, Person, Population, Parameters
 from pyEpiabm.property import InfectionStatus, PlaceType
-from pyEpiabm.sweep import HostProgressionSweep
+from pyEpiabm.sweep import HostProgressionSweep, InitialHouseholdSweep
 from pyEpiabm.utility import log_exceptions
 
 
@@ -64,6 +64,8 @@ class FilePopulationFactory:
         # Read file into pandas dataframe
         input = pd.read_csv(input_file)
         loc_given = ("location_x" and "location_y" in input.columns.values)
+        # Sort csv on cell and microcell ID
+        input = input.sort_values(by=["cell", "microcell"])
 
         # Validate all column names in input
         valid_names = ["cell", "microcell", "location_x",
@@ -78,10 +80,15 @@ class FilePopulationFactory:
         # Initialise sweep to assign new people their next infection status
         host_sweep = HostProgressionSweep()
 
+        # Store current cell
+        current_cell = None
         # Iterate through lines (one per microcell)
         for _, line in input.iterrows():
             # Check if cell exists, or create it
-            cell = FilePopulationFactory.find_cell(new_pop, line["cell"])
+            cell = FilePopulationFactory.find_cell(new_pop, line["cell"],
+                                                   current_cell)
+            if current_cell != cell:
+                current_cell = cell
 
             if loc_given:
                 location = (line["location_x"], line["location_y"])
@@ -100,7 +107,7 @@ class FilePopulationFactory:
             for column in input.columns.values:
                 if hasattr(InfectionStatus, column):
                     value = getattr(InfectionStatus, column)
-                    for i in range(int(line[column])):
+                    for _ in range(int(line[column])):
                         person = Person(new_microcell)
                         person.set_random_age()
                         new_microcell.add_person(person)
@@ -115,15 +122,22 @@ class FilePopulationFactory:
                                                                     time)
 
             # Add households and places to microcell
-            if ('household_number' in line) and (line["household_number"]) > 0:
-                households = int(line["household_number"])
-                FilePopulationFactory.add_households(new_microcell,
-                                                     households)
+            if len(Parameters.instance().household_size_distribution) == 0:
+                if (('household_number' in line) and
+                        (line["household_number"]) > 0):
+                    households = int(line["household_number"])
+                    FilePopulationFactory.add_households(new_microcell,
+                                                         households)
 
             if ('place_number' in line) and (line["place_number"]) > 0:
                 new_microcell.add_place(int(line["place_number"]),
                                         cell.location,
                                         random.choice(list(PlaceType)))
+
+        # if household_size_distribution parameters are available use
+        # appropriate function
+        if len(Parameters.instance().household_size_distribution) != 0:
+            InitialHouseholdSweep().household_allocation(new_pop)
 
         # Verify all people are logged in cell
         for cell in new_pop.cells:
@@ -136,9 +150,10 @@ class FilePopulationFactory:
         return new_pop
 
     @staticmethod
-    def find_cell(population: Population, cell_id: float):
+    def find_cell(population: Population, cell_id: float, current_cell: Cell):
         """Returns cell with given ID in population, creates one if
-        no cell with that ID exists.
+        current cell has another ID. As input is sorted on cell no
+        cell will exist with that ID.
 
         Parameters
         ----------
@@ -146,6 +161,8 @@ class FilePopulationFactory:
             Population containing target cell
         cell_id : float
             ID for target cell
+        current_cell : Cell or None
+            Cell object of current cell
 
         Returns
         -------
@@ -153,9 +170,8 @@ class FilePopulationFactory:
             Cell with given ID in population
 
         """
-        for cell in population.cells:
-            if cell.id == cell_id:
-                return cell
+        if (current_cell is not None) and (current_cell.id == cell_id):
+            return current_cell
         new_cell = Cell()
         population.cells.append(new_cell)
         new_cell.set_id(cell_id)
@@ -175,18 +191,18 @@ class FilePopulationFactory:
         """
         # Initialises another multinomial distribution
         q = [1 / household_number] * household_number
-        people_number = len(microcell.persons)
+        people_list = microcell.persons.copy()
+        people_number = len(people_list)
         household_split = np.random.multinomial(people_number, q,
                                                 size=1)[0]
-        person_index = 0
         for j in range(household_number):
             people_in_household = household_split[j]
-            new_household = Household(microcell,
-                                      loc=microcell.location)
-            for _ in range(people_in_household):
-                person = microcell.persons[person_index]
-                new_household.add_person(person)
-                person_index += 1
+            household_people = []
+            for i in range(people_in_household):
+                person_choice = people_list[0]
+                people_list.remove(person_choice)
+                household_people.append(person_choice)
+            microcell.add_household(household_people)
 
     @staticmethod
     @log_exceptions()
@@ -228,16 +244,13 @@ class FilePopulationFactory:
                     "location_y": cell.location[1],
                 }
 
-                households = []
                 for person in microcell.persons:
                     status = str(person.infection_status.name)
                     if status in data_dict:
                         data_dict[status] += 1
                     else:  # New status
                         data_dict[status] = 1
-                    if person.household not in households:
-                        households.append(person.household)
-                data_dict['household_number'] = len(households)
+                data_dict['household_number'] = len(microcell.households)
                 data_dict['place_number'] = len(microcell.places)
 
                 new_row = pd.DataFrame(data=data_dict, columns=columns,

@@ -8,7 +8,7 @@ import numpy as np
 import random
 import math
 
-from pyEpiabm.core import Household, Population, Parameters
+from pyEpiabm.core import Population, Parameters
 from pyEpiabm.property import PlaceType
 from pyEpiabm.utility import DistanceFunctions, log_exceptions
 
@@ -124,17 +124,19 @@ class ToyPopulationFactory(AbstractPopulationFactory):
         q = [1 / household_number] * household_number
         for cell in population.cells:
             for microcell in cell.microcells:
-                people_number = len(microcell.persons)
+                people_list = microcell.persons.copy()
+                people_number = len(people_list)
                 household_split = np.random.multinomial(people_number, q,
                                                         size=1)[0]
-                person_index = 0
+
                 for j in range(household_number):
                     people_in_household = household_split[j]
-                    new_household = Household(microcell, loc=(1.0, 1.0))
-                    for _ in range(people_in_household):
-                        person = microcell.persons[person_index]
-                        new_household.add_person(person)
-                        person_index += 1
+                    household_people = []
+                    for i in range(people_in_household):
+                        person_choice = people_list[0]
+                        people_list.remove(person_choice)
+                        household_people.append(person_choice)
+                    microcell.add_household(household_people)
 
     @staticmethod
     def add_places(population: Population, place_number: float):
