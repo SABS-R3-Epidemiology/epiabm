@@ -58,7 +58,6 @@ namespace epiabm
         setup();
 
         LOG << LOG_LEVEL_NORMAL << "Iterating through timesteps...";
-
         //try
         //{
             for (const auto& reporter : m_timestepReporters)
@@ -73,7 +72,6 @@ namespace epiabm
                 for (const auto& reporter : m_timestepReporters)
                     reporter->report(m_population, timestep);
             }
-
         //}
         // LCOV_EXCL_START
         /*

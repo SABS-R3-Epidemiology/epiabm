@@ -69,10 +69,10 @@ void run()
 
 int main()
 {
-    try
-    {
+    //try
+    //{
         run();
-    }
+    /*}
     catch (std::exception& e)
     {
         std::cout << "Exception: " << e.what();
@@ -80,6 +80,6 @@ int main()
     catch (...)
     {
         std::cout << "Unknown Exception" << std::endl;
-    }
+    }*/
 }
 
