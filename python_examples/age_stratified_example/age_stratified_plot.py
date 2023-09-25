@@ -11,7 +11,7 @@ from collections import defaultdict
 import pyEpiabm as pe
 from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.utility import StateTransitionMatrix, TransitionTimeMatrix
+from pyEpiabm.sweep import StateTransitionMatrix, TransitionTimeMatrix
 # csv input files should have the column headers:
 # time, infection_Status1, infection_status2, ..., age_range
 # so there will be multiple entries for each timepoint.
@@ -204,6 +204,7 @@ class Plotter():
             else:
                 new_frame['dates'] = self._dates(new_frame, 'daily')
 
+        plt.rcParams['font.size'] = '12'
         if self.do_ages:
             # If we have age stratified data, plot the bar chart with
             # colours for each age.
@@ -238,8 +239,8 @@ class Plotter():
             plt.gca().set_xticks(plt.gca().get_xticks()[::3])  # Avoids overlap
         if param_file:
             title = 'New ' + title
-        plt.title(title)
-        plt.gca().legend().set_title('Age Group')
+        # plt.title(title)
+        # plt.ylim(0, 6700)  # hardwire ylim if needed
         plt.xlabel("Date (Month-Day)")
         plt.tight_layout()
         plt.savefig(outfile)

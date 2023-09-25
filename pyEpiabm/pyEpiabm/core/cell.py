@@ -5,8 +5,11 @@
 import typing
 import numpy as np
 from queue import Queue
+from numbers import Number
 
+from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
+from pyEpiabm.utility import DistanceFunctions
 
 from .microcell import Microcell
 from .person import Person
@@ -32,11 +35,15 @@ class Cell:
         self.microcells = []
         self.persons = []
         self.places = []
+        self.households = []
         self.person_queue = Queue()
+        self.PCR_queue = Queue()
+        self.LFT_queue = Queue()
         self.compartment_counter = _CompartmentCounter(f"Cell {id(self)}")
+        self.nearby_cell_distances = dict()
 
-        if not (len(loc) == 2 and isinstance(loc[0], (float, int)) and
-                isinstance(loc[1], (float, int))):
+        if not (len(loc) == 2 and isinstance(loc[0], Number) and
+                isinstance(loc[1], Number)):
             raise ValueError("Location must be a tuple of float-type")
 
     def __repr__(self):
@@ -85,6 +92,36 @@ class Cell:
         """
         self.person_queue.put(person)
 
+    def enqueue_PCR_testing(self, person: Person):
+        """Add person to PCR testing queue for processing in testing
+         sweep.
+
+        Detailed description of the implementation can be found in github wiki:
+        https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#testing
+
+        Parameters
+        ----------
+        person : Person
+            Person to enqueue.
+
+        """
+        self.PCR_queue.put(person)
+
+    def enqueue_LFT_testing(self, person: Person):
+        """Add person to LFT testing queue for processing in testing
+         sweep.
+
+        Detailed description of the implementation can be found in github wiki:
+        https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Interventions#testing
+
+        Parameters
+        ----------
+        person : Person
+            Person to enqueue.
+
+        """
+        self.LFT_queue.put(person)
+
     def notify_person_status_change(
             self,
             old_status: InfectionStatus,
@@ -131,3 +168,30 @@ class Cell:
 
         """
         self.location = loc
+
+    def find_nearby_cells(self, other_cells):
+        '''
+        Helper function which takes in a given cell and the list of all cells
+        and generates a list of nearby cells which are
+        closer than the cutoff for cross-cell infection.
+
+        Populates: self.find_nearby_cells
+        Dictionary of all cells with distance below cutoff.
+        Dictionary stores cell.id and distance between the 2 cells
+        These are stored in the form:
+        cell.id: distance
+
+        Parameters
+        ----------
+        other_cells : typing.List[Cell]
+            List of all cells except cell
+
+        '''
+        cutoff = Parameters.instance().infection_radius
+
+        for cell2 in other_cells:
+            distance = DistanceFunctions.dist(self.location, cell2.location)
+            if distance < cutoff:
+                self.nearby_cell_distances[cell2.id] = distance
+                # Dict of near neighbours, cells which are closer than the
+                # cutoff for cross-cell infection

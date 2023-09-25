@@ -1,4 +1,5 @@
 import unittest
+from unittest import mock
 
 import pyEpiabm as pe
 from pyEpiabm.property import PlaceType, InfectionStatus
@@ -67,11 +68,24 @@ class TestMicrocell(TestPyEpiabm):
         self.cell.add_microcells(n)
         self.assertEqual(len(self.cell.microcells), n)
 
+    def test_add_household(self):
+        self.microcell.add_people(1)
+        self.microcell.add_household(self.microcell.persons)
+        self.assertEqual(len(self.microcell.households), 1)
+        household = self.microcell.households[0]
+        self.assertEqual(len(household.persons), 1)
+
+    @mock.patch('logging.info')
+    def test_logging(self, mock_log):
+        self.microcell.add_household(self.microcell.persons)
+        mock_log.assert_called_once()
+
     def test_report(self):
         self.microcell.add_people(5)
         self.microcell.notify_person_status_change(
             pe.property.InfectionStatus.Susceptible,
-            pe.property.InfectionStatus.Recovered, 0)
+            pe.property.InfectionStatus.Recovered,
+            self.microcell.persons[0].age_group)
 
     def test_set_location(self):
         local_cell = pe.Cell(loc=(-2, 3.2))
@@ -81,6 +95,19 @@ class TestMicrocell(TestPyEpiabm):
         self.assertRaises(ValueError, microcell.set_location, (1, 1, 1))
         self.assertRaises(ValueError, microcell.set_location, (1, (8, 6)))
         self.assertRaises(ValueError, microcell.set_location, ('1', 1))
+
+    def test_count_icu(self):
+        self.microcell.add_people(6)
+        for person in self.microcell.persons[:4]:
+            person.update_status(InfectionStatus(7))
+        self.assertEqual(self.microcell.count_icu(), 4)
+
+    def test_count_infectious(self):
+        self.microcell.add_people(6)
+        for i in range(4):
+            person = self.microcell.persons[i]
+            person.update_status(InfectionStatus(i+3))
+        self.assertEqual(self.microcell.count_infectious(), 4)
 
 
 if __name__ == '__main__':

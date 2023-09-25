@@ -25,9 +25,6 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                                     "gibraltar_parameters.json"))
 
-# Method to set the seed at the start of the simulation, for reproducibility
-pe.routine.Simulation.set_random_seed(seed=42)
-
 # Generate population from input file
 # (Input converted from CovidSim with `microcell_conversion.py`)
 file_loc = os.path.join(os.path.dirname(__file__),
@@ -52,7 +49,9 @@ file_params = {"output_file": "output_gibraltar.csv",
 sim = pe.routine.Simulation()
 sim.configure(
     population,
-    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialisePlaceSweep()],
+    [pe.sweep.InitialHouseholdSweep(),
+     pe.sweep.InitialInfectedSweep(),
+     pe.sweep.InitialisePlaceSweep()],
     [
         pe.sweep.UpdatePlaceSweep(),
         pe.sweep.HouseholdSweep(),
@@ -76,16 +75,18 @@ filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
                         "output_gibraltar.csv")
 SIRdf = pd.read_csv(filename)
 total = SIRdf[list(SIRdf.filter(regex='InfectionStatus.Infect'))]
-SIRdf["Total Infectious"] = total.sum(axis=1)
+SIRdf["Infected"] = total.sum(axis=1)
 SIRdf = SIRdf.groupby(["time"]).agg(
                                 {"InfectionStatus.Susceptible": 'sum',
-                                 "Total Infectious": 'sum',
+                                 "Infected": 'sum',
                                  "InfectionStatus.Recovered": 'sum',
                                  "InfectionStatus.Dead": 'sum'})
+SIRdf.rename(columns={"InfectionStatus.Susceptible": "Susceptible",
+                      "InfectionStatus.Recovered": "Recovered"},
+             inplace=True)
+
 # Create plot to show SIR curves against time
-SIRdf.plot(y=["InfectionStatus.Susceptible",
-              "Total Infectious",
-              "InfectionStatus.Recovered"])
+SIRdf.plot(y=["Susceptible", "Infected", "Recovered"])
 plt.savefig(os.path.join(os.path.dirname(__file__),
             "simulation_outputs/simulation_flow_SIR_plot.png"))
 

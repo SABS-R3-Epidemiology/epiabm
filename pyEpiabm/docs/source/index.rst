@@ -17,11 +17,13 @@ Contents
 .. toctree::
 
     core
+    interventions
     outputs
     properties
     routines
     sweeps
     utility
+    py2c
 
 
 Search

@@ -54,7 +54,9 @@ class DistanceFunctions:
             Euclidean distance between the two locations
 
         """
-        return np.linalg.norm(np.abs(np.asarray(loc1) - np.asarray(loc2)))
+        x1, y1 = loc1
+        x2, y2 = loc2
+        return ((x1-x2)**2+(y1-y2)**2)**(1/2)
 
     @staticmethod
     def dist_periodic(loc1: typing.Tuple[int, int],
@@ -98,7 +100,7 @@ class DistanceFunctions:
         # Enforce periodicity of the map from the grid to the Earth.
         # If the distance between points is more than half the total length,
         # it would be quicker to "go round the back" of the Earth
-        for index in range(1):
+        for index in range(2):
             if diff[index] > 0.5 * scales[index]:
                 diff[index] = scales[index] - diff[index]
         return np.linalg.norm(diff)

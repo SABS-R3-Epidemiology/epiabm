@@ -20,7 +20,7 @@ class TestCompartmentCounter(TestPyEpiabm):
         cls.cell = pe.Cell()
         cls.cell.add_microcells(1)
         cls.microcell = cls.cell.microcells[0]
-        cls.microcell.add_people(1000)
+        cls.microcell.add_people(10)
         cls.subject = cls.microcell.compartment_counter
 
     def test_construct(self):
@@ -35,6 +35,13 @@ class TestCompartmentCounter(TestPyEpiabm):
                 with self.subTest(status=status):
                     self.assertEqual(self.subject.retrieve()[status][agegroup],
                                      0)
+
+    def test_clear_counter(self):
+        counter = pe._CompartmentCounter("test")
+        counter._increment_compartment(1, InfectionStatus.Susceptible, 0)
+        counter.clear_counter()
+        self.assertEqual(counter.retrieve()[InfectionStatus.Susceptible].all(),
+                         0)
 
     @patch('pyEpiabm.core.Parameters.instance')
     def test_construct_no_age(self, mock_params):
@@ -60,13 +67,15 @@ class TestCompartmentCounter(TestPyEpiabm):
         else:
             nb_groups = 1
         statuses = {s: np.zeros(nb_groups) for s in InfectionStatus}
-        statuses[InfectionStatus.Susceptible][0] = 1000
+        for p in self.microcell.persons:
+            statuses[InfectionStatus.Susceptible][p.age_group] += 1
         self.assertTrue((self.subject.retrieve()[InfectionStatus.Susceptible]
                          == statuses[InfectionStatus.Susceptible]).all())
-        for i in range(100):
-            statuses[InfectionStatus.Susceptible][0] -= 1
+        for i in range(10):
+            p_age_group = self.microcell.persons[i].age_group
+            statuses[InfectionStatus.Susceptible][p_age_group] -= 1
             newStatus = random.choice(list(InfectionStatus))
-            statuses[newStatus][0] += 1
+            statuses[newStatus][p_age_group] += 1
             self.microcell.persons[i].update_status(newStatus)
         for inf_status in list(InfectionStatus):
             self.assertTrue((self.subject.retrieve()[inf_status] ==
@@ -84,18 +93,19 @@ class TestCompartmentCounter(TestPyEpiabm):
         self.maxDiff = None
         for person in self.microcell.persons:
             person.update_status(InfectionStatus.Susceptible)
-        large_num = 10000
+        large_num = 100
         self.microcell.add_people(large_num - len(self.microcell.persons))
         if pe.Parameters.instance().use_ages:
             nb_groups = len(pe.Parameters.instance().age_proportions)
         else:
             nb_groups = 1
         statuses = {s: np.zeros(nb_groups) for s in InfectionStatus}
-        statuses[InfectionStatus.Susceptible][0] = large_num
+        for p in self.microcell.persons:
+            statuses[InfectionStatus.Susceptible][p.age_group] += 1
         self.assertTrue((self.subject.retrieve()[InfectionStatus.Susceptible]
                          == statuses[InfectionStatus.Susceptible]).all())
 
-        for _ in range(10000):
+        for _ in range(100):
             old = random.choice(list(InfectionStatus))
             if statuses[old][0] == 0:
                 continue

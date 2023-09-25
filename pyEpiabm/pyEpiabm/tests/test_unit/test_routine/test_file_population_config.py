@@ -18,11 +18,13 @@ class TestPopConfig(TestPyEpiabm):
                       'household_number': [1, 1], 'place_number': [1, 1],
                       'Susceptible': [8, 9], 'InfectMild': [2, 3]}
         self.df = pd.DataFrame(self.input)
+        pe.Parameters.instance().household_size_distribution = []
 
     @patch('logging.exception')
     def test_make_pop_no_file(self, mock_log):
         """Tests for when no file is specified.
         """
+
         FilePopulationFactory.make_pop()
         mock_log.assert_called_once_with("TypeError in"
                                          + " FilePopulationFactory.make_pop()")
@@ -94,6 +96,24 @@ class TestPopConfig(TestPyEpiabm):
                                          + "Factory.make_pop()")
         mock_read.assert_called_once_with('test_input.csv')
 
+    @patch("pandas.read_csv")
+    def test_disorderd_input(self, mock_read):
+        """Test ordering input and setting up correct number of cells
+        and microcells.
+        """
+        # Read in disordered data
+        dict_extra = {'cell': [1.0, 3.0], 'microcell': [2.0, 1.0],
+                      'location_x': [0.0, 2.0], 'location_y': [0.0, 2.0],
+                      'household_number': [1, 1], 'place_number': [1, 1],
+                      'Susceptible': [8, 9], 'InfectMild': [2, 3]}
+        data_extended = pd.concat(
+            [self.df, pd.DataFrame.from_dict(dict_extra)])
+        mock_read.return_value = data_extended
+
+        test_pop = FilePopulationFactory.make_pop('test_input.csv')
+        self.assertEqual(len(test_pop.cells), 3)
+        self.assertEqual(len(test_pop.cells[0].microcells), 2)
+
     @patch('logging.exception')
     @patch("pandas.read_csv")
     def test_duplicate_microcell(self, mock_read, mock_log):
@@ -115,12 +135,12 @@ class TestPopConfig(TestPyEpiabm):
         pop.add_cells(2)
         pop.cells[1].set_id(42)
 
-        target_cell = FilePopulationFactory.find_cell(pop, 42)
+        target_cell = FilePopulationFactory.find_cell(pop, 42, pop.cells[1])
         self.assertEqual(target_cell.id, 42)
         self.assertEqual(hash(target_cell), hash(pop.cells[1]))
         self.assertEqual(len(pop.cells), 2)  # No new cell created
 
-        new_cell = FilePopulationFactory.find_cell(pop, 43)
+        new_cell = FilePopulationFactory.find_cell(pop, 43, pop.cells[1])
         self.assertEqual(new_cell.id, 43)
         self.assertEqual(len(pop.cells), 3)  # New cell created
 
@@ -157,6 +177,7 @@ class TestPopConfig(TestPyEpiabm):
                                mock_np_random, n=42):
         # Population is initialised with no households
         mock_read.return_value = self.df
+
         FilePopulationFactory.make_pop('test_input.csv', random_seed=n)
         mock_read.assert_called_once_with('test_input.csv')
 
@@ -193,11 +214,21 @@ class TestPopConfig(TestPyEpiabm):
         self.assertEqual(test_pop.total_people(), 22)
 
         FilePopulationFactory.print_population(test_pop, 'output.csv')
+        actual_df = mock_copy.call_args.args[0]
         if version.parse(pd.__version__) >= version.parse("1.4.0"):
-            pd.testing.assert_frame_equal(mock_copy.call_args.args[0],
-                                          self.df, check_dtype=False)
+            expected_df = self.df.copy()
+            expected = expected_df.drop('household_number', axis=1)
+            actual = actual_df.drop('household_number', axis=1)
+
+            pd.testing.assert_frame_equal(actual,
+                                          expected, check_dtype=False)
         else:
             self.skipTest("Test requires pandas version 1.4 - skipped")
+
+        household_list = self.df.loc[:, 'household_number']
+        actual_household = actual_df.loc[:, 'household_number']
+        for i in range(len(household_list)):
+            self.assertLessEqual(actual_household[i], household_list[i])
 
     @patch('logging.exception')
     @patch("pandas.DataFrame.to_csv")
@@ -228,6 +259,16 @@ class TestPopConfig(TestPyEpiabm):
 
         FilePopulationFactory.print_population(test_pop, 'output.csv')
         mock_logger.assert_called_once()
+
+    @patch("pandas.read_csv")
+    @patch("pyEpiabm.sweep.InitialHouseholdSweep.household_allocation")
+    def test_use_of_household_size_distribution(self, mock_household_function,
+                                                mock_read):
+        pe.Parameters.instance().household_size_distribution = [0.5, 0.5]
+        mock_read.return_value = self.df
+
+        FilePopulationFactory.make_pop('test_input.csv')
+        mock_household_function.assert_called_once()
 
 
 if __name__ == '__main__':

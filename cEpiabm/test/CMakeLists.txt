@@ -47,6 +47,7 @@ set(
     reporters/test_population_compartment_reporter.cpp
     reporters/test_new_cases_reporter.cpp
     reporters/test_age_stratified_new_cases_reporter.cpp
+    reporters/test_age_stratified_population_reporter.cpp
     utilities/test_inverse_cdf.cpp
     utilities/test_random_manager.cpp
     utilities/test_random_generator.cpp
