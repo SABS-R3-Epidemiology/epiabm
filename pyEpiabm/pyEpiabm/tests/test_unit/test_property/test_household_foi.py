@@ -118,9 +118,9 @@ class TestHouseholdInfection(TestPyEpiabm):
         result = HouseholdInfection.household_susc(
             self.infector, self.infectee, self.time)
 
-        # Normal social distancing
-        self.infector.microcell.distancing_start_time = 1
-        self.infector.distancing_enhanced = False
+        # Normal social distancing of infectee
+        self.infectee.microcell.distancing_start_time = 1
+        self.infectee.distancing_enhanced = False
         distancing_house_susc = pe.Parameters.instance().\
             intervention_params['social_distancing'][
                 'distancing_house_susc']
@@ -129,8 +129,8 @@ class TestHouseholdInfection(TestPyEpiabm):
         self.assertEqual(result*distancing_house_susc,
                          result_distancing)
 
-        # Enhanced social distancing
-        self.infector.distancing_enhanced = True
+        # Enhanced social distancing of infectee
+        self.infectee.distancing_enhanced = True
         distancing_house_enhanced_susc = pe.Parameters.instance().\
             intervention_params['social_distancing'][
                 'distancing_house_enhanced_susc']

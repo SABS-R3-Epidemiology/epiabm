@@ -49,7 +49,7 @@ class _py2c_converter:
                         "Person incorrectly linked to microcell\
                             outside of cell"
                     assert person.microcell == m_cell
-                    assert not hasattr(person, "_index"),\
+                    assert not hasattr(person, "_index"), \
                         "Person already indexed (is person in two microcells?)"
                     person._index = (c_i, person.microcell._index[1],
                                      person_index)
@@ -163,7 +163,7 @@ class _py2c_converter:
             # Link People
             for py_person in py_household.persons:
                 c_person = c_cell.get_person(py_person._index[2])
-                assert c_person.set_household(hh_i),\
+                assert c_person.set_household(hh_i), \
                     "Person was already in a different household"
                 c_household.add_member(c_person.microcell_pos())
             # Configure Household Parameters
