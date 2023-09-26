@@ -128,11 +128,12 @@ class TestSpatialInfection(TestPyEpiabm):
             'place_closure']['closure_place_type'] = [1, 2, 3, 4, 5, 6]
         result_closure_foi = SpatialInfection.spatial_foi(
             self.cell, self.cell, self.infector, self.infectee, self.time)
-        self.assertEqual(result_susc*closure_spatial_params*result_inf*closure_spatial_params,
-                         result_closure_foi)
+        self.assertEqual(result_susc * closure_spatial_params * result_inf *
+                         closure_spatial_params, result_closure_foi)
 
         # Place closure foi, place of only infectee closed
-        pe.Parameters.instance().intervention_params['place_closure']['closure_place_type'] = [1, 2, 3]
+        pe.Parameters.instance().intervention_params['place_closure'][
+            'closure_place_type'] = [1, 2, 3]
         result_closure_foi = SpatialInfection.spatial_foi(
             self.cell, self.cell, self.infector, self.infectee, self.time)
         self.assertEqual(result_susc*result_inf*closure_spatial_params,
