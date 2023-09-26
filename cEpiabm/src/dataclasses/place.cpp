@@ -78,9 +78,7 @@ namespace epiabm
     }
 
     /**
-     * @brief Randomly sample n members in place with specific group number
-     * 
-     * If n is larger than number of people in specific place group, all members in that group are returned
+     * @brief Randomly sample n members in place with specific group number with replacement
      * 
      * @param population Reference to parent group
      * @param group Place's group number to retrieve members from
@@ -97,8 +95,9 @@ namespace epiabm
             return false;
         }
         std::vector<std::pair<size_t, size_t>> chosen;
-        std::sample(m_memberGroups[group].begin(), m_memberGroups[group].end(),
-            std::back_inserter(chosen), n, rg);
+        for (size_t i = 0; i < n; i++)
+            std::sample(m_memberGroups[group].begin(), m_memberGroups[group].end(),
+                std::back_inserter(chosen), 1, rg);
         for (const auto& r : chosen)
             callback(population.cells()[r.first].get(),
                     &population.cells()[r.first]->getPerson(r.second));

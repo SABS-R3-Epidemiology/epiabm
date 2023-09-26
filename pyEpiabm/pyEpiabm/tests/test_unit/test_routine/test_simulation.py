@@ -127,7 +127,7 @@ class TestSimulation(TestMockedLogs):
 
         mo = mock_open()
         mo2 = mock_open()
-        with patch('pyEpiabm.output._csv_dict_writer.open', mo),\
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo), \
              patch('pyEpiabm.output._csv_writer.open', mo2):
 
             time_sweep = self.sim_params["simulation_start_time"] + 1
