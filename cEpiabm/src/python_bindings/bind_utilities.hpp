@@ -23,7 +23,6 @@ void bind_utilities(py::module &m)
     py::class_<RandomManager, RandomManagerPtr>(m, "RandomManager")
         .def("generator", &RandomManager::g, "Get RandomGenerator",
             py::return_value_policy::reference);
-
     py::class_<RandomGenerator, RandomGeneratorPtr>(m, "RandomGenerator")
         .def("randi", py::overload_cast<long, long>(&RandomGenerator::randi<long>), "Generate Random Long",
             py::return_value_policy::copy)

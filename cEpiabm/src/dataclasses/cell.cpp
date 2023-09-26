@@ -377,9 +377,7 @@ namespace epiabm
     }
 
     /**
-     * @brief Randomly sample n infectious people in the cell
-     * 
-     * If n is larger than number of infectious people, all infectious people are returned
+     * @brief Randomly sample n infectious people in the cell with replacement
      * 
      * @param n Number of people to sample
      * @param callback Callback applied to each chosen person
@@ -393,17 +391,16 @@ namespace epiabm
             return false;
         }
         std::vector<size_t> sampled = std::vector<size_t>();
-        std::sample(m_infectiousPeople.begin(), m_infectiousPeople.end(),
-            std::back_inserter(sampled), n, rg);
+        for (size_t i = 0; i < n; i++)
+            std::sample(m_infectiousPeople.begin(), m_infectiousPeople.end(),
+                std::back_inserter(sampled), 1, rg);
         for (const auto& s : sampled)
             callback(&m_people[s]);
         return true;
     }
 
     /**
-     * @brief Randomly sample n susceptible people in the cell
-     * 
-     * If n is larger than number of susceptible people, all susceptible people are returned
+     * @brief Randomly sample n susceptible people in the cell with replacement
      * 
      * @param n Number of people to sample
      * @param callback Callback to apply to each sampled person
@@ -417,8 +414,9 @@ namespace epiabm
             return false;
         }
         std::vector<size_t> sampled = std::vector<size_t>();
-        std::sample(m_susceptiblePeople.begin(),m_susceptiblePeople.end(),
-            std::back_inserter(sampled), n, rg);
+        for (size_t i = 0; i < n; i++)
+            std::sample(m_susceptiblePeople.begin(),m_susceptiblePeople.end(),
+                std::back_inserter(sampled), 1, rg);
         for (const auto& s : sampled)
             callback(&m_people[s]);
         return true;

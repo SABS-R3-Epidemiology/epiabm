@@ -55,16 +55,14 @@ class PlaceInfection:
         return place_inf
 
     @staticmethod
-    def place_susc(place, infector, infectee,
-                   time: float):
-        """Calculate the susceptibility of a place.
-        Does not include interventions such as isolation,
-        or whether individual is a carehome resident.
+    def place_susc(place, infectee, time: float):
+        """Calculate the susceptibility of a place. Intervention parameters
+        are based on the microcell properties of the infectee. Does not include
+        interventions such as isolation, or whether individual is a carehome
+        resident.
 
         Parameters
         ----------
-        infector : Person
-            Infector
         infectee : Person
             Infectee
         place : Place
@@ -80,11 +78,11 @@ class PlaceInfection:
         """
         place_susc = 1.0
         place_idx = place.place_type.value - 1
-        if (hasattr(infector.microcell, 'distancing_start_time')) and (
-                infector.microcell.distancing_start_time is not None) and (
-                    infector.microcell.distancing_start_time <= time):
-            if (hasattr(infector, 'distancing_enhanced')) and (
-                        infector.distancing_enhanced is True):
+        if (hasattr(infectee.microcell, 'distancing_start_time')) and (
+                infectee.microcell.distancing_start_time is not None) and (
+                    infectee.microcell.distancing_start_time <= time):
+            if (hasattr(infectee, 'distancing_enhanced')) and (
+                        infectee.distancing_enhanced is True):
                 place_susc *= Parameters.instance().\
                              intervention_params[
                              'social_distancing'][
@@ -153,6 +151,6 @@ class PlaceInfection:
 
         infectiousness = (PlaceInfection.place_inf(place, infector, time)
                           * isolation_scale_inf * quarantine_scale)
-        susceptibility = (PlaceInfection.place_susc(place, infector, infectee,
+        susceptibility = (PlaceInfection.place_susc(place, infectee,
                           time) * carehome_scale_susc * quarantine_scale)
         return (infectiousness * susceptibility)

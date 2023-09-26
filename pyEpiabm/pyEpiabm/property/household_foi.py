@@ -46,8 +46,9 @@ class HouseholdInfection:
     @staticmethod
     def household_susc(infector, infectee, time: float):
         """Calculate the susceptibility of one person to another in a given
-        household. Does not include interventions such as isolation,
-        or whether individual is a carehome resident.
+        household. Intervention parameters are based on the microcell
+        properties of the infectee. Does not include interventions such as
+        isolation, or whether individual is a carehome resident.
 
         Parameters
         ----------
@@ -66,11 +67,11 @@ class HouseholdInfection:
         """
         household_susceptibility = PersonalInfection.person_susc(
             infector, infectee, time)
-        if (hasattr(infector.microcell, 'distancing_start_time')) and (
-                infector.microcell.distancing_start_time is not None) and (
-                    infector.microcell.distancing_start_time <= time):
-            if (hasattr(infector, 'distancing_enhanced')) and (
-                        infector.distancing_enhanced is True):
+        if (hasattr(infectee.microcell, 'distancing_start_time')) and (
+                infectee.microcell.distancing_start_time is not None) and (
+                    infectee.microcell.distancing_start_time <= time):
+            if (hasattr(infectee, 'distancing_enhanced')) and (
+                        infectee.distancing_enhanced is True):
                 household_susceptibility *= Parameters.instance().\
                     intervention_params['social_distancing'][
                         'distancing_house_enhanced_susc']
