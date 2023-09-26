@@ -1,3 +1,4 @@
+import math
 import glob
 import os
 from PIL import Image
@@ -8,9 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
 
-sim_file = 'simulation_outputs/large_csv/output_luxembourg_post_change.csv'
-# sim_file = 'output_0.03.csv'
-# sim_file = 'lux_test_fixed.csv'
+sim_file = 'simulation_outputs/large_csv/output_luxembourg_test2.csv'
 
 delta = 0.008333
 
@@ -44,8 +43,9 @@ def generate_colour_map(df, name, min_value=0.0, cmap=cm.Reds):
     """Generates a given color map, with the max value determined by
     the max value in a given column of the provided dataframe.
     """
-    max_inf = max(df[name])
-    norm = matplotlib.colors.Normalize(vmin=min_value, vmax=max_inf, clip=True)
+    max_inf = math.log(max(df[name])+1)
+    cmap.set_under('lightgrey')
+    norm = matplotlib.colors.Normalize(vmin=min_value, vmax=max_inf, clip=False)
     return cm.ScalarMappable(norm=norm, cmap=cmap)
 
 
@@ -63,7 +63,7 @@ def add_colorbar(im, width=None, pad=None, **kwargs):
 def render_frame(ax, df, i, time, name, mapper, save_path='.'):
     print(f'Generating frame {i}')
     rows = df[df['time'] == time]
-    img_grid = [[0] * len(x_locs)] * len(y_locs)
+    img_grid = [[-1] * len(x_locs)] * len(y_locs)
     img_grid = np.array(img_grid)
     rows = zip(
         rows['location_x'],
@@ -74,9 +74,9 @@ def render_frame(ax, df, i, time, name, mapper, save_path='.'):
     for row in rows:
         coords = f'{row[1]}-{row[0]}'
         idx = coord_map[coords]
-        img_grid[idx] = row[2]
+        img_grid[idx] = math.log(row[2]+1)
     ax.set_title(f'Time = {time}')
-    im = ax.imshow(img_grid, cmap=mapper.get_cmap())
+    im = ax.imshow(img_grid, norm=mapper.norm, cmap=mapper.get_cmap())
     if i == 0:
         add_colorbar(im, mappable=mapper)
     if not os.path.exists(save_path):
@@ -108,7 +108,8 @@ def make_gif(
         render_frame(ax, df, i, t, name, mapper, save_path)
 
     fp_in = f"{save_path}/frame-*.png"
-    fp_out = f"{save_path}/infection_animation.gif"
+    fp_name = sim_file.split('/')[-1].replace('.csv', '')
+    fp_out = f"{save_path}/{fp_name}.gif"
     img, *imgs = [Image.open(f).convert("RGB")
                   for f in sorted(glob.glob(fp_in))]
     img.save(

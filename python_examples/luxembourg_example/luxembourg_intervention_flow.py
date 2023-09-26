@@ -23,12 +23,12 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                                    "luxembourg_parameters.json"))
+                                    "luxembourg_intervention_parameters.json"))
 
 # Generate population from input file
 # (Input converted from CovidSim with `microcell_conversion.py`)
 file_loc = os.path.join(os.path.dirname(__file__),
-                        "luxembourg_inputs", "luxembourg_adapted_input.csv")
+                        "luxembourg_inputs", "luxembourg_adapted_5_in_cell_input.csv")
 population = pe.routine.FilePopulationFactory.make_pop(file_loc,
                                                        random_seed=42)
 
@@ -39,7 +39,7 @@ sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
               "initial_infected_number": 0, "initial_infect_cell": True,
               "simulation_seed": 2}
 
-file_params = {"output_file": "output_luxembourg_test2.csv",
+file_params = {"output_file": "output_luxembourg_test2_intervention.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
                                           "simulation_outputs/large_csv"),
                "spatial_output": True,
@@ -54,6 +54,7 @@ sim.configure(
      pe.sweep.InitialInfectedSweep(),
      pe.sweep.InitialisePlaceSweep()],
     [
+        pe.sweep.InterventionSweep(),
         pe.sweep.UpdatePlaceSweep(),
         pe.sweep.HouseholdSweep(),
         pe.sweep.PlaceSweep(),
@@ -74,7 +75,7 @@ del (sim)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 filename = os.path.join(os.path.dirname(__file__),
                         "simulation_outputs/large_csv",
-                        "output_luxembourg_test2.csv")
+                        "output_luxembourg_test2_intervention.csv")
 SIRdf = pd.read_csv(filename)
 total = SIRdf[list(SIRdf.filter(regex='InfectionStatus.Infect'))]
 SIRdf["Infected"] = total.sum(axis=1)
@@ -89,16 +90,16 @@ SIRdf.rename(columns={"InfectionStatus.Susceptible": "Susceptible",
 # Create plot to show SIR curves against time
 SIRdf.plot(y=["Susceptible", "Infected", "Recovered"])
 plt.savefig(os.path.join(os.path.dirname(__file__),
-            "simulation_outputs/simulation_flow_SIR_plot.png"))
+            "simulation_outputs/intervention_simulation_flow_SIR_plot.png"))
 
 # Creation of a plot of results with age stratification
 # if file_params["age_stratified"]:
 p = Plotter(os.path.join(os.path.dirname(__file__),
-            "simulation_outputs/large_csv/output_luxembourg_test2.csv"),
+            "simulation_outputs/large_csv/output_luxembourg_test2_intervention.csv"),
             start_date='29-02-2020', sum_weekly=True)
 p.barchart(os.path.join(os.path.dirname(__file__),
-           "simulation_outputs/age_stratify.png"),
+           "simulation_outputs/intervention_age_stratify.png"),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
            "simulation_outputs/luxembourg_weeky_cases.csv"),
            param_file=os.path.join(os.path.dirname(__file__),
-           "luxembourg_parameters.json"))
+           "luxembourg_intervention_parameters.json"))

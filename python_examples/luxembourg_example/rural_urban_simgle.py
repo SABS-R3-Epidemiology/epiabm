@@ -51,7 +51,7 @@ SIRdf_urban_pre = clipped_df_2
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 filename = os.path.join(os.path.dirname(__file__),
                         "simulation_outputs/large_csv",
-                        "output_luxembourg_post_change.csv")
+                        "output_luxembourg_test2_intervention.csv")
 SIRdf = pd.read_csv(filename)
 
 clipped_df = SIRdf.loc[SIRdf['location_y'] < 49.81]
@@ -108,13 +108,13 @@ print('Df', SIRdf_rural_post)
 plt.figure()
 plt.plot(SIRdf_rural_pre['Infected'])
 plt.plot(SIRdf_rural_post['Infected'])
-plt.legend(['Distance weighted', 'Distance and population weighted'])
+plt.legend(['No interventions', 'Interventions'])
 plt.xlabel('time (days)')
 plt.ylabel('Infected people')
 
 
 plt.savefig(os.path.join(os.path.dirname(__file__),
-            "simulation_outputs/infected_rural_new.png"), dpi=300)
+            "simulation_outputs/infected_rural_test2.png"), dpi=300)
 
 
 ##############
@@ -137,10 +137,10 @@ print('Df', SIRdf_urban_post)
 plt.figure()
 plt.plot(SIRdf_urban_pre['Infected'])
 plt.plot(SIRdf_urban_post['Infected'])
-plt.legend(['Distance weighted', 'Distance and population weighted'])
+plt.legend(['No interventions', 'Interventions'])
 plt.xlabel('time (days)')
 plt.ylabel('Infected people')
 
 
 plt.savefig(os.path.join(os.path.dirname(__file__),
-            "simulation_outputs/infected_urban_new.png"), dpi=300)
+            "simulation_outputs/infected_urban_test2.png"), dpi=300)
