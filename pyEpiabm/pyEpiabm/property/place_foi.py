@@ -55,11 +55,11 @@ class PlaceInfection:
         return place_inf
 
     @staticmethod
-    def place_susc(place, infectee,
-                   time: float):
-        """Calculate the susceptibility of a place.
-        Does not include interventions such as isolation,
-        or whether individual is a carehome resident.
+    def place_susc(place, infectee, time: float):
+        """Calculate the susceptibility of a place. Intervention parameters
+        are based on the microcell properties of the infectee. Does not include
+        interventions such as isolation, or whether individual is a carehome
+        resident.
 
         Parameters
         ----------

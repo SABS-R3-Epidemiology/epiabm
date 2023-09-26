@@ -88,7 +88,8 @@ class SpatialInfection:
     @staticmethod
     def spatial_susc(susc_cell, infectee, time: float):
         """Calculate the susceptibility of one cell towards its neighbouring
-        cells.
+        cells. Intervention parameters are based on the microcell properties
+        of the infectee.
 
         Parameters
         ----------

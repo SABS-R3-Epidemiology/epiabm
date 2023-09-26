@@ -46,8 +46,9 @@ class HouseholdInfection:
     @staticmethod
     def household_susc(infector, infectee, time: float):
         """Calculate the susceptibility of one person to another in a given
-        household. Does not include interventions such as isolation,
-        or whether individual is a carehome resident.
+        household. Intervention parameters are based on the microcell
+        properties of the infectee. Does not include interventions such as
+        isolation, or whether individual is a carehome resident.
 
         Parameters
         ----------
