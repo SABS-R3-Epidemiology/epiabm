@@ -140,7 +140,7 @@ class StateTransitionMatrix:
 
         """
         weights = pyEpiabm.core.Parameters.instance().age_proportions
-        self.matrix = self.matrix.applymap(
+        self.matrix = self.matrix.map(
             lambda x: np.average(x, weights=weights)
             if isinstance(x, list) else x)
 
