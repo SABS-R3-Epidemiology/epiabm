@@ -69,17 +69,6 @@ void run()
 
 int main()
 {
-    try
-    {
-        run();
-    }
-    catch (std::exception& e)
-    {
-        std::cout << "Exception: " << e.what();
-    }
-    catch (...)
-    {
-        std::cout << "Unknown Exception" << std::endl;
-    }
+    run();
 }
 
