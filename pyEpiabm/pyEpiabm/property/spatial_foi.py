@@ -86,7 +86,7 @@ class SpatialInfection:
         return infector.infectiousness * age * closure_spatial
 
     @staticmethod
-    def spatial_susc(susc_cell, infector, infectee, time: float):
+    def spatial_susc(susc_cell, infectee, time: float):
         """Calculate the susceptibility of one cell towards its neighbouring
         cells.
 
@@ -94,8 +94,6 @@ class SpatialInfection:
         ----------
         susc_cell : Cell
             Cell receiving infections
-        infector : Person
-            Infector
         infectee : Person
             Infectee
         time : float
@@ -196,6 +194,6 @@ class SpatialInfection:
             inf_cell, infector, time) * carehome_scale_inf
             * isolation_scale_inf * quarantine_scale)
         susceptibility = (SpatialInfection.spatial_susc(
-            susc_cell, infector, infectee, time)
+            susc_cell, infectee, time)
             * carehome_scale_susc * quarantine_scale)
         return (infectiousness * susceptibility)

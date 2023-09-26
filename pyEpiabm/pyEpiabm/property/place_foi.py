@@ -55,7 +55,7 @@ class PlaceInfection:
         return place_inf
 
     @staticmethod
-    def place_susc(place, infector, infectee,
+    def place_susc(place, infectee,
                    time: float):
         """Calculate the susceptibility of a place.
         Does not include interventions such as isolation,
@@ -63,8 +63,6 @@ class PlaceInfection:
 
         Parameters
         ----------
-        infector : Person
-            Infector
         infectee : Person
             Infectee
         place : Place
@@ -153,6 +151,6 @@ class PlaceInfection:
 
         infectiousness = (PlaceInfection.place_inf(place, infector, time)
                           * isolation_scale_inf * quarantine_scale)
-        susceptibility = (PlaceInfection.place_susc(place, infector, infectee,
+        susceptibility = (PlaceInfection.place_susc(place, infectee,
                           time) * carehome_scale_susc * quarantine_scale)
         return (infectiousness * susceptibility)
