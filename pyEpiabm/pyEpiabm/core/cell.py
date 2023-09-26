@@ -90,7 +90,8 @@ class Cell:
             Person to enqueue
 
         """
-        self.person_queue.put(person)
+        if person.infection_status != InfectionStatus.Recovered:
+            self.person_queue.put(person)
 
     def enqueue_PCR_testing(self, person: Person):
         """Add person to PCR testing queue for processing in testing
