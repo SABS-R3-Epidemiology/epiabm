@@ -19,7 +19,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 
 # sim_params give details for the running of the simulations
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 100,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
 # Set parameter file
@@ -32,11 +32,11 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 # Parameter to change
 to_modify_parameter = 'testing_capacity'
 parameter_values = [[0, 0], [10000, 10000]]
-label = [0, 1]
+labels = ['No intervention', '100% CI after testing']
 
 for i in range(len(parameter_values)):
     name_output_file = 'output_{}_{}.csv'.format(
-        int(label[i]), to_modify_parameter)
+        int(i), to_modify_parameter)
 
     pe.Parameters.instance().intervention_params['disease_testing'][
         to_modify_parameter] = parameter_values[i]
@@ -94,7 +94,7 @@ for i in range(len(parameter_values)):
     file_name = os.path.join(os.path.dirname(__file__),
                              "intervention_outputs",
                              'output_{}_{}.csv'.format(
-                                int(label[i]),
+                                int(i),
                                 to_modify_parameter))
     df = pd.read_csv(file_name)
     total_df = \
@@ -107,11 +107,12 @@ for i in range(len(parameter_values)):
                  "InfectionStatus.Dead": 'sum'})
     df = df.reset_index(level=0)
 
-    plt.plot(df['time'], df['Infected'])
+    plt.plot(df['time'], df['Infected'], label=labels[i])
 
-plt.legend(['No Testing', 'Testing and Isolation'])
+plt.legend()
 plt.title("Infection curves for case isolation following testing or not")
 plt.ylabel("Infected Population")
+plt.xlabel("Time (days)")
 plt.savefig(
     os.path.join(os.path.dirname(__file__),
                  "intervention_outputs",

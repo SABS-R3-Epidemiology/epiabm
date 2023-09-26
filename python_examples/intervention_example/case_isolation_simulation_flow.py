@@ -19,7 +19,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 
 # sim_params give details for the running of the simulations
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 100,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
 # Set parameter file
@@ -32,6 +32,7 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 # Parameter to change
 to_modify_parameter = 'isolation_probability'
 parameter_values = [0.0, 0.5, 1.0]
+labels = ['no intervention', '50% CI', '100% CI']
 
 for i in range(len(parameter_values)):
     name_output_file = 'output_{}_{}.csv'.format(
@@ -105,12 +106,12 @@ for i in range(len(parameter_values)):
                  "InfectionStatus.Dead": 'sum'})
     df = df.reset_index(level=0)
 
-    plt.plot(df['time'], df['Infected'], label='{}% isolating'.format(
-        int(parameter_values[i]*100)))
+    plt.plot(df['time'], df['Infected'], label=f'{labels[i]}')
 
 plt.legend()
 plt.title("Infection curves for different case isolating probabilities")
 plt.ylabel("Infected Population")
+plt.xlabel("Time (days)")
 plt.savefig(
     os.path.join(os.path.dirname(__file__),
                  "intervention_outputs",

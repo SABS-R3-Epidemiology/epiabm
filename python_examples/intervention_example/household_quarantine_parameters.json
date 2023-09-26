@@ -501,12 +501,13 @@
             "policy_duration": 365,
             "case_threshold": 0,
             "isolation_delay": 0,
-            "isolation_duration": 10,
-            "isolation_probability": 1,
+            "isolation_duration": 7,
+            "isolation_probability": 0.9,
             "use_testing": 0,
-            "isolation_effectiveness": 0.1,
-            "isolation_house_effectiveness": 0.2
+            "isolation_effectiveness": 0.25,
+            "isolation_house_effectiveness": 0.5
         },
+
         "household_quarantine": {
             "start_time": 6,
             "policy_duration": 365,
