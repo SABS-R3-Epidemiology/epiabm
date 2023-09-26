@@ -54,9 +54,6 @@ class Person:
         self.key_worker = False
         self.date_positive = None
         self.is_vaccinated = False
-        self.id = (str(self.microcell.cell.location[0]) + '_' + 
-                   str(self.microcell.cell.location[1]) + '_' + 
-                   str(len(self.microcell.cell.persons)) + '*')
 
         self.set_random_age(age_group)
 
