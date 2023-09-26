@@ -82,7 +82,8 @@ class Cell:
         self.id = id
 
     def enqueue_person(self, person: Person):
-        """Add person to queue for processing at end of iteration.
+        """Add person to queue for processing at end of iteration, provided
+        they are not already recovered (and so may be infected).
 
         Parameters
         ----------
@@ -143,7 +144,7 @@ class Cell:
 
     def number_infectious(self):
         """Returns the total number of infectious people in each
-        cell, all ages combined.
+         cell, all ages combined.
 
         Returns
         -------
