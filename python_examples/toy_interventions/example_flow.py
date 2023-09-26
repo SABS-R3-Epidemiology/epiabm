@@ -13,7 +13,7 @@ from toy_plotter import Plotter
 
 def main():
     # set parameters
-    repeats = 5
+    repeats = 2
     # repeats = 2
     # grid_sizes = [4, 15]
     grid_sizes = [4]
