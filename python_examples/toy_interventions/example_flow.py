@@ -13,10 +13,10 @@ from toy_plotter import Plotter
 
 def main():
     # set parameters
-    # repeats = 10
-    grid_sizes = [4, 15]
-    repeats = 1
-    # grid_sizes = [4]
+    repeats = 10
+    # repeats = 2
+    # grid_sizes = [4, 15]
+    grid_sizes = [4]
     avplaces = 5
     input_folder = "uniform_inputs/av{}_places".format(avplaces)
     output_folder = 'simulation_outputs'
@@ -67,18 +67,25 @@ def main():
     # NOTE: 90 days now instead of 120
 
     #### Travelling
-    parameter_list = [{'travel_isolation': {'start_time': 360}},
-                      {'travel_isolation': {'start_time': 0, 'hotel_isolate': 0}},
-                      {'travel_isolation': {'start_time': 0, 'hotel_isolate': 1}}]
-    parameter_sets_labels = ['no_int', 'TI_household', 'TI_hotel']
+    # parameter_list = [{'travel_isolation': {'start_time': 360}},
+    #                   {'travel_isolation': {'start_time': 0, 'hotel_isolate': 0}},
+    #                   {'travel_isolation': {'start_time': 0, 'hotel_isolate': 1}}]
+    # parameter_sets_labels = ['no_int', 'TI_household', 'TI_hotel']
     # Note: include travel sweep
+
+    ### Combination: no intervention, only case isolation (based on disease testing), household quarantine extra, place closure extra
+    parameter_list = [{'case_isolation': {'start_time': 360}, 'place_closure': {'start_time': 360}, 'household_quarantine': {'start_time': 360}},
+                      {'case_isolation': {'start_time': 0}, 'place_closure': {'start_time': 360}, 'household_quarantine': {'start_time': 360}},
+                      {'case_isolation': {'start_time': 0}, 'place_closure': {'start_time': 360}, 'household_quarantine': {'start_time': 0}},
+                      {'case_isolation': {'start_time': 0}, 'place_closure': {'start_time': 0}, 'household_quarantine': {'start_time': 0}}]
+    parameter_sets_labels = ['No intervention', 'CI', 'CI+HQ', 'CI+HQ+PC']
 
     # Name output
     # name_plot_multiple = 'MP_4_15_5av_NZ_90d_sd_csparam'
     # name_plot_bar = 'BP_4_15_5av_NZ_90d_sd_csparam'
-    name_plot_multiple = 'MP_4_15_5av_test_TI_0.01_120d_sd_strict'
-    name_plot_bar = 'BP_4_15_5av_test_TI_0.01_120d_sd_strict'
-    name_table = 'table_4_15_5av_test_TI_0.01_120d_sd_strict'
+    name_plot_multiple = 'MP_4gs_5av_combi_120d'
+    name_plot_bar = 'BP_4gs_5av_combi_120'
+    name_table = 'table_4gs_5av_combi_120'
 
     # Setup output for logging file
     logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
@@ -87,7 +94,7 @@ def main():
 
     # Set config file for Parameters
     pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                           "Int_params_strict.json"))
+                                        "Int_params.json"))
 
     for grid_size in grid_sizes:
         input_file_name = "toy_input_{}x{}_av{}_places.csv".format(
@@ -179,7 +186,7 @@ def run_simulation(seed, file_loc, output_folder, output_file_name):
             pe.sweep.InitialInfectedSweep(),
             pe.sweep.InitialisePlaceSweep()],
         [
-            pe.sweep.TravelSweep(),
+            # pe.sweep.TravelSweep(),
             pe.sweep.InterventionSweep(),
             pe.sweep.UpdatePlaceSweep(),
             pe.sweep.HouseholdSweep(),

@@ -250,7 +250,7 @@ class Plotter():
         highest_value = 0
         for sim_name, dict_ms in dict_info.items():
             offset = width * multiplier
-            rects = ax.bar(x + offset, dict_ms['mean'], width, yerr=dict_ms['stdev'], label=[sim_name, sim_name], color=[color_dict[4][multiplier],color_dict[15][multiplier]])
+            rects = ax.bar(x + offset, dict_ms['mean'], width, yerr=dict_ms['stdev'], label=[sim_name], color=[color_dict[4][multiplier]])
             ax.bar_label(rects, padding=3, fontsize=8)
             multiplier += 1
             if max(dict_ms['mean']) > highest_value:
