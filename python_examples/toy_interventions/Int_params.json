@@ -435,6 +435,19 @@
         "prop_other_parent_away": 0.0
     },
     "intervention_params": {
+        "disease_testing": {
+            "start_time": 6,
+            "policy_duration": 365,
+            "case_threshold": 0,
+            "testing_capacity": [100,1000],
+            "false_positive": [0.023, 0.0032],
+            "false_negative": [0.2, 0.222],
+            "testing_asympt_uninf": [0.5, 0.5, 0.5],
+            "asympt_uninf_pcr": [0.2, 0.2, 0.2],
+            "testing_sympt": [1, 1, 1],
+            "sympt_pcr": [0.5, 0.5, 0.5]
+            },
+
         "case_isolation":
             {"start_time": 0,
             "policy_duration": 365,
@@ -442,7 +455,7 @@
             "isolation_delay": 0,
             "isolation_duration": 7,
             "isolation_probability": 0.9,
-            "use_testing": 0,
+            "use_testing": 1,
             "isolation_effectiveness": 0.25,
             "isolation_house_effectiveness": 0.5
         },
