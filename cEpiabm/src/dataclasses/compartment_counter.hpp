@@ -19,7 +19,6 @@ namespace epiabm
     class CompartmentCounter
     {
     private:
-
         std::unordered_map<InfectionStatus, unsigned int> m_counts;
         
     public:
@@ -37,7 +36,6 @@ namespace epiabm
         void initialize(const std::vector<Person>& people);
 
     private:
-
         friend class Cell;
         friend class Microcell;
     };

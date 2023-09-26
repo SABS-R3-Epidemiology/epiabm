@@ -30,7 +30,7 @@ class TestPlaceInfection(TestPyEpiabm):
         cls.time = 1.0
 
     def test_place_susc(self):
-        result = PlaceInfection.place_susc(self.place, self.infector,
+        result = PlaceInfection.place_susc(self.place,
                                            self.infectee, self.time)
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
@@ -99,27 +99,28 @@ class TestPlaceInfection(TestPyEpiabm):
 
     def test_place_social_distancing(self):
         # Not in social distancing (distancing_start_time = None)
-        result = PlaceInfection.place_susc(self.place, self.infector,
+        result = PlaceInfection.place_susc(self.place,
                                            self.infectee, self.time)
         place_idx = self.place.place_type.value - 1
 
-        # Normal social distancing
-        self.infector.microcell.distancing_start_time = 1
-        self.infector.distancing_enhanced = False
+        # Normal social distancing of infectee
+        self.infectee.microcell.distancing_start_time = 1
+        self.infectee.distancing_enhanced = False
         distancing_place_susc = pe.Parameters.instance().\
             intervention_params['social_distancing'][
                 'distancing_place_susc']
         result_distancing = PlaceInfection.place_susc(
-            self.place, self.infector, self.infectee, self.time)
+            self.place, self.infectee, self.time)
         self.assertEqual(result*distancing_place_susc[place_idx],
                          result_distancing)
-        # Enhanced social distancing
-        self.infector.distancing_enhanced = True
+
+        # Enhanced social distancing of infectee
+        self.infectee.distancing_enhanced = True
         distancing_place_enhanced_susc = pe.Parameters.instance().\
             intervention_params['social_distancing'][
                 'distancing_place_enhanced_susc']
         result_distancing_enhanced = PlaceInfection.place_susc(
-            self.place, self.infector, self.infectee, self.time)
+            self.place, self.infectee, self.time)
         self.assertEqual(result*distancing_place_enhanced_susc[place_idx],
                          result_distancing_enhanced)
 

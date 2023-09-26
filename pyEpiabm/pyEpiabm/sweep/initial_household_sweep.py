@@ -142,7 +142,7 @@ class InitialHouseholdSweep(AbstractSweep):
         """
 
         r = random.random()
-        assert len(people) == 2,\
+        assert len(people) == 2, \
                'Only a list of two people should be passed to this method'
         person1 = people[0]
         person2 = people[1]

@@ -44,7 +44,7 @@ class HostProgressionSweep(AbstractSweep):
 
         self.number_of_states = len(InfectionStatus)
         assert self.state_transition_matrix.shape == \
-            (self.number_of_states, self.number_of_states),\
+            (self.number_of_states, self.number_of_states), \
             'Matrix dimensions must match number of infection states'
 
         # Instantiate transmission time matrix

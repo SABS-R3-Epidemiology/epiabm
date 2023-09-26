@@ -1,13 +1,13 @@
 {
-    "random_seed": 2,
+    "random_seed": 42,
     "timesteps_per_day": 1,
     "population_config":{
         "age_proportions": [0.042564544, 0.048003452, 0.053426705, 0.047869391,0.048249802, 0.050512265, 0.056015061, 0.070217864,0.085571480, 0.084218614, 0.077687068, 0.073021085,0.062866531, 0.051360371, 0.047142770, 0.038737342,0.062535655],
         "age_contacts": [0.6, 0.7, 0.75, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.75, 0.5]
     },
     "infection_config": {
-        "infection_radius": 2,
-        "basic_reproduction_num": 2.8,
+        "infection_radius": 0.0075,
+        "basic_reproduction_num": 3.0,
         "prob_symptomatic": 0.66,
         "sympt_infectiousness": 1.5,
         "asympt_infectiousness": 1,
