@@ -436,21 +436,6 @@
         "older_gen_gap": 19,
         "prop_other_parent_away": 0.0
     },
-    "carehome_params": {
-      "carehome_minimum_age": 1000,
-      "carehome_allow_initial_infections": 1,
-      "carehome_resident_household_scaling": 1,
-      "carehome_resident_place_scaling": 1,
-      "carehome_resident_spatial_scaling": 1,
-      "carehome_worker_group_scaling": 1,
-      "carehome_rel_prob_hosp": 1
-    },
-    "travel_params": {
-        "ratio_introduce_cases": 0.0,
-        "constant_introduce_cases": [3],
-        "duration_travel_stay": [14, 30],
-        "prob_existing_household": 0.5
-    },
     "intervention_params": {
         "case_isolation": {
             "start_time": 0,
@@ -489,18 +474,6 @@
             "distancing_house_susc": 1.25,
             "distancing_place_susc": [0.5, 0.5, 0.5, 0.5, 0.75, 0.75],
             "distancing_spatial_susc": 0.25
-        },
-        "travel_isolation": {
-            "start_time": 14,
-            "policy_duration": 365,
-            "case_threshold": 0,
-            "isolation_delay": 0,
-            "isolation_duration": 14,
-            "isolation_probability": 1.0,
-            "use_testing": 0,
-            "hotel_isolate": 0,
-            "isolation_effectiveness": 0.1,
-            "isolation_house_effectiveness": 0.5
         }
     }
 }

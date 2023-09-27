@@ -27,7 +27,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                                    "luxembourg_parameters.json"))
+                                    "luxembourg_intervention_parameters.json"))
 
 
 
@@ -62,7 +62,7 @@ for i in range(len(seed_values)):
     population = pe.routine.FilePopulationFactory.make_pop(file_loc,
                                                            random_seed=42)
 
-    name_output_file = 'population_output_simulation_{}.csv'.format(
+    name_output_file = 'population_output_intervention_simulation_{}.csv'.format(
         seed_values[i])
     sim_params = {"simulation_start_time": 0, "simulation_end_time": 120,
                 "initial_infected_number": 0, "initial_infect_cell": True,
@@ -83,6 +83,7 @@ for i in range(len(seed_values)):
          pe.sweep.InitialInfectedSweep(),
          pe.sweep.InitialisePlaceSweep()],
         [
+            pe.sweep.InterventionSweep(),
             pe.sweep.UpdatePlaceSweep(),
             pe.sweep.HouseholdSweep(),
             pe.sweep.PlaceSweep(),
