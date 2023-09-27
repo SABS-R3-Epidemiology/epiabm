@@ -1,4 +1,3 @@
-import re
 import unittest
 from unittest import mock
 
@@ -21,8 +20,8 @@ class TestTimer(TestPyEpiabm):
         del timer
         mock_print.assert_called_once()
         re_scientific_notation = r"(?:0|[1-9]\d*)(?:\.\d+)?(?:[e][+\-]?\d+)?"
-        self.assertTrue(re.fullmatch(f"timer took {re_scientific_notation}s",
-                                     mock_print.call_args.args[0]))
+        self.assertRegex(mock_print.call_args.args[0],
+                         f"timer took {re_scientific_notation}s")
 
 
 if __name__ == '__main__':
