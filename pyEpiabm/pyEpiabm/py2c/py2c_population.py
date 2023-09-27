@@ -3,7 +3,7 @@ from pyEpiabm.core import Population
 from pyEpiabm.property import InfectionStatus
 
 
-def py2c_population(py_population: Population, c_factory, c_status_map):
+def py2c_convert_population(py_population: Population, c_factory, c_status_map):
     return _py2c_converter(py_population, c_factory, c_status_map).c_population
 
 

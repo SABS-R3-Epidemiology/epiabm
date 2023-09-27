@@ -69,7 +69,7 @@ c_status_map = {
     pe.property.InfectionStatus.Susceptible: ce.InfectionStatus.Susceptible
 }
 logging.info("Converting python population to cpp.")
-c_population = pe.py2c.py2c_population(population, c_factory, c_status_map)
+c_population = pe.py2c.py2c_convert_population(population, c_factory, c_status_map)
 
 logging.info("Configuring cpp simulation")
 simulation = ce.BasicSimulation(c_population)

@@ -7,4 +7,4 @@ classes to C, for use in speeding up simulations
 """
 
 
-from .py2c_population import py2c_population
+from .py2c_population import py2c_convert_population

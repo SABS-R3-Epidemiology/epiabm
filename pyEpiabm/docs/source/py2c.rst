@@ -8,4 +8,4 @@ py2c provides a method for converting python populations to c population for spe
 
 Overview:
 
-.. autofunction:: py2c_population
+.. autofunction:: py2c_convert_population
