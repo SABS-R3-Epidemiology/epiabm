@@ -122,12 +122,12 @@ class SpatialSweep(AbstractSweep):
         actual_infectee_cells = []
         for cell2 in possible_infectee_cells:
             if cell2.id in infector_cell.nearby_cell_distances.keys():
-                # distance_weights.append(
-                #     len(cell2.persons) /
-                #     infector_cell.nearby_cell_distances.get(cell2.id))
                 distance_weights.append(
-                    1 /
+                    len(cell2.persons) /
                     infector_cell.nearby_cell_distances.get(cell2.id))
+                # distance_weights.append(
+                #     1 /
+                #     infector_cell.nearby_cell_distances.get(cell2.id))
                 actual_infectee_cells.append(cell2)
 
         try:
