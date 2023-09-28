@@ -1,5 +1,5 @@
 #
-# Example simulation script with travel isolaton data output
+# Example simulation script with Travel Isolaton data output
 # and visualisation
 #
 
@@ -19,7 +19,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 
 # sim_params give details for the running of the simulations
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 100,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
 # Set parameter file
@@ -29,9 +29,15 @@ name_parameter_file = 'travel_isolation_parameters.json'
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
+# The parameters in this example are such that no intervention when infected
+# travellers are entering the population is compared against isolating
+# infected travellers in households or hotels.
+
 # Parameter to change
 to_modify_parameter_values = {'isolation_probability': [0.0, 1.0],
                               'hotel_isolate': [1]}
+labels = ['No interventions, travellers', 'household TI', 'hotel TI']
+
 for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         items():
     for parameter_value in parameter_values:
@@ -93,6 +99,7 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
 # Creation of a plot of results
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 
+count = 0
 for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         items():
     for parameter_value in parameter_values:
@@ -112,22 +119,13 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
                      "InfectionStatus.Dead": 'sum'})
         df = df.reset_index(level=0)
 
-        label = 'hotel_isolate:'
-        if to_modify_parameter == 'hotel_isolate':
-            label += ' {}, '.format(parameter_value)
-            label += 'isolation_probability: {}'.format(
-                pe.Parameters.instance().intervention_params[
-                                        'travel_isolation'][
-                                        'isolation_probability'])
-        else:
-            label += ' 0, '
-            label += 'isolation_probability: {}'.format(parameter_value)
-
-        plt.plot(df['time'], df['Infected'], label=label)
+        plt.plot(df['time'], df['Infected'], label=labels[count])
+        count += 1
 
 plt.legend()
 plt.title("Infection curves for travel isolation")
 plt.ylabel("Infected Population")
+plt.xlabel("Time (days)")
 plt.savefig(
     os.path.join(os.path.dirname(__file__),
                  "intervention_outputs",

@@ -1,5 +1,5 @@
 #
-# Example simulation script with place closure intervention data output
+# Example simulation script with Place Closure intervention data output
 # and visualisation
 #
 
@@ -19,7 +19,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 
 # sim_params give details for the running of the simulations
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 100,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
 # Set parameter file
@@ -29,9 +29,14 @@ name_parameter_file = 'place_closure_parameters.json'
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
+# The parameters in this example are such that no intervention is compared
+# against closure of Workplaces and closure of Workplaces and all three types
+# of schools (PrimarySchool, SecondarySchool, SixthForm = 3)
+
 # Parameter to change
-to_modify_parameter_values = {'closure_household_infectiousness': [2, 10, 20],
-                              'closure_spatial_params': [0.8, 0.5, 0.2]}
+to_modify_parameter_values = {'closure_place_type': [[], [4], [1, 2, 3, 4]]}
+labels = ['No intervention', 'PC workplaces', 'PC schools + workplaces']
+
 for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         items():
     for parameter_value in parameter_values:
@@ -91,6 +96,7 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
 # Creation of a plot of results
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 
+count = 0
 for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         items():
     for parameter_value in parameter_values:
@@ -110,13 +116,14 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
                      "InfectionStatus.Dead": 'sum'})
         df = df.reset_index(level=0)
 
-        plt.plot(df['time'], df['Infected'], label='{}: {}'.format(
-            to_modify_parameter, parameter_value))
+        plt.plot(df['time'], df['Infected'], label=f'{labels[count]}')
+        count += 1
 
     plt.legend()
     plt.title("Infection curves for different {}".format(
         to_modify_parameter))
     plt.ylabel("Infected Population")
+    plt.xlabel("Time (days)")
     plt.savefig(
         os.path.join(os.path.dirname(__file__),
                      "intervention_outputs",

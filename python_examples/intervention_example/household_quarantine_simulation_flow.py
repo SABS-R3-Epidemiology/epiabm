@@ -1,7 +1,7 @@
 #
-# Example simulation script with household quarantine intervention data output
+# Example simulation script with Household Quarantine intervention data output
 # and visualisation
-# Note: case isolation parameters need to be given as infector should case
+# Note: Case Isolation parameters need to be given as infector should case
 # isolate and its household should quarantine.
 #
 
@@ -21,7 +21,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 
 # sim_params give details for the running of the simulations
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 100,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
 # Set parameter file
@@ -31,9 +31,14 @@ name_parameter_file = 'household_quarantine_parameters.json'
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
+# The parameters in this example are such that the influence of the additional
+# Household Quarantine with 50% and 100% compliance is compared agains only the
+# Case Isolation intervention.
+
 # Parameter to change
 to_modify_parameter = 'quarantine_house_compliant'
 parameter_values = [0.0, 0.5, 1.0]
+labels = ['CI', 'CI + 50% HQ', 'CI + 100% HQ']
 
 for i in range(len(parameter_values)):
     name_output_file = 'output_{}_{}.csv'.format(
@@ -107,12 +112,12 @@ for i in range(len(parameter_values)):
                  "InfectionStatus.Dead": 'sum'})
     df = df.reset_index(level=0)
 
-    plt.plot(df['time'], df['Infected'], label='{}% house compliance'.format(
-        int(parameter_values[i]*100)))
+    plt.plot(df['time'], df['Infected'], label=f'{labels[i]}')
 
 plt.legend()
 plt.title("Infection curves for different house quarantine compliance")
 plt.ylabel("Infected Population")
+plt.xlabel("Time (days)")
 plt.savefig(
     os.path.join(os.path.dirname(__file__),
                  "intervention_outputs",
