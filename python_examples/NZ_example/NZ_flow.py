@@ -97,7 +97,8 @@ plt.close()
 
 # Create plot to show new cases and new deaths against time
 newdf = pd.DataFrame()
-newdf['New_cases'] = np.insert(-np.diff(SIRdf['Susceptible']), 0, SIRdf['Infected'][0])
+newdf['New_cases'] = np.insert(-np.diff(SIRdf['Susceptible']),
+                               0, SIRdf['Infected'][0])
 newdf['New_deaths'] = np.insert(np.diff(SIRdf['Dead']), 0, SIRdf['Dead'][0])
 newdf.plot(y=["New_cases", "New_deaths"])
 plt.savefig(os.path.join(os.path.dirname(__file__),
