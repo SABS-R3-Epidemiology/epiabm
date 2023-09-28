@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
 
-sim_file = 'simulation_outputs/large_csv/output_luxembourg_test2.csv'
+sim_file = 'simulation_outputs/large_csv/pre_population_output_simulation_1.csv'
 
 delta = 0.008333
 
