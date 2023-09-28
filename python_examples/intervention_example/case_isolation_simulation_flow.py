@@ -1,5 +1,5 @@
 #
-# Example simulation script with case isolation intervention data output
+# Example simulation script with Case Isolation intervention data output
 # and visualisation
 #
 
@@ -29,10 +29,14 @@ name_parameter_file = 'case_isolation_parameters.json'
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
+# The parameters in this example are such that no intervention is compared
+# with Case Isolation of symptomatic individuals with a compliance of 50% and
+# 100%.
+
 # Parameter to change
 to_modify_parameter = 'isolation_probability'
 parameter_values = [0.0, 0.5, 1.0]
-labels = ['no intervention', '50% CI', '100% CI']
+labels = ['No intervention', '50% CI', '100% CI']
 
 for i in range(len(parameter_values)):
     name_output_file = 'output_{}_{}.csv'.format(

@@ -1,5 +1,5 @@
 #
-# Example simulation script with travel isolaton data output
+# Example simulation script with Travel Isolaton data output
 # and visualisation
 #
 
@@ -29,10 +29,15 @@ name_parameter_file = 'travel_isolation_parameters.json'
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
+# The parameters in this example are such that no intervention when infected
+# travellers are entering the population is compared against isolating
+# infected travellers in households or hotels.
+
 # Parameter to change
 to_modify_parameter_values = {'isolation_probability': [0.0, 1.0],
                               'hotel_isolate': [1]}
-labels = ['no interventions, travellers', 'household TI', 'hotel TI']
+labels = ['No interventions, travellers', 'household TI', 'hotel TI']
+
 for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         items():
     for parameter_value in parameter_values:

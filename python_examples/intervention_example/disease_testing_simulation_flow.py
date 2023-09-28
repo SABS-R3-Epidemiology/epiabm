@@ -1,5 +1,5 @@
 #
-# Example simulation script with case isolation intervention data output
+# Example simulation script with Disease Testing intervention data output
 # and visualisation
 #
 
@@ -28,6 +28,10 @@ name_parameter_file = 'disease_testing_parameters.json'
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
+
+# The parameters in this example are such that no testing is compared PCR and
+# lateral flow testing with unlimited capacity of all symptomatic and a
+# proportion of asymptomatic and non-infected individuals.
 
 # Parameter to change
 to_modify_parameter = 'testing_capacity'

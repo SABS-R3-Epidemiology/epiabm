@@ -1,5 +1,5 @@
 #
-# Example simulation script with place closure intervention data output
+# Example simulation script with Place Closure intervention data output
 # and visualisation
 #
 
@@ -29,9 +29,14 @@ name_parameter_file = 'place_closure_parameters.json'
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
+# The parameters in this example are such that no intervention is compared
+# against closure of Workplaces and closure of Workplaces and all three types
+# of schools (PrimarySchool, SecondarySchool, SixthForm = 3)
+
 # Parameter to change
 to_modify_parameter_values = {'closure_place_type': [[], [4], [1, 2, 3, 4]]}
-labels = ['no intervention', 'PC workplaces', 'PC schools + workplaces']
+labels = ['No intervention', 'PC workplaces', 'PC schools + workplaces']
+
 for to_modify_parameter, parameter_values in to_modify_parameter_values.\
         items():
     for parameter_value in parameter_values:

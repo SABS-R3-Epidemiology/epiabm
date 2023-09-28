@@ -1,5 +1,5 @@
 #
-# Example simulation script with social distancing intervention data output
+# Example simulation script with Social Distancing intervention data output
 # and visualisation
 #
 
@@ -29,14 +29,15 @@ name_parameter_file = 'social_distancing_parameters.json'
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
+# The parameters in this example are such that no intervention is compared
+# against social distancing of eldery (>60 years, last 5 age groups) and
+# social distancing of the whole population.
+
 # Parameter to change
 to_modify_parameter = 'distancing_enhanced_prob'
-parameter_values = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 1.0,
-                     1.0],
-                    [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-                     1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]
-labels = ['no intervention', 'SD elderly', 'SD']
+parameter_values = [[0.0]*17, [0.0]*12 + [1.0]*5, [1.0]*17]
+labels = ['No intervention', 'SD elderly', 'SD']
+
 for i in range(len(parameter_values)):
     name_output_file = 'output_{}_{}.csv'.format(
         labels[i], to_modify_parameter)

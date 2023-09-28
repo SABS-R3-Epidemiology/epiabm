@@ -1,7 +1,7 @@
 #
-# Example simulation script with household quarantine intervention data output
+# Example simulation script with Household Quarantine intervention data output
 # and visualisation
-# Note: case isolation parameters need to be given as infector should case
+# Note: Case Isolation parameters need to be given as infector should case
 # isolate and its household should quarantine.
 #
 
@@ -31,10 +31,14 @@ name_parameter_file = 'household_quarantine_parameters.json'
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        name_parameter_file))
 
+# The parameters in this example are such that the influence of the additional
+# Household Quarantine with 50% and 100% compliance is compared agains only the
+# Case Isolation intervention.
+
 # Parameter to change
 to_modify_parameter = 'quarantine_house_compliant'
 parameter_values = [0.0, 0.5, 1.0]
-labels = ['no intervention', '50% HQ', '100% HQ']
+labels = ['CI', 'CI + 50% HQ', 'CI + 100% HQ']
 
 for i in range(len(parameter_values)):
     name_output_file = 'output_{}_{}.csv'.format(

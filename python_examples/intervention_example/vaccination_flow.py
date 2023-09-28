@@ -1,5 +1,6 @@
 #
-# Example simulation script with intervention data output and visualisation
+# Example simulation script with Vaccine intervention data output and
+# visualisation
 #
 
 import os
@@ -36,7 +37,7 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 # Parameter to change
 to_modify_parameter = 'prob_vaccinated'
 parameter_values = [[0, 0, 0, 0], [0.5, 0.5, 0.5, 0.5], [1.0, 1.0, 1.0, 1.0]]
-labels = ['no intervention', '50% VC', '100% VC']
+labels = ['No intervention', '50% VC', '100% VC']
 
 for i in range(len(parameter_values)):
     name_output_file = 'output_{}.csv'.format(
