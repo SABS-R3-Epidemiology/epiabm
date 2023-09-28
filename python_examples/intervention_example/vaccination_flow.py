@@ -1,5 +1,6 @@
 #
-# Example simulation script with intervention data output and visualisation
+# Example simulation script with Vaccine intervention data output and
+# visualisation
 #
 
 import os
@@ -18,7 +19,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 
 # sim_params give details for the running of the simulations
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 50,
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 100,
               "initial_infected_number": 1, "initial_infect_cell": True}
 
 # Set parameter file
@@ -35,9 +36,8 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 
 # Parameter to change
 to_modify_parameter = 'prob_vaccinated'
-parameter_values = [[0.9, 0.9, 0.9, 0.9], [0.5, 0.5, 0.5, 0.5]]
-
-labels = ['uptake_90', 'uptake_50']
+parameter_values = [[0, 0, 0, 0], [0.5, 0.5, 0.5, 0.5], [1.0, 1.0, 1.0, 1.0]]
+labels = ['No intervention', '50% VC', '100% VC']
 
 for i in range(len(parameter_values)):
     name_output_file = 'output_{}.csv'.format(
@@ -113,14 +113,14 @@ for i in range(len(parameter_values)):
                  "InfectionStatus.Vaccinated": 'sum'})
     df = df.reset_index(level=0)
 
-    plt.plot(df['time'], df['Infected'], colours[index][0],
-             label='Number infected with {}% vaccine uptake'.format(
-        int(parameter_values[i][0]*100)))
+    plt.plot(df['time'], df['Infected'],
+             label=f'{labels[i]}')
     index += 1
 
 plt.legend()
 plt.title("Infection curves for different vaccination uptake")
 plt.ylabel("Number of Individuals")
+plt.xlabel("Time (days)")
 plt.savefig(
     os.path.join(os.path.dirname(__file__),
                  "intervention_outputs",
