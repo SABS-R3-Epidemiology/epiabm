@@ -1,5 +1,5 @@
 #
-# Example simulation script running with Bermuda parameters
+# Example simulation script running with New Zealand parameters
 # Incorporates both age and spatial stratification.
 #
 
