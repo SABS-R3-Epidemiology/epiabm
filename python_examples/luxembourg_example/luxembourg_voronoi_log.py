@@ -315,8 +315,8 @@ def generate_animation(
             fig, animate, frames=times, init_func=lambda *args: None
         )
         writer = matplotlib.animation.PillowWriter(fps=30)
-        ani.save((save_path + str("test_voronoi_log_animation.gif")), writer=writer,
-                 dpi=200)
+        ani.save((save_path + str("voronoi_log_animation.gif")),
+                 writer=writer, dpi=200)
     else:
         file_names = []
         for i, t in enumerate(times):
@@ -333,7 +333,7 @@ def generate_animation(
             plt.close(t_fig)
 
         fp_in = save_path + "image" + "*d_log.png"
-        fp_out = save_path + "test_voronoi_log_animation.gif"
+        fp_out = save_path + "voronoi_log_animation.gif"
         img, *imgs = [Image.open(f).convert("RGB")
                       for f in sorted(glob.glob(fp_in))]
         img.save(
@@ -357,7 +357,7 @@ lux = df.loc[df['ADMIN'] == 'Luxembourg'].geometry.to_list()
 # Read in the data from simulation output
 filename = os.path.join(os.path.dirname(__file__),
                         "simulation_outputs/large_csv",
-                        "population_output_simulation_2.csv")
+                        "output_luxembourg.csv")
 df_old = pd.read_csv(filename)
 df = df_old.groupby(
     ['time', 'cell', 'location_x', 'location_y'], as_index=False).sum()
@@ -381,7 +381,7 @@ vor = Voronoi(locations)
 # Plot grid of time points
 
 fig_loc = ("simulation_outputs/"
-           + "test_voronoi_grid_log_img.png")
+           + "voronoi_grid_log_img.png")
 plot_time_grid(
     df,
     vor,
