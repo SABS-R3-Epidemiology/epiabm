@@ -31,7 +31,8 @@ plt.savefig(os.path.join(os.path.dirname(__file__),
             "simulation_outputs/simulation_flow_SIR_plot.png"), dpi=300)
 
 p = Plotter(os.path.join(os.path.dirname(__file__),
-            "simulation_outputs/large_csv/output_luxembourg_spatial_0_5_post_change.csv"),
+            "simulation_outputs/large_csv/"
+                         "output_luxembourg_spatial_0_5_post_change.csv"),
             start_date='29-02-2020', sum_weekly=True)
 p.barchart(os.path.join(os.path.dirname(__file__),
            "simulation_outputs/age_stratify.png"),
