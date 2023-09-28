@@ -19,9 +19,9 @@ class TestTimer(TestPyEpiabm):
         timer = _Timer('timer')
         del timer
         mock_print.assert_called_once()
+        args, _ = mock_print.call_args_list[0]
         re_scientific_notation = r"(?:0|[1-9]\d*)(?:\.\d+)?(?:[e][+\-]?\d+)?"
-        self.assertRegex(mock_print.call_args.args[0],
-                         f"timer took {re_scientific_notation}s")
+        self.assertRegex(args[0], f"timer took {re_scientific_notation}s")
 
 
 if __name__ == '__main__':
