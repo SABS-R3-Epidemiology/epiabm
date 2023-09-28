@@ -13,7 +13,7 @@ from toy_plotter import Plotter
 
 def main():
     # set parameters
-    repeats = 2
+    repeats = 10
     # repeats = 2
     # grid_sizes = [4, 15]
     grid_sizes = [4]
@@ -83,64 +83,64 @@ def main():
     # Name output
     # name_plot_multiple = 'MP_4_15_5av_NZ_90d_sd_csparam'
     # name_plot_bar = 'BP_4_15_5av_NZ_90d_sd_csparam'
-    name_plot_multiple = 'MP_4gs_5av_combi_120d'
-    name_plot_bar = 'BP_4gs_5av_combi_120'
-    name_table = 'table_4gs_5av_combi_120'
+    name_plot_multiple = 'MP_4gs_5av_combi_120d_strictCI_stricterHQ'
+    name_plot_bar = 'BP_4gs_5av_combi_120_strictCI_stricterHQ'
+    name_table = 'table_4gs_5av_combi_120_sstrictCI_stricterHQ'
 
-    # Setup output for logging file
-    logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
-                        format=('%(asctime)s - %(name)s'
-                                + '- %(levelname)s - %(message)s'))
+    # # Setup output for logging file
+    # logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
+    #                     format=('%(asctime)s - %(name)s'
+    #                             + '- %(levelname)s - %(message)s'))
 
-    # Set config file for Parameters
-    pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                                        "Int_params.json"))
+    # # Set config file for Parameters
+    # pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
+    #                                     "Int_params.json"))
 
-    for grid_size in grid_sizes:
-        input_file_name = "toy_input_{}x{}_av{}_places.csv".format(
-            grid_size, grid_size, avplaces)
-        if grid_size == 4:
-            pe.Parameters.instance().infection_radius = 5.66
-        else: #15
-            pe.Parameters.instance().infection_radius = 21.22
-        print(f'set infection_radius to {pe.Parameters.instance().infection_radius}')
+    # for grid_size in grid_sizes:
+    #     input_file_name = "toy_input_{}x{}_av{}_places.csv".format(
+    #         grid_size, grid_size, avplaces)
+    #     if grid_size == 4:
+    #         pe.Parameters.instance().infection_radius = 5.66
+    #     else: #15
+    #         pe.Parameters.instance().infection_radius = 21.22
+    #     print(f'set infection_radius to {pe.Parameters.instance().infection_radius}')
 
-        # Generate population from input file
-        # (Input converted from CovidSim with `microcell_conversion.py`)
-        file_loc = os.path.join(os.path.dirname(__file__), input_folder,
-                                input_file_name)
-        for i in range(repeats):
-            print('Set seed to: {}'.format(i))
+    #     # Generate population from input file
+    #     # (Input converted from CovidSim with `microcell_conversion.py`)
+    #     file_loc = os.path.join(os.path.dirname(__file__), input_folder,
+    #                             input_file_name)
+    #     for i in range(repeats):
+    #         print('Set seed to: {}'.format(i))
 
-            if len(parameter_list) > 0:
-                for j in range(len(parameter_list)):
-                    output_file_name = "output_{}x{}_av{}_{}_{}.csv".\
-                        format(grid_size, grid_size, avplaces,
-                               parameter_sets_labels[j], i)
-                # for parameter_value in parameter_values
-                #     output_file_name = "output_{}x{}_av{}_{}_{}_{}_{}.csv".\
-                #         format(grid_size, grid_size, avplaces, intervention,
-                #                parameter, parameter_value, i)
-                    for key_int in parameter_list[j].keys():
-                        for key_param in parameter_list[j][key_int].keys():
-                            pe.Parameters.instance().intervention_params[
-                                key_int][key_param] = parameter_list[j][
-                                    key_int][key_param]
-                            print('set {} {} param to {}'.format(key_int,
-                                  key_param,
-                                  pe.Parameters.instance().intervention_params[
-                                    key_int][key_param]))
+    #         if len(parameter_list) > 0:
+    #             for j in range(len(parameter_list)):
+    #                 output_file_name = "output_{}x{}_av{}_{}_{}.csv".\
+    #                     format(grid_size, grid_size, avplaces,
+    #                            parameter_sets_labels[j], i)
+    #             # for parameter_value in parameter_values
+    #             #     output_file_name = "output_{}x{}_av{}_{}_{}_{}_{}.csv".\
+    #             #         format(grid_size, grid_size, avplaces, intervention,
+    #             #                parameter, parameter_value, i)
+    #                 for key_int in parameter_list[j].keys():
+    #                     for key_param in parameter_list[j][key_int].keys():
+    #                         pe.Parameters.instance().intervention_params[
+    #                             key_int][key_param] = parameter_list[j][
+    #                                 key_int][key_param]
+    #                         print('set {} {} param to {}'.format(key_int,
+    #                               key_param,
+    #                               pe.Parameters.instance().intervention_params[
+    #                                 key_int][key_param]))
 
-                    # Run simulation
-                    run_simulation(i, file_loc, output_folder,
-                                   output_file_name)
-            else:
-                output_file_name = "output_{}x{}_av{}_{}.csv".\
-                        format(grid_size, grid_size, avplaces, i)
+    #                 # Run simulation
+    #                 run_simulation(i, file_loc, output_folder,
+    #                                output_file_name)
+    #         else:
+    #             output_file_name = "output_{}x{}_av{}_{}.csv".\
+    #                     format(grid_size, grid_size, avplaces, i)
 
-                # Run simulation
-                run_simulation(i, file_loc, output_folder,
-                               output_file_name)
+    #             # Run simulation
+    #             run_simulation(i, file_loc, output_folder,
+    #                            output_file_name)
 
     # Plotting
     p = Plotter(output_folder, grid_sizes, avplaces, repeats,

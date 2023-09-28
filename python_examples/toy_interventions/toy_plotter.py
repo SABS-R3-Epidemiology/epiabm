@@ -179,8 +179,9 @@ class Plotter():
                     summary_output_name = 'summary_{}x{}_av{}_{}.csv'.\
                         format(grid_size, grid_size, self.avplaces,
                                self.parameter_sets_labels[j])
-                    label = '{}x{}, {}'.format(
-                        grid_size, grid_size, self.parameter_sets_labels[j])
+                    # label = '{}x{}, {}'.format(
+                    #     grid_size, grid_size, self.parameter_sets_labels[j])
+                    label = f'{self.parameter_sets_labels[j]}'
                     plot = self._make_multiple_curve_plot(
                         summary_output_name, color_list[count], label)
                     count += 1
@@ -201,9 +202,9 @@ class Plotter():
 
         plot.legend(loc='upper right', fontsize=8)
         # plot.legend(fontsize=8)
-        plot.xlabel('time (days)')
-        plot.ylabel('Infections')
-        plot.title('Infection curve{}'.format(title))
+        plot.xlabel('Time (days)')
+        plot.ylabel('Number of infected individuals')
+        # plot.title('Infection curve{}'.format(title))
         plot.savefig(os.path.join(os.path.dirname(__file__), self.folder,
                      '{}.png'.format(name_fig)))
 

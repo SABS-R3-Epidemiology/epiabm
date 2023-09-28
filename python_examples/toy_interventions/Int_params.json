@@ -456,8 +456,8 @@
             "isolation_duration": 7,
             "isolation_probability": 0.9,
             "use_testing": 1,
-            "isolation_effectiveness": 0.25,
-            "isolation_house_effectiveness": 0.5
+            "isolation_effectiveness": 0.05,
+            "isolation_house_effectiveness": 0.25
         },
              
         "household_quarantine": {
@@ -468,10 +468,10 @@
             "quarantine_duration": 14,
             "quarantine_house_compliant": 0.75,
             "quarantine_individual_compliant": 1.0,
-            "quarantine_house_effectiveness": 1.5,
-            "quarantine_spatial_effectiveness": 0.25,
-            "quarantine_place_effectiveness": [0.25, 0.25, 0.25, 0.25,
-            0.25, 0.25]
+            "quarantine_house_effectiveness": 0.5,
+            "quarantine_spatial_effectiveness": 0.1,
+            "quarantine_place_effectiveness": [0.1, 0.1, 0.1, 0.1,
+            0.1, 0.1]
         },
 
         "place_closure": {
