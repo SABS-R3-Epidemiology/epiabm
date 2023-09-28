@@ -47,7 +47,7 @@ The resulting infection curve shows the progression of the disease when no inter
 ![place closure.pt](./intervention_example/intervention_outputs/place_closure_closure_place_type_Icurve_plot.png)
 
 ## Social Distancing
-The resulting infection curve shows the progression of the disease when no interventions are applied, eldery (> 60 years) socially distance, and everyone socially distance. In this simulation, social distancing will increase the household infections ('distancing_house_enhanced_susc' equals 1.25) and decreases infections in all places ('distancing_place_enhanced_susc' set to 0.25 for all places) and spatial infections ('distancing_place_enhanced_susc' equals 0.1). Not enhanced parameters are set to 1.0 to generate a simulation in which the intervention is applied to nobody or only eldery. Both the invervention on only the eldery as on the whole population delayed the wave with reduced peak of infections. Applying the intervention on the total population had the biggest effect. 
+The resulting infection curve shows the progression of the disease when no interventions are applied, eldery (> 60 years) socially distance, and everyone socially distance. In this simulation, social distancing will decrease the household infections ('distancing_house_enhanced_susc' equals 0.8), infections in all places ('distancing_place_enhanced_susc' set to 0.1 for all places) and spatial infections ('distancing_place_enhanced_susc' equals 0.1). Not enhanced parameters are set to 1.0 to generate a simulation in which the intervention does not have an effect. Both the invervention on only the eldery as on the whole population delayed the wave with reduced peak of infections. Applying the intervention on the total population had the strongest effect. 
 
 ![social distancing.pt](./intervention_example/intervention_outputs/social_distancing_distancing_enhanced_prob_Icurve_plot.png)
 
@@ -71,9 +71,9 @@ Contained within the `travel_example/` directory, this script runs a simulation 
 
 The two resulting infection curves shows the progression of the disease when every day a ratio of the number of infected cases in the population is introduced and when a constant number of infected individuals is introduced at day 4. Infection curves when no individuals are introduced  ('ratio_introduce_cases' equals 0.0), 5% of the infected cases in the population are introduced as newly infected individuals ('ratio_introduce_cases' equals 0.05), and 10% of the infected cases in the population are introduced as newly infected individuals ('ratio_introduce_cases' equals 0.1) are compared. Introducing more infected individuals will dilate the wave with an increased peak of infections. Furthermore, not introducing individuals (constant_introduce_cases equals [0]) is compared to introducing 100 individuals at day 4. Introducing infected individuas results in an early start of the wave of infections.
 
-[travel example rate.pt](./travel_example/travelling_outputs/travelling_ratio_introduce_cases_Icurve_plot.png)
+![travel example rate.pt](./travel_example/travelling_outputs/travelling_ratio_introduce_cases_Icurve_plot.png)
 
-[travel example constant.pt](./travel_example/travelling_outputs/travelling_constant_introduce_cases_Icurve_plot.png)
+![travel example constant.pt](./travel_example/travelling_outputs/travelling_constant_introduce_cases_Icurve_plot.png)
 
 ## cEpiabm Example
 
