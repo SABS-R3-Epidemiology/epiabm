@@ -378,7 +378,7 @@ locations = np.append(
 
 # Compute and plot Tesselation
 vor = Voronoi(locations)
-# Plot grid of time points
+# Plots grid of time points
 
 fig_loc = ("simulation_outputs/"
            + "voronoi_grid_log_img.png")
