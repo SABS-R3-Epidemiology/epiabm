@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
 
-sim_file = 'simulation_outputs/large_csv/pre_population_output_simulation_1.csv'
+sim_file = 'simulation_outputs/large_csv/population_output_simulation_1.csv'
 
 delta = 0.008333
 
@@ -45,16 +45,17 @@ def generate_colour_map(df, name, min_value=0.0, cmap=cm.Reds):
     """
     max_inf = math.log(max(df[name])+1)
     cmap.set_under('lightgrey')
-    norm = matplotlib.colors.Normalize(vmin=min_value, vmax=max_inf, clip=False)
+    norm = matplotlib.colors.Normalize(vmin=min_value, vmax=max_inf,
+                                       clip=False)
     return cm.ScalarMappable(norm=norm, cmap=cmap)
 
 
 def add_colorbar(im, width=None, pad=None, **kwargs):
     # From https://stackoverflow.com/a/76378778
-    l, b, w, h = im.axes.get_position().bounds       # get boundaries
-    width = width or 0.1 * w                         # get width of the colorbar
-    pad = pad or width                               # get pad between im and cbar
-    fig = im.axes.figure                             # get figure of image
+    l, b, w, h = im.axes.get_position().bounds    # get boundaries
+    width = width or 0.1 * w                      # get width of the colorbar
+    pad = pad or width                            # get pad between im and cbar
+    fig = im.axes.figure                          # get figure of image
     cax = fig.add_axes([l + w + pad, b, width, h])   # define cbar Axes
     # return fig.colorbar(im, cax=cax, **kwargs)       # draw cbar
     return fig.colorbar(cax=cax, **kwargs)       # draw cbar
@@ -91,20 +92,15 @@ def make_gif(
         df,
         times,
         name='InfectionStatus.InfectMild',
-        save_path = 'animation'
-    ):
-    file_names = []
+        save_path='animation'
+        ):
+    # file_names = []
 
     mapper = generate_colour_map(df, name=name)
-    # cbar = plt.colorbar(mapper)
-    # cbar.set_label("Number of " + str(name))
-    # fig = plt.figure()
     ax = plt.axes()
-    # add_colorbar(fig)
 
     plt.axis('off')
     for i, t in enumerate(times):
-        # t_fig, t_ax = plot_time_point(df, vor, name, t, grid_lim, ax, mapper, borders_df)
         render_frame(ax, df, i, t, name, mapper, save_path)
 
     fp_in = f"{save_path}/frame-*.png"
