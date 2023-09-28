@@ -64,8 +64,8 @@ for i in range(len(seed_values)):
 
     name_output_file = 'population_output_simulation_loc_change_{}.csv'.format(
         seed_values[i])
-    sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
-                "initial_infected_number": 1, "initial_infect_cell": True,
+    sim_params = {"simulation_start_time": 0, "simulation_end_time": 120,
+                "initial_infected_number": 5, "initial_infect_cell": True,
                 "simulation_seed": seed_values[i]}
 
     file_params = {"output_file": name_output_file,

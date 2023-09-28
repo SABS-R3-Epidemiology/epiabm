@@ -36,7 +36,7 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 # where output should be written to.
 
 # Parameter to change
-seed_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+seed_values = [1]
 
 
 for i in range(len(seed_values)):
