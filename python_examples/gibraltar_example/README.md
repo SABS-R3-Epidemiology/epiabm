@@ -2,7 +2,7 @@
 Contained within the gibraltar_example/ directory, these scripts runs simulations in which intervention is active or inactive in Gibraltar. Output graphs are contained within the gibraltar_example/simulation_outputs/ directory. Both simulations are run using the same imput file, considering the real population set up in Gibraltar. 
 
 ## Without Intervention
-The resulting infection curve shows the progression of the disease when the intervention is absent. The infection peak occurs around Day 40 with roughly 5k infected individuals. Nearly half of the population will be susceptible in 90 days and half of the population is recovered.
+The resulting infection curve shows the progression of the disease when the intervention is absent. The infection peak occurs around Day 40 with roughly 5k infected individuals. Nearly half of the population is susceptible in 90 days and half of the population is recovered.
 
 ![without intervention.pt](./simulation_outputs/without_intervention/simulation_flow_SIR_plot.png)
 
