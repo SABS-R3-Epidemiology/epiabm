@@ -1,5 +1,6 @@
 #
 # Example simulation script running with Luxembourg parameters
+# Runs with initial infections seeded at the same starting location
 # Incorporates both age and spatial stratification.
 #
 
