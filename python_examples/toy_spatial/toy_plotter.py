@@ -3,7 +3,6 @@
 #
 
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import os
 
@@ -22,7 +21,7 @@ class Plotter():
         grid_size : int
             Size of the grid used for the population set up
         repeats : int
-            Number of simulation repeats 
+            Number of simulation repeats
         sim_parameters : dict
             Containing modified parameters during simulation
         sim_parameters_labels : list
@@ -91,7 +90,9 @@ class Plotter():
                                   "InfectionStatus.Recovered":
                                   "Recovered_{}".format(i),
                                   "Infected":
-                                  "Infected_{}".format(i)},
+                                  "Infected_{}".format(i),
+                                  "InfectionStatus.Dead":
+                                  "Dead_{}".format(i)},
                          inplace=True)
             combined_df["Susceptible_{}".format(i)] = \
                 SIRdf["Susceptible_{}".format(i)]
@@ -99,6 +100,14 @@ class Plotter():
                 SIRdf["Recovered_{}".format(i)]
             combined_df["Infected_{}".format(i)] = \
                 SIRdf["Infected_{}".format(i)]
+            combined_df["Dead_{}".format(i)] = \
+                SIRdf["Dead_{}".format(i)]
+
+            # Total infected is sum of infections, recovered and dead
+            combined_df["Total_infected_{}".format(i)] = \
+                combined_df["Recovered_{}".format(i)] + \
+                combined_df["Infected_{}".format(i)] + \
+                combined_df["Dead_{}".format(i)]
 
         return combined_df
 
@@ -113,7 +122,8 @@ class Plotter():
         Returns
         ----------
         pd.DataFrame
-            Containing mean and standard deviation of simulation output over repeats.
+            Containing mean and standard deviation of simulation output over
+            repeats.
         """
 
         summary_df = pd.DataFrame()
@@ -123,6 +133,10 @@ class Plotter():
             list((combined_df.filter(regex='Susceptible')))]
         all_recovered = combined_df[
             list((combined_df.filter(regex='Recovered')))]
+        all_dead = combined_df[
+            list((combined_df.filter(regex='Dead')))]
+        all_total_infected = combined_df[
+            list((combined_df.filter(regex='Total_infected')))]
 
         summary_df["av_infections"] = all_infections.mean(axis=1)
         summary_df["sd_infections"] = all_infections.std(axis=1)
@@ -130,6 +144,10 @@ class Plotter():
         summary_df["sd_susceptible"] = all_susceptible.std(axis=1)
         summary_df["av_recovered"] = all_recovered.mean(axis=1)
         summary_df["sd_recovered"] = all_recovered.std(axis=1)
+        summary_df["av_dead"] = all_dead.mean(axis=1)
+        summary_df["sd_dead"] = all_dead.std(axis=1)
+        summary_df["av_total_infected"] = all_total_infected.mean(axis=1)
+        summary_df["sd_total_infected"] = all_total_infected.std(axis=1)
 
         return summary_df
 
@@ -148,6 +166,10 @@ class Plotter():
         color_dict = {4: ['blue', 'darkblue', 'deepskyblue', 'slategrey',
                           'turquoise', 'teal']}
         color_list = color_dict[self.grid_size]
+
+        plt.figure(figsize=(5, 4.8))
+
+        # Get data and make figure
         for j in range(len(self.sim_parameters)):
             df = dict_df[self.sim_parameters_labels[j]]
             label = f'{self.sim_parameters_labels[j]}'
@@ -158,17 +180,21 @@ class Plotter():
                              df['av_infections'] + df['sd_infections'],
                              color=color_list[j], alpha=0.2)
 
-        plt.legend(loc='upper right', fontsize=8)
-        plt.xlabel('Time (days)')
-        plt.ylabel('Number of infected individuals')
+        plt.legend(loc='upper right', fontsize=12)
+        plt.xlabel('Time (days)', fontsize=12)
+        plt.ylabel('Number of infected individuals', fontsize=12)
+        plt.xticks(fontsize=12)
+        plt.yticks(fontsize=12)
 
         if name_fig:
+            plt.title('a', loc='left', weight='bold', fontsize=12)
+            plt.tight_layout()
             plt.savefig(os.path.join(os.path.dirname(__file__), self.folder,
-                        '{}.png'.format(name_fig)))
+                        '{}.png'.format(name_fig)), dpi=300)
         else:
             plt.show()
 
-    def _total_recovered_bars(self, dict_df, pop_size=10000, name_fig=None):
+    def _total_infected_bars(self, dict_df, pop_size=10000, name_fig=None):
         """Plots the total number of infections over the total simulation
 
         Parameters
@@ -183,47 +209,33 @@ class Plotter():
         """
         color_dict = {4: ['blue', 'darkblue', 'deepskyblue', 'slategrey',
                           'turquoise', 'teal']}
-        dict_info = {}
+
+        # Get the mean and standard deviation over repeats
+        mean_list = []
+        std_list = []
         for j in range(len(self.sim_parameters)):
             df = dict_df[self.sim_parameters_labels[j]]
-            dict_info[self.sim_parameters_labels[j]] = {'mean': [],
-                                                        'stdev': []}
+            mean_list.append(100/pop_size*df['av_total_infected'].iloc[-1])
+            std_list.append(100/pop_size*df['sd_total_infected'].iloc[-1])
 
-        for j in range(len(self.sim_parameters)):
-            mean = df['av_recovered'].iloc[-1]
-            stdev = df['sd_recovered'].iloc[-1]
-            dict_info[self.sim_parameters_labels[j]][
-                'mean'].append(100/pop_size*mean)
-            dict_info[self.sim_parameters_labels[j]][
-                'stdev'].append(100/pop_size*stdev)
-        if name_fig is None:
-            name_fig = 'plot_summary'
+        fig, ax = plt.subplots(figsize=(5, 4.8))
 
-        width = 1/(len(self.sim_parameters_labels)+1)  # the width of the bars
-        multiplier = 0
+        # Make figure
+        rects = ax.bar(self.sim_parameters_labels, mean_list, yerr=std_list,
+                       color=color_dict[4])
+        ax.bar_label(rects, padding=3, fontsize=12)
 
-        fig, ax = plt.subplots()
+        ax.set_ylabel('Total population infected (percentage)', fontsize=12)
+        ax.tick_params(axis='x', labelsize=11)
+        ax.tick_params(axis='y', labelsize=12)
+        ax.set_ylim(top=110)
 
-        highest_value = 0
-        for sim_name, dict_ms in dict_info.items():
-            offset = width * multiplier
-            rects = ax.bar(offset, dict_ms['mean'], width,
-                           yerr=dict_ms['stdev'], label=[sim_name],
-                           color=[color_dict[4][multiplier]])
-            ax.bar_label(rects, padding=3, fontsize=8)
-            multiplier += 1
-            if max(dict_ms['mean']) > highest_value:
-                highest_value = max(dict_ms['mean'])
-
-        ax.set_ylabel('Total percentage population infected')
-        ax.set_xticks([0.25],
-                      [f'{self.grid_size}x{self.grid_size}'])
-        box = ax.get_position()
-        ax.set_position([box.x0, box.y0, box.width * 0.85, box.height])
-        ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize=8)
         if name_fig:
+            ax.set_xlabel(' ', fontsize=12)
+            plt.title('b', loc='left', weight='bold', fontsize=12)
+            plt.tight_layout()
             plt.savefig(os.path.join(os.path.dirname(__file__), self.folder,
-                                     '{}.png'.format(name_fig)))
+                                     '{}.png'.format(name_fig)), dpi=300)
         else:
             plt.show()
 
@@ -252,8 +264,8 @@ class Plotter():
                     'time_peak': []}
         for j in range(len(self.sim_parameters)):
             df = dict_df[self.sim_parameters_labels[j]]
-            mean = df['av_recovered'].iloc[-1]
-            stdev = df['sd_recovered'].iloc[-1]
+            mean = df['av_total_infected'].iloc[-1]
+            stdev = df['sd_total_infected'].iloc[-1]
 
             max_height = df['av_infections'].max()
             max_time = df[df['av_infections'] == max_height].iloc[0]['time']
