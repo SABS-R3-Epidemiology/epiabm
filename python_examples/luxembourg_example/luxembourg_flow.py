@@ -35,7 +35,7 @@ seed_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 # specific location.
 # For the case with 0 initial infections at a known location the
 # commented out code will seed a single random infection at an
-# unknown starting location 
+# unknown starting location
 for i in range(len(seed_values)):
     # File for 5 initial infections in cell 1664
     file_loc = os.path.join(os.path.dirname(__file__),
