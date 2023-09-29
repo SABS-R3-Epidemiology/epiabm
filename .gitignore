@@ -176,3 +176,6 @@ python_examples/NZ_example/NZ_inputs/*.csv
 kernprof.py
 *.prof
 *.lprof
+
+# Large csv output files
+large_csv/
