@@ -354,7 +354,7 @@ lux = df.loc[df['ADMIN'] == 'Luxembourg'].geometry.to_list()
 # Read in the data from simulation output
 filename = os.path.join(os.path.dirname(__file__),
                         "simulation_outputs/large_csv",
-                        "output_luxembourg.csv")
+                        "population_output_simulation_1.csv")
 df_old = pd.read_csv(filename)
 df = df_old.groupby(
     ['time', 'cell', 'location_x', 'location_y'], as_index=False).sum()
