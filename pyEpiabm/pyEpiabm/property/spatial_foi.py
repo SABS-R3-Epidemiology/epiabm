@@ -86,16 +86,15 @@ class SpatialInfection:
         return infector.infectiousness * age * closure_spatial
 
     @staticmethod
-    def spatial_susc(susc_cell, infector, infectee, time: float):
+    def spatial_susc(susc_cell, infectee, time: float):
         """Calculate the susceptibility of one cell towards its neighbouring
-        cells.
+        cells. Intervention parameters are based on the microcell properties
+        of the infectee.
 
         Parameters
         ----------
         susc_cell : Cell
             Cell receiving infections
-        infector : Person
-            Infector
         infectee : Person
             Infectee
         time : float
@@ -114,17 +113,17 @@ class SpatialInfection:
 
         spatial_susc *= Parameters.instance().\
             intervention_params['place_closure']['closure_spatial_params'] \
-            if ((hasattr(infector.microcell, 'closure_start_time'))) and (
-                infector.is_place_closed(
+            if ((hasattr(infectee.microcell, 'closure_start_time'))) and (
+                infectee.is_place_closed(
                     Parameters.instance().intervention_params[
                         'place_closure']['closure_place_type'])) and (
-                        infector.microcell.closure_start_time <= time) else 1
+                        infectee.microcell.closure_start_time <= time) else 1
 
-        if (hasattr(infector.microcell, 'distancing_start_time')) and (
-                infector.microcell.distancing_start_time is not None) and (
-                    infector.microcell.distancing_start_time <= time):
-            if (hasattr(infector, 'distancing_enhanced')) and (
-                        infector.distancing_enhanced is True):
+        if (hasattr(infectee.microcell, 'distancing_start_time')) and (
+                infectee.microcell.distancing_start_time is not None) and (
+                    infectee.microcell.distancing_start_time <= time):
+            if (hasattr(infectee, 'distancing_enhanced')) and (
+                        infectee.distancing_enhanced is True):
                 spatial_susc *= Parameters.instance().\
                     intervention_params['social_distancing'][
                         'distancing_spatial_enhanced_susc']
@@ -196,6 +195,6 @@ class SpatialInfection:
             inf_cell, infector, time) * carehome_scale_inf
             * isolation_scale_inf * quarantine_scale)
         susceptibility = (SpatialInfection.spatial_susc(
-            susc_cell, infector, infectee, time)
+            susc_cell, infectee, time)
             * carehome_scale_susc * quarantine_scale)
         return (infectiousness * susceptibility)
