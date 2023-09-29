@@ -181,7 +181,7 @@ def plot_time_point(
                 value = find_value_for_region(current_data, point, name=name)
                 polygon = Polygon([vor.vertices[i] for i in region])
                 intersect = polygon.intersection(country)[0]
-                if type(intersect) == Polygon:
+                if isinstance(intersect, Polygon) is True:
                     polygon = intersect.exterior.coords
                     finite_segments.append(polygon)
                     ax.fill(*zip(*polygon), color=mapper.to_rgba(value))
