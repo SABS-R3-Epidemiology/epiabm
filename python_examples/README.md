@@ -29,29 +29,18 @@ Contained within the `age_stratified_example/` directory, this script creates an
 ![Age stratified bar plot.pt](./age_stratified_example/simulation_outputs/age_stratify.png)
 
 ## Intervention Examples
-Contained within the `intervention_example/` directory, these scripts runs simulations in which one intervention is active. Output graphs are contained within the `intervention_example/intervention_outputs/` directory. All simulations are run using the same input file containing a population of 10000 individuals, spread across 200 cells, each with 2 microcells, and 5 households per microcell. Simulations are run until day 50 with one initial infection. Of all interventions only Social Distancing and Vaccination use age in the model. All interventions consider household, place and spatial infections.
 
-### Case Isolation
-The resulting infection curve, saved to a .png file, shows the progression of the disease when symptomatic infected cases isolate with different isolation probabilities. Infection curves when none of the symptomatic individuals isolate ('isolation_probability' equals 0.0), half of the symptomatic individuals isolate ('isolation_probability' equals 0.5), and all symptomatic individuals isolate ('isolation_probability' equals 1.0) are compared. Increasing the isolation probability results in a delayed wave with reduced peak of infections.
-
-### Household Quarantine
-The resulting infection curve, saved to a .png file, shows the progression of the disease when the household of the case isolating individual enters quarantine. Infection curves when none of the individuals in the household enters quarantine ('quarantine_house_compliant' equals 0.0), half of the individuals in the household enters quarantine ('quarantine_house_compliant' equals 0.5), and all individuals in the household enters quarantine ('quarantine_house_compliant' equals 1.0) are compared (as 'quarantine_individual_compliant' is always set to 1.0). Increasing the compliance of the household results in a delayed wave with reduced peak of infections.
-
-## Place Closure
-
-## Social Distancing
-
-## Vaccination
-
-## Disease Testing
-
-## Travel Isolation
-The resulting infection curve, saved to a .png file, shows the progression of the disease when individuals introduced by travelling isolate. Infection curves when none of the introduced individuals isolate ('isolation_probability' equals 0.0), all the introduced individuals isolate in their assigned household ('isolation_probability' equals 1.0, 'hotel_isolate' equals 0), and all the introduced individuals isolate in an isolated household in the assigned microcell ('isolation_probability' equals 1.0, 'hotel_isolate' equals 1). Isolated individuals in isolated households might enter another household after their isolation period. Isolating introduced indiviudals results in a delayed wave. A further delayed wave with reduced peak of infections is observed when the introduced individuals isolate in their own isolating household.
+The general effect of interventions is a delayed wave with reduced peak of infections. The strenght of the intervention is dependent on the parameters. Scripts of simulations in which one intervention is active are contained within the `intervention_example/` directory. Specific examples of all interventions are shown in `intervention_example/README.md`. 
 
 ## Travel Example
+
 Contained within the `travel_example/` directory, this script runs a simulation in which infected (mild or asymptomatic) enter the population. Output graphs are contained within the `travel_example/travelling_outputs/` directory. The simulation is run on a population of 10000 individuals, spread across 200 cells, each with 2 microcells, and 5 households per microcell. The simulation is run until day 50 with one initial infection, age is used in the model and household, place and spatial infections are considered.
 
-The two resulting infection curves, saved to a .png file, shows the progression of the disease when every day a ratio of the number of infected cases in the population is introduced and when a constant number of infected individuals is introduced at day 4. Infection curves when no individuals are introduced  ('ratio_introduce_cases' equals 0.0), 5% of the infected cases in the population are introduced as newly infected individuals ('ratio_introduce_cases' equals 0.05), and 10% of the infected cases in the population are introduced as newly infected individuals ('ratio_introduce_cases' equals 0.1) are compared. Introducing more infected individuals will dilate the wave with an increased peak of infections. Furthermore, not introducing individuals (constant_introduce_cases equals [0]) is compared to introducing 100 individuals at day 4. Introducing infected individuas results in an early start of the wave of infections.
+The two resulting infection curves shows the progression of the disease when every day a ratio of the number of infected cases in the population is introduced and when a constant number of infected individuals is introduced at day 4. Infection curves when no individuals are introduced  ('ratio_introduce_cases' equals 0.0), 5% of the infected cases in the population are introduced as newly infected individuals ('ratio_introduce_cases' equals 0.05), and 10% of the infected cases in the population are introduced as newly infected individuals ('ratio_introduce_cases' equals 0.1) are compared. Introducing more infected individuals will dilate the wave with an increased peak of infections. Furthermore, not introducing individuals ('constant_introduce_cases' equals [0]) is compared to introducing 100 individuals at day 4. Introducing infected individuas results in an early start of the wave of infections.
+
+![travel example rate.pt](./travel_example/travelling_outputs/travelling_ratio_introduce_cases_Icurve_plot.png)
+
+![travel example constant.pt](./travel_example/travelling_outputs/travelling_constant_introduce_cases_Icurve_plot.png)
 
 ## cEpiabm Example
 
@@ -60,3 +49,9 @@ This gives jupyter notebook examples of how to run both threaded and non-threade
 ## Gibraltar Example
 
 The `gibraltar_simulation_flow.py` script runs a simulation of the spread of coronavirus across Gibraltar - a country chosen for its small size (and hence ease of simulation) while having complete [simulation parameters](https://github.com/mrc-ide/covid-sim/blob/master/data/admin_units/Gibraltar_admin.txt) available on the repo for [CovidSim](https://github.com/mrc-ide/covid-sim). Microcell-wise locations are not specified directly, and so reconstructed using the `microcell.conversion.py` script to generate the `gib_input.csv` file used in the main simulation flow.
+
+## Luxembourg Example
+
+The `luxembourg_simulation_flow.py` script runs a series of 10 differently seeded simulation of the spread of coronavirus across Luxembourg. This can be run for cases with and without interventions by changing between the `luxembourg_parameters.json` and `luxembourg_intervention_parameters.json` files. The initial infections are selected to be 5 individuals in the cell number 1664 which is towards the furthest eastern part of Luxembourg near the border with Germany (6.400&deg N, 49.708&deg W). The urban and rural locations selected, Luxembourg city and Nommern, respectively, are both 180 km from this initial infection site as the crow flies, allowing for fair comparisons to be made. These initial condition can be changed to randomly seeded initial conditions by changing the `luxembourg_adapted_5_in_cell_input.csv` input file to `luxembourg_input_file.csv` and changing the "initial_infected_number" parameter to be the desired number of infections. Outputs of the simulation are stored in large csv files named `population_output_simulation_i.csv` where i is the initial simulation repeat number. 
+
+The Jupyter Notebook rural_v_urban.ipynb shows the analysis we have done on these outputs. Including comparing that the spatial change made for version 1.1.1. The file `luxembourg_flow.py` was run on version 1.0.1 of epiabm with outputs saved as `pre_population_output_simulation_i.csv` to show the effect of the spatial change in version 1.1.1. This notebook also contains conparisons on version 1.1.1 with and without the presence of interventions. The files with interventions have their outputs stored as `population_output_intervention_simulation_i.csv` which are compared to the outputs without interventions `population_output_simulation_i.csv`.

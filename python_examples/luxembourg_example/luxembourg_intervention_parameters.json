@@ -1,6 +1,7 @@
 {
-    "basic_reproduction_num": 2.8,
+    "basic_reproduction_num": 0.5,
     "do_CovidSim": false,
+    "ave_places_per_mcell": 5,
     "infection_radius": 1,
     "latent_period": 4.59,
     "asympt_infect_period": 14,
@@ -297,123 +298,63 @@
     "asympt_infectiousness": 1,
     "latent_to_sympt_delay": 0.5,
     "infectiousness_prof": [0.487464241, 1, 1.229764827, 1.312453175,
-              1.307955665, 1.251658756, 1.166040358, 1.065716869,
-              0.960199498, 0.855580145, 0.755628835, 0.662534099,
-              0.577412896, 0.500665739, 0.432225141, 0.371729322,
-              0.318643018, 0.272340645, 0.232162632, 0.19745264,
-              0.167581252, 0.141960133, 0.120049578, 0.101361532,
-              0.085459603, 0.071957123, 0.060514046, 0.050833195,
-              0.04265624, 0.035759641, 0.029950735, 0.025064045,
-              0.02095788, 0.017511251, 0.014621091, 0.012199802,
-              0.010173075, 0.008477992, 0.007061366, 0.005878301,
-              0.00489096, 0.004067488, 0.003381102, 0.00280931,
-              0.002333237, 0.001937064, 0.001607543, 0.001333589,
-              0.001105933, 0.00091683, 0.000759816, 0.000629496,
-              0.000521372, 0.000431695, 0.000357344, 0.000295719,
-              0.000244659],
+        1.307955665, 1.251658756, 1.166040358, 1.065716869,
+        0.960199498, 0.855580145, 0.755628835, 0.662534099,
+        0.577412896, 0.500665739, 0.432225141, 0.371729322,
+        0.318643018, 0.272340645, 0.232162632, 0.19745264,
+        0.167581252, 0.141960133, 0.120049578, 0.101361532,
+        0.085459603, 0.071957123, 0.060514046, 0.050833195,
+        0.04265624, 0.035759641, 0.029950735, 0.025064045,
+        0.02095788, 0.017511251, 0.014621091, 0.012199802,
+        0.010173075, 0.008477992, 0.007061366, 0.005878301,
+        0.00489096, 0.004067488, 0.003381102, 0.00280931,
+        0.002333237, 0.001937064, 0.001607543, 0.001333589,
+        0.001105933, 0.00091683, 0.000759816, 0.000629496,
+        0.000521372, 0.000431695, 0.000357344, 0.000295719,
+        0.000244659],
+    "max_infectious_steps": 2550,
+    "infprof_res": 56,
     "place_params": {
-        "age_group1_min_age": [
-            5,
-            11,
-            18,
-            16
-        ],
-        "age_group1_max_age": [
-            11,
-            16,
-            65,
-            18
-        ],
+        "age_group1_min_age": [5, 11, 18, 16, 25],
+        "age_group1_max_age": [11, 16, 65, 18, 64],
         "age_group1_prop": [
-            0.976396125,
-            0.98390173,
-            0,
-            0.37097869299999997
+            0.968576934, 0.991132314, 0, 0.2806, 0.0115
         ],
-        "age_group2_min_age": [
-            3,
-            16,
-            18,
-            18
-        ],
-        "age_group2_max_age": [
-            5,
-            18,
-            21,
-            21
-        ],
+        "age_group2_min_age": [3, 16, 18, 18, 65],
+        "age_group2_max_age": [5, 18, 21, 21, 80],
         "age_group2_prop": [
-            1,
-            0.959727307,
-            0.629021307,
-            0.040272693000000026
+            0.974981243, 0.947510365, 0.707888292, 0.052489635, 0.0113
         ],
-        "age_group3_min_age": [
-            21,
-            21,
-            21,
-            21
-        ],
-        "age_group3_max_age": [
-            65,
-            65,
-            65,
-            65
-        ],
+        "age_group3_min_age": [21, 21, 21, 21, 80],
+        "age_group3_max_age": [65, 65, 65, 65, 1000],
         "age_group3_prop": [
-            0.005292966,
-            0.006331515,
-            0.064144615,
-            0.742058813
+            0.004749309, 0.006170466, 0.070787334, 0.62277534, 0.123
         ],
-        "nearest_places": [
-            3,
-            3,
-            6,
-            0
-        ],
-        "mean_size": [
-            230,
-            1010,
-            3300,
-            14.28
-        ],
-        "max_size": [
-            0,
-            0,
-            0,
-            5927
-        ],
-        "size_power": [
-            0,
-            0,
-            0,
-            1.34
-        ],
-        "size_offset": [
-            0,
-            0,
-            0,
-            5.35
-        ],
-        "mean_group_size": [
-            25,
-            25,
-            100,
-            10
-        ],
+        "nearest_places": [3, 3, 6, 0, 0],
+        "mean_size": [230, 1010, 3300, 14.28, 40],
+        "max_size": [0, 0, 0, 5927, 0],
+        "size_power": [0, 0, 0, 1.34, 0],
+        "size_offset": [0, 0, 0, 5.35, 0],
+        "mean_group_size": [25, 25, 100, 10, 20],
         "place_transmission": 0.1
     },
     "household_transmission": 0.1,
+    "household_size_distribution": [0.3334, 0.21635, 0.21635, 0.1044,
+                                    0.1044,	0.00502, 0.00502, 0.00502,
+                                    0.00502, 0.00502],
     "false_positive_rate": 0,
     "place_transmission": 0.1,
     "use_ages": 1,
-    "age_proportions": [6.2, 5.6, 5.8, 6.3, 6.8, 6.8, 6.5, 6.6,
-                        7.3, 7.3, 6.5, 5.7, 6, 4.8, 3.9, 3.2, 4.7],
+    
+    "age_proportions": [0.051839098, 0.053285979, 0.052873687,
+                        0.052283817, 0.058651946, 0.072903027,
+                        0.080151328, 0.078105312, 0.076536442,
+                        0.071951822, 0.072821186, 0.070125077,
+                        0.058187153, 0.046263125, 0.036740272,
+                        0.027033663, 0.040247066],
+
     "age_contact": [0.6, 0.7, 0.75, 1, 1, 1, 1, 1,
                     1, 1, 1, 1, 1, 1, 1, 0.75, 0.5],
-    "household_size_distribution": [],
-    "max_household_size": 10,
     "host_progression_lists": {
         "prob_gp_to_hosp": [0.001896, 0.001616, 0.002981, 0.006083,
                             0.013513, 0.025793, 0.040294, 0.057278,
@@ -467,6 +408,7 @@
                                     0.47651, 0.47651, 0.47651, 0.47651,
                                     0.47651]
     },
+    "max_household_size": 10,
     "household_age_params": {
         "mean_child_age_gap": 2,
         "min_adult_age": 19,
@@ -495,23 +437,43 @@
         "prop_other_parent_away": 0.0
     },
     "intervention_params": {
+        "case_isolation": {
+            "start_time": 0,
+            "policy_duration": 90,
+            "case_threshold": 0,
+            "isolation_delay": 0,
+            "isolation_duration": 14,
+            "isolation_probability": 1,
+            "use_testing": 0,
+            "isolation_effectiveness": 0.25,
+            "isolation_house_effectiveness": 0.5
+        },
+        "household_quarantine": {
+            "start_time": 0,
+            "policy_duration": 90,
+            "case_threshold": 0,
+            "quarantine_delay": 0,
+            "quarantine_duration": 14,
+            "quarantine_house_compliant": 0.75,
+            "quarantine_individual_compliant": 1.0,
+            "quarantine_house_effectiveness": 1.5,
+            "quarantine_spatial_effectiveness": 0.25,
+            "quarantine_place_effectiveness": [0.25, 0.25, 0.25, 0.25, 0.25, 0.25]
+        },
         "social_distancing": {
-            "start_time": 6,
-            "policy_duration": 365,
+            "start_time": 49,
+            "policy_duration": 90,
             "case_threshold": 0,
             "distancing_delay": 0,
-            "distancing_duration": 100,
+            "distancing_duration": 90,
             "case_microcell_threshold": 0,
-            "distancing_enhanced_prob": [0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "distancing_house_enhanced_susc": 0.8,
-            "distancing_place_enhanced_susc": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
-            "distancing_spatial_enhanced_susc": 0.1,
-            "distancing_house_susc": 1.0,
-            "distancing_place_susc": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-            "distancing_spatial_susc": 1.0
+            "distancing_enhanced_prob": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.3, 0.3, 0.5, 0.5, 0.8, 0.8, 0.8, 0.8],
+            "distancing_house_enhanced_susc": 1,
+            "distancing_place_enhanced_susc": [0.25, 0.25, 0.25, 0.25, 0.25, 0.25],
+            "distancing_spatial_enhanced_susc": 0.25,
+            "distancing_house_susc": 1.25,
+            "distancing_place_susc": [0.5, 0.5, 0.5, 0.5, 0.75, 0.75],
+            "distancing_spatial_susc": 0.25
         }
-        }
-    
-    
+    }
 }
