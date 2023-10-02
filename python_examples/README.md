@@ -42,6 +42,12 @@ The two resulting infection curves shows the progression of the disease when eve
 
 ![travel example constant.pt](./travel_example/travelling_outputs/travelling_constant_introduce_cases_Icurve_plot.png)
 
+## Model Population Examples
+
+Contained within the `model_population_example/` directory, the `model_population.ipynb` notebook shows examples on how to create an uniform population file and how to run simulations on this model population. The example compares infection curves for different grid sizes (the input is stored in the `model_population_example/simulation_outputs/` directory). The generated uniform population files are stored in the `model_population_example/uniform_inputs/` directory. 
+
+The `model_population_example/model_interventions.ipynb` notebook shows examples on how to run a simulation on a generated uniform population in which one or multiple intervention are active. The input for the multi-intervention example are stored in the `model_population_example/simulation_outputs/multi_interventions` directory.
+
 ## cEpiabm Example
 
 This gives jupyter notebook examples of how to run both threaded and non-threaded simulations in `cEpiabm` from python, using the python bindings (requires pybind 11).
