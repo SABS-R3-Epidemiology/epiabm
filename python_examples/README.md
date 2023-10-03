@@ -42,6 +42,12 @@ The two resulting infection curves shows the progression of the disease when eve
 
 ![travel example constant.pt](./travel_example/travelling_outputs/travelling_constant_introduce_cases_Icurve_plot.png)
 
+## Model Population Examples
+
+Contained within the `model_population_example/` directory, the `model_population.ipynb` notebook shows examples on how to create an uniform population file and how to run simulations on this model population. The example compares infection curves for different grid sizes (the input is stored in the `model_population_example/simulation_outputs/` directory). The generated uniform population files are stored in the `model_population_example/uniform_inputs/` directory. 
+
+The `model_population_example/model_interventions.ipynb` notebook shows examples on how to run a simulation on a generated uniform population in which one or multiple intervention are active. The input for the multi-intervention example are stored in the `model_population_example/simulation_outputs/multi_interventions` directory.
+
 ## cEpiabm Example
 
 This gives jupyter notebook examples of how to run both threaded and non-threaded simulations in `cEpiabm` from python, using the python bindings (requires pybind 11).
@@ -55,3 +61,7 @@ The `gibraltar_simulation_flow.py` script runs a simulation of the spread of cor
 The `luxembourg_simulation_flow.py` script runs a series of 10 differently seeded simulation of the spread of coronavirus across Luxembourg. This can be run for cases with and without interventions by changing between the `luxembourg_parameters.json` and `luxembourg_intervention_parameters.json` files. The initial infections are selected to be 5 individuals in the cell number 1664 which is towards the furthest eastern part of Luxembourg near the border with Germany (6.400&deg N, 49.708&deg W). The urban and rural locations selected, Luxembourg city and Nommern, respectively, are both 180 km from this initial infection site as the crow flies, allowing for fair comparisons to be made. These initial condition can be changed to randomly seeded initial conditions by changing the `luxembourg_adapted_5_in_cell_input.csv` input file to `luxembourg_input_file.csv` and changing the "initial_infected_number" parameter to be the desired number of infections. Outputs of the simulation are stored in large csv files named `population_output_simulation_i.csv` where i is the initial simulation repeat number. 
 
 The Jupyter Notebook rural_v_urban.ipynb shows the analysis we have done on these outputs. Including comparing that the spatial change made for version 1.1.1. The file `luxembourg_flow.py` was run on version 1.0.1 of epiabm with outputs saved as `pre_population_output_simulation_i.csv` to show the effect of the spatial change in version 1.1.1. This notebook also contains conparisons on version 1.1.1 with and without the presence of interventions. The files with interventions have their outputs stored as `population_output_intervention_simulation_i.csv` which are compared to the outputs without interventions `population_output_simulation_i.csv`.
+
+## New Zealand Example
+
+The `NZ_flow.py` script runs a simulation of the spread of coronavirus across New Zealand - a country chosen for its rapid implementation of strict intervention strategies to successfully control the spread of COVID-19 in the early stages of the pandemic. The parameter values for non-pharmaceutical interventions (`NewZealand_parameters.json`) are based on instructions from the New Zealand government as far as possible, based on the timeline of Alert Level changes, which documents the dates of key events and the duration of the State of National Emergency ([New Zealand Covid-19 Instructions](https://covid19.govt.nz/about-our-covid-19-response/history-of-the-covid-19-alert-system/)). Besides, one new infected case is introduced by international travel every day, and 25\% of these arrivals stay in an existing household, with the remaining staying in a hotel. 
