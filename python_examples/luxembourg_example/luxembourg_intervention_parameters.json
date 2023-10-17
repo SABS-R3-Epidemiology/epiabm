@@ -1,9 +1,8 @@
 {
-    "basic_reproduction_num": 3.0,
+    "basic_reproduction_num": 0.5,
     "do_CovidSim": false,
-    "mcell_num_per_cell": 81,
     "ave_places_per_mcell": 5,
-    "infection_radius": 0.0075,
+    "infection_radius": 1,
     "latent_period": 4.59,
     "asympt_infect_period": 14,
     "mean_mild_to_recov": 7,
@@ -340,17 +339,20 @@
         "place_transmission": 0.1
     },
     "household_transmission": 0.1,
-    "household_size_distribution": [0.255000, 0.304000, 0.209000, 0.177000,
-                                	0.041000, 0.010164, 0.002218, 0.000871,
-                                    0.000408, 0.000339],
+    "household_size_distribution": [0.3334, 0.21635, 0.21635, 0.1044,
+                                    0.1044,	0.00502, 0.00502, 0.00502,
+                                    0.00502, 0.00502],
     "false_positive_rate": 0,
     "place_transmission": 0.1,
     "use_ages": 1,
-    "age_proportions": [0.042564544, 0.048003452, 0.053426705, 0.047869391,
-                        0.048249802, 0.050512265, 0.056015061, 0.070217864,
-                        0.085571480, 0.084218614, 0.077687068, 0.073021085,
-                        0.062866531, 0.051360371, 0.047142770, 0.038737342,
-                        0.062535655],
+    
+    "age_proportions": [0.051839098, 0.053285979, 0.052873687,
+                        0.052283817, 0.058651946, 0.072903027,
+                        0.080151328, 0.078105312, 0.076536442,
+                        0.071951822, 0.072821186, 0.070125077,
+                        0.058187153, 0.046263125, 0.036740272,
+                        0.027033663, 0.040247066],
+
     "age_contact": [0.6, 0.7, 0.75, 1, 1, 1, 1, 1,
                     1, 1, 1, 1, 1, 1, 1, 0.75, 0.5],
     "host_progression_lists": {
@@ -434,36 +436,17 @@
         "older_gen_gap": 19,
         "prop_other_parent_away": 0.0
     },
-    "carehome_params": {
-      "carehome_minimum_age": 1000,
-      "carehome_allow_initial_infections": 0,
-      "carehome_resident_household_scaling": 1,
-      "carehome_resident_place_scaling": 1,
-      "carehome_resident_spatial_scaling": 1,
-      "carehome_worker_group_scaling": 1,
-      "carehome_rel_prob_hosp": 1
-    },
     "intervention_params": {
         "case_isolation": {
             "start_time": 0,
             "policy_duration": 90,
             "case_threshold": 0,
             "isolation_delay": 0,
-            "isolation_duration": 10,
-            "isolation_probability": 0.9,
+            "isolation_duration": 14,
+            "isolation_probability": 1,
+            "use_testing": 0,
             "isolation_effectiveness": 0.25,
             "isolation_house_effectiveness": 0.5
-        },
-        "place_closure": {
-            "start_time": 0,
-            "policy_duration": 74,
-            "case_threshold": 0,
-            "closure_delay": 0,
-            "closure_duration": 74,
-            "closure_place_type": [1, 2, 3],
-            "closure_household_infectiousness": 1.5,
-            "closure_spatial_params": 1.25,
-            "case_microcell_threshold": 0
         },
         "household_quarantine": {
             "start_time": 0,
@@ -478,19 +461,18 @@
             "quarantine_place_effectiveness": [0.25, 0.25, 0.25, 0.25, 0.25, 0.25]
         },
         "social_distancing": {
-            "start_time": 0,
+            "start_time": 49,
             "policy_duration": 90,
             "case_threshold": 0,
             "distancing_delay": 0,
             "distancing_duration": 90,
             "case_microcell_threshold": 0,
-            "distancing_enhanced_prob": [0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0.5, 0.5, 0.8, 0.8, 0.8, 0.8],
+            "distancing_enhanced_prob": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.3, 0.3, 0.5, 0.5, 0.8, 0.8, 0.8, 0.8],
             "distancing_house_enhanced_susc": 1,
             "distancing_place_enhanced_susc": [0.25, 0.25, 0.25, 0.25, 0.25, 0.25],
             "distancing_spatial_enhanced_susc": 0.25,
             "distancing_house_susc": 1.25,
-            "distancing_place_susc": [1, 1, 1, 0.75, 0.75, 0.75],
+            "distancing_place_susc": [0.5, 0.5, 0.5, 0.5, 0.75, 0.75],
             "distancing_spatial_susc": 0.25
         }
     }

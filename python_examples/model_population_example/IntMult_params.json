@@ -3,7 +3,7 @@
     "do_CovidSim": false,
     "mcell_num_per_cell": 81,
     "ave_places_per_mcell": 5,
-    "infection_radius": 0.0075,
+    "infection_radius": 1.2,
     "latent_period": 4.59,
     "asympt_infect_period": 14,
     "mean_mild_to_recov": 7,
@@ -434,64 +434,56 @@
         "older_gen_gap": 19,
         "prop_other_parent_away": 0.0
     },
-    "carehome_params": {
-      "carehome_minimum_age": 1000,
-      "carehome_allow_initial_infections": 0,
-      "carehome_resident_household_scaling": 1,
-      "carehome_resident_place_scaling": 1,
-      "carehome_resident_spatial_scaling": 1,
-      "carehome_worker_group_scaling": 1,
-      "carehome_rel_prob_hosp": 1
-    },
     "intervention_params": {
-        "case_isolation": {
-            "start_time": 0,
-            "policy_duration": 90,
+        "disease_testing": {
+            "start_time": 6,
+            "policy_duration": 365,
+            "case_threshold": 0,
+            "testing_capacity": [100,1000],
+            "false_positive": [0.023, 0.0032],
+            "false_negative": [0.2, 0.222],
+            "testing_asympt_uninf": [0.5, 0.5, 0.5],
+            "asympt_uninf_pcr": [0.2, 0.2, 0.2],
+            "testing_sympt": [1, 1, 1],
+            "sympt_pcr": [0.5, 0.5, 0.5]
+            },
+
+        "case_isolation":
+            {"start_time": 0,
+            "policy_duration": 365,
             "case_threshold": 0,
             "isolation_delay": 0,
-            "isolation_duration": 10,
+            "isolation_duration": 7,
             "isolation_probability": 0.9,
-            "isolation_effectiveness": 0.25,
-            "isolation_house_effectiveness": 0.5
+            "use_testing": 1,
+            "isolation_effectiveness": 0.05,
+            "isolation_house_effectiveness": 0.25
         },
-        "place_closure": {
-            "start_time": 0,
-            "policy_duration": 74,
-            "case_threshold": 0,
-            "closure_delay": 0,
-            "closure_duration": 74,
-            "closure_place_type": [1, 2, 3],
-            "closure_household_infectiousness": 1.5,
-            "closure_spatial_params": 1.25,
-            "case_microcell_threshold": 0
-        },
+             
         "household_quarantine": {
             "start_time": 0,
-            "policy_duration": 90,
+            "policy_duration": 365,
             "case_threshold": 0,
             "quarantine_delay": 0,
             "quarantine_duration": 14,
             "quarantine_house_compliant": 0.75,
             "quarantine_individual_compliant": 1.0,
-            "quarantine_house_effectiveness": 1.5,
-            "quarantine_spatial_effectiveness": 0.25,
-            "quarantine_place_effectiveness": [0.25, 0.25, 0.25, 0.25, 0.25, 0.25]
+            "quarantine_house_effectiveness": 0.5,
+            "quarantine_spatial_effectiveness": 0.1,
+            "quarantine_place_effectiveness": [0.1, 0.1, 0.1, 0.1,
+            0.1, 0.1]
         },
-        "social_distancing": {
+
+        "place_closure": {
             "start_time": 0,
-            "policy_duration": 90,
+            "policy_duration": 365,
             "case_threshold": 0,
-            "distancing_delay": 0,
-            "distancing_duration": 90,
-            "case_microcell_threshold": 0,
-            "distancing_enhanced_prob": [0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0.5, 0.5, 0.8, 0.8, 0.8, 0.8],
-            "distancing_house_enhanced_susc": 1,
-            "distancing_place_enhanced_susc": [0.25, 0.25, 0.25, 0.25, 0.25, 0.25],
-            "distancing_spatial_enhanced_susc": 0.25,
-            "distancing_house_susc": 1.25,
-            "distancing_place_susc": [1, 1, 1, 0.75, 0.75, 0.75],
-            "distancing_spatial_susc": 0.25
+            "closure_delay": 0,
+            "closure_duration": 365,
+            "closure_place_type": [4, 6],
+            "closure_household_infectiousness": 1.5,
+            "closure_spatial_params": 1.25,
+            "case_microcell_threshold": 0
         }
     }
 }
