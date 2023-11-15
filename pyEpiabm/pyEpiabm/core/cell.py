@@ -32,6 +32,7 @@ class Cell:
         """
         self.location = loc
         self.id = hash(self)
+        print(self.id)
         self.microcells = []
         self.persons = []
         self.places = []
