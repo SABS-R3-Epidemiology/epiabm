@@ -139,8 +139,11 @@ class Microcell:
             household = Household(self, loc=self.location)
             cell_id = self.cell.id
             household.set_id(str(cell_id) + "." + str(self.id) + "." + str(household_id))
-            for person in people:
-                household.add_person(person)
+            for i in range(len(people)):
+                household.add_person(people[i])
+                people[i].set_id(household.id + "." + str(i))
+
+
         else:
             logging.info("Cannot create an empty household")
 
