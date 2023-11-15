@@ -54,6 +54,7 @@ class Person:
         self.key_worker = False
         self.date_positive = None
         self.is_vaccinated = False
+        self.id = ""
 
         self.set_random_age(age_group)
 
@@ -223,3 +224,17 @@ class Person:
         self.microcell.cell.persons.remove(self)
         self.microcell.persons.remove(self)
         self.household.persons.remove(self)
+
+    def set_id(self, id: str):
+        """Updates ID of person (i.e. for input from file).
+        ID format: 4.3.2.1 represents cell 4, microcell 3 within this cell,
+        household 2 within this microcell, and person 1 within this
+        household
+
+        Parameters
+        ----------
+        id : str
+            Identity of person
+
+        """
+        self.id = id
