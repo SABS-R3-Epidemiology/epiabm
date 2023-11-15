@@ -123,7 +123,7 @@ class Microcell:
             self.cell.places.append(p)
             self.places.append(p)
 
-    def add_household(self, people: list):
+    def add_household(self, people: list, household_id: int):
         """Adds a default :class:`Household` to Microcell and fills it with
         a number of :class:`Person` s.
 
@@ -131,10 +131,14 @@ class Microcell:
         ----------
         people : list
             List of :class:`People` to add to household
+        household_id : int
+            Integer representing this specific household within the microcell
 
         """
         if len(people) != 0:
             household = Household(self, loc=self.location)
+            cell_id = self.cell.id
+            household.set_id(str(cell_id) + "." + str(self.id) + "." + str(household_id))
             for person in people:
                 household.add_person(person)
         else:

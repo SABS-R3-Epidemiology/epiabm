@@ -29,6 +29,7 @@ class Household:
             Household's base infectiousness
 
         """
+        self.id = ""
         self.persons = []
         self.susceptible_persons = []
         self.location = loc
@@ -104,3 +105,16 @@ class Household:
         """
         self.microcell.households.remove(self)
         self.cell.households.remove(self)
+
+    def set_id(self, id: str):
+        """Updates ID of household (i.e. for input from file).
+        Format of ID - for example 3.1.2 represents household 2 within microcell 1
+        within cell 3.
+
+        Parameters
+        ----------
+        id : str
+            Identity of household
+
+        """
+        self.id = id

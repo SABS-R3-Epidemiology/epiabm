@@ -195,14 +195,14 @@ class FilePopulationFactory:
         people_number = len(people_list)
         household_split = np.random.multinomial(people_number, q,
                                                 size=1)[0]
-        for j in range(household_number):
-            people_in_household = household_split[j]
+        for household_id in range(household_number):
+            people_in_household = household_split[household_id]
             household_people = []
             for i in range(people_in_household):
                 person_choice = people_list[0]
                 people_list.remove(person_choice)
                 household_people.append(person_choice)
-            microcell.add_household(household_people)
+            microcell.add_household(household_people, household_id)
 
     @staticmethod
     @log_exceptions()

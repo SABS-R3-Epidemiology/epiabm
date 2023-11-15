@@ -198,3 +198,6 @@ class Cell:
                 self.nearby_cell_distances[cell2.id] = distance
                 # Dict of near neighbours, cells which are closer than the
                 # cutoff for cross-cell infection
+
+
+print(Cell().id)
