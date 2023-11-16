@@ -143,7 +143,6 @@ class Microcell:
                 household.add_person(people[i])
                 people[i].set_id(household.id + "." + str(i))
 
-
         else:
             logging.info("Cannot create an empty household")
 
