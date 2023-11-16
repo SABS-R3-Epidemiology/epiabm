@@ -19,11 +19,21 @@ class TestPopulation(TestMockedLogs):
         self.assertEqual(repr(self.population),
                          "Population with 0 cells.")
 
-    def test_add_cells(self, n=4):
+    def test_add_cells(self, n=4, m=3):
         population = pe.Population()
         self.assertEqual(len(population.cells), 0)
+
         population.add_cells(n)
         self.assertEqual(len(population.cells), n)
+        self.assertEqual(population.cells[-1].id, n-1)
+
+        population.add_cells(m)
+        self.assertEqual(len(population.cells), n+m)
+        self.assertEqual(population.cells[-1].id, n+m-1)
+
+        # Check all cell IDs are unique
+        cell_ids = [cell.id for cell in population.cells]
+        self.assertEqual(len(cell_ids), len(set(cell_ids)))
 
     def test_total_people(self):
         self.assertEqual(self.population.total_people(), 0)
