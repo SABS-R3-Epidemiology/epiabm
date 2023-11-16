@@ -7,11 +7,11 @@ import numpy as np
 from queue import Queue
 from numbers import Number
 
-from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import DistanceFunctions
 
 from .microcell import Microcell
+from .parameters import Parameters
 from .person import Person
 from ._compartment_counter import _CompartmentCounter
 
@@ -198,6 +198,3 @@ class Cell:
                 self.nearby_cell_distances[cell2.id] = distance
                 # Dict of near neighbours, cells which are closer than the
                 # cutoff for cross-cell infection
-
-
-print(Cell().id)
