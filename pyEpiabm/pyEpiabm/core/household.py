@@ -4,6 +4,7 @@
 
 import typing
 from numbers import Number
+import re
 
 from pyEpiabm.property import InfectionStatus
 
@@ -109,7 +110,7 @@ class Household:
     def set_id(self, id: str):
         """Updates ID of household (i.e. for input from file).
         Format of ID - for example 3.1.2 represents household 2 within microcell 1
-        within cell 3.
+        within cell 3. The id will only be changed if it has the correct expression.
 
         Parameters
         ----------
@@ -117,4 +118,6 @@ class Household:
             Identity of household
 
         """
-        self.id = id
+        # May want to set upper limit on the number of digits
+        if re.match("\\d+\\.\\d+\\.\\d+", id):
+            self.id = id

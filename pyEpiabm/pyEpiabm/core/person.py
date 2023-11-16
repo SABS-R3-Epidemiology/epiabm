@@ -3,6 +3,7 @@
 #
 
 import random
+import re
 
 from pyEpiabm.property import InfectionStatus
 
@@ -229,7 +230,7 @@ class Person:
         """Updates ID of person (i.e. for input from file).
         ID format: 4.3.2.1 represents cell 4, microcell 3 within this cell,
         household 2 within this microcell, and person 1 within this
-        household
+        household. The id will only be changed if there is a match.
 
         Parameters
         ----------
@@ -237,4 +238,6 @@ class Person:
             Identity of person
 
         """
-        self.id = id
+        # May want to set upper limit on the number of digits
+        if re.match("\\d+\\.\\d+\\.\\d+\\.\\d+", id):
+            self.id = id
