@@ -53,6 +53,20 @@ class TestHousehold(TestPyEpiabm):
         self.assertEqual(len(subject.susceptible_persons), 0)
         self.assertEqual(subject.susceptible_persons, [])
 
+    def test_set_id(self):
+        subject = pe.Household(self.microcell, (1, 1))
+        self.assertEqual(subject.id, "")
+        subject.set_id("a.b.c")
+        self.assertEqual(subject.id, "")
+        subject.set_id("0.0.")
+        self.assertEqual(subject.id, "")
+        subject.set_id("0.0.0.0")
+        self.assertEqual(subject.id, "")
+        subject.set_id("0.0.0")
+        self.assertEqual(subject.id, "0.0.0")
+        subject.set_id("10.7.20")
+        self.assertEqual(subject.id, "10.7.20")
+
 
 if __name__ == '__main__':
     unittest.main()
