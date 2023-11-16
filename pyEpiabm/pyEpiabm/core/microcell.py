@@ -33,12 +33,12 @@ class Microcell:
             Microcell's parent :class:`Cell` instance
 
         """
-        self.id = hash(self)
         self.persons = []
         self.places = []
         self.households = []
         self.cell = cell
         self.location = cell.location
+        self.id = str(self.cell.id) + "." + str(len(self.cell.microcells))
         self.compartment_counter = _CompartmentCounter(
             f"Microcell {id(self)}")
 
@@ -123,7 +123,7 @@ class Microcell:
             self.cell.places.append(p)
             self.places.append(p)
 
-    def add_household(self, people: list, household_id: int):
+    def add_household(self, people: list):
         """Adds a default :class:`Household` to Microcell and fills it with
         a number of :class:`Person` s.
 
@@ -131,17 +131,12 @@ class Microcell:
         ----------
         people : list
             List of :class:`People` to add to household
-        household_id : int
-            Integer representing this specific household within the microcell
 
         """
         if len(people) != 0:
             household = Household(self, loc=self.location)
-            cell_id = self.cell.id
-            household.set_id(str(cell_id) + "." + str(self.id) + "." + str(household_id))
-            for i in range(len(people)):
-                household.add_person(people[i])
-                people[i].set_id(household.id + "." + str(i))
+            for person in people:
+                household.add_person(person)
 
         else:
             logging.info("Cannot create an empty household")
