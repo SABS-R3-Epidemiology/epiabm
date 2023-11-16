@@ -23,7 +23,7 @@ class TestMicrocell(TestPyEpiabm):
                          "Microcell with 0 people at location (0, 0).")
 
     def test_set_id(self):
-        self.assertEqual(self.microcell.id, hash(self.microcell))
+        self.assertEqual(self.microcell.id, str(self.cell.id) + "." + str(len(self.cell.microcells)))
         self.microcell.set_id(2.0)
         self.assertEqual(self.microcell.id, 2.0)
 
