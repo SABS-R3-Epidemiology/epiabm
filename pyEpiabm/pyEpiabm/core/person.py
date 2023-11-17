@@ -55,7 +55,7 @@ class Person:
         self.key_worker = False
         self.date_positive = None
         self.is_vaccinated = False
-        self.id = ""
+        self.id = self.microcell.id + "." + "." + str(len(self.microcell.persons))
 
         self.set_random_age(age_group)
 
@@ -239,5 +239,5 @@ class Person:
 
         """
         # May want to set upper limit on the number of digits
-        if re.match("\\d+\\.\\d+\\.\\d+\\.\\d+", id):
+        if re.match("^\\d+\\.\\d+\\.\\d+\\.\\d+$", id):
             self.id = id
