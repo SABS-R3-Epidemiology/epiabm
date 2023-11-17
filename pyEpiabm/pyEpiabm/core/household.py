@@ -30,7 +30,6 @@ class Household:
             Household's base infectiousness
 
         """
-        self.id = ""
         self.persons = []
         self.susceptible_persons = []
         self.location = loc
@@ -39,6 +38,7 @@ class Household:
         self.cell = microcell.cell
         self.microcell = microcell
         self.isolation_location = False
+        self.id = self.microcell.id + "." + str(len(self.microcell.households))
 
         if not (len(loc) == 2 and isinstance(loc[0], Number) and
                 isinstance(loc[1], Number)):
