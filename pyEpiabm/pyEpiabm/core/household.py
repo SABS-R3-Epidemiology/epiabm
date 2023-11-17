@@ -119,5 +119,5 @@ class Household:
 
         """
         # May want to set upper limit on the number of digits
-        if re.match("\\d+\\.\\d+\\.\\d+", id):
+        if re.match("^\\d+\\.\\d+\\.\\d+$", id):
             self.id = id
