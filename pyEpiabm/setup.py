@@ -72,7 +72,8 @@ setup(
     extras_require={
         'docs': [
             # Sphinx for doc generation. Version 1.7.3 has a bug:
-            'sphinx>=1.5, !=1.7.3',
+            'sphinx<7,>=1.5, !=1.7.3',
+
             # Nice theme for docs
             'sphinx_rtd_theme',
         ],
