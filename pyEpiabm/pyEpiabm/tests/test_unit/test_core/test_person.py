@@ -110,6 +110,18 @@ class TestPerson(TestPyEpiabm):
         self.assertTrue(self.person.is_vaccinated)
         self.assertEqual(self.person.date_vaccinated, 5)
 
+    def test_set_id(self):
+        init_id = self.microcell.id + "." + "." + str(len(self.microcell.persons)-1)
+        self.assertEqual(self.person.id, init_id)
+        self.person.set_id("0.1")
+        self.assertEqual(self.person.id, init_id)
+        self.person.set_id("1234")
+        self.assertEqual(self.person.id, init_id)
+        self.person.set_id("0.0.0.0.5")
+        self.assertEqual(self.person.id, init_id)
+        self.person.set_id("2.3.4.5")
+        self.assertEqual(self.person.id, "2.3.4.5")
+
 
 if __name__ == '__main__':
     unittest.main()

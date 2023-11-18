@@ -74,6 +74,9 @@ class TestMicrocell(TestPyEpiabm):
         self.assertEqual(len(self.microcell.households), 1)
         household = self.microcell.households[0]
         self.assertEqual(len(household.persons), 1)
+        for i in range(len(household.persons)):
+            person = self.microcell.persons[i]
+            self.assertEqual(person.id, household.id + "." + str(i))
 
     @mock.patch('logging.info')
     def test_logging(self, mock_log):
