@@ -6,6 +6,7 @@ import typing
 import numpy as np
 from queue import Queue
 from numbers import Number
+import re
 
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import DistanceFunctions
@@ -31,7 +32,7 @@ class Cell:
 
         """
         self.location = loc
-        self.id = hash(self)
+        self.id = str(hash(self))
         self.microcells = []
         self.persons = []
         self.places = []
@@ -70,16 +71,24 @@ class Cell:
         for _ in range(n):
             self.microcells.append(Microcell(self))
 
-    def set_id(self, id: float):
+    def set_id(self, id: str):
         """Updates ID of cell (i.e. for input from file).
 
         Parameters
         ----------
-        id : float
+        id : str
             Identity of cell
 
         """
-        self.id = id
+        # Ensure id is a string
+        if not isinstance(id, str):
+            raise TypeError("id must be of type string")
+
+        # May want to set upper limit on the number of digits
+        if re.match("^\\d+$", id):
+            self.id = id
+        else:
+            raise ValueError("id must take the correct form")
 
     def enqueue_person(self, person: Person):
         """Add person to queue for processing at end of iteration, provided

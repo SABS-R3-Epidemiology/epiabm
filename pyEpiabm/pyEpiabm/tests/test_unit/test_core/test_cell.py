@@ -15,7 +15,7 @@ class TestCell(TestPyEpiabm):
     def test__init__(self):
         self.assertEqual(self.cell.location[0], 0)
         self.assertEqual(self.cell.location[1], 0)
-        self.assertEqual(self.cell.id, hash(self.cell))
+        self.assertEqual(self.cell.id, str(hash(self.cell)))
         self.assertEqual(self.cell.microcells, [])
         self.assertEqual(self.cell.persons, [])
         self.assertEqual(self.cell.places, [])
@@ -38,9 +38,11 @@ class TestCell(TestPyEpiabm):
         self.assertRaises(ValueError, pe.Cell, ('1', 1))
 
     def test_set_id(self):
-        self.assertEqual(self.cell.id, hash(self.cell))
-        self.cell.set_id(2.0)
-        self.assertEqual(self.cell.id, 2.0)
+        self.assertEqual(self.cell.id, str(hash(self.cell)))
+        self.assertRaises(TypeError, self.cell.set_id, 2.0)
+        self.assertRaises(ValueError, self.cell.set_id, "2.0")
+        self.cell.set_id("2")
+        self.assertEqual(self.cell.id, "2")
 
     def test_add_microcells(self, n=4):
         self.assertEqual(len(self.cell.microcells), 0)

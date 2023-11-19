@@ -23,9 +23,9 @@ class TestMicrocell(TestPyEpiabm):
                          "Microcell with 0 people at location (0, 0).")
 
     def test_set_id(self):
-        self.assertEqual(self.microcell.id, str(self.cell.id) + "." + str(len(self.cell.microcells)))
-        self.microcell.set_id(2.0)
-        self.assertEqual(self.microcell.id, 2.0)
+        self.assertEqual(self.microcell.id, self.cell.id + "." + str(len(self.cell.microcells)))
+        self.assertRaises(TypeError, self.microcell.set_id, 2.0)
+        self.assertRaises(ValueError, self.microcell.set_id, "1.1.")
 
     def test_add_person(self):
         self.assertEqual(len(self.microcell.persons), 0)

@@ -118,6 +118,13 @@ class Household:
             Identity of household
 
         """
+
+        # Ensure id is a string
+        if not isinstance(id, str):
+            raise TypeError("id must be of type string")
+
         # May want to set upper limit on the number of digits
         if re.match("^\\d+\\.\\d+\\.\\d+$", id):
             self.id = id
+        else:
+            raise ValueError("id must take the correct form")

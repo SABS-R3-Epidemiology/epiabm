@@ -25,11 +25,11 @@ class TestPopulation(TestMockedLogs):
 
         population.add_cells(n)
         self.assertEqual(len(population.cells), n)
-        self.assertEqual(population.cells[-1].id, n-1)
+        self.assertEqual(population.cells[-1].id, str(n-1))
 
         population.add_cells(m)
         self.assertEqual(len(population.cells), n+m)
-        self.assertEqual(population.cells[-1].id, n+m-1)
+        self.assertEqual(population.cells[-1].id, str(n+m-1))
 
         # Check all cell IDs are unique
         cell_ids = [cell.id for cell in population.cells]

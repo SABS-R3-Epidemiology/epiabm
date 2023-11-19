@@ -61,9 +61,10 @@ class TestPopConfig(TestPyEpiabm):
         # Test cell_wise values
         for i in range(2):
             self.assertEqual(test_pop.cells[i].id,
-                             self.input.get('cell')[i])
-            self.assertEqual(test_pop.cells[i].microcells[0].id,
-                             self.input.get('microcell')[i])
+                             str(int(self.input.get('cell')[i])))
+            id_parts = test_pop.cells[i].microcells[0].id.split(".")
+            self.assertEqual(id_parts[-1],
+                             str(int(self.input.get('microcell')[i])))
             self.assertEqual(test_pop.cells[i].location[0],
                              self.input.get('location_x')[i])
             self.assertEqual(test_pop.cells[i].location[1],
@@ -133,15 +134,15 @@ class TestPopConfig(TestPyEpiabm):
     def test_find_cell(self):
         pop = pe.Population()
         pop.add_cells(2)
-        pop.cells[1].set_id(42)
+        pop.cells[1].set_id("42")
 
-        target_cell = FilePopulationFactory.find_cell(pop, 42, pop.cells[1])
-        self.assertEqual(target_cell.id, 42)
+        target_cell = FilePopulationFactory.find_cell(pop, "42", pop.cells[1])
+        self.assertEqual(target_cell.id, "42")
         self.assertEqual(hash(target_cell), hash(pop.cells[1]))
         self.assertEqual(len(pop.cells), 2)  # No new cell created
 
-        new_cell = FilePopulationFactory.find_cell(pop, 43, pop.cells[1])
-        self.assertEqual(new_cell.id, 43)
+        new_cell = FilePopulationFactory.find_cell(pop, "43", pop.cells[1])
+        self.assertEqual(new_cell.id, "43")
         self.assertEqual(len(pop.cells), 3)  # New cell created
 
     @patch("pandas.read_csv")
@@ -217,8 +218,11 @@ class TestPopConfig(TestPyEpiabm):
         actual_df = mock_copy.call_args.args[0]
         if version.parse(pd.__version__) >= version.parse("1.4.0"):
             expected_df = self.df.copy()
-            expected = expected_df.drop('household_number', axis=1)
-            actual = actual_df.drop('household_number', axis=1)
+
+            # The type of the id is converted from float to string, so we
+            # drop the cell and microcell columns
+            expected = expected_df.drop(['cell', 'microcell', 'household_number'], axis=1)
+            actual = actual_df.drop(['cell', 'microcell', 'household_number'], axis=1)
 
             pd.testing.assert_frame_equal(actual,
                                           expected, check_dtype=False)

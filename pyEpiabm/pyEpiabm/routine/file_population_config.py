@@ -84,8 +84,12 @@ class FilePopulationFactory:
         current_cell = None
         # Iterate through lines (one per microcell)
         for _, line in input.iterrows():
+
+            # Converting from float to string
+            cell_id_csv = str(int(line["cell"]))
+            microcell_id_csv = str(int(line["microcell"]))
             # Check if cell exists, or create it
-            cell = FilePopulationFactory.find_cell(new_pop, line["cell"],
+            cell = FilePopulationFactory.find_cell(new_pop, cell_id_csv,
                                                    current_cell)
             if current_cell != cell:
                 current_cell = cell
@@ -96,13 +100,20 @@ class FilePopulationFactory:
 
             # Raise error if microcell exists, then create new one
             for microcell in cell.microcells:
-                if microcell.id == line["microcell"]:
+
+                # The microcell id is a string separated by periods, so we
+                # must find the part which matches the csv input
+                id_parts = microcell.id.split(".")
+                if id_parts[-1] == microcell_id_csv:
                     raise ValueError(f"Duplicate microcells {microcell.id}"
                                      + f" in cell {cell.id}")
 
             new_microcell = Microcell(cell)
             cell.microcells.append(new_microcell)
-            new_microcell.set_id(line["microcell"])
+
+            # Either keep the following line (sets id according to data frame input), or
+            # remove it (sets id according to current number of microcells in cell.microcells)
+            new_microcell.set_id(cell_id_csv + "." + microcell_id_csv)
 
             for column in input.columns.values:
                 if hasattr(InfectionStatus, column):
@@ -150,7 +161,7 @@ class FilePopulationFactory:
         return new_pop
 
     @staticmethod
-    def find_cell(population: Population, cell_id: float, current_cell: Cell):
+    def find_cell(population: Population, cell_id: str, current_cell: Cell):
         """Returns cell with given ID in population, creates one if
         current cell has another ID. As input is sorted on cell no
         cell will exist with that ID.
@@ -159,7 +170,7 @@ class FilePopulationFactory:
         ----------
         population : Population
             Population containing target cell
-        cell_id : float
+        cell_id : str
             ID for target cell
         current_cell : Cell or None
             Cell object of current cell
@@ -195,14 +206,14 @@ class FilePopulationFactory:
         people_number = len(people_list)
         household_split = np.random.multinomial(people_number, q,
                                                 size=1)[0]
-        for household_id in range(household_number):
-            people_in_household = household_split[household_id]
+        for j in range(household_number):
+            people_in_household = household_split[j]
             household_people = []
             for i in range(people_in_household):
                 person_choice = people_list[0]
                 people_list.remove(person_choice)
                 household_people.append(person_choice)
-            microcell.add_household(household_people, household_id)
+            microcell.add_household(household_people)
 
     @staticmethod
     @log_exceptions()

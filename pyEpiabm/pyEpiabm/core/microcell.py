@@ -5,6 +5,7 @@
 import typing
 from numbers import Number
 import logging
+import re
 
 from pyEpiabm.property import InfectionStatus
 
@@ -38,7 +39,7 @@ class Microcell:
         self.households = []
         self.cell = cell
         self.location = cell.location
-        self.id = str(self.cell.id) + "." + str(len(self.cell.microcells))
+        self.id = self.cell.id + "." + str(len(self.cell.microcells))
         self.compartment_counter = _CompartmentCounter(
             f"Microcell {id(self)}")
 
@@ -59,11 +60,20 @@ class Microcell:
 
         Parameters
         ----------
-        id : float
+        id : str
             Identity of microcell
 
         """
-        self.id = id
+
+        # Ensure id is a string
+        if not isinstance(id, str):
+            raise TypeError("id must be of type string")
+
+        # Ensure that the id is of the correct form
+        if re.match("^\\d+\\.\\d+$", id):
+            self.id = id
+        else:
+            raise ValueError("id must take the correct form")
 
     def add_person(self, person):
         """Adds :class:`Person` with given :class:`InfectionStatus` and given
