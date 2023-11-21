@@ -17,13 +17,13 @@ authors:
     affiliation: 'Department of Engineering, University of Oxford'
   - given-names: Lara
     family-names: Herriott
-    affiliation: 'Doctoral Training Centre, University of Oxford'
+    affiliation: 'Mathematical Institute, University of Oxford'
   - given-names: Nathan
     family-names: Schofield
-    affiliation: 'Doctoral Training Centre, University of Oxford'
+    affiliation: 'Mathematical Institute, University of Oxford'
   - given-names: Henriette
     family-names: Capel
-    affiliation: 'Doctoral Training Centre, University of Oxford'
+    affiliation: 'Department of Statistics, University of Oxford'
   - given-names: Luke
     family-names: Heirene
     affiliation: 'Mathematical Institute, University of Oxford'
@@ -32,7 +32,7 @@ authors:
     affiliation: 'Mathematical Institute, University of Oxford'
   - given-names: Jiayuan
     family-names: Zhu
-    affiliation: 'Doctoral Training Centre, University of Oxford'
+    affiliation: 'Department of Engineering, University of Oxford'
   - given-names: Patricia
     family-names: Lamirande
     affiliation: 'Mathematical Institute, University of Oxford'
@@ -44,7 +44,7 @@ authors:
     affiliation: 'Department of Engineering, University of Oxford'
   - given-names: Isaac
     family-names: Ellmen
-    affiliation: 'Doctoral Training Centre, University of Oxford'
+    affiliation: 'Department of Statistics, University of Oxford'
   - given-names: Pietro
     family-names: Monticone
     affiliation: 'University of Turin'
