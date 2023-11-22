@@ -56,7 +56,7 @@ class Microcell:
             f" at location {self.location}."
 
     def set_id(self, id):
-        """Updates ID of microcell (i.e. for input from file).
+        """Updates id of current microcell (i.e. for input from file).
 
         Parameters
         ----------

@@ -72,7 +72,7 @@ class Cell:
             self.microcells.append(Microcell(self))
 
     def set_id(self, id: str):
-        """Updates ID of cell (i.e. for input from file).
+        """Updates id of current cell (i.e. for input from file).
 
         Parameters
         ----------

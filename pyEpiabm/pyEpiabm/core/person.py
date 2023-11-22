@@ -228,8 +228,8 @@ class Person:
         self.household.persons.remove(self)
 
     def set_id(self, id: str):
-        """Updates ID of person (i.e. for input from file).
-        ID format: 4.3.2.1 represents cell 4, microcell 3 within this cell,
+        """Updates id of current person (i.e. for input from file).
+        id format: 4.3.2.1 represents cell 4, microcell 3 within this cell,
         household 2 within this microcell, and person 1 within this
         household. The id will only be changed if there is a match.
 
