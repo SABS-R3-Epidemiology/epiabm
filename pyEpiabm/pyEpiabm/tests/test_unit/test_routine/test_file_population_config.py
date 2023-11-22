@@ -134,7 +134,7 @@ class TestPopConfig(TestPyEpiabm):
     def test_find_cell(self):
         pop = pe.Population()
         pop.add_cells(2)
-        pop.cells[1].set_id("42")
+        pop.cells[1].set_id("42", cells=pop.cells)
 
         target_cell = FilePopulationFactory.find_cell(pop, "42", pop.cells[1])
         self.assertEqual(target_cell.id, "42")
