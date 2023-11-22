@@ -111,8 +111,9 @@ class FilePopulationFactory:
             new_microcell = Microcell(cell)
             cell.microcells.append(new_microcell)
 
-            # Either keep the following line (sets id according to data frame input), or
-            # remove it (sets id according to current number of microcells in cell.microcells)
+            # Either keep the following line (sets id according to data frame
+            # input), or remove it (sets id according to current number of
+            # microcells in cell.microcells)
             new_microcell.set_id(cell_id_csv + "." + microcell_id_csv)
 
             for column in input.columns.values:

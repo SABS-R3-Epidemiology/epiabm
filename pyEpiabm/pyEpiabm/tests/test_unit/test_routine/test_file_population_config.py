@@ -221,8 +221,10 @@ class TestPopConfig(TestPyEpiabm):
 
             # The type of the id is converted from float to string, so we
             # drop the cell and microcell columns
-            expected = expected_df.drop(['cell', 'microcell', 'household_number'], axis=1)
-            actual = actual_df.drop(['cell', 'microcell', 'household_number'], axis=1)
+            expected = expected_df.drop(['cell', 'microcell',
+                                         'household_number'], axis=1)
+            actual = actual_df.drop(['cell', 'microcell',
+                                     'household_number'], axis=1)
 
             pd.testing.assert_frame_equal(actual,
                                           expected, check_dtype=False)

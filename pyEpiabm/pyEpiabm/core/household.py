@@ -109,8 +109,9 @@ class Household:
 
     def set_id(self, id: str):
         """Updates ID of household (i.e. for input from file).
-        Format of ID - for example 3.1.2 represents household 2 within microcell 1
-        within cell 3. The id will only be changed if it has the correct expression.
+        Format of ID - for example 3.1.2 represents household 2 within
+        microcell 1 within cell 3. The id will only be changed if it has the
+        correct expression.
 
         Parameters
         ----------

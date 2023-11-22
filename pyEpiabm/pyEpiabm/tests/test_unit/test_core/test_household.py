@@ -55,7 +55,8 @@ class TestHousehold(TestPyEpiabm):
 
     def test_set_id(self):
         subject = pe.Household(self.microcell, (1, 1))
-        init_id = str(self.microcell.id) + "." + str(len(self.microcell.households)-1)
+        init_id = str(self.microcell.id) + "." + \
+                  str(len(self.microcell.households)-1)
         self.assertEqual(subject.id, init_id)
         subject.set_id("0.0.0")
         self.assertEqual(subject.id, "0.0.0")
