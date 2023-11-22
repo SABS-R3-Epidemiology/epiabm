@@ -71,13 +71,15 @@ class Cell:
         for _ in range(n):
             self.microcells.append(Microcell(self))
 
-    def set_id(self, id: str):
+    def set_id(self, id: str, cells: typing.List):
         """Updates id of current cell (i.e. for input from file).
 
         Parameters
         ----------
         id : str
             Identity of cell
+        cells : list
+            List of all current cells
 
         """
         # Ensure id is a string
@@ -85,11 +87,16 @@ class Cell:
             raise TypeError("Provided id must be a string")
 
         # This regex will match on any string which has 1 or more digits
-        if re.match("^\\d+$", id):
-            self.id = id
-        else:
+        if not re.match("^\\d+$", id):
             raise ValueError(f"Invalid id: {id}. id must be of the form 'i' "
                              f"where i is an integer")
+
+        # Finally, check for duplicates
+        cell_ids = [cell.id for cell in cells]
+        if id in cell_ids:
+            raise ValueError(f"Duplicate id: {id}.")
+
+        self.id = id
 
     def enqueue_person(self, person: Person):
         """Add person to queue for processing at end of iteration, provided
