@@ -252,7 +252,7 @@ class Person:
                              f"can be empty)")
 
         # Finally, check for duplicates
-        person_ids = [person.id for person in self.household.persons]
+        person_ids = [person.id for person in self.microcell.persons]
         if id in person_ids:
             raise ValueError(f"Duplicate id: {id}.")
 

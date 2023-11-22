@@ -87,7 +87,8 @@ class FilePopulationFactory:
 
             # Converting from float to string
             cell_id_csv = str(int(line["cell"]))
-            microcell_id_csv = str(int(line["microcell"]))
+            microcell_id_csv = cell_id_csv + "." + str(int(line["microcell"]))
+
             # Check if cell exists, or create it
             cell = FilePopulationFactory.find_cell(new_pop, cell_id_csv,
                                                    current_cell)
@@ -99,14 +100,10 @@ class FilePopulationFactory:
                 cell.set_location(location)
 
             # Raise error if microcell exists, then create new one
-            for microcell in cell.microcells:
-
-                # The microcell id is a string separated by periods, so we
-                # must find the part which matches the csv input
-                id_parts = microcell.id.split(".")
-                if id_parts[-1] == microcell_id_csv:
-                    raise ValueError(f"Duplicate microcells {microcell.id}"
-                                     + f" in cell {cell.id}")
+            microcell_ids = [microcell.id for microcell in cell.microcells]
+            if microcell_id_csv in microcell_ids:
+                raise ValueError(f"Duplicate microcells {microcell_id_csv}"
+                                 + f" in cell {cell.id}")
 
             new_microcell = Microcell(cell)
             cell.microcells.append(new_microcell)
@@ -114,7 +111,7 @@ class FilePopulationFactory:
             # Either keep the following line (sets id according to data frame
             # input), or remove it (sets id according to current number of
             # microcells in cell.microcells)
-            new_microcell.set_id(cell_id_csv + "." + microcell_id_csv)
+            new_microcell.set_id(microcell_id_csv)
 
             for column in input.columns.values:
                 if hasattr(InfectionStatus, column):
