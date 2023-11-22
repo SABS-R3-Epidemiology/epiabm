@@ -221,8 +221,8 @@ class TestPopConfig(TestPyEpiabm):
 
             expected = expected_df.drop(['household_number'], axis=1)
             actual = actual_df.drop(['household_number'], axis=1)
-            actual_df['cell'] = pd.Series([1.0, 2.0])
-            actual_df['microcell'] = pd.Series([1.0, 1.0])
+            actual['cell'] = pd.Series([1.0, 2.0])
+            actual['microcell'] = pd.Series([1.0, 1.0])
 
             pd.testing.assert_frame_equal(actual,
                                           expected, check_dtype=False)
