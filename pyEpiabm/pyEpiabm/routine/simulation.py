@@ -21,6 +21,7 @@ class Simulation:
     """Class to run a full simulation.
 
     """
+
     def __init__(self):
         """ Constructor
         """
@@ -32,7 +33,8 @@ class Simulation:
                   initial_sweeps: typing.List[AbstractSweep],
                   sweeps: typing.List[AbstractSweep],
                   sim_params: typing.Dict,
-                  file_params: typing.Dict):
+                  file_params: typing.Dict,
+                  ih_file_params: typing.Dict = None):
         """Initialise a population structure for use in the simulation.
 
         sim_params Contains:
@@ -51,6 +53,11 @@ class Simulation:
             * `age_stratified`: Boolean to determine whether the output will \
                 be age stratified
 
+        ih_file_params Contains:
+            * `output_file`: String for the name of the output .csv file
+            * `output_dir`: String for the location fo the output file, \
+               as a relative path
+
         Parameters
         ----------
         population : Population
@@ -67,7 +74,10 @@ class Simulation:
             as input for call method of initial sweeps
         file_params : dict
             Dictionary of parameters specific to the output file
-
+        ih_file_params : dict
+            Dictionary of parameters specific to the output infection history
+            file. Defaults to None if infection history is not required for the
+            simulation
         """
         self.sim_params = sim_params
         self.population = population
@@ -103,6 +113,7 @@ class Simulation:
         logging.info(
             f"Set output location to {os.path.join(folder, filename)}")
 
+        # Setting up writer for infection status distribution for each cell
         output_titles = ["time"] + [s for s in InfectionStatus]
         if self.spatial_output:
             output_titles.insert(1, "cell")
@@ -115,6 +126,26 @@ class Simulation:
         self.writer = _CsvDictWriter(
             folder, filename,
             output_titles)
+
+        # Setting up writer for infection history for each person. If the
+        # ih_file_params dict is empty, then we do not need to record this
+        ih_folder = os.path.join(os.getcwd(),
+                                 ih_file_params["output_dir"])
+
+        ih_filename = ih_file_params["output_file"]
+        logging.info(
+            f"Set infection history output location to "
+            f"{os.path.join(ih_folder, ih_filename)}")
+
+        person_ids = []
+        for cell in population.cells:
+            person_ids += [person.id for person in cell]
+        ih_output_titles = ["time"] + person_ids
+
+        self.ih_writer = _CsvDictWriter(
+            ih_folder, ih_filename,
+            ih_output_titles
+        )
 
     @log_exceptions()
     def run_sweeps(self):
@@ -143,6 +174,7 @@ class Simulation:
             for sweep in self.sweeps:
                 sweep(t)
             self.write_to_file(t)
+            self.write_to_ih_file(t)
             for writer in self.writers:
                 writer.write(t, self.population)
             logging.debug(f'Iteration at time {t} days completed')
@@ -169,12 +201,12 @@ class Simulation:
                     for age_i in range(0, nb_age_groups):
                         data = {s: 0 for s in list(InfectionStatus)}
                         for inf_status in data:
-                            data_per_inf_status =\
+                            data_per_inf_status = \
                                 cell.compartment_counter.retrieve()[inf_status]
                             data[inf_status] += data_per_inf_status[age_i]
                         # Age groups are numbered from 1 to the total number
                         # of age groups (thus the +1):
-                        data["age_group"] = age_i+1
+                        data["age_group"] = age_i + 1
                         data["time"] = time
                         data["cell"] = cell.id
                         data["location_x"] = cell.location[0]
@@ -185,10 +217,10 @@ class Simulation:
                 for cell in self.population.cells:
                     for age_i in range(0, nb_age_groups):
                         for inf_status in list(InfectionStatus):
-                            data_per_inf_status =\
+                            data_per_inf_status = \
                                 cell.compartment_counter.retrieve()[inf_status]
                             data[inf_status] += data_per_inf_status[age_i]
-                        data["age_group"] = age_i+1
+                        data["age_group"] = age_i + 1
                         data["time"] = time
                         self.writer.write(data)
         else:  # If age not considered, age_group not written in csv
