@@ -231,7 +231,7 @@ class Person:
         """Updates id of current person (i.e. for input from file).
         id format: 4.3.2.1 represents cell 4, microcell 3 within this cell,
         household 2 within this microcell, and person 1 within this
-        household. The id will only be changed if there is a match.
+        household. The id will only be changed if it is of the correct format.
 
         Parameters
         ----------
