@@ -211,6 +211,23 @@ class Simulation:
                 data["time"] = time
                 self.writer.write(data)
 
+    def write_to_ih_file(self, time):
+        """Records the infection history of the individual people
+        and writes these to file.
+
+        Parameters
+        ----------
+        time : float
+            Time of output data
+
+        """
+        data = {column:0 for column in self.ih_writer.writer.fieldnames}
+        for cell in self.population.cells:
+            for person in cell.persons:
+                data[person.id] += person.infection_status.value
+        data["time"] = time
+        self.writer.write(data)
+
     def add_writer(self, writer: AbstractReporter):
         self.writers.append(writer)
 
