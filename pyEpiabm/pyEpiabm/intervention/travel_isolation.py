@@ -75,6 +75,13 @@ class TravelIsolation(AbstractIntervention):
                                     selected_household = random.choice(
                                         existing_households)
                                     selected_household.add_person(person)
+
+                                    # Have to update the person's id to
+                                    # account for their new household
+                                    person.set_id(selected_household.id +
+                                                  "." +
+                                                  len(selected_household
+                                                      .persons))
                                 else:
                                     person.household.isolation_location = \
                                         False
