@@ -142,7 +142,7 @@ class Person:
         self.infection_status = new_status
 
         if self.infection_status == InfectionStatus.Susceptible and \
-            self.household is not None:
+                                 self.household is not None:
             self.household.add_susceptible_person(self)
         if self.infection_status == InfectionStatus.Exposed and \
             self.household is not None:
