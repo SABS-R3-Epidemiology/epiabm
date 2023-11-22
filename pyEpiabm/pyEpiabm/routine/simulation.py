@@ -129,23 +129,26 @@ class Simulation:
 
         # Setting up writer for infection history for each person. If the
         # ih_file_params dict is empty, then we do not need to record this
-        ih_folder = os.path.join(os.getcwd(),
-                                 ih_file_params["output_dir"])
+        if ih_file_params is not None:
+            ih_folder = os.path.join(os.getcwd(),
+                                     ih_file_params["output_dir"])
 
-        ih_filename = ih_file_params["output_file"]
-        logging.info(
-            f"Set infection history output location to "
-            f"{os.path.join(ih_folder, ih_filename)}")
+            ih_filename = ih_file_params["output_file"]
+            logging.info(
+                f"Set infection history output location to "
+                f"{os.path.join(ih_folder, ih_filename)}")
 
-        person_ids = []
-        for cell in population.cells:
-            person_ids += [person.id for person in cell]
-        ih_output_titles = ["time"] + person_ids
+            person_ids = []
+            for cell in population.cells:
+                person_ids += [person.id for person in cell]
+            ih_output_titles = ["time"] + person_ids
 
-        self.ih_writer = _CsvDictWriter(
-            ih_folder, ih_filename,
-            ih_output_titles
-        )
+            self.ih_writer = _CsvDictWriter(
+                ih_folder, ih_filename,
+                ih_output_titles
+            )
+        else:
+            self.ih_writer = None
 
     @log_exceptions()
     def run_sweeps(self):
@@ -174,7 +177,8 @@ class Simulation:
             for sweep in self.sweeps:
                 sweep(t)
             self.write_to_file(t)
-            self.write_to_ih_file(t)
+            if self.ih_writer is not None:
+                self.write_to_ih_file(t)
             for writer in self.writers:
                 writer.write(t, self.population)
             logging.debug(f'Iteration at time {t} days completed')
@@ -253,7 +257,7 @@ class Simulation:
             Time of output data
 
         """
-        data = {column:0 for column in self.ih_writer.writer.fieldnames}
+        data = {column: 0 for column in self.ih_writer.writer.fieldnames}
         for cell in self.population.cells:
             for person in cell.persons:
                 data[person.id] += person.infection_status.value
