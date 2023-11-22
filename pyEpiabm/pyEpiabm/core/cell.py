@@ -4,9 +4,9 @@
 
 import typing
 import numpy as np
+import re
 from queue import Queue
 from numbers import Number
-import re
 
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import DistanceFunctions
