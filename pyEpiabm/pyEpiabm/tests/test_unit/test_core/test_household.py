@@ -65,6 +65,7 @@ class TestHousehold(TestPyEpiabm):
         self.assertRaises(TypeError, subject.set_id, 2.0)
         self.assertRaises(ValueError, subject.set_id, "a.b.c")
         self.assertRaises(ValueError, subject.set_id, "0.0.")
+        self.assertRaises(ValueError, subject.set_id, "123")
         self.assertRaises(ValueError, subject.set_id, "0.0.0.0")
 
 
