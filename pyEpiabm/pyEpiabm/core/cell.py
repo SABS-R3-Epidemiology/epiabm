@@ -82,13 +82,14 @@ class Cell:
         """
         # Ensure id is a string
         if not isinstance(id, str):
-            raise TypeError("id must be of type string")
+            raise TypeError("Provided id must be a string")
 
-        # May want to set upper limit on the number of digits
+        # This regex will match on any string which has 1 or more digits
         if re.match("^\\d+$", id):
             self.id = id
         else:
-            raise ValueError("id must take the correct form")
+            raise ValueError(f"Invalid id: {id}. id must be of the form 'i' "
+                             f"where i is an integer")
 
     def enqueue_person(self, person: Person):
         """Add person to queue for processing at end of iteration, provided

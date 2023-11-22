@@ -67,13 +67,20 @@ class Microcell:
 
         # Ensure id is a string
         if not isinstance(id, str):
-            raise TypeError("id must be of type string")
+            raise TypeError("Provided id must be a string")
 
-        # Ensure that the id is of the correct form
-        if re.match("^\\d+\\.\\d+$", id):
-            self.id = id
-        else:
-            raise ValueError("id must take the correct form")
+        # This regex will match on any string which takes the form "i.j" where
+        # i and j are integers
+        if not re.match("^\\d+\\.\\d+$", id):
+            raise ValueError(f"Invalid id: {id}. id must be of the form 'i.j' "
+                             f"where i, j are integers")
+
+        # Finally, check for duplicates
+        microcell_ids = [microcell.id for microcell in self.cell.microcells]
+        if id in microcell_ids:
+            raise ValueError(f"Duplicate id: {id}.")
+
+        self.id = id
 
     def add_person(self, person):
         """Adds :class:`Person` with given :class:`InfectionStatus` and given

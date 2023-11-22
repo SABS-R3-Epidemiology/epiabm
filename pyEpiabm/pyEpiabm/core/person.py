@@ -242,10 +242,18 @@ class Person:
 
         # Ensure id is a string
         if not isinstance(id, str):
-            raise TypeError("id must be of type string")
+            raise TypeError("Provided id must be a string")
 
-        # May want to set upper limit on the number of digits
-        if re.match("^\\d+\\.\\d+\\.\\d*\\.\\d+$", id):
-            self.id = id
-        else:
-            raise ValueError("id must take the correct form")
+        # This regex will match on any string which takes the form "i.j.k.l"
+        # where i, j, k and l are integers (k can be empty)
+        if not re.match("^\\d+\\.\\d+\\.\\d*\\.\\d+$", id):
+            raise ValueError(f"Invalid id: {id}. id must be of the form "
+                             f"'i.j.k.l' where i, j, k, l are integers (k"
+                             f"can be empty)")
+
+        # Finally, check for duplicates
+        person_ids = [person.id for person in self.household.persons]
+        if id in person_ids:
+            raise ValueError(f"Duplicate id: {id}.")
+
+        self.id = id
