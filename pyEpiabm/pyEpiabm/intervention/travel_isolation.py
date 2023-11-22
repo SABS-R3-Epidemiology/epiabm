@@ -80,8 +80,8 @@ class TravelIsolation(AbstractIntervention):
                                     # account for their new household
                                     person.set_id(selected_household.id +
                                                   "." +
-                                                  len(selected_household
-                                                      .persons))
+                                                  str(len(selected_household
+                                                          .persons)))
                                 else:
                                     person.household.isolation_location = \
                                         False
