@@ -216,13 +216,13 @@ class TestPopConfig(TestPyEpiabm):
 
         FilePopulationFactory.print_population(test_pop, 'output.csv')
         actual_df = mock_copy.call_args.args[0]
-        actual_df['cell'] = pd.Series([1.0, 2.0])
-        actual_df['microcell'] = pd.Series([1.0, 1.0])
         if version.parse(pd.__version__) >= version.parse("1.4.0"):
             expected_df = self.df.copy()
 
             expected = expected_df.drop(['household_number'], axis=1)
             actual = actual_df.drop(['household_number'], axis=1)
+            actual_df['cell'] = pd.Series([1.0, 2.0])
+            actual_df['microcell'] = pd.Series([1.0, 1.0])
 
             pd.testing.assert_frame_equal(actual,
                                           expected, check_dtype=False)
