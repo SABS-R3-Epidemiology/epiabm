@@ -179,7 +179,7 @@ class FilePopulationFactory:
             return current_cell
         new_cell = Cell()
         population.cells.append(new_cell)
-        new_cell.set_id(cell_id)
+        new_cell.set_id(cell_id, population.cells)
         return new_cell
 
     @staticmethod
