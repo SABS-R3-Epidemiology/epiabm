@@ -30,6 +30,11 @@ class TestMicrocell(TestPyEpiabm):
         self.assertRaises(TypeError, self.microcell.set_id, 2.0)
         self.assertRaises(ValueError, self.microcell.set_id, "1.1.")
         self.assertRaises(ValueError, self.microcell.set_id, "12")
+        self.microcell.set_id("0.0")
+        self.cell.microcells.append(self.microcell)
+        new_microcell = pe.Microcell(self.cell)
+        self.cell.microcells.append(new_microcell)
+        self.assertRaises(ValueError, new_microcell.set_id, "0.0")
 
     def test_add_person(self):
         self.assertEqual(len(self.microcell.persons), 0)
