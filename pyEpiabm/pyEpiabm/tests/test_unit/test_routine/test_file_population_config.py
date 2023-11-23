@@ -13,7 +13,7 @@ class TestPopConfig(TestPyEpiabm):
     """
 
     def setUp(self) -> None:
-        self.input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
+        self.input = {'cell': [1, 2], 'microcell': [1, 1],
                       'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
                       'household_number': [1, 1], 'place_number': [1, 1],
                       'Susceptible': [8, 9], 'InfectMild': [2, 3]}
@@ -37,7 +37,9 @@ class TestPopConfig(TestPyEpiabm):
         mock_read.return_value = self.df
 
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
-        mock_read.assert_called_once_with('test_input.csv')
+        mock_read.assert_called_once_with('test_input.csv',
+                                          dtype={"cell": int,
+                                                 "microcell": int})
 
         total_people = 0
         total_infectious = 0
@@ -61,10 +63,10 @@ class TestPopConfig(TestPyEpiabm):
         # Test cell_wise values
         for i in range(2):
             self.assertEqual(test_pop.cells[i].id,
-                             str(int(self.input.get('cell')[i])))
+                             str(self.input.get('cell')[i]))
             id_parts = test_pop.cells[i].microcells[0].id.split(".")
             self.assertEqual(id_parts[-1],
-                             str(int(self.input.get('microcell')[i])))
+                             str(self.input.get('microcell')[i]))
             self.assertEqual(test_pop.cells[i].location[0],
                              self.input.get('location_x')[i])
             self.assertEqual(test_pop.cells[i].location[1],
@@ -95,7 +97,9 @@ class TestPopConfig(TestPyEpiabm):
         FilePopulationFactory.make_pop('test_input.csv')
         mock_log.assert_called_once_with("ValueError in FilePopulation"
                                          + "Factory.make_pop()")
-        mock_read.assert_called_once_with('test_input.csv')
+        mock_read.assert_called_once_with('test_input.csv',
+                                          dtype={"cell": int,
+                                                 "microcell": int})
 
     @patch("pandas.read_csv")
     def test_disorderd_input(self, mock_read):
@@ -103,7 +107,7 @@ class TestPopConfig(TestPyEpiabm):
         and microcells.
         """
         # Read in disordered data
-        dict_extra = {'cell': [1.0, 3.0], 'microcell': [2.0, 1.0],
+        dict_extra = {'cell': [1, 3], 'microcell': [2, 1],
                       'location_x': [0.0, 2.0], 'location_y': [0.0, 2.0],
                       'household_number': [1, 1], 'place_number': [1, 1],
                       'Susceptible': [8, 9], 'InfectMild': [2, 3]}
@@ -129,7 +133,9 @@ class TestPopConfig(TestPyEpiabm):
         FilePopulationFactory.make_pop('test_input.csv')
         mock_log.assert_called_once_with("ValueError in FilePopulation"
                                          + "Factory.make_pop()")
-        mock_read.assert_called_once_with('test_input.csv')
+        mock_read.assert_called_once_with('test_input.csv',
+                                          dtype={"cell": int,
+                                                 "microcell": int})
 
     def test_find_cell(self):
         pop = pe.Population()
@@ -180,7 +186,9 @@ class TestPopConfig(TestPyEpiabm):
         mock_read.return_value = self.df
 
         FilePopulationFactory.make_pop('test_input.csv', random_seed=n)
-        mock_read.assert_called_once_with('test_input.csv')
+        mock_read.assert_called_once_with('test_input.csv',
+                                          dtype={"cell": int,
+                                                 "microcell": int})
 
         mock_random.assert_called_once_with(n)
         mock_np_random.assert_called_once_with(n)
@@ -221,8 +229,8 @@ class TestPopConfig(TestPyEpiabm):
 
             expected = expected_df.drop(['household_number'], axis=1)
             actual = actual_df.drop(['household_number'], axis=1)
-            actual['cell'] = pd.Series([1.0, 2.0])
-            actual['microcell'] = pd.Series([1.0, 1.0])
+            actual['cell'] = pd.Series([1, 2])
+            actual['microcell'] = pd.Series([1, 1])
 
             pd.testing.assert_frame_equal(actual,
                                           expected, check_dtype=False)

@@ -62,7 +62,8 @@ class FilePopulationFactory:
             logging.info(f"Set population random seed to: {random_seed}")
 
         # Read file into pandas dataframe
-        input = pd.read_csv(input_file)
+        input = pd.read_csv(input_file, dtype={"cell": int,
+                                               "microcell": int})
         loc_given = ("location_x" and "location_y" in input.columns.values)
         # Sort csv on cell and microcell ID
         input = input.sort_values(by=["cell", "microcell"])
@@ -83,11 +84,11 @@ class FilePopulationFactory:
         # Store current cell
         current_cell = None
         # Iterate through lines (one per microcell)
-        for _, line in input.iterrows():
-
+        for line in input.itertuples():
+            line = line._asdict()
             # Converting from float to string
-            cell_id_csv = str(int(line["cell"]))
-            microcell_id_csv = cell_id_csv + "." + str(int(line["microcell"]))
+            cell_id_csv = str(line["cell"])
+            microcell_id_csv = cell_id_csv + "." + str(line["microcell"])
 
             # Check if cell exists, or create it
             cell = FilePopulationFactory.find_cell(new_pop, cell_id_csv,
