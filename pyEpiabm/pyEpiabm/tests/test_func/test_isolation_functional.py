@@ -54,7 +54,9 @@ class TestIsolationFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with('test_input.csv',
+                                     dtype={"cell": int,
+                                            "microcell": int})
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -82,7 +84,9 @@ class TestIsolationFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with('test_input.csv',
+                                     dtype={"cell": int,
+                                            "microcell": int})
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -109,7 +113,9 @@ class TestIsolationFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc().sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with('test_input.csv',
+                                     dtype={"cell": int,
+                                            "microcell": int})
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -137,7 +143,9 @@ class TestIsolationFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with('test_input.csv',
+                                     dtype={"cell": int,
+                                            "microcell": int})
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -164,7 +172,9 @@ class TestIsolationFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with('test_input.csv',
+                                     dtype={"cell": int,
+                                            "microcell": int})
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -191,7 +201,9 @@ class TestIsolationFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with('test_input.csv',
+                                     dtype={"cell": int,
+                                            "microcell": int})
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group

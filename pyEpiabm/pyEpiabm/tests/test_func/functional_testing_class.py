@@ -30,7 +30,7 @@ class TestFunctional(TestMockedLogs):
         """Can be called in setUp to create a default population,
         to test the impact of interventions.
         """
-        self.pop_params = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
+        self.pop_params = {'cell': [1, 2], 'microcell': [1, 1],
                            'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
                            'household_number': [1, 1],
                            'Susceptible': [800, 900], 'InfectMild': [10, 0],
