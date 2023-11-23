@@ -56,7 +56,7 @@ class Person:
         self.date_positive = None
         self.is_vaccinated = False
         self.id = self.microcell.id + "." + "." + \
-                  str(len(self.microcell.persons))
+            str(len(self.microcell.persons))
 
         self.set_random_age(age_group)
 
@@ -91,7 +91,7 @@ class Person:
 
         """
         return Person.is_infectious(self) and self.infection_status != \
-               InfectionStatus.InfectASympt
+            InfectionStatus.InfectASympt
 
     def is_infectious(self):
         """Query if the person is currently infectious.
@@ -142,10 +142,10 @@ class Person:
         self.infection_status = new_status
 
         if self.infection_status == InfectionStatus.Susceptible and \
-                                 self.household is not None:
+                self.household is not None:
             self.household.add_susceptible_person(self)
         if self.infection_status == InfectionStatus.Exposed and \
-            self.household is not None:
+                self.household is not None:
             self.household.remove_susceptible_person(self)
 
     def add_place(self, place, person_group: int = 0):
@@ -198,7 +198,7 @@ class Person:
 
         """
         if (hasattr(self.microcell, 'closure_start_time')) and (
-            self.microcell.closure_start_time is not None):
+                self.microcell.closure_start_time is not None):
             for place_type in self.place_types:
                 if place_type.value in closure_place_type:
                     return True
