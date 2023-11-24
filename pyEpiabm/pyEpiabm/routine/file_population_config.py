@@ -103,8 +103,8 @@ class FilePopulationFactory:
             # Raise error if microcell exists, then create new one
             microcell_ids = [microcell.id for microcell in cell.microcells]
             if microcell_id_csv in microcell_ids:
-                raise ValueError(f"Duplicate microcells {microcell_id_csv}"
-                                 + f" in cell {cell.id}")
+                raise ValueError(f"Duplicate microcells: {microcell_id_csv}"
+                                 + f" already exists in cell {cell.id}")
 
             new_microcell = Microcell(cell)
             cell.microcells.append(new_microcell)
