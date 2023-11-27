@@ -262,7 +262,7 @@ class Simulation:
             for person in cell.persons:
                 data[person.id] += person.infection_status.value
         data["time"] += time
-        self.writer.write(data)
+        self.ih_writer.write(data)
 
     def add_writer(self, writer: AbstractReporter):
         self.writers.append(writer)
