@@ -33,6 +33,9 @@ class TestSimFunctional(TestFunctional):
                             "spatial_output": False,
                             "age_stratified": True}
 
+        self.read_params = {"filepath_or_buffer": 'test_input.csv',
+                            "dtype": {"cell": int, "microcell": int}}
+
     @staticmethod
     def toy_simulation(pop_params, sim_params, file_params):
         # Create a population based on the parameters given.
@@ -189,9 +192,7 @@ class TestSimFunctional(TestFunctional):
                                                 self.file_params,
                                                 sweep_list)
 
-        mock_read.assert_called_with('test_input.csv',
-                                     dtype={"cell": int,
-                                            "microcell": int})
+        mock_read.assert_called_with(**self.read_params)
         mock_csv.assert_called_once()
 
         cell_data_0 = pop.cells[0].compartment_counter.retrieve()
@@ -226,9 +227,7 @@ class TestSimFunctional(TestFunctional):
                                                 self.file_params,
                                                 sweep_list)
 
-        mock_read.assert_called_once_with('test_input.csv',
-                                          dtype={"cell": int,
-                                                 "microcell": int})
+        mock_read.assert_called_once_with(**self.read_params)
         mock_csv.assert_called_once()
 
         cell_data_0 = pop.cells[0].compartment_counter.retrieve()

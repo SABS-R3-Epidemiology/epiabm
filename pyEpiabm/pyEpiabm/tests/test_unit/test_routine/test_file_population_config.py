@@ -20,6 +20,9 @@ class TestPopConfig(TestPyEpiabm):
         self.df = pd.DataFrame(self.input)
         pe.Parameters.instance().household_size_distribution = []
 
+        self.read_params = {"filepath_or_buffer": 'test_input.csv',
+                            "dtype": {"cell": int, "microcell": int}}
+
     @patch('logging.exception')
     def test_make_pop_no_file(self, mock_log):
         """Tests for when no file is specified.
@@ -37,9 +40,7 @@ class TestPopConfig(TestPyEpiabm):
         mock_read.return_value = self.df
 
         test_pop = FilePopulationFactory.make_pop('test_input.csv')
-        mock_read.assert_called_once_with('test_input.csv',
-                                          dtype={"cell": int,
-                                                 "microcell": int})
+        mock_read.assert_called_once_with(**self.read_params)
 
         total_people = 0
         total_infectious = 0
@@ -97,9 +98,7 @@ class TestPopConfig(TestPyEpiabm):
         FilePopulationFactory.make_pop('test_input.csv')
         mock_log.assert_called_once_with("ValueError in FilePopulation"
                                          + "Factory.make_pop()")
-        mock_read.assert_called_once_with('test_input.csv',
-                                          dtype={"cell": int,
-                                                 "microcell": int})
+        mock_read.assert_called_once_with(**self.read_params)
 
     @patch("pandas.read_csv")
     def test_disorderd_input(self, mock_read):
@@ -133,9 +132,7 @@ class TestPopConfig(TestPyEpiabm):
         FilePopulationFactory.make_pop('test_input.csv')
         mock_log.assert_called_once_with("ValueError in FilePopulation"
                                          + "Factory.make_pop()")
-        mock_read.assert_called_once_with('test_input.csv',
-                                          dtype={"cell": int,
-                                                 "microcell": int})
+        mock_read.assert_called_once_with(**self.read_params)
 
     def test_find_cell(self):
         pop = pe.Population()
@@ -186,9 +183,7 @@ class TestPopConfig(TestPyEpiabm):
         mock_read.return_value = self.df
 
         FilePopulationFactory.make_pop('test_input.csv', random_seed=n)
-        mock_read.assert_called_once_with('test_input.csv',
-                                          dtype={"cell": int,
-                                                 "microcell": int})
+        mock_read.assert_called_once_with(**self.read_params)
 
         mock_random.assert_called_once_with(n)
         mock_np_random.assert_called_once_with(n)

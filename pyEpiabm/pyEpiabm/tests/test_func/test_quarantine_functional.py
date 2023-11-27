@@ -47,6 +47,9 @@ class TestQuarantineFunctional(TestFunctional):
             }
         }
 
+        self.read_params = {"filepath_or_buffer": 'test_input.csv',
+                            "dtype": {"cell": int, "microcell": int}}
+
     def test_quarantine_present(self, mock_read, mock_csv):
         """Household quarantine functional test to ensure more people will be
         susceptible when household quarantine intervention is present.
@@ -70,9 +73,7 @@ class TestQuarantineFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv',
-                                     dtype={"cell": int,
-                                            "microcell": int})
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group

@@ -62,8 +62,8 @@ class FilePopulationFactory:
             logging.info(f"Set population random seed to: {random_seed}")
 
         # Read file into pandas dataframe
-        input = pd.read_csv(input_file, dtype={"cell": int,
-                                               "microcell": int})
+        input = pd.read_csv(filepath_or_buffer=input_file, dtype={"cell": int,
+                            "microcell": int})
         loc_given = ("location_x" and "location_y" in input.columns.values)
         # Sort csv on cell and microcell ID
         input = input.sort_values(by=["cell", "microcell"])
