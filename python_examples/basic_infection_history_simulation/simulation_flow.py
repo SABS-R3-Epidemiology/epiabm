@@ -42,9 +42,9 @@ file_params = {"output_file": "output.csv",
                "age_stratified": False}
 
 ih_file_params = {"output_dir": os.path.join(os.path.dirname(__file__),
-                                          "simulation_outputs"),
-               "status_output": True,
-               "infectiousness_output": True}
+                                             "simulation_outputs"),
+                  "status_output": True,
+                  "infectiousness_output": True}
 
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.
@@ -53,7 +53,7 @@ sim.configure(
     population,
     [pe.sweep.InitialInfectedSweep()],
     [pe.sweep.HouseholdSweep(), pe.sweep.QueueSweep(),
-     pe.sweep.HostProgressionSweep()],
+     pe.sweep.HostProgressionSweep(), pe.sweep.DemographicsSweep(file_params)],
     sim_params,
     file_params,
     ih_file_params)
