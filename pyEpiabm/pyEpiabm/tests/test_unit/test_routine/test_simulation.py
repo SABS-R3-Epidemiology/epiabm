@@ -281,6 +281,59 @@ class TestSimulation(TestMockedLogs):
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                       self.file_params["output_dir"]))
 
+    @patch('os.makedirs')
+    def test_write_to_ih_file(self, mock_mkdir):
+        mo = mock_open()
+        self.ih_file_params['status_output'] = True
+        self.ih_file_params['infectiousness_output'] = False
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            time = 1
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params)
+            data = {column: 0 for column in test_sim.ih_status_writer.writer.fieldnames}
+            data["time"] = time
+        with patch.object(test_sim.ih_status_writer, 'write') as mock:
+                test_sim.write_to_ih_file(time, "status")
+                mock.assert_called_with(data)
+        mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
+                                      self.ih_file_params["output_dir"]))
+
+        self.ih_file_params['status_output'] = False
+        self.ih_file_params['infectiousness_output'] = True
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            time = 1
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params)
+            data = {column: 0 for column in test_sim.ih_infectiousness_writer.writer.fieldnames}
+            data["time"] = time
+        with patch.object(test_sim.ih_infectiousness_writer, 'write') as mock:
+                test_sim.write_to_ih_file(time, "infectiousness")
+                mock.assert_called_with(data)
+        mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
+                                      self.ih_file_params["output_dir"]))
+
+        self.ih_file_params['status_output'] = True
+        self.ih_file_params['infectiousness_output'] = True
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            time = 1
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params)
+            ih_data = {column: 0 for column in test_sim.ih_status_writer.writer.fieldnames}
+            ih_data["time"] = time
+            infect_data = {column: 0 for column in test_sim.ih_infectiousness_writer.writer.fieldnames}
+            infect_data["time"] = time
+        with patch.object(test_sim.ih_status_writer, 'write') as mock:
+                test_sim.write_to_ih_file(time, "status")
+                mock.assert_called_with(ih_data)
+        with patch.object(test_sim.ih_infectiousness_writer, 'write') as mock:
+                test_sim.write_to_ih_file(time, "infectiousness")
+                mock.assert_called_with(infect_data)
+        mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
+                                      self.ih_file_params["output_dir"]))
+
     def test_set_random_seed(self):
         pe.routine.Simulation.set_random_seed(seed=0)
         value = random.random()

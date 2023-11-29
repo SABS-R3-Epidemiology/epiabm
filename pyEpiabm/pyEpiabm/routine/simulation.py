@@ -201,9 +201,9 @@ class Simulation:
                 sweep(t)
             self.write_to_file(t)
             if self.ih_status_writer is not None:
-                self.write_to_ih_file(t)
+                self.write_to_ih_file(t, option="status")
             if self.ih_infectiousness_writer is not None:
-                self.write_to_ih_file(t)
+                self.write_to_ih_file(t, option="infectiousness")
             for writer in self.writers:
                 writer.write(t, self.population)
             logging.debug(f'Iteration at time {t} days completed')
@@ -272,7 +272,7 @@ class Simulation:
                 data["time"] = time
                 self.writer.write(data)
 
-    def write_to_ih_file(self, time):
+    def write_to_ih_file(self, time, option: str):
         """Records the infection history of the individual people
         and writes these to file.
 
@@ -285,7 +285,12 @@ class Simulation:
         data = {column: 0 for column in self.ih_writer.writer.fieldnames}
         for cell in self.population.cells:
             for person in cell.persons:
-                data[person.id] += person.infection_status.value
+                if option=="status":
+                    data[person.id] += person.infection_status.value
+                elif option=="infectiousness":
+                    data[person.id] += person.infectiousness
+                else:
+                    data[person.id]
         data["time"] += time
         self.ih_writer.write(data)
 
