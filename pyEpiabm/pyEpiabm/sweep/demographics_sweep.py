@@ -66,7 +66,7 @@ class DemographicsSweep(AbstractSweep):
                 for cell in self._population.cells:
                     for person in cell.persons:
                         data = {"id": person.id,
-                                "age_group": person.age,
+                                "age_group": person.age_group,
                                 "location_x": cell.location[0],
                                 "location_y": cell.location[1],
                                 "kw_or_chr": "K" if person.key_worker else
@@ -86,7 +86,7 @@ class DemographicsSweep(AbstractSweep):
                 for cell in self._population.cells:
                     for person in cell.persons:
                         data = {"id": person.id,
-                                "age_group": person.age,
+                                "age_group": person.age_group,
                                 "kw_or_chr": "K" if person.key_worker else
                                 ("C" if person.care_home_resident else "X")}
                         self.writer.write(data)
