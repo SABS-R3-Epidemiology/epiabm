@@ -64,7 +64,7 @@ class TestSimulation(TestMockedLogs):
             # Test that the ih writers are None, and that both status_output
             # and infectiousness_output are False
             self.assertEqual(test_sim.status_output, False)
-            self.assertEqual(test_sim.ih_infectiousness_writer, False)
+            self.assertEqual(test_sim.infectiousness_output, False)
             self.assertEqual(test_sim.ih_status_writer, None)
             self.assertEqual(test_sim.ih_infectiousness_writer, None)
 
