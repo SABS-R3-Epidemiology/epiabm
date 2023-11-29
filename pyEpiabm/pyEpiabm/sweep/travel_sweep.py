@@ -151,7 +151,7 @@ class TravelSweep(AbstractSweep):
         microcells) with highest population density are selected. The
         individuals are assigned to one of these microcells by a uniform random
         choice between them. Individuals can end up in the same microcell.
-        Next, individuals are assigned to an wxisting or a new household within
+        Next, individuals are assigned to an existing or a new household within
         the selected microcell.
 
         Parameters
@@ -195,7 +195,7 @@ class TravelSweep(AbstractSweep):
                 selected_household.add_person(person)
             else:
                 # Create new household
-                selected_microcell.add_household([person])
+                selected_microcell.add_household([person], change_id=False)
 
     def check_leaving_individuals(self, time, person):
         """Check if individuals travel_end_time is reached. If interventions
