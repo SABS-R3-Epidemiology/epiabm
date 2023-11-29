@@ -149,7 +149,6 @@ class Microcell:
                 person = people[i]
                 household.add_person(person)
                 person.set_id(household.id + "." + str(i))
-                # Here, we can write the demographic data to the file
 
         else:
             logging.info("Cannot create an empty household")
