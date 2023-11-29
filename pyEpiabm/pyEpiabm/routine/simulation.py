@@ -291,7 +291,8 @@ class Simulation:
         if self.status_output:
             ih_data = {column: 0 for column in
                        self.ih_status_writer.writer.fieldnames}
-            infect_data = ih_data
+            infect_data = {column: 0 for column in
+                       self.ih_status_writer.writer.fieldnames}
             if self.infectiousness_output:
                 for cell in self.population.cells:
                     for person in cell.persons:
