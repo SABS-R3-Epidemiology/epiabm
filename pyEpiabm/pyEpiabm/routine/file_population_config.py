@@ -207,7 +207,7 @@ class FilePopulationFactory:
                 person_choice = people_list[0]
                 people_list.remove(person_choice)
                 household_people.append(person_choice)
-            microcell.add_household(household_people)
+            microcell.add_household(household_people, change_id=False)
 
     @staticmethod
     @log_exceptions()

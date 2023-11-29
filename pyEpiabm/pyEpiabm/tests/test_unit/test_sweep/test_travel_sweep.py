@@ -30,10 +30,14 @@ class TestTravelSweep(TestPyEpiabm):
         self.microcell2 = self.cell.microcells[1]
         self.microcell1.add_people(15)
         self.microcell2.add_people(5)
-        self.microcell1.add_household(self.microcell1.persons.copy()[:10])
-        self.microcell1.add_household(self.microcell1.persons.copy()[10:])
-        self.microcell2.add_household(self.microcell1.persons.copy()[:3])
-        self.microcell2.add_household(self.microcell1.persons.copy()[3:])
+        self.microcell1.add_household(self.microcell1.persons.copy()[:10],
+                                      change_id=True)
+        self.microcell1.add_household(self.microcell1.persons.copy()[10:],
+                                      change_id=True)
+        self.microcell2.add_household(self.microcell1.persons.copy()[:3],
+                                      change_id=True)
+        self.microcell2.add_household(self.microcell1.persons.copy()[3:],
+                                      change_id=True)
         # By default all susceptible, make 2 infectious
         self.initial_infected_person1 = self.microcell1.persons[0]
         self.initial_infected_person1.update_status(InfectionStatus(4))

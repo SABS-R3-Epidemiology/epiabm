@@ -68,7 +68,8 @@ class InitialHouseholdSweep(AbstractSweep):
                     people_in_household = []
                     for i in range(k, k + m):
                         people_in_household.append(microcell.persons[i])
-                    microcell.add_household(people_in_household)
+                    microcell.add_household(people_in_household,
+                                            change_id=True)
                     k += m
 
     def one_person_household_age(self, person: Person):

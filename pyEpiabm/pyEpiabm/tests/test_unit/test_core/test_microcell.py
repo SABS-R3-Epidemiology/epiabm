@@ -79,24 +79,36 @@ class TestMicrocell(TestPyEpiabm):
 
     def test_add_household(self):
         self.microcell.add_people(1)
-        self.microcell.add_household(self.microcell.persons)
+        self.microcell.add_household(self.microcell.persons, change_id=True)
         self.assertEqual(len(self.microcell.households), 1)
-        household = self.microcell.households[0]
-        self.assertEqual(len(household.persons), 1)
-        for i in range(len(household.persons)):
+        original_household = self.microcell.households[0]
+        self.assertEqual(len(original_household.persons), 1)
+        for i in range(len(original_household.persons)):
             person = self.microcell.persons[i]
-            self.assertEqual(person.id, household.id + "." + str(i))
+            self.assertEqual(person.id, original_household.id + "." + str(i))
 
-        # Check that if the person already has a household, then we cannot
-        # change their id when they move to a new one
-        person = self.microcell.persons[0]
-        household.persons.remove(person)
-        self.microcell.add_household([person])
-        self.assertEqual(person.id, household.id + ".0")
+        # Now add another original_household without changing
+        # the id of the person
+        self.microcell.add_household(self.microcell.persons, change_id=False)
+        self.assertEqual(original_household.persons[0].id,
+                         original_household.id + ".0")
 
     @mock.patch('logging.info')
     def test_logging(self, mock_log):
-        self.microcell.add_household(self.microcell.persons)
+        self.microcell.add_household(self.microcell.persons, change_id=True)
+        mock_log.assert_called_once()
+
+    @mock.patch('logging.info')
+    def test_logging_duplicates(self, mock_log):
+        # Check that if the person already has a household, then we cannot
+        # change their id when they move to a new one
+        self.microcell.add_people(1)
+        self.microcell.add_household(self.microcell.persons, change_id=True)
+        old_household = self.microcell.households[0]
+        person = self.microcell.persons[0]
+        old_household.persons.remove(person)
+        self.microcell.add_household([person], change_id=True)
+        self.assertEqual(person.id, old_household.id + ".0")
         mock_log.assert_called_once()
 
     def test_report(self):

@@ -25,6 +25,7 @@ class Microcell:
         An instance of :class:`Cell`
 
     """
+
     def __init__(self, cell):
         """Constructor Method.
 
@@ -53,7 +54,7 @@ class Microcell:
 
         """
         return f"Microcell with {len(self.persons)} people" + \
-            f" at location {self.location}."
+               f" at location {self.location}."
 
     def set_id(self, id):
         """Updates id of current microcell (i.e. for input from file).
@@ -140,7 +141,7 @@ class Microcell:
             self.cell.places.append(p)
             self.places.append(p)
 
-    def add_household(self, people: list):
+    def add_household(self, people: list, change_id: bool):
         """Adds a default :class:`Household` to Microcell and fills it with
         a number of :class:`Person` s.
 
@@ -148,6 +149,9 @@ class Microcell:
         ----------
         people : list
             List of :class:`People` to add to household
+        change_id : bool
+            Boolean representing whether we wish to set the id of the people
+            of the household when the function is called or not
 
         """
         if len(people) != 0:
@@ -158,17 +162,21 @@ class Microcell:
 
                 # If the person already has a household, then do not change
                 # their id
-                if not re.match("^\\d+\\.\\d+\\.\\d+\\.\\d+$", person.id):
+                if not re.match("^\\d+\\.\\d+\\.\\d+\\.\\d+$", person.id) and \
+                    change_id:
                     person.set_id(household.id + "." + str(i))
+                else:
+                    logging.info(f"Person {person.id} has moved to household"
+                                 f"{household.id}")
 
         else:
             logging.info("Cannot create an empty household")
 
     def notify_person_status_change(
-            self,
-            old_status: InfectionStatus,
-            new_status: InfectionStatus,
-            age_group) -> None:
+        self,
+        old_status: InfectionStatus,
+        new_status: InfectionStatus,
+        age_group) -> None:
         """Notify Microcell that a person's status has changed.
 
         Parameters
@@ -201,8 +209,8 @@ class Microcell:
 
     def count_icu(self):
         return sum(map(lambda person: person.infection_status ==
-                   InfectionStatus.InfectICU, self.persons))
+                                      InfectionStatus.InfectICU, self.persons))
 
     def count_infectious(self):
         return sum(map(lambda person: person.is_infectious() is
-                   True, self.persons))
+                                      True, self.persons))
