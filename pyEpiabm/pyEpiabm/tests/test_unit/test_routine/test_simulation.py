@@ -27,7 +27,9 @@ class TestSimulation(TestMockedLogs):
         cls.mock_output_dir = "pyEpiabm/pyEpiabm/tests/test_output/mock"
         cls.file_params = {"output_file": "test_file.csv",
                            "output_dir": cls.mock_output_dir}
-
+        cls.ih_file_params = {"output_dir": cls.mock_output_dir,
+                              "status_output": False,
+                              "infectiousness_output": False}
         cls.spatial_file_params = dict(cls.file_params)
         cls.spatial_file_params["age_stratified"] = True
         cls.spatial_file_params["spatial_output"] = True
@@ -53,10 +55,44 @@ class TestSimulation(TestMockedLogs):
 
             # Test configure binds parameters as expected.
             test_sim.configure(self.test_population, self.initial_sweeps,
-                               self.sweeps, self.sim_params, self.file_params)
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.ih_file_params)
             self.assertEqual(len(test_sim.initial_sweeps), 1)
             self.assertEqual(len(test_sim.sweeps), 1)
             self.assertIsInstance(test_sim.population, pe.Population)
+
+            # Test that the ih writers are None, as both status_output
+            # and infectiousness_output are False
+            self.assertEqual(test_sim.ih_status_writer, None)
+            self.assertEqual(test_sim.ih_infectiousness_writer, None)
+
+            del test_sim.writer
+        mo.assert_called_with(filename, 'w')
+
+    @patch('os.makedirs')
+    def test_configure_ih(self, mock_mkdir):
+        mo = mock_open()
+        self.ih_file_params["status_output"] = True
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+
+            ih_filename = os.path.join(os.getcwd(),
+                                    self.file_params["output_dir"],
+                                    self.file_params["output_file"])
+            test_sim = pe.routine.Simulation()
+
+            # Test configure binds parameters as expected.
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.ih_file_params)
+            self.assertEqual(len(test_sim.initial_sweeps), 1)
+            self.assertEqual(len(test_sim.sweeps), 1)
+            self.assertIsInstance(test_sim.population, pe.Population)
+
+            # Test that the ih writers are None, as both status_output
+            # and infectiousness_output are False
+            self.assertEqual(test_sim.ih_status_writer, None)
+            self.assertEqual(test_sim.ih_infectiousness_writer, None)
+
             del test_sim.writer
         mo.assert_called_with(filename, 'w')
 
