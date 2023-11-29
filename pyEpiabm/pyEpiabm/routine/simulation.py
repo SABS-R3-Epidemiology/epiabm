@@ -290,36 +290,26 @@ class Simulation:
 
         """
         if self.status_output:
-            ih_data = {column: 0 for column in
+            if output_option == "status":
+                ih_data = {column: 0 for column in
                        self.ih_status_writer.writer.fieldnames}
-            infect_data = {column: 0 for column in
-                       self.ih_status_writer.writer.fieldnames}
-            if self.infectiousness_output:
-                for cell in self.population.cells:
-                    for person in cell.persons:
-                        if output_option == "status":
-                            ih_data[person.id] = person.infection_status.value
-                        elif output_option == "infectiousness":
-                            infect_data[person.id] = person.infectiousness
-                ih_data["time"] = time
-                infect_data["time"] = time
-                self.ih_status_writer.write(ih_data)
-                self.ih_infectiousness_writer.write(infect_data)
-            else:
                 for cell in self.population.cells:
                     for person in cell.persons:
                         ih_data[person.id] = person.infection_status.value
+
                 ih_data["time"] = time
                 self.ih_status_writer.write(ih_data)
-        else:
-            if self.infectiousness_output:
-                data = {column: 0 for column in
-                        self.ih_infectiousness_writer.writer.fieldnames}
+
+        if self.infectiousness_output:
+            if output_option == "infectiousness":
+                infect_data = {column: 0 for column in
+                           self.ih_infectiousness_writer.writer.fieldnames}
                 for cell in self.population.cells:
                     for person in cell.persons:
-                        data[person.id] = person.infectiousness
-                data["time"] = time
-                self.ih_infectiousness_writer.write(data)
+                        infect_data[person.id] = person.infectiousness
+
+                infect_data["time"] = time
+                self.ih_infectiousness_writer.write(infect_data)
 
     def add_writer(self, writer: AbstractReporter):
         self.writers.append(writer)
