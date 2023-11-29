@@ -155,7 +155,11 @@ class Microcell:
             for i in range(len(people)):
                 person = people[i]
                 household.add_person(person)
-                person.set_id(household.id + "." + str(i))
+
+                # If the person already has a household, then do not change
+                # their id
+                if not re.match("^\\d+\\.\\d+\\.\\d+\\.\\d+$", person.id):
+                    person.set_id(household.id + "." + str(i))
 
         else:
             logging.info("Cannot create an empty household")

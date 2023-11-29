@@ -85,10 +85,9 @@ class FilePopulationFactory:
         current_cell = None
         # Iterate through lines (one per microcell)
         for line in input.itertuples():
-            line = line._asdict()
             # Converting from float to string
-            cell_id_csv = str(line["cell"])
-            microcell_id_csv = cell_id_csv + "." + str(line["microcell"])
+            cell_id_csv = str(line.cell)
+            microcell_id_csv = cell_id_csv + "." + str(line.microcell)
 
             # Check if cell exists, or create it
             cell = FilePopulationFactory.find_cell(new_pop, cell_id_csv,
@@ -97,7 +96,7 @@ class FilePopulationFactory:
                 current_cell = cell
 
             if loc_given:
-                location = (line["location_x"], line["location_y"])
+                location = (line.location_x, line.location_y)
                 cell.set_location(location)
 
             # Raise error if microcell exists, then create new one
@@ -113,7 +112,7 @@ class FilePopulationFactory:
             for column in input.columns.values:
                 if hasattr(InfectionStatus, column):
                     value = getattr(InfectionStatus, column)
-                    for _ in range(int(line[column])):
+                    for _ in range(int(getattr(line, column))):
                         person = Person(new_microcell)
                         person.set_random_age()
                         new_microcell.add_person(person)
@@ -129,14 +128,14 @@ class FilePopulationFactory:
 
             # Add households and places to microcell
             if len(Parameters.instance().household_size_distribution) == 0:
-                if (('household_number' in line) and
-                        (line["household_number"]) > 0):
-                    households = int(line["household_number"])
+                if (hasattr(line, 'household_number') and
+                        line.household_number > 0):
+                    households = int(line.household_number)
                     FilePopulationFactory.add_households(new_microcell,
                                                          households)
 
-            if ('place_number' in line) and (line["place_number"]) > 0:
-                new_microcell.add_place(int(line["place_number"]),
+            if hasattr(line, 'place_number') and line.place_number > 0:
+                new_microcell.add_place(int(line.place_number),
                                         cell.location,
                                         random.choice(list(PlaceType)))
 

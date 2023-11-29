@@ -87,6 +87,13 @@ class TestMicrocell(TestPyEpiabm):
             person = self.microcell.persons[i]
             self.assertEqual(person.id, household.id + "." + str(i))
 
+        # Check that if the person already has a household, then we cannot
+        # change their id when they move to a new one
+        person = self.microcell.persons[0]
+        household.persons.remove(person)
+        self.microcell.add_household([person])
+        self.assertEqual(person.id, household.id + ".0")
+
     @mock.patch('logging.info')
     def test_logging(self, mock_log):
         self.microcell.add_household(self.microcell.persons)

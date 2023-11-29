@@ -76,14 +76,6 @@ class TravelIsolation(AbstractIntervention):
                                         existing_households)
                                     selected_household.add_person(person)
 
-                                    # Have to update the person's id to
-                                    # account for their new household
-                                    person.set_id(selected_household.id +
-                                                  "." +
-                                                  str(len(selected_household
-                                                          .persons)))
-                                    # Here we should keep track of this
-                                    # person's previous id
                                 else:
                                     person.household.isolation_location = \
                                         False
