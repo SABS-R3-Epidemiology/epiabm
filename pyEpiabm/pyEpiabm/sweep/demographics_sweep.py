@@ -25,23 +25,23 @@ class DemographicsSweep(AbstractSweep):
                as a relative path
             * `spatial_output`: Boolean to determine whether a spatial output \
                should be used
-            * `age_stratified`: Boolean to determine whether the output will \
-                be age stratified
+            * `age_output`: Boolean to determine whether the output will \
+                have ages
 
         """
         if "output_dir" not in file_params:
             raise ValueError("output_dir must be specified in file_params")
         self.spatial_output = file_params["spatial_output"] \
             if "spatial_output" in file_params else False
-        self.age_stratified = file_params["age_stratified"] \
-            if "age_stratified" in file_params else False
+        self.age_output = file_params["age_output"] \
+            if "age_output" in file_params else False
 
         # Here we set up the writer
         folder = os.path.join(os.getcwd(),
                               file_params["output_dir"])
         file_name = "demographics.csv"
         self.titles = ["id"]
-        if self.age_stratified:
+        if self.age_output:
             self.titles.append("age_group")
         if self.spatial_output:
             self.titles += ["location_x", "location_y"]
@@ -62,7 +62,7 @@ class DemographicsSweep(AbstractSweep):
 
         """
         if self.spatial_output:
-            if self.age_stratified:
+            if self.age_output:
                 for cell in self._population.cells:
                     for person in cell.persons:
                         data = {"id": person.id,
@@ -82,7 +82,7 @@ class DemographicsSweep(AbstractSweep):
                                 ("C" if person.care_home_resident else "X")}
                         self.writer.write(data)
         else:
-            if self.age_stratified:
+            if self.age_output:
                 for cell in self._population.cells:
                     for person in cell.persons:
                         data = {"id": person.id,
