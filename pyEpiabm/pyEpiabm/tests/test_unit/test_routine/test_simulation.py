@@ -219,14 +219,14 @@ class TestSimulation(TestMockedLogs):
     @patch('pyEpiabm.routine.Simulation.write_to_file')
     @patch('os.makedirs')
     def test_run_sweeps_with_writer(
-        self, mock_mkdir, patch_write, patch_initial, patch_sweep):
+            self, mock_mkdir, patch_write, patch_initial, patch_sweep):
         if os.path.exists(self.file_params["output_dir"]):
             os.rmdir(self.file_params["output_dir"])
 
         mo = mock_open()
         mo2 = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo), \
-            patch('pyEpiabm.output._csv_writer.open', mo2):
+                patch('pyEpiabm.output._csv_writer.open', mo2):
             time_sweep = self.sim_params["simulation_start_time"] + 1
             time_write = self.sim_params["simulation_end_time"]
             test_sim = pe.routine.Simulation()

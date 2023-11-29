@@ -1,5 +1,4 @@
 import os
-import unittest
 from unittest.mock import patch, mock_open
 
 import pyEpiabm as pe
@@ -34,7 +33,7 @@ class TestDemographicsSweep(TestPyEpiabm):
         person_1_0_0_1 = microcell_1_0.households[0].persons[1]
         person_1_0_0_1.age_group = 8
         self.file_params = {"output_dir":
-                                "pyEpiabm/pyEpiabm/tests/test_output/mock"}
+                            "pyEpiabm/pyEpiabm/tests/test_output/mock"}
 
     @patch('os.makedirs')
     def test_construct(self, mock_mkdir):

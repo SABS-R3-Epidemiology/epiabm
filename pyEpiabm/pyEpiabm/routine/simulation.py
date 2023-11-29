@@ -292,7 +292,7 @@ class Simulation:
         if self.status_output:
             if output_option == "status":
                 ih_data = {column: 0 for column in
-                       self.ih_status_writer.writer.fieldnames}
+                           self.ih_status_writer.writer.fieldnames}
                 for cell in self.population.cells:
                     for person in cell.persons:
                         ih_data[person.id] = person.infection_status.value
@@ -303,7 +303,7 @@ class Simulation:
         if self.infectiousness_output:
             if output_option == "infectiousness":
                 infect_data = {column: 0 for column in
-                           self.ih_infectiousness_writer.writer.fieldnames}
+                               self.ih_infectiousness_writer.writer.fieldnames}
                 for cell in self.population.cells:
                     for person in cell.persons:
                         infect_data[person.id] = person.infectiousness
