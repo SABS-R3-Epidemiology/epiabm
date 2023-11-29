@@ -203,9 +203,9 @@ class Simulation:
                 sweep(t)
             self.write_to_file(t)
             if self.ih_status_writer:
-                self.write_to_ih_file(t)
+                self.write_to_ih_file(t, output_option="status")
             if self.ih_infectiousness_writer:
-                self.write_to_ih_file(t)
+                self.write_to_ih_file(t, output_option="infectiousness")
             for writer in self.writers:
                 writer.write(t, self.population)
             logging.debug(f'Iteration at time {t} days completed')
