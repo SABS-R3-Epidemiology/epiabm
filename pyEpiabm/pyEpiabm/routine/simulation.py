@@ -275,7 +275,7 @@ class Simulation:
                 data["time"] = time
                 self.writer.write(data)
 
-    def write_to_ih_file(self, time):
+    def write_to_ih_file(self, time, output_option: str):
         """Records the infection history of the individual people
         and writes these to file.
 
@@ -283,14 +283,42 @@ class Simulation:
         ----------
         time : float
             Time of output data
+        output_options : str
+            Determines if you write data of infection status where \
+            output_option="status" and/or infectiousness where \
+            output_option="infectiousness"
 
         """
-        data = {column: 0 for column in self.ih_writer.writer.fieldnames}
-        for cell in self.population.cells:
-            for person in cell.persons:
-                data[person.id] += person.infection_status.value
-        data["time"] += time
-        self.ih_writer.write(data)
+        if self.status_output:
+            ih_data = {column: 0 for column in
+                       self.ih_status_writer.writer.fieldnames}
+            infect_data = ih_data
+            if self.infectiousness_output:
+                for cell in self.population.cells:
+                    for person in cell.persons:
+                        if output_option == "status":
+                            ih_data[person.id] = person.infection_status.value
+                        elif output_option == "infectiousness":
+                            infect_data[person.id] = person.infectiousness
+                ih_data["time"] = time
+                infect_data["time"] = time
+                self.ih_status_writer.write(ih_data)
+                self.ih_infectiousness_writer.write(infect_data)
+            else:
+                for cell in self.population.cells:
+                    for person in cell.persons:
+                        ih_data[person.id] = person.infection_status.value
+                ih_data["time"] = time
+                self.ih_status_writer.write(ih_data)
+        else:
+            if self.infectiousness_output:
+                data = {column: 0 for column in
+                        self.ih_infectiousness_writer.writer.fieldnames}
+                for cell in self.population.cells:
+                    for person in cell.persons:
+                        data[person.id] = person.infectiousness
+                data["time"] = time
+                self.ih_infectiousness_writer.write(data)
 
     def add_writer(self, writer: AbstractReporter):
         self.writers.append(writer)
