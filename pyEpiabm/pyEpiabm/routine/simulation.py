@@ -142,7 +142,8 @@ class Simulation:
             self.status_output = ih_file_params["status_output"] \
                 if "status_output" in ih_file_params else False
 
-            self.infectiousness_output = ih_file_params["infectiousness_output"] \
+            self.infectiousness_output = \
+                ih_file_params["infectiousness_output"] \
                 if "infectiousness_output" in ih_file_params else False
             person_ids = []
             for cell in population.cells:
