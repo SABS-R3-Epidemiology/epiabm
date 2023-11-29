@@ -55,8 +55,7 @@ class TestSimulation(TestMockedLogs):
 
             # Test configure binds parameters as expected.
             test_sim.configure(self.test_population, self.initial_sweeps,
-                               self.sweeps, self.sim_params, self.file_params,
-                               self.ih_file_params)
+                               self.sweeps, self.sim_params, self.file_params)
             self.assertEqual(len(test_sim.initial_sweeps), 1)
             self.assertEqual(len(test_sim.sweeps), 1)
             self.assertIsInstance(test_sim.population, pe.Population)
@@ -67,33 +66,62 @@ class TestSimulation(TestMockedLogs):
             self.assertEqual(test_sim.ih_infectiousness_writer, None)
 
             del test_sim.writer
+            del test_sim.ih_status_writer
+            del test_sim.ih_infectiousness_writer
         mo.assert_called_with(filename, 'w')
 
     @patch('os.makedirs')
-    def test_configure_ih(self, mock_mkdir):
+    def test_configure_ih_status(self, mock_mkdir):
         mo = mock_open()
+        self.ih_file_params["infectiousness_output"] = False
         self.ih_file_params["status_output"] = True
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
 
-            ih_filename = os.path.join(os.getcwd(),
-                                    self.file_params["output_dir"],
-                                    self.file_params["output_file"])
+            filename = os.path.join(os.getcwd(),
+                                    self.ih_file_params["output_dir"],
+                                    "ih_status_output.csv")
             test_sim = pe.routine.Simulation()
 
-            # Test configure binds parameters as expected.
+            # Test that the output titles are correct
             test_sim.configure(self.test_population, self.initial_sweeps,
                                self.sweeps, self.sim_params, self.file_params,
                                self.ih_file_params)
-            self.assertEqual(len(test_sim.initial_sweeps), 1)
-            self.assertEqual(len(test_sim.sweeps), 1)
-            self.assertIsInstance(test_sim.population, pe.Population)
 
-            # Test that the ih writers are None, as both status_output
-            # and infectiousness_output are False
-            self.assertEqual(test_sim.ih_status_writer, None)
+            self.assertEqual(test_sim.ih_output_titles, ["time"])
+            # Test that the ih_infectiousness_writer is None, as
+            # infectiousness_output is False
             self.assertEqual(test_sim.ih_infectiousness_writer, None)
 
             del test_sim.writer
+            del test_sim.ih_status_writer
+            del test_sim.ih_infectiousness_writer
+        mo.assert_called_with(filename, 'w')
+
+    @patch('os.makedirs')
+    def test_configure_ih_infectiousness(self, mock_mkdir):
+        mo = mock_open()
+        self.ih_file_params["infectiousness_output"] = True
+        self.ih_file_params["status_output"] = False
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+
+            filename = os.path.join(os.getcwd(),
+                                    self.ih_file_params["output_dir"],
+                                    "ih_infectiousness_output.csv")
+            test_sim = pe.routine.Simulation()
+
+            # Test that the output titles are correct
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.ih_file_params)
+
+            self.assertEqual(test_sim.ih_output_titles, ["time"])
+            # Test that the ih_status_writer is None, as
+            # infectiousness_output is False
+            self.assertEqual(test_sim.ih_status_writer, None)
+
+            del test_sim.writer
+            del test_sim.ih_status_writer
+            del test_sim.ih_infectiousness_writer
         mo.assert_called_with(filename, 'w')
 
     @patch('logging.exception')
