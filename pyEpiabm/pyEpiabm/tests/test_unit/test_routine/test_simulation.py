@@ -283,7 +283,7 @@ class TestSimulation(TestMockedLogs):
                 for age_i in \
                         range(0,
                               len(pe.Parameters.instance().age_proportions)):
-                    for inf_status in data:
+                    for inf_status in list(pe.property.InfectionStatus):
                         data_per_inf_status = \
                                 cell.compartment_counter.retrieve()[inf_status]
                         data[inf_status] += data_per_inf_status[age_i]
@@ -307,23 +307,19 @@ class TestSimulation(TestMockedLogs):
                                self.spatial_file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
             for cell in self.test_population.cells:
-                for age_i in \
-                        range(0,
-                              len(pe.Parameters.instance().age_proportions)):
-                    for inf_status in data:
-                        data_per_inf_status = \
-                                cell.compartment_counter.retrieve()[inf_status]
-                        data[inf_status] += data_per_inf_status[age_i]
-            data["time"] = time
-            data["cell"] = test_sim.population.cells[0].id
-            data['location_x'] = 0
-            data['location_y'] = 0
+                for k in data:
+                    data[k] += sum(cell.compartment_counter.retrieve()[k])
+                data["time"] = time
+                data["cell"] = test_sim.population.cells[0].id
+                data['location_x'] = 0
+                data['location_y'] = 0
             with patch.object(test_sim.writer, 'write') as mock:
                 test_sim.write_to_file(time)
                 mock.assert_called_with(data)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                                    self.file_params[
                                                        "output_dir"]))
+
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             time = 1
             test_sim = pe.routine.Simulation()
@@ -331,12 +327,8 @@ class TestSimulation(TestMockedLogs):
                                self.sweeps, self.sim_params, self.file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
             for cell in self.test_population.cells:
-                for age_i in \
-                       range(0, len(pe.Parameters.instance().age_proportions)):
-                    for inf_status in data:
-                        data_per_inf_status = \
-                                cell.compartment_counter.retrieve()[inf_status]
-                        data[inf_status] += data_per_inf_status[age_i]
+                for k in data:
+                    data[k] += sum(cell.compartment_counter.retrieve()[k])
             data["time"] = time
             with patch.object(test_sim.writer, 'write') as mock:
                 test_sim.write_to_file(time)
@@ -356,12 +348,21 @@ class TestSimulation(TestMockedLogs):
                                   self.sweeps, self.sim_params,
                                   self.spatial_file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
-            data["age_group"] = len(pe.Parameters.instance().age_proportions)
-            data["time"] = time
-            cell = self.test_population.cells[0]
-            data["cell"] = cell.id
-            data["location_x"] = cell.location[0]
-            data["location_y"] = cell.location[0]
+            for cell in self.test_population.cells:
+                for age_i in \
+                        range(0,
+                              len(pe.Parameters.instance().age_proportions)):
+                    for inf_status in data:
+                        data_per_inf_status = \
+                                cell.compartment_counter.retrieve()[inf_status]
+                        data[inf_status] += data_per_inf_status[age_i]
+                data["age_group"] = \
+                    len(pe.Parameters.instance().age_proportions)
+                data["time"] = time
+                cell = self.test_population.cells[0]
+                data["cell"] = cell.id
+                data["location_x"] = cell.location[0]
+                data["location_y"] = cell.location[0]
 
             with patch.object(spatial_sim.writer, 'write') as mock:
                 spatial_sim.write_to_file(time)
