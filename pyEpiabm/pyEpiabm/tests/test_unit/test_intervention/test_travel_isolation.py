@@ -84,7 +84,8 @@ class TestTravelIsolation(TestPyEpiabm):
         person_introduced2 = self._microcell.persons[3]
         person_introduced2.set_id("0.0.2.0")
         self._population.travellers.append(person_introduced2)
-        self._microcell.add_household([person_introduced2])
+        self._microcell.add_household([person_introduced2],
+                                      override_person_id=False)
         person_introduced2.travel_end_time = 40
         self.travelisolation(time=21)
         self.assertTrue(person_introduced2.household.isolation_location)
