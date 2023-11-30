@@ -283,7 +283,7 @@ class Simulation:
         ----------
         time : float
             Time of output data
-        output_options : str
+        output_option : str
             Determines if you write data of infection status where \
             output_option="status" and/or infectiousness where \
             output_option="infectiousness"

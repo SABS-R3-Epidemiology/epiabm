@@ -9,6 +9,7 @@ Sweep provides the basic class framework to build methods which sweep over the p
 Overview:
 
 - :class:`AbstractSweep`
+- :class:`DemographicsSweep`
 - :class:`HostProgressionSweep`
 - :class:`HouseholdSweep`
 - :class:`InitialInfectedSweep`
@@ -26,6 +27,10 @@ Overview:
 
 
 .. autoclass:: AbstractSweep
+    :members:
+    :special-members: __call__
+
+.. autoclass:: DemographicsSweep
     :members:
     :special-members: __call__
 

@@ -91,6 +91,7 @@ class TestDemographicsSweep(TestPyEpiabm):
                 mock.assert_any_call(person_0_0_0_0_data)
                 mock.assert_any_call(person_1_0_0_0_data)
                 mock.assert_any_call(person_1_0_0_1_data)
+                self.assertEqual(mock.call_count, 3)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                                    self.file_params[
                                                        "output_dir"]))
@@ -110,6 +111,7 @@ class TestDemographicsSweep(TestPyEpiabm):
                 mock.assert_any_call(person_0_0_0_0_data)
                 mock.assert_any_call(person_1_0_0_0_data)
                 mock.assert_any_call(person_1_0_0_1_data)
+                self.assertEqual(mock.call_count, 3)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                                    self.file_params[
                                                        "output_dir"]))
@@ -132,6 +134,7 @@ class TestDemographicsSweep(TestPyEpiabm):
                 mock.assert_any_call(person_0_0_0_0_data)
                 mock.assert_any_call(person_1_0_0_0_data)
                 mock.assert_any_call(person_1_0_0_1_data)
+                self.assertEqual(mock.call_count, 3)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                                    self.file_params[
                                                        "output_dir"]))
@@ -154,6 +157,7 @@ class TestDemographicsSweep(TestPyEpiabm):
                 mock.assert_any_call(person_0_0_0_0_data)
                 mock.assert_any_call(person_1_0_0_0_data)
                 mock.assert_any_call(person_1_0_0_1_data)
+                self.assertEqual(mock.call_count, 3)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                                    self.file_params[
                                                        "output_dir"]))
