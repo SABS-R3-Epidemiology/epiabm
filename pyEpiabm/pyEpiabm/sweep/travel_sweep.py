@@ -193,9 +193,11 @@ class TravelSweep(AbstractSweep):
                     [h for h in selected_microcell.households if not
                      h.isolation_location])
                 selected_household.add_person(person)
+                person.set_id(selected_household.id + "." +
+                              str(len(selected_household.persons) - 1))
             else:
                 # Create new household
-                selected_microcell.add_household([person], change_id=False)
+                selected_microcell.add_household([person])
 
     def check_leaving_individuals(self, time, person):
         """Check if individuals travel_end_time is reached. If interventions
