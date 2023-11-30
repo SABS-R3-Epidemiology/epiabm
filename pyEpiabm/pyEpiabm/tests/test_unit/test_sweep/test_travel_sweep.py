@@ -131,12 +131,13 @@ class TestTravelSweep(TestPyEpiabm):
         self.travelsweep(time=1)
         self.assertEqual(len(self.microcell1.persons), 16)
         self.assertEqual(len(self.microcell1.households), 3)
+        self.assertEqual(self.microcell1.persons[-1].id, "0.0.2.0")
 
     def test_remove_leaving_individual(self):
         """Remove individuals introduced after their travel_end_time has
         passed and check if they are not in isolation and/or quarantine.
         If so, keep them in the population until isolation_start_time and/or
-        quaratine_start_time has also passed. Check if the population size
+        quarantine_start_time has also passed. Check if the population size
         is as expected at the considered time points.
 
         """
@@ -152,7 +153,7 @@ class TestTravelSweep(TestPyEpiabm):
         # Remove after end time and isolation and quarantine over
         self.travelsweep.travel_params['ratio_introduce_cases'] = 0.5
         self.travelsweep.travel_params['duration_travel_stay'] = [2, 2]
-        # Introduce individual staying untill day 16
+        # Introduce individual staying until day 16
         self.travelsweep(time=14)
         introduced_person = self.cell.persons[-1]
         introduced_person.travel_isolation_start_time = 18

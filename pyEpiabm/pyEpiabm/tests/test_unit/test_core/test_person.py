@@ -120,6 +120,11 @@ class TestPerson(TestPyEpiabm):
         self.assertRaises(ValueError, self.person.set_id, "0.1")
         self.assertRaises(ValueError, self.person.set_id, "1234")
         self.assertRaises(ValueError, self.person.set_id, "0.0.0.0.5")
+        self.person.set_id("1.1.1.1")
+        self.microcell.persons.append(self.person)
+        new_person = pe.Person(self.microcell)
+        self.microcell.persons.append(new_person)
+        self.assertRaises(ValueError, new_person.set_id, "1.1.1.1")
 
 
 if __name__ == '__main__':
