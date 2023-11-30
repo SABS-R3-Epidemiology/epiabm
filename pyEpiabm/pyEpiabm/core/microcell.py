@@ -176,7 +176,7 @@ class Microcell:
         self,
         old_status: InfectionStatus,
         new_status: InfectionStatus,
-        age_group) -> None:
+            age_group) -> None:
         """Notify Microcell that a person's status has changed.
 
         Parameters
@@ -209,8 +209,8 @@ class Microcell:
 
     def count_icu(self):
         return sum(map(lambda person: person.infection_status ==
-                                      InfectionStatus.InfectICU, self.persons))
+                       InfectionStatus.InfectICU, self.persons))
 
     def count_infectious(self):
         return sum(map(lambda person: person.is_infectious() is
-                                      True, self.persons))
+                       True, self.persons))
