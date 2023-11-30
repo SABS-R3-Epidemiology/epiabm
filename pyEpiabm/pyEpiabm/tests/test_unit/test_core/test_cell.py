@@ -38,11 +38,19 @@ class TestCell(TestPyEpiabm):
         self.assertRaises(ValueError, pe.Cell, ('1', 1))
 
     def test_set_id(self):
+        cells = []
+        cell1 = pe.Cell()
         self.assertEqual(self.cell.id, str(hash(self.cell)))
-        self.assertRaises(TypeError, self.cell.set_id, 2.0)
-        self.assertRaises(ValueError, self.cell.set_id, "2.0")
-        self.cell.set_id("2")
+        self.assertRaises(TypeError, self.cell.set_id, id=2.0, cells=[cell1])
+        self.assertRaises(ValueError, self.cell.set_id, id="2.0",
+                          cells=[cell1])
+        self.cell.set_id(id="2", cells=[cell1])
         self.assertEqual(self.cell.id, "2")
+        cell1.set_id(id="1", cells=[cell1])
+        cells.append(cell1)
+        new_cell = pe.Cell((1, 1))
+        cells.append(new_cell)
+        self.assertRaises(ValueError, new_cell.set_id, id="1", cells=[cell1])
 
     def test_add_microcells(self, n=4):
         self.assertEqual(len(self.cell.microcells), 0)

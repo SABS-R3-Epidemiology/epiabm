@@ -56,7 +56,7 @@ class Person:
         self.date_positive = None
         self.is_vaccinated = False
         self.id = self.microcell.id + "." + "." + \
-                  str(len(self.microcell.persons))
+            str(len(self.microcell.persons))
 
         self.set_random_age(age_group)
 
@@ -91,7 +91,7 @@ class Person:
 
         """
         return Person.is_infectious(self) and self.infection_status != \
-               InfectionStatus.InfectASympt
+            InfectionStatus.InfectASympt
 
     def is_infectious(self):
         """Query if the person is currently infectious.
@@ -142,10 +142,10 @@ class Person:
         self.infection_status = new_status
 
         if self.infection_status == InfectionStatus.Susceptible and \
-            self.household is not None:
+                self.household is not None:
             self.household.add_susceptible_person(self)
         if self.infection_status == InfectionStatus.Exposed and \
-            self.household is not None:
+                self.household is not None:
             self.household.remove_susceptible_person(self)
 
     def add_place(self, place, person_group: int = 0):
@@ -198,7 +198,7 @@ class Person:
 
         """
         if (hasattr(self.microcell, 'closure_start_time')) and (
-            self.microcell.closure_start_time is not None):
+                self.microcell.closure_start_time is not None):
             for place_type in self.place_types:
                 if place_type.value in closure_place_type:
                     return True
@@ -228,10 +228,10 @@ class Person:
         self.household.persons.remove(self)
 
     def set_id(self, id: str):
-        """Updates ID of person (i.e. for input from file).
-        ID format: 4.3.2.1 represents cell 4, microcell 3 within this cell,
+        """Updates id of current person (i.e. for input from file).
+        id format: 4.3.2.1 represents cell 4, microcell 3 within this cell,
         household 2 within this microcell, and person 1 within this
-        household. The id will only be changed if there is a match.
+        household. The id will only be changed if it is of the correct format.
 
         Parameters
         ----------
@@ -242,10 +242,18 @@ class Person:
 
         # Ensure id is a string
         if not isinstance(id, str):
-            raise TypeError("id must be of type string")
+            raise TypeError("Provided id must be a string")
 
-        # May want to set upper limit on the number of digits
-        if re.match("^\\d+\\.\\d+\\.\\d*\\.\\d+$", id):
-            self.id = id
-        else:
-            raise ValueError("id must take the correct form")
+        # This regex will match on any string which takes the form "i.j.k.l"
+        # where i, j, k and l are integers (k can be empty)
+        if not re.match("^\\d+\\.\\d+\\.\\d*\\.\\d+$", id):
+            raise ValueError(f"Invalid id: {id}. id must be of the form "
+                             f"'i.j.k.l' where i, j, k, l are integers (k"
+                             f"can be empty)")
+
+        # Finally, check for duplicates
+        person_ids = [person.id for person in self.microcell.persons]
+        if id in person_ids:
+            raise ValueError(f"Duplicate id: {id}.")
+
+        self.id = id
