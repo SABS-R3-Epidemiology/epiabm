@@ -384,11 +384,10 @@ class TestInitialHouseholdSweep(TestPyEpiabm):
         test_sweep = pe.sweep.InitialHouseholdSweep()
         test_sweep.bind_population(self.test_population)
         microcell = self.test_population.cells[0].microcells[0]
-        microcell.add_household([self.person1], change_id=True)
-        microcell.add_household([self.person2, self.person3], change_id=True)
-        microcell.add_household([self.person4, self.person5, self.person6],
-                                change_id=True)
-        microcell.add_household([], change_id=True)
+        microcell.add_household([self.person1])
+        microcell.add_household([self.person2, self.person3])
+        microcell.add_household([self.person4, self.person5, self.person6])
+        microcell.add_household([])
 
         for cell in self.test_population.cells:
             for person in cell.persons:

@@ -136,7 +136,7 @@ class ToyPopulationFactory(AbstractPopulationFactory):
                         person_choice = people_list[0]
                         people_list.remove(person_choice)
                         household_people.append(person_choice)
-                    microcell.add_household(household_people, change_id=True)
+                    microcell.add_household(household_people)
 
     @staticmethod
     def add_places(population: Population, place_number: float):

@@ -141,7 +141,7 @@ class Microcell:
             self.cell.places.append(p)
             self.places.append(p)
 
-    def add_household(self, people: list, change_id: bool):
+    def add_household(self, people: list, change_id: bool = True):
         """Adds a default :class:`Household` to Microcell and fills it with
         a number of :class:`Person` s.
 
@@ -162,12 +162,12 @@ class Microcell:
 
                 # If the person already has a household, then do not change
                 # their id
-                if not re.match("^\\d+\\.\\d+\\.\\d+\\.\\d+$", person.id) and \
-                    change_id:
-                    person.set_id(household.id + "." + str(i))
-                else:
-                    logging.info(f"Person {person.id} has moved to household"
-                                 f"{household.id}")
+                if change_id:
+                    if not re.match("^\\d+\\.\\d+\\.\\d+\\.\\d+$", person.id):
+                        person.set_id(household.id + "." + str(i))
+                    else:
+                        logging.info(f"Person {person.id} has moved to "
+                                     f"household {household.id}")
 
         else:
             logging.info("Cannot create an empty household")
