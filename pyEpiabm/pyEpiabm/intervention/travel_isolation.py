@@ -96,7 +96,8 @@ class TravelIsolation(AbstractIntervention):
                                 if len(person.household.persons) > 1:
                                     # Remove from old household
                                     person.household.persons.remove(person)
-                                    # Put in new household
+                                    # Move to temporary household
+                                    # N.B Person ID is not changed
                                     person.microcell.add_household([
                                         person], update_person_id=False)
                                     person.household.isolation_location = \
