@@ -166,7 +166,7 @@ class Microcell:
                     # their id
                     logging.info(f"Person {person.id} has moved to "
                                  f"household {household.id} but has "
-                                 f"not moved household")
+                                 f"not changed id")
 
         else:
             logging.info("Cannot create an empty household")

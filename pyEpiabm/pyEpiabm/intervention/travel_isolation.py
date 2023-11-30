@@ -1,7 +1,7 @@
 #
 # Travel isolation Class
 #
-
+import logging
 import random
 
 from pyEpiabm.core import Parameters
@@ -75,6 +75,10 @@ class TravelIsolation(AbstractIntervention):
                                     selected_household = random.choice(
                                         existing_households)
                                     selected_household.add_person(person)
+                                    logging.info(f"Person {person.id} has "
+                                                 f"finished isolating and "
+                                                 f"has moved to household "
+                                                 f"{selected_household.id}")
 
                                 else:
                                     person.household.isolation_location = \
