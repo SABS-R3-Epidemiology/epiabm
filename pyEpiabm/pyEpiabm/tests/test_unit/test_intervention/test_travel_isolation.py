@@ -79,13 +79,13 @@ class TestTravelIsolation(TestPyEpiabm):
         self.assertIsNone(self.person_introduced.travel_isolation_start_time)
         self.assertEqual(len(self._microcell.households), 1)
         self.assertEqual(len(self.person_symp.household.persons), 3)
-        mock_log.assert_has_calls([mock.call(f"Person 0.0.0.2 has moved to "
-                                             f"household 0.0.1 but has "
-                                             f"not changed id"),
-                                   mock.call(f"Person 0.0.0.2 has "
-                                             f"finished isolating and "
-                                             f"has moved to household "
-                                             f"0.0.0")])
+        mock_log.assert_has_calls([mock.call("Person 0.0.0.2 has moved to " +
+                                             "household 0.0.1 but has " +
+                                             "not changed id"),
+                                   mock.call("Person 0.0.0.2 has " +
+                                             "finished isolating and " +
+                                             "has moved to household " +
+                                             "0.0.0")])
         self.assertEqual(mock_log.call_count, 2)
         # Introduce individual in single household
         self._microcell.add_people(
