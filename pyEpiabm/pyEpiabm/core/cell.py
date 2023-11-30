@@ -4,14 +4,15 @@
 
 import typing
 import numpy as np
+import re
 from queue import Queue
 from numbers import Number
 
-from pyEpiabm.core import Parameters
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.utility import DistanceFunctions
 
 from .microcell import Microcell
+from .parameters import Parameters
 from .person import Person
 from ._compartment_counter import _CompartmentCounter
 
@@ -31,7 +32,7 @@ class Cell:
 
         """
         self.location = loc
-        self.id = hash(self)
+        self.id = str(hash(self))
         self.microcells = []
         self.persons = []
         self.places = []
@@ -70,15 +71,31 @@ class Cell:
         for _ in range(n):
             self.microcells.append(Microcell(self))
 
-    def set_id(self, id: float):
-        """Updates ID of cell (i.e. for input from file).
+    def set_id(self, id: str, cells: typing.List):
+        """Updates id of current cell (i.e. for input from file).
 
         Parameters
         ----------
-        id : float
+        id : str
             Identity of cell
+        cells : list
+            List of all current cells
 
         """
+        # Ensure id is a string
+        if not isinstance(id, str):
+            raise TypeError("Provided id must be a string")
+
+        # This regex will match on any string which has 1 or more digits
+        if not re.match("^\\d+$", id):
+            raise ValueError(f"Invalid id: {id}. id must be of the form 'i' "
+                             f"where i is an integer")
+
+        # Finally, check for duplicates
+        cell_ids = [cell.id for cell in cells]
+        if id in cell_ids:
+            raise ValueError(f"Duplicate id: {id}.")
+
         self.id = id
 
     def enqueue_person(self, person: Person):

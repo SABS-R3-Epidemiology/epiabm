@@ -33,6 +33,9 @@ class TestSimFunctional(TestFunctional):
                             "spatial_output": False,
                             "age_stratified": True}
 
+        self.read_params = {"filepath_or_buffer": 'test_input.csv',
+                            "dtype": {"cell": int, "microcell": int}}
+
     @staticmethod
     def toy_simulation(pop_params, sim_params, file_params):
         # Create a population based on the parameters given.
@@ -174,7 +177,7 @@ class TestSimFunctional(TestFunctional):
         outside their household (or microcell) without a spatial sweep.
         """
         mock_read, mock_csv = mocks[:2]
-        file_input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
+        file_input = {'cell': [1, 2], 'microcell': [1, 1],
                       'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
                       'household_number': [1, 1],
                       'Susceptible': [8, 9], 'InfectMild': [2, 0]}
@@ -189,7 +192,7 @@ class TestSimFunctional(TestFunctional):
                                                 self.file_params,
                                                 sweep_list)
 
-        mock_read.assert_called_once_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         mock_csv.assert_called_once()
 
         cell_data_0 = pop.cells[0].compartment_counter.retrieve()
@@ -209,7 +212,7 @@ class TestSimFunctional(TestFunctional):
         outside their cell when the cut-off is sufficiently small.
         """
         mock_read, mock_csv = mocks[:2]
-        file_input = {'cell': [1.0, 2.0], 'microcell': [1.0, 1.0],
+        file_input = {'cell': [1, 2], 'microcell': [1, 1],
                       'location_x': [0.0, 1.0], 'location_y': [0.0, 1.0],
                       'household_number': [1, 1],
                       'Susceptible': [8, 9], 'InfectMild': [2, 0]}
@@ -224,7 +227,7 @@ class TestSimFunctional(TestFunctional):
                                                 self.file_params,
                                                 sweep_list)
 
-        mock_read.assert_called_once_with('test_input.csv')
+        mock_read.assert_called_once_with(**self.read_params)
         mock_csv.assert_called_once()
 
         cell_data_0 = pop.cells[0].compartment_counter.retrieve()

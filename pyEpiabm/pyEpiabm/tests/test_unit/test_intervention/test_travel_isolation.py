@@ -29,6 +29,7 @@ class TestTravelIsolation(TestPyEpiabm):
         self._microcell.add_people(
             1, status=InfectionStatus.InfectASympt, age_group=5)
         self.person_introduced = self._microcell.persons[2]
+        self.person_introduced.set_id("0.0.0.2")
         self._population.travellers.append(self.person_introduced)
         self._microcell.households[0].add_person(self.person_introduced)
         self.person_introduced.travel_end_time = 25
@@ -58,7 +59,8 @@ class TestTravelIsolation(TestPyEpiabm):
                          self.params['hotel_isolate'])
 
     @mock.patch('random.random')
-    def test___call__(self, mock_random):
+    @mock.patch('logging.info')
+    def test___call__(self, mock_log, mock_random):
         mock_random.return_value = 0
         # Before travel isolation starts
         self.assertFalse(hasattr(
@@ -77,13 +79,22 @@ class TestTravelIsolation(TestPyEpiabm):
         self.assertIsNone(self.person_introduced.travel_isolation_start_time)
         self.assertEqual(len(self._microcell.households), 1)
         self.assertEqual(len(self.person_symp.household.persons), 3)
-
+        mock_log.assert_has_calls([mock.call("Person 0.0.0.2 has moved to " +
+                                             "household 0.0.1 but has " +
+                                             "not changed id"),
+                                   mock.call("Person 0.0.0.2 has " +
+                                             "finished isolating and " +
+                                             "has moved to household " +
+                                             "0.0.0")])
+        self.assertEqual(mock_log.call_count, 2)
         # Introduce individual in single household
         self._microcell.add_people(
             1, status=InfectionStatus.InfectASympt, age_group=7)
         person_introduced2 = self._microcell.persons[3]
+        person_introduced2.set_id("0.0.2.0")
         self._population.travellers.append(person_introduced2)
-        self._microcell.add_household([person_introduced2])
+        self._microcell.add_household([person_introduced2],
+                                      update_person_id=False)
         person_introduced2.travel_end_time = 40
         self.travelisolation(time=21)
         self.assertTrue(person_introduced2.household.isolation_location)

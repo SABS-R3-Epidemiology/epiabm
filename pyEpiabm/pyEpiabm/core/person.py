@@ -3,6 +3,7 @@
 #
 
 import random
+import re
 
 from pyEpiabm.property import InfectionStatus
 
@@ -54,6 +55,8 @@ class Person:
         self.key_worker = False
         self.date_positive = None
         self.is_vaccinated = False
+        self.id = self.microcell.id + "." + "." + \
+            str(len(self.microcell.persons))
 
         self.set_random_age(age_group)
 
@@ -110,7 +113,7 @@ class Person:
             Whether person is currently susceptible
 
         """
-        return self.infection_status == InfectionStatus.\
+        return self.infection_status == InfectionStatus. \
             Susceptible
 
     def __repr__(self):
@@ -214,12 +217,43 @@ class Person:
         Used to remove travellers from the population.
 
         """
-        self.microcell.cell.compartment_counter.\
+        self.microcell.cell.compartment_counter. \
             _increment_compartment(-1, self.infection_status,
                                    self.age_group)
-        self.microcell.compartment_counter.\
+        self.microcell.compartment_counter. \
             _increment_compartment(-1, self.infection_status,
                                    self.age_group)
         self.microcell.cell.persons.remove(self)
         self.microcell.persons.remove(self)
         self.household.persons.remove(self)
+
+    def set_id(self, id: str):
+        """Updates id of current person (i.e. for input from file).
+        id format: 4.3.2.1 represents cell 4, microcell 3 within this cell,
+        household 2 within this microcell, and person 1 within this
+        household. The id will only be changed if it is of the correct format.
+
+        Parameters
+        ----------
+        id : str
+            Identity of person
+
+        """
+
+        # Ensure id is a string
+        if not isinstance(id, str):
+            raise TypeError("Provided id must be a string")
+
+        # This regex will match on any string which takes the form "i.j.k.l"
+        # where i, j, k and l are integers (k can be empty)
+        if not re.match("^\\d+\\.\\d+\\.\\d*\\.\\d+$", id):
+            raise ValueError(f"Invalid id: {id}. id must be of the form "
+                             f"'i.j.k.l' where i, j, k, l are integers (k"
+                             f"can be empty)")
+
+        # Finally, check for duplicates
+        person_ids = [person.id for person in self.microcell.persons]
+        if id in person_ids:
+            raise ValueError(f"Duplicate id: {id}.")
+
+        self.id = id

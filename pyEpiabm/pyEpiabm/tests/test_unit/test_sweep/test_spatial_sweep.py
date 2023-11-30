@@ -93,7 +93,7 @@ class TestSpatialSweep(TestMockedLogs):
         test_sweep = SpatialSweep()
         mock_dist.return_value = 2
         test_sweep.bind_population(test_pop)
-        self.assertEqual(self.cell_inf.nearby_cell_distances, {1: 2})
+        self.assertEqual(self.cell_inf.nearby_cell_distances, {"1": 2})
         mock_dist.assert_called_with(self.cell_inf.location,
                                      self.cell_susc.location)
         self.assertEqual(mock_dist.call_count,
