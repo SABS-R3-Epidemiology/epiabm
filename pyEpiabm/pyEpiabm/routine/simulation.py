@@ -230,9 +230,9 @@ class Simulation:
         if Parameters.instance().use_ages:
             if self.spatial_output:  # Separate output line for each cell
                 for cell in self.population.cells:
+                    data = {s: 0 for s in list(InfectionStatus)}
                     for age_i in range(0, nb_age_groups):
-                        data = {s: 0 for s in list(InfectionStatus)}
-                        for inf_status in data:
+                        for inf_status in list(InfectionStatus):
                             data_per_inf_status = \
                                 cell.compartment_counter.retrieve()[inf_status]
                             data[inf_status] += data_per_inf_status[age_i]
