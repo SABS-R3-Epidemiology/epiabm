@@ -80,7 +80,7 @@ class TestMicrocell(TestPyEpiabm):
     def test_add_household(self):
         self.microcell.add_people(1)
         self.microcell.add_household(self.microcell.persons,
-                                     override_person_id=True)
+                                     update_person_id=True)
         self.assertEqual(len(self.microcell.households), 1)
         original_household = self.microcell.households[0]
         self.assertEqual(len(original_household.persons), 1)
@@ -91,7 +91,7 @@ class TestMicrocell(TestPyEpiabm):
         # Now add another original_household without changing
         # the id of the person
         self.microcell.add_household(self.microcell.persons,
-                                     override_person_id=False)
+                                     update_person_id=False)
         self.assertEqual(original_household.persons[0].id,
                          original_household.id + ".0")
 
@@ -100,16 +100,20 @@ class TestMicrocell(TestPyEpiabm):
         # Check that the logger is called if there are no people in the
         # household
         self.microcell.add_household(self.microcell.persons,
-                                     override_person_id=True)
-        mock_log.assert_called_once()
+                                     update_person_id=True)
+        mock_log.assert_called_once_with("Cannot create an empty household")
 
     @mock.patch('logging.info')
     def test_logging_duplicates(self, mock_log):
-        # Check that the logger is called if override_person_id is False
+        # Check that the logger is called if update_person_id is False
         self.microcell.add_people(1)
         self.microcell.add_household(self.microcell.persons,
-                                     override_person_id=False)
-        mock_log.assert_called_once()
+                                     update_person_id=False)
+        person = self.microcell.persons[0]
+        household = self.microcell.households[0]
+        mock_log.assert_called_once_with(f"Person {person.id} has moved to "
+                                         f"household {household.id} but has "
+                                         f"not changed id")
 
     def test_report(self):
         self.microcell.add_people(5)

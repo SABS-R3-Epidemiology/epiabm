@@ -98,7 +98,7 @@ class TravelIsolation(AbstractIntervention):
                                     person.household.persons.remove(person)
                                     # Put in new household
                                     person.microcell.add_household([
-                                        person], override_person_id=False)
+                                        person], update_person_id=False)
                                     person.household.isolation_location = \
                                         True
                                 else:

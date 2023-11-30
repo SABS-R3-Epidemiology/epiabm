@@ -141,7 +141,7 @@ class Microcell:
             self.cell.places.append(p)
             self.places.append(p)
 
-    def add_household(self, people: list, override_person_id: bool = True):
+    def add_household(self, people: list, update_person_id: bool = True):
         """Adds a default :class:`Household` to Microcell and fills it with
         a number of :class:`Person` s.
 
@@ -149,8 +149,8 @@ class Microcell:
         ----------
         people : list
             List of :class:`People` to add to household
-        override_person_id : bool
-            Boolean representing whether we wish to override the id of the
+        update_person_id : bool
+            Boolean representing whether we wish to update the id of the
             people of the household when the function is called or not
 
         """
@@ -159,7 +159,7 @@ class Microcell:
             for i, person in enumerate(people):
                 household.add_person(person)
 
-                if override_person_id:
+                if update_person_id:
                     person.set_id(household.id + "." + str(i))
                 else:
                     # If the person already has a household, then do not change
