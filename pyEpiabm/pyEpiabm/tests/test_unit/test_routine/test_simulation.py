@@ -17,7 +17,7 @@ class TestSimulation(TestMockedLogs):
     def setUpClass(cls) -> None:
         super(TestSimulation, cls).setUpClass()  # Sets up patch on logging
         cls.pop_factory = pe.routine.ToyPopulationFactory()
-        cls.pop_params = {"population_size": 0, "cell_number": 1,
+        cls.pop_params = {"population_size": 1, "cell_number": 1,
                           "microcell_number": 1, "household_number": 1}
         cls.test_population = cls.pop_factory.make_pop(cls.pop_params)
         pe.Parameters.instance().time_steps_per_day = 1
@@ -89,7 +89,7 @@ class TestSimulation(TestMockedLogs):
                                self.sweeps, self.sim_params, self.file_params,
                                self.ih_file_params)
 
-            self.assertEqual(test_sim.ih_output_titles, ["time"])
+            self.assertEqual(test_sim.ih_output_titles, ["time", '0.0.0.0'])
             # Test that the ih_infectiousness_writer is None, as
             # infectiousness_output is False
             self.assertEqual(test_sim.ih_infectiousness_writer, None)
@@ -115,7 +115,7 @@ class TestSimulation(TestMockedLogs):
                                self.sweeps, self.sim_params, self.file_params,
                                self.ih_file_params)
 
-            self.assertEqual(test_sim.ih_output_titles, ["time"])
+            self.assertEqual(test_sim.ih_output_titles, ["time", '0.0.0.0'])
             # Test that the ih_status_writer is None, as
             # infectiousness_output is False
             self.assertEqual(test_sim.ih_status_writer, None)
@@ -279,6 +279,14 @@ class TestSimulation(TestMockedLogs):
             test_sim.configure(self.test_population, self.initial_sweeps,
                                self.sweeps, self.sim_params, self.file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
+            for cell in self.test_population.cells:
+                for age_i in \
+                        range(0,
+                              len(pe.Parameters.instance().age_proportions)):
+                    for inf_status in data:
+                        data_per_inf_status = \
+                                cell.compartment_counter.retrieve()[inf_status]
+                        data[inf_status] += data_per_inf_status[age_i]
             data["age_group"] = len(pe.Parameters.instance().age_proportions)
             data["time"] = time
 
@@ -298,6 +306,14 @@ class TestSimulation(TestMockedLogs):
                                self.sweeps, self.sim_params,
                                self.spatial_file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
+            for cell in self.test_population.cells:
+                for age_i in \
+                        range(0,
+                              len(pe.Parameters.instance().age_proportions)):
+                    for inf_status in data:
+                        data_per_inf_status = \
+                                cell.compartment_counter.retrieve()[inf_status]
+                        data[inf_status] += data_per_inf_status[age_i]
             data["time"] = time
             data["cell"] = test_sim.population.cells[0].id
             data['location_x'] = 0
@@ -314,6 +330,13 @@ class TestSimulation(TestMockedLogs):
             test_sim.configure(self.test_population, self.initial_sweeps,
                                self.sweeps, self.sim_params, self.file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
+            for cell in self.test_population.cells:
+                for age_i in \
+                       range(0, len(pe.Parameters.instance().age_proportions)):
+                    for inf_status in data:
+                        data_per_inf_status = \
+                                cell.compartment_counter.retrieve()[inf_status]
+                        data[inf_status] += data_per_inf_status[age_i]
             data["time"] = time
             with patch.object(test_sim.writer, 'write') as mock:
                 test_sim.write_to_file(time)
@@ -364,11 +387,14 @@ class TestSimulation(TestMockedLogs):
                                self.ih_file_params)
             data = {column: 0 for column in
                     test_sim.ih_status_writer.writer.fieldnames}
+            for cell in self.test_population.cells:
+                for person in cell.persons:
+                    data[person.id] = person.infection_status.value
             data["time"] = time
 
-        with patch.object(test_sim.ih_status_writer, 'write') as mock:
-            test_sim.write_to_ih_file(time, "status")
-            mock.assert_called_with(data)
+            with patch.object(test_sim.ih_status_writer, 'write') as mock:
+                test_sim.write_to_ih_file(time, "status")
+                mock.assert_called_with(data)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                       self.ih_file_params["output_dir"]))
 
@@ -382,11 +408,15 @@ class TestSimulation(TestMockedLogs):
                                self.ih_file_params)
             data = {column: 0 for column in
                     test_sim.ih_infectiousness_writer.writer.fieldnames}
+            for cell in self.test_population.cells:
+                for person in cell.persons:
+                    data[person.id] = person.infectiousness
             data["time"] = time
 
-        with patch.object(test_sim.ih_infectiousness_writer, 'write') as mock:
-            test_sim.write_to_ih_file(time, "infectiousness")
-            mock.assert_called_with(data)
+            with patch.object(test_sim.ih_infectiousness_writer, 'write') \
+                    as mock:
+                test_sim.write_to_ih_file(time, "infectiousness")
+                mock.assert_called_with(data)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                       self.ih_file_params["output_dir"]))
 
@@ -400,17 +430,24 @@ class TestSimulation(TestMockedLogs):
                                self.ih_file_params)
             ih_data = {column: 0 for column in
                        test_sim.ih_status_writer.writer.fieldnames}
+            for cell in self.test_population.cells:
+                for person in cell.persons:
+                    ih_data[person.id] = person.infection_status.value
             ih_data["time"] = time
             infect_data = {column: 0 for column in
                            test_sim.ih_infectiousness_writer.writer.fieldnames}
+            for cell in self.test_population.cells:
+                for person in cell.persons:
+                    infect_data[person.id] = person.infectiousness
             infect_data["time"] = time
 
-        with patch.object(test_sim.ih_status_writer, 'write') as mock:
-            test_sim.write_to_ih_file(time, "status")
-            mock.assert_called_with(ih_data)
-        with patch.object(test_sim.ih_infectiousness_writer, 'write') as mock:
-            test_sim.write_to_ih_file(time, "infectiousness")
-            mock.assert_called_with(infect_data)
+            with patch.object(test_sim.ih_status_writer, 'write') as mock:
+                test_sim.write_to_ih_file(time, "status")
+                mock.assert_called_with(ih_data)
+            with patch.object(test_sim.ih_infectiousness_writer, 'write') \
+                    as mock:
+                test_sim.write_to_ih_file(time, "infectiousness")
+                mock.assert_called_with(infect_data)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                       self.ih_file_params["output_dir"]))
 
