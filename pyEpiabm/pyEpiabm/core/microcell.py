@@ -156,8 +156,7 @@ class Microcell:
         """
         if len(people) != 0:
             household = Household(self, loc=self.location)
-            for i in range(len(people)):
-                person = people[i]
+            for i, person in enumerate(people):
                 household.add_person(person)
 
                 if override_person_id:
