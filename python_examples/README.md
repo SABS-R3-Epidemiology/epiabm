@@ -16,6 +16,7 @@ Contained within the `basic_infection_history_simulation/` directory, this scrip
 
 It subsequently saves the results to .csv files. The four .csv files that are produced record the infection history of the population, the infection history of each individual, the infectiousness history of each individual, and the demographics of the population at the start of the simulation.
 
+These .csv files are then used in the repository (https://github.com/SABS-R3-Epidemiology/EpiOS.git) for further analysis.
 
 ## Spatial Simulations
 
