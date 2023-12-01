@@ -30,15 +30,15 @@ Overview:
     :members:
     :special-members: __call__
 
-.. autoclass:: DemographicsSweep
-    :members:
-    :special-members: __call__
-
 .. autoclass:: HostProgressionSweep
     :members:
     :special-members: __call__
 
 .. autoclass:: HouseholdSweep
+    :members:
+    :special-members: __call__
+
+.. autoclass:: InitialDemographicsSweep
     :members:
     :special-members: __call__
 

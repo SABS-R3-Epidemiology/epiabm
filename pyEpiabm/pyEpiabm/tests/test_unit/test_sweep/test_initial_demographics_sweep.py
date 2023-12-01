@@ -5,8 +5,8 @@ import pyEpiabm as pe
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
-class TestDemographicsSweep(TestPyEpiabm):
-    """Tests the 'DemographicsSweep' class.
+class TestInitialDemographicsSweep(TestPyEpiabm):
+    """Tests the 'InitialDemographicsSweep' class.
     """
 
     def setUp(self) -> None:
@@ -38,12 +38,12 @@ class TestDemographicsSweep(TestPyEpiabm):
     @patch('os.makedirs')
     def test_construct(self, mock_mkdir):
         # Check faulty input
-        self.assertRaises(ValueError, pe.sweep.DemographicsSweep, {})
+        self.assertRaises(ValueError, pe.sweep.InitialDemographicsSweep, {})
 
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             # Now test init using valid input
-            dem_sweep = pe.sweep.DemographicsSweep(self.file_params)
+            dem_sweep = pe.sweep.InitialDemographicsSweep(self.file_params)
             dem_sweep.bind_population(self.test_population)
             self.assertEqual(dem_sweep.spatial_output, False)
             self.assertEqual(dem_sweep.age_output, False)
@@ -58,7 +58,7 @@ class TestDemographicsSweep(TestPyEpiabm):
         self.file_params["age_output"] = True
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             # Now test init using valid input
-            dem_sweep = pe.sweep.DemographicsSweep(self.file_params)
+            dem_sweep = pe.sweep.InitialDemographicsSweep(self.file_params)
             dem_sweep.bind_population(self.test_population)
             self.assertEqual(dem_sweep.spatial_output, True)
             self.assertEqual(dem_sweep.age_output, True)
@@ -81,7 +81,7 @@ class TestDemographicsSweep(TestPyEpiabm):
         self.file_params['spatial_output'] = False
         self.file_params['age_output'] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-            dem_sweep = pe.sweep.DemographicsSweep(self.file_params)
+            dem_sweep = pe.sweep.InitialDemographicsSweep(self.file_params)
             dem_sweep.bind_population(self.test_population)
             person_0_0_0_0_data = {"id": "0.0.0.0", "kw_or_chr": 'K'}
             person_1_0_0_0_data = {"id": "1.0.0.0", "kw_or_chr": 'C'}
@@ -106,7 +106,7 @@ class TestDemographicsSweep(TestPyEpiabm):
         self.file_params['spatial_output'] = False
         self.file_params['age_output'] = True
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-            dem_sweep = pe.sweep.DemographicsSweep(self.file_params)
+            dem_sweep = pe.sweep.InitialDemographicsSweep(self.file_params)
             dem_sweep.bind_population(self.test_population)
             person_0_0_0_0_data = {"id": "0.0.0.0", "age_group": 5,
                                    "kw_or_chr": 'K'}
@@ -136,7 +136,7 @@ class TestDemographicsSweep(TestPyEpiabm):
         cell_0_x, cell_0_y = self.test_population.cells[0].location
         cell_1_x, cell_1_y = self.test_population.cells[1].location
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-            dem_sweep = pe.sweep.DemographicsSweep(self.file_params)
+            dem_sweep = pe.sweep.InitialDemographicsSweep(self.file_params)
             dem_sweep.bind_population(self.test_population)
             person_0_0_0_0_data = {"id": "0.0.0.0", "location_x": cell_0_x,
                                    "location_y": cell_0_y, "kw_or_chr": 'K'}
@@ -166,7 +166,7 @@ class TestDemographicsSweep(TestPyEpiabm):
         cell_0_x, cell_0_y = self.test_population.cells[0].location
         cell_1_x, cell_1_y = self.test_population.cells[1].location
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-            dem_sweep = pe.sweep.DemographicsSweep(self.file_params)
+            dem_sweep = pe.sweep.InitialDemographicsSweep(self.file_params)
             dem_sweep.bind_population(self.test_population)
             person_0_0_0_0_data = {"id": "0.0.0.0", "age_group": 5,
                                    "location_x": cell_0_x,

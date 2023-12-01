@@ -7,7 +7,7 @@
 """
 
 from .abstract_sweep import AbstractSweep
-from .demographics_sweep import DemographicsSweep
+from .initial_demographics_sweep import InitialDemographicsSweep
 from .host_progression_sweep import HostProgressionSweep
 from .household_sweep import HouseholdSweep
 from .initial_household_sweep import InitialHouseholdSweep

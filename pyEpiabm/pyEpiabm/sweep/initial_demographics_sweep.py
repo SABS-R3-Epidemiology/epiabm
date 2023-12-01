@@ -10,7 +10,7 @@ from pyEpiabm.output import _CsvDictWriter
 from .abstract_sweep import AbstractSweep
 
 
-class DemographicsSweep(AbstractSweep):
+class InitialDemographicsSweep(AbstractSweep):
     """Class to sweep through the population at the beginning of the simulation
     and record their demographic information
 
