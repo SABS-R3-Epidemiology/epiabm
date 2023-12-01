@@ -372,7 +372,8 @@ class TestSimulation(TestMockedLogs):
                                                        "output_dir"]))
 
     @patch('os.makedirs')
-    def test_write_to_ih_file(self, mock_mkdir):
+    def test_write_to_ih_file_status_no_infectiousness(self, mock_mkdir,
+                                                       time=1):
 
         if os.path.exists(self.ih_file_params["output_dir"]):
             os.rmdir(self.ih_file_params["output_dir"])
@@ -381,7 +382,6 @@ class TestSimulation(TestMockedLogs):
         self.ih_file_params['status_output'] = True
         self.ih_file_params['infectiousness_output'] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-            time = 1
             test_sim = pe.routine.Simulation()
             test_sim.configure(self.test_population, self.initial_sweeps,
                                self.sweeps, self.sim_params, self.file_params,
@@ -399,10 +399,17 @@ class TestSimulation(TestMockedLogs):
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                       self.ih_file_params["output_dir"]))
 
+    @patch('os.makedirs')
+    def test_write_to_ih_file_no_status_infectiousness(self, mock_mkdir,
+                                                       time=1):
+
+        if os.path.exists(self.ih_file_params["output_dir"]):
+            os.rmdir(self.ih_file_params["output_dir"])
+
+        mo = mock_open()
         self.ih_file_params['status_output'] = False
         self.ih_file_params['infectiousness_output'] = True
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-            time = 1
             test_sim = pe.routine.Simulation()
             test_sim.configure(self.test_population, self.initial_sweeps,
                                self.sweeps, self.sim_params, self.file_params,
@@ -421,10 +428,16 @@ class TestSimulation(TestMockedLogs):
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                       self.ih_file_params["output_dir"]))
 
+    @patch('os.makedirs')
+    def test_write_to_ih_file_status_infectiousness(self, mock_mkdir, time=1):
+
+        if os.path.exists(self.ih_file_params["output_dir"]):
+            os.rmdir(self.ih_file_params["output_dir"])
+
+        mo = mock_open()
         self.ih_file_params['status_output'] = True
         self.ih_file_params['infectiousness_output'] = True
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-            time = 1
             test_sim = pe.routine.Simulation()
             test_sim.configure(self.test_population, self.initial_sweeps,
                                self.sweeps, self.sim_params, self.file_params,
