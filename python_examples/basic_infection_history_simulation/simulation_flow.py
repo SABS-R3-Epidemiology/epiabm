@@ -51,7 +51,8 @@ ih_file_params = {"output_dir": os.path.join(os.path.dirname(__file__),
 sim = pe.routine.Simulation()
 sim.configure(
     population,
-    [pe.sweep.InitialInfectedSweep(), pe.sweep.InitialDemographicsSweep(file_params)],
+    [pe.sweep.InitialInfectedSweep(),
+     pe.sweep.InitialDemographicsSweep(file_params)],
     [pe.sweep.HouseholdSweep(), pe.sweep.QueueSweep(),
      pe.sweep.HostProgressionSweep()],
     sim_params,
