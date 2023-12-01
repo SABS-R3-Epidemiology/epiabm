@@ -146,8 +146,8 @@ class Simulation:
                 ih_file_params["infectiousness_output"] \
                 if "infectiousness_output" in ih_file_params else False
             person_ids = []
-            for cell in population.cells:
-                person_ids += [person.id for person in cell.persons]
+            person_ids += [person.id for person in cell.persons for cell in 
+                           population.cells]
             self.ih_output_titles = ["time"] + person_ids
             ih_folder = os.path.join(os.getcwd(),
                                      ih_file_params["output_dir"])
