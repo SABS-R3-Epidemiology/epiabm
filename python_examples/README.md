@@ -4,11 +4,18 @@ This directory contains a number of examples of python workflows to run simulati
 
 ## Basic Example
 
-This script outlines all commands necessary to run a basic simulation. It models a population of 100 individuals, spread across 20 households in a single cell and microcell.
+This script outlines all commands necessary to run a basic simulation. It models a population of 100 individuals, spread across 20 households in a single cell and microcell. 
 
 It subsequently saves the results to a .csv file, and plots a basic SIR plot of the simulation output, depicted below:
 
 ![SIR plot from simulation_flow.pt](./basic_example/simulation_outputs/simulation_flow_SIR_plot.png)
+
+## Basic Infection History Simulation
+
+Contained within the `basic_infection_history_simulation/` directory, this script runs a basic simulation. It models a population of 100 individuals, spread across 2 cells, each with 2 microcells, and 5 households per microcell.
+
+It subsequently saves the results to .csv files. The four .csv files that are produced record the infection history of the population, the infection history of each individual, the infectiousness history of each individual, and the demographics of the population at the start of the simulation.
+
 
 ## Spatial Simulations
 
