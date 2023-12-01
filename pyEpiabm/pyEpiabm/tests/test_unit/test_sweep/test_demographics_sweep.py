@@ -1,5 +1,5 @@
 import os
-from unittest.mock import patch, mock_open
+from unittest.mock import patch, mock_open, call
 
 import pyEpiabm as pe
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
@@ -72,7 +72,7 @@ class TestDemographicsSweep(TestPyEpiabm):
         mo.assert_called_with(file_name, 'w')
 
     @patch('os.makedirs')
-    def test_write_to_file(self, mock_mkdir):
+    def test_write_to_file_no_age_no_spatial(self, mock_mkdir):
 
         if os.path.exists(self.file_params["output_dir"]):
             os.rmdir(self.file_params["output_dir"])
@@ -88,14 +88,22 @@ class TestDemographicsSweep(TestPyEpiabm):
             person_1_0_0_1_data = {"id": "1.0.0.1", "kw_or_chr": 'X'}
             with patch.object(dem_sweep.writer, 'write') as mock:
                 dem_sweep()
-                mock.assert_any_call(person_0_0_0_0_data)
-                mock.assert_any_call(person_1_0_0_0_data)
-                mock.assert_any_call(person_1_0_0_1_data)
+                mock.assert_has_calls([call(person_0_0_0_0_data),
+                                       call(person_1_0_0_0_data),
+                                       call(person_1_0_0_1_data)])
                 self.assertEqual(mock.call_count, 3)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                                    self.file_params[
                                                        "output_dir"]))
 
+    @patch('os.makedirs')
+    def test_write_to_file_age_no_spatial(self, mock_mkdir):
+
+        if os.path.exists(self.file_params["output_dir"]):
+            os.rmdir(self.file_params["output_dir"])
+
+        mo = mock_open()
+        self.file_params['spatial_output'] = False
         self.file_params['age_output'] = True
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             dem_sweep = pe.sweep.DemographicsSweep(self.file_params)
@@ -108,18 +116,25 @@ class TestDemographicsSweep(TestPyEpiabm):
                                    "kw_or_chr": 'X'}
             with patch.object(dem_sweep.writer, 'write') as mock:
                 dem_sweep()
-                mock.assert_any_call(person_0_0_0_0_data)
-                mock.assert_any_call(person_1_0_0_0_data)
-                mock.assert_any_call(person_1_0_0_1_data)
+                mock.assert_has_calls([call(person_0_0_0_0_data),
+                                       call(person_1_0_0_0_data),
+                                       call(person_1_0_0_1_data)])
                 self.assertEqual(mock.call_count, 3)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                                    self.file_params[
                                                        "output_dir"]))
 
-        self.file_params["spatial_output"] = True
+    @patch('os.makedirs')
+    def test_write_to_file_no_age_spatial(self, mock_mkdir):
+
+        if os.path.exists(self.file_params["output_dir"]):
+            os.rmdir(self.file_params["output_dir"])
+
+        mo = mock_open()
+        self.file_params['spatial_output'] = True
+        self.file_params['age_output'] = False
         cell_0_x, cell_0_y = self.test_population.cells[0].location
         cell_1_x, cell_1_y = self.test_population.cells[1].location
-        self.file_params["age_output"] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             dem_sweep = pe.sweep.DemographicsSweep(self.file_params)
             dem_sweep.bind_population(self.test_population)
@@ -131,15 +146,25 @@ class TestDemographicsSweep(TestPyEpiabm):
                                    "location_y": cell_1_y, "kw_or_chr": 'X'}
             with patch.object(dem_sweep.writer, 'write') as mock:
                 dem_sweep()
-                mock.assert_any_call(person_0_0_0_0_data)
-                mock.assert_any_call(person_1_0_0_0_data)
-                mock.assert_any_call(person_1_0_0_1_data)
+                mock.assert_has_calls([call(person_0_0_0_0_data),
+                                       call(person_1_0_0_0_data),
+                                       call(person_1_0_0_1_data)])
                 self.assertEqual(mock.call_count, 3)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                                    self.file_params[
                                                        "output_dir"]))
 
-        self.file_params["age_output"] = True
+    @patch('os.makedirs')
+    def test_write_to_file_age_spatial(self, mock_mkdir):
+
+        if os.path.exists(self.file_params["output_dir"]):
+            os.rmdir(self.file_params["output_dir"])
+
+        mo = mock_open()
+        self.file_params['spatial_output'] = True
+        self.file_params['age_output'] = True
+        cell_0_x, cell_0_y = self.test_population.cells[0].location
+        cell_1_x, cell_1_y = self.test_population.cells[1].location
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             dem_sweep = pe.sweep.DemographicsSweep(self.file_params)
             dem_sweep.bind_population(self.test_population)
@@ -154,9 +179,9 @@ class TestDemographicsSweep(TestPyEpiabm):
                                    "location_y": cell_1_y, "kw_or_chr": 'X'}
             with patch.object(dem_sweep.writer, 'write') as mock:
                 dem_sweep()
-                mock.assert_any_call(person_0_0_0_0_data)
-                mock.assert_any_call(person_1_0_0_0_data)
-                mock.assert_any_call(person_1_0_0_1_data)
+                mock.assert_has_calls([call(person_0_0_0_0_data),
+                                       call(person_1_0_0_0_data),
+                                       call(person_1_0_0_1_data)])
                 self.assertEqual(mock.call_count, 3)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                                    self.file_params[

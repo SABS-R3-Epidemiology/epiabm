@@ -78,10 +78,14 @@ class Simulation:
         file_params : dict
             Dictionary of parameters specific to the output file
         ih_file_params : dict
-            Dictionary of parameters specific to the output infection history
-            file. If both `status_output` and `infectiousness_output` are
+            This is short for 'infection history file parameters' and we will
+            use the abbreviation 'ih' to refer to infection history throughout
+            this class. If both `status_output` and `infectiousness_output` are
             False, then no infection history csv files are produced (or if
-            the dictionary is None)
+            the dictionary is None). These files contain the infection status
+            or infectiousness of each person every time step. The EpiOS tool
+            (https://github.com/SABS-R3-Epidemiology/EpiOS) samples data from
+            these files to mimic real life epidemic sampling techniques.
         """
         self.sim_params = sim_params
         self.population = population
@@ -139,15 +143,13 @@ class Simulation:
         if ih_file_params:
             # Setting up writer for infection history for each person. If the
             # ih_file_params dict is empty, then we do not need to record this
-            self.status_output = ih_file_params["status_output"] \
-                if "status_output" in ih_file_params else False
+            self.status_output = ih_file_params.get("status_output")
 
-            self.infectiousness_output = \
-                ih_file_params["infectiousness_output"] \
-                if "infectiousness_output" in ih_file_params else False
+            self.infectiousness_output = ih_file_params\
+                .get("infectiousness_output")
             person_ids = []
-            person_ids += [person.id for person in cell.persons for cell in 
-                           population.cells]
+            person_ids += [person.id for cell in population.cells for person
+                           in cell.persons]
             self.ih_output_titles = ["time"] + person_ids
             ih_folder = os.path.join(os.getcwd(),
                                      ih_file_params["output_dir"])
