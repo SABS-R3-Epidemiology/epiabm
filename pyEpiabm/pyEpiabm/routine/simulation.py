@@ -198,6 +198,10 @@ class Simulation:
                      + f"{self.sim_params['simulation_start_time']} days")
         # First entry of the data file is the initial state
         self.write_to_file(self.sim_params["simulation_start_time"])
+        if self.ih_status_writer:
+            self.write_to_ih_file(0.0, output_option="status")
+        if self.ih_infectiousness_writer:
+            self.write_to_ih_file(0.0, output_option="infectiousness")
 
         for t in tqdm(np.arange(self.sim_params["simulation_start_time"] + ts,
                                 self.sim_params["simulation_end_time"] + ts,

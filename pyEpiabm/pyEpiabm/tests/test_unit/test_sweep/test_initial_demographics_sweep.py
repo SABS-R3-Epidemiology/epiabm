@@ -36,10 +36,27 @@ class TestInitialDemographicsSweep(TestPyEpiabm):
                             "pyEpiabm/pyEpiabm/tests/test_output/mock"}
 
     @patch('os.makedirs')
-    def test_construct(self, mock_mkdir):
+    def test_construct_invalid_input(self, mock_mkdir):
         # Check faulty input
-        self.assertRaises(ValueError, pe.sweep.InitialDemographicsSweep, {})
+        with self.assertRaises(ValueError) as cm_1:
+            pe.sweep.InitialDemographicsSweep({})
+        self.assertEqual("output_dir must be specified in file_params",
+                         str(cm_1.exception))
 
+        # Check that age_stratified cannot be True while use_ages is False
+        pe.core.Parameters.instance().use_ages = False
+        test_file_params = {"output_dir":
+                            "pyEpiabm/pyEpiabm/tests/test_output/mock",
+                            "age_output": True}
+        with self.assertRaises(ValueError) as cm_2:
+            pe.sweep.InitialDemographicsSweep(test_file_params)
+        self.assertEqual("age_output cannot be True as Parameters"
+                         ".instance().use_ages is False",
+                         str(cm_2.exception))
+        pe.core.Parameters.instance().use_ages = True
+
+    @patch('os.makedirs')
+    def test_construct(self, mock_mkdir):
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             # Now test init using valid input

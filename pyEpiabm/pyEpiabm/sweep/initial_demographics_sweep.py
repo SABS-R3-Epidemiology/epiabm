@@ -5,6 +5,7 @@
 import os
 import typing
 
+from pyEpiabm.core import Parameters
 from pyEpiabm.output import _CsvDictWriter
 
 from .abstract_sweep import AbstractSweep
@@ -35,6 +36,9 @@ class InitialDemographicsSweep(AbstractSweep):
             if "spatial_output" in file_params else False
         self.age_output = file_params["age_output"] \
             if "age_output" in file_params else False
+        if self.age_output and not Parameters.instance().use_ages:
+            raise ValueError("age_output cannot be True as Parameters"
+                             ".instance().use_ages is False")
 
         # Here we set up the writer
         folder = os.path.join(os.getcwd(),
@@ -57,8 +61,9 @@ class InitialDemographicsSweep(AbstractSweep):
         age_group (int, optional), location_x (float, optional), location_y
         (float, optional), kw_or_chr (str)
 
-        For the final column, 'K' refers to a key worker, 'C' refers to a
-        care home resident and 'X' refers to a person who is neither
+        Note that kw_or_chr stands for 'key worker or care home resident'. For
+        kw_or_chr, 'K' refers to a key worker, 'C' refers to a care home
+        resident and 'X' refers to a person who is neither
 
         """
         if self.spatial_output:
