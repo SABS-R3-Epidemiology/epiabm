@@ -66,39 +66,16 @@ class InitialDemographicsSweep(AbstractSweep):
         resident and 'X' refers to a person who is neither
 
         """
-        if self.spatial_output:
-            if self.age_output:
-                for cell in self._population.cells:
-                    for person in cell.persons:
-                        data = {"id": person.id,
-                                "age_group": person.age_group,
-                                "location_x": cell.location[0],
-                                "location_y": cell.location[1],
-                                "kw_or_chr": "K" if person.key_worker else
-                                ("C" if person.care_home_resident else "X")}
-                        self.writer.write(data)
-            else:
-                for cell in self._population.cells:
-                    for person in cell.persons:
-                        data = {"id": person.id,
-                                "location_x": cell.location[0],
-                                "location_y": cell.location[1],
-                                "kw_or_chr": "K" if person.key_worker else
-                                ("C" if person.care_home_resident else "X")}
-                        self.writer.write(data)
-        else:
-            if self.age_output:
-                for cell in self._population.cells:
-                    for person in cell.persons:
-                        data = {"id": person.id,
-                                "age_group": person.age_group,
-                                "kw_or_chr": "K" if person.key_worker else
-                                ("C" if person.care_home_resident else "X")}
-                        self.writer.write(data)
-            else:
-                for cell in self._population.cells:
-                    for person in cell.persons:
-                        data = {"id": person.id,
-                                "kw_or_chr": "K" if person.key_worker else
-                                ("C" if person.care_home_resident else "X")}
-                        self.writer.write(data)
+        for cell in self._population.cells:
+            for person in cell.persons:
+                data = {"id": person.id,
+                        "age_group": person.age_group
+                        if self.age_output else None,
+                        "location_x": cell.location[0]
+                        if self.spatial_output else None,
+                        "location_y": cell.location[1]
+                        if self.spatial_output else None,
+                        "kw_or_chr": "K" if person.key_worker else
+                        ("C" if person.care_home_resident else "X")}
+                data = {k: data[k] for k in data if data[k] is not None}
+                self.writer.write(data)
