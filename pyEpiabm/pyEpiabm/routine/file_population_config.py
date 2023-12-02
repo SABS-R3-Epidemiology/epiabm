@@ -106,8 +106,8 @@ class FilePopulationFactory:
                                  + f" already exists in cell {cell.id}")
 
             new_microcell = Microcell(cell)
-            cell.microcells.append(new_microcell)
             new_microcell.set_id(microcell_id_csv)
+            cell.microcells.append(new_microcell)
 
             for column in input.columns.values:
                 if hasattr(InfectionStatus, column):
