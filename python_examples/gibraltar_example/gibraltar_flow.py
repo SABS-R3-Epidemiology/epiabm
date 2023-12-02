@@ -45,6 +45,11 @@ file_params = {"output_file": "output_gibraltar.csv",
                "spatial_output": True,
                "age_stratified": True}
 
+ih_file_params = {"output_dir": os.path.join(os.path.dirname(__file__),
+                                             "simulation_outputs"),
+                  "status_output": True,
+                  "infectiousness_output": True}
+
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.
 sim = pe.routine.Simulation()
@@ -52,7 +57,8 @@ sim.configure(
     population,
     [pe.sweep.InitialHouseholdSweep(),
      pe.sweep.InitialInfectedSweep(),
-     pe.sweep.InitialisePlaceSweep()],
+     pe.sweep.InitialisePlaceSweep(),
+     pe.sweep.InitialDemographicsSweep(file_params)],
     [
         pe.sweep.UpdatePlaceSweep(),
         pe.sweep.HouseholdSweep(),
@@ -63,6 +69,7 @@ sim.configure(
     ],
     sim_params,
     file_params,
+    ih_file_params
 )
 sim.run_sweeps()
 
