@@ -9,6 +9,7 @@ from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 class TestCell(TestPyEpiabm):
     """Test the 'Cell' class.
     """
+
     def setUp(self) -> None:
         self.cell = pe.Cell()
 
@@ -26,8 +27,8 @@ class TestCell(TestPyEpiabm):
 
     def test_repr(self):
         self.assertEqual(repr(self.cell),
-                         "Cell with 0 microcells and 0 people"
-                         + " at location (0, 0).")
+                         f"Cell ({self.cell.id}) with 0 microcells "
+                         f"and 0 people at location (0, 0).")
 
     def test_set_location(self):
         local_cell = pe.Cell(loc=(-2, 3.2))
