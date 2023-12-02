@@ -347,12 +347,12 @@ class TestSimulation(TestMockedLogs):
             spatial_sim.configure(self.test_population, self.initial_sweeps,
                                   self.sweeps, self.sim_params,
                                   self.spatial_file_params)
-            data = {s: 0 for s in list(pe.property.InfectionStatus)}
             for cell in self.test_population.cells:
                 for age_i in \
                         range(0,
                               len(pe.Parameters.instance().age_proportions)):
-                    for inf_status in data:
+                    data = {s: 0 for s in list(pe.property.InfectionStatus)}
+                for inf_status in data:
                         data_per_inf_status = \
                                 cell.compartment_counter.retrieve()[inf_status]
                         data[inf_status] += data_per_inf_status[age_i]
