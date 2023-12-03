@@ -17,11 +17,11 @@ class InitialDemographicsSweep(AbstractSweep):
 
     """
 
-    def __init__(self, file_params: typing.Dict):
+    def __init__(self, dem_file_params: typing.Dict):
         """Initiate file parameters referring to the file location and
         which columns are to be included
 
-        file_params Contains:
+        dem_file_params Contains:
             * `output_dir`: String for the location of the output file, \
                as a relative path
             * `spatial_output`: Boolean to determine whether a spatial output \
@@ -30,19 +30,28 @@ class InitialDemographicsSweep(AbstractSweep):
                 have ages
 
         """
-        if "output_dir" not in file_params:
-            raise ValueError("output_dir must be specified in file_params")
-        self.spatial_output = file_params["spatial_output"] \
-            if "spatial_output" in file_params else False
-        self.age_output = file_params["age_output"] \
-            if "age_output" in file_params else False
+
+        # Must have an output directory
+        if "output_dir" not in dem_file_params:
+            raise ValueError("output_dir must be specified in dem_file_params")
+
+        # Check for invalid keys
+        invalid_keys = set(dem_file_params.keys()) - \
+            {"output_dir", "age_output", "spatial_output"}
+        if len(invalid_keys) != 0:
+            raise ValueError(f"dem_file_params contains invalid keys: "
+                             f"{invalid_keys}")
+        self.spatial_output = dem_file_params["spatial_output"] \
+            if "spatial_output" in dem_file_params else False
+        self.age_output = dem_file_params["age_output"] \
+            if "age_output" in dem_file_params else False
         if self.age_output and not Parameters.instance().use_ages:
             raise ValueError("age_output cannot be True as Parameters"
                              ".instance().use_ages is False")
 
         # Here we set up the writer
         folder = os.path.join(os.getcwd(),
-                              file_params["output_dir"])
+                              dem_file_params["output_dir"])
         file_name = "demographics.csv"
         self.titles = ["id"]
         if self.age_output:
