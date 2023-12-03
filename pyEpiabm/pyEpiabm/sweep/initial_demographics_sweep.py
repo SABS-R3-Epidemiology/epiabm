@@ -71,7 +71,7 @@ class InitialDemographicsSweep(AbstractSweep):
         (float, optional), kw_or_chr (str)
 
         Note that kw_or_chr stands for 'key worker or care home resident'. For
-        kw_or_chr, 'K' refers to a key worker, 'C' refers to a care home
+        kw_or_chr, 'W' refers to a key worker, 'C' refers to a care home
         resident and 'X' refers to a person who is neither
 
         """
@@ -84,7 +84,7 @@ class InitialDemographicsSweep(AbstractSweep):
                         if self.spatial_output else None,
                         "location_y": cell.location[1]
                         if self.spatial_output else None,
-                        "kw_or_chr": "K" if person.key_worker else
+                        "kw_or_chr": "W" if person.key_worker else
                         ("C" if person.care_home_resident else "X")}
                 data = {k: data[k] for k in data if data[k] is not None}
                 self.writer.write(data)

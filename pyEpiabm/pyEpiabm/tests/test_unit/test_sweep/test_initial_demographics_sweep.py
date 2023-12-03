@@ -108,7 +108,7 @@ class TestInitialDemographicsSweep(TestPyEpiabm):
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             dem_sweep = pe.sweep.InitialDemographicsSweep(self.dem_file_params)
             dem_sweep.bind_population(self.test_population)
-            person_0_0_0_0_data = {"id": "0.0.0.0", "kw_or_chr": 'K'}
+            person_0_0_0_0_data = {"id": "0.0.0.0", "kw_or_chr": 'W'}
             person_1_0_0_0_data = {"id": "1.0.0.0", "kw_or_chr": 'C'}
             person_1_0_0_1_data = {"id": "1.0.0.1", "kw_or_chr": 'X'}
             with patch.object(dem_sweep.writer, 'write') as mock:
@@ -134,7 +134,7 @@ class TestInitialDemographicsSweep(TestPyEpiabm):
             dem_sweep = pe.sweep.InitialDemographicsSweep(self.dem_file_params)
             dem_sweep.bind_population(self.test_population)
             person_0_0_0_0_data = {"id": "0.0.0.0", "age_group": 5,
-                                   "kw_or_chr": 'K'}
+                                   "kw_or_chr": 'W'}
             person_1_0_0_0_data = {"id": "1.0.0.0", "age_group": 13,
                                    "kw_or_chr": 'C'}
             person_1_0_0_1_data = {"id": "1.0.0.1", "age_group": 8,
@@ -164,7 +164,7 @@ class TestInitialDemographicsSweep(TestPyEpiabm):
             dem_sweep = pe.sweep.InitialDemographicsSweep(self.dem_file_params)
             dem_sweep.bind_population(self.test_population)
             person_0_0_0_0_data = {"id": "0.0.0.0", "location_x": cell_0_x,
-                                   "location_y": cell_0_y, "kw_or_chr": 'K'}
+                                   "location_y": cell_0_y, "kw_or_chr": 'W'}
             person_1_0_0_0_data = {"id": "1.0.0.0", "location_x": cell_1_x,
                                    "location_y": cell_1_y, "kw_or_chr": 'C'}
             person_1_0_0_1_data = {"id": "1.0.0.1", "location_x": cell_1_x,
@@ -195,7 +195,7 @@ class TestInitialDemographicsSweep(TestPyEpiabm):
             dem_sweep.bind_population(self.test_population)
             person_0_0_0_0_data = {"id": "0.0.0.0", "age_group": 5,
                                    "location_x": cell_0_x,
-                                   "location_y": cell_0_y, "kw_or_chr": 'K'}
+                                   "location_y": cell_0_y, "kw_or_chr": 'W'}
             person_1_0_0_0_data = {"id": "1.0.0.0", "age_group": 13,
                                    "location_x": cell_1_x,
                                    "location_y": cell_1_y, "kw_or_chr": 'C'}
