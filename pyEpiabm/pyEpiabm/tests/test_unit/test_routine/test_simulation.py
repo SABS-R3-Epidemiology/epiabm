@@ -29,8 +29,8 @@ class TestSimulation(TestMockedLogs):
         cls.file_params = {"output_file": "test_file.csv",
                            "output_dir": cls.mock_output_dir}
         cls.inf_history_params = {"output_dir": cls.mock_output_dir,
-                              "status_output": False,
-                              "infectiousness_output": False}
+                                  "status_output": False,
+                                  "infectiousness_output": False}
         cls.spatial_file_params = dict(cls.file_params)
         cls.spatial_file_params["age_stratified"] = True
         cls.spatial_file_params["spatial_output"] = True
