@@ -34,7 +34,7 @@ class Simulation:
                   sweeps: typing.List[AbstractSweep],
                   sim_params: typing.Dict,
                   file_params: typing.Dict,
-                  ih_file_params: typing.Dict = None):
+                  inf_history_params: typing.Dict = None):
         """Initialise a population structure for use in the simulation.
 
         sim_params Contains:
@@ -53,7 +53,7 @@ class Simulation:
             * `age_stratified`: Boolean to determine whether the output will \
                 be age stratified
 
-        ih_file_params Contains:
+        inf_history_params Contains:
             * `output_dir`: String for the location for the output files, \
                as a relative path
             * `status_output`: Boolean to determine whether we need \
@@ -77,7 +77,7 @@ class Simulation:
             as input for call method of initial sweeps
         file_params : dict
             Dictionary of parameters specific to the output file
-        ih_file_params : dict
+        inf_history_params : dict
             This is short for 'infection history file parameters' and we will
             use the abbreviation 'ih' to refer to infection history throughout
             this class. If both `status_output` and `infectiousness_output` are
@@ -140,19 +140,20 @@ class Simulation:
         self.ih_status_writer = None
         self.ih_infectiousness_writer = None
 
-        if ih_file_params:
+        if inf_history_params:
             # Setting up writer for infection history for each person. If the
-            # ih_file_params dict is empty, then we do not need to record this
-            self.status_output = ih_file_params.get("status_output")
+            # inf_history_params dict is empty then we do not need to record
+            # this
+            self.status_output = inf_history_params.get("status_output")
 
-            self.infectiousness_output = ih_file_params\
+            self.infectiousness_output = inf_history_params\
                 .get("infectiousness_output")
             person_ids = []
             person_ids += [person.id for cell in population.cells for person
                            in cell.persons]
             self.ih_output_titles = ["time"] + person_ids
             ih_folder = os.path.join(os.getcwd(),
-                                     ih_file_params["output_dir"])
+                                     inf_history_params["output_dir"])
 
             if self.status_output:
 
