@@ -83,7 +83,7 @@ class UpdatePlaceSweep(AbstractSweep):
 
         """
         if place.place_type.value == 5 and hasattr(Parameters.instance(),
-                                             'carehome_params'):
+                                                   'carehome_params'):
             carehome_params = Parameters.instance().carehome_params
         # If a specific list of people is not provided, use the whole cell
         if person_list is None:
