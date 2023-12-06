@@ -82,7 +82,7 @@ class UpdatePlaceSweep(AbstractSweep):
             Weights for people in list
 
         """
-        if place.place_type == 5 and hasattr(Parameters.instance(),
+        if place.place_type.value == 5 and hasattr(Parameters.instance(),
                                              'carehome_params'):
             carehome_params = Parameters.instance().carehome_params
         # If a specific list of people is not provided, use the whole cell
@@ -134,7 +134,7 @@ class UpdatePlaceSweep(AbstractSweep):
             # haven't already been assigned to this place type.
             if ((person not in place.persons) and
                     (place.place_type not in person.place_types)):
-                if place.place_type == 5:
+                if place.place_type.value == 5:
                     if hasattr(Parameters.instance(), 'carehome_params'):
                         if person.age >= carehome_params[
                                 "carehome_minimum_age"]:
