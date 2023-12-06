@@ -155,6 +155,11 @@ class Simulation:
             ih_folder = os.path.join(os.getcwd(),
                                      inf_history_params["output_dir"])
 
+            if not (self.status_output or self.infectiousness_output):
+                logging.warning("Both status_output and infectiousness_output "
+                                + "are False. Neither infection history csv "
+                                + "will be created.")
+
             if self.status_output:
 
                 ih_file_name = "ih_status_output.csv"
