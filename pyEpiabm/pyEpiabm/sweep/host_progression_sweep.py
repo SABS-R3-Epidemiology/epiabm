@@ -1,7 +1,7 @@
 #
 # Progression of infection within individuals
 #
-
+import logging
 import random
 import numpy as np
 from collections import defaultdict
@@ -152,32 +152,34 @@ class HostProgressionSweep(AbstractSweep):
                                        InfectionStatus.Dead,
                                        InfectionStatus.Vaccinated]:
             person.next_infection_status = None
+            return
         elif (person.care_home_resident and
               person.infection_status == InfectionStatus.InfectICU):
             person.next_infection_status = InfectionStatus.Dead
+            return
         elif (person.care_home_resident and
               person.infection_status == InfectionStatus.InfectHosp):
             carehome_params = Parameters.instance().carehome_params
             carehome_hosp = carehome_params['carehome_rel_prob_hosp']
             if random.uniform(0, 1) > carehome_hosp:
                 person.next_infection_status = InfectionStatus.Dead
-        else:
-            row_index = person.infection_status.name
-            weights = self.state_transition_matrix.loc[row_index].to_numpy()
-            weights = [w[person.age_group] if isinstance(w, list) else w
-                       for w in weights]
-            outcomes = range(1, self.number_of_states + 1)
+                return
+        row_index = person.infection_status.name
+        weights = self.state_transition_matrix.loc[row_index].to_numpy()
+        weights = [w[person.age_group] if isinstance(w, list) else w
+                   for w in weights]
+        outcomes = range(1, self.number_of_states + 1)
 
-            if len(weights) != len(outcomes):
-                raise AssertionError('The number of infection statuses must' +
-                                     ' match the number of transition' +
-                                     ' probabilities')
+        if len(weights) != len(outcomes):
+            raise AssertionError('The number of infection statuses must' +
+                                 ' match the number of transition' +
+                                 ' probabilities')
 
-            next_infection_status_number = random.choices(outcomes, weights)[0]
-            next_infection_status =\
-                InfectionStatus(next_infection_status_number)
+        next_infection_status_number = random.choices(outcomes, weights)[0]
+        next_infection_status =\
+            InfectionStatus(next_infection_status_number)
 
-            person.next_infection_status = next_infection_status
+        person.next_infection_status = next_infection_status
 
     def update_time_status_change(self, person: Person, time: float):
         """Calculates transition time as calculated in CovidSim,
@@ -235,6 +237,12 @@ class HostProgressionSweep(AbstractSweep):
         # Assigns the time of status change using current time and transition
         # time:
         if transition_time < 0:
+            logging.info(f"Person: {person}")
+            logging.info(f"Status: {person.infection_status}")
+            logging.info(f"Next status: {person.next_infection_status}")
+            logging.info(f"transition_time: {transition_time}")
+            logging.info(f"Key worker: {person.key_worker}")
+            logging.info(f"Care home resident: {person.care_home_resident}")
             raise ValueError('New transition time must be larger than' +
                              ' or equal to 0')
 

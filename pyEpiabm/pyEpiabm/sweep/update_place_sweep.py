@@ -17,6 +17,7 @@ class UpdatePlaceSweep(AbstractSweep):
     class.
 
     """
+
     def __call__(self, time: float):
         """Given a population structure, updates the people
         present in each place at a specific timepoint.
@@ -82,8 +83,8 @@ class UpdatePlaceSweep(AbstractSweep):
             Weights for people in list
 
         """
-        if place.place_type == 5 and hasattr(Parameters.instance(),
-                                             'carehome_params'):
+        if place.place_type.name == "CareHome" and \
+                hasattr(Parameters.instance(), 'carehome_params'):
             carehome_params = Parameters.instance().carehome_params
         # If a specific list of people is not provided, use the whole cell
         if person_list is None:
@@ -117,7 +118,8 @@ class UpdatePlaceSweep(AbstractSweep):
         count = 0
 
         try:
-            num_groups = np.random.poisson(math.ceil(new_capacity/group_size))
+            num_groups = np.random.poisson(
+                math.ceil(new_capacity / group_size))
         except ZeroDivisionError:
             # Will occur when no group_size is set, if there are no groups
             # implemented in this place type
@@ -129,19 +131,19 @@ class UpdatePlaceSweep(AbstractSweep):
                 person = random.choices(person_list, person_weights, k=1)[0]
             else:
                 i = random.randint(1, len(person_list))
-                person = person_list[i-1]
+                person = person_list[i - 1]
             # Checks person is not already in the place, and that they
             # haven't already been assigned to this place type.
             if ((person not in place.persons) and
-                    (place.place_type not in person.place_types)):
-                if place.place_type == 5:
+                (place.place_type not in person.place_types)):
+                if place.place_type.name == "CareHome":
                     if hasattr(Parameters.instance(), 'carehome_params'):
                         if person.age >= carehome_params[
-                                "carehome_minimum_age"]:
+                            "carehome_minimum_age"]:
                             group_index = 1
                             person.care_home_resident = True
                         elif person.age < carehome_params[
-                             "carehome_minimum_age"]:
+                            "carehome_minimum_age"]:
                             group_index = 0
                             person.key_worker = True
                 elif (hasattr(Parameters.instance(), 'use_key_workers') and
