@@ -62,7 +62,7 @@ class TestFunctional(TestMockedLogs):
 
         """
         population = pe.routine.FilePopulationFactory.make_pop(
-            pop_file, random_seed=40)
+            pop_file, random_seed=30)
         pe.routine.FilePopulationFactory.print_population(population,
                                                           "test.csv")
 
