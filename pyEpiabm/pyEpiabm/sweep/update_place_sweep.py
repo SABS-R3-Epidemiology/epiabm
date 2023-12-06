@@ -135,15 +135,15 @@ class UpdatePlaceSweep(AbstractSweep):
             # Checks person is not already in the place, and that they
             # haven't already been assigned to this place type.
             if ((person not in place.persons) and
-                (place.place_type not in person.place_types)):
+                    (place.place_type not in person.place_types)):
                 if place.place_type.name == "CareHome":
                     if hasattr(Parameters.instance(), 'carehome_params'):
                         if person.age >= carehome_params[
-                            "carehome_minimum_age"]:
+                                "carehome_minimum_age"]:
                             group_index = 1
                             person.care_home_resident = True
                         elif person.age < carehome_params[
-                            "carehome_minimum_age"]:
+                                "carehome_minimum_age"]:
                             group_index = 0
                             person.key_worker = True
                 elif (hasattr(Parameters.instance(), 'use_key_workers') and
