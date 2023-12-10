@@ -162,7 +162,7 @@ class Simulation:
 
             if self.status_output:
 
-                ih_file_name = "ih_status_output.csv"
+                ih_file_name = "inf_status_history.csv"
                 logging.info(
                     f"Set infection history infection status location to "
                     f"{os.path.join(ih_folder, ih_file_name)}")
@@ -174,7 +174,7 @@ class Simulation:
 
             if self.infectiousness_output:
 
-                ih_file_name = "ih_infectiousness_output.csv"
+                ih_file_name = "infectiousness_history.csv"
                 logging.info(
                     f"Set infection history infectiousness location to "
                     f"{os.path.join(ih_folder, ih_file_name)}")

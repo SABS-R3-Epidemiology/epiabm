@@ -99,7 +99,7 @@ class TestSimulation(TestMockedLogs):
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             filename = os.path.join(os.getcwd(),
                                     self.inf_history_params["output_dir"],
-                                    "ih_status_output.csv")
+                                    "inf_status_history.csv")
             test_sim = pe.routine.Simulation()
 
             # Test that the output titles are correct
@@ -125,7 +125,7 @@ class TestSimulation(TestMockedLogs):
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             filename = os.path.join(os.getcwd(),
                                     self.inf_history_params["output_dir"],
-                                    "ih_infectiousness_output.csv")
+                                    "infectiousness_history.csv")
             test_sim = pe.routine.Simulation()
 
             # Test that the output titles are correct
