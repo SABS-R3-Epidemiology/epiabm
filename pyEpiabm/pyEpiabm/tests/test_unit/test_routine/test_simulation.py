@@ -74,6 +74,24 @@ class TestSimulation(TestMockedLogs):
         mo.assert_called_with(filename, 'w')
 
     @patch('os.makedirs')
+    @patch('logging.warning')
+    def test_configure_ih_status_infectiousness_false(self, mock_warning,
+                                                      mock_dir):
+        self.inf_history_params["infectiousness_output"] = False
+        self.inf_history_params["status_output"] = False
+        mo = mock_open()
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+            mock_warning.assert_called_once_with("Both status_output and "
+                                                 + "infectiousness_output are "
+                                                 + "False. Neither infection "
+                                                 + "history csv will be "
+                                                 + "created.")
+
+    @patch('os.makedirs')
     def test_configure_ih_status(self, mock_mkdir):
         mo = mock_open()
         self.inf_history_params["infectiousness_output"] = False

@@ -41,10 +41,15 @@ file_params = {"output_file": "output.csv",
                "spatial_output": False,
                "age_stratified": False}
 
-ih_file_params = {"output_dir": os.path.join(os.path.dirname(__file__),
-                                             "simulation_outputs"),
-                  "status_output": True,
-                  "infectiousness_output": True}
+dem_file_params = {"output_dir": os.path.join(os.path.dirname(__file__),
+                                              "simulation_outputs"),
+                   "spatial_output": False,
+                   "age_output": False}
+
+inf_history_params = {"output_dir": os.path.join(os.path.dirname(__file__),
+                                                 "simulation_outputs"),
+                      "status_output": True,
+                      "infectiousness_output": True}
 
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.
@@ -52,12 +57,12 @@ sim = pe.routine.Simulation()
 sim.configure(
     population,
     [pe.sweep.InitialInfectedSweep(),
-     pe.sweep.InitialDemographicsSweep(file_params)],
+     pe.sweep.InitialDemographicsSweep(dem_file_params)],
     [pe.sweep.HouseholdSweep(), pe.sweep.QueueSweep(),
      pe.sweep.HostProgressionSweep()],
     sim_params,
     file_params,
-    ih_file_params)
+    inf_history_params)
 sim.run_sweeps()
 
 # Need to close the writer object at the end of each simulation.
