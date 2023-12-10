@@ -13,13 +13,13 @@ from .abstract_sweep import AbstractSweep
 
 class InitialDemographicsSweep(AbstractSweep):
     """Class to sweep through the population at the beginning of the simulation
-    and record their demographic information
+    and record their demographic information.
 
     """
 
     def __init__(self, dem_file_params: typing.Dict):
         """Initiate file parameters referring to the file location and
-        which columns are to be included
+        which columns are to be included.
 
         dem_file_params Contains:
             * `output_dir`: String for the location of the output file, \
@@ -68,11 +68,11 @@ class InitialDemographicsSweep(AbstractSweep):
         to a .csv file titled "demographics.csv". This file will have one row
         per person, and will have the following columns: id (str),
         age_group (int, optional), location_x (float, optional), location_y
-        (float, optional), kw_or_chr (str)
+        (float, optional), kw_or_chr (str).
 
         Note that kw_or_chr stands for 'key worker or care home resident'. For
         kw_or_chr, 'W' refers to a key worker, 'C' refers to a care home
-        resident and 'X' refers to a person who is neither
+        resident and 'X' refers to a person who is neither.
 
         """
         for cell in self._population.cells:

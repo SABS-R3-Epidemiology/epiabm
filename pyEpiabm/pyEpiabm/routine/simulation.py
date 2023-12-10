@@ -85,7 +85,7 @@ class Simulation:
             the dictionary is None). These files contain the infection status
             or infectiousness of each person every time step. The EpiOS tool
             (https://github.com/SABS-R3-Epidemiology/EpiOS) samples data from
-            these files to mimic real life epidemic sampling techniques.
+            these files to mimic real life epidemic sampling techniques
         """
         self.sim_params = sim_params
         self.population = population
