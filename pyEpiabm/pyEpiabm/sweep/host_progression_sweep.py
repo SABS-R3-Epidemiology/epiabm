@@ -1,7 +1,6 @@
 #
 # Progression of infection within individuals
 #
-import logging
 import random
 import numpy as np
 from collections import defaultdict
@@ -237,12 +236,6 @@ class HostProgressionSweep(AbstractSweep):
         # Assigns the time of status change using current time and transition
         # time:
         if transition_time < 0:
-            logging.info(f"Person: {person}")
-            logging.info(f"Status: {person.infection_status}")
-            logging.info(f"Next status: {person.next_infection_status}")
-            logging.info(f"transition_time: {transition_time}")
-            logging.info(f"Key worker: {person.key_worker}")
-            logging.info(f"Care home resident: {person.care_home_resident}")
             raise ValueError('New transition time must be larger than' +
                              ' or equal to 0')
 
