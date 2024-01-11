@@ -249,18 +249,20 @@ class FilePopulationFactory:
                     "location_y": cell.location[1],
                 }
 
+                inf_dict = {str(status.name): 0 for status in InfectionStatus}
+                data_dict.update(inf_dict)
+
                 for person in microcell.persons:
                     status = str(person.infection_status.name)
-                    if status in data_dict:
-                        data_dict[status] += 1
-                    else:  # New status
-                        data_dict[status] = 1
+                    data_dict[status] += 1
+
                 data_dict['household_number'] = len(microcell.households)
                 data_dict['place_number'] = len(microcell.places)
 
                 new_row = pd.DataFrame(data=data_dict, columns=columns,
                                        index=[0])
-                df = pd.concat([df, new_row], ignore_index=True)
+                df = pd.concat([df, new_row], ignore_index=True) \
+                    if df.size else new_row
 
         df['household_number'] = df['household_number'].astype(int)
         df['place_number'] = df['place_number'].astype(int)
