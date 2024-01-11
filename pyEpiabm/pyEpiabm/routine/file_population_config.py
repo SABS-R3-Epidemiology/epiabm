@@ -135,9 +135,9 @@ class FilePopulationFactory:
                                                          households)
 
             if hasattr(line, 'place_number') and line.place_number > 0:
-                new_microcell.add_place(int(line.place_number),
-                                        cell.location,
-                                        random.choice(list(PlaceType)))
+                for _ in range(int(line.place_number)):
+                    new_microcell.add_place(1, cell.location,
+                                            random.choice(list(PlaceType)))
 
         # if household_size_distribution parameters are available use
         # appropriate function
