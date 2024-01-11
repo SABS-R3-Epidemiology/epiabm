@@ -135,6 +135,8 @@ class TestIsolationFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
+        # Reduce isolation duration so intervention is less effective
+        # In this case, fewer people will be susceptible as more are infected
         self.intervention['case_isolation']['isolation_duration'] = 1
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
@@ -145,7 +147,7 @@ class TestIsolationFunctional(TestFunctional):
 
         # Compare number of susceptible individuals for each age group
         HelperFunc().compare_susceptible_groups(
-             pop.cells, pop_standard.cells)
+             pop_standard.cells, pop.cells)
 
     def test_isolation_prob(self, mock_read, mock_csv):
         """Case isolation functional test to ensure fewer people will be
