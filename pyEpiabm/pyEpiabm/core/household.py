@@ -56,7 +56,7 @@ class Household:
             String representation of the household
 
         """
-        return "Household at " \
+        return f"Household ({self.id}) at " \
             + f"({self.location[0]:.2f}, {self.location[1]:.2f}) "\
             + f"with {len(self.persons)} people."
 

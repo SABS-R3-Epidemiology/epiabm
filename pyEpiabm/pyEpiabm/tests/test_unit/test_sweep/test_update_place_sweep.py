@@ -94,7 +94,7 @@ class TestUpdatePlaceSweep(TestPyEpiabm):
         log_mock.assert_called
 
         # Change to care homes
-        self.place.place_type = 5
+        self.place.place_type = PlaceType.CareHome
 
         # Test for care home resident
         self.place.empty_place()

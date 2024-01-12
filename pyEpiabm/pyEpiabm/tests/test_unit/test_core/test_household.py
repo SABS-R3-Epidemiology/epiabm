@@ -25,7 +25,8 @@ class TestHousehold(TestPyEpiabm):
     def test___repr__(self):
         subject = pe.Household(self.microcell, (1, 1))
         self.assertIsInstance(repr(subject), str)
-        test_string = "Household at (1.00, 1.00) with 0 people."
+        test_string = f"Household ({subject.id}) " \
+                      f"at (1.00, 1.00) with 0 people."
         self.assertEqual(repr(subject), test_string)
 
     def test_location_type(self):

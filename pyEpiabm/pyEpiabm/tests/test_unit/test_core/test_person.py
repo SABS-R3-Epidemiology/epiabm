@@ -42,8 +42,9 @@ class TestPerson(TestPyEpiabm):
 
     def test_repr(self):
         self.assertEqual(repr(self.person),
-                         f"Person, Age = {self.person.age}, "
-                         + f"Status = {self.person.infection_status}.")
+                         f"Person ({self.person.id}), "
+                         f"Age = {self.person.age}, "
+                         f"Status = {self.person.infection_status}.")
 
     def test_is_symptomatic(self):
         self.person.update_status(pe.property.InfectionStatus.InfectMild)

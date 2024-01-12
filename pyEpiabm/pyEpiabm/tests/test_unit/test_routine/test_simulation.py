@@ -12,11 +12,12 @@ from pyEpiabm.tests.test_unit.mocked_logging_tests import TestMockedLogs
 class TestSimulation(TestMockedLogs):
     """Tests the 'Simulation' class.
     """
+
     @classmethod
     def setUpClass(cls) -> None:
         super(TestSimulation, cls).setUpClass()  # Sets up patch on logging
         cls.pop_factory = pe.routine.ToyPopulationFactory()
-        cls.pop_params = {"population_size": 0, "cell_number": 1,
+        cls.pop_params = {"population_size": 1, "cell_number": 1,
                           "microcell_number": 1, "household_number": 1}
         cls.test_population = cls.pop_factory.make_pop(cls.pop_params)
         pe.Parameters.instance().time_steps_per_day = 1
@@ -27,7 +28,9 @@ class TestSimulation(TestMockedLogs):
         cls.mock_output_dir = "pyEpiabm/pyEpiabm/tests/test_output/mock"
         cls.file_params = {"output_file": "test_file.csv",
                            "output_dir": cls.mock_output_dir}
-
+        cls.inf_history_params = {"output_dir": cls.mock_output_dir,
+                                  "status_output": False,
+                                  "infectiousness_output": False}
         cls.spatial_file_params = dict(cls.file_params)
         cls.spatial_file_params["age_stratified"] = True
         cls.spatial_file_params["spatial_output"] = True
@@ -45,19 +48,99 @@ class TestSimulation(TestMockedLogs):
     def test_configure(self, mock_mkdir):
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-
             filename = os.path.join(os.getcwd(),
                                     self.file_params["output_dir"],
                                     self.file_params["output_file"])
             test_sim = pe.routine.Simulation()
 
-            # Test configure binds parameters as expected.
+            # Test configure binds parameters as expected, with default
+            # input for inf_history_params
             test_sim.configure(self.test_population, self.initial_sweeps,
                                self.sweeps, self.sim_params, self.file_params)
             self.assertEqual(len(test_sim.initial_sweeps), 1)
             self.assertEqual(len(test_sim.sweeps), 1)
             self.assertIsInstance(test_sim.population, pe.Population)
+
+            # Test that the ih writers are None, and that both status_output
+            # and infectiousness_output are False
+            self.assertEqual(test_sim.status_output, False)
+            self.assertEqual(test_sim.infectiousness_output, False)
+            self.assertEqual(test_sim.ih_status_writer, None)
+            self.assertEqual(test_sim.ih_infectiousness_writer, None)
+
             del test_sim.writer
+            del test_sim.ih_status_writer
+            del test_sim.ih_infectiousness_writer
+        mo.assert_called_with(filename, 'w')
+
+    @patch('os.makedirs')
+    @patch('logging.warning')
+    def test_configure_ih_status_infectiousness_false(self, mock_warning,
+                                                      mock_dir):
+        self.inf_history_params["infectiousness_output"] = False
+        self.inf_history_params["status_output"] = False
+        mo = mock_open()
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+            mock_warning.assert_called_once_with("Both status_output and "
+                                                 + "infectiousness_output are "
+                                                 + "False. Neither infection "
+                                                 + "history csv will be "
+                                                 + "created.")
+
+    @patch('os.makedirs')
+    def test_configure_ih_status(self, mock_mkdir):
+        mo = mock_open()
+        self.inf_history_params["infectiousness_output"] = False
+        self.inf_history_params["status_output"] = True
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            filename = os.path.join(os.getcwd(),
+                                    self.inf_history_params["output_dir"],
+                                    "inf_status_history.csv")
+            test_sim = pe.routine.Simulation()
+
+            # Test that the output titles are correct
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+
+            self.assertEqual(test_sim.ih_output_titles, ["time", '0.0.0.0'])
+            # Test that the ih_infectiousness_writer is None, as
+            # infectiousness_output is False
+            self.assertEqual(test_sim.ih_infectiousness_writer, None)
+
+            del test_sim.writer
+            del test_sim.ih_status_writer
+            del test_sim.ih_infectiousness_writer
+        mo.assert_called_with(filename, 'w')
+
+    @patch('os.makedirs')
+    def test_configure_ih_infectiousness(self, mock_mkdir):
+        mo = mock_open()
+        self.inf_history_params["infectiousness_output"] = True
+        self.inf_history_params["status_output"] = False
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            filename = os.path.join(os.getcwd(),
+                                    self.inf_history_params["output_dir"],
+                                    "infectiousness_history.csv")
+            test_sim = pe.routine.Simulation()
+
+            # Test that the output titles are correct
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+
+            self.assertEqual(test_sim.ih_output_titles, ["time", '0.0.0.0'])
+            # Test that the ih_status_writer is None, as
+            # infectiousness_output is False
+            self.assertEqual(test_sim.ih_status_writer, None)
+
+            del test_sim.writer
+            del test_sim.ih_status_writer
+            del test_sim.ih_infectiousness_writer
         mo.assert_called_with(filename, 'w')
 
     @patch('logging.exception')
@@ -93,7 +176,8 @@ class TestSimulation(TestMockedLogs):
             del test_sim.writer
             self.assertEqual(mock_mkdir.call_count, 2)
             mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
-                                          self.file_params["output_dir"]))
+                                                       self.file_params[
+                                                           "output_dir"]))
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.sweep.PlaceSweep.__call__')
@@ -104,7 +188,6 @@ class TestSimulation(TestMockedLogs):
                         patch_sweep):
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-
             time_sweep = self.sim_params["simulation_start_time"] + 1
             time_write = self.sim_params["simulation_end_time"]
             test_sim = pe.routine.Simulation()
@@ -114,6 +197,39 @@ class TestSimulation(TestMockedLogs):
             patch_initial.assert_called_with(self.sim_params)
             patch_sweep.assert_called_with(time_sweep)
             patch_write.assert_called_with(time_write)
+
+    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.Simulation.write_to_ih_file')
+    @patch('os.makedirs')
+    def test_run_sweeps_ih_status(self, mock_mkdir, patch_write):
+        mo = mock_open()
+        self.inf_history_params["infectiousness_output"] = False
+        self.inf_history_params["status_output"] = True
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            time_write = self.sim_params["simulation_end_time"]
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+            test_sim.run_sweeps()
+            patch_write.assert_called_with(time_write, output_option="status")
+
+    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.Simulation.write_to_ih_file')
+    @patch('os.makedirs')
+    def test_run_sweeps_ih_infectiousness(self, mock_mkdir, patch_write):
+        mo = mock_open()
+        self.inf_history_params["infectiousness_output"] = True
+        self.inf_history_params["status_output"] = False
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            time_write = self.sim_params["simulation_end_time"]
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+            test_sim.run_sweeps()
+            patch_write.assert_called_with(time_write,
+                                           output_option="infectiousness")
 
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.sweep.PlaceSweep.__call__')
@@ -128,8 +244,7 @@ class TestSimulation(TestMockedLogs):
         mo = mock_open()
         mo2 = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo), \
-             patch('pyEpiabm.output._csv_writer.open', mo2):
-
+                patch('pyEpiabm.output._csv_writer.open', mo2):
             time_sweep = self.sim_params["simulation_start_time"] + 1
             time_write = self.sim_params["simulation_end_time"]
             test_sim = pe.routine.Simulation()
@@ -143,7 +258,8 @@ class TestSimulation(TestMockedLogs):
             patch_sweep.assert_called_with(time_sweep)
             patch_write.assert_called_with(time_write)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
-                                      self.file_params["output_dir"]))
+                                                   self.file_params[
+                                                       "output_dir"]))
 
     @patch('os.makedirs')
     @patch('logging.exception')
@@ -156,7 +272,6 @@ class TestSimulation(TestMockedLogs):
 
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
-
             broken_sim = pe.routine.Simulation()
             broken_sim.configure(self.test_population, self.initial_sweeps,
                                  self.sweeps, self.sim_params,
@@ -165,7 +280,8 @@ class TestSimulation(TestMockedLogs):
             patch_log.assert_called_once_with("NotImplementedError in"
                                               + " Simulation.run_sweeps()")
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
-                                      self.file_params["output_dir"]))
+                                                   self.file_params[
+                                                       "output_dir"]))
 
     @patch('os.makedirs')
     def test_write_to_file(self, mock_mkdir):
@@ -181,6 +297,14 @@ class TestSimulation(TestMockedLogs):
             test_sim.configure(self.test_population, self.initial_sweeps,
                                self.sweeps, self.sim_params, self.file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
+            for cell in self.test_population.cells:
+                for age_i in \
+                        range(0,
+                              len(pe.Parameters.instance().age_proportions)):
+                    for inf_status in list(pe.property.InfectionStatus):
+                        data_per_inf_status = \
+                                cell.compartment_counter.retrieve()[inf_status]
+                        data[inf_status] += data_per_inf_status[age_i]
             data["age_group"] = len(pe.Parameters.instance().age_proportions)
             data["time"] = time
 
@@ -188,7 +312,8 @@ class TestSimulation(TestMockedLogs):
                 test_sim.write_to_file(time)
                 mock.assert_called_with(data)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
-                                      self.file_params["output_dir"]))
+                                                   self.file_params[
+                                                       "output_dir"]))
 
         self.spatial_file_params['age_stratified'] = False
         self.file_params['age_stratified'] = False
@@ -199,27 +324,36 @@ class TestSimulation(TestMockedLogs):
                                self.sweeps, self.sim_params,
                                self.spatial_file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
-            data["time"] = time
-            data["cell"] = test_sim.population.cells[0].id
-            data['location_x'] = 0
-            data['location_y'] = 0
+            for cell in self.test_population.cells:
+                for k in data:
+                    data[k] += sum(cell.compartment_counter.retrieve()[k])
+                data["time"] = time
+                data["cell"] = test_sim.population.cells[0].id
+                data['location_x'] = 0
+                data['location_y'] = 0
             with patch.object(test_sim.writer, 'write') as mock:
                 test_sim.write_to_file(time)
                 mock.assert_called_with(data)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
-                                      self.file_params["output_dir"]))
+                                                   self.file_params[
+                                                       "output_dir"]))
+
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             time = 1
             test_sim = pe.routine.Simulation()
             test_sim.configure(self.test_population, self.initial_sweeps,
                                self.sweeps, self.sim_params, self.file_params)
             data = {s: 0 for s in list(pe.property.InfectionStatus)}
+            for cell in self.test_population.cells:
+                for k in data:
+                    data[k] += sum(cell.compartment_counter.retrieve()[k])
             data["time"] = time
             with patch.object(test_sim.writer, 'write') as mock:
                 test_sim.write_to_file(time)
                 mock.assert_called_with(data)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
-                                      self.file_params["output_dir"]))
+                                                   self.file_params[
+                                                       "output_dir"]))
 
     @patch('os.makedirs')
     def test_s_write_to_file(self, mock_mkdir):
@@ -231,19 +365,123 @@ class TestSimulation(TestMockedLogs):
             spatial_sim.configure(self.test_population, self.initial_sweeps,
                                   self.sweeps, self.sim_params,
                                   self.spatial_file_params)
-            data = {s: 0 for s in list(pe.property.InfectionStatus)}
-            data["age_group"] = len(pe.Parameters.instance().age_proportions)
-            data["time"] = time
-            cell = self.test_population.cells[0]
-            data["cell"] = cell.id
-            data["location_x"] = cell.location[0]
-            data["location_y"] = cell.location[0]
+            for cell in self.test_population.cells:
+                for age_i in \
+                        range(0,
+                              len(pe.Parameters.instance().age_proportions)):
+                    data = {s: 0 for s in list(pe.property.InfectionStatus)}
+                    for inf_status in data:
+                        data_per_inf_status = \
+                                cell.compartment_counter.retrieve()[inf_status]
+                        data[inf_status] += data_per_inf_status[age_i]
+                data["age_group"] = \
+                    len(pe.Parameters.instance().age_proportions)
+                data["time"] = time
+                cell = self.test_population.cells[0]
+                data["cell"] = cell.id
+                data["location_x"] = cell.location[0]
+                data["location_y"] = cell.location[0]
 
             with patch.object(spatial_sim.writer, 'write') as mock:
                 spatial_sim.write_to_file(time)
                 mock.assert_called_with(data)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
-                                      self.file_params["output_dir"]))
+                                                   self.file_params[
+                                                       "output_dir"]))
+
+    @patch('os.makedirs')
+    def test_write_to_ih_file_status_no_infectiousness(self, mock_mkdir,
+                                                       time=1):
+
+        if os.path.exists(self.inf_history_params["output_dir"]):
+            os.rmdir(self.inf_history_params["output_dir"])
+
+        mo = mock_open()
+        self.inf_history_params['status_output'] = True
+        self.inf_history_params['infectiousness_output'] = False
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+            data = {column: 0 for column in
+                    test_sim.ih_status_writer.writer.fieldnames}
+            for cell in self.test_population.cells:
+                for person in cell.persons:
+                    data[person.id] = person.infection_status.value
+            data["time"] = time
+
+            with patch.object(test_sim.ih_status_writer, 'write') as mock:
+                test_sim.write_to_ih_file(time, "status")
+                mock.assert_called_with(data)
+        mock_mkdir.assert_called_with(
+            os.path.join(os.getcwd(), self.inf_history_params["output_dir"]))
+
+    @patch('os.makedirs')
+    def test_write_to_ih_file_no_status_infectiousness(self, mock_mkdir,
+                                                       time=1):
+
+        if os.path.exists(self.inf_history_params["output_dir"]):
+            os.rmdir(self.inf_history_params["output_dir"])
+
+        mo = mock_open()
+        self.inf_history_params['status_output'] = False
+        self.inf_history_params['infectiousness_output'] = True
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+            data = {column: 0 for column in
+                    test_sim.ih_infectiousness_writer.writer.fieldnames}
+            for cell in self.test_population.cells:
+                for person in cell.persons:
+                    data[person.id] = person.infectiousness
+            data["time"] = time
+
+            with patch.object(test_sim.ih_infectiousness_writer, 'write') \
+                    as mock:
+                test_sim.write_to_ih_file(time, "infectiousness")
+                mock.assert_called_with(data)
+        mock_mkdir.assert_called_with(
+            os.path.join(os.getcwd(), self.inf_history_params["output_dir"]))
+
+    @patch('os.makedirs')
+    def test_write_to_ih_file_status_infectiousness(self, mock_mkdir, time=1):
+
+        if os.path.exists(self.inf_history_params["output_dir"]):
+            os.rmdir(self.inf_history_params["output_dir"])
+
+        mo = mock_open()
+        self.inf_history_params['status_output'] = True
+        self.inf_history_params['infectiousness_output'] = True
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+            ih_data = {column: 0 for column in
+                       test_sim.ih_status_writer.writer.fieldnames}
+            for cell in self.test_population.cells:
+                for person in cell.persons:
+                    ih_data[person.id] = person.infection_status.value
+            ih_data["time"] = time
+            infect_data = {column: 0 for column in
+                           test_sim.ih_infectiousness_writer.writer.fieldnames}
+            for cell in self.test_population.cells:
+                for person in cell.persons:
+                    infect_data[person.id] = person.infectiousness
+            infect_data["time"] = time
+
+            with patch.object(test_sim.ih_status_writer, 'write') as mock:
+                test_sim.write_to_ih_file(time, "status")
+                mock.assert_called_with(ih_data)
+            with patch.object(test_sim.ih_infectiousness_writer, 'write') \
+                    as mock:
+                test_sim.write_to_ih_file(time, "infectiousness")
+                mock.assert_called_with(infect_data)
+        mock_mkdir.assert_called_with(
+            os.path.join(os.getcwd(), self.inf_history_params["output_dir"]))
 
     def test_set_random_seed(self):
         pe.routine.Simulation.set_random_seed(seed=0)
@@ -268,7 +506,8 @@ class TestSimulation(TestMockedLogs):
         mock_random.assert_called_once_with(n)
         mock_np_random.assert_called_once_with(n)
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
-                                      self.file_params["output_dir"]))
+                                                   self.file_params[
+                                                       "output_dir"]))
 
     @patch('os.makedirs')
     def test_add_writer(self, mock_mkdir):
@@ -277,7 +516,8 @@ class TestSimulation(TestMockedLogs):
             spatial_sim.add_writer(pe.output.NewCasesWriter(
                 os.path.join(os.getcwd(), self.file_params["output_dir"])))
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
-                                      self.file_params["output_dir"]))
+                                                   self.file_params[
+                                                       "output_dir"]))
 
 
 if __name__ == '__main__':

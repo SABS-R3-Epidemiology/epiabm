@@ -87,6 +87,7 @@ class TestDistancingFunctional(TestFunctional):
 
         self.intervention['social_distancing'][
             'distancing_spatial_enhanced_susc'] = 0.8
+        pe.Parameters.instance().intervention_params = self.intervention
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
@@ -116,6 +117,7 @@ class TestDistancingFunctional(TestFunctional):
 
         self.intervention['social_distancing'][
             'distancing_enhanced_prob'] = [0.1]*17
+        pe.Parameters.instance().intervention_params = self.intervention
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())

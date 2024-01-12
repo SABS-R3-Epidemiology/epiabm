@@ -56,7 +56,7 @@ class Cell:
             String representation of the Cell
 
         """
-        return f"Cell with {len(self.microcells)} microcells " + \
+        return f"Cell ({self.id}) with {len(self.microcells)} microcells " + \
             f"and {len(self.persons)} people at location {self.location}."
 
     def add_microcells(self, n):

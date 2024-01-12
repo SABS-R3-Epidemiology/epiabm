@@ -16,6 +16,10 @@ class TestQuarantineFunctional(TestFunctional):
     """Functional testing of household quarantine intervention. Conducts
     household quarantine intervention simulations with known
     results/properties to ensure code functions as desired.
+
+    Note that household isolation does not increase household transmission
+    in this test, to allow for a comparison of community infections.
+
     """
 
     def setUp(self) -> None:
@@ -40,7 +44,7 @@ class TestQuarantineFunctional(TestFunctional):
                 "quarantine_duration": 10,
                 "quarantine_house_compliant": 1.0,
                 "quarantine_individual_compliant": 1.0,
-                "quarantine_house_effectiveness": 1.1,
+                "quarantine_house_effectiveness": 1.0,
                 "quarantine_spatial_effectiveness": 0.1,
                 "quarantine_place_effectiveness": [0.1, 0.1, 0.1, 0.1, 0.1,
                                                    0.1]

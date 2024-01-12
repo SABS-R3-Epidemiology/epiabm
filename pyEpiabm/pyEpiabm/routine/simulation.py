@@ -21,6 +21,7 @@ class Simulation:
     """Class to run a full simulation.
 
     """
+
     def __init__(self):
         """ Constructor
         """
@@ -32,7 +33,8 @@ class Simulation:
                   initial_sweeps: typing.List[AbstractSweep],
                   sweeps: typing.List[AbstractSweep],
                   sim_params: typing.Dict,
-                  file_params: typing.Dict):
+                  file_params: typing.Dict,
+                  inf_history_params: typing.Dict = None):
         """Initialise a population structure for use in the simulation.
 
         sim_params Contains:
@@ -51,6 +53,14 @@ class Simulation:
             * `age_stratified`: Boolean to determine whether the output will \
                 be age stratified
 
+        inf_history_params Contains:
+            * `output_dir`: String for the location for the output files, \
+               as a relative path
+            * `status_output`: Boolean to determine whether we need \
+               a csv file containing infection status values
+            * `infectiousness_output`: Boolean to determine whether we need \
+               a csv file containing infectiousness (viral load) values
+
         Parameters
         ----------
         population : Population
@@ -67,7 +77,15 @@ class Simulation:
             as input for call method of initial sweeps
         file_params : dict
             Dictionary of parameters specific to the output file
-
+        inf_history_params : dict
+            This is short for 'infection history file parameters' and we will
+            use the abbreviation 'ih' to refer to infection history throughout
+            this class. If both `status_output` and `infectiousness_output` are
+            False, then no infection history csv files are produced (or if
+            the dictionary is None). These files contain the infection status
+            or infectiousness of each person every time step. The EpiOS tool
+            (https://github.com/SABS-R3-Epidemiology/EpiOS) samples data from
+            these files to mimic real life epidemic sampling techniques
         """
         self.sim_params = sim_params
         self.population = population
@@ -103,6 +121,7 @@ class Simulation:
         logging.info(
             f"Set output location to {os.path.join(folder, filename)}")
 
+        # Setting up writer for infection status distribution for each cell
         output_titles = ["time"] + [s for s in InfectionStatus]
         if self.spatial_output:
             output_titles.insert(1, "cell")
@@ -115,6 +134,55 @@ class Simulation:
         self.writer = _CsvDictWriter(
             folder, filename,
             output_titles)
+
+        self.status_output = False
+        self.infectiousness_output = False
+        self.ih_status_writer = None
+        self.ih_infectiousness_writer = None
+
+        if inf_history_params:
+            # Setting up writer for infection history for each person. If the
+            # inf_history_params dict is empty then we do not need to record
+            # this
+            self.status_output = inf_history_params.get("status_output")
+
+            self.infectiousness_output = inf_history_params\
+                .get("infectiousness_output")
+            person_ids = []
+            person_ids += [person.id for cell in population.cells for person
+                           in cell.persons]
+            self.ih_output_titles = ["time"] + person_ids
+            ih_folder = os.path.join(os.getcwd(),
+                                     inf_history_params["output_dir"])
+
+            if not (self.status_output or self.infectiousness_output):
+                logging.warning("Both status_output and infectiousness_output "
+                                + "are False. Neither infection history csv "
+                                + "will be created.")
+
+            if self.status_output:
+
+                ih_file_name = "inf_status_history.csv"
+                logging.info(
+                    f"Set infection history infection status location to "
+                    f"{os.path.join(ih_folder, ih_file_name)}")
+
+                self.ih_status_writer = _CsvDictWriter(
+                    ih_folder, ih_file_name,
+                    self.ih_output_titles
+                )
+
+            if self.infectiousness_output:
+
+                ih_file_name = "infectiousness_history.csv"
+                logging.info(
+                    f"Set infection history infectiousness location to "
+                    f"{os.path.join(ih_folder, ih_file_name)}")
+
+                self.ih_infectiousness_writer = _CsvDictWriter(
+                    ih_folder, ih_file_name,
+                    self.ih_output_titles
+                )
 
     @log_exceptions()
     def run_sweeps(self):
@@ -136,6 +204,12 @@ class Simulation:
                      + f"{self.sim_params['simulation_start_time']} days")
         # First entry of the data file is the initial state
         self.write_to_file(self.sim_params["simulation_start_time"])
+        if self.ih_status_writer:
+            self.write_to_ih_file(self.sim_params["simulation_start_time"],
+                                  output_option="status")
+        if self.ih_infectiousness_writer:
+            self.write_to_ih_file(self.sim_params["simulation_start_time"],
+                                  output_option="infectiousness")
 
         for t in tqdm(np.arange(self.sim_params["simulation_start_time"] + ts,
                                 self.sim_params["simulation_end_time"] + ts,
@@ -143,6 +217,10 @@ class Simulation:
             for sweep in self.sweeps:
                 sweep(t)
             self.write_to_file(t)
+            if self.ih_status_writer:
+                self.write_to_ih_file(t, output_option="status")
+            if self.ih_infectiousness_writer:
+                self.write_to_ih_file(t, output_option="infectiousness")
             for writer in self.writers:
                 writer.write(t, self.population)
             logging.debug(f'Iteration at time {t} days completed')
@@ -168,13 +246,13 @@ class Simulation:
                 for cell in self.population.cells:
                     for age_i in range(0, nb_age_groups):
                         data = {s: 0 for s in list(InfectionStatus)}
-                        for inf_status in data:
-                            data_per_inf_status =\
+                        for inf_status in list(InfectionStatus):
+                            data_per_inf_status = \
                                 cell.compartment_counter.retrieve()[inf_status]
                             data[inf_status] += data_per_inf_status[age_i]
                         # Age groups are numbered from 1 to the total number
                         # of age groups (thus the +1):
-                        data["age_group"] = age_i+1
+                        data["age_group"] = age_i + 1
                         data["time"] = time
                         data["cell"] = cell.id
                         data["location_x"] = cell.location[0]
@@ -185,10 +263,10 @@ class Simulation:
                 for cell in self.population.cells:
                     for age_i in range(0, nb_age_groups):
                         for inf_status in list(InfectionStatus):
-                            data_per_inf_status =\
+                            data_per_inf_status = \
                                 cell.compartment_counter.retrieve()[inf_status]
                             data[inf_status] += data_per_inf_status[age_i]
-                        data["age_group"] = age_i+1
+                        data["age_group"] = age_i + 1
                         data["time"] = time
                         self.writer.write(data)
         else:  # If age not considered, age_group not written in csv
@@ -210,6 +288,40 @@ class Simulation:
                         data[k] += sum(cell.compartment_counter.retrieve()[k])
                 data["time"] = time
                 self.writer.write(data)
+
+    def write_to_ih_file(self, time, output_option: str):
+        """Records the infection history of the individual people
+        and writes these to file.
+
+        Parameters
+        ----------
+        time : float
+            Time of output data
+        output_option : str
+            Determines if you write data of infection status where \
+            output_option="status" and/or infectiousness where \
+            output_option="infectiousness"
+
+        """
+        if self.status_output and output_option == "status":
+            ih_data = {column: 0 for column in
+                       self.ih_status_writer.writer.fieldnames}
+            for cell in self.population.cells:
+                for person in cell.persons:
+                    ih_data[person.id] = person.infection_status.value
+
+            ih_data["time"] = time
+            self.ih_status_writer.write(ih_data)
+
+        if self.infectiousness_output and output_option == "infectiousness":
+            infect_data = {column: 0 for column in
+                           self.ih_infectiousness_writer.writer.fieldnames}
+            for cell in self.population.cells:
+                for person in cell.persons:
+                    infect_data[person.id] = person.infectiousness
+
+            infect_data["time"] = time
+            self.ih_infectiousness_writer.write(infect_data)
 
     def add_writer(self, writer: AbstractReporter):
         self.writers.append(writer)

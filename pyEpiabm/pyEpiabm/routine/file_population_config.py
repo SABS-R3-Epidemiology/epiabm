@@ -106,8 +106,8 @@ class FilePopulationFactory:
                                  + f" already exists in cell {cell.id}")
 
             new_microcell = Microcell(cell)
-            cell.microcells.append(new_microcell)
             new_microcell.set_id(microcell_id_csv)
+            cell.microcells.append(new_microcell)
 
             for column in input.columns.values:
                 if hasattr(InfectionStatus, column):
@@ -135,9 +135,9 @@ class FilePopulationFactory:
                                                          households)
 
             if hasattr(line, 'place_number') and line.place_number > 0:
-                new_microcell.add_place(int(line.place_number),
-                                        cell.location,
-                                        random.choice(list(PlaceType)))
+                for _ in range(int(line.place_number)):
+                    new_microcell.add_place(1, cell.location,
+                                            random.choice(list(PlaceType)))
 
         # if household_size_distribution parameters are available use
         # appropriate function
@@ -249,18 +249,20 @@ class FilePopulationFactory:
                     "location_y": cell.location[1],
                 }
 
+                inf_dict = {str(status.name): 0 for status in InfectionStatus}
+                data_dict.update(inf_dict)
+
                 for person in microcell.persons:
                     status = str(person.infection_status.name)
-                    if status in data_dict:
-                        data_dict[status] += 1
-                    else:  # New status
-                        data_dict[status] = 1
+                    data_dict[status] += 1
+
                 data_dict['household_number'] = len(microcell.households)
                 data_dict['place_number'] = len(microcell.places)
 
                 new_row = pd.DataFrame(data=data_dict, columns=columns,
                                        index=[0])
-                df = pd.concat([df, new_row], ignore_index=True)
+                df = pd.concat([df, new_row], ignore_index=True) \
+                    if df.size else new_row
 
         df['household_number'] = df['household_number'].astype(int)
         df['place_number'] = df['place_number'].astype(int)
