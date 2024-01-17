@@ -42,9 +42,10 @@ class Population:
             Number of empty :class:`Cell` s to add
 
         """
+        base_num = len(self.cells)
         for i in range(n):
             self.cells.append(Cell())
-            self.cells[i].set_id(i)
+            self.cells[i + base_num].set_id(str(i + base_num), self.cells)
 
     def total_people(self):
         """Returns the total number of people in the population.

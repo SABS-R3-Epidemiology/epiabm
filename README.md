@@ -78,7 +78,7 @@ File of this format can also be exported using the `pyEpiabm.routine.FilePopulat
 
 ### Configure Simulation
 
-Configure a simulation with a number of parameters. These are split into two categories:
+Configure a simulation with a number of parameters. These are split into three categories:
 
 *`sim_params`* _(For running the simulation)_
 * `simulation_start_time`: The initial time at the start of the simulation
@@ -91,6 +91,12 @@ Configure a simulation with a number of parameters. These are split into two cat
 * `output_file`: String for the name of the output .csv file
 * `output_dir`: String for the location of the output file, as a relative path
 * `spatial_output`: Boolean to determine whether a spatial output should be used _(Default false)_
+* `age_stratified`: Boolean to determine whether the output will be age stratified _(Default false)_
+
+*`inf_history_params`* _(For controlling the infection history output - Default None)_
+* `output_dir`: String for the location for the output files, as a relative path
+* `status_output`: Boolean to determine whether we need a csv file containing infection status values _(Default false)_
+* `infectiousness_output`: Boolean to determine whether we need a csv file containing infectiousness (viral load) values _(Default false)_
 
 Two lists of sweeps must also be passed to this function - the first will be executed once at the start of the simulation (i.e. to determine the initial infections in the population), while the second list will be ran at every timestep (i.e. to propagate the infection through the population).
 

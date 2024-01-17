@@ -39,6 +39,9 @@ class TestDistancingFunctional(TestFunctional):
         }
         }
 
+        self.read_params = {"filepath_or_buffer": 'test_input.csv',
+                            "dtype": {"cell": int, "microcell": int}}
+
     def test_distancing_present(self, mock_read, mock_csv):
         """Social distancing functional test to ensure more people will be
         susceptible when social distancing intervention is present.
@@ -60,7 +63,7 @@ class TestDistancingFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -84,11 +87,12 @@ class TestDistancingFunctional(TestFunctional):
 
         self.intervention['social_distancing'][
             'distancing_spatial_enhanced_susc'] = 0.8
+        pe.Parameters.instance().intervention_params = self.intervention
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -113,11 +117,12 @@ class TestDistancingFunctional(TestFunctional):
 
         self.intervention['social_distancing'][
             'distancing_enhanced_prob'] = [0.1]*17
+        pe.Parameters.instance().intervention_params = self.intervention
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group

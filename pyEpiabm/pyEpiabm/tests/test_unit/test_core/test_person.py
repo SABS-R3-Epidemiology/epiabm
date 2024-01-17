@@ -42,8 +42,9 @@ class TestPerson(TestPyEpiabm):
 
     def test_repr(self):
         self.assertEqual(repr(self.person),
-                         f"Person, Age = {self.person.age}, "
-                         + f"Status = {self.person.infection_status}.")
+                         f"Person ({self.person.id}), "
+                         f"Age = {self.person.age}, "
+                         f"Status = {self.person.infection_status}.")
 
     def test_is_symptomatic(self):
         self.person.update_status(pe.property.InfectionStatus.InfectMild)
@@ -109,6 +110,22 @@ class TestPerson(TestPyEpiabm):
         self.person.vaccinate(time=5)
         self.assertTrue(self.person.is_vaccinated)
         self.assertEqual(self.person.date_vaccinated, 5)
+
+    def test_set_id(self):
+        init_id = self.microcell.id + "." + "." + \
+                  str(len(self.microcell.persons) - 1)
+        self.assertEqual(self.person.id, init_id)
+        self.person.set_id("2.3.4.5")
+        self.assertEqual(self.person.id, "2.3.4.5")
+        self.assertRaises(TypeError, self.person.set_id, 2.0)
+        self.assertRaises(ValueError, self.person.set_id, "0.1")
+        self.assertRaises(ValueError, self.person.set_id, "1234")
+        self.assertRaises(ValueError, self.person.set_id, "0.0.0.0.5")
+        self.person.set_id("1.1.1.1")
+        self.microcell.persons.append(self.person)
+        new_person = pe.Person(self.microcell)
+        self.microcell.persons.append(new_person)
+        self.assertRaises(ValueError, new_person.set_id, "1.1.1.1")
 
 
 if __name__ == '__main__':

@@ -9,13 +9,14 @@ from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 class TestCell(TestPyEpiabm):
     """Test the 'Cell' class.
     """
+
     def setUp(self) -> None:
         self.cell = pe.Cell()
 
     def test__init__(self):
         self.assertEqual(self.cell.location[0], 0)
         self.assertEqual(self.cell.location[1], 0)
-        self.assertEqual(self.cell.id, hash(self.cell))
+        self.assertEqual(self.cell.id, str(hash(self.cell)))
         self.assertEqual(self.cell.microcells, [])
         self.assertEqual(self.cell.persons, [])
         self.assertEqual(self.cell.places, [])
@@ -26,8 +27,8 @@ class TestCell(TestPyEpiabm):
 
     def test_repr(self):
         self.assertEqual(repr(self.cell),
-                         "Cell with 0 microcells and 0 people"
-                         + " at location (0, 0).")
+                         f"Cell ({self.cell.id}) with 0 microcells "
+                         f"and 0 people at location (0, 0).")
 
     def test_set_location(self):
         local_cell = pe.Cell(loc=(-2, 3.2))
@@ -38,9 +39,19 @@ class TestCell(TestPyEpiabm):
         self.assertRaises(ValueError, pe.Cell, ('1', 1))
 
     def test_set_id(self):
-        self.assertEqual(self.cell.id, hash(self.cell))
-        self.cell.set_id(2.0)
-        self.assertEqual(self.cell.id, 2.0)
+        cells = []
+        cell1 = pe.Cell()
+        self.assertEqual(self.cell.id, str(hash(self.cell)))
+        self.assertRaises(TypeError, self.cell.set_id, id=2.0, cells=[cell1])
+        self.assertRaises(ValueError, self.cell.set_id, id="2.0",
+                          cells=[cell1])
+        self.cell.set_id(id="2", cells=[cell1])
+        self.assertEqual(self.cell.id, "2")
+        cell1.set_id(id="1", cells=[cell1])
+        cells.append(cell1)
+        new_cell = pe.Cell((1, 1))
+        cells.append(new_cell)
+        self.assertRaises(ValueError, new_cell.set_id, id="1", cells=[cell1])
 
     def test_add_microcells(self, n=4):
         self.assertEqual(len(self.cell.microcells), 0)

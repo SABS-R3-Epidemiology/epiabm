@@ -4,6 +4,7 @@
 
 import typing
 from numbers import Number
+import re
 
 from pyEpiabm.property import InfectionStatus
 
@@ -37,6 +38,7 @@ class Household:
         self.cell = microcell.cell
         self.microcell = microcell
         self.isolation_location = False
+        self.id = self.microcell.id + "." + str(len(self.microcell.households))
 
         if not (len(loc) == 2 and isinstance(loc[0], Number) and
                 isinstance(loc[1], Number)):
@@ -54,7 +56,7 @@ class Household:
             String representation of the household
 
         """
-        return "Household at " \
+        return f"Household ({self.id}) at " \
             + f"({self.location[0]:.2f}, {self.location[1]:.2f}) "\
             + f"with {len(self.persons)} people."
 
@@ -104,3 +106,34 @@ class Household:
         """
         self.microcell.households.remove(self)
         self.cell.households.remove(self)
+
+    def set_id(self, id: str):
+        """Updates id of current household (i.e. for input from file).
+        Format of id - for example 3.1.2 represents household 2 within
+        microcell 1 within cell 3. The id will only be changed if it has the
+        correct expression.
+
+        Parameters
+        ----------
+        id : str
+            Identity of household
+
+        """
+
+        # Ensure id is a string
+        if not isinstance(id, str):
+            raise TypeError("Provided id must be a string")
+
+        # This regex will match on any string which takes the form "i.j.k"
+        # where i, j and k are integers
+        if not re.match("^\\d+\\.\\d+\\.\\d+$", id):
+            raise ValueError(f"Invalid id: {id}. id must be of the form "
+                             f"'i.j.k' where i, j, k are integers")
+
+        # Finally, check for duplicates
+        household_ids = [household.id
+                         for household in self.microcell.households]
+        if id in household_ids:
+            raise ValueError(f"Duplicate id: {id}.")
+
+        self.id = id

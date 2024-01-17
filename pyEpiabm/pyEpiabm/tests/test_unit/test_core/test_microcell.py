@@ -20,12 +20,22 @@ class TestMicrocell(TestPyEpiabm):
 
     def test_repr(self):
         self.assertEqual(repr(self.microcell),
-                         "Microcell with 0 people at location (0, 0).")
+                         f"Microcell ({self.microcell.id}) "
+                         f"with 0 people at location (0, 0).")
 
     def test_set_id(self):
-        self.assertEqual(self.microcell.id, hash(self.microcell))
-        self.microcell.set_id(2.0)
-        self.assertEqual(self.microcell.id, 2.0)
+        self.assertEqual(self.microcell.id, self.cell.id + "." +
+                         str(len(self.cell.microcells)))
+        self.microcell.set_id("2.3")
+        self.assertEqual(self.microcell.id, "2.3")
+        self.assertRaises(TypeError, self.microcell.set_id, 2.0)
+        self.assertRaises(ValueError, self.microcell.set_id, "1.1.")
+        self.assertRaises(ValueError, self.microcell.set_id, "12")
+        self.microcell.set_id("0.0")
+        self.cell.microcells.append(self.microcell)
+        new_microcell = pe.Microcell(self.cell)
+        self.cell.microcells.append(new_microcell)
+        self.assertRaises(ValueError, new_microcell.set_id, "0.0")
 
     def test_add_person(self):
         self.assertEqual(len(self.microcell.persons), 0)
@@ -70,15 +80,41 @@ class TestMicrocell(TestPyEpiabm):
 
     def test_add_household(self):
         self.microcell.add_people(1)
-        self.microcell.add_household(self.microcell.persons)
+        self.microcell.add_household(self.microcell.persons,
+                                     update_person_id=True)
         self.assertEqual(len(self.microcell.households), 1)
-        household = self.microcell.households[0]
-        self.assertEqual(len(household.persons), 1)
+        original_household = self.microcell.households[0]
+        self.assertEqual(len(original_household.persons), 1)
+        for i in range(len(original_household.persons)):
+            person = self.microcell.persons[i]
+            self.assertEqual(person.id, original_household.id + "." + str(i))
+
+        # Now add another original_household without changing
+        # the id of the person
+        self.microcell.add_household(self.microcell.persons,
+                                     update_person_id=False)
+        self.assertEqual(original_household.persons[0].id,
+                         original_household.id + ".0")
 
     @mock.patch('logging.info')
     def test_logging(self, mock_log):
-        self.microcell.add_household(self.microcell.persons)
-        mock_log.assert_called_once()
+        # Check that the logger is called if there are no people in the
+        # household
+        self.microcell.add_household(self.microcell.persons,
+                                     update_person_id=True)
+        mock_log.assert_called_once_with("Cannot create an empty household")
+
+    @mock.patch('logging.info')
+    def test_logging_duplicates(self, mock_log):
+        # Check that the logger is called if update_person_id is False
+        self.microcell.add_people(1)
+        self.microcell.add_household(self.microcell.persons,
+                                     update_person_id=False)
+        person = self.microcell.persons[0]
+        household = self.microcell.households[0]
+        mock_log.assert_called_once_with(f"Person {person.id} has moved to "
+                                         f"household {household.id} but has "
+                                         f"not changed id")
 
     def test_report(self):
         self.microcell.add_people(5)

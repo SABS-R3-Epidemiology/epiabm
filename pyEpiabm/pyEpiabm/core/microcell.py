@@ -5,6 +5,7 @@
 import typing
 from numbers import Number
 import logging
+import re
 
 from pyEpiabm.property import InfectionStatus
 
@@ -24,6 +25,7 @@ class Microcell:
         An instance of :class:`Cell`
 
     """
+
     def __init__(self, cell):
         """Constructor Method.
 
@@ -33,12 +35,12 @@ class Microcell:
             Microcell's parent :class:`Cell` instance
 
         """
-        self.id = hash(self)
         self.persons = []
         self.places = []
         self.households = []
         self.cell = cell
         self.location = cell.location
+        self.id = self.cell.id + "." + str(len(self.cell.microcells))
         self.compartment_counter = _CompartmentCounter(
             f"Microcell {id(self)}")
 
@@ -51,18 +53,34 @@ class Microcell:
             String representation of Microcell
 
         """
-        return f"Microcell with {len(self.persons)} people" + \
-            f" at location {self.location}."
+        return f"Microcell ({self.id}) with {len(self.persons)} people" + \
+               f" at location {self.location}."
 
     def set_id(self, id):
-        """Updates ID of microcell (i.e. for input from file).
+        """Updates id of current microcell (i.e. for input from file).
 
         Parameters
         ----------
-        id : float
+        id : str
             Identity of microcell
 
         """
+
+        # Ensure id is a string
+        if not isinstance(id, str):
+            raise TypeError("Provided id must be a string")
+
+        # This regex will match on any string which takes the form "i.j" where
+        # i and j are integers
+        if not re.match("^\\d+\\.\\d+$", id):
+            raise ValueError(f"Invalid id: {id}. id must be of the form 'i.j' "
+                             f"where i, j are integers")
+
+        # Finally, check for duplicates
+        microcell_ids = [microcell.id for microcell in self.cell.microcells]
+        if id in microcell_ids:
+            raise ValueError(f"Duplicate id: {id}.")
+
         self.id = id
 
     def add_person(self, person):
@@ -123,7 +141,7 @@ class Microcell:
             self.cell.places.append(p)
             self.places.append(p)
 
-    def add_household(self, people: list):
+    def add_household(self, people: list, update_person_id: bool = True):
         """Adds a default :class:`Household` to Microcell and fills it with
         a number of :class:`Person` s.
 
@@ -131,19 +149,32 @@ class Microcell:
         ----------
         people : list
             List of :class:`People` to add to household
+        update_person_id : bool
+            Boolean representing whether we wish to update the id of the
+            people of the household when the function is called or not
 
         """
         if len(people) != 0:
             household = Household(self, loc=self.location)
-            for person in people:
+            for i, person in enumerate(people):
                 household.add_person(person)
+
+                if update_person_id:
+                    person.set_id(household.id + "." + str(i))
+                else:
+                    # If the person already has a household, then do not change
+                    # their id
+                    logging.info(f"Person {person.id} has moved to "
+                                 f"household {household.id} but has "
+                                 f"not changed id")
+
         else:
             logging.info("Cannot create an empty household")
 
     def notify_person_status_change(
-            self,
-            old_status: InfectionStatus,
-            new_status: InfectionStatus,
+        self,
+        old_status: InfectionStatus,
+        new_status: InfectionStatus,
             age_group) -> None:
         """Notify Microcell that a person's status has changed.
 
@@ -177,8 +208,8 @@ class Microcell:
 
     def count_icu(self):
         return sum(map(lambda person: person.infection_status ==
-                   InfectionStatus.InfectICU, self.persons))
+                       InfectionStatus.InfectICU, self.persons))
 
     def count_infectious(self):
         return sum(map(lambda person: person.is_infectious() is
-                   True, self.persons))
+                       True, self.persons))

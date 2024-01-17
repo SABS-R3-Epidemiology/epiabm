@@ -33,6 +33,9 @@ class TestIsolationFunctional(TestFunctional):
             "isolation_house_effectiveness": 0}
         }
 
+        self.read_params = {"filepath_or_buffer": 'test_input.csv',
+                            "dtype": {"cell": int, "microcell": int}}
+
     def test_isolation_present(self, mock_read, mock_csv):
         """Case isolation functional test to ensure more people will be
         susceptible when case isolation intervention is present.
@@ -54,7 +57,7 @@ class TestIsolationFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -82,7 +85,7 @@ class TestIsolationFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -109,7 +112,7 @@ class TestIsolationFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc().sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -132,17 +135,19 @@ class TestIsolationFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
+        # Reduce isolation duration so intervention is less effective
+        # In this case, fewer people will be susceptible as more are infected
         self.intervention['case_isolation']['isolation_duration'] = 1
         pop = TestFunctional.file_simulation(
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
         HelperFunc().compare_susceptible_groups(
-             pop.cells, pop_standard.cells)
+             pop_standard.cells, pop.cells)
 
     def test_isolation_prob(self, mock_read, mock_csv):
         """Case isolation functional test to ensure fewer people will be
@@ -164,7 +169,7 @@ class TestIsolationFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -191,7 +196,7 @@ class TestIsolationFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group

@@ -16,7 +16,12 @@ class TestQuarantineFunctional(TestFunctional):
     """Functional testing of household quarantine intervention. Conducts
     household quarantine intervention simulations with known
     results/properties to ensure code functions as desired.
+
+    Note that household isolation does not increase household transmission
+    in this test, to allow for a comparison of community infections.
+
     """
+
     def setUp(self) -> None:
         TestFunctional.setUpPopulation()
 
@@ -32,18 +37,22 @@ class TestQuarantineFunctional(TestFunctional):
             "isolation_house_effectiveness": 1},
 
             "household_quarantine": {
-            "start_time": 0,
-            "policy_duration": 365,
-            "case_threshold": 0,
-            "quarantine_delay": 0,
-            "quarantine_duration": 10,
-            "quarantine_house_compliant": 1.0,
-            "quarantine_individual_compliant": 1.0,
-            "quarantine_house_effectiveness": 1.1,
-            "quarantine_spatial_effectiveness": 0.1,
-            "quarantine_place_effectiveness": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+                "start_time": 0,
+                "policy_duration": 365,
+                "case_threshold": 0,
+                "quarantine_delay": 0,
+                "quarantine_duration": 10,
+                "quarantine_house_compliant": 1.0,
+                "quarantine_individual_compliant": 1.0,
+                "quarantine_house_effectiveness": 1.0,
+                "quarantine_spatial_effectiveness": 0.1,
+                "quarantine_place_effectiveness": [0.1, 0.1, 0.1, 0.1, 0.1,
+                                                   0.1]
+            }
         }
-        }
+
+        self.read_params = {"filepath_or_buffer": 'test_input.csv',
+                            "dtype": {"cell": int, "microcell": int}}
 
     def test_quarantine_present(self, mock_read, mock_csv):
         """Household quarantine functional test to ensure more people will be
@@ -68,12 +77,12 @@ class TestQuarantineFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
         HelperFunc().compare_susceptible_groups(
-             pop_isolation.cells, pop_quarantine.cells)
+            pop_isolation.cells, pop_quarantine.cells)
 
 
 if __name__ == '__main__':

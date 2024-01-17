@@ -11,6 +11,7 @@ Overview:
 - :class:`AbstractSweep`
 - :class:`HostProgressionSweep`
 - :class:`HouseholdSweep`
+- :class:`InitialDemographicsSweep`
 - :class:`InitialInfectedSweep`
 - :class:`InitialisePlaceSweep`
 - :class:`InitialHouseholdSweep`
@@ -34,6 +35,10 @@ Overview:
     :special-members: __call__
 
 .. autoclass:: HouseholdSweep
+    :members:
+    :special-members: __call__
+
+.. autoclass:: InitialDemographicsSweep
     :members:
     :special-members: __call__
 

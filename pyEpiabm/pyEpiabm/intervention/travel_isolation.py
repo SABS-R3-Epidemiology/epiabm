@@ -1,7 +1,7 @@
 #
 # Travel isolation Class
 #
-
+import logging
 import random
 
 from pyEpiabm.core import Parameters
@@ -75,6 +75,11 @@ class TravelIsolation(AbstractIntervention):
                                     selected_household = random.choice(
                                         existing_households)
                                     selected_household.add_person(person)
+                                    logging.info(f"Person {person.id} has "
+                                                 f"finished isolating and "
+                                                 f"has moved to household "
+                                                 f"{selected_household.id}")
+
                                 else:
                                     person.household.isolation_location = \
                                         False
@@ -91,9 +96,10 @@ class TravelIsolation(AbstractIntervention):
                                 if len(person.household.persons) > 1:
                                     # Remove from old household
                                     person.household.persons.remove(person)
-                                    # Put in new household
+                                    # Move to temporary household
+                                    # N.B Person ID is not changed
                                     person.microcell.add_household([
-                                        person])
+                                        person], update_person_id=False)
                                     person.household.isolation_location = \
                                         True
                                 else:

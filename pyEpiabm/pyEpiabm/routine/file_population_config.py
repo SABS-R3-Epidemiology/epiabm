@@ -62,7 +62,8 @@ class FilePopulationFactory:
             logging.info(f"Set population random seed to: {random_seed}")
 
         # Read file into pandas dataframe
-        input = pd.read_csv(input_file)
+        input = pd.read_csv(filepath_or_buffer=input_file, dtype={"cell": int,
+                            "microcell": int})
         loc_given = ("location_x" and "location_y" in input.columns.values)
         # Sort csv on cell and microcell ID
         input = input.sort_values(by=["cell", "microcell"])
@@ -83,31 +84,35 @@ class FilePopulationFactory:
         # Store current cell
         current_cell = None
         # Iterate through lines (one per microcell)
-        for _, line in input.iterrows():
+        for line in input.itertuples():
+            # Converting from float to string
+            cell_id_csv = str(line.cell)
+            microcell_id_csv = cell_id_csv + "." + str(line.microcell)
+
             # Check if cell exists, or create it
-            cell = FilePopulationFactory.find_cell(new_pop, line["cell"],
+            cell = FilePopulationFactory.find_cell(new_pop, cell_id_csv,
                                                    current_cell)
             if current_cell != cell:
                 current_cell = cell
 
             if loc_given:
-                location = (line["location_x"], line["location_y"])
+                location = (line.location_x, line.location_y)
                 cell.set_location(location)
 
             # Raise error if microcell exists, then create new one
-            for microcell in cell.microcells:
-                if microcell.id == line["microcell"]:
-                    raise ValueError(f"Duplicate microcells {microcell.id}"
-                                     + f" in cell {cell.id}")
+            microcell_ids = [microcell.id for microcell in cell.microcells]
+            if microcell_id_csv in microcell_ids:
+                raise ValueError(f"Duplicate microcells: {microcell_id_csv}"
+                                 + f" already exists in cell {cell.id}")
 
             new_microcell = Microcell(cell)
+            new_microcell.set_id(microcell_id_csv)
             cell.microcells.append(new_microcell)
-            new_microcell.set_id(line["microcell"])
 
             for column in input.columns.values:
                 if hasattr(InfectionStatus, column):
                     value = getattr(InfectionStatus, column)
-                    for _ in range(int(line[column])):
+                    for _ in range(int(getattr(line, column))):
                         person = Person(new_microcell)
                         person.set_random_age()
                         new_microcell.add_person(person)
@@ -123,16 +128,16 @@ class FilePopulationFactory:
 
             # Add households and places to microcell
             if len(Parameters.instance().household_size_distribution) == 0:
-                if (('household_number' in line) and
-                        (line["household_number"]) > 0):
-                    households = int(line["household_number"])
+                if (hasattr(line, 'household_number') and
+                        line.household_number > 0):
+                    households = int(line.household_number)
                     FilePopulationFactory.add_households(new_microcell,
                                                          households)
 
-            if ('place_number' in line) and (line["place_number"]) > 0:
-                new_microcell.add_place(int(line["place_number"]),
-                                        cell.location,
-                                        random.choice(list(PlaceType)))
+            if hasattr(line, 'place_number') and line.place_number > 0:
+                for _ in range(int(line.place_number)):
+                    new_microcell.add_place(1, cell.location,
+                                            random.choice(list(PlaceType)))
 
         # if household_size_distribution parameters are available use
         # appropriate function
@@ -150,7 +155,7 @@ class FilePopulationFactory:
         return new_pop
 
     @staticmethod
-    def find_cell(population: Population, cell_id: float, current_cell: Cell):
+    def find_cell(population: Population, cell_id: str, current_cell: Cell):
         """Returns cell with given ID in population, creates one if
         current cell has another ID. As input is sorted on cell no
         cell will exist with that ID.
@@ -159,7 +164,7 @@ class FilePopulationFactory:
         ----------
         population : Population
             Population containing target cell
-        cell_id : float
+        cell_id : str
             ID for target cell
         current_cell : Cell or None
             Cell object of current cell
@@ -174,7 +179,7 @@ class FilePopulationFactory:
             return current_cell
         new_cell = Cell()
         population.cells.append(new_cell)
-        new_cell.set_id(cell_id)
+        new_cell.set_id(cell_id, population.cells)
         return new_cell
 
     @staticmethod
@@ -244,18 +249,20 @@ class FilePopulationFactory:
                     "location_y": cell.location[1],
                 }
 
+                inf_dict = {str(status.name): 0 for status in InfectionStatus}
+                data_dict.update(inf_dict)
+
                 for person in microcell.persons:
                     status = str(person.infection_status.name)
-                    if status in data_dict:
-                        data_dict[status] += 1
-                    else:  # New status
-                        data_dict[status] = 1
+                    data_dict[status] += 1
+
                 data_dict['household_number'] = len(microcell.households)
                 data_dict['place_number'] = len(microcell.places)
 
                 new_row = pd.DataFrame(data=data_dict, columns=columns,
                                        index=[0])
-                df = pd.concat([df, new_row], ignore_index=True)
+                df = pd.concat([df, new_row], ignore_index=True) \
+                    if df.size else new_row
 
         df['household_number'] = df['household_number'].astype(int)
         df['place_number'] = df['place_number'].astype(int)

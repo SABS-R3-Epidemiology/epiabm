@@ -33,6 +33,9 @@ class TestClosureFunctional(TestFunctional):
         }
         }
 
+        self.read_params = {"filepath_or_buffer": 'test_input.csv',
+                            "dtype": {"cell": int, "microcell": int}}
+
     def test_closure_present(self, mock_read, mock_csv):
         """Place closure functional test to ensure more people will be
         susceptible when place closure intervention is present.
@@ -54,7 +57,7 @@ class TestClosureFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -83,7 +86,7 @@ class TestClosureFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -112,7 +115,7 @@ class TestClosureFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -141,7 +144,7 @@ class TestClosureFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -172,7 +175,7 @@ class TestClosureFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
@@ -200,7 +203,7 @@ class TestClosureFunctional(TestFunctional):
             "test_input.csv", self.sim_params, self.file_params,
             HelperFunc.sweep_list_initialise())
 
-        mock_read.assert_called_with('test_input.csv')
+        mock_read.assert_called_with(**self.read_params)
         self.assertEqual(mock_csv.call_count, 2)
 
         # Compare number of susceptible individuals for each age group
