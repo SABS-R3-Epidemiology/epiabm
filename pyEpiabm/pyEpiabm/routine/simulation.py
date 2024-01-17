@@ -10,7 +10,7 @@ import numpy as np
 from tqdm import tqdm
 
 from pyEpiabm.core import Parameters, Population
-from pyEpiabm.output import _CsvDictWriter
+from pyEpiabm.output import _CsvDictWriter, _ZipCsvDictWriter
 from pyEpiabm.output import AbstractReporter
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import AbstractSweep
@@ -167,7 +167,7 @@ class Simulation:
                     f"Set infection history infection status location to "
                     f"{os.path.join(ih_folder, ih_file_name)}")
 
-                self.ih_status_writer = _CsvDictWriter(
+                self.ih_status_writer = _ZipCsvDictWriter(
                     ih_folder, ih_file_name,
                     self.ih_output_titles
                 )
@@ -179,7 +179,7 @@ class Simulation:
                     f"Set infection history infectiousness location to "
                     f"{os.path.join(ih_folder, ih_file_name)}")
 
-                self.ih_infectiousness_writer = _CsvDictWriter(
+                self.ih_infectiousness_writer = _ZipCsvDictWriter(
                     ih_folder, ih_file_name,
                     self.ih_output_titles
                 )
@@ -305,7 +305,7 @@ class Simulation:
         """
         if self.status_output and output_option == "status":
             ih_data = {column: 0 for column in
-                       self.ih_status_writer.writer.fieldnames}
+                       self.ih_status_writer.fieldnames}
             for cell in self.population.cells:
                 for person in cell.persons:
                     ih_data[person.id] = person.infection_status.value
@@ -315,7 +315,7 @@ class Simulation:
 
         if self.infectiousness_output and output_option == "infectiousness":
             infect_data = {column: 0 for column in
-                           self.ih_infectiousness_writer.writer.fieldnames}
+                           self.ih_infectiousness_writer.fieldnames}
             for cell in self.population.cells:
                 for person in cell.persons:
                     infect_data[person.id] = person.infectiousness

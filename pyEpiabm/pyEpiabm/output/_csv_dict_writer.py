@@ -28,6 +28,8 @@ class _CsvDictWriter(AbstractReporter):
 
         """
         super().__init__(folder, clear_folder)
+        self.filename = filename
+        self.fieldnames = fieldnames
 
         self.f = open(os.path.join(folder, filename), 'w')
         self.writer = csv.DictWriter(

@@ -29,12 +29,14 @@ class _ZipCsvDictWriter(AbstractReporter):
 
         """
         super().__init__(folder, clear_folder)
+        self.filename = filename
+        self.fieldnames = fieldnames
 
         self.zip_buffer = zipfile.ZipFile(os.path.join(folder, filename + '.zip'), 'w')
         self.f = self.zip_buffer.open(filename, 'w')
-        self.writer = csv.DictWriter(
-            self.f, fieldnames=fieldnames, delimiter=',')
-        self.writer.writeheader()
+
+        header_string = ','.join(fieldnames) + '\n'
+        self.f.write(header_string.encode())
 
     def __del__(self):
         """Closes the file when the simulation is finished.
@@ -55,4 +57,5 @@ class _ZipCsvDictWriter(AbstractReporter):
             Dictionary of data to be saved
 
         """
-        self.writer.writerow(row)
+        row_string = ','.join([str(row[key]) for key in row.keys()]) + '\n'
+        self.f.write(row_string.encode())
