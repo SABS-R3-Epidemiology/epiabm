@@ -5,6 +5,8 @@
 import csv
 import typing
 import os
+import pandas as pd
+import logging
 
 from pyEpiabm.output.abstract_reporter import AbstractReporter
 
@@ -29,6 +31,7 @@ class _CsvDictWriter(AbstractReporter):
         """
         super().__init__(folder, clear_folder)
         self.filename = filename
+        self.filepath = os.path.join(folder, filename)
         self.fieldnames = fieldnames
 
         self.f = open(os.path.join(folder, filename), 'w')
@@ -54,3 +57,11 @@ class _CsvDictWriter(AbstractReporter):
 
         """
         self.writer.writerow(row)
+
+    def compress(self):
+        """Compresses the csv file.
+        """
+        output_filepath = f"{self.filepath}.gz"
+        logging.info(f"Zip file created for {self.filename}")
+        df = pd.read_csv(self.filepath)
+        df.to_csv(output_filepath, index=False, compression={'method': 'gzip'})

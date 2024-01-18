@@ -10,7 +10,7 @@ import numpy as np
 from tqdm import tqdm
 
 from pyEpiabm.core import Parameters, Population
-from pyEpiabm.output import _CsvDictWriter, _ZipCsvDictWriter
+from pyEpiabm.output import _CsvDictWriter
 from pyEpiabm.output import AbstractReporter
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import AbstractSweep
@@ -60,6 +60,8 @@ class Simulation:
                a csv file containing infection status values
             * `infectiousness_output`: Boolean to determine whether we need \
                a csv file containing infectiousness (viral load) values
+            * `compress`: Boolean to determine whether we compress \
+               the infection history csv files
 
         Parameters
         ----------
@@ -85,7 +87,9 @@ class Simulation:
             the dictionary is None). These files contain the infection status
             or infectiousness of each person every time step. The EpiOS tool
             (https://github.com/SABS-R3-Epidemiology/EpiOS) samples data from
-            these files to mimic real life epidemic sampling techniques
+            these files to mimic real life epidemic sampling techniques. These
+            files can be compressed when 'compress' is True, reducing the size
+            of these files.
         """
         self.sim_params = sim_params
         self.population = population
@@ -139,6 +143,7 @@ class Simulation:
         self.infectiousness_output = False
         self.ih_status_writer = None
         self.ih_infectiousness_writer = None
+        self.compress = False
 
         if inf_history_params:
             # Setting up writer for infection history for each person. If the
@@ -148,6 +153,7 @@ class Simulation:
 
             self.infectiousness_output = inf_history_params\
                 .get("infectiousness_output")
+            self.compress = inf_history_params.get("compress")
             person_ids = []
             person_ids += [person.id for cell in population.cells for person
                            in cell.persons]
@@ -167,7 +173,7 @@ class Simulation:
                     f"Set infection history infection status location to "
                     f"{os.path.join(ih_folder, ih_file_name)}")
 
-                self.ih_status_writer = _ZipCsvDictWriter(
+                self.ih_status_writer = _CsvDictWriter(
                     ih_folder, ih_file_name,
                     self.ih_output_titles
                 )
@@ -179,7 +185,7 @@ class Simulation:
                     f"Set infection history infectiousness location to "
                     f"{os.path.join(ih_folder, ih_file_name)}")
 
-                self.ih_infectiousness_writer = _ZipCsvDictWriter(
+                self.ih_infectiousness_writer = _CsvDictWriter(
                     ih_folder, ih_file_name,
                     self.ih_output_titles
                 )
@@ -325,6 +331,13 @@ class Simulation:
 
     def add_writer(self, writer: AbstractReporter):
         self.writers.append(writer)
+
+    def compress_csv(self):
+        if self.compress:
+            if self.ih_status_writer:
+                self.ih_status_writer.compress()
+            if self.ih_infectiousness_writer:
+                self.ih_infectiousness_writer.compress()
 
     @staticmethod
     def set_random_seed(seed):
