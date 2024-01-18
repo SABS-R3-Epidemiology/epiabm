@@ -51,6 +51,7 @@ class Person:
         self.next_infection_status = None
         self.time_of_status_change = None
         self.infection_start_time = None
+        self.time_of_recovery = None
         self.care_home_resident = False
         self.key_worker = False
         self.date_positive = None
@@ -258,3 +259,14 @@ class Person:
             raise ValueError(f"Duplicate id: {id}.")
 
         self.id = id
+
+    def set_time_of_recovery(self, time: float):
+        """Records the time at which a person enters the Recovered compartment
+
+        Parameters
+        ----------
+        time : float
+            Current simulation time
+
+        """
+        self.time_of_recovery = time
