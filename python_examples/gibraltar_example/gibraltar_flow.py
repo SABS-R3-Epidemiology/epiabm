@@ -23,7 +23,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                                    "gibraltar_parameters.json"))
+                                    "gibraltar_parameters_without_intervention.json"))
 
 # Generate population from input file
 # (Input converted from CovidSim with `microcell_conversion.py`)
@@ -37,13 +37,19 @@ population = pe.routine.FilePopulationFactory.make_pop(file_loc,
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
               "initial_infected_number": 100, "initial_infect_cell": True,
-              "simulation_seed": 42}
+              "simulation_seed": 42,
+              "include_waning": True}
 
 file_params = {"output_file": "output_gibraltar.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
                                           "simulation_outputs"),
                "spatial_output": True,
                "age_stratified": True}
+
+dem_file_params = {"output_dir": os.path.join(os.path.dirname(__file__),
+                                             "simulation_outputs"),
+                  "spatial_output": True,
+                  "age_output": True}
 
 ih_file_params = {"output_dir": os.path.join(os.path.dirname(__file__),
                                              "simulation_outputs"),
@@ -58,7 +64,7 @@ sim.configure(
     [pe.sweep.InitialHouseholdSweep(),
      pe.sweep.InitialInfectedSweep(),
      pe.sweep.InitialisePlaceSweep(),
-     pe.sweep.InitialDemographicsSweep(file_params)],
+     pe.sweep.InitialDemographicsSweep(dem_file_params)],
     [
         pe.sweep.UpdatePlaceSweep(),
         pe.sweep.HouseholdSweep(),
