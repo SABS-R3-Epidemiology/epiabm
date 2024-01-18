@@ -59,9 +59,10 @@ class _CsvDictWriter(AbstractReporter):
         self.writer.writerow(row)
 
     def compress(self):
-        """Compresses the csv file.
+        """Compresses the csv file and deletes the unzipped csv.
         """
         output_filepath = f"{self.filepath}.gz"
         logging.info(f"Zip file created for {self.filename}")
         df = pd.read_csv(self.filepath)
         df.to_csv(output_filepath, index=False, compression={'method': 'gzip'})
+        os.remove(self.filepath)
