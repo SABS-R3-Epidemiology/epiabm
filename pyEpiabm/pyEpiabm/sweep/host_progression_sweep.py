@@ -154,7 +154,7 @@ class HostProgressionSweep(AbstractSweep):
             person.next_infection_status = None
             return
         elif person.infection_status == InfectionStatus.Recovered and not \
-            pyEpiabm.core.Parameters.instance().use_waning_immunity:
+            Parameters.instance().use_waning_immunity:
             person.next_infection_status = None
             return
         elif (person.care_home_resident and
@@ -212,7 +212,7 @@ class HostProgressionSweep(AbstractSweep):
                                        InfectionStatus.Vaccinated]:
             transition_time = np.inf
         elif person.infection_status == InfectionStatus.Recovered and not \
-            pyEpiabm.core.Parameters.instance().use_waning_immunity:
+            Parameters.instance().use_waning_immunity:
             transition_time = np.inf
         else:
             row_index = person.infection_status.name

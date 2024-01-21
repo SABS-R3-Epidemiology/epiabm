@@ -1,4 +1,5 @@
 import unittest
+from unittest import mock
 import numpy as np
 from enum import Enum
 
@@ -14,17 +15,33 @@ class TestTransitionTimeMatrix(TestPyEpiabm):
     def test_create__transition_time_matrix(self):
         """Tests the create_transition_time_matrix method by asserting that the
         matrix is of the right size and that elements are of type InverseCdf
-        (unless they are the default value of -1)."""
+        (unless they are the default value of -1). Furthermore, tests that we
+        have the correct number of InverseCdf instances.
+        """
         matrix_object = TransitionTimeMatrix()
-        matrix = matrix_object.matrix
+        matrix = matrix_object.create_transition_time_matrix()
         self.assertEqual(matrix.size, len(InfectionStatus)**2)
+        inverse_cdf_count = 0
         for row in matrix.to_numpy():
             for element in row:
                 with self.subTest(row=row, element=element):
                     if element != -1:
+                        inverse_cdf_count += 1
                         self.assertIsInstance(element,
                                               pe.utility.inverse_cdf.
                                               InverseCdf)
+        self.assertEqual(inverse_cdf_count, 14)
+
+    def test_create_transition_time_matrix_waning_immunity(self):
+        """Tests that the Recovered to Susceptible entry of the matrix has
+        an InverseCdf with waning immunity turned on
+        """
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.use_waning_immunity = 1.0
+            matrix_object = TransitionTimeMatrix()
+            matrix = matrix_object.create_transition_time_matrix()
+            self.assertIsInstance(matrix.loc['Recovered', 'Susceptible'],
+                                  pe.utility.inverse_cdf.InverseCdf)
 
     def test_update_transition_time_with_float(self):
         # Test method updates transition time as expected
