@@ -57,6 +57,7 @@ class _CsvDictWriter(AbstractReporter):
 
         """
         self.writer.writerow(row)
+        self.f.flush()
 
     def compress(self):
         """Compresses the csv file and deletes the unzipped csv.
