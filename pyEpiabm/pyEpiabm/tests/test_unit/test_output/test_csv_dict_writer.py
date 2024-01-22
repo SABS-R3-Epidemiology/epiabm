@@ -50,6 +50,27 @@ class TestCsvDictWriter(unittest.TestCase):
             m.__del__()
             fake_file.close.assert_called_once()
 
+    @patch('os.makedirs')
+    @patch('os.remove')
+    @patch('pandas.read_csv')
+    @patch('pandas.DataFrame.to_csv')
+    def test_compress(self, mock_mkdir, mock_remove, mock_read, mock_to_csv):
+        """
+        """
+        mo = mock_open()
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            mock_content = ['1', '2', '3']
+            m = pe.output._CsvDictWriter('mock_folder', 'mock_filename',
+                                         mock_content)
+            m.compress()
+            expected_output_filepath = f"{m.filepath}.gz"
+            self.assertEqual(expected_output_filepath,
+                             "mock_folder/mock_filename.gz")
+
+            mock_read.assert_called_once_with(m.filepath)
+            mock_to_csv.assert_called_once()
+            mock_remove.assert_called_once_with(m.filepath)
+
 
 if __name__ == '__main__':
     unittest.main()

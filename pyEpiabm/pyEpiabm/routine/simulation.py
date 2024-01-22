@@ -333,11 +333,14 @@ class Simulation:
         self.writers.append(writer)
 
     def compress_csv(self):
-        if self.compress:
-            if self.ih_status_writer:
-                self.ih_status_writer.compress()
-            if self.ih_infectiousness_writer:
-                self.ih_infectiousness_writer.compress()
+        """Compresses the infection history csvs when they are written.
+
+        """
+        if self.compress and self.ih_status_writer:
+            self.ih_status_writer.compress()
+
+        if self.compress and self.ih_infectiousness_writer:
+            self.ih_infectiousness_writer.compress()
 
     @staticmethod
     def set_random_seed(seed):
