@@ -45,10 +45,16 @@ file_params = {"output_file": "output_gibraltar.csv",
                "spatial_output": True,
                "age_stratified": True}
 
-ih_file_params = {"output_dir": os.path.join(os.path.dirname(__file__),
-                                             "simulation_outputs"),
-                  "status_output": True,
-                  "infectiousness_output": True}
+dem_file_params = {"output_dir": os.path.join(os.path.dirname(__file__),
+                                              "simulation_outputs"),
+                   "spatial_output": True,
+                   "age_output": True}
+
+inf_history_params = {"output_dir": os.path.join(os.path.dirname(__file__),
+                                                 "simulation_outputs"),
+                      "status_output": True,
+                      "infectiousness_output": True,
+                      "compress": True}
 
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.
@@ -58,8 +64,9 @@ sim.configure(
     [pe.sweep.InitialHouseholdSweep(),
      pe.sweep.InitialInfectedSweep(),
      pe.sweep.InitialisePlaceSweep(),
-     pe.sweep.InitialDemographicsSweep(file_params)],
+     pe.sweep.InitialDemographicsSweep(dem_file_params)],
     [
+        pe.sweep.InterventionSweep(),
         pe.sweep.UpdatePlaceSweep(),
         pe.sweep.HouseholdSweep(),
         pe.sweep.PlaceSweep(),
@@ -69,9 +76,10 @@ sim.configure(
     ],
     sim_params,
     file_params,
-    ih_file_params
+    inf_history_params
 )
 sim.run_sweeps()
+sim.compress_csv()
 
 # Need to close the writer object at the end of each simulation.
 del (sim.writer)
