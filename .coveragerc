@@ -3,7 +3,5 @@ source = pyEpiabm
 omit =
     pyEpiabm/pyEpiabm/tests/*
     pyEpiabm/pyEpiabm/version_info.py
-    pyEpiabm/pyEpiabm/py2c/__init__.py
-    pyEpiabm/pyEpiabm/py2c/py2c_population.py
     pyEpiabm/run_tests.py
     pyEpiabm/setup.py
