@@ -65,7 +65,7 @@ class TestCsvDictWriter(unittest.TestCase):
             m.compress()
             expected_output_filepath = f"{m.filepath}.gz"
             self.assertEqual(expected_output_filepath,
-                             "mock_folder/mock_filename.gz")
+                             os.path.join("mock_folder", "mock_filename.gz"))
 
             mock_read.assert_called_once_with(m.filepath)
             mock_to_csv.assert_called_once()
