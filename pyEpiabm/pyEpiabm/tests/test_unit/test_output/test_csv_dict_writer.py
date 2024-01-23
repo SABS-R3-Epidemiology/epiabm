@@ -60,10 +60,10 @@ class TestCsvDictWriter(unittest.TestCase):
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             mock_content = ['1', '2', '3']
-            m = pe.output._CsvDictWriter('mock_folder', 'mock_filename',
+            m = pe.output._CsvDictWriter('mock_folder', 'mock_filename.csv',
                                          mock_content)
             m.compress()
-            expected_output_filepath = f"{m.filepath}.gz"
+            expected_output_filepath = f"{m.filepath_without_extension}.gz"
             self.assertEqual(expected_output_filepath,
                              os.path.join("mock_folder", "mock_filename.gz"))
 

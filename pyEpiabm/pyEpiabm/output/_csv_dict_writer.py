@@ -32,6 +32,8 @@ class _CsvDictWriter(AbstractReporter):
         super().__init__(folder, clear_folder)
         self.filename = filename
         self.filepath = os.path.join(folder, filename)
+        self.filepath_without_extension = os.path.join(
+            folder, os.path.splitext(filename)[0])
         self.fieldnames = fieldnames
 
         self.f = open(os.path.join(folder, filename), 'w')
@@ -62,7 +64,7 @@ class _CsvDictWriter(AbstractReporter):
     def compress(self):
         """Compresses the csv file and deletes the unzipped csv.
         """
-        output_filepath = f"{self.filepath}.gz"
+        output_filepath = f"{self.filepath_without_extension}.gz"
         logging.info(f"Zip file created for {self.filename}")
         df = pd.read_csv(self.filepath)
         df.to_csv(output_filepath, index=False, compression={'method': 'gzip'})
