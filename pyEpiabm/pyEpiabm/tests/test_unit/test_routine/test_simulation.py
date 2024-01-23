@@ -507,9 +507,7 @@ class TestSimulation(TestMockedLogs):
                     test_sim.compress_csv()
                     mock_status_writer.compress.assert_not_called()
                     mock_infectiousness_writer.compress.assert_not_called()
-            del test_sim.writer
-            del test_sim.ih_status_writer
-            del test_sim.ih_infectiousness_writer
+            del test_sim
 
     @patch('os.makedirs')
     def test_compress_csv_status(self, mock_mkdir):
@@ -529,9 +527,7 @@ class TestSimulation(TestMockedLogs):
                               mock_status_writer):
                 test_sim.compress_csv()
                 mock_status_writer.compress.assert_called_once()
-            del test_sim.writer
-            del test_sim.ih_status_writer
-            del test_sim.ih_infectiousness_writer
+            del test_sim
 
     @patch('os.makedirs')
     def test_compress_csv_infect(self, mock_mkdir):
@@ -551,9 +547,7 @@ class TestSimulation(TestMockedLogs):
                               mock_infect_writer):
                 test_sim.compress_csv()
                 mock_infect_writer.compress.assert_called_once()
-            del test_sim.writer
-            del test_sim.ih_status_writer
-            del test_sim.ih_infectiousness_writer
+            del test_sim
 
     def test_set_random_seed(self):
         pe.routine.Simulation.set_random_seed(seed=0)
