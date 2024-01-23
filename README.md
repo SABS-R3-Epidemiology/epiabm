@@ -97,6 +97,7 @@ Configure a simulation with a number of parameters. These are split into three c
 * `output_dir`: String for the location for the output files, as a relative path
 * `status_output`: Boolean to determine whether we need a csv file containing infection status values _(Default false)_
 * `infectiousness_output`: Boolean to determine whether we need a csv file containing infectiousness (viral load) values _(Default false)_
+* `compress`: Boolean to determine whether we compress a csv file containing infection status values and/or a csv file containing infectiousness (viral load) values if they are written _(Default false)_
 
 Two lists of sweeps must also be passed to this function - the first will be executed once at the start of the simulation (i.e. to determine the initial infections in the population), while the second list will be ran at every timestep (i.e. to propagate the infection through the population).
 
