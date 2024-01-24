@@ -123,7 +123,7 @@ class TestStateTransitionMatrix(TestPyEpiabm):
             mock_param.assert_not_called
             output = matrix_object.matrix
             self.assertListEqual([0.8, 0.2], output.loc['Exposed',
-            'InfectASympt'])
+                                                             'InfectASympt'])
             self.assertEqual([0.2, 0.8], output.loc['Exposed', 'InfectMild'])
 
     def test_remove_age_dependance(self):

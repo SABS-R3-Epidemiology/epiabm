@@ -130,7 +130,7 @@ class TestPerson(TestPyEpiabm):
     def test_set_time_of_recovery(self):
         self.person.set_time_of_recovery(time=5)
         self.assertTrue(self.person.time_of_recovery, 5)
-        
+
 
 if __name__ == '__main__':
     unittest.main()
