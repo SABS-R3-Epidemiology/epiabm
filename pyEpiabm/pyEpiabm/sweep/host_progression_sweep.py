@@ -315,8 +315,9 @@ class HostProgressionSweep(AbstractSweep):
                     if person.infection_status == InfectionStatus.Susceptible:
                         person.time_of_status_change = None
                         break
-                    else:
-                        self.update_time_status_change(person, time)
+                    elif person.infection_status == InfectionStatus.Recovered:
+                        person.set_time_of_recovery(time)
+                    self.update_time_status_change(person, time)
                     self.sympt_testing_queue(cell, person)
                 self._updates_infectiousness(person, time)
 

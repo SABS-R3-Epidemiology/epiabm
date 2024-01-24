@@ -625,13 +625,19 @@ class TestHostProgressionSweep(TestPyEpiabm):
             test_sweep.bind_population(self.test_population1)
             self.person1.update_status(InfectionStatus.Recovered)
             self.person1.next_infection_status = InfectionStatus.Susceptible
+            self.person2.update_status(InfectionStatus.InfectMild)
+            self.person2.next_infection_status = InfectionStatus.Recovered
             current_time = 1.0
             test_sweep.update_time_status_change(self.person1, current_time)
             time_of_change = self.person1.time_of_status_change
+            self.person2.time_of_status_change = time_of_change
             test_sweep(time_of_change)
             self.assertEqual(self.person1.infection_status,
                              InfectionStatus.Susceptible)
             self.assertEqual(self.person1.time_of_status_change, None)
+            self.assertEqual(self.person2.infection_status,
+                             InfectionStatus.Recovered)
+            self.assertEqual(self.person2.time_of_recovery, time_of_change)
 
     @mock.patch(
         'pyEpiabm.sweep.HostProgressionSweep.asympt_uninf_testing_queue')
