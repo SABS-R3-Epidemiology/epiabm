@@ -3,7 +3,8 @@ from pyEpiabm.core import Population
 from pyEpiabm.property import InfectionStatus
 
 
-def py2c_population(py_population: Population, c_factory, c_status_map):
+def py2c_convert_population(py_population: Population,
+                            c_factory, c_status_map):
     return _py2c_converter(py_population, c_factory, c_status_map).c_population
 
 
@@ -72,8 +73,8 @@ class _py2c_converter:
                 else:
                     assert household._microcell_index ==\
                         person.microcell._index, \
-                        "Household cannot link two people\
-                            in different microcells."
+                        ("Household cannot link two people" +
+                         " in different microcells.")
             if household._microcell_index is None:
                 print("Warning: Empty Household exists.")
         for cell in self.py_population.cells:
@@ -164,7 +165,7 @@ class _py2c_converter:
             for py_person in py_household.persons:
                 c_person = c_cell.get_person(py_person._index[2])
                 assert c_person.set_household(hh_i), \
-                    "Person was already in a different household"
+                    "Person was already in a different household."
                 c_household.add_member(c_person.microcell_pos())
             # Configure Household Parameters
             params = c_household.params()
