@@ -60,6 +60,8 @@ class Simulation:
                a csv file containing infection status values
             * `infectiousness_output`: Boolean to determine whether we need \
                a csv file containing infectiousness (viral load) values
+            * `compress`: Boolean to determine whether we compress \
+               the infection history csv files
 
         Parameters
         ----------
@@ -85,7 +87,9 @@ class Simulation:
             the dictionary is None). These files contain the infection status
             or infectiousness of each person every time step. The EpiOS tool
             (https://github.com/SABS-R3-Epidemiology/EpiOS) samples data from
-            these files to mimic real life epidemic sampling techniques
+            these files to mimic real life epidemic sampling techniques. These
+            files can be compressed when 'compress' is True, reducing the size
+            of these files.
         """
         self.sim_params = sim_params
         self.population = population
@@ -139,6 +143,7 @@ class Simulation:
         self.infectiousness_output = False
         self.ih_status_writer = None
         self.ih_infectiousness_writer = None
+        self.compress = False
 
         if inf_history_params:
             # Setting up writer for infection history for each person. If the
@@ -148,6 +153,7 @@ class Simulation:
 
             self.infectiousness_output = inf_history_params\
                 .get("infectiousness_output")
+            self.compress = inf_history_params.get("compress", False)
             person_ids = []
             person_ids += [person.id for cell in population.cells for person
                            in cell.persons]
@@ -305,7 +311,7 @@ class Simulation:
         """
         if self.status_output and output_option == "status":
             ih_data = {column: 0 for column in
-                       self.ih_status_writer.writer.fieldnames}
+                       self.ih_status_writer.fieldnames}
             for cell in self.population.cells:
                 for person in cell.persons:
                     ih_data[person.id] = person.infection_status.value
@@ -315,7 +321,7 @@ class Simulation:
 
         if self.infectiousness_output and output_option == "infectiousness":
             infect_data = {column: 0 for column in
-                           self.ih_infectiousness_writer.writer.fieldnames}
+                           self.ih_infectiousness_writer.fieldnames}
             for cell in self.population.cells:
                 for person in cell.persons:
                     infect_data[person.id] = person.infectiousness
@@ -325,6 +331,16 @@ class Simulation:
 
     def add_writer(self, writer: AbstractReporter):
         self.writers.append(writer)
+
+    def compress_csv(self):
+        """Compresses the infection history csvs when they are written.
+
+        """
+        if self.compress and self.ih_status_writer:
+            self.ih_status_writer.compress()
+
+        if self.compress and self.ih_infectiousness_writer:
+            self.ih_infectiousness_writer.compress()
 
     @staticmethod
     def set_random_seed(seed):

@@ -2,7 +2,7 @@ import os
 import random
 import numpy as np
 import unittest
-from unittest.mock import patch, mock_open
+from unittest.mock import patch, mock_open, MagicMock
 
 import pyEpiabm as pe
 
@@ -61,12 +61,13 @@ class TestSimulation(TestMockedLogs):
             self.assertEqual(len(test_sim.sweeps), 1)
             self.assertIsInstance(test_sim.population, pe.Population)
 
-            # Test that the ih writers are None, and that both status_output
-            # and infectiousness_output are False
+            # Test that the ih writers are None, that both status_output
+            # and infectiousness_output are False, and that compress is false
             self.assertEqual(test_sim.status_output, False)
             self.assertEqual(test_sim.infectiousness_output, False)
             self.assertEqual(test_sim.ih_status_writer, None)
             self.assertEqual(test_sim.ih_infectiousness_writer, None)
+            self.assertEqual(test_sim.compress, False)
 
             del test_sim.writer
             del test_sim.ih_status_writer
@@ -461,13 +462,13 @@ class TestSimulation(TestMockedLogs):
                                self.sweeps, self.sim_params, self.file_params,
                                self.inf_history_params)
             ih_data = {column: 0 for column in
-                       test_sim.ih_status_writer.writer.fieldnames}
+                       test_sim.ih_status_writer.fieldnames}
             for cell in self.test_population.cells:
                 for person in cell.persons:
                     ih_data[person.id] = person.infection_status.value
             ih_data["time"] = time
             infect_data = {column: 0 for column in
-                           test_sim.ih_infectiousness_writer.writer.fieldnames}
+                           test_sim.ih_infectiousness_writer.fieldnames}
             for cell in self.test_population.cells:
                 for person in cell.persons:
                     infect_data[person.id] = person.infectiousness
@@ -482,6 +483,71 @@ class TestSimulation(TestMockedLogs):
                 mock.assert_called_with(infect_data)
         mock_mkdir.assert_called_with(
             os.path.join(os.getcwd(), self.inf_history_params["output_dir"]))
+
+    @patch('os.makedirs')
+    def test_compress_no_compression(self, mock_mkdir):
+        mo = mock_open()
+        self.inf_history_params['compress'] = False
+        self.inf_history_params['status_output'] = True
+        self.inf_history_params['infectiousness_output'] = True
+
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            test_sim = pe.routine.Simulation()
+            mock_status_writer = MagicMock()
+            mock_infectiousness_writer = MagicMock()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+            test_sim.run_sweeps()
+
+            with patch.object(test_sim, 'ih_status_writer',
+                              mock_status_writer):
+                with patch.object(test_sim, 'ih_infectiousness_writer',
+                                  mock_infectiousness_writer):
+                    test_sim.compress_csv()
+                    mock_status_writer.compress.assert_not_called()
+                    mock_infectiousness_writer.compress.assert_not_called()
+            del test_sim
+
+    @patch('os.makedirs')
+    def test_compress_csv_status(self, mock_mkdir):
+        mo = mock_open()
+        self.inf_history_params['compress'] = True
+        self.inf_history_params['status_output'] = True
+        self.inf_history_params['infectiousness_output'] = False
+
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            test_sim = pe.routine.Simulation()
+            mock_status_writer = MagicMock()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+            test_sim.run_sweeps()
+            with patch.object(test_sim, 'ih_status_writer',
+                              mock_status_writer):
+                test_sim.compress_csv()
+                mock_status_writer.compress.assert_called_once_with()
+            del test_sim
+
+    @patch('os.makedirs')
+    def test_compress_csv_infect(self, mock_mkdir):
+        mo = mock_open()
+        self.inf_history_params['compress'] = True
+        self.inf_history_params['status_output'] = False
+        self.inf_history_params['infectiousness_output'] = True
+
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            test_sim = pe.routine.Simulation()
+            mock_infect_writer = MagicMock()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+            test_sim.run_sweeps()
+            with patch.object(test_sim, 'ih_infectiousness_writer',
+                              mock_infect_writer):
+                test_sim.compress_csv()
+                mock_infect_writer.compress.assert_called_once_with()
+            del test_sim
 
     def test_set_random_seed(self):
         pe.routine.Simulation.set_random_seed(seed=0)
