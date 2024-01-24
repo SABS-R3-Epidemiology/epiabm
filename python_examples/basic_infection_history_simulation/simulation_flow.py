@@ -50,7 +50,8 @@ dem_file_params = {"output_dir": os.path.join(os.path.dirname(__file__),
 inf_history_params = {"output_dir": os.path.join(os.path.dirname(__file__),
                                                  "simulation_outputs"),
                       "status_output": True,
-                      "infectiousness_output": True}
+                      "infectiousness_output": True,
+                      "compress": False}  # Set to True if compression desired
 
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.
@@ -65,6 +66,7 @@ sim.configure(
     file_params,
     inf_history_params)
 sim.run_sweeps()
+sim.compress_csv()
 
 # Need to close the writer object at the end of each simulation.
 del sim.writer

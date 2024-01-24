@@ -460,7 +460,7 @@
         "prop_other_parent_away": 0.0
     },
     "carehome_params": {
-      "carehome_minimum_age": 1000,
+      "carehome_minimum_age": 65,
       "carehome_allow_initial_infections": 0,
       "carehome_resident_household_scaling": 1,
       "carehome_resident_place_scaling": 1,
@@ -476,6 +476,7 @@
             "isolation_delay": 0,
             "isolation_duration": 10,
             "isolation_probability": 0.9,
+            "use_testing": 0,
             "isolation_effectiveness": 0.25,
             "isolation_house_effectiveness": 0.5
         },
