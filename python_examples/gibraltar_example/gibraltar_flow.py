@@ -23,7 +23,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                                    "gibraltar_parameters_without_intervention.json"))
+                                    "gibraltar_parameters.json"))
 
 # Generate population from input file
 # (Input converted from CovidSim with `microcell_conversion.py`)
@@ -47,9 +47,9 @@ file_params = {"output_file": "output_gibraltar.csv",
                "age_stratified": True}
 
 dem_file_params = {"output_dir": os.path.join(os.path.dirname(__file__),
-                                             "simulation_outputs"),
-                  "spatial_output": True,
-                  "age_output": True}
+                                              "simulation_outputs"),
+                   "spatial_output": True,
+                   "age_output": True}
 
 ih_file_params = {"output_dir": os.path.join(os.path.dirname(__file__),
                                              "simulation_outputs"),
