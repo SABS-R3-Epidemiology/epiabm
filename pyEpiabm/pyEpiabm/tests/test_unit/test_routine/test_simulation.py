@@ -23,7 +23,8 @@ class TestSimulation(TestMockedLogs):
         pe.Parameters.instance().time_steps_per_day = 1
         cls.sim_params = {"simulation_start_time": 0,
                           "simulation_end_time": 1,
-                          "initial_infected_number": 0}
+                          "initial_infected_number": 0,
+                          "include_waning": True}
 
         cls.mock_output_dir = "pyEpiabm/pyEpiabm/tests/test_output/mock"
         cls.file_params = {"output_file": "test_file.csv",
@@ -67,6 +68,7 @@ class TestSimulation(TestMockedLogs):
             self.assertEqual(test_sim.infectiousness_output, False)
             self.assertEqual(test_sim.ih_status_writer, None)
             self.assertEqual(test_sim.ih_infectiousness_writer, None)
+            self.assertEqual(test_sim.include_waning, True)
 
             del test_sim.writer
             del test_sim.ih_status_writer
