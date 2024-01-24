@@ -153,7 +153,7 @@ class Simulation:
 
             self.infectiousness_output = inf_history_params\
                 .get("infectiousness_output")
-            self.compress = inf_history_params.get("compress")
+            self.compress = inf_history_params.get("compress", False)
             person_ids = []
             person_ids += [person.id for cell in population.cells for person
                            in cell.persons]

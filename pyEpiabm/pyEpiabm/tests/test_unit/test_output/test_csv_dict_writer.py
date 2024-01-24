@@ -1,5 +1,8 @@
 import unittest
 from unittest.mock import patch, mock_open, call, MagicMock
+import zipfile
+import pandas as pd
+import io
 import os
 
 import pyEpiabm as pe
@@ -55,7 +58,7 @@ class TestCsvDictWriter(unittest.TestCase):
     @patch('pandas.read_csv')
     @patch('pandas.DataFrame.to_csv')
     def test_compress(self, mock_mkdir, mock_remove, mock_read, mock_to_csv):
-        """
+        """Test the compress method of the _CsvDictWriter class.
         """
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
@@ -63,9 +66,9 @@ class TestCsvDictWriter(unittest.TestCase):
             m = pe.output._CsvDictWriter('mock_folder', 'mock_filename.csv',
                                          mock_content)
             m.compress()
-            expected_output_filepath = f"{m.filepath_without_extension}.gz"
+            expected_output_filepath = f"{m.filepath_without_extension}.zip"
             self.assertEqual(expected_output_filepath,
-                             os.path.join("mock_folder", "mock_filename.gz"))
+                             os.path.join("mock_folder", "mock_filename.zip"))
 
             mock_read.assert_called_once_with(m.filepath)
             mock_to_csv.assert_called_once()

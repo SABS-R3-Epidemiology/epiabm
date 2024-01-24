@@ -526,7 +526,7 @@ class TestSimulation(TestMockedLogs):
             with patch.object(test_sim, 'ih_status_writer',
                               mock_status_writer):
                 test_sim.compress_csv()
-                mock_status_writer.compress.assert_called_once()
+                mock_status_writer.compress.assert_called_once_with()
             del test_sim
 
     @patch('os.makedirs')
@@ -546,7 +546,7 @@ class TestSimulation(TestMockedLogs):
             with patch.object(test_sim, 'ih_infectiousness_writer',
                               mock_infect_writer):
                 test_sim.compress_csv()
-                mock_infect_writer.compress.assert_called_once()
+                mock_infect_writer.compress.assert_called_once_with()
             del test_sim
 
     def test_set_random_seed(self):

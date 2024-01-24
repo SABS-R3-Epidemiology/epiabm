@@ -50,7 +50,7 @@ inf_history_params = {"output_dir": os.path.join(os.path.dirname(__file__),
                                                  "simulation_outputs"),
                       "status_output": True,
                       "infectiousness_output": True,
-                      "compress": True}
+                      "compress": False} # Set to True if compression wanted
 
 # Create a simulation object, configure it with the parameters given, then
 # run the simulation.
