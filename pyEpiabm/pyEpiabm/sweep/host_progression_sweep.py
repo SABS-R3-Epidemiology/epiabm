@@ -215,13 +215,21 @@ class HostProgressionSweep(AbstractSweep):
         else:
             row_index = person.infection_status.name
             column_index = person.next_infection_status.name
-            transition_time_icdf_object = \
-                self.transition_time_matrix.loc[row_index, column_index]
             # Checks for susceptible to exposed case
             # where transition time is zero
             try:
-                transition_time = \
-                    transition_time_icdf_object.icdf_choose_noexp()
+                if person.infection_status != InfectionStatus.Recovered:
+                    transition_time_icdf_object = \
+                        self.transition_time_matrix.loc[row_index,
+                                                        column_index]
+                    transition_time = \
+                        transition_time_icdf_object.icdf_choose_noexp()
+                else:
+                    # If someone is recovered, then their transition time
+                    # will be equal to 1 when waning immunity is turned on.
+                    # This means that everyone spends exactly 1 day in the
+                    # Recovered compartment with waning immunity
+                    transition_time = 1
             except AttributeError as e:
                 if "object has no attribute 'icdf_choose_noexp'" in str(e):
                     transition_time = transition_time_icdf_object

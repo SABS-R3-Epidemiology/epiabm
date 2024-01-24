@@ -32,17 +32,6 @@ class TestTransitionTimeMatrix(TestPyEpiabm):
                                               InverseCdf)
         self.assertEqual(inverse_cdf_count, 14)
 
-    def test_create_transition_time_matrix_waning_immunity(self):
-        """Tests that the Recovered to Susceptible entry of the matrix has
-        an InverseCdf with waning immunity turned on
-        """
-        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
-            mock_param.return_value.use_waning_immunity = 1.0
-            matrix_object = TransitionTimeMatrix()
-            matrix = matrix_object.create_transition_time_matrix()
-            self.assertIsInstance(matrix.loc['Recovered', 'Susceptible'],
-                                  pe.utility.inverse_cdf.InverseCdf)
-
     def test_update_transition_time_with_float(self):
         # Test method updates transition time as expected
         matrix_object = TransitionTimeMatrix()

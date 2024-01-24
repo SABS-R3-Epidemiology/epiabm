@@ -225,10 +225,6 @@ class TransitionTimeMatrix:
         matrix.loc['InfectICURecov', 'Recovered'] =\
             InverseCdf(pe.Parameters.instance().mean_icurecov_to_recov,
                        pe.Parameters.instance().icurecov_to_recov)
-        if pe.core.Parameters.instance().use_waning_immunity:
-            matrix.loc['Recovered', 'Susceptible'] = \
-                InverseCdf(pe.Parameters.instance().mean_recov_to_susc,
-                           pe.Parameters.instance().recov_to_susc_icdf)
         return matrix
 
     def update_transition_time_with_float(
