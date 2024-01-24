@@ -1,7 +1,6 @@
 #
 # Transition matrices used by host progression sweep
 #
-import logging
 
 import pandas as pd
 import numpy as np

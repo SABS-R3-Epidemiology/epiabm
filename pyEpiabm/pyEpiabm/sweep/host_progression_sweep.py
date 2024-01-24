@@ -1,13 +1,11 @@
 #
 # Progression of infection within individuals
 #
-import logging
 import random
 import numpy as np
 from collections import defaultdict
 
 import pyEpiabm as pe
-import pyEpiabm.core
 from pyEpiabm.core import Parameters, Person
 from pyEpiabm.property import InfectionStatus
 
@@ -46,7 +44,7 @@ class HostProgressionSweep(AbstractSweep):
         self.number_of_states = len(InfectionStatus)
         assert self.state_transition_matrix.shape == \
                (self.number_of_states, self.number_of_states), \
-            'Matrix dimensions must match number of infection states'
+               'Matrix dimensions must match number of infection states'
 
         # Instantiate transmission time matrix
         time_matrix_object = TransitionTimeMatrix()
@@ -153,8 +151,8 @@ class HostProgressionSweep(AbstractSweep):
                                        InfectionStatus.Vaccinated]:
             person.next_infection_status = None
             return
-        elif person.infection_status == InfectionStatus.Recovered and not \
-            Parameters.instance().use_waning_immunity:
+        elif (person.infection_status == InfectionStatus.Recovered and not
+              Parameters.instance().use_waning_immunity):
             person.next_infection_status = None
             return
         elif (person.care_home_resident and
@@ -211,8 +209,8 @@ class HostProgressionSweep(AbstractSweep):
         if person.infection_status in [InfectionStatus.Dead,
                                        InfectionStatus.Vaccinated]:
             transition_time = np.inf
-        elif person.infection_status == InfectionStatus.Recovered and not \
-            Parameters.instance().use_waning_immunity:
+        elif (person.infection_status == InfectionStatus.Recovered and not
+              Parameters.instance().use_waning_immunity):
             transition_time = np.inf
         else:
             row_index = person.infection_status.name
@@ -269,8 +267,8 @@ class HostProgressionSweep(AbstractSweep):
             scale_infectiousness = self.infectiousness_progression
             time_since_infection = (int((time - person.infection_start_time)
                                         / self.model_time_step))
-            person.infectiousness = person.initial_infectiousness * \
-                                    scale_infectiousness[time_since_infection]
+            person.infectiousness = person.initial_infectiousness *\
+                scale_infectiousness[time_since_infection]
         # Sets infectiousness to 0 if person just became Recovered, Dead, or
         # Vaccinated, and sets its infection start time to None again.
         elif person.infectiousness != 0:
@@ -343,14 +341,14 @@ class HostProgressionSweep(AbstractSweep):
         """
         if hasattr(Parameters.instance(), 'intervention_params'):
             if 'disease_testing' in Parameters.instance(). \
-                intervention_params.keys():
+              intervention_params.keys():
                 testing_params = Parameters.instance(). \
                     intervention_params['disease_testing']
                 r = random.random()
                 type_r = random.random()
 
                 if (person.is_symptomatic() and
-                    person.date_positive is None):
+                   person.date_positive is None):
                     if person.care_home_resident:
                         test_probability = testing_params['testing_sympt'][0]
                         type_probability = testing_params['sympt_pcr'][0]
@@ -392,7 +390,7 @@ class HostProgressionSweep(AbstractSweep):
         """
         if hasattr(Parameters.instance(), 'intervention_params'):
             if 'disease_testing' in Parameters.instance(). \
-                intervention_params.keys():
+              intervention_params.keys():
                 testing_params = Parameters.instance(). \
                     intervention_params['disease_testing']
                 for item in person_list:
@@ -421,7 +419,7 @@ class HostProgressionSweep(AbstractSweep):
                             'asympt_uninf_pcr'][2]
 
                     if (r < test_probability and
-                        person.date_positive is None):
+                       person.date_positive is None):
                         if type_r < type_probability:
                             cell.enqueue_PCR_testing(person)
                         else:
