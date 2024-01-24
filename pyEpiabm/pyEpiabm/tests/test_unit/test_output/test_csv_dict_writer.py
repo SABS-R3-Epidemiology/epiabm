@@ -1,8 +1,5 @@
 import unittest
 from unittest.mock import patch, mock_open, call, MagicMock
-import zipfile
-import pandas as pd
-import io
 import os
 
 import pyEpiabm as pe
