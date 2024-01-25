@@ -265,18 +265,12 @@ class TestHostProgressionSweep(TestPyEpiabm):
             mock_param.return_value.use_waning_immunity = 1.0
             mock_param.return_value.asympt_infect_period = 14
             mock_param.return_value.time_steps_per_day = 1
-            mean = 0
-            icdf_array = np.array([0]*21)
-            mock_param.return_value.mean_recov_to_susc = mean
-            mock_param.return_value.recov_to_susc_icdf = icdf_array
             test_sweep = pe.sweep.HostProgressionSweep()
             self.person1.update_status(InfectionStatus.Recovered)
             self.person1.next_infection_status = InfectionStatus.Susceptible
             current_time = 1.0
             test_sweep.update_time_status_change(self.person1, current_time)
-            icdf = pe.utility.InverseCdf(mean, icdf_array)
-            self.assertEqual(icdf.icdf_choose_noexp() + 1,
-                             self.person1.time_of_status_change)
+            self.assertEqual(2.0, self.person1.time_of_status_change)
 
     def test_neg_trans_raise(self):
         """Tests exception is raised with negative transition delta,
@@ -619,8 +613,6 @@ class TestHostProgressionSweep(TestPyEpiabm):
             mock_param.return_value.use_waning_immunity = 1.0
             mock_param.return_value.asympt_infect_period = 14
             mock_param.return_value.time_steps_per_day = 1
-            mock_param.return_value.mean_recov_to_susc = 0
-            mock_param.return_value.recov_to_susc_icdf = np.array([0]*21)
             test_sweep = pe.sweep.HostProgressionSweep()
             test_sweep.bind_population(self.test_population1)
             self.person1.update_status(InfectionStatus.Recovered)

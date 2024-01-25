@@ -261,7 +261,7 @@ class Person:
         self.id = id
 
     def set_time_of_recovery(self, time: float):
-        """Records the time at which a person enters the Recovered compartment
+        """Records the time at which a person enters the Recovered compartment.
 
         Parameters
         ----------

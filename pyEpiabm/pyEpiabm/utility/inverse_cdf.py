@@ -54,7 +54,7 @@ class InverseCdf:
         ti = (self.mean
               * (q * self.icdf_array[i+1] + (1.0 - q) * self.icdf_array[i]))
         value = float(math.floor(0.5 + (ti * self.time_steps_per_day)))
-        return value if value > 0 else 1
+        return value
 
     def icdf_choose_exp(self) -> float:
         """Samples a value from the inverse cumulative distribution function,
