@@ -158,26 +158,29 @@ class TestSimFunctional(TestFunctional):
         """Basic functional test to ensure everyone is not recovered at the
         end of the simulation.
         """
-        self.sim_params["initial_infected_number"] = 5
-        self.sim_params["include_waning"] = True
-        pop = TestSimFunctional.toy_simulation(self.pop_params,
-                                               self.sim_params,
-                                               self.file_params)
+        with patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.use_waning_immunity = 1.0
+            mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.time_steps_per_day = 1
+            self.sim_params["initial_infected_number"] = 5
+            self.sim_params["include_waning"] = True
+            pop = TestSimFunctional.toy_simulation(self.pop_params,
+                                                   self.sim_params,
+                                                   self.file_params)
 
-        # Test not all individuals have entered Recovered or Dead at end
-        recov_dead_state_count = 0
-        for status in pe.property.InfectionStatus:
-            with self.subTest(status=status):
-                count = 0
+            # Test not all individuals have entered Recovered or Dead at end
+            recov_dead_state_count = 0
+            for status in pe.property.InfectionStatus:
+                with self.subTest(status=status):
+                    count = 0
 
-                for cell in pop.cells:
-                    cell_data = cell.compartment_counter.retrieve()
-                    count += cell_data[status]
-                if status in [InfectionStatus.Recovered, InfectionStatus.Dead]:
-                    recov_dead_state_count += count
-
-        self.assertNotEqual(np.sum(recov_dead_state_count),
-                         self.pop_params["population_size"])
+                    for cell in pop.cells:
+                        cell_data = cell.compartment_counter.retrieve()
+                        count += cell_data[status]
+                    if status in [InfectionStatus.Recovered, InfectionStatus.Dead]:
+                        recov_dead_state_count += count
+            self.assertNotEqual(np.sum(recov_dead_state_count),
+                             self.pop_params["population_size"])
 
     def test_no_infection(self, *mocks):
         """Basic functional test to ensure noone is infected when there are
