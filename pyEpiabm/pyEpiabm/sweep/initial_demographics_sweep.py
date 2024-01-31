@@ -55,7 +55,7 @@ class InitialDemographicsSweep(AbstractSweep):
         file_name = "demographics.csv"
         self.titles = ["id"]
         if self.age_output:
-            self.titles.append("age_group")
+            self.titles.append("age")
         if self.spatial_output:
             self.titles += ["location_x", "location_y"]
         self.titles.append("kw_or_chr")
@@ -78,7 +78,7 @@ class InitialDemographicsSweep(AbstractSweep):
         for cell in self._population.cells:
             for person in cell.persons:
                 data = {"id": person.id,
-                        "age_group": person.age_group
+                        "age": person.age
                         if self.age_output else None,
                         "location_x": cell.location[0]
                         if self.spatial_output else None,
