@@ -166,15 +166,11 @@ class TestSimFunctional(TestFunctional):
 
         # Test not all individuals have entered Recovered or Dead at end
         recov_dead_state_count = 0
-        for status in pe.property.InfectionStatus:
-            with self.subTest(status=status):
-                count = 0
 
-                for cell in pop.cells:
-                    cell_data = cell.compartment_counter.retrieve()
-                    count += cell_data[status]
-                if status in [InfectionStatus.Recovered, InfectionStatus.Dead]:
-                    recov_dead_state_count += count
+        for cell in pop.cells:
+            cell_data = cell.compartment_counter.retrieve()
+            for status in [InfectionStatus.Recovered, InfectionStatus.Dead]:
+                recov_dead_state_count += cell_data[status]
 
         self.assertNotEqual(np.sum(recov_dead_state_count),
                          self.pop_params["population_size"])
