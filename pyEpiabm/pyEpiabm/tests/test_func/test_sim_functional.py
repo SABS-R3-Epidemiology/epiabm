@@ -173,11 +173,12 @@ class TestSimFunctional(TestFunctional):
 
             for cell in pop.cells:
                 cell_data = cell.compartment_counter.retrieve()
-                for status in [InfectionStatus.Recovered, InfectionStatus.Dead]:
+                for status in [InfectionStatus.Recovered,
+                               InfectionStatus.Dead]:
                     recov_dead_state_count += cell_data[status]
 
             self.assertNotEqual(np.sum(recov_dead_state_count),
-                             self.pop_params["population_size"])
+                                self.pop_params["population_size"])
 
     def test_no_infection(self, *mocks):
         """Basic functional test to ensure noone is infected when there are
