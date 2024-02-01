@@ -127,6 +127,10 @@ class TestPerson(TestPyEpiabm):
         self.microcell.persons.append(new_person)
         self.assertRaises(ValueError, new_person.set_id, "1.1.1.1")
 
+    def test_set_time_of_recovery(self):
+        self.person.set_time_of_recovery(time=5)
+        self.assertTrue(self.person.time_of_recovery, 5)
+
 
 if __name__ == '__main__':
     unittest.main()

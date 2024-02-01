@@ -43,16 +43,16 @@ class HostProgressionSweep(AbstractSweep):
 
         self.number_of_states = len(InfectionStatus)
         assert self.state_transition_matrix.shape == \
-            (self.number_of_states, self.number_of_states), \
-            'Matrix dimensions must match number of infection states'
+               (self.number_of_states, self.number_of_states), \
+               'Matrix dimensions must match number of infection states'
 
         # Instantiate transmission time matrix
         time_matrix_object = TransitionTimeMatrix()
-        self.transition_time_matrix =\
+        self.transition_time_matrix = \
             time_matrix_object.create_transition_time_matrix()
         # Instantiate parameters to be used in update transition time
         # method
-        self.latent_to_symptom_delay =\
+        self.latent_to_symptom_delay = \
             pe.Parameters.instance().latent_to_sympt_delay
         # Defining the length of the model time step (in days, can be a
         # fraction of day as well).
@@ -69,7 +69,7 @@ class HostProgressionSweep(AbstractSweep):
         # Extreme case where model time step would be too small
         max_inf_steps = 2550
         # Define number of time steps a person is infectious:
-        num_infectious_ts =\
+        num_infectious_ts = \
             int(np.ceil(infectious_period / self.model_time_step))
         if num_infectious_ts >= max_inf_steps:
             raise ValueError('Number of timesteps in infectious period exceeds'
@@ -86,11 +86,11 @@ class HostProgressionSweep(AbstractSweep):
             associated_inf_value = int(np.floor(t))
             t -= associated_inf_value
             if associated_inf_value < inf_prof_resolution:
-                infectiousness_prog[i] =\
+                infectiousness_prog[i] = \
                     (infectious_profile[associated_inf_value] * (1 - t)
                      + infectious_profile[associated_inf_value + 1] * t)
             else:  # limit case where we define infectiousness to 0
-                infectiousness_prog[i] =\
+                infectiousness_prog[i] = \
                     infectious_profile[inf_prof_resolution]
         # Scaling
         scaling_param = inf_prof_average
@@ -147,9 +147,12 @@ class HostProgressionSweep(AbstractSweep):
             Instance of person class with infection status attributes
 
         """
-        if person.infection_status in [InfectionStatus.Recovered,
-                                       InfectionStatus.Dead,
+        if person.infection_status in [InfectionStatus.Dead,
                                        InfectionStatus.Vaccinated]:
+            person.next_infection_status = None
+            return
+        elif (person.infection_status == InfectionStatus.Recovered and not
+              Parameters.instance().use_waning_immunity):
             person.next_infection_status = None
             return
         elif (person.care_home_resident and
@@ -175,7 +178,7 @@ class HostProgressionSweep(AbstractSweep):
                                  ' probabilities')
 
         next_infection_status_number = random.choices(outcomes, weights)[0]
-        next_infection_status =\
+        next_infection_status = \
             InfectionStatus(next_infection_status_number)
 
         person.next_infection_status = next_infection_status
@@ -203,20 +206,30 @@ class HostProgressionSweep(AbstractSweep):
         if person.infection_status == InfectionStatus.Susceptible:
             raise ValueError("Method should not be used to infect people")
 
-        if person.infection_status in [InfectionStatus.Recovered,
-                                       InfectionStatus.Dead,
+        if person.infection_status in [InfectionStatus.Dead,
                                        InfectionStatus.Vaccinated]:
+            transition_time = np.inf
+        elif (person.infection_status == InfectionStatus.Recovered and not
+              Parameters.instance().use_waning_immunity):
             transition_time = np.inf
         else:
             row_index = person.infection_status.name
             column_index = person.next_infection_status.name
-            transition_time_icdf_object =\
-                self.transition_time_matrix.loc[row_index, column_index]
             # Checks for susceptible to exposed case
             # where transition time is zero
             try:
-                transition_time =\
-                    transition_time_icdf_object.icdf_choose_noexp()
+                if person.infection_status != InfectionStatus.Recovered:
+                    transition_time_icdf_object = \
+                        self.transition_time_matrix.loc[row_index,
+                                                        column_index]
+                    transition_time = \
+                        transition_time_icdf_object.icdf_choose_noexp()
+                else:
+                    # If someone is recovered, then their transition time
+                    # will be equal to 1 when waning immunity is turned on.
+                    # This means that everyone spends exactly 1 day in the
+                    # Recovered compartment with waning immunity
+                    transition_time = 1
             except AttributeError as e:
                 if "object has no attribute 'icdf_choose_noexp'" in str(e):
                     transition_time = transition_time_icdf_object
@@ -300,13 +313,18 @@ class HostProgressionSweep(AbstractSweep):
                 while person.time_of_status_change <= time:
                     person.update_status(person.next_infection_status)
                     if person.infection_status in \
-                            [InfectionStatus.InfectASympt,
-                             InfectionStatus.InfectMild,
-                             InfectionStatus.InfectGP]:
+                        [InfectionStatus.InfectASympt,
+                         InfectionStatus.InfectMild,
+                         InfectionStatus.InfectGP]:
                         self.set_infectiousness(person, time)
                         if not person.is_symptomatic():
                             asympt_or_uninf_people.append((cell, person))
                     self.update_next_infection_status(person)
+                    if person.infection_status == InfectionStatus.Susceptible:
+                        person.time_of_status_change = None
+                        break
+                    elif person.infection_status == InfectionStatus.Recovered:
+                        person.set_time_of_recovery(time)
                     self.update_time_status_change(person, time)
                     self.sympt_testing_queue(cell, person)
                 self._updates_infectiousness(person, time)
@@ -331,9 +349,9 @@ class HostProgressionSweep(AbstractSweep):
 
         """
         if hasattr(Parameters.instance(), 'intervention_params'):
-            if 'disease_testing' in Parameters.instance().\
+            if 'disease_testing' in Parameters.instance(). \
               intervention_params.keys():
-                testing_params = Parameters.instance().\
+                testing_params = Parameters.instance(). \
                     intervention_params['disease_testing']
                 r = random.random()
                 type_r = random.random()
@@ -380,9 +398,9 @@ class HostProgressionSweep(AbstractSweep):
 
         """
         if hasattr(Parameters.instance(), 'intervention_params'):
-            if 'disease_testing' in Parameters.instance().\
-               intervention_params.keys():
-                testing_params = Parameters.instance().\
+            if 'disease_testing' in Parameters.instance(). \
+              intervention_params.keys():
+                testing_params = Parameters.instance(). \
                     intervention_params['disease_testing']
                 for item in person_list:
                     cell = item[0]

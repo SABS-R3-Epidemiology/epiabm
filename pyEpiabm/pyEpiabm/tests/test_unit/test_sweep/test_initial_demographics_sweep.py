@@ -22,16 +22,16 @@ class TestInitialDemographicsSweep(TestPyEpiabm):
         microcell_0_0 = self.test_population.cells[0].microcells[0]
         microcell_0_0.add_household([microcell_0_0.persons[0]])
         person_0_0_0_0 = microcell_0_0.households[0].persons[0]
-        person_0_0_0_0.age_group = 5
+        person_0_0_0_0.age = 25
         person_0_0_0_0.key_worker = True
         microcell_1_0 = self.test_population.cells[1].microcells[0]
         microcell_1_0.add_household([microcell_1_0.persons[0],
                                      microcell_1_0.persons[1]])
         person_1_0_0_0 = microcell_1_0.households[0].persons[0]
-        person_1_0_0_0.age_group = 13
+        person_1_0_0_0.age = 65
         person_1_0_0_0.care_home_resident = True
         person_1_0_0_1 = microcell_1_0.households[0].persons[1]
-        person_1_0_0_1.age_group = 8
+        person_1_0_0_1.age = 40
         self.dem_file_params = {"output_dir":
                                 "pyEpiabm/pyEpiabm/tests/test_output/mock"}
 
@@ -90,7 +90,7 @@ class TestInitialDemographicsSweep(TestPyEpiabm):
             file_name = os.path.join(os.getcwd(),
                                      self.dem_file_params["output_dir"],
                                      "demographics.csv")
-            self.assertEqual(dem_sweep.titles, ["id", "age_group",
+            self.assertEqual(dem_sweep.titles, ["id", "age",
                                                 "location_x", "location_y",
                                                 "kw_or_chr"])
             del dem_sweep.writer
@@ -133,11 +133,11 @@ class TestInitialDemographicsSweep(TestPyEpiabm):
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             dem_sweep = pe.sweep.InitialDemographicsSweep(self.dem_file_params)
             dem_sweep.bind_population(self.test_population)
-            person_0_0_0_0_data = {"id": "0.0.0.0", "age_group": 5,
+            person_0_0_0_0_data = {"id": "0.0.0.0", "age": 25,
                                    "kw_or_chr": 'W'}
-            person_1_0_0_0_data = {"id": "1.0.0.0", "age_group": 13,
+            person_1_0_0_0_data = {"id": "1.0.0.0", "age": 65,
                                    "kw_or_chr": 'C'}
-            person_1_0_0_1_data = {"id": "1.0.0.1", "age_group": 8,
+            person_1_0_0_1_data = {"id": "1.0.0.1", "age": 40,
                                    "kw_or_chr": 'X'}
             with patch.object(dem_sweep.writer, 'write') as mock:
                 dem_sweep()
@@ -193,13 +193,13 @@ class TestInitialDemographicsSweep(TestPyEpiabm):
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             dem_sweep = pe.sweep.InitialDemographicsSweep(self.dem_file_params)
             dem_sweep.bind_population(self.test_population)
-            person_0_0_0_0_data = {"id": "0.0.0.0", "age_group": 5,
+            person_0_0_0_0_data = {"id": "0.0.0.0", "age": 25,
                                    "location_x": cell_0_x,
                                    "location_y": cell_0_y, "kw_or_chr": 'W'}
-            person_1_0_0_0_data = {"id": "1.0.0.0", "age_group": 13,
+            person_1_0_0_0_data = {"id": "1.0.0.0", "age": 65,
                                    "location_x": cell_1_x,
                                    "location_y": cell_1_y, "kw_or_chr": 'C'}
-            person_1_0_0_1_data = {"id": "1.0.0.1", "age_group": 8,
+            person_1_0_0_1_data = {"id": "1.0.0.1", "age": 40,
                                    "location_x": cell_1_x,
                                    "location_y": cell_1_y, "kw_or_chr": 'X'}
             with patch.object(dem_sweep.writer, 'write') as mock:

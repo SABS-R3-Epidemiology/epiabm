@@ -26,7 +26,8 @@ class TestSimFunctional(TestFunctional):
                            "place_number": 2}
         self.sim_params = {"simulation_start_time": 0,
                            "simulation_end_time": 100,
-                           "initial_infected_number": 0}
+                           "initial_infected_number": 0,
+                           "include_waning": False}
 
         self.file_params = {"output_file": "output.csv",
                             "output_dir": "test_folder/integration_tests",
@@ -152,6 +153,32 @@ class TestSimFunctional(TestFunctional):
         folder = os.path.join(os.getcwd(),
                               "test_folder/integration_tests")
         mocks[2].assert_called_with(folder)  # Mock for mkdir()
+
+    def test_waning_compartments(self, *mocks):
+        """Basic functional test to ensure everyone is not recovered at the
+        end of the simulation.
+        """
+        with patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.use_waning_immunity = 1.0
+            mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.time_steps_per_day = 1
+            self.sim_params["initial_infected_number"] = 5
+            self.sim_params["include_waning"] = True
+            pop = TestSimFunctional.toy_simulation(self.pop_params,
+                                                   self.sim_params,
+                                                   self.file_params)
+
+            # Test not all individuals have entered Recovered or Dead at end
+            recov_dead_state_count = 0
+
+            for cell in pop.cells:
+                cell_data = cell.compartment_counter.retrieve()
+                for status in [InfectionStatus.Recovered,
+                               InfectionStatus.Dead]:
+                    recov_dead_state_count += cell_data[status]
+
+            self.assertNotEqual(np.sum(recov_dead_state_count),
+                                self.pop_params["population_size"])
 
     def test_no_infection(self, *mocks):
         """Basic functional test to ensure noone is infected when there are

@@ -339,6 +339,7 @@
     "false_positive_rate": 0,
     "place_transmission": 0.1,
     "use_ages": 1,
+    "use_waning_immunity": 0,
     "age_proportions": [6.2, 5.6, 5.8, 6.3, 6.8, 6.8, 6.5, 6.6,
                         7.3, 7.3, 6.5, 5.7, 6, 4.8, 3.9, 3.2, 4.7],
     "age_contact": [0.6, 0.7, 0.75, 1, 1, 1, 1, 1,

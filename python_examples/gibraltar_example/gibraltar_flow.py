@@ -37,7 +37,8 @@ population = pe.routine.FilePopulationFactory.make_pop(file_loc,
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
               "initial_infected_number": 100, "initial_infect_cell": True,
-              "simulation_seed": 42}
+              "simulation_seed": 42,
+              "include_waning": True}
 
 file_params = {"output_file": "output_gibraltar.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),

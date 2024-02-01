@@ -43,6 +43,8 @@ class Simulation:
             * `initial_infected_number`: The initial number of infected \
                individuals in the population
             * `simulation_seed`:  Random seed for reproducible simulations
+            * `include_waning`: Boolean to determine whether immunity waning \
+                is included in the simulation
 
         file_params Contains:
             * `output_file`: String for the name of the output .csv file
@@ -103,6 +105,11 @@ class Simulation:
             if "age_stratified" in file_params else False
 
         Parameters.instance().use_ages = self.age_stratified
+
+        self.include_waning = sim_params["include_waning"] \
+            if "include_waning" in sim_params else False
+
+        Parameters.instance().use_waning_immunity = self.include_waning
 
         # If random seed is specified in parameters, set this in numpy
         if "simulation_seed" in self.sim_params:

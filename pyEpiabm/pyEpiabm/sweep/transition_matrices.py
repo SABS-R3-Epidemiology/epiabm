@@ -91,7 +91,10 @@ class StateTransitionMatrix:
                                                           "to_icurecov"]
         matrix.loc['InfectICU', 'Dead'] = coeff["prob_icu_to_death"]
         matrix.loc['InfectICURecov', 'Recovered'] = 1
-        matrix.loc['Recovered', 'Recovered'] = 1
+        if pe.core.Parameters.instance().use_waning_immunity:
+            matrix.loc['Recovered', 'Susceptible'] = 1
+        else:
+            matrix.loc['Recovered', 'Recovered'] = 1
         matrix.loc['Dead', 'Dead'] = 1
         matrix.loc['Vaccinated', 'Vaccinated'] = 1
 

@@ -25,7 +25,7 @@ class TestInverseCdf(TestPyEpiabm):
         icdf = 10 * icdf
         icdf_object = InverseCdf(3, icdf)
         value = icdf_object.icdf_choose_noexp()
-        self.assertTrue(0 <= value)
+        self.assertTrue(0 < value)
 
     @parameterized.expand([(np.random.rand(21) * numReps,)
                            for _ in range(numReps)])

@@ -11,6 +11,7 @@ from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 class TestHostProgressionSweep(TestPyEpiabm):
     """Tests the 'HostProgressionSweep' class.
     """
+
     def setUp(self) -> None:
         """Sets up two populations we can use throughout the test.
         3 people are located in one microcell.
@@ -68,7 +69,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.test_population2 = pe.Population()
         self.test_population2.add_cells(1)
         self.test_population2.cells[0].add_microcells(1)
-        self.test_population2.cells[0].microcells[0].\
+        self.test_population2.cells[0].microcells[0]. \
             add_people(len(InfectionStatus))
         self.people = []
         for i in range(len(InfectionStatus)):
@@ -142,7 +143,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
         method works with an identity state matrix as state_transition_matrix.
         Tests that the method works for each infection status with all people
         going to InfectICURecov infection status. Tests that method works for
-        a random upper triangular state transition matrix.
+        a random upper triangular state transition matrix. This only works
+        with waning immunity turned off.
         """
         test_sweep = pe.sweep.HostProgressionSweep()
 
@@ -152,9 +154,9 @@ class TestHostProgressionSweep(TestPyEpiabm):
 
         identity_matrix = pd.DataFrame(np.identity(len(InfectionStatus)),
                                        columns=[status.name for
-                                       status in InfectionStatus],
+                                                status in InfectionStatus],
                                        index=[status.name for
-                                       status in InfectionStatus])
+                                              status in InfectionStatus])
         test_sweep.state_transition_matrix = identity_matrix
         for person in self.people:
             with self.subTest(person=person):
@@ -207,9 +209,24 @@ class TestHostProgressionSweep(TestPyEpiabm):
                     next_enum_value = person.next_infection_status.value
                     self.assertTrue(current_enum_value <= next_enum_value)
 
+    def test_update_next_infection_status_waning_immunity(self):
+        """Test that Recovered people return to Susceptible when their status
+        is updated if waning immunity is turned on
+        """
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.use_waning_immunity = 1.0
+            mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.time_steps_per_day = 1
+            test_sweep = pe.sweep.HostProgressionSweep()
+            self.person1.update_status(InfectionStatus.Recovered)
+            test_sweep.update_next_infection_status(self.person1)
+            self.assertEqual(InfectionStatus.Susceptible,
+                             self.person1.next_infection_status)
+
     def test_update_time_status_change_no_age(self, current_time=100.0):
         """Tests that people who have their time to status change set correctly
-        depending on their current infection status.
+        depending on their current infection status. This test is with waning
+        immunity turned off.
         """
         test_sweep = pe.sweep.HostProgressionSweep()
         for i in range(len(InfectionStatus)):
@@ -239,6 +256,22 @@ class TestHostProgressionSweep(TestPyEpiabm):
                 else:
                     self.assertLessEqual(current_time, time_of_status_change)
 
+    def test_update_time_status_change_waning_immunity(self):
+        """Tests that the time to status change of a Recovered person with
+        waning immunity is equal to the output of the InverseCDF method. This
+        test should be changed if and when there is a different Recovery period
+        """
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.use_waning_immunity = 1.0
+            mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.time_steps_per_day = 1
+            test_sweep = pe.sweep.HostProgressionSweep()
+            self.person1.update_status(InfectionStatus.Recovered)
+            self.person1.next_infection_status = InfectionStatus.Susceptible
+            current_time = 1.0
+            test_sweep.update_time_status_change(self.person1, current_time)
+            self.assertEqual(2.0, self.person1.time_of_status_change)
+
     def test_neg_trans_raise(self):
         """Tests exception is raised with negative transition delta,
         originating from default value in array that has not been set.
@@ -247,7 +280,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         person = self.people[1]
         test_sweep.update_next_infection_status(person)
 
-        test_sweep.transition_time_matrix =\
+        test_sweep.transition_time_matrix = \
             pe.sweep.TransitionTimeMatrix().matrix
         with self.assertRaises(ValueError):
             test_sweep.update_time_status_change(person, 1.0)
@@ -269,13 +302,13 @@ class TestHostProgressionSweep(TestPyEpiabm):
                                    index=labels,
                                    dtype=object)
         test_sweep.transition_time_matrix = init_matrix
-        test_sweep.transition_time_matrix.\
+        test_sweep.transition_time_matrix. \
             loc[row_index, column_index] = mock.Mock()
-        test_sweep.transition_time_matrix.loc[row_index, column_index].\
+        test_sweep.transition_time_matrix.loc[row_index, column_index]. \
             icdf_choose_noexp.side_effect = AttributeError
         with self.assertRaises(AttributeError):
             test_sweep.update_time_status_change(person, 1.0)
-        test_sweep.transition_time_matrix.loc[row_index, column_index].\
+        test_sweep.transition_time_matrix.loc[row_index, column_index]. \
             icdf_choose_noexp.assert_called_once()
 
     def test_infectiousness_progression(self):
@@ -301,10 +334,10 @@ class TestHostProgressionSweep(TestPyEpiabm):
             self.assertIsInstance(infect_prog, np.ndarray)
             # Checks elements are 0 after k and greater than 0 before
             tail = infect_prog[num_infectious_ts:2550]
-            zeros = np.zeros(2550-num_infectious_ts)
+            zeros = np.zeros(2550 - num_infectious_ts)
             self.assertTrue((tail == zeros).all())
             self.assertTrue((infect_prog[0:num_infectious_ts] >
-                            np.zeros(num_infectious_ts)).all())
+                             np.zeros(num_infectious_ts)).all())
 
     def test_infectiousness_progression_small_time_steps(self):
         """Tests that the method workd when there are more than 1 time step
@@ -329,10 +362,10 @@ class TestHostProgressionSweep(TestPyEpiabm):
             # Checks elements are 0 after num_infectious_ts and greater than 0
             # before
             tail = infect_prog[num_infectious_ts:2550]
-            zeros = np.zeros(2550-num_infectious_ts)
+            zeros = np.zeros(2550 - num_infectious_ts)
             self.assertTrue((tail == zeros).all())
             self.assertTrue((infect_prog[0:num_infectious_ts] >
-                            np.zeros(num_infectious_ts)).all())
+                             np.zeros(num_infectious_ts)).all())
 
             # Very small value for time steps to raise error:
             mock_param.return_value.time_steps_per_day = 10000
@@ -349,7 +382,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
                 mock_param.return_value.time_steps_per_day = 1
                 mock_param.return_value.asympt_infect_period = 14
-                mock_param.return_value.infectiousness_prof =\
+                mock_param.return_value.infectiousness_prof = \
                     self.mock_inf_prog
                 num_infectious_ts = int(np.ceil(pe.Parameters.instance().
                                                 asympt_infect_period
@@ -432,7 +465,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             time_steps_1 = np.zeros(num_infectious_ts)
             time_steps_1[0] = model_time_step
             for i in range(num_infectious_ts):
-                time_steps_1[i] = time_steps_1[i-1] + model_time_step
+                time_steps_1[i] = time_steps_1[i - 1] + model_time_step
 
             # Generating the list of infectiousness values for when we have 2
             # time steps per day
@@ -445,7 +478,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             time_steps_2 = np.zeros(num_infectious_ts)
             time_steps_2[0] = model_time_step
             for i in range(num_infectious_ts):
-                time_steps_2[i] = time_steps_2[i-1] + model_time_step
+                time_steps_2[i] = time_steps_2[i - 1] + model_time_step
 
             # We set an asymptotically infected person with infectiousness 1
             # for each time simulation time step length
@@ -571,6 +604,33 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.assertEqual(self.person1.infectiousness, 0)
         self.assertEqual(self.person1.infection_start_time, None)
 
+    def test_call_waning_immunity(self):
+        """Tests that a Recovered person will progress to Susceptible at the
+        correct time if waning immunity is turned on. Also tests that the
+        person exits the method with time_of_next_status_change being None
+        """
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.use_waning_immunity = 1.0
+            mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.time_steps_per_day = 1
+            test_sweep = pe.sweep.HostProgressionSweep()
+            test_sweep.bind_population(self.test_population1)
+            self.person1.update_status(InfectionStatus.Recovered)
+            self.person1.next_infection_status = InfectionStatus.Susceptible
+            self.person2.update_status(InfectionStatus.InfectMild)
+            self.person2.next_infection_status = InfectionStatus.Recovered
+            current_time = 1.0
+            test_sweep.update_time_status_change(self.person1, current_time)
+            time_of_change = self.person1.time_of_status_change
+            self.person2.time_of_status_change = time_of_change
+            test_sweep(time_of_change)
+            self.assertEqual(self.person1.infection_status,
+                             InfectionStatus.Susceptible)
+            self.assertEqual(self.person1.time_of_status_change, None)
+            self.assertEqual(self.person2.infection_status,
+                             InfectionStatus.Recovered)
+            self.assertEqual(self.person2.time_of_recovery, time_of_change)
+
     @mock.patch(
         'pyEpiabm.sweep.HostProgressionSweep.asympt_uninf_testing_queue')
     def test_asymptomatic_list(self, mock_asympt):
@@ -591,14 +651,21 @@ class TestHostProgressionSweep(TestPyEpiabm):
                                         (self.cell, self.person3)], 1.0)
 
     @mock.patch('pyEpiabm.utility.InverseCdf.icdf_choose_noexp')
-    def test_multiple_transitions_in_one_time_step(self, mock_next_time):
+    @mock.patch('pyEpiabm.Parameters.instance')
+    def test_multiple_transitions_in_one_time_step(self, mock_param,
+                                                   mock_next_time):
         """Reconfigure population and check that a person is able to progress
         infection status multiple times in the same time step. This will be
         checked by setting the time transition time to 0 so Person 1 should
         progress from susceptible through the whole infection timeline ending
-        up as either recovered or dead in one time step.
+        up as either recovered or dead in one time step. This is only the case
+        when we do not have waning immunity.
         """
-
+        mock_param.return_value.use_waning_immunity = 0
+        mock_param.return_value.time_steps_per_day = 1
+        mock_param.return_value.asympt_infect_period = 14
+        mock_param.return_value.latent_to_sympt_delay = 0.5
+        mock_param.return_value.host_progression_lists = self.coefficients
         mock_next_time.return_value = 0.0
         self.person1.time_of_status_change = 1.0
         self.person1.update_status(InfectionStatus.Susceptible)
@@ -651,7 +718,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.person2.date_positive = None
 
         with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
-            mock_param.return_value.\
+            mock_param.return_value. \
                 intervention_params = {'disease_testing':
                                        {'sympt_pcr': [-1, -1, -1],
                                         'testing_sympt': [0.5, 0.5, 0.5]}}
@@ -665,7 +732,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         person_list = [(self.cell, self.person1)]
 
         with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
-            mock_param.return_value.\
+            mock_param.return_value. \
                 intervention_params = {'disease_testing':
                                        {'asympt_uninf_pcr':
                                         [-1, -1, -1],

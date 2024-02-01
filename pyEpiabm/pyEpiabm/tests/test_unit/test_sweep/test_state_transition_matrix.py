@@ -14,6 +14,7 @@ from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 class TestStateTransitionMatrix(TestPyEpiabm):
     """Test the 'StateTransitionMatrix' class.
     """
+
     def setUp(self) -> None:
         self.empty_coefficients = defaultdict(int)
         self.matrix_object = StateTransitionMatrix(self.empty_coefficients)
@@ -67,6 +68,21 @@ class TestStateTransitionMatrix(TestPyEpiabm):
         row_sums = filled_matrix.matrix.sum(axis=1)
         for i in row_sums:
             self.assertAlmostEqual(i, 1)
+
+    def test_create_state_transition_matrix_waning_immunity(self):
+        """Tests that we have a Recovered to Susceptible probability with
+        waning immunity turned on, and that we have not broken summing to 1
+        """
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.use_waning_immunity = 1.0
+            waning_matrix = StateTransitionMatrix(self.real_coefficients)
+            self.assertEqual(waning_matrix.matrix.loc['Recovered',
+                                                      'Susceptible'], 1.0)
+            self.assertEqual(waning_matrix.matrix.loc['Recovered',
+                                                      'Recovered'], 0.0)
+            row_sums = waning_matrix.matrix.sum(axis=1)
+            for i in row_sums:
+                self.assertAlmostEqual(i, 1)
 
     def test_update_probability(self):
         # Test method updates probability as expected
