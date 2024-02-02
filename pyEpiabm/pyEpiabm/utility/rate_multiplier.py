@@ -21,9 +21,9 @@ class RateMultiplier:
         Parameters
         ----------
         p_1 : float
-            Probability Value at t = t_1
+            Rate multiplier at t = t_1
         p_2 : float
-            Probability Value at t = t_2
+            Rate multiplier at t = t_2
         t_1 : float
             First time data point (represents a Person's time since last
             recovery in days, default = 90.0)
