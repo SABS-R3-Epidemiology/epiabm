@@ -11,6 +11,7 @@ Overview:
 - :class:`DistanceFunctions`
 - :class:`InverseCdf`
 - :class:`RandomMethods`
+- :class:`RateMultiplier`
 - :class:`SpatialKernel`
 
 .. autoclass:: DistanceFunctions
@@ -20,6 +21,9 @@ Overview:
     :members:
 
 .. autoclass:: RandomMethods
+    :members:
+
+.. autoclass:: RateMultiplier
     :members:
 
 .. autoclass:: SpatialKernel
