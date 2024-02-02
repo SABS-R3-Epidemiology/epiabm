@@ -76,5 +76,6 @@ class TestRateMultiplier(TestPyEpiabm):
         self.assertAlmostEqual(0.4, multiplier_2(135.0))
         self.assertAlmostEqual(0.92099, multiplier_2(360.0), places=5)
 
+
 if __name__ == "__main__":
     unittest.main()
