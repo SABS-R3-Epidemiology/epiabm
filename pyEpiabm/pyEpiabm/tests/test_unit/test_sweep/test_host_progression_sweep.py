@@ -30,6 +30,14 @@ class TestHostProgressionSweep(TestPyEpiabm):
             "prob_icu_to_icurecov": 0.5,
             "prob_icu_to_death": 0.5
         }
+        self.multipliers = {
+            "gp_to_hosp": [0.25, 0.421052632],
+            "gp_to_death": [0.25, 0.421052632],
+            "exposed_to_infect": [0.75, 0.842105263],
+            "hosp_to_death": [0.9, 1],
+            "hosp_to_icu": [0.9, 1],
+            "icu_to_death": [0.9, 1]
+        }
         self.mock_inf_prog = np.array(
             [0.487464241, 1, 1.229764827, 1.312453175,
              1.307955665, 1.251658756, 1.166040358,
@@ -217,6 +225,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             mock_param.return_value.use_waning_immunity = 1.0
             mock_param.return_value.asympt_infect_period = 14
             mock_param.return_value.time_steps_per_day = 1
+            mock_param.return_value.rate_multiplier_params = self.multipliers
             test_sweep = pe.sweep.HostProgressionSweep()
             self.person1.update_status(InfectionStatus.Recovered)
             test_sweep.update_next_infection_status(self.person1)
@@ -265,6 +274,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             mock_param.return_value.use_waning_immunity = 1.0
             mock_param.return_value.asympt_infect_period = 14
             mock_param.return_value.time_steps_per_day = 1
+            mock_param.return_value.rate_multiplier_params = self.multipliers
             test_sweep = pe.sweep.HostProgressionSweep()
             self.person1.update_status(InfectionStatus.Recovered)
             self.person1.next_infection_status = InfectionStatus.Susceptible
@@ -321,6 +331,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             mock_param.return_value.time_steps_per_day = 1
             mock_param.return_value.asympt_infect_period = 14
             mock_param.return_value.infectiousness_prof = self.mock_inf_prog
+            mock_param.return_value.rate_multiplier_params = self.multipliers
             # Parameters to determine where the tail starts, has to be the same
             # as for the parameters called in HostProgressionSweep.
             infectious_period = pe.Parameters.instance().asympt_infect_period
@@ -350,6 +361,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             # steps per day:
             mock_param.return_value.time_steps_per_day = 100
             mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.rate_multiplier_params = self.multipliers
             mock_param.return_value.infectiousness_prof = self.mock_inf_prog
             infectious_period = pe.Parameters.instance().asympt_infect_period
             model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
@@ -384,6 +396,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
                 mock_param.return_value.asympt_infect_period = 14
                 mock_param.return_value.infectiousness_prof = \
                     self.mock_inf_prog
+                mock_param.return_value.rate_multiplier_params = \
+                    self.multipliers
                 num_infectious_ts = int(np.ceil(pe.Parameters.instance().
                                                 asympt_infect_period
                                                 * pe.Parameters.instance().
@@ -452,6 +466,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             # length:
             mock_param.return_value.asympt_infect_period = 14
             mock_param.return_value.infectiousness_prof = self.mock_inf_prog
+            mock_param.return_value.rate_multiplier_params = self.multipliers
             infectious_period = pe.Parameters.instance().asympt_infect_period
 
             # Generating the list of infectiousness values for when we have 1
@@ -521,6 +536,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         """
         mock_next_time.return_value = 1.0
         mock_param.return_value.host_progression_lists = self.coefficients
+        mock_param.return_value.rate_multiplier_params = self.multipliers
         mock_param.return_value.latent_to_sympt_delay = 1
         mock_param.return_value.time_steps_per_day = 1
         mock_param.return_value.model_time_step = 1
@@ -613,6 +629,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             mock_param.return_value.use_waning_immunity = 1.0
             mock_param.return_value.asympt_infect_period = 14
             mock_param.return_value.time_steps_per_day = 1
+            mock_param.return_value.rate_multiplier_params = self.multipliers
             test_sweep = pe.sweep.HostProgressionSweep()
             test_sweep.bind_population(self.test_population1)
             self.person1.update_status(InfectionStatus.Recovered)
@@ -666,6 +683,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         mock_param.return_value.asympt_infect_period = 14
         mock_param.return_value.latent_to_sympt_delay = 0.5
         mock_param.return_value.host_progression_lists = self.coefficients
+        mock_param.return_value.rate_multiplier_params = self.multipliers
         mock_next_time.return_value = 0.0
         self.person1.time_of_status_change = 1.0
         self.person1.update_status(InfectionStatus.Susceptible)

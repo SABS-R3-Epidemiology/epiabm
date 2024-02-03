@@ -402,6 +402,17 @@
                                     0.47651, 0.47651, 0.47651, 0.47651,
                                     0.47651]
     },
+    "rate_multiplier_params": {
+        "gp_to_hosp": [0.25, 0.421052632],
+        "gp_to_death": [0.25, 0.421052632],
+    
+        "exposed_to_infect": [0.75, 0.842105263],
+    
+        "hosp_to_death": [0.9, 1],
+        "hosp_to_icu": [0.9, 1],
+    
+        "icu_to_death": [0.9, 1]
+    },
     "household_age_params": {
         "mean_child_age_gap": 2,
         "min_adult_age": 19,

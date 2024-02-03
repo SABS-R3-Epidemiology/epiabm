@@ -25,9 +25,11 @@ class HostProgressionSweep(AbstractSweep):
         to a current infection status of a person. The columns of that
         row then indicate the transition probabilities to the remaining
         infection statuses. Number of infection states is set by
-        taking the size of the InfectionStatus enum. Transition time matrix
-        is also initialised and associated parameters are called from the
-        parameters class.
+        taking the size of the InfectionStatus enum. Waning transition matrix
+        is initialised and adapts the state transition matrix with rate
+        multipliers relating to waning immunity which are called from the
+        parameters class. Transition time matrix is also initialised and
+        associated parameters are called from the parameters class.
 
         Infectiousness progression defines an array used to scale a person's
         infectiousness and which depends on time since the start of the
@@ -38,8 +40,12 @@ class HostProgressionSweep(AbstractSweep):
         use_ages = Parameters.instance().use_ages
         coefficients = defaultdict(int, Parameters.instance()
                                    .host_progression_lists)
-        matrix_object = StateTransitionMatrix(coefficients, use_ages)
+        multipliers = defaultdict(list, Parameters.instance()
+                                  .rate_multiplier_params)
+        matrix_object = StateTransitionMatrix(coefficients, multipliers,
+                                              use_ages)
         self.state_transition_matrix = matrix_object.matrix
+        self.waning_transition_matrix = matrix_object.waning_matrix
 
         self.number_of_states = len(InfectionStatus)
         assert self.state_transition_matrix.shape == \

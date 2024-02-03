@@ -17,7 +17,6 @@ class TestStateTransitionMatrix(TestPyEpiabm):
 
     def setUp(self) -> None:
         self.empty_coefficients = defaultdict(int)
-        self.matrix_object = StateTransitionMatrix(self.empty_coefficients)
 
         self.real_coefficients = {
             "prob_exposed_to_asympt": 0.4,
@@ -38,12 +37,26 @@ class TestStateTransitionMatrix(TestPyEpiabm):
                 "prob_exposed_to_mild": [0.2, 0.8],
             }
         )
+        self.rate_multipliers = defaultdict(
+            list, {
+                "exposed_to_infect": [0.2, 0.8],
+                "gp_to_hosp": [0.2, 0.8],
+                "gp_to_death": [0.2, 0.8],
+                "hosp_to_icu": [0.2, 0.8],
+                "hosp_to_death": [0.2, 0.8],
+                "icu_to_death": [0.2, 0.8]
+            }
+        )
         self.age_prop = [0.1, 0.9]
+        self.matrix_object = StateTransitionMatrix(self.empty_coefficients,
+                                                   self.rate_multipliers)
 
     def test_init(self):
         self.assertIsInstance(self.matrix_object.matrix, pd.DataFrame)
+        self.assertIsInstance(self.matrix_object.waning_matrix, pd.DataFrame)
         self.assertFalse(self.matrix_object.age_dependent)
         self.matrix_object_ad = StateTransitionMatrix(self.empty_coefficients,
+                                                      self.rate_multipliers,
                                                       use_ages=True)
         self.assertTrue(self.matrix_object_ad.age_dependent)
 
@@ -64,7 +77,8 @@ class TestStateTransitionMatrix(TestPyEpiabm):
         each row sums to 1 (ie that the transition probabilities for each
         current infection status sum to 1).
         """
-        filled_matrix = StateTransitionMatrix(self.real_coefficients)
+        filled_matrix = StateTransitionMatrix(self.real_coefficients,
+                                              self.rate_multipliers)
         row_sums = filled_matrix.matrix.sum(axis=1)
         for i in row_sums:
             self.assertAlmostEqual(i, 1)
@@ -75,7 +89,8 @@ class TestStateTransitionMatrix(TestPyEpiabm):
         """
         with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
             mock_param.return_value.use_waning_immunity = 1.0
-            waning_matrix = StateTransitionMatrix(self.real_coefficients)
+            waning_matrix = StateTransitionMatrix(self.real_coefficients,
+                                                  self.rate_multipliers)
             self.assertEqual(waning_matrix.matrix.loc['Recovered',
                                                       'Susceptible'], 1.0)
             self.assertEqual(waning_matrix.matrix.loc['Recovered',
@@ -83,6 +98,19 @@ class TestStateTransitionMatrix(TestPyEpiabm):
             row_sums = waning_matrix.matrix.sum(axis=1)
             for i in row_sums:
                 self.assertAlmostEqual(i, 1)
+
+    def test_create_waning_transition_matrix(self):
+        """Tests that all entries are a lambda expression, integer, or float.
+        """
+        filled_matrix = StateTransitionMatrix(self.real_coefficients,
+                                              self.rate_multipliers)
+
+        # Iterating through the matrix to see if either callable or float
+        for row_index in filled_matrix.waning_matrix.index:
+            for col_index in filled_matrix.waning_matrix.columns:
+                element = filled_matrix.waning_matrix.loc[row_index, col_index]
+                self.assertTrue(callable(element) or
+                                isinstance(element, (int, float)))
 
     def test_update_probability(self):
         # Test method updates probability as expected
@@ -119,6 +147,7 @@ class TestStateTransitionMatrix(TestPyEpiabm):
         with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
             mock_param.return_value.age_proportions = self.age_prop
             matrix_object = StateTransitionMatrix(self.list_coefficients,
+                                                  self.rate_multipliers,
                                                   use_ages=True)
             mock_param.assert_not_called
             output = matrix_object.matrix
@@ -130,6 +159,7 @@ class TestStateTransitionMatrix(TestPyEpiabm):
         with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
             mock_param.return_value.age_proportions = self.age_prop
             matrix_object = StateTransitionMatrix(self.list_coefficients,
+                                                  self.rate_multipliers,
                                                   use_ages=False)
             mock_param.assert_called_once
             output = matrix_object.matrix

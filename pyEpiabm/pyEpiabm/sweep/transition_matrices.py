@@ -9,13 +9,14 @@ import typing
 import pyEpiabm as pe
 import pyEpiabm.core
 from pyEpiabm.property import InfectionStatus
-from pyEpiabm.utility import InverseCdf
+from pyEpiabm.utility import InverseCdf, RateMultiplier
 
 
 class StateTransitionMatrix:
     """Class to generate and edit the state transition matrix
     """
     def __init__(self, coefficients: typing.Dict[str, typing.List[float]],
+                 multipliers: typing.Dict[str, typing.List[float]],
                  use_ages=False):
         """Generate age independent transition matrix.
 
@@ -23,10 +24,13 @@ class StateTransitionMatrix:
         ----------
         coefficients : typing.Dict[str, typing.List[float]]
             Dictionary of age-dependent lists for matrix coefficients
+        multipliers : typing.Dict[str, typing.List[float]]
+            Dictionary of rate multipliers
         use_ages : bool
             Whether to include age dependant lists in matrix
         """
         self.matrix = self.create_state_transition_matrix(coefficients)
+        self.waning_matrix = self.create_waning_transition_matrix(multipliers)
         self.age_dependent = use_ages
         if not self.age_dependent:
             self.remove_age_dependence()
@@ -99,6 +103,78 @@ class StateTransitionMatrix:
         matrix.loc['Vaccinated', 'Vaccinated'] = 1
 
         return matrix
+
+    def create_waning_transition_matrix(self, coeff: typing.
+                                        Dict[str, typing.List[float]]):
+        """Fill the waning transition matrix with lambda functions
+        corresponding to a linear combination of state transition probabilities
+        and the probability of protection from this change in state.
+        The rows are associated to the current infection status, the
+        columns to the next infection status, and the elements are the
+        probabilities to go from one state to another. For example, the element
+        ij in the matrix is the probability of someone with current infection
+        status associated with the row i to move to the infection status
+        associated with the column j.
+
+        Parameters
+        ----------
+        coefficients : typing.Dict[str, typing.List[float]]
+            Dictionary of lists for rate multipliers
+
+        Returns
+        -------
+        pd.DataFrame
+            Matrix in the form of a dataframe
+
+        """
+        waning_matrix =\
+            StateTransitionMatrix.create_empty_state_transition_matrix()
+        p = RateMultiplier(coeff["exposed_to_infect"][0],
+                           coeff["exposed_to_infect"][1])
+        q = RateMultiplier(coeff["gp_to_hosp"][0], coeff["gp_to_hosp"][1])
+        r = RateMultiplier(coeff["gp_to_death"][0], coeff["gp_to_death"][1])
+        s = RateMultiplier(coeff["hosp_to_icu"][0], coeff["hosp_to_icu"][1])
+        v = RateMultiplier(coeff["hosp_to_death"][0],
+                           coeff["hosp_to_death"][1])
+        u = RateMultiplier(coeff["icu_to_death"][0], coeff["icu_to_death"][1])
+
+        waning_matrix.loc['Susceptible', 'Exposed'] = 1
+        waning_matrix.loc['Exposed', 'InfectASympt'] =\
+            lambda t: np.array(self.matrix.loc['Exposed', 'InfectASympt']) +\
+            (1-p(t))*np.array(self.matrix.loc['Exposed', 'InfectMild']) +\
+            (1-p(t))*np.array(self.matrix.loc['Exposed', 'InfectGP'])
+        waning_matrix.loc['Exposed', 'InfectMild'] =\
+            lambda t: p(t)*np.array(self.matrix.loc['Exposed', 'InfectMild'])
+        waning_matrix.loc['Exposed', 'InfectGP'] =\
+            lambda t: p(t)*np.array(self.matrix.loc['Exposed', 'InfectGP'])
+        waning_matrix.loc['InfectAsympt', 'Recovered'] = 1
+        waning_matrix.loc['InfectMild', 'Recovered'] = 1
+        waning_matrix.loc['InfectGP', 'InfectHosp'] =\
+            lambda t: q(t)*np.array(self.matrix.loc['InfectGP', 'InfectHosp'])
+        waning_matrix.loc['InfectGP', 'Recovered'] =\
+            lambda t: np.array(self.matrix.loc['InfectGP', 'Recovered']) +\
+            (1-q(t))*np.array(self.matrix.loc['InfectGP', 'InfectHosp']) +\
+            (1-r(t))*np.array(self.matrix.loc['InfectGP', 'Dead'])
+        waning_matrix.loc['InfectGP', 'Dead'] =\
+            lambda t: r(t)*np.array(self.matrix.loc['Exposed', 'InfectGP'])
+        waning_matrix.loc['InfectHosp', 'InfectICU'] =\
+            lambda t: s(t)*np.array(self.matrix.loc['InfectHosp', 'InfectICU'])
+        waning_matrix.loc['InfectHosp', 'Recovered'] =\
+            lambda t: np.array(self.matrix.loc['InfectHosp', 'Recovered']) +\
+            (1-s(t))*np.array(self.matrix.loc['InfectHosp', 'InfectICU']) +\
+            (1-v(t))*np.array(self.matrix.loc['InfectHosp', 'Dead'])
+        waning_matrix.loc['InfectHosp', 'Dead'] =\
+            lambda t: v(t)*np.array(self.matrix.loc['InfectHosp', 'Dead'])
+        waning_matrix.loc['InfectICU', 'InfectICURecov'] =\
+            lambda t: np.array(self.matrix.loc['InfectICU', 'InfectICURecov'])\
+            + (1-u(t))*np.array(self.matrix.loc['InfectICURecov', 'Dead'])
+        waning_matrix.loc['InfectICU', 'Dead'] =\
+            lambda t: u(t)*np.array(self.matrix.loc['InfectICU', 'Dead'])
+        waning_matrix.loc['InfectICURecov', 'Recovered'] = 1
+        waning_matrix.loc['Recovered', 'Susceptible'] = 1
+        waning_matrix.loc['Vaccinated', 'Vaccinated'] = 1
+
+        return waning_matrix
 
     def update_probability(self, current_infection_status_row: InfectionStatus,
                            next_infection_status_column: InfectionStatus,
