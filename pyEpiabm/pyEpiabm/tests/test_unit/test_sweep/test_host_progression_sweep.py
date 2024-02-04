@@ -134,13 +134,13 @@ class TestHostProgressionSweep(TestPyEpiabm):
 
         self.person1.care_home_resident = 1
         self.person1.update_status(InfectionStatus.InfectICU)
-        test_sweep.update_next_infection_status(self.person1)
+        test_sweep.update_next_infection_status(self.person1, 1.0)
         self.assertEqual(self.person1.next_infection_status,
                          InfectionStatus.Dead)
 
         self.person2.care_home_resident = 1
         self.person2.infection_status = InfectionStatus.InfectHosp
-        test_sweep.update_next_infection_status(self.person2)
+        test_sweep.update_next_infection_status(self.person2, 1.0)
         self.assertEqual(self.person2.next_infection_status,
                          InfectionStatus.Dead)
         mock_rand.assert_called_once_with(0, 1)
@@ -158,7 +158,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
 
         test_sweep.state_transition_matrix['Test col'] = ""
         with self.assertRaises(AssertionError):
-            test_sweep.update_next_infection_status(self.people[0])
+            test_sweep.update_next_infection_status(self.people[0], 1.0)
 
         identity_matrix = pd.DataFrame(np.identity(len(InfectionStatus)),
                                        columns=[status.name for
@@ -168,7 +168,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         test_sweep.state_transition_matrix = identity_matrix
         for person in self.people:
             with self.subTest(person=person):
-                test_sweep.update_next_infection_status(person)
+                test_sweep.update_next_infection_status(person, 1.0)
                 if person.infection_status.name in ['Recovered', 'Dead',
                                                     'Vaccinated']:
                     self.assertEqual(person.next_infection_status, None)
@@ -189,7 +189,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         test_sweep.state_transition_matrix = matrix
         for person in self.people:
             with self.subTest(person=person):
-                test_sweep.update_next_infection_status(person)
+                test_sweep.update_next_infection_status(person, 1.0)
                 if person.infection_status.name in ['Recovered', 'Dead',
                                                     'Vaccinated']:
                     self.assertEqual(person.next_infection_status, None)
@@ -208,7 +208,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         test_sweep.state_transition_matrix = random_matrix
         for person in self.people:
             with self.subTest(person=person):
-                test_sweep.update_next_infection_status(person)
+                test_sweep.update_next_infection_status(person, 1.0)
                 if person.infection_status.name in ['Recovered', 'Dead',
                                                     'Vaccinated']:
                     self.assertEqual(person.next_infection_status, None)
@@ -218,8 +218,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
                     self.assertTrue(current_enum_value <= next_enum_value)
 
     def test_update_next_infection_status_waning_immunity(self):
-        """Test that Recovered people return to Susceptible when their status
-        is updated if waning immunity is turned on
+        """Tests that Recovered people return to Susceptible when their status
+        is updated if waning immunity is turned on.
         """
         with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
             mock_param.return_value.use_waning_immunity = 1.0
@@ -228,9 +228,48 @@ class TestHostProgressionSweep(TestPyEpiabm):
             mock_param.return_value.rate_multiplier_params = self.multipliers
             test_sweep = pe.sweep.HostProgressionSweep()
             self.person1.update_status(InfectionStatus.Recovered)
-            test_sweep.update_next_infection_status(self.person1)
+            test_sweep.update_next_infection_status(self.person1, 1.0)
             self.assertEqual(InfectionStatus.Susceptible,
                              self.person1.next_infection_status)
+
+            # Assert that the _get_waning_weights function is called under
+            # the correct conditions
+            with mock.patch('pyEpiabm.sweep.HostProgressionSweep.'
+                            '_get_waning_weights') as mock_func:
+                self.person1.time_of_recovery = 30
+                self.person1.infection_status = InfectionStatus.Exposed
+                mock_func.return_value = [1] + [0]*10
+                test_sweep.update_next_infection_status(self.person1, 1.0)
+                mock_func.assert_called_once_with(self.person1, 1.0)
+
+    def test__get_waning_weights(self):
+        """Tests the _get_waning_weights() function to ensure that the correct
+        weights are returned when waning immunity is turned on.
+        """
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.use_waning_immunity = 1.0
+            mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.time_steps_per_day = 1
+            mock_param.return_value.host_progression_lists = self.coefficients
+            mock_param.return_value.rate_multiplier_params = self.multipliers
+            test_sweep = pe.sweep.HostProgressionSweep()
+            self.person1.infection_status = InfectionStatus.Exposed
+            self.person1.time_of_recovery = 20
+            current_time = 50
+            weights = test_sweep._get_waning_weights(self.person1,
+                                                     current_time)
+            # We are using the RateMultiplier functions with t = 30, so the
+            # expected weights have been calculated below
+            a = self.coefficients["prob_exposed_to_asympt"]
+            b = self.coefficients["prob_exposed_to_mild"]
+            c = self.coefficients["prob_exposed_to_gp"]
+            p_90, p_180 = self.multipliers["exposed_to_infect"]
+            p = pe.utility.RateMultiplier(p_90, p_180)
+            p_30 = p(30)
+            expected_weights = [0, 0, a + (1 - p_30) * b + (1 - p_30) * c,
+                                p_30 * b, p_30 * c, 0, 0, 0, 0, 0, 0]
+            for i in range(len(weights)):
+                self.assertAlmostEqual(expected_weights[i], weights[i])
 
     def test_update_time_status_change_no_age(self, current_time=100.0):
         """Tests that people who have their time to status change set correctly
@@ -247,12 +286,13 @@ class TestHostProgressionSweep(TestPyEpiabm):
             with self.subTest(person=person):
                 if person.infection_status == InfectionStatus.Susceptible:
                     with self.assertRaises(ValueError):
-                        test_sweep.update_next_infection_status(person)
+                        test_sweep.update_next_infection_status(person,
+                                                                current_time)
                         test_sweep.update_time_status_change(person,
                                                              current_time)
                     continue  # Method should not be used to infect people
 
-                test_sweep.update_next_infection_status(person)
+                test_sweep.update_next_infection_status(person, current_time)
                 test_sweep.update_time_status_change(person, current_time)
                 time_of_status_change = person.time_of_status_change
                 if person.infection_status.name in ['Recovered', 'Dead',
@@ -288,7 +328,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         """
         test_sweep = pe.sweep.HostProgressionSweep()
         person = self.people[1]
-        test_sweep.update_next_infection_status(person)
+        test_sweep.update_next_infection_status(person, 1.0)
 
         test_sweep.transition_time_matrix = \
             pe.sweep.TransitionTimeMatrix().matrix
@@ -301,7 +341,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         """
         test_sweep = pe.sweep.HostProgressionSweep()
         person = self.people[1]
-        test_sweep.update_next_infection_status(person)
+        test_sweep.update_next_infection_status(person, 1.0)
         row_index = person.infection_status.name
         column_index = person.next_infection_status.name
 

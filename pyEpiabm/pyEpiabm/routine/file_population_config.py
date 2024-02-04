@@ -120,7 +120,7 @@ class FilePopulationFactory:
                         if (person.infection_status
                                 == InfectionStatus.Susceptible):
                             continue  # Next status set upon infection
-                        host_sweep.update_next_infection_status(person)
+                        host_sweep.update_next_infection_status(person, time)
                         host_sweep.update_time_status_change(person, time)
                         if str(person.infection_status).startswith('Infect'):
                             HostProgressionSweep.set_infectiousness(person,

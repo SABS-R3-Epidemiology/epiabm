@@ -147,7 +147,7 @@ class StateTransitionMatrix:
             lambda t: p(t)*np.array(self.matrix.loc['Exposed', 'InfectMild'])
         waning_matrix.loc['Exposed', 'InfectGP'] =\
             lambda t: p(t)*np.array(self.matrix.loc['Exposed', 'InfectGP'])
-        waning_matrix.loc['InfectAsympt', 'Recovered'] = 1
+        waning_matrix.loc['InfectASympt', 'Recovered'] = 1
         waning_matrix.loc['InfectMild', 'Recovered'] = 1
         waning_matrix.loc['InfectGP', 'InfectHosp'] =\
             lambda t: q(t)*np.array(self.matrix.loc['InfectGP', 'InfectHosp'])
