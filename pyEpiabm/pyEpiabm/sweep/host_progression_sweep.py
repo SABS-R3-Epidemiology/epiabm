@@ -183,7 +183,7 @@ class HostProgressionSweep(AbstractSweep):
         # from the state_transition_matrix. Otherwise, we use the
         # waning_transition_matrix.
         if (not Parameters.instance().use_waning_immunity or
-            not person.time_of_recovery):
+                not person.time_of_recovery):
             weights = self.state_transition_matrix.loc[row_index].to_numpy()
             weights = [w[person.age_group] if isinstance(w, list) else w
                        for w in weights]

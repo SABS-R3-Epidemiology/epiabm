@@ -64,7 +64,8 @@ class RateMultiplier:
         if self.p_1 == 1.0 or self.p_2 == 1.0:
             return 0.0, 0.0
 
-        a = - math.log((1.0 - self.p_1) / (1.0 - self.p_2)) / (self.t_1 - self.t_2)
+        a = - math.log((1.0 - self.p_1) / (1.0 - self.p_2)) / (self.t_1 -
+                                                               self.t_2)
         b = (1.0 - self.p_1) * math.exp(a * self.t_1)
         return a, b
 
