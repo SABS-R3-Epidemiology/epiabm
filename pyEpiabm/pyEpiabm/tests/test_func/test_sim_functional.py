@@ -36,14 +36,6 @@ class TestSimFunctional(TestFunctional):
 
         self.read_params = {"filepath_or_buffer": 'test_input.csv',
                             "dtype": {"cell": int, "microcell": int}}
-        self.multipliers = {
-            "gp_to_hosp": [0.25, 0.421052632],
-            "gp_to_death": [0.25, 0.421052632],
-            "exposed_to_infect": [0.75, 0.842105263],
-            "hosp_to_death": [0.9, 1],
-            "hosp_to_icu": [0.9, 1],
-            "icu_to_death": [0.9, 1]
-        }
 
     @staticmethod
     def toy_simulation(pop_params, sim_params, file_params):
@@ -166,29 +158,25 @@ class TestSimFunctional(TestFunctional):
         """Basic functional test to ensure everyone is not recovered at the
         end of the simulation.
         """
-        with patch('pyEpiabm.Parameters.instance') as mock_param:
-            mock_param.return_value.use_waning_immunity = 1.0
-            mock_param.return_value.asympt_infect_period = 14
-            mock_param.return_value.time_steps_per_day = 1
-            self.sim_params["initial_infected_number"] = 5
-            self.sim_params["include_waning"] = True
-            mock_param.return_value.rate_multiplier_params = self.multipliers
+        self.sim_params["initial_infected_number"] = 5
+        self.sim_params["include_waning"] = True
+        pe.Parameters.instance().use_waning_immunity = 1.0
 
-            pop = TestSimFunctional.toy_simulation(self.pop_params,
-                                                   self.sim_params,
-                                                   self.file_params)
+        pop = TestSimFunctional.toy_simulation(self.pop_params,
+                                               self.sim_params,
+                                               self.file_params)
 
-            # Test not all individuals have entered Recovered or Dead at end
-            recov_dead_state_count = 0
+        # Test not all individuals have entered Recovered or Dead at end
+        recov_dead_state_count = 0
 
-            for cell in pop.cells:
-                cell_data = cell.compartment_counter.retrieve()
-                for status in [InfectionStatus.Recovered,
-                               InfectionStatus.Dead]:
-                    recov_dead_state_count += cell_data[status]
+        for cell in pop.cells:
+            cell_data = cell.compartment_counter.retrieve()
+            for status in [InfectionStatus.Recovered,
+                           InfectionStatus.Dead]:
+                recov_dead_state_count += cell_data[status]
 
-            self.assertNotEqual(np.sum(recov_dead_state_count),
-                                self.pop_params["population_size"])
+        self.assertNotEqual(np.sum(recov_dead_state_count),
+                            self.pop_params["population_size"])
 
     def test_no_infection(self, *mocks):
         """Basic functional test to ensure noone is infected when there are
@@ -301,42 +289,40 @@ class TestSimFunctional(TestFunctional):
         """Basic functional test to ensure different number of people enter
         status categories given waning immunity.
         """
-        with patch('pyEpiabm.Parameters.instance') as mock_param:
-            # Record the number of individuals within the compartment ... when
-            # waning immunity is active
-            mock_param.return_value.use_waning_immunity = 1.0
-            mock_param.return_value.asympt_infect_period = 14
-            mock_param.return_value.time_steps_per_day = 1
-            self.sim_params["initial_infected_number"] = 5
-            self.sim_params["include_waning"] = True
-            mock_param.return_value.rate_multiplier_params = self.multipliers
+        # Record the number of individuals within the compartment Infect.Asympt
+        # when waning immunity is active
+        self.sim_params["initial_infected_number"] = 5
+        self.sim_params["include_waning"] = True
+        pe.Parameters.instance().use_waning_immunity = 1.0
 
-            pop = TestSimFunctional.toy_simulation(self.pop_params,
-                                                   self.sim_params,
-                                                   self.file_params)
+        pop = TestSimFunctional.toy_simulation(self.pop_params,
+                                               self.sim_params,
+                                               self.file_params)
 
-            count_with_waning = 0
-            for cell in pop.cells:
-                cell_data = cell.compartment_counter.retrieve()
-                for status in [InfectionStatus.InfectASympt]:
-                    count_with_waning += cell_data[status]
+        count_with_waning = 0
+        for cell in pop.cells:
+            cell_data = cell.compartment_counter.retrieve()
+            for status in [InfectionStatus.InfectASympt]:
+                count_with_waning += cell_data[status]
 
 
-            # Record the number of individuals within the compartment ... when
-            # waning immunity is not active
-            mock_param.return_value.use_waning_immunity = 0
-            self.sim_params["include_waning"] = False
+        # Record the number of individuals within the compartment InfectAsympt
+        # when waning immunity is not active
+        pe.Parameters.instance().use_waning_immunity = 0.0
+        self.sim_params["include_waning"] = False
+        pop_2 = TestSimFunctional.toy_simulation(self.pop_params,
+                                               self.sim_params,
+                                               self.file_params)
+        count_without_waning = 0
 
-            count_without_waning = 0
+        for cell in pop_2.cells:
+            cell_data = cell.compartment_counter.retrieve()
+            for status in [InfectionStatus.InfectASympt]:
+                count_without_waning += cell_data[status]
 
-            for cell in pop.cells:
-                cell_data = cell.compartment_counter.retrieve()
-                for status in [InfectionStatus.InfectASympt]:
-                    count_without_waning += cell_data[status]
-
-            # Compare the two values to ensure that when the rate multipliers
-            # are applied, the number of individuals ...
-            self.assertGreater(np.sum(count_with_waning), np.sum(count_without_waning))
+        # Compare the two values to ensure that when the rate multipliers
+        # are applied, the number of individuals ...
+        self.assertGreater(np.sum(count_with_waning), np.sum(count_without_waning))
 
 
 if __name__ == '__main__':
