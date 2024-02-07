@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 import unittest
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import patch, mock_open
 
 import pyEpiabm as pe
 from pyEpiabm.property.infection_status import InfectionStatus
@@ -311,8 +311,8 @@ class TestSimFunctional(TestFunctional):
         pe.Parameters.instance().use_waning_immunity = 0.0
         self.sim_params["include_waning"] = False
         pop_2 = TestSimFunctional.toy_simulation(self.pop_params,
-                                               self.sim_params,
-                                               self.file_params)
+                                                 self.sim_params,
+                                                 self.file_params)
         count_without_waning = 0
 
         for cell in pop_2.cells:
@@ -321,8 +321,9 @@ class TestSimFunctional(TestFunctional):
                 count_without_waning += cell_data[status]
 
         # Compare the two values to ensure that when the rate multipliers
-        # are applied, the number of individuals ...
-        self.assertGreater(np.sum(count_with_waning), np.sum(count_without_waning))
+        # are applied, the number of individuals increases
+        self.assertGreater(np.sum(count_with_waning),
+                           np.sum(count_without_waning))
 
 
 if __name__ == '__main__':
