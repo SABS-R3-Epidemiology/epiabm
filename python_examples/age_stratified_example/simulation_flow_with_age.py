@@ -88,6 +88,7 @@ df_sum_age.plot(y=["InfectionStatus.Susceptible",
                    "InfectionStatus.Recovered"])
 plt.savefig(os.path.join(os.path.dirname(__file__),
             "simulation_outputs/simulation_flow_SIR_plot.png"))
+# Default file format is .png, but can be changed to .pdf, .svg, etc.
 
 # Creation of a plot of results with age stratification
 p = Plotter(os.path.join(os.path.dirname(__file__),

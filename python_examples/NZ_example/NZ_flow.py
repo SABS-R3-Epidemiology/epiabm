@@ -94,6 +94,7 @@ SIRdf.plot(y=["Infected", "Recovered"])
 plt.savefig(os.path.join(os.path.dirname(__file__),
             "simulation_outputs/SIR.png"))
 plt.close()
+# Default file format is .png, but can be changed to .pdf, .svg, etc.
 
 # Create plot to show new cases and new deaths against time
 newdf = pd.DataFrame()

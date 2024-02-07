@@ -51,5 +51,5 @@ plt.legend()
 
 plt.savefig(os.path.join(os.path.dirname(__file__),
             "sim_speeds_plots/", "basic_sim_speed_from_file.png"))
-
+# Default file format is .png, but can be changed to .pdf, .svg, etc.
 plt.show()
