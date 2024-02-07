@@ -167,7 +167,7 @@ class StateTransitionMatrix:
             lambda t: v(t)*np.array(self.matrix.loc['InfectHosp', 'Dead'])
         waning_matrix.loc['InfectICU', 'InfectICURecov'] =\
             lambda t: np.array(self.matrix.loc['InfectICU', 'InfectICURecov'])\
-            + (1-u(t))*np.array(self.matrix.loc['InfectICURecov', 'Dead'])
+            + (1-u(t))*np.array(self.matrix.loc['InfectICU', 'Dead'])
         waning_matrix.loc['InfectICU', 'Dead'] =\
             lambda t: u(t)*np.array(self.matrix.loc['InfectICU', 'Dead'])
         waning_matrix.loc['InfectICURecov', 'Recovered'] = 1
