@@ -32,6 +32,11 @@ can be used on ubuntu systems:
 
    sudo apt-get install cmake cmake-data
 
+We recommend the use of the G++ compiler (version 9 or higher) with
+cEpiabm. If other compilers are used, users should ensure they include 
+the filesystem library, or include this explicitly by inserting 
+`link_libraries(stdc++fs)` in [CMakeLists.txt](cEpiabm\CMakeLists.txt).
+
 Compiling cEpiabm Python Bindings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

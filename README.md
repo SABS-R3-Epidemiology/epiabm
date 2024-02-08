@@ -130,6 +130,8 @@ Note that cmake must be installed on your system. The following command can be u
 sudo apt-get install cmake cmake-data
 ```
 
+We recommend the use of the G++ compiler (version 9 or higher) with cEpiabm. If other compilers are used, users should ensure they include the filesystem library, or include this explicitly by inserting `link_libraries(stdc++fs)` in [CMakeLists.txt](cEpiabm\CMakeLists.txt).
+
 ### Compiling cEpiabm Python Bindings
 
 Pybind11 is required for compiling cEpiabm with Python bindings. Pybind11 is added as a git submodule, make sure this submodule is cloned along with the main epiabm repository.
