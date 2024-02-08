@@ -73,7 +73,6 @@ setup(
         'docs': [
             # Sphinx for doc generation. Version 1.7.3 has a bug:
             'sphinx<7,>=1.5, !=1.7.3',
-            'myst_parser',
 
             # Nice theme for docs
             'alabaster',
