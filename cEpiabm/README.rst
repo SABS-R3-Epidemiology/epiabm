@@ -35,7 +35,7 @@ can be used on ubuntu systems:
 We recommend the use of the G++ compiler (version 9 or higher) with
 cEpiabm. If other compilers are used, users should ensure they include 
 the filesystem library, or include this explicitly by inserting 
-``link_libraries(stdc++fs)`` in the ``CMakeLists.txt`` file.
+``link_libraries(stdc++fs)`` in the ``cEpiabm/CMakeLists.txt`` file.
 
 Compiling cEpiabm Python Bindings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
