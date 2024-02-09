@@ -5,9 +5,11 @@
 # Required
 version: 2
 
-# Set the required OS
+# Set the required OS and Python version
 build:
   os: ubuntu-22.04
+  tools:
+    python: "3.10"
 
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
