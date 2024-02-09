@@ -25,9 +25,9 @@ def get_version():
 
 def get_readme():
     """
-    Load README.md text for use as description.
+    Load README.rst text for use as description.
     """
-    with open('README.md') as f:
+    with open('README.rst') as f:
         return f.read()
 
 
