@@ -9,6 +9,7 @@ Utility provides various methods that don't act on a population directly.
 Overview:
 
 - :class:`DistanceFunctions`
+- :class:`IgGFOIMultiplier`
 - :class:`InverseCdf`
 - :class:`RandomMethods`
 - :class:`RateMultiplier`
@@ -16,6 +17,10 @@ Overview:
 
 .. autoclass:: DistanceFunctions
     :members:
+
+.. autoclass:: IgGFOIMultiplier
+    :members:
+    :special-members: __call__
 
 .. autoclass:: InverseCdf
     :members:
@@ -25,6 +30,7 @@ Overview:
 
 .. autoclass:: RateMultiplier
     :members:
+    :special-members: __call__
 
 .. autoclass:: SpatialKernel
     :members:

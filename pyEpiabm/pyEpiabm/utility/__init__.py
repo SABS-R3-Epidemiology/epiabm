@@ -13,3 +13,4 @@ from .random_methods import RandomMethods
 from .inverse_cdf import InverseCdf
 from .exception_logger import log_exceptions
 from .rate_multiplier import RateMultiplier
+from .igg_foi_multiplier import IgGFOIMultiplier
