@@ -1,8 +1,10 @@
 #
 # Calculate infectiousness and susceptibility for an individual
 #
+from collections import defaultdict
 
 from pyEpiabm.core import Parameters
+from pyEpiabm.utility import IgGFOIMultiplier
 
 
 class PersonalInfection:
@@ -55,8 +57,20 @@ class PersonalInfection:
         Returns
         -------
         float
-            Susceptibility parameter of household
+            Susceptibility parameter of person
 
         """
-
-        return 1.0
+        # If we are using waning immunity then we use a multiplier from
+        # igg_foi_multiplier. Otherwise, we set the susceptibility to 1.0.
+        if Parameters.instance().use_waning_immunity:
+            params = defaultdict(list,
+                                 Parameters.instance().antibody_level_params)
+            m = IgGFOIMultiplier(params['igg_peak'], params['igg_half_life'],
+                                 params['peak_increase_per_10_years_of_age'],
+                                 params[
+                                     'half_life_increase_per_10_years_of_age'],
+                                 params['days_positive_pcr_to_max_igg'])
+            time_since_infection = time - infectee.infection_start_time
+            return 1.0 * m(time_since_infection, infectee.age_group)
+        else:
+            return 1.0
