@@ -63,7 +63,7 @@ class PersonalInfection:
         # If we are using waning immunity then we use a multiplier from
         # igg_foi_multiplier. Otherwise, we set the susceptibility to 1.0.
         if Parameters.instance().use_waning_immunity:
-            params = defaultdict(list,
+            params = defaultdict(str,
                                  Parameters.instance().antibody_level_params)
             m = IgGFOIMultiplier(params['igg_peak'], params['igg_half_life'],
                                  params['peak_increase_per_10_years_of_age'],
