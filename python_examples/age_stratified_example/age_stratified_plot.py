@@ -106,10 +106,12 @@ class Plotter():
         self.number_of_states = len(InfectionStatus)
         coefficients = defaultdict(int, Parameters.instance()
                                    .host_progression_lists)
+        multipliers = defaultdict(list, Parameters.instance()
+                                  .rate_multiplier_params)
 
         # Use False for self.do_age to automatically average over ages in
         # state matrix
-        matrix_object = StateTransitionMatrix(coefficients, False)
+        matrix_object = StateTransitionMatrix(coefficients, multipliers, False)
         # state matrix has list entries, or 1, or 0
         state_transition_matrix = matrix_object.matrix
 
