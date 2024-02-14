@@ -85,12 +85,6 @@ class IgGFOIMultiplier:
         float
             An IgG multiplier for the force of infection
         """
-        # Parameter checks
-        if time_since_infection < 0:
-            raise ValueError("time_since_infection must be non-negative")
-        if not 0 <= age_group <= 16:
-            raise ValueError("age_group must be between 0 and 16")
-
         # If time_since_infection < days_positive_pcr_to_max_igg, then the
         # person cannot be reinfected yet, so set their multiplier to 0.
         if time_since_infection < self.days_positive_pcr_to_max_igg:

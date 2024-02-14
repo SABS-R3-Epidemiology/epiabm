@@ -58,17 +58,6 @@ class TestIgGFOIMultiplier(TestPyEpiabm):
         titre = self.multiplier._calculate_igg_titre(time_since_max, age_group)
         self.assertAlmostEqual(3.312, titre, places=3)
 
-    def test___call___erroneous(self):
-        multiplier = IgGFOIMultiplier(1.0, 2.0, 0.1, 0.2, 3)
-        with self.assertRaises(ValueError) as ve_1:
-            multiplier(-1.0, 5)
-        self.assertEqual("time_since_infection must be non-negative",
-                         str(ve_1.exception))
-        with self.assertRaises(ValueError) as ve_2:
-            multiplier(1.0, 17)
-        self.assertEqual("age_group must be between 0 and 16",
-                         str(ve_2.exception))
-
     def test___call___before_max_igg(self):
         p = self.multiplier(20.0, 6)
         self.assertEqual(0, p)
