@@ -65,12 +65,15 @@ class PersonalInfection:
         if Parameters.instance().use_waning_immunity:
             params = defaultdict(int,
                                  Parameters.instance().antibody_level_params)
-            m = IgGFOIMultiplier(params['igg_peak'], params['igg_half_life'],
-                                 params['peak_increase_per_10_years_of_age'],
-                                 params[
-                                     'half_life_increase_per_10_years_of_age'],
-                                 params['days_positive_pcr_to_max_igg'])
+            if not hasattr(PersonalInfection, 'm'):
+                PersonalInfection.m =\
+                    IgGFOIMultiplier(params['igg_peak_at_age_41'],
+                                     params['igg_half_life_at_age_41'],
+                                     params['peak_change_per_10_yrs_age'],
+                                     params['half_life_change_per_10_yrs_age'],
+                                     params['days_positive_pcr_to_max_igg'])
             time_since_infection = time - infectee.infection_start_time
-            return 1.0 * m(time_since_infection, infectee.age_group)
+            return 1.0 * PersonalInfection.m(time_since_infection,
+                                             infectee.age_group)
         else:
             return 1.0
