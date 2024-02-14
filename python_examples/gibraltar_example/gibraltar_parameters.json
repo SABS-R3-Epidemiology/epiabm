@@ -421,6 +421,13 @@
     
         "icu_to_death": [0.9, 1]
     },
+    "antibody_level_params": {
+        "igg_peak_at_age_41": 4.26,
+        "igg_half_life_at_age_41": 85.38,
+        "peak_change_per_10_yrs_age": 0.21,
+        "half_life_change_per_10_yrs_age": 4.07,
+        "days_positive_pcr_to_max_igg": 24
+    },
     "max_household_size": 10,
     "household_age_params": {
         "mean_child_age_gap": 2,
