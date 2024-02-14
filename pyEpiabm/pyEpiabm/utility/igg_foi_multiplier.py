@@ -38,16 +38,34 @@ class IgGFOIMultiplier:
         self.change_in_half_life_10 = change_in_half_life_10
         self.days_positive_pcr_to_max_igg = days_positive_pcr_to_max_igg
         # Parameter checks
-        # We need max_41, half_life_41 and days_positive_pcr_to_max_igg
-        # to be positive
         if max_41 <= 0:
-            raise ValueError("c must be positive")
+            raise ValueError("max_41 must be positive")
         if half_life_41 <= 0:
-            raise ValueError("a must be positive")
+            raise ValueError("half_life_41 must be positive")
+        if days_positive_pcr_to_max_igg <= 0:
+            raise ValueError("days_positive_pcr_to_max_igg must be positive")
+
+        # We also need to ensure that the maximal IgG and half life will never
+        # go negative when taking the changes into account. Multiplying by 4
+        # corresponds to a change in 40 years of age from 41.
+        maximal_change_in_max_igg = change_in_max_10 * 4
+        maximal_change_in_half_life = change_in_half_life_10 * 4
+        if abs(maximal_change_in_max_igg) > max_41:
+            raise ValueError(f"change_in_max_10 is too large in magnitude "
+                             f"(4 * {abs(change_in_max_10)} > {max_41})")
+        if abs(maximal_change_in_half_life) > half_life_41:
+            raise ValueError(f"change_in_half_life_10 is too large is too "
+                             f"large in magnitude (4 * "
+                             f"{abs(change_in_half_life_10)} > {half_life_41})"
+                             )
+
+        # This is the normalisation constant used later, defined as the maximal
+        # IgG value (at time_since_max = 0) for the maximal age_group
+        self.normalisation = self._calculate_igg_titre(0, 16)
 
     def __call__(self, time_since_infection: float, age_group: int) -> float:
         """Calculates the multiplier to be used in the force of infection.
-        Takes the form 1 - A * 2^(bt) where A and b are factors dependent on
+        Takes the form 1 - A * 2^(-bt) where A and b are factors dependent on
         `age_group`. If we are not using ages, then we use values for age = 41.
 
         This will be a decaying exponential from the time of peak IgG titre,
@@ -67,6 +85,12 @@ class IgGFOIMultiplier:
         float
             An IgG multiplier for the force of infection
         """
+        # Parameter checks
+        if time_since_infection < 0:
+            raise ValueError("time_since_infection must be non-negative")
+        if not 0 <= age_group <= 16:
+            raise ValueError("age_group must be between 0 and 16")
+
         # If time_since_infection < days_positive_pcr_to_max_igg, then the
         # person cannot be reinfected yet, so set their multiplier to 0.
         if time_since_infection < self.days_positive_pcr_to_max_igg:
@@ -84,10 +108,7 @@ class IgGFOIMultiplier:
         else:
             igg_titre = self._calculate_igg_titre(time_since_max, age_group)
 
-            # Normalise so that igg_titre = 1 corresponds to maximal age group
-            # and time_since_max = 0
-            normalisation = self._calculate_igg_titre(0, 16)
-            igg_titre /= normalisation
+            igg_titre /= self.normalisation
 
         return 1 - igg_titre
 
