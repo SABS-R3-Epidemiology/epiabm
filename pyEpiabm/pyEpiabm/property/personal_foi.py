@@ -62,7 +62,8 @@ class PersonalInfection:
         """
         # If we are using waning immunity then we use a multiplier from
         # igg_foi_multiplier. Otherwise, we set the susceptibility to 1.0.
-        if Parameters.instance().use_waning_immunity:
+        if Parameters.instance().use_waning_immunity and not\
+                (infectee.infection_start_time is None):
             params = defaultdict(int,
                                  Parameters.instance().antibody_level_params)
             if not hasattr(PersonalInfection, 'm'):
