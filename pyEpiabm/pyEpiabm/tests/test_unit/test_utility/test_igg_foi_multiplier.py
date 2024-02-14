@@ -74,5 +74,6 @@ class TestIgGFOIMultiplier(TestPyEpiabm):
         q = self.multiplier(26.0, 15)
         self.assertAlmostEqual(0.03412, q, places=5)
 
+
 if __name__ == "__main__":
     unittest.main()

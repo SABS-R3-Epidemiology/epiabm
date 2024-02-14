@@ -107,7 +107,7 @@ class IgGFOIMultiplier:
         return 1 - igg_titre
 
     def _calculate_igg_titre(self, time_since_max: float,
-                            age_group: int) -> float:
+                             age_group: int) -> float:
         """The general expression for the titre is A * 2^(-t/c) where A is the
         max titre and c is the half-life. Both these values vary with age, and
         so given the values at age = 41 and the changes per 10 years of age,

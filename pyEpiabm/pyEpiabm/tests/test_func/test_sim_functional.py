@@ -305,7 +305,6 @@ class TestSimFunctional(TestFunctional):
             for status in [InfectionStatus.InfectASympt]:
                 count_with_waning += cell_data[status]
 
-
         # Record the number of individuals within the compartment InfectAsympt
         # when waning immunity is not active
         pe.Parameters.instance().use_waning_immunity = 0.0
