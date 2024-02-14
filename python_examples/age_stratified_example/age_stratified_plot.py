@@ -163,11 +163,11 @@ class Plotter():
                  param_file=None):
         """Function which creates a bar chart from csv data, with
         capability to stratify by age if required. Plot is automatically
-        saved to a png file.
+        saved to a file of the specified format.
         Parameters
         ----------
         outfile : str
-            Path to the .png file where the bar chart will be saved
+            Path to the file where the bar chart will be saved
         infection_category : str
             Category to be plotted, defaults to Total Infectious
         write_Df_toFile : str
@@ -242,9 +242,13 @@ class Plotter():
 
 if __name__ == '__main__':
     dirname = os.path.dirname(os.path.abspath(__file__))
+    savename = os.path.join("simulation_outputs", "age_stratify.png")
+    # Default file format is .png, but can be changed to .pdf, .svg, etc.
+
     p = Plotter(os.path.join(os.path.dirname(__file__),
                 "simulation_outputs/output_with_age.csv"),
                 start_date='01-01-2020', sum_weekly=False)
+
     p.barchart(os.path.join(os.path.dirname(__file__),
                "simulation_outputs/age_stratify.png"),
                write_Df_toFile=os.path.join(os.path.dirname(__file__),

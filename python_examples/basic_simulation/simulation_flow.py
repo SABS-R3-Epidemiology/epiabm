@@ -72,3 +72,4 @@ plt.savefig(
                          "simulation_outputs",
                          "simulation_flow_SIR_plot.png")
 )
+# Default file format is .png, but can be changed to .pdf, .svg, etc.

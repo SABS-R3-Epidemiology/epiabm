@@ -126,3 +126,4 @@ plt.savefig(
                  "intervention_outputs",
                  "vaccination_Icurve_plot.png")
 )
+# Default file format is .png, but can be changed to .pdf, .svg, etc.

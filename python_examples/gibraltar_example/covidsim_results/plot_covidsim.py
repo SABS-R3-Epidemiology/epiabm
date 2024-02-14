@@ -74,3 +74,4 @@ p.barchart(os.path.join(os.path.dirname(__file__),
            "covidsim_daily_cases.csv"),
            param_file=os.path.join(os.path.dirname(__file__),
            os.path.pardir, "./gibraltar_parameters.json"))
+# Default file format is .png, but can be changed to .pdf, .svg, etc.

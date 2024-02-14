@@ -131,3 +131,4 @@ plt.savefig(
                  "intervention_outputs",
                  "travel_isolation_Icurve_plot.png")
 )
+# Default file format is .png, but can be changed to .pdf, .svg, etc.
