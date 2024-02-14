@@ -53,8 +53,10 @@ while age < 62:
     igg_plot = f(t, A, b)
 
     # plot standard graph and log-2 graph
-    axes[0].plot(t, igg_plot, color=plot_colour, label=f'Age={age}')
-    axes[1].plot(t, igg_plot, color=plot_colour, label=f'Age={age}')
+    axes[0].plot(t, igg_plot, color=plot_colour, label=f'Age={age-1}')
+    ##axes[0].fill_between(t, f(t, A+0.185, b+4.4), f(t,A-0.185,b-4.4), color=plot_colour, alpha=0.3, label='Error Bounds')
+
+    axes[1].plot(t, igg_plot, color=plot_colour, label=f'Age={age-1}')
     axes[1].set_yscale('log', base=2)
 
     # increment age
