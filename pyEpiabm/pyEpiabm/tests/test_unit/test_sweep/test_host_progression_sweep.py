@@ -30,6 +30,18 @@ class TestHostProgressionSweep(TestPyEpiabm):
             "prob_icu_to_icurecov": 0.5,
             "prob_icu_to_death": 0.5
         }
+        self.age_coefficients = {
+            "prob_exposed_to_asympt": [0.4]*17,
+            "prob_exposed_to_mild": [0.4]*17,
+            "prob_exposed_to_gp": [0.2]*17,
+            "prob_gp_to_recov": [0.9]*17,
+            "prob_gp_to_hosp": [0.1]*17,
+            "prob_hosp_to_recov": [0.6]*17,
+            "prob_hosp_to_icu": [0.2]*17,
+            "prob_hosp_to_death": [0.2]*17,
+            "prob_icu_to_icurecov": [0.5]*17,
+            "prob_icu_to_death": [0.5]*17
+        }
         self.multipliers = {
             "gp_to_hosp": [0.25, 0.421052632],
             "gp_to_death": [0.25, 0.421052632],
@@ -242,7 +254,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
                 test_sweep.update_next_infection_status(self.person1, 1.0)
                 mock_func.assert_called_once_with(self.person1, 1.0)
 
-    def test__get_waning_weights(self):
+    def test__get_waning_weights_no_age(self):
         """Tests the _get_waning_weights() function to ensure that the correct
         weights are returned when waning immunity is turned on.
         """
@@ -263,6 +275,39 @@ class TestHostProgressionSweep(TestPyEpiabm):
             a = self.coefficients["prob_exposed_to_asympt"]
             b = self.coefficients["prob_exposed_to_mild"]
             c = self.coefficients["prob_exposed_to_gp"]
+            p_90, p_180 = self.multipliers["exposed_to_infect"]
+            p = pe.utility.RateMultiplier(p_90, p_180)
+            p_30 = p(30)
+            expected_weights = [0, 0, a + (1 - p_30) * b + (1 - p_30) * c,
+                                p_30 * b, p_30 * c, 0, 0, 0, 0, 0, 0]
+            for i in range(len(weights)):
+                self.assertAlmostEqual(expected_weights[i], weights[i])
+
+    def test__get_waning_weights(self):
+        """Tests the _get_waning_weights() function with ages
+        """
+        with (mock.patch('pyEpiabm.Parameters.instance') as mock_param):
+            mock_param.return_value.use_ages = 1.0
+            mock_param.return_value.use_waning_immunity = 1.0
+            mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.time_steps_per_day = 1
+            mock_param.return_value.host_progression_lists = \
+                self.age_coefficients
+            mock_param.return_value.rate_multiplier_params = self.multipliers
+            test_sweep = pe.sweep.HostProgressionSweep()
+            self.person1.infection_status = InfectionStatus.Exposed
+            self.person1.time_of_recovery = 20
+            current_time = 50
+            weights = test_sweep._get_waning_weights(self.person1,
+                                                     current_time)
+            # We are using the RateMultiplier functions with t = 30, so the
+            # expected weights have been calculated below
+            a = self.age_coefficients["prob_exposed_to_asympt"][self.person1.
+                                                                age_group]
+            b = self.age_coefficients["prob_exposed_to_mild"][self.person1.
+                                                              age_group]
+            c = self.age_coefficients["prob_exposed_to_gp"][self.person1.
+                                                            age_group]
             p_90, p_180 = self.multipliers["exposed_to_infect"]
             p = pe.utility.RateMultiplier(p_90, p_180)
             p_30 = p(30)
