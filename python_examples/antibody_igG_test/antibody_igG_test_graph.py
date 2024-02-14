@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-fig, axes = plt.subplots(1, 2, figsize=(10, 4))
 
 def f(t, A, b):
     """Function modelling IgG antibody levels
@@ -16,6 +15,9 @@ def f(t, A, b):
     """
 
     return A * 2 ** (-b * t)
+
+# create figure
+fig, axes = plt.subplots(1, 2, figsize=(10, 4))
 
 # Values from Lumley et al. paper for ages 41
 intercept_41 = 4.26
