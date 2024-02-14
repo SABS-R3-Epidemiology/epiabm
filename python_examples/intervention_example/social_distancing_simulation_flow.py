@@ -124,3 +124,4 @@ plt.savefig(
                     to_modify_parameter))
 )
 plt.clf()
+# Default file format is .png, but can be changed to .pdf, .svg, etc.

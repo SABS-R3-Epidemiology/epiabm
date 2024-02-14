@@ -191,6 +191,7 @@ class Plotter():
             plt.tight_layout()
             plt.savefig(os.path.join(os.path.dirname(__file__), self.folder,
                         '{}.png'.format(name_fig)), dpi=300)
+            # Default file format is .png, but can be changed to .pdf, etc.
         else:
             plt.show()
 

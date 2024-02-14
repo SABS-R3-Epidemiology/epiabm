@@ -99,3 +99,4 @@ plt.savefig(
     os.path.join(os.path.dirname(__file__),
                  "spatial_outputs", "spatial_flow_Icurve_plot.png")
 )
+# Default file format is .png, but can be changed to .pdf, .svg, etc.

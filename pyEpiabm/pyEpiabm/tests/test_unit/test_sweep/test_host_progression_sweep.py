@@ -286,7 +286,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
     def test__get_waning_weights(self):
         """Tests the _get_waning_weights() function with ages
         """
-        with (mock.patch('pyEpiabm.Parameters.instance') as mock_param):
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
             mock_param.return_value.use_ages = 1.0
             mock_param.return_value.use_waning_immunity = 1.0
             mock_param.return_value.asympt_infect_period = 14

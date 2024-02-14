@@ -6,8 +6,7 @@
 Welcome to C++ Epiabm's documentation!
 ======================================
 
-This is the C++ Backend for the EpiAbm Package.
-
+.. include:: ../README.rst
 
 Contents
 ========

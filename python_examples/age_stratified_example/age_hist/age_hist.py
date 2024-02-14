@@ -30,6 +30,7 @@ plt.ylabel('Count')
 plt.xlabel('Age')
 plt.title('Histogram of toy population')
 plt.savefig('images/Histograms/Withoutsim.png')
+# Default file format is .png, but can be changed to .pdf, .svg, etc.
 
 # Set simulation parameters
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,

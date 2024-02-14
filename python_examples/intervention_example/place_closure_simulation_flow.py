@@ -131,3 +131,4 @@ for to_modify_parameter, parameter_values in to_modify_parameter_values.\
                         to_modify_parameter))
     )
     plt.clf()
+    # Default file format is .png, but can be changed to .pdf, .svg, etc.
