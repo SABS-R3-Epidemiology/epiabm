@@ -4,6 +4,7 @@
 #
 
 import math
+import typing
 
 
 class RateMultiplier:
@@ -47,7 +48,7 @@ class RateMultiplier:
         self.t_2 = t_2
         self.a, self.b = self._calculate_parameters()
 
-    def _calculate_parameters(self) -> tuple[float, float]:
+    def _calculate_parameters(self) -> typing.Tuple:
         """Given the initial data points p(t_1) = p_1 and p(t_2) = p_2, this
         method determines the parameters a and b of the function.
         Note that p(t) = 1 - be^(-at).
