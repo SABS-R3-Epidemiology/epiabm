@@ -104,6 +104,7 @@ class InitialInfectedSweep(AbstractSweep):
                                            ["initial_infected_number"]))
         for person in pers_to_infect:
             person.update_status(InfectionStatus.InfectMild)
+            person.increment_num_times_infected()
             person.household.remove_susceptible_person(person)
             person.next_infection_status = InfectionStatus.Recovered
             HostProgressionSweep.set_infectiousness(person, start_time)
