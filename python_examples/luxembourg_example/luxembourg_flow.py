@@ -120,5 +120,6 @@ for i in range(len(seed_values)):
     # Create plot to show SIR curves against time
     SIRdf.plot(y=["Susceptible", "Infected", "Recovered"])
     plt.savefig(os.path.join(os.path.dirname(__file__),
-                f"simulation_outputs/simulation_flow_{seed_values[i]}_SIR_plot.png"))
+                             "simulation_outputs",
+                             f"simulation_flow_{seed_values[i]}_SIR_plot.png"))
     # Default file format is .png, but can be changed to .pdf, .svg, etc.
