@@ -6,7 +6,7 @@ from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
 
 
 class TestIgGFOIMultiplier(TestPyEpiabm):
-    """Test the 'RateMultiplier' class
+    """Test the 'IgGFOIMultiplier' class
     """
 
     def setUp(self):

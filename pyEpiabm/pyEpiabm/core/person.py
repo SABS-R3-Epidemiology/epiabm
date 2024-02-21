@@ -52,6 +52,7 @@ class Person:
         self.time_of_status_change = None
         self.infection_start_time = None
         self.time_of_recovery = None
+        self.num_times_infected = 0
         self.care_home_resident = False
         self.key_worker = False
         self.date_positive = None
@@ -146,9 +147,10 @@ class Person:
         if self.infection_status == InfectionStatus.Susceptible and \
                 self.household is not None:
             self.household.add_susceptible_person(self)
-        if self.infection_status == InfectionStatus.Exposed and \
-                self.household is not None:
-            self.household.remove_susceptible_person(self)
+        if self.infection_status == InfectionStatus.Exposed:
+            self.increment_num_times_infected()
+            if self.household is not None:
+                self.household.remove_susceptible_person(self)
 
     def add_place(self, place, person_group: int = 0):
         """Method adds a place to the place list if the person visits
@@ -270,3 +272,9 @@ class Person:
 
         """
         self.time_of_recovery = time
+
+    def increment_num_times_infected(self):
+        """Increments the number of times the person has been Infected as a
+        useful parameter to keep track of.
+        """
+        self.num_times_infected += 1

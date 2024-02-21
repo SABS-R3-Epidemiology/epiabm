@@ -75,6 +75,14 @@ class TestPopConfig(TestPyEpiabm):
             self.assertEqual(test_pop.cells[i].number_infectious(),
                              self.input.get('InfectMild')[i])
 
+        # Test that people have the correct number of times infected
+        for cell in test_pop.cells:
+            for person in cell.persons:
+                if person.infection_status.value == 4:
+                    self.assertEqual(person.num_times_infected, 1)
+                else:
+                    self.assertEqual(person.num_times_infected, 0)
+
     @patch('logging.exception')
     @patch("pandas.read_csv")
     def test_make_pop_exception(self, mock_read, mock_log):

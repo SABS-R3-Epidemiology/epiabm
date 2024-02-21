@@ -113,6 +113,7 @@ class TestInitialInfectedSweep(TestPyEpiabm):
         num_infectious = sum(self.cell.compartment_counter.retrieve()[status])
         self.assertEqual(num_infectious, 1)
         self.assertEqual(self.person2.infection_status, status)
+        self.assertEqual(self.person2.num_times_infected, 1)
 
         # Set parameters and initial susceptibilty to test error
         params = {"initial_infected_number": 2, "simulation_start_time": 0}

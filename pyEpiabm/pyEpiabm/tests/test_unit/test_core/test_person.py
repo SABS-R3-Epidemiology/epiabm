@@ -20,6 +20,7 @@ class TestPerson(TestPyEpiabm):
         self.assertTrue(0 <= self.person.age < 85)
         self.assertTrue(0 <= self.person.age_group < 17)
         self.assertEqual(self.person.infectiousness, 0)
+        self.assertEqual(self.person.num_times_infected, 0)
         self.assertEqual(self.person.microcell, self.microcell)
 
     @patch("random.randint")
@@ -70,6 +71,7 @@ class TestPerson(TestPyEpiabm):
             pe.property.InfectionStatus.InfectMild)
         self.person.household = MagicMock()
         self.person.update_status(pe.property.InfectionStatus.Exposed)
+        self.assertEqual(self.person.num_times_infected, 1)
         self.assertEqual(
             self.person.infection_status,
             pe.property.InfectionStatus.Exposed)
@@ -129,7 +131,11 @@ class TestPerson(TestPyEpiabm):
 
     def test_set_time_of_recovery(self):
         self.person.set_time_of_recovery(time=5)
-        self.assertTrue(self.person.time_of_recovery, 5)
+        self.assertEqual(self.person.time_of_recovery, 5)
+
+    def test_increment_num_times_infected(self):
+        self.person.increment_num_times_infected()
+        self.assertEqual(self.person.num_times_infected, 1)
 
 
 if __name__ == '__main__':

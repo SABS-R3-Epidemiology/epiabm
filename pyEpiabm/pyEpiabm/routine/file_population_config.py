@@ -125,6 +125,7 @@ class FilePopulationFactory:
                         if str(person.infection_status).startswith('Infect'):
                             HostProgressionSweep.set_infectiousness(person,
                                                                     time)
+                            person.increment_num_times_infected()
 
             # Add households and places to microcell
             if len(Parameters.instance().household_size_distribution) == 0:
