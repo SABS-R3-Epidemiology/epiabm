@@ -30,7 +30,7 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
 # where output should be written to.
 # Parameter to change
 
-#seed_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+# seed_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 seed_values = [1]
 
@@ -100,22 +100,22 @@ for i in range(len(seed_values)):
     del (sim.writer)
     del (sim)
 
-
     # Creation of a plot of results (plotter from spatial_simulation_flow)
     logging.getLogger("matplotlib").setLevel(logging.WARNING)
     filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
-                            'large_csv/population_output_simulation_{}.csv'.format(seed_values[i]))
+                            'large_csv/population_output_simulation_{}.csv'
+                            .format(seed_values[i]))
     SIRdf = pd.read_csv(filename)
     total = SIRdf[list(SIRdf.filter(regex='InfectionStatus.Infect'))]
     SIRdf["Infected"] = total.sum(axis=1)
     SIRdf = SIRdf.groupby(["time"]).agg(
-                                    {"InfectionStatus.Susceptible": 'sum',
-                                    "Infected": 'sum',
-                                    "InfectionStatus.Recovered": 'sum',
-                                    "InfectionStatus.Dead": 'sum'})
+                                        {"InfectionStatus.Susceptible": 'sum',
+                                         "Infected": 'sum',
+                                         "InfectionStatus.Recovered": 'sum',
+                                         "InfectionStatus.Dead": 'sum'})
     SIRdf.rename(columns={"InfectionStatus.Susceptible": "Susceptible",
-                        "InfectionStatus.Recovered": "Recovered"},
-                inplace=True)
+                          "InfectionStatus.Recovered": "Recovered"},
+                 inplace=True)
 
     # Create plot to show SIR curves against time
     SIRdf.plot(y=["Susceptible", "Infected", "Recovered"])
