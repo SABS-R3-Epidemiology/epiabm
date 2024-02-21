@@ -114,7 +114,7 @@ class StateTransitionMatrix:
         The rows are associated to the current infection status, the
         columns to the next infection status, and the elements are the
         probabilities to go from one state to another. For example, the element
-        ij in the matrix is the probability of someone with current infection
+        i,j in the matrix is the probability of someone with current infection
         status associated with the row i to move to the infection status
         associated with the column j.
 
