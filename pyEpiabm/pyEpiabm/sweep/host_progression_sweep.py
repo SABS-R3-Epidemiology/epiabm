@@ -140,7 +140,7 @@ class HostProgressionSweep(AbstractSweep):
         if person.infection_start_time < 0:
             raise ValueError('The infection start time cannot be negative')
 
-    def update_next_infection_status(self, person: Person, time: float):
+    def update_next_infection_status(self, person: Person, time: float = None):
         """Assigns next infection status based on current infection status
         and on probabilities of transition to different statuses. Weights
         are taken from row in state transition matrix that corresponds to
@@ -154,7 +154,8 @@ class HostProgressionSweep(AbstractSweep):
         person : Person
             Instance of person class with infection status attributes
         time : float
-            Current simulation time
+            Current simulation time (if necessary for the method, default =
+            None)
 
         """
         if person.infection_status in [InfectionStatus.Dead,
@@ -188,6 +189,10 @@ class HostProgressionSweep(AbstractSweep):
             weights = [w[person.age_group] if isinstance(w, list) else w
                        for w in weights]
         else:
+            if time is None:
+                raise ValueError("Simulation time must be passed to "
+                                 "update_next_infection_status when waning "
+                                 "immunity is active")
             weights = self._get_waning_weights(person, time)
 
         outcomes = range(1, self.number_of_states + 1)

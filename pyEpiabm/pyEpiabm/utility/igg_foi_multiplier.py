@@ -52,12 +52,13 @@ class IgGFOIMultiplier:
         maximal_change_in_half_life = change_in_half_life_10 * 4
         if abs(maximal_change_in_max_igg) > max_41:
             raise ValueError(f"change_in_max_10 is too large in magnitude "
-                             f"(4 * {abs(change_in_max_10)} > {max_41})")
+                             f"(supplied: |{change_in_max_10}|, "
+                             f"maximal: {max_41 / 4})")
         if abs(maximal_change_in_half_life) > half_life_41:
             raise ValueError(f"change_in_half_life_10 is too large is too "
-                             f"large in magnitude (4 * "
-                             f"{abs(change_in_half_life_10)} > {half_life_41})"
-                             )
+                             f"large in magnitude (supplied: "
+                             f"|{change_in_half_life_10}|, maximal: "
+                             f"{half_life_41 / 4})")
 
         # This is the normalisation constant used later, defined as the maximal
         # IgG value (at time_since_max = 0) for the maximal age_group

@@ -146,13 +146,13 @@ class TestHostProgressionSweep(TestPyEpiabm):
 
         self.person1.care_home_resident = 1
         self.person1.update_status(InfectionStatus.InfectICU)
-        test_sweep.update_next_infection_status(self.person1, 1.0)
+        test_sweep.update_next_infection_status(self.person1)
         self.assertEqual(self.person1.next_infection_status,
                          InfectionStatus.Dead)
 
         self.person2.care_home_resident = 1
         self.person2.infection_status = InfectionStatus.InfectHosp
-        test_sweep.update_next_infection_status(self.person2, 1.0)
+        test_sweep.update_next_infection_status(self.person2)
         self.assertEqual(self.person2.next_infection_status,
                          InfectionStatus.Dead)
         mock_rand.assert_called_once_with(0, 1)
@@ -170,7 +170,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
 
         test_sweep.state_transition_matrix['Test col'] = ""
         with self.assertRaises(AssertionError):
-            test_sweep.update_next_infection_status(self.people[0], 1.0)
+            test_sweep.update_next_infection_status(self.people[0])
 
         identity_matrix = pd.DataFrame(np.identity(len(InfectionStatus)),
                                        columns=[status.name for
@@ -180,7 +180,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         test_sweep.state_transition_matrix = identity_matrix
         for person in self.people:
             with self.subTest(person=person):
-                test_sweep.update_next_infection_status(person, 1.0)
+                test_sweep.update_next_infection_status(person)
                 if person.infection_status.name in ['Recovered', 'Dead',
                                                     'Vaccinated']:
                     self.assertEqual(person.next_infection_status, None)
@@ -201,7 +201,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         test_sweep.state_transition_matrix = matrix
         for person in self.people:
             with self.subTest(person=person):
-                test_sweep.update_next_infection_status(person, 1.0)
+                test_sweep.update_next_infection_status(person)
                 if person.infection_status.name in ['Recovered', 'Dead',
                                                     'Vaccinated']:
                     self.assertEqual(person.next_infection_status, None)
@@ -220,7 +220,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         test_sweep.state_transition_matrix = random_matrix
         for person in self.people:
             with self.subTest(person=person):
-                test_sweep.update_next_infection_status(person, 1.0)
+                test_sweep.update_next_infection_status(person)
                 if person.infection_status.name in ['Recovered', 'Dead',
                                                     'Vaccinated']:
                     self.assertEqual(person.next_infection_status, None)
@@ -253,6 +253,23 @@ class TestHostProgressionSweep(TestPyEpiabm):
                 mock_func.return_value = [1] + [0]*10
                 test_sweep.update_next_infection_status(self.person1, 1.0)
                 mock_func.assert_called_once_with(self.person1, 1.0)
+
+    def test_update_next_infection_status_waning_erroneous(self):
+        """Tests that update_next_infection_status throws an error if waning
+        immunity is turned on and the current time is not passed to the method
+        """
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.use_waning_immunity = 1.0
+            mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.time_steps_per_day = 1
+            mock_param.return_value.rate_multiplier_params = self.multipliers
+            test_sweep = pe.sweep.HostProgressionSweep()
+            self.person1.time_of_recovery = 40
+            with self.assertRaises(ValueError) as ve:
+                test_sweep.update_next_infection_status(self.person1)
+            self.assertEqual("Simulation time must be passed to "
+                             "update_next_infection_status when waning "
+                             "immunity is active", str(ve.exception))
 
     def test__get_waning_weights_no_age(self):
         """Tests the _get_waning_weights() function to ensure that the correct
@@ -331,13 +348,12 @@ class TestHostProgressionSweep(TestPyEpiabm):
             with self.subTest(person=person):
                 if person.infection_status == InfectionStatus.Susceptible:
                     with self.assertRaises(ValueError):
-                        test_sweep.update_next_infection_status(person,
-                                                                current_time)
+                        test_sweep.update_next_infection_status(person)
                         test_sweep.update_time_status_change(person,
                                                              current_time)
                     continue  # Method should not be used to infect people
 
-                test_sweep.update_next_infection_status(person, current_time)
+                test_sweep.update_next_infection_status(person)
                 test_sweep.update_time_status_change(person, current_time)
                 time_of_status_change = person.time_of_status_change
                 if person.infection_status.name in ['Recovered', 'Dead',
@@ -373,7 +389,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         """
         test_sweep = pe.sweep.HostProgressionSweep()
         person = self.people[1]
-        test_sweep.update_next_infection_status(person, 1.0)
+        test_sweep.update_next_infection_status(person)
 
         test_sweep.transition_time_matrix = \
             pe.sweep.TransitionTimeMatrix().matrix
@@ -386,7 +402,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         """
         test_sweep = pe.sweep.HostProgressionSweep()
         person = self.people[1]
-        test_sweep.update_next_infection_status(person, 1.0)
+        test_sweep.update_next_infection_status(person)
         row_index = person.infection_status.name
         column_index = person.next_infection_status.name
 

@@ -28,12 +28,12 @@ class TestIgGFOIMultiplier(TestPyEpiabm):
         with self.assertRaises(ValueError) as ve_4:
             IgGFOIMultiplier(1.0, 1.0, -0.3, 0.1, 1)
         self.assertEqual("change_in_max_10 is too large in magnitude "
-                         "(4 * 0.3 > 1.0)",
+                         "(supplied: |-0.3|, maximal: 0.25)",
                          str(ve_4.exception))
         with self.assertRaises(ValueError) as ve_5:
             IgGFOIMultiplier(1.0, 1.0, 0.1, 0.3, 1)
         self.assertEqual("change_in_half_life_10 is too large is too large "
-                         "in magnitude (4 * 0.3 > 1.0)",
+                         "in magnitude (supplied: |0.3|, maximal: 0.25)",
                          str(ve_5.exception))
 
     @mock.patch('pyEpiabm.utility.IgGFOIMultiplier._calculate_igg_titre')
