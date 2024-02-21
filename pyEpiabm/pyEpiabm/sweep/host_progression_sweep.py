@@ -47,7 +47,8 @@ class HostProgressionSweep(AbstractSweep):
         matrix_object = StateTransitionMatrix(coefficients, multipliers,
                                               use_ages)
         self.state_transition_matrix = matrix_object.matrix
-        self.waning_transition_matrix = matrix_object.waning_matrix
+        if pe.Parameters.instance().use_waning_immunity:
+            self.waning_transition_matrix = matrix_object.waning_matrix
 
         self.number_of_states = len(InfectionStatus)
         assert self.state_transition_matrix.shape == \
