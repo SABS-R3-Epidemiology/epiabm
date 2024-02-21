@@ -39,6 +39,16 @@ class TestSpatialInfection(TestPyEpiabm):
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
+    def test_spatial_susc_waning(self):
+        pe.Parameters.instance().use_waning_immunity = 1.0
+
+        # use pre-infection
+        self.infectee.increment_num_times_infected()
+        self.infectee.infection_start_time = self.time
+        result = SpatialInfection.spatial_susc(
+            self.cell, self.infectee, self.time)
+        self.assertEqual(result, 0.0)
+
     @patch('pyEpiabm.core.Parameters.instance')
     def test_spatial_susc_no_age(self, mock_params):
         mock_params.return_value.use_ages = False

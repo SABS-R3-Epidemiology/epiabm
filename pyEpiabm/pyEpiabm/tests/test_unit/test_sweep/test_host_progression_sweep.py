@@ -539,7 +539,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.assertEqual(self.person1.infectiousness, 1)
         test_sweep._updates_infectiousness(self.person1, 1)
         self.assertEqual(self.person1.infectiousness, 0)
-        self.assertIsNone(self.person1.infection_start_time)
+        self.assertEqual(self.person1.infection_start_time, 0)
 
     def test_compare_value_update_infectiousness(self):
         """Tests that a person's infectiousness is correctly updated by

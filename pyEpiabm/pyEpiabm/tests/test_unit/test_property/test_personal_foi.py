@@ -36,18 +36,25 @@ class TestPersonalInfection(TestPyEpiabm):
 
     def test_person_susc_no_waning(self):
         pe.Parameters.instance().use_waning_immunity = 0
-        result = PersonalInfection.person_susc(self.infector,
-                                               self.infectee,
+        result = PersonalInfection.person_susc(self.infectee,
                                                self.time)
         self.assertEqual(result, 1.0)
         self.assertIsInstance(result, float)
 
     def test_person_susc_waning(self):
         pe.Parameters.instance().use_waning_immunity = 1.0
-        result = PersonalInfection.person_susc(self.infector,
-                                               self.infectee,
+
+        # No pre-infection
+        result = PersonalInfection.person_susc(self.infectee,
                                                self.time)
-        self.assertEqual(result, 0.0)
+        self.assertEqual(result, 1.0)
+        self.assertIsInstance(result, float)
+
+        # With pre-infection
+        self.infectee.increment_num_times_infected()
+        result2 = PersonalInfection.person_susc(self.infectee,
+                                                self.time)
+        self.assertEqual(result2, 0.0)
         self.assertIsInstance(result, float)
 
 

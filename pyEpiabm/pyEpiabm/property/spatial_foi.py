@@ -7,6 +7,7 @@ import numpy as np
 import pyEpiabm.core
 from pyEpiabm.core import Parameters
 
+from .personal_foi import PersonalInfection
 
 class SpatialInfection:
     """Class to calculate the infectiousness and susceptibility
@@ -106,9 +107,9 @@ class SpatialInfection:
             Susceptibility parameter of cell
 
         """
-        spatial_susc = 1.0
+        spatial_susc = PersonalInfection.person_susc(infectee, time)
         if pyEpiabm.core.Parameters.instance().use_ages:
-            spatial_susc = pyEpiabm.core.Parameters.instance().\
+            spatial_susc *= pyEpiabm.core.Parameters.instance().\
                 age_contact[infectee.age_group]
 
         spatial_susc *= Parameters.instance().\

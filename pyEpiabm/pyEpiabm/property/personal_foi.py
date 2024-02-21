@@ -39,7 +39,7 @@ class PersonalInfection:
         return infector_inf
 
     @staticmethod
-    def person_susc(infector, infectee, time: float):
+    def person_susc(infectee, time: float):
         """Calculate the susceptibility of one person to another.
 
         Does not yet import WAIFW matrix from Polymod data to determine
@@ -47,8 +47,6 @@ class PersonalInfection:
 
         Parameters
         ----------
-        infector : Person
-            Infector
         infectee : Person
             Infectee
         time : float
@@ -62,8 +60,8 @@ class PersonalInfection:
         """
         # If we are using waning immunity then we use a multiplier from
         # igg_foi_multiplier. Otherwise, we set the susceptibility to 1.0.
-        if Parameters.instance().use_waning_immunity and not\
-                (infectee.infection_start_time is None):
+        if Parameters.instance().use_waning_immunity and\
+                (infectee.num_times_infected >= 1):
             params = defaultdict(int,
                                  Parameters.instance().antibody_level_params)
             if not hasattr(PersonalInfection, 'm'):

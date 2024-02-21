@@ -76,7 +76,7 @@ class PlaceInfection:
             Susceptibility parameter of place
 
         """
-        place_susc = 1.0
+        place_susc = PersonalInfection.person_susc(infectee, time)
         place_idx = place.place_type.value - 1
         if (hasattr(infectee.microcell, 'distancing_start_time')) and (
                 infectee.microcell.distancing_start_time is not None) and (
