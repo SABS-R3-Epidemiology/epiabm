@@ -6,6 +6,7 @@ from pandas.testing import assert_frame_equal
 import unittest
 from unittest import mock
 
+import pyEpiabm as pe
 from pyEpiabm.property import InfectionStatus
 from pyEpiabm.sweep import StateTransitionMatrix
 from pyEpiabm.tests.test_unit.parameter_config_tests import TestPyEpiabm
@@ -53,7 +54,9 @@ class TestStateTransitionMatrix(TestPyEpiabm):
 
     def test_init(self):
         self.assertIsInstance(self.matrix_object.matrix, pd.DataFrame)
-        self.assertIsInstance(self.matrix_object.waning_matrix, pd.DataFrame)
+        if pe.core.Parameters.instance().use_waning_immunity:
+            self.assertIsInstance(self.matrix_object.waning_matrix,
+                                  pd.DataFrame)
         self.assertFalse(self.matrix_object.age_dependent)
         self.matrix_object_ad = StateTransitionMatrix(self.empty_coefficients,
                                                       self.rate_multipliers,
@@ -102,6 +105,7 @@ class TestStateTransitionMatrix(TestPyEpiabm):
     def test_create_waning_transition_matrix(self):
         """Tests that all entries are a lambda expression, integer, or float.
         """
+        pe.Parameters.instance().use_waning_immunity = 1.0
         filled_matrix = StateTransitionMatrix(self.real_coefficients,
                                               self.rate_multipliers)
 

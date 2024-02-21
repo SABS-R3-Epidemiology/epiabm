@@ -30,8 +30,10 @@ class StateTransitionMatrix:
             Whether to include age dependant lists in matrix
         """
         self.matrix = self.create_state_transition_matrix(coefficients)
-        self.waning_matrix = self.create_waning_transition_matrix(multipliers)
         self.age_dependent = use_ages
+        if pe.core.Parameters.instance().use_waning_immunity:
+            self.waning_matrix =\
+                self.create_waning_transition_matrix(multipliers)
         if not self.age_dependent:
             self.remove_age_dependence()
 
