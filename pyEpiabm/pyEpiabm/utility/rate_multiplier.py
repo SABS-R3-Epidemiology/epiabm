@@ -103,4 +103,4 @@ class RateMultiplier:
         if t < math.log(self.b) / self.a:
             return 0.0
 
-        return 1.0 - self.b * math.exp(- self.a * t)
+        return 1.0 - self.b * math.exp(-self.a * t)
