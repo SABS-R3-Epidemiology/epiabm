@@ -9,6 +9,7 @@ from pyEpiabm.core import Parameters
 
 from .personal_foi import PersonalInfection
 
+
 class SpatialInfection:
     """Class to calculate the infectiousness and susceptibility
     parameters for the force of infection parameter, between cells.
