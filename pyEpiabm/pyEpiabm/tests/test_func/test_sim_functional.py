@@ -286,11 +286,11 @@ class TestSimFunctional(TestFunctional):
                                   + file_input["InfectMild"][i]))
 
     def test_waning_status_count(self, *mocks):
-        """Basic functional test to ensure different number of people enter
-        status categories given waning immunity.
+        """Basic functional test to ensure more individuals enter InfectASympt
+        status given waning immunity.
         """
-        # Record the number of individuals within the compartment Infect.Asympt
-        # when waning immunity is active
+        # Record the number of individuals within the compartments when waning
+        # immunity is active
         self.sim_params["initial_infected_number"] = 5
         self.sim_params["include_waning"] = True
         pe.Parameters.instance().use_waning_immunity = 1.0
@@ -299,30 +299,27 @@ class TestSimFunctional(TestFunctional):
                                                self.sim_params,
                                                self.file_params)
 
-        count_with_waning = 0
         for cell in pop.cells:
-            cell_data = cell.compartment_counter.retrieve()
-            for status in [InfectionStatus.InfectASympt]:
-                count_with_waning += cell_data[status]
+            cell_data_waning = cell.compartment_counter.retrieve()
 
-        # Record the number of individuals within the compartment InfectAsympt
-        # when waning immunity is not active
+        # Record the number of individuals within the compartments when waning
+        # immunity is not active
         pe.Parameters.instance().use_waning_immunity = 0.0
         self.sim_params["include_waning"] = False
+
         pop_2 = TestSimFunctional.toy_simulation(self.pop_params,
                                                  self.sim_params,
                                                  self.file_params)
-        count_without_waning = 0
 
         for cell in pop_2.cells:
             cell_data = cell.compartment_counter.retrieve()
-            for status in [InfectionStatus.InfectASympt]:
-                count_without_waning += cell_data[status]
 
-        # Compare the two values to ensure that when the rate multipliers
-        # are applied, the number of individuals increases
-        self.assertGreater(np.sum(count_with_waning),
-                           np.sum(count_without_waning))
+        # Compare the number of individuals in the InfectASympt compartment to
+        # ensure that when waning immunity is active, the number of individuals
+        # increases
+        self.assertGreater(np.sum(cell_data_waning[
+            InfectionStatus.InfectASympt]), np.sum(cell_data[
+                InfectionStatus.InfectASympt]))
 
 
 if __name__ == '__main__':
