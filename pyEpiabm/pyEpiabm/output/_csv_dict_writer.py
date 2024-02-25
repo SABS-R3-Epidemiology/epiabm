@@ -68,4 +68,5 @@ class _CsvDictWriter(AbstractReporter):
         logging.info(f"Zip file created for {self.filename}")
         df = pd.read_csv(self.filepath)
         df.to_csv(output_filepath, index=False, compression={'method': 'zip'})
+        self.f.close()
         os.remove(self.filepath)
