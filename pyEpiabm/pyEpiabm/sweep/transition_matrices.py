@@ -116,7 +116,8 @@ class StateTransitionMatrix:
         probabilities to go from one state to another. For example, the element
         i,j in the matrix is the probability of someone with current infection
         status associated with the row i to move to the infection status
-        associated with the column j.
+        associated with the column j. Further explanation of this matrix can be
+        found at https://github.com/SABS-R3-Epidemiology/epiabm/wiki/Parameters#waning-infection-matrix
 
         Parameters
         ----------
