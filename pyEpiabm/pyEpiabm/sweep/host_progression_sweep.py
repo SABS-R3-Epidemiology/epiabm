@@ -343,7 +343,7 @@ class HostProgressionSweep(AbstractSweep):
             person.infectiousness = person.initial_infectiousness *\
                 scale_infectiousness[time_since_infection]
         # Sets infectiousness to 0 if person just became Recovered, Dead, or
-        # Vaccinated, and sets its infection start time to None again.
+        # Vaccinated
         elif person.infectiousness != 0:
             if person.infection_status in [InfectionStatus.Recovered,
                                            InfectionStatus.Dead,
