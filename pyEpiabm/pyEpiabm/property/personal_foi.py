@@ -69,7 +69,7 @@ class PersonalInfection:
                     AntibodyMultiplier(params['igg_peak_at_age_41'],
                                        params['igg_half_life_at_age_41'],
                                        params['peak_change_per_10_yrs_age'],
-                                       params['half_life_change_per_10_yrs_age'],
+                                       params['half_life_diff_per_10_yrs_age'],
                                        params['days_positive_pcr_to_max_igg'])
             time_since_infection = time - infectee.infection_start_time
             return 1.0 * PersonalInfection.m(time_since_infection,
