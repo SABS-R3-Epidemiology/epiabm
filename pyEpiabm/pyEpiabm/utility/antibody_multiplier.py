@@ -6,7 +6,7 @@
 import pyEpiabm as pe
 
 
-class IgGFOIMultiplier:
+class AntibodyMultiplier:
     """Class which calculates a multiplier for the susceptibility in the force
     of infection (to be used in personal_foi.py) based on the current IgG
     antibody count.

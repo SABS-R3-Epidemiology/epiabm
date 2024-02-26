@@ -8,19 +8,19 @@ Utility provides various methods that don't act on a population directly.
 
 Overview:
 
+- :class:`AntibodyMultiplier`
 - :class:`DistanceFunctions`
-- :class:`IgGFOIMultiplier`
 - :class:`InverseCdf`
 - :class:`RandomMethods`
 - :class:`RateMultiplier`
 - :class:`SpatialKernel`
 
-.. autoclass:: DistanceFunctions
-    :members:
-
-.. autoclass:: IgGFOIMultiplier
+.. autoclass:: AntibodyMultiplier
     :members:
     :special-members: __call__
+
+.. autoclass:: DistanceFunctions
+    :members:
 
 .. autoclass:: InverseCdf
     :members:
