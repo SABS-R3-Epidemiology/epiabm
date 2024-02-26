@@ -35,6 +35,16 @@ class TestPlaceInfection(TestPyEpiabm):
         self.assertTrue(result > 0)
         self.assertIsInstance(result, float)
 
+    def test_place_susc_waning(self):
+        pe.Parameters.instance().use_waning_immunity = 1.0
+
+        # use pre-infection
+        self.infectee.increment_num_times_infected()
+        self.infectee.infection_start_time = self.time
+        result = PlaceInfection.place_susc(self.place,
+                                           self.infectee, self.time)
+        self.assertEqual(result, 0.0)
+
     def test_place_inf(self):
         result = PlaceInfection.place_inf(self.place, self.infector, self.time)
         self.assertTrue(result > 0)

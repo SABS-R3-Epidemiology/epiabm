@@ -96,6 +96,7 @@ class TestSimFunctional(TestFunctional):
         iter_num = (sim_params["simulation_end_time"]
                     - sim_params["simulation_start_time"] + 1)
 
+        pe.routine.Simulation.set_random_seed(seed=30)
         pop = TestSimFunctional.toy_simulation(pop_params,
                                                sim_params,
                                                self.file_params)
@@ -129,6 +130,7 @@ class TestSimFunctional(TestFunctional):
         """Basic functional test to ensure everyone is infected when the entire
         population is placed in one large household.
         """
+        pe.routine.Simulation.set_random_seed(seed=30)
         self.sim_params["initial_infected_number"] = 5
         pop = TestSimFunctional.toy_simulation(self.pop_params,
                                                self.sim_params,
@@ -158,32 +160,32 @@ class TestSimFunctional(TestFunctional):
         """Basic functional test to ensure everyone is not recovered at the
         end of the simulation.
         """
-        with patch('pyEpiabm.Parameters.instance') as mock_param:
-            mock_param.return_value.use_waning_immunity = 1.0
-            mock_param.return_value.asympt_infect_period = 14
-            mock_param.return_value.time_steps_per_day = 1
-            self.sim_params["initial_infected_number"] = 5
-            self.sim_params["include_waning"] = True
-            pop = TestSimFunctional.toy_simulation(self.pop_params,
-                                                   self.sim_params,
-                                                   self.file_params)
+        pe.routine.Simulation.set_random_seed(seed=30)
+        self.sim_params["initial_infected_number"] = 5
+        self.sim_params["include_waning"] = True
+        pe.Parameters.instance().use_waning_immunity = 1.0
 
-            # Test not all individuals have entered Recovered or Dead at end
-            recov_dead_state_count = 0
+        pop = TestSimFunctional.toy_simulation(self.pop_params,
+                                               self.sim_params,
+                                               self.file_params)
 
-            for cell in pop.cells:
-                cell_data = cell.compartment_counter.retrieve()
-                for status in [InfectionStatus.Recovered,
-                               InfectionStatus.Dead]:
-                    recov_dead_state_count += cell_data[status]
+        # Test not all individuals have entered Recovered or Dead at end
+        recov_dead_state_count = 0
 
-            self.assertNotEqual(np.sum(recov_dead_state_count),
-                                self.pop_params["population_size"])
+        for cell in pop.cells:
+            cell_data = cell.compartment_counter.retrieve()
+            for status in [InfectionStatus.Recovered,
+                           InfectionStatus.Dead]:
+                recov_dead_state_count += cell_data[status]
+
+        self.assertNotEqual(np.sum(recov_dead_state_count),
+                            self.pop_params["population_size"])
 
     def test_no_infection(self, *mocks):
         """Basic functional test to ensure noone is infected when there are
         no initial cases in the entire population
         """
+        pe.routine.Simulation.set_random_seed(seed=30)
         pop = TestSimFunctional.toy_simulation(self.pop_params,
                                                self.sim_params,
                                                self.file_params)
@@ -213,6 +215,7 @@ class TestSimFunctional(TestFunctional):
         sweep_list = [pe.sweep.HouseholdSweep(), pe.sweep.QueueSweep(),
                       pe.sweep.HostProgressionSweep()]
 
+        pe.routine.Simulation.set_random_seed(seed=30)
         pe.Parameters.instance().household_size_distribution = []
         pop = TestSimFunctional.file_simulation("test_input.csv",
                                                 self.sim_params,
@@ -248,6 +251,7 @@ class TestSimFunctional(TestFunctional):
         sweep_list = [pe.sweep.HouseholdSweep(), pe.sweep.SpatialSweep(),
                       pe.sweep.QueueSweep(), pe.sweep.HostProgressionSweep()]
 
+        pe.routine.Simulation.set_random_seed(seed=30)
         pe.Parameters.instance().infection_radius = 0.5
         pop = TestSimFunctional.file_simulation("test_input.csv",
                                                 self.sim_params,
@@ -286,6 +290,43 @@ class TestSimFunctional(TestFunctional):
                                   + np.sum(cell_data[InfectionStatus.Dead])),
                                  (file_input['Susceptible'][i]
                                   + file_input["InfectMild"][i]))
+
+    def test_waning_status_count(self, *mocks):
+        """Basic functional test to ensure more individuals enter Susceptible
+        status given waning immunity.
+        """
+        # Record the number of individuals within the compartments when waning
+        # immunity is active
+        pe.routine.Simulation.set_random_seed(seed=30)
+        self.sim_params["initial_infected_number"] = 5
+        self.sim_params["include_waning"] = True
+        pe.Parameters.instance().use_waning_immunity = 1.0
+
+        pop = TestSimFunctional.toy_simulation(self.pop_params,
+                                               self.sim_params,
+                                               self.file_params)
+
+        for cell in pop.cells:
+            cell_data_waning = cell.compartment_counter.retrieve()
+
+        # Record the number of individuals within the compartments when waning
+        # immunity is not active
+        pe.Parameters.instance().use_waning_immunity = 0.0
+        self.sim_params["include_waning"] = False
+
+        pop_2 = TestSimFunctional.toy_simulation(self.pop_params,
+                                                 self.sim_params,
+                                                 self.file_params)
+
+        for cell in pop_2.cells:
+            cell_data = cell.compartment_counter.retrieve()
+
+        # Compare the number of individuals in the Susceptible compartment to
+        # ensure that when waning immunity is active, the number of individuals
+        # increases
+        self.assertGreater(np.sum(cell_data_waning[
+            InfectionStatus.Susceptible]), np.sum(cell_data[
+                InfectionStatus.Susceptible]))
 
 
 if __name__ == '__main__':

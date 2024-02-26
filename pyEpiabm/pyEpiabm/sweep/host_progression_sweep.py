@@ -2,6 +2,8 @@
 # Progression of infection within individuals
 #
 import random
+import typing
+
 import numpy as np
 from collections import defaultdict
 
@@ -25,9 +27,11 @@ class HostProgressionSweep(AbstractSweep):
         to a current infection status of a person. The columns of that
         row then indicate the transition probabilities to the remaining
         infection statuses. Number of infection states is set by
-        taking the size of the InfectionStatus enum. Transition time matrix
-        is also initialised and associated parameters are called from the
-        parameters class.
+        taking the size of the InfectionStatus enum. Waning transition matrix
+        is initialised and adapts the state transition matrix with rate
+        multipliers relating to waning immunity which are called from the
+        parameters class. Transition time matrix is also initialised and
+        associated parameters are called from the parameters class.
 
         Infectiousness progression defines an array used to scale a person's
         infectiousness and which depends on time since the start of the
@@ -38,8 +42,13 @@ class HostProgressionSweep(AbstractSweep):
         use_ages = Parameters.instance().use_ages
         coefficients = defaultdict(int, Parameters.instance()
                                    .host_progression_lists)
-        matrix_object = StateTransitionMatrix(coefficients, use_ages)
+        multipliers = defaultdict(list, Parameters.instance()
+                                  .rate_multiplier_params)
+        matrix_object = StateTransitionMatrix(coefficients, multipliers,
+                                              use_ages)
         self.state_transition_matrix = matrix_object.matrix
+        if pe.Parameters.instance().use_waning_immunity:
+            self.waning_transition_matrix = matrix_object.waning_matrix
 
         self.number_of_states = len(InfectionStatus)
         assert self.state_transition_matrix.shape == \
@@ -132,7 +141,7 @@ class HostProgressionSweep(AbstractSweep):
         if person.infection_start_time < 0:
             raise ValueError('The infection start time cannot be negative')
 
-    def update_next_infection_status(self, person: Person):
+    def update_next_infection_status(self, person: Person, time: float = None):
         """Assigns next infection status based on current infection status
         and on probabilities of transition to different statuses. Weights
         are taken from row in state transition matrix that corresponds to
@@ -143,8 +152,11 @@ class HostProgressionSweep(AbstractSweep):
 
         Parameters
         ----------
-        Person : Person
+        person : Person
             Instance of person class with infection status attributes
+        time : float
+            Current simulation time (if necessary for the method, default =
+            None)
 
         """
         if person.infection_status in [InfectionStatus.Dead,
@@ -167,11 +179,24 @@ class HostProgressionSweep(AbstractSweep):
                 person.next_infection_status = InfectionStatus.Dead
                 return
         row_index = person.infection_status.name
-        weights = self.state_transition_matrix.loc[row_index].to_numpy()
-        weights = [w[person.age_group] if isinstance(w, list) else w
-                   for w in weights]
-        outcomes = range(1, self.number_of_states + 1)
 
+        # If we are not using waning immunity or person.time_of_recovery is
+        # None (so they have never reached Recovered) then we choose weights
+        # from the state_transition_matrix. Otherwise, we use the
+        # waning_transition_matrix.
+        if (not Parameters.instance().use_waning_immunity or
+                not person.time_of_recovery):
+            weights = self.state_transition_matrix.loc[row_index].to_numpy()
+            weights = [w[person.age_group] if isinstance(w, list) else w
+                       for w in weights]
+        else:
+            if time is None:
+                raise ValueError("Simulation time must be passed to "
+                                 "update_next_infection_status when waning "
+                                 "immunity is active")
+            weights = self._get_waning_weights(person, time)
+
+        outcomes = range(1, self.number_of_states + 1)
         if len(weights) != len(outcomes):
             raise AssertionError('The number of infection statuses must' +
                                  ' match the number of transition' +
@@ -183,6 +208,46 @@ class HostProgressionSweep(AbstractSweep):
 
         person.next_infection_status = next_infection_status
 
+    def _get_waning_weights(self, person: Person, time: float) -> typing.List:
+        """Given that the current person has previously recovered, this method
+        will return a list of updated weights based on the level of immunity
+        the person has. The weights taken from the waning_transition_matrix
+        are lambda expressions parameterized by t (time_since_recovery).
+
+        Parameters
+        ----------
+        person : Person
+            Instance of person class with infection status attributes
+        time : float
+            Current simulation time
+
+        Returns
+        -------
+        list:
+            List of weights representing the probability of transitioning to
+            a given compartment.
+        """
+        row_index = person.infection_status.name
+        time_since_recovery = time - person.time_of_recovery
+        weights = list(self.waning_transition_matrix.loc[row_index])
+
+        # Note that below, each entry w will be a lambda expression returning
+        # a np.array either representing a float (shape = ()) or a list
+        # (shape = (n,)) hence the conditions.
+        new_weights = []
+        for w in weights:
+            if isinstance(w, (int, float)):
+                new_weights.append(w)
+            else:
+                # This is evaluating the lambda expressions at t =
+                # time_since_recovery
+                w_evaluated = w(time_since_recovery)
+                if w_evaluated.shape:
+                    new_weights.append(w_evaluated[person.age_group])
+                else:
+                    new_weights.append(w_evaluated)
+        return new_weights
+
     def update_time_status_change(self, person: Person, time: float):
         """Calculates transition time as calculated in CovidSim,
         and updates the time_of_status_change for the given
@@ -193,7 +258,7 @@ class HostProgressionSweep(AbstractSweep):
 
         Parameters
         ----------
-        Person : Person
+        person : Person
             Instance of Person class with :class:`InfectionStatus` attributes
         time : float
             Current simulation time
@@ -278,13 +343,12 @@ class HostProgressionSweep(AbstractSweep):
             person.infectiousness = person.initial_infectiousness *\
                 scale_infectiousness[time_since_infection]
         # Sets infectiousness to 0 if person just became Recovered, Dead, or
-        # Vaccinated, and sets its infection start time to None again.
+        # Vaccinated
         elif person.infectiousness != 0:
             if person.infection_status in [InfectionStatus.Recovered,
                                            InfectionStatus.Dead,
                                            InfectionStatus.Vaccinated]:
                 person.infectiousness = 0
-                person.infection_start_time = None
 
     def __call__(self, time: float):
         """Sweeps through all people in the population, updates their
@@ -319,7 +383,7 @@ class HostProgressionSweep(AbstractSweep):
                         self.set_infectiousness(person, time)
                         if not person.is_symptomatic():
                             asympt_or_uninf_people.append((cell, person))
-                    self.update_next_infection_status(person)
+                    self.update_next_infection_status(person, time)
                     if person.infection_status == InfectionStatus.Susceptible:
                         person.time_of_status_change = None
                         break

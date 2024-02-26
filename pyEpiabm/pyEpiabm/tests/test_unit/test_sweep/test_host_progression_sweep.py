@@ -30,6 +30,26 @@ class TestHostProgressionSweep(TestPyEpiabm):
             "prob_icu_to_icurecov": 0.5,
             "prob_icu_to_death": 0.5
         }
+        self.age_coefficients = {
+            "prob_exposed_to_asympt": [0.4]*17,
+            "prob_exposed_to_mild": [0.4]*17,
+            "prob_exposed_to_gp": [0.2]*17,
+            "prob_gp_to_recov": [0.9]*17,
+            "prob_gp_to_hosp": [0.1]*17,
+            "prob_hosp_to_recov": [0.6]*17,
+            "prob_hosp_to_icu": [0.2]*17,
+            "prob_hosp_to_death": [0.2]*17,
+            "prob_icu_to_icurecov": [0.5]*17,
+            "prob_icu_to_death": [0.5]*17
+        }
+        self.multipliers = {
+            "gp_to_hosp": [0.25, 0.421052632],
+            "gp_to_death": [0.25, 0.421052632],
+            "exposed_to_infect": [0.75, 0.842105263],
+            "hosp_to_death": [0.9, 1],
+            "hosp_to_icu": [0.9, 1],
+            "icu_to_death": [0.9, 1]
+        }
         self.mock_inf_prog = np.array(
             [0.487464241, 1, 1.229764827, 1.312453175,
              1.307955665, 1.251658756, 1.166040358,
@@ -210,18 +230,108 @@ class TestHostProgressionSweep(TestPyEpiabm):
                     self.assertTrue(current_enum_value <= next_enum_value)
 
     def test_update_next_infection_status_waning_immunity(self):
-        """Test that Recovered people return to Susceptible when their status
-        is updated if waning immunity is turned on
+        """Tests that Recovered people return to Susceptible when their status
+        is updated if waning immunity is turned on.
         """
         with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
             mock_param.return_value.use_waning_immunity = 1.0
             mock_param.return_value.asympt_infect_period = 14
             mock_param.return_value.time_steps_per_day = 1
+            mock_param.return_value.rate_multiplier_params = self.multipliers
             test_sweep = pe.sweep.HostProgressionSweep()
             self.person1.update_status(InfectionStatus.Recovered)
-            test_sweep.update_next_infection_status(self.person1)
+            test_sweep.update_next_infection_status(self.person1, 1.0)
             self.assertEqual(InfectionStatus.Susceptible,
                              self.person1.next_infection_status)
+
+            # Assert that the _get_waning_weights function is called under
+            # the correct conditions
+            with mock.patch('pyEpiabm.sweep.HostProgressionSweep.'
+                            '_get_waning_weights') as mock_func:
+                self.person1.time_of_recovery = 30
+                self.person1.infection_status = InfectionStatus.Exposed
+                mock_func.return_value = [1] + [0]*10
+                test_sweep.update_next_infection_status(self.person1, 1.0)
+                mock_func.assert_called_once_with(self.person1, 1.0)
+
+    def test_update_next_infection_status_waning_erroneous(self):
+        """Tests that update_next_infection_status throws an error if waning
+        immunity is turned on and the current time is not passed to the method
+        """
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.use_waning_immunity = 1.0
+            mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.time_steps_per_day = 1
+            mock_param.return_value.rate_multiplier_params = self.multipliers
+            test_sweep = pe.sweep.HostProgressionSweep()
+            self.person1.time_of_recovery = 40
+            with self.assertRaises(ValueError) as ve:
+                test_sweep.update_next_infection_status(self.person1)
+            self.assertEqual("Simulation time must be passed to "
+                             "update_next_infection_status when waning "
+                             "immunity is active", str(ve.exception))
+
+    def test__get_waning_weights_no_age(self):
+        """Tests the _get_waning_weights() function to ensure that the correct
+        weights are returned when waning immunity is turned on.
+        """
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.use_waning_immunity = 1.0
+            mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.time_steps_per_day = 1
+            mock_param.return_value.host_progression_lists = self.coefficients
+            mock_param.return_value.rate_multiplier_params = self.multipliers
+            test_sweep = pe.sweep.HostProgressionSweep()
+            self.person1.infection_status = InfectionStatus.Exposed
+            self.person1.time_of_recovery = 20
+            current_time = 50
+            weights = test_sweep._get_waning_weights(self.person1,
+                                                     current_time)
+            # We are using the RateMultiplier functions with t = 30, so the
+            # expected weights have been calculated below
+            a = self.coefficients["prob_exposed_to_asympt"]
+            b = self.coefficients["prob_exposed_to_mild"]
+            c = self.coefficients["prob_exposed_to_gp"]
+            p_90, p_180 = self.multipliers["exposed_to_infect"]
+            p = pe.utility.RateMultiplier(p_90, p_180)
+            p_30 = p(30)
+            expected_weights = [0, 0, a + (1 - p_30) * b + (1 - p_30) * c,
+                                p_30 * b, p_30 * c, 0, 0, 0, 0, 0, 0]
+            for i in range(len(weights)):
+                self.assertAlmostEqual(expected_weights[i], weights[i])
+
+    def test__get_waning_weights(self):
+        """Tests the _get_waning_weights() function with ages
+        """
+        with mock.patch('pyEpiabm.Parameters.instance') as mock_param:
+            mock_param.return_value.use_ages = 1.0
+            mock_param.return_value.use_waning_immunity = 1.0
+            mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.time_steps_per_day = 1
+            mock_param.return_value.host_progression_lists = \
+                self.age_coefficients
+            mock_param.return_value.rate_multiplier_params = self.multipliers
+            test_sweep = pe.sweep.HostProgressionSweep()
+            self.person1.infection_status = InfectionStatus.Exposed
+            self.person1.time_of_recovery = 20
+            current_time = 50
+            weights = test_sweep._get_waning_weights(self.person1,
+                                                     current_time)
+            # We are using the RateMultiplier functions with t = 30, so the
+            # expected weights have been calculated below
+            a = self.age_coefficients["prob_exposed_to_asympt"][self.person1.
+                                                                age_group]
+            b = self.age_coefficients["prob_exposed_to_mild"][self.person1.
+                                                              age_group]
+            c = self.age_coefficients["prob_exposed_to_gp"][self.person1.
+                                                            age_group]
+            p_90, p_180 = self.multipliers["exposed_to_infect"]
+            p = pe.utility.RateMultiplier(p_90, p_180)
+            p_30 = p(30)
+            expected_weights = [0, 0, a + (1 - p_30) * b + (1 - p_30) * c,
+                                p_30 * b, p_30 * c, 0, 0, 0, 0, 0, 0]
+            for i in range(len(weights)):
+                self.assertAlmostEqual(expected_weights[i], weights[i])
 
     def test_update_time_status_change_no_age(self, current_time=100.0):
         """Tests that people who have their time to status change set correctly
@@ -265,6 +375,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             mock_param.return_value.use_waning_immunity = 1.0
             mock_param.return_value.asympt_infect_period = 14
             mock_param.return_value.time_steps_per_day = 1
+            mock_param.return_value.rate_multiplier_params = self.multipliers
             test_sweep = pe.sweep.HostProgressionSweep()
             self.person1.update_status(InfectionStatus.Recovered)
             self.person1.next_infection_status = InfectionStatus.Susceptible
@@ -321,6 +432,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             mock_param.return_value.time_steps_per_day = 1
             mock_param.return_value.asympt_infect_period = 14
             mock_param.return_value.infectiousness_prof = self.mock_inf_prog
+            mock_param.return_value.rate_multiplier_params = self.multipliers
             # Parameters to determine where the tail starts, has to be the same
             # as for the parameters called in HostProgressionSweep.
             infectious_period = pe.Parameters.instance().asympt_infect_period
@@ -350,6 +462,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             # steps per day:
             mock_param.return_value.time_steps_per_day = 100
             mock_param.return_value.asympt_infect_period = 14
+            mock_param.return_value.rate_multiplier_params = self.multipliers
             mock_param.return_value.infectiousness_prof = self.mock_inf_prog
             infectious_period = pe.Parameters.instance().asympt_infect_period
             model_time_step = 1 / pe.Parameters.instance().time_steps_per_day
@@ -384,6 +497,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
                 mock_param.return_value.asympt_infect_period = 14
                 mock_param.return_value.infectiousness_prof = \
                     self.mock_inf_prog
+                mock_param.return_value.rate_multiplier_params = \
+                    self.multipliers
                 num_infectious_ts = int(np.ceil(pe.Parameters.instance().
                                                 asympt_infect_period
                                                 * pe.Parameters.instance().
@@ -440,7 +555,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.assertEqual(self.person1.infectiousness, 1)
         test_sweep._updates_infectiousness(self.person1, 1)
         self.assertEqual(self.person1.infectiousness, 0)
-        self.assertIsNone(self.person1.infection_start_time)
+        self.assertEqual(self.person1.infection_start_time, 0)
 
     def test_compare_value_update_infectiousness(self):
         """Tests that a person's infectiousness is correctly updated by
@@ -452,6 +567,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             # length:
             mock_param.return_value.asympt_infect_period = 14
             mock_param.return_value.infectiousness_prof = self.mock_inf_prog
+            mock_param.return_value.rate_multiplier_params = self.multipliers
             infectious_period = pe.Parameters.instance().asympt_infect_period
 
             # Generating the list of infectiousness values for when we have 1
@@ -521,6 +637,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         """
         mock_next_time.return_value = 1.0
         mock_param.return_value.host_progression_lists = self.coefficients
+        mock_param.return_value.rate_multiplier_params = self.multipliers
         mock_param.return_value.latent_to_sympt_delay = 1
         mock_param.return_value.time_steps_per_day = 1
         mock_param.return_value.model_time_step = 1
@@ -613,6 +730,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             mock_param.return_value.use_waning_immunity = 1.0
             mock_param.return_value.asympt_infect_period = 14
             mock_param.return_value.time_steps_per_day = 1
+            mock_param.return_value.rate_multiplier_params = self.multipliers
             test_sweep = pe.sweep.HostProgressionSweep()
             test_sweep.bind_population(self.test_population1)
             self.person1.update_status(InfectionStatus.Recovered)
@@ -666,6 +784,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         mock_param.return_value.asympt_infect_period = 14
         mock_param.return_value.latent_to_sympt_delay = 0.5
         mock_param.return_value.host_progression_lists = self.coefficients
+        mock_param.return_value.rate_multiplier_params = self.multipliers
         mock_next_time.return_value = 0.0
         self.person1.time_of_status_change = 1.0
         self.person1.update_status(InfectionStatus.Susceptible)

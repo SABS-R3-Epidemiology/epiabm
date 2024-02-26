@@ -26,18 +26,35 @@ class TestPersonalInfection(TestPyEpiabm):
         cls.infectee.date_vaccinated = 0
         cls.infectee.is_vaccinated = True
         cls.infector.is_vaccinated = True
-        cls.time = 1
+        cls.infectee.infection_start_time = 1
+        cls.time = 2
 
     def test_person_inf(self):
         result = PersonalInfection.person_inf(self.infector, self.time)
         self.assertEqual(result, 0.5)
         self.assertIsInstance(result, float)
 
-    def test_person_susc(self):
-        result = PersonalInfection.person_susc(self.infector,
-                                               self.infectee,
+    def test_person_susc_no_waning(self):
+        pe.Parameters.instance().use_waning_immunity = 0
+        result = PersonalInfection.person_susc(self.infectee,
                                                self.time)
         self.assertEqual(result, 1.0)
+        self.assertIsInstance(result, float)
+
+    def test_person_susc_waning(self):
+        pe.Parameters.instance().use_waning_immunity = 1.0
+
+        # No pre-infection
+        result = PersonalInfection.person_susc(self.infectee,
+                                               self.time)
+        self.assertEqual(result, 1.0)
+        self.assertIsInstance(result, float)
+
+        # With pre-infection
+        self.infectee.increment_num_times_infected()
+        result2 = PersonalInfection.person_susc(self.infectee,
+                                                self.time)
+        self.assertEqual(result2, 0.0)
         self.assertIsInstance(result, float)
 
 

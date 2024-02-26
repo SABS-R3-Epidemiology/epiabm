@@ -41,6 +41,16 @@ class TestHouseholdInfection(TestPyEpiabm):
         self.assertEqual(result, 1.0)
         self.assertIsInstance(result, float)
 
+    def test_household_susc_waning(self):
+        pe.Parameters.instance().use_waning_immunity = 1.0
+
+        # use pre-infection
+        self.infectee.increment_num_times_infected()
+        self.infectee.infection_start_time = self.time
+        result = HouseholdInfection.household_susc(
+            self.infector, self.infectee, self.time)
+        self.assertEqual(result, 0.0)
+
     def test_house_inf_force(self):
         result = HouseholdInfection.household_foi(self.infector,
                                                   self.infectee,

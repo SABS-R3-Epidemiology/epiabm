@@ -65,8 +65,8 @@ class HouseholdInfection:
             Susceptibility parameter of household
 
         """
-        household_susceptibility = PersonalInfection.person_susc(
-            infector, infectee, time)
+        household_susceptibility = PersonalInfection.person_susc(infectee,
+                                                                 time)
         if (hasattr(infectee.microcell, 'distancing_start_time')) and (
                 infectee.microcell.distancing_start_time is not None) and (
                     infectee.microcell.distancing_start_time <= time):

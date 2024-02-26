@@ -407,5 +407,23 @@
                                 0.47651, 0.47651, 0.47651, 0.47651,
                                 0.47651, 0.47651, 0.47651, 0.47651,
                                 0.47651]
+    },
+"rate_multiplier_params": {
+    "gp_to_hosp": [0.25, 0.421052632],
+    "gp_to_death": [0.25, 0.421052632],
+
+    "exposed_to_infect": [0.75, 0.842105263],
+
+    "hosp_to_death": [0.9, 1],
+    "hosp_to_icu": [0.9, 1],
+
+    "icu_to_death": [0.9, 1]
+    },
+"antibody_level_params": {
+    "igg_peak_at_age_41": 4.26,
+    "igg_half_life_at_age_41": 85.38,
+    "peak_change_per_10_yrs_age": 0.21,
+    "half_life_diff_per_10_yrs_age": 4.07,
+    "days_positive_pcr_to_max_igg": 24
     }
 }

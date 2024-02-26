@@ -108,6 +108,7 @@ sim_params
 - ``initial_infected_number``: The initial number of infected individuals in the population
 - ``initial_infect_cell``: Whether to choose initial infected individuals from a single cell
 - ``simulation_seed``: Random seed for reproducible simulations - see above *(Optional)*
+- ``include_waning``: Boolean to determine whether immunity waning is included in the simulation *(Default false)*
 
 file_params
 """""""""""
@@ -123,9 +124,9 @@ inf_history_params
 *(For controlling the infection history output - Default None)*
 
 - ``output_dir``: String for the location for the output files, as a relative path
-- ``status_output``: Boolean to determine whether we need a csv file containing infection status values (Default false)
-- ``infectiousness_output``: Boolean to determine whether we need a csv file containing infectiousness (viral load) values (Default false)
-- ``compress``: Boolean to determine whether we compress a csv file containing infection status values and/or a csv file containing infectiousness (viral load) values if they are written (Default false)
+- ``status_output``: Boolean to determine whether we need a csv file containing infection status values *(Default false)*
+- ``infectiousness_output``: Boolean to determine whether we need a csv file containing infectiousness (viral load) values *(Default false)*
+- ``compress``: Boolean to determine whether we compress a csv file containing infection status values and/or a csv file containing infectiousness (viral load) values if they are written *(Default false)*
 
 Two lists of sweeps must also be passed to this function - the first
 will be executed once at the start of the simulation (i.e. to determine

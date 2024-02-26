@@ -86,6 +86,7 @@ Configure a simulation with a number of parameters. These are split into three c
 * `initial_infected_number`: The initial number of infected individuals in the population
 * `initial_infect_cell`: Whether to choose initial infected individuals from a single cell
 * `simulation_seed`:  Random seed for reproducible simulations - see above _(Optional)_
+* `include_waning`: Boolean to determine whether immunity waning is included in the simulation _(Default false)_
 
 *`file_params`* _(For controlling output location)_
 * `output_file`: String for the name of the output .csv file
