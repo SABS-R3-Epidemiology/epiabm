@@ -349,7 +349,6 @@ class HostProgressionSweep(AbstractSweep):
                                            InfectionStatus.Dead,
                                            InfectionStatus.Vaccinated]:
                 person.infectiousness = 0
-                # person.infection_start_time = None
 
     def __call__(self, time: float):
         """Sweeps through all people in the population, updates their
