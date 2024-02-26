@@ -129,7 +129,7 @@ class StateTransitionMatrix:
         pd.DataFrame
             Matrix in the form of a dataframe
 
-        """
+        """ # noqa
         waning_matrix =\
             StateTransitionMatrix.create_empty_state_transition_matrix()
         p = RateMultiplier(coeff["exposed_to_infect"][0],
