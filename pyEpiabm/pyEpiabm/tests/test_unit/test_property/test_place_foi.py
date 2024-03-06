@@ -40,10 +40,11 @@ class TestPlaceInfection(TestPyEpiabm):
 
         # use pre-infection
         self.infectee.increment_num_times_infected()
-        self.infectee.infection_start_time = self.time
+        self.infectee.infection_start_times = [self.time]
         result = PlaceInfection.place_susc(self.place,
                                            self.infectee, self.time)
         self.assertEqual(result, 0.0)
+        pe.Parameters.instance().use_waning_immunity = 0.0
 
     def test_place_inf(self):
         result = PlaceInfection.place_inf(self.place, self.infector, self.time)

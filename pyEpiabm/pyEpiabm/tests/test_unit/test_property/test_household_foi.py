@@ -46,10 +46,11 @@ class TestHouseholdInfection(TestPyEpiabm):
 
         # use pre-infection
         self.infectee.increment_num_times_infected()
-        self.infectee.infection_start_time = self.time
+        self.infectee.infection_start_times = [self.time]
         result = HouseholdInfection.household_susc(
             self.infector, self.infectee, self.time)
         self.assertEqual(result, 0.0)
+        pe.Parameters.instance().use_waning_immunity = 0.0
 
     def test_house_inf_force(self):
         result = HouseholdInfection.household_foi(self.infector,
