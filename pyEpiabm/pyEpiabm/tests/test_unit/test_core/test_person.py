@@ -71,8 +71,6 @@ class TestPerson(TestPyEpiabm):
             pe.property.InfectionStatus.InfectMild)
         self.person.household = MagicMock()
         self.person.update_status(pe.property.InfectionStatus.Exposed)
-        self.assertEqual(self.person.num_times_infected, 1)
-        self.assertListEqual(self.person.secondary_infections_counts, [0])
         self.assertEqual(
             self.person.infection_status,
             pe.property.InfectionStatus.Exposed)

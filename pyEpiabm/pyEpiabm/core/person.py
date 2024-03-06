@@ -149,11 +149,6 @@ class Person:
                 self.household is not None:
             self.household.add_susceptible_person(self)
         if self.infection_status == InfectionStatus.Exposed:
-
-            # Increment the number of times a person is infected and updates
-            # their secondary_infections_counts list with a new zero entry
-            self.increment_num_times_infected()
-            self.secondary_infections_counts += [0]
             if self.household is not None:
                 self.household.remove_susceptible_person(self)
 

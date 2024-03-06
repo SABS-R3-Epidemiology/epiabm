@@ -137,8 +137,13 @@ class HostProgressionSweep(AbstractSweep):
             infectiousness = (init_infectiousness *
                               pe.Parameters.instance().sympt_infectiousness)
             person.initial_infectiousness = infectiousness
-        person.infection_start_time = time
-        if person.infection_start_time < 0:
+
+        # Add new infection start time, increment number of times infected and
+        # add a new entry to the secondary_infections_counts list
+        person.infection_start_times.append(time)
+        person.increment_num_times_infected()
+        person.secondary_infections_counts.append(0)
+        if person.infection_start_times[-1] < 0:
             raise ValueError('The infection start time cannot be negative')
 
     def update_next_infection_status(self, person: Person, time: float = None):
