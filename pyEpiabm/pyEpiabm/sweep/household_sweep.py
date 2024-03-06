@@ -53,3 +53,6 @@ class HouseholdSweep(AbstractSweep):
                     r = random.uniform(0, 1)
                     if r < force_of_infection:
                         cell.enqueue_person(infectee)
+                        # Increment the infector's
+                        # secondary_infections_count
+                        infector.increment_secondary_infections()

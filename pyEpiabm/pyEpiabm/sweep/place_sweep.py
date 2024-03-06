@@ -54,6 +54,9 @@ class PlaceSweep(AbstractSweep):
                             if not infectee.is_susceptible():
                                 continue
                             cell.enqueue_person(infectee)
+                            # Increment the infector's
+                            # secondary_infections_count
+                            infector.increment_secondary_infections()
 
                     # Otherwise number of infectees is binomially
                     # distributed. Not sure if covidsim considers only
@@ -91,3 +94,6 @@ class PlaceSweep(AbstractSweep):
 
                             if r < force_of_infection:
                                 cell.enqueue_person(infectee)
+                                # Increment the infector's
+                                # secondary_infections_count
+                                infector.increment_secondary_infections()
