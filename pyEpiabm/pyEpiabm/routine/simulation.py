@@ -7,6 +7,7 @@ import os
 import logging
 import typing
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
 
 from pyEpiabm.core import Parameters, Population
@@ -62,6 +63,8 @@ class Simulation:
                a csv file containing infection status values
             * `infectiousness_output`: Boolean to determine whether we need \
                a csv file containing infectiousness (viral load) values
+            * `secondary_infections_output`: Boolean to determine whether we need a csv file \
+               containing secondary infections and R_t values
             * `compress`: Boolean to determine whether we compress \
                the infection history csv files
 
@@ -84,10 +87,11 @@ class Simulation:
         inf_history_params : dict
             This is short for 'infection history file parameters' and we will
             use the abbreviation 'ih' to refer to infection history throughout
-            this class. If both `status_output` and `infectiousness_output` are
-            False, then no infection history csv files are produced (or if
-            the dictionary is None). These files contain the infection status
-            or infectiousness of each person every time step. The EpiOS tool
+            this class. If `status_output`, `infectiousness_output` and
+            `secondary_infections_output` are all False, then no infection history csv files are
+            produced (or if the dictionary is None). These files contain the
+            infection status, infectiousness and secondary infection counts of
+            each person every time step respectively. The EpiOS tool
             (https://github.com/SABS-R3-Epidemiology/EpiOS) samples data from
             these files to mimic real life epidemic sampling techniques. These
             files can be compressed when 'compress' is True, reducing the size
@@ -148,8 +152,10 @@ class Simulation:
 
         self.status_output = False
         self.infectiousness_output = False
+        self.secondary_infections_output = False
         self.ih_status_writer = None
         self.ih_infectiousness_writer = None
+        self.secondary_infections_writer = None
         self.compress = False
 
         if inf_history_params:
@@ -157,21 +163,24 @@ class Simulation:
             # inf_history_params dict is empty then we do not need to record
             # this
             self.status_output = inf_history_params.get("status_output")
-
             self.infectiousness_output = inf_history_params\
                 .get("infectiousness_output")
+            self.secondary_infections_output = inf_history_params\
+                .get("secondary_infections_output")
             self.compress = inf_history_params.get("compress", False)
             person_ids = []
             person_ids += [person.id for cell in population.cells for person
                            in cell.persons]
             self.ih_output_titles = ["time"] + person_ids
+            self.Rt_output_titles = ["time"] + person_ids + ["R_t"]
             ih_folder = os.path.join(os.getcwd(),
                                      inf_history_params["output_dir"])
 
-            if not (self.status_output or self.infectiousness_output):
-                logging.warning("Both status_output and infectiousness_output "
-                                + "are False. Neither infection history csv "
-                                + "will be created.")
+            if not (self.status_output or self.infectiousness_output
+                    or self.secondary_infections_output):
+                logging.warning("status_output, infectiousness_output and "
+                                + "secondary_infections_output are False. "
+                                + "No infection history csvs will be created.")
 
             if self.status_output:
 
@@ -195,6 +204,18 @@ class Simulation:
                 self.ih_infectiousness_writer = _CsvDictWriter(
                     ih_folder, ih_file_name,
                     self.ih_output_titles
+                )
+
+            if self.secondary_infections_output:
+
+                ih_file_name = "secondary_infections.csv"
+                logging.info(
+                    f"Set secondary infections (R_t) location to "
+                    f"{os.path.join(ih_folder, ih_file_name)}")
+
+                self.secondary_infections_writer = _CsvDictWriter(
+                    ih_folder, ih_file_name,
+                    self.Rt_output_titles
                 )
 
     @log_exceptions()
@@ -224,9 +245,10 @@ class Simulation:
             self.write_to_ih_file(self.sim_params["simulation_start_time"],
                                   output_option="infectiousness")
 
-        for t in tqdm(np.arange(self.sim_params["simulation_start_time"] + ts,
-                                self.sim_params["simulation_end_time"] + ts,
-                                ts)):
+        times = np.arange(self.sim_params["simulation_start_time"] + ts,
+                          self.sim_params["simulation_end_time"] + ts,
+                          ts)
+        for t in tqdm(times):
             for sweep in self.sweeps:
                 sweep(t)
             self.write_to_file(t)
@@ -239,6 +261,8 @@ class Simulation:
             logging.debug(f'Iteration at time {t} days completed')
 
         logging.info(f"Final time {t} days reached")
+        if self.secondary_infections_writer:
+            self.write_to_Rt_file(times)
 
     def write_to_file(self, time):
         """Records the count number of a given list of infection statuses
@@ -336,6 +360,46 @@ class Simulation:
             infect_data["time"] = time
             self.ih_infectiousness_writer.write(infect_data)
 
+    def write_to_Rt_file(self, times: np.array):
+        """Records the number of secondary infections of each `Person` at the
+        time they first became infected. Each `Person` may have multiple
+        entries if they have been infected multiple times. Also records the
+        R_t value for each time step.
+
+        Parameters
+        ----------
+        times : np.array
+            An array of all time steps of the simulation
+        """
+        # Initialise the dataframe
+        all_times = np.hstack((np.array(self
+                                        .sim_params["simulation_start_time"]),
+                               times))
+        df = pd.DataFrame({"time": all_times})
+        for cell in self.population.cells:
+            for person in cell.persons:
+                person_data = np.empty(len(all_times))
+                # Initialise the person column as a column of NaNs
+                person_data[:] = np.nan
+
+                # The only non-NaN entries will be at the time steps in which
+                # the person was infected, and each entry will represent the
+                # number of secondary cases the person accumulated for that
+                # specific infection (if they have been infected multiple
+                # times)
+                for j in range(person.num_times_infected):
+                    person_data[int(person.infection_start_times[j])] = \
+                        person.secondary_infections_counts[j]
+                df[person.id] = person_data
+
+        # Save the R_t value for each time step (the mean of each row excluding
+        # NaNs)
+        df["R_t"] = np.nanmean(df.iloc[:, 1:].to_numpy(), axis=1)
+        df_dict = df.to_dict(orient='records')
+        for row in df_dict:
+            # Write each time step in dictionary form
+            self.secondary_infections_writer.write(row)
+
     def add_writer(self, writer: AbstractReporter):
         self.writers.append(writer)
 
@@ -348,6 +412,9 @@ class Simulation:
 
         if self.compress and self.ih_infectiousness_writer:
             self.ih_infectiousness_writer.compress()
+
+        if self.compress and self.secondary_infections_writer:
+            self.secondary_infections_writer.compress()
 
     @staticmethod
     def set_random_seed(seed):
