@@ -26,7 +26,7 @@ class TestPersonalInfection(TestPyEpiabm):
         cls.infectee.date_vaccinated = 0
         cls.infectee.is_vaccinated = True
         cls.infector.is_vaccinated = True
-        cls.infectee.infection_start_time = 1
+        cls.infectee.infection_start_times = [1.0]
         cls.time = 2
 
     def test_person_inf(self):
