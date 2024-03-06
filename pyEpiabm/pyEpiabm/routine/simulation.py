@@ -376,7 +376,7 @@ class Simulation:
         all_times = np.hstack((np.array(self
                                         .sim_params["simulation_start_time"]),
                                times))
-        df = pd.DataFrame({"time": all_times})
+        data_dict = {"time": all_times}
         for cell in self.population.cells:
             for person in cell.persons:
                 person_data = np.empty(len(all_times))
@@ -391,15 +391,18 @@ class Simulation:
                 for j in range(person.num_times_infected):
                     person_data[int(person.infection_start_times[j])] = \
                         person.secondary_infections_counts[j]
-                df[person.id] = person_data
+                data_dict[person.id] = person_data
 
-        # Save the R_t value for each time step (the mean of each row excluding
-        # NaNs)
+        # Change to dataframe to record the R_t values and to get the data
+        # in a list of dicts format
+        df = pd.DataFrame(data_dict)
         df["R_t"] = np.nanmean(df.iloc[:, 1:].to_numpy(), axis=1)
-        df_dict = df.to_dict(orient='records')
-        for row in df_dict:
+
+        # The below is a list of dictionaries for each time step
+        list_of_dicts = df.to_dict(orient='records')
+        for dict_row in list_of_dicts:
             # Write each time step in dictionary form
-            self.secondary_infections_writer.write(row)
+            self.secondary_infections_writer.write(dict_row)
 
     def add_writer(self, writer: AbstractReporter):
         self.writers.append(writer)
