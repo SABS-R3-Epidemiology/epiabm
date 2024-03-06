@@ -282,7 +282,7 @@ class TestSimulation(TestMockedLogs):
     @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
     @patch('pyEpiabm.routine.Simulation.write_to_Rt_file')
     @patch('os.makedirs')
-    def test_run_sweeps_ih_infectiousness(self, mock_mkdir, patch_write):
+    def test_run_sweeps_secondary_infections(self, mock_mkdir, patch_write):
         mo = mock_open()
         self.inf_history_params["infectiousness_output"] = False
         self.inf_history_params["status_output"] = False

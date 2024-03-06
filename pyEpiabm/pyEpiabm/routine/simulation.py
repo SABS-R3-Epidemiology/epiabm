@@ -63,8 +63,8 @@ class Simulation:
                a csv file containing infection status values
             * `infectiousness_output`: Boolean to determine whether we need \
                a csv file containing infectiousness (viral load) values
-            * `secondary_infections_output`: Boolean to determine whether we need a csv file \
-               containing secondary infections and R_t values
+            * `secondary_infections_output`: Boolean to determine whether we \
+               need a csv file containing secondary infections and R_t values
             * `compress`: Boolean to determine whether we compress \
                the infection history csv files
 
@@ -88,10 +88,11 @@ class Simulation:
             This is short for 'infection history file parameters' and we will
             use the abbreviation 'ih' to refer to infection history throughout
             this class. If `status_output`, `infectiousness_output` and
-            `secondary_infections_output` are all False, then no infection history csv files are
-            produced (or if the dictionary is None). These files contain the
-            infection status, infectiousness and secondary infection counts of
-            each person every time step respectively. The EpiOS tool
+            `secondary_infections_output` are all False, then no infection
+            history csv files are produced (or if the dictionary is None).
+            These files contain the infection status, infectiousness and
+            secondary infection counts of each person every time step
+            respectively. The EpiOS tool
             (https://github.com/SABS-R3-Epidemiology/EpiOS) samples data from
             these files to mimic real life epidemic sampling techniques. These
             files can be compressed when 'compress' is True, reducing the size
