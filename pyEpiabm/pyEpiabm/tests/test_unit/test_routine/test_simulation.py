@@ -577,7 +577,13 @@ class TestSimulation(TestMockedLogs):
                 test_sim.write_to_Rt_file(np.array([1]))
                 calls = mock_write.call_args_list
                 # Need to use np.testing for the NaNs
-                np.testing.assert_equal(calls[0].args[0], dict_1)
+                # Need to test keys and values separately in case we are using
+                # python 3.7 (for which np.testing.assert_equal will not work)
+                actual_dict = calls[0].args[0]
+                for key in dict_1:
+                    self.assertTrue(key in actual_dict)
+                    np.testing.assert_array_equal(dict_1[key],
+                                                  actual_dict[key])
                 self.assertDictEqual(calls[1].args[0], dict_2)
                 self.assertEqual(mock_write.call_count, 2)
         mock_mkdir.assert_called_with(
