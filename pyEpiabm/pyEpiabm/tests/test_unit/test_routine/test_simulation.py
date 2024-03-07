@@ -1,4 +1,5 @@
 import os
+import sys
 import random
 import numpy as np
 import unittest
@@ -579,7 +580,10 @@ class TestSimulation(TestMockedLogs):
                 # Need to use np.testing for the NaNs
                 # Need to test keys and values separately in case we are using
                 # python 3.7 (for which np.testing.assert_equal will not work)
-                actual_dict = calls[0].args[0]
+                if sys.version_info[1] <= 7:
+                    actual_dict = calls[0].args
+                else:
+                    actual_dict = calls[0].args[0]
                 for key in dict_1:
                     self.assertTrue(key in actual_dict.keys())
                     np.testing.assert_array_equal(dict_1[key],
