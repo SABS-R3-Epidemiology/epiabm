@@ -3,7 +3,7 @@ import sys
 import random
 import numpy as np
 import unittest
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import patch, mock_open, MagicMock, call
 
 import pyEpiabm as pe
 
@@ -580,16 +580,13 @@ class TestSimulation(TestMockedLogs):
                 # Need to use np.testing for the NaNs
                 # Need to test keys and values separately in case we are using
                 # python 3.7 (for which np.testing.assert_equal will not work)
-                if sys.version_info[1] <= 7:
-                    name, actual_dict = calls[0]
-                else:
+                if sys.version_info[1] > 7:
                     actual_dict = calls[0].args[0]
-                self.assertEqual(dict_1, actual_dict)
-                for key in dict_1:
-                    self.assertTrue(key in actual_dict.keys())
-                    np.testing.assert_array_equal(dict_1[key],
-                                                  actual_dict[key])
-                self.assertDictEqual(calls[1].args[0], dict_2)
+                    for key in dict_1:
+                        self.assertTrue(key in actual_dict.keys())
+                        np.testing.assert_array_equal(dict_1[key],
+                                                      actual_dict[key])
+                self.assertEqual(calls[1], call(dict_2))
                 self.assertEqual(mock_write.call_count, 2)
         mock_mkdir.assert_called_with(
             os.path.join(os.getcwd(), self.inf_history_params["output_dir"]))
