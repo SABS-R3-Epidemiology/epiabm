@@ -104,7 +104,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
 
     def test_set_infectiousness(self):
         """Tests that the set infectiousness function returns a positive
-        float and the correct infection start time.
+        float and the correct infection start times.
         """
         # Test with person1 as InfectASympt infection status and time an
         # integer.
@@ -112,20 +112,30 @@ class TestHostProgressionSweep(TestPyEpiabm):
         pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 0)
         self.assertIsInstance(self.person1.initial_infectiousness, float)
         self.assertTrue(0 <= self.person1.initial_infectiousness)
-        self.assertEqual(self.person1.infection_start_time, 0)
+        self.assertListEqual(self.person1.infection_start_times, [0])
+        self.assertEqual(self.person1.num_times_infected, 1)
+        self.assertListEqual(self.person1.secondary_infections_counts, [0])
         # Test with person1 as InfectMild infection status and time a non-zero
         # integer
         self.person1.update_status(InfectionStatus.InfectMild)
         pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 5)
         self.assertIsInstance(self.person1.initial_infectiousness, float)
         self.assertTrue(0 <= self.person1.initial_infectiousness)
-        self.assertEqual(self.person1.infection_start_time, 5)
+        self.assertListEqual(self.person1.infection_start_times,
+                             [0, 5])
+        self.assertEqual(self.person1.num_times_infected, 2)
+        self.assertListEqual(self.person1.secondary_infections_counts,
+                             [0, 0])
         # Test with person1 as InfectGP and time a float
         self.person1.update_status(InfectionStatus.InfectGP)
-        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 1.5)
+        pe.sweep.HostProgressionSweep.set_infectiousness(self.person1, 7.5)
         self.assertIsInstance(self.person1.initial_infectiousness, float)
         self.assertTrue(0 <= self.person1.initial_infectiousness)
-        self.assertEqual(self.person1.infection_start_time, 1.5)
+        self.assertListEqual(self.person1.infection_start_times,
+                             [0, 5, 7.5])
+        self.assertEqual(self.person1.num_times_infected, 3)
+        self.assertListEqual(self.person1.secondary_infections_counts,
+                             [0, 0, 0])
 
     def test_set_infectiousness_neg_time(self):
         """Tests that a value error is raised if the input time in 'set
@@ -531,7 +541,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             person.update_status(InfectionStatus(i + 1))
             person.next_infection_status = None
             person.initial_infectiousness = 1.1
-            person.infection_start_time = 0
+            person.infection_start_times = [0]
         # Updates infectiousness after one day
         for person in self.people:
             test_sweep._updates_infectiousness(person, 1)
@@ -548,14 +558,14 @@ class TestHostProgressionSweep(TestPyEpiabm):
     def test_invalid_update_infectiousness(self):
         test_sweep = pe.sweep.HostProgressionSweep()
         self.person1.infectiousness = 1
-        self.person1.infection_start_time = 0
+        self.person1.infection_start_times = [0]
         self.person1.update_status(InfectionStatus.Dead)
 
-        self.assertEqual(self.person1.infection_start_time, 0)
+        self.assertListEqual(self.person1.infection_start_times, [0])
         self.assertEqual(self.person1.infectiousness, 1)
         test_sweep._updates_infectiousness(self.person1, 1)
         self.assertEqual(self.person1.infectiousness, 0)
-        self.assertEqual(self.person1.infection_start_time, 0)
+        self.assertListEqual(self.person1.infection_start_times, [0])
 
     def test_compare_value_update_infectiousness(self):
         """Tests that a person's infectiousness is correctly updated by
@@ -602,7 +612,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
             for person in [person_1, person_2]:
                 person.update_status(InfectionStatus(3))
                 person.initial_infectiousness = 1
-                person.infection_start_time = 0
+                person.infection_start_times = [0]
             # We generate a list containing the infectiousness values of the
             # person for each simulation time step length
             person_infectiousness_ts1 = list()
@@ -667,13 +677,13 @@ class TestHostProgressionSweep(TestPyEpiabm):
                          pe.property.InfectionStatus.Exposed)
         self.assertEqual(self.person3.infection_status,
                          pe.property.InfectionStatus.Susceptible)
-        # Checks infectiousness update and infection start time
+        # Checks infectiousness update and infection start times
         self.assertEqual(self.person3.infectiousness, 0)
-        self.assertEqual(self.person3.infection_start_time, None)
+        self.assertListEqual(self.person3.infection_start_times, [])
         self.assertEqual(self.person1.infectiousness, 0)
-        self.assertEqual(self.person1.infection_start_time, None)
+        self.assertListEqual(self.person1.infection_start_times, [])
         self.assertGreater(self.person2.infectiousness, 0)
-        self.assertIsInstance(self.person2.infection_start_time, float)
+        self.assertListEqual(self.person2.infection_start_times, [1.0])
         # Checks time of status change
         self.assertIsInstance(self.person2.time_of_status_change, float)
         self.assertIsInstance(self.person1.time_of_status_change, float)
@@ -719,7 +729,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         self.assertEqual(self.person1.next_infection_status, None)
         self.assertEqual(self.person1.time_of_status_change, np.inf)
         self.assertEqual(self.person1.infectiousness, 0)
-        self.assertEqual(self.person1.infection_start_time, None)
+        self.assertListEqual(self.person1.infection_start_times, [])
 
     def test_call_waning_immunity(self):
         """Tests that a Recovered person will progress to Susceptible at the

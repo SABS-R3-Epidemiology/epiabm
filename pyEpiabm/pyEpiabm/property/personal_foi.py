@@ -71,7 +71,7 @@ class PersonalInfection:
                                        params['peak_change_per_10_yrs_age'],
                                        params['half_life_diff_per_10_yrs_age'],
                                        params['days_positive_pcr_to_max_igg'])
-            time_since_infection = time - infectee.infection_start_time
+            time_since_infection = time - infectee.infection_start_times[-1]
             return 1.0 * PersonalInfection.m(time_since_infection,
                                              infectee.age_group)
         else:

@@ -50,7 +50,8 @@ class Person:
         self.place_types = []
         self.next_infection_status = None
         self.time_of_status_change = None
-        self.infection_start_time = None
+        self.infection_start_times = []
+        self.secondary_infections_counts = []
         self.time_of_recovery = None
         self.num_times_infected = 0
         self.care_home_resident = False
@@ -148,7 +149,6 @@ class Person:
                 self.household is not None:
             self.household.add_susceptible_person(self)
         if self.infection_status == InfectionStatus.Exposed:
-            self.increment_num_times_infected()
             if self.household is not None:
                 self.household.remove_susceptible_person(self)
 
@@ -278,3 +278,15 @@ class Person:
         useful parameter to keep track of.
         """
         self.num_times_infected += 1
+
+    def increment_secondary_infections(self):
+        """Increments the number of secondary infections the given person has
+        for this specific infection period (i.e. if the given person has been
+        infected multiple times, then we only increment the current secondary
+        infection count)
+        """
+        try:
+            self.secondary_infections_counts[-1] += 1
+        except IndexError:
+            raise RuntimeError("Cannot call increment_secondary_infections "
+                               "while secondary_infections_counts is empty")

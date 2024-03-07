@@ -34,6 +34,7 @@ class TestSpatialSweep(TestMockedLogs):
         self.microcell_inf.add_people(1)
         self.infector = self.microcell_inf.persons[0]
         self.infector.update_status(InfectionStatus.InfectMild)
+        self.infector.secondary_infections_counts = [0]
 
         self.microcell_susc.add_people(1)
         self.infectee = self.microcell_susc.persons[0]
@@ -58,6 +59,7 @@ class TestSpatialSweep(TestMockedLogs):
         self.infector_only1.update_status(InfectionStatus.InfectMild)
 
         self.infector_only1.infectiousness = 1.0
+        self.infector_only1.secondary_infections_counts = [0]
         Parameters.instance().time_steps_per_day = 1
         Parameters.instance().do_CovidSim = False
 
@@ -81,6 +83,7 @@ class TestSpatialSweep(TestMockedLogs):
         self.microcell_no_infectees_inf.add_people(1)
         self.no_infectees_infector = self.microcell_no_infectees_inf.persons[0]
         self.no_infectees_infector.update_status(InfectionStatus.InfectMild)
+        self.no_infectees_infector.secondary_infections_counts = [0]
 
         self.microcell_no_infectees_rec.add_people(1)
         self.no_infectees_rec = self.microcell_no_infectees_rec.persons[0]
@@ -254,6 +257,7 @@ class TestSpatialSweep(TestMockedLogs):
         test_sweep.bind_population(test_pop)
         test_sweep(time)
         self.assertTrue(self.cell_inf.person_queue.empty())
+        self.assertListEqual(self.infector.secondary_infections_counts, [1])
 
         mock_inf.assert_called_once_with(self.cell_inf, time)
         mock_foi.assert_called_once_with(self.cell_inf, self.cell_susc,
@@ -264,20 +268,24 @@ class TestSpatialSweep(TestMockedLogs):
         self.infector.update_status(InfectionStatus.InfectMild)
         test_sweep(time)
         self.assertEqual(self.cell_inf.person_queue.qsize(), 0)
+        self.assertListEqual(self.infector.secondary_infections_counts, [2])
         Parameters.instance().do_CovidSim = True
         self.cell_susc.person_queue = Queue()
         test_sweep(time)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
+        self.assertListEqual(self.infector.secondary_infections_counts, [3])
         # Check when we have an infector but no infectees
         self.infectee.update_status(InfectionStatus.Recovered)
         self.cell_susc.person_queue = Queue()
         test_sweep(time)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 0)
+        self.assertListEqual(self.infector.secondary_infections_counts, [3])
 
         # Test parameters break-out clause
         Parameters.instance().infection_radius = 0
         test_sweep(time)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 0)
+        self.assertListEqual(self.infector.secondary_infections_counts, [3])
 
         mock_inf_list.assert_called_with(self.cell_inf, [self.cell_susc], time)
         mock_list_covid.assert_called_with(self.infector, [self.cell_susc],
@@ -295,6 +303,8 @@ class TestSpatialSweep(TestMockedLogs):
         test_sweep(time=1)
         self.assertTrue(self.cell_inf.person_queue.empty())
         self.assertEqual(self.cell_no_infectees_rec.person_queue.qsize(), 0)
+        self.assertListEqual(self.no_infectees_infector
+                             .secondary_infections_counts, [0])
 
     @mock.patch("random.random")
     def test_do_infection_event(self, mock_random):
@@ -318,10 +328,12 @@ class TestSpatialSweep(TestMockedLogs):
         test_sweep.do_infection_event(self.infector, fake_infectee, 1)
         self.assertFalse(mock_random.called)  # Should have already returned
         self.assertTrue(cell_susc.person_queue.empty())
+        self.assertListEqual(self.infector.secondary_infections_counts, [0])
 
         test_sweep.do_infection_event(self.infector, actual_infectee, 1)
         mock_random.assert_called_once()
         self.assertEqual(cell_susc.person_queue.qsize(), 1)
+        self.assertListEqual(self.infector.secondary_infections_counts, [1])
 
 
 if __name__ == '__main__':

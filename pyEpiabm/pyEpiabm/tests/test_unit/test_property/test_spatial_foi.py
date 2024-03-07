@@ -44,10 +44,11 @@ class TestSpatialInfection(TestPyEpiabm):
 
         # use pre-infection
         self.infectee.increment_num_times_infected()
-        self.infectee.infection_start_time = self.time
+        self.infectee.infection_start_times = [self.time]
         result = SpatialInfection.spatial_susc(
             self.cell, self.infectee, self.time)
         self.assertEqual(result, 0.0)
+        pe.Parameters.instance().use_waning_immunity = 0.0
 
     @patch('pyEpiabm.core.Parameters.instance')
     def test_spatial_susc_no_age(self, mock_params):

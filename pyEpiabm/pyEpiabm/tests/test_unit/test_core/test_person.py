@@ -71,7 +71,6 @@ class TestPerson(TestPyEpiabm):
             pe.property.InfectionStatus.InfectMild)
         self.person.household = MagicMock()
         self.person.update_status(pe.property.InfectionStatus.Exposed)
-        self.assertEqual(self.person.num_times_infected, 1)
         self.assertEqual(
             self.person.infection_status,
             pe.property.InfectionStatus.Exposed)
@@ -136,6 +135,19 @@ class TestPerson(TestPyEpiabm):
     def test_increment_num_times_infected(self):
         self.person.increment_num_times_infected()
         self.assertEqual(self.person.num_times_infected, 1)
+
+    def test_increment_secondary_infections_erroneous(self):
+        with self.assertRaises(RuntimeError) as ve:
+            self.person.increment_secondary_infections()
+        self.assertEqual("Cannot call increment_secondary_infections "
+                         "while secondary_infections_counts is empty",
+                         str(ve.exception))
+
+    def test_increment_secondary_infections(self):
+        self.person.secondary_infections_counts = [2, 5, 1]
+        self.person.increment_secondary_infections()
+        self.assertListEqual(self.person.secondary_infections_counts,
+                             [2, 5, 2])
 
 
 if __name__ == '__main__':

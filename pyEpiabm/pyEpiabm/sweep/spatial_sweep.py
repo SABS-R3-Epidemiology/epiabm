@@ -249,6 +249,8 @@ class SpatialSweep(AbstractSweep):
         r = random.random()
         if r < force_of_infection:
             infectee.microcell.cell.enqueue_person(infectee)
+            # Increment the infector's secondary_infections_count
+            infector.increment_secondary_infections()
 
     def bind_population(self, population):
         super().bind_population(population)
