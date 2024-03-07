@@ -285,8 +285,8 @@ class Person:
         infected multiple times, then we only increment the current secondary
         infection count)
         """
-        if self.secondary_infections_counts:
+        try:
             self.secondary_infections_counts[-1] += 1
-        else:
+        except IndexError:
             raise RuntimeError("Cannot call increment_secondary_infections "
                                "while secondary_infections_counts is empty")
