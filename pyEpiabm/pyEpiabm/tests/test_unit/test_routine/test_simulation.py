@@ -584,6 +584,7 @@ class TestSimulation(TestMockedLogs):
                     actual_dict = calls[0].args
                 else:
                     actual_dict = calls[0].args[0]
+                self.assertDictEqual(dict_1, actual_dict)
                 for key in dict_1:
                     self.assertTrue(key in actual_dict.keys())
                     np.testing.assert_array_equal(dict_1[key],
