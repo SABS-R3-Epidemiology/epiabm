@@ -595,7 +595,8 @@ class TestSimulation(TestMockedLogs):
                 # Need to use np.testing for the NaNs
                 # Need to test keys and values separately in case we are using
                 # python 3.7 (for which np.testing.assert_equal will not work)
-                if sys.version_info[0] >= 3 or sys.version_info[1] >= 8:
+                major, minor = sys.version_info[0], sys.version_info[1]
+                if major >= 4 or (major == 3 and minor >= 8):
                     actual_dict_1 = calls[0].args[0]
                     for key in dict_1:
                         self.assertTrue(key in actual_dict_1)
