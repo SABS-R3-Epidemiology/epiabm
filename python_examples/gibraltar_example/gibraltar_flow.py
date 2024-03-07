@@ -80,7 +80,7 @@ sim.configure(
     inf_history_params
 )
 sim.run_sweeps()
-sim.compress_csv()
+#sim.compress_csv()
 
 # Need to close the writer object at the end of each simulation.
 del (sim.writer)
