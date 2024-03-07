@@ -3,7 +3,7 @@ import sys
 import random
 import numpy as np
 import unittest
-from unittest.mock import patch, mock_open, MagicMock, call
+from unittest.mock import patch, mock_open, MagicMock
 
 import pyEpiabm as pe
 
