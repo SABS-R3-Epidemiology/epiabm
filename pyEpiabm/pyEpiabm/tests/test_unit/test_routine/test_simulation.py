@@ -581,7 +581,7 @@ class TestSimulation(TestMockedLogs):
                 # Need to test keys and values separately in case we are using
                 # python 3.7 (for which np.testing.assert_equal will not work)
                 if sys.version_info[1] <= 7:
-                    name, actual_dict, kwargs = calls[0]
+                    name, actual_dict = calls[0]
                 else:
                     actual_dict = calls[0].args[0]
                 self.assertEqual(dict_1, actual_dict)
