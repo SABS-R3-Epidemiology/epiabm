@@ -8,7 +8,7 @@
     "asympt_infect_period": 8,
     "mean_mild_to_recov": 5.5,
     "mean_gp_to_recov": 8.5,
-    "mean_gp_to_hosp": 4.5,
+    "mean_gp_to_hosp": 5.5,
     "mean_gp_to_death": 7,
     "mean_hosp_to_recov": 3.7,
     "mean_hosp_to_icu": 1,
