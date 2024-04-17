@@ -33,7 +33,7 @@ class TestInitialDemographicsSweep(TestPyEpiabm):
         person_1_0_0_0.age = 65
         person_1_0_0_0.care_home_resident = True
         person_1_0_0_1 = microcell_1_0.households[0].persons[1]
-        person_1_0_0_1
+        person_1_0_0_1.age_group = 8
         person_1_0_0_1.age = 40
         self.dem_file_params = {"output_dir":
                                 "pyEpiabm/pyEpiabm/tests/test_output/mock"}
