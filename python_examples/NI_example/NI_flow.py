@@ -36,7 +36,7 @@ population = pe.routine.FilePopulationFactory.make_pop(file_loc,
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
-              "initial_infected_number": 0, "initial_infect_cell": True,
+              "initial_infected_number": 100, "initial_infect_cell": True,
               "simulation_seed": 42}
 
 file_params = {"output_file": "output_NI.csv",
@@ -54,6 +54,7 @@ inf_history_params = {"output_dir": os.path.join(os.path.dirname(__file__),
                                                  "simulation_outputs"),
                       "status_output": True,
                       "infectiousness_output": True,
+                      "secondary_infections_output": True,
                       "compress": False}
 
 # Create a simulation object, configure it with the parameters given, then
