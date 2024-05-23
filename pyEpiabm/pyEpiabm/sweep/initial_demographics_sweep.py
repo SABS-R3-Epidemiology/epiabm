@@ -61,6 +61,14 @@ class InitialDemographicsSweep(AbstractSweep):
         self.titles.append("kw_or_chr")
         self.writer = _CsvDictWriter(
             folder, file_name, self.titles)
+        num_age_groups = (len(Parameters.instance().age_proportions)
+                          if Parameters.instance().age_proportions.size
+                          and self.age_output
+                          else 1)
+        self.count_titles = (["Cell"] +
+                             [f"Age group {i}" for i in range(num_age_groups)])
+        self.counts_writer = _CsvDictWriter(
+            folder, "counts.csv", self.count_titles)
 
     def __call__(self, *args):
         """During the initial sweeps, this will be called, and will loop
@@ -70,12 +78,18 @@ class InitialDemographicsSweep(AbstractSweep):
         age_group (int, optional), location_x (float, optional), location_y
         (float, optional), kw_or_chr (str).
 
+        Furthermore, we write up the counts of how many people there are per
+        age group within each cell in a contingency table .csv file titled
+        "counts.csv".
+
         Note that kw_or_chr stands for 'key worker or care home resident'. For
         kw_or_chr, 'W' refers to a key worker, 'C' refers to a care home
         resident and 'X' refers to a person who is neither.
 
         """
         for cell in self._population.cells:
+            cell_count_dict = {title: 0 for title in self.count_titles}
+            cell_count_dict["Cell"] = cell.id
             for person in cell.persons:
                 data = {"id": person.id,
                         "age": person.age
@@ -88,3 +102,10 @@ class InitialDemographicsSweep(AbstractSweep):
                         ("C" if person.care_home_resident else "X")}
                 data = {k: data[k] for k in data if data[k] is not None}
                 self.writer.write(data)
+                # Update cell_count_dict
+                age_str = (f"Age group {person.age_group}"
+                           if self.age_output else "Age group 0")
+                # The below line will increment the age group count in the
+                # dictionary
+                cell_count_dict.update({age_str: cell_count_dict[age_str] + 1})
+            self.counts_writer.write(cell_count_dict)
