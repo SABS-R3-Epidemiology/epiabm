@@ -54,6 +54,8 @@ class Person:
         self.secondary_infections_counts = []
         self.time_of_recovery = None
         self.num_times_infected = 0
+        self.exposure_period = None
+        self.serial_interval_dict = {}
         self.care_home_resident = False
         self.key_worker = False
         self.date_positive = None
@@ -283,10 +285,55 @@ class Person:
         """Increments the number of secondary infections the given person has
         for this specific infection period (i.e. if the given person has been
         infected multiple times, then we only increment the current secondary
-        infection count)
+        infection count).
         """
         try:
             self.secondary_infections_counts[-1] += 1
         except IndexError:
             raise RuntimeError("Cannot call increment_secondary_infections "
                                "while secondary_infections_counts is empty")
+
+    def set_exposure_period(self, exposure_period: float):
+        """Sets the exposure period (we define here as the time between a
+        primary case infection and a secondary case exposure, with the current
+        `Person` being the secondary case). We store this to be added to the
+        latent period of the infection to give a serial interval.
+
+        Parameters
+        ----------
+        exposure_period : float
+            The time between the infector's time of infection and the time
+            of exposure to the current Person
+        """
+        self.exposure_period = exposure_period
+
+    def store_serial_interval(self, latent_period: float):
+        """Adds this `latent_period` to the current `exposure_period` to give
+        a `serial_interval`, which will be stored in the
+        `serial_interval_dict`. The serial interval is the time between a
+        primary case infection and a secondary case infection.
+
+        Parameters
+        ----------
+        latent_period : float
+            The period between this `Person`'s time of exposure and this
+            `Person`'s time of infection
+        """
+        # This method has been called erroneously if the exposure period is
+        # None
+        if self.exposure_period is None:
+            raise RuntimeError("Cannot call store_serial_interval while the"
+                               " exposure_period is None")
+
+        serial_interval = self.exposure_period + latent_period
+        # The reference day is the day the primary case was first infected
+        # This is what we will store in the dictionary
+        reference_day = self.infection_start_times[-1] - serial_interval
+        try:
+            (self.serial_interval_dict[reference_day]
+             .append(serial_interval))
+        except KeyError:
+            self.serial_interval_dict[reference_day] = [serial_interval]
+
+        # Reset the exposure period for the next infection
+        self.exposure_period = None

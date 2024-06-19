@@ -324,6 +324,13 @@ class HostProgressionSweep(AbstractSweep):
 
         person.time_of_status_change = time + transition_time
 
+        # Finally, if the person is Exposed, we can store their latency period
+        # as the transition_time. This can be used for calculating the serial
+        # interval
+        if person.infection_status == InfectionStatus.Exposed:
+            latent_period = transition_time
+            person.store_serial_interval(latent_period)
+
     def _updates_infectiousness(self, person: Person, time: float):
         """Updates infectiousness. Scales using the initial infectiousness
         if the person is in an infectious state. Updates the infectiousness to

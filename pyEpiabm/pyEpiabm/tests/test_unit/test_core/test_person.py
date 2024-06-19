@@ -149,6 +149,16 @@ class TestPerson(TestPyEpiabm):
         self.assertListEqual(self.person.secondary_infections_counts,
                              [2, 5, 2])
 
+    def test_add_serial_interval(self):
+        self.person.infection_start_times.append(1.0)
+        self.person.add_serial_interval(2.0)
+        self.person.infection_start_times.append(4.0)
+        self.person.add_serial_interval(1.0)
+        self.person.add_serial_interval(1.0)
+        self.person.add_serial_interval(3.0)
+        self.assertDictEqual(self.person.serial_interval_dict,
+                             {1.0: [2.0], 4.0: [1.0, 1.0, 3.0]})
+
 
 if __name__ == '__main__':
     unittest.main()
