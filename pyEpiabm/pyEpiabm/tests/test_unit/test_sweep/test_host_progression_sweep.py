@@ -376,6 +376,32 @@ class TestHostProgressionSweep(TestPyEpiabm):
                 else:
                     self.assertLessEqual(current_time, time_of_status_change)
 
+    def test_update_time_status_change_serial_interval(self):
+        """Tests that an exposed person has their latency period stored and
+        added to their exposure_period to give a serial interval (to be stored)
+        This occurs at the end of the update_time_status_change method
+        """
+        test_sweep = pe.sweep.HostProgressionSweep()
+        # 3 days between their infector becoming infected and now (the time
+        # of the infection event)
+        self.person1.set_exposure_period(3.0)
+        self.person1.update_status(InfectionStatus.Exposed)
+        self.person1.next_infection_status = InfectionStatus.InfectMild
+        current_time = 5.0
+        test_sweep.update_time_status_change(self.person1, current_time)
+        time_of_status_change = self.person1.time_of_status_change
+        # The time_of_status_change to InfectMild minus the current_time
+        # gives the length of time that the person is latent
+        latent_period = time_of_status_change - current_time
+        # The reference time is the time in which their infector became
+        # infected
+        reference_time = 5.0 - 3.0
+        # The serial_interval_dict records their serial_interval (defined as
+        # the time between the infector having Infect status and the current
+        # person having Infect status) at the reference time
+        self.assertDictEqual(self.person1.serial_interval_dict,
+                             {reference_time: [3.0 + latent_period]})
+
     def test_update_time_status_change_waning_immunity(self):
         """Tests that the time to status change of a Recovered person with
         waning immunity is equal to the output of the InverseCDF method. This

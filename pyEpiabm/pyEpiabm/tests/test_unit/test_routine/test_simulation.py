@@ -706,19 +706,19 @@ class TestSimulation(TestMockedLogs):
                                self.inf_history_params)
             person1 = self.rt_test_population.cells[0].persons[0]
             person1.num_times_infected = 2
-            person1.infection_start_times = [0.0, 2.0]
-            person1.serial_interval_dict = {0.0: [6.0, 3.0], 2.0: [3.0]}
+            person1.infection_start_times = [2.0, 10.0]
+            person1.serial_interval_dict = {0.0: [2.0], 1.0: [9.0]}
             person2 = self.rt_test_population.cells[0].persons[1]
             person2.num_times_infected = 1
-            person2.infection_start_times = [1.0]
-            person2.serial_interval_dict = {1.0: [4.0]}
+            person2.infection_start_times = [5.0]
+            person2.serial_interval_dict = {2.0: [3.0]}
             person3 = self.rt_test_population.cells[0].persons[2]
             person3.num_times_infected = 1
-            person3.infection_start_times = [1.0]
-            person3.serial_interval_dict = {1.0: [7.0, 5.0]}
-            dict_0 = {0.0: 6.0, 1.0: 4.0, 2.0: 3.0}
-            dict_1 = {0.0: 3.0, 1.0: 7.0, 2.0: np.nan}
-            dict_2 = {0.0: np.nan, 1.0: 5.0, 2.0: np.nan}
+            person3.infection_start_times = [3.0, 11.0, 21.0]
+            person3.serial_interval_dict = {0.0: [3.0, 11.0], 2.0: [19.0]}
+            dict_0 = {0.0: 2.0, 1.0: 9.0, 2.0: 3.0}
+            dict_1 = {0.0: 3.0, 1.0: np.nan, 2.0: 19.0}
+            dict_2 = {0.0: 11.0, 1.0: np.nan, 2.0: np.nan}
 
             with patch('pyEpiabm.output._csv_dict_writer'
                        '._CsvDictWriter.write') as mock_write:

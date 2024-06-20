@@ -149,15 +149,40 @@ class TestPerson(TestPyEpiabm):
         self.assertListEqual(self.person.secondary_infections_counts,
                              [2, 5, 2])
 
-    def test_add_serial_interval(self):
-        self.person.infection_start_times.append(1.0)
-        self.person.add_serial_interval(2.0)
-        self.person.infection_start_times.append(4.0)
-        self.person.add_serial_interval(1.0)
-        self.person.add_serial_interval(1.0)
-        self.person.add_serial_interval(3.0)
+    def test_set_exposure_period(self):
+        self.person.set_exposure_period(exposure_period=5)
+        self.assertEqual(self.person.exposure_period, 5)
+
+    def test_store_serial_interval_erroneous(self):
+        with self.assertRaises(RuntimeError) as ve_1:
+            self.person.store_serial_interval(4.0)
+        self.assertEqual(str(ve_1.exception),
+                         "Cannot call store_serial_interval while the"
+                         " exposure_period is None")
+        # Infect once with an exposure period for successful method call
+        self.person.set_exposure_period(1.0)
+        self.person.time_of_status_change = 2.0
+        self.person.store_serial_interval(latent_period=1.0)
+        # Do not add the exposure period for failure
+        self.person.time_of_status_change = 19.0
+        with self.assertRaises(RuntimeError) as ve_2:
+            self.person.store_serial_interval(latent_period=4.0)
+        self.assertEqual(str(ve_2.exception),
+                         "Cannot call store_serial_interval while the"
+                         " exposure_period is None")
+
+    def test_store_serial_interval(self):
+        self.person.set_exposure_period(1.0)
+        self.person.time_of_status_change = 2.0
+        self.person.store_serial_interval(latent_period=1.0)
+        self.person.set_exposure_period(2.0)
+        self.person.time_of_status_change = 6.0
+        self.person.store_serial_interval(latent_period=4.0)
+        self.person.set_exposure_period(5.0)
+        self.person.time_of_status_change = 19.0
+        self.person.store_serial_interval(latent_period=4.0)
         self.assertDictEqual(self.person.serial_interval_dict,
-                             {1.0: [2.0], 4.0: [1.0, 1.0, 3.0]})
+                             {0.0: [2.0, 6.0], 10.0: [9.0]})
 
 
 if __name__ == '__main__':

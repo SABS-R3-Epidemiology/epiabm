@@ -311,7 +311,8 @@ class Person:
         """Adds this `latent_period` to the current `exposure_period` to give
         a `serial_interval`, which will be stored in the
         `serial_interval_dict`. The serial interval is the time between a
-        primary case infection and a secondary case infection.
+        primary case infection and a secondary case infection. This method
+        is called immediately after a person becomes exposed.
 
         Parameters
         ----------
@@ -328,7 +329,7 @@ class Person:
         serial_interval = self.exposure_period + latent_period
         # The reference day is the day the primary case was first infected
         # This is what we will store in the dictionary
-        reference_day = self.infection_start_times[-1] - serial_interval
+        reference_day = self.time_of_status_change - serial_interval
         try:
             (self.serial_interval_dict[reference_day]
              .append(serial_interval))
