@@ -64,18 +64,21 @@ class TestHouseholdSweep(TestPyEpiabm):
         # Add one susceptible to the population, with the mocked infectiousness
         # ensuring they are added to the infected queue.
         self.person.infection_status = pe.property.InfectionStatus.InfectMild
+        self.person.infection_start_times = [0.0]
         test_queue = Queue()
         new_person = pe.Person(self.microcell)
         new_person.household = self.house
         self.house.persons.append(new_person)
         self.house.susceptible_persons.append(new_person)
         self.pop.cells[0].persons.append(new_person)
+        self.assertEqual(new_person.exposure_period, None)
 
         test_queue.put(new_person)
         self.test_sweep.bind_population(self.pop)
         self.test_sweep(self.time)
         self.assertEqual(self.cell.person_queue.qsize(), 1)
         self.assertListEqual(self.person.secondary_infections_counts, [1])
+        self.assertEqual(new_person.exposure_period, 1.0)
 
         # Change the additional person to recovered, and assert the queue
         # is empty.
@@ -87,6 +90,7 @@ class TestHouseholdSweep(TestPyEpiabm):
         self.test_sweep(self.time)
         self.assertTrue(self.cell.person_queue.empty())
         self.assertListEqual(self.person.secondary_infections_counts, [1])
+        self.assertEqual(new_person.exposure_period, 1.0)
 
     def test_no_households(self):
         pop_nh = pe.Population()  # Population without households
