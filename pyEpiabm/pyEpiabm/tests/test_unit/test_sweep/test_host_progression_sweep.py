@@ -364,6 +364,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
                     continue  # Method should not be used to infect people
 
                 test_sweep.update_next_infection_status(person)
+                if person.infection_status.name == 'Exposed':
+                    person.set_exposure_period(2.0)
                 test_sweep.update_time_status_change(person, current_time)
                 time_of_status_change = person.time_of_status_change
                 if person.infection_status.name in ['Recovered', 'Dead',
@@ -682,6 +684,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         mock_param.return_value.infectiousness_prof = self.mock_inf_prog
         # First check that people progress through the
         # infection stages correctly.
+        self.person2.set_exposure_period(1.0)
         self.person2.update_status(pe.property.InfectionStatus.Exposed)
         self.person2.time_of_status_change = 1.0
         self.person2.next_infection_status = \
@@ -696,6 +699,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         # Tests population bound successfully.
         self.assertEqual(test_sweep._population.cells[0].persons[1].
                          infection_status, pe.property.InfectionStatus.Exposed)
+        self.person1.set_exposure_period(1.0)
         test_sweep(1.0)
         self.assertEqual(self.person2.infection_status,
                          pe.property.InfectionStatus.InfectMild)
@@ -823,6 +827,7 @@ class TestHostProgressionSweep(TestPyEpiabm):
         mock_param.return_value.rate_multiplier_params = self.multipliers
         mock_next_time.return_value = 0.0
         self.person1.time_of_status_change = 1.0
+        self.person1.set_exposure_period(1.0)
         self.person1.update_status(InfectionStatus.Susceptible)
         self.person1.next_infection_status = InfectionStatus.Exposed
         test_sweep = pe.sweep.HostProgressionSweep()
