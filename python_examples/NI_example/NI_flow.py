@@ -12,9 +12,9 @@ import matplotlib.pyplot as plt
 import pyEpiabm as pe
 
 # Add plotting functions to path
-# sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir,
-#                 "./age_stratified_example"))
-# from age_stratified_plot import Plotter  # noqa
+sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir,
+                "./age_stratified_example"))
+from age_stratified_plot import Plotter  # noqa
 
 # Setup output for logging file
 logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
@@ -23,7 +23,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                                    "NI_parameters.json"))
+                                    "NI_measles_parameters.json"))
 
 # Generate population from input file
 # (Input converted from CovidSim with `microcell_conversion.py`)
@@ -108,13 +108,13 @@ plt.savefig(os.path.join(os.path.dirname(__file__),
 # Default file format is .png, but can be changed to .pdf, .svg, etc.
 
 # Creation of a plot of results with age stratification
-# if file_params["age_stratified"]:
-# p = Plotter(os.path.join(os.path.dirname(__file__),
-#             "simulation_outputs/output_ireland.csv"),
-#             start_date='18-03-2022', sum_weekly=True)
-# p.barchart(os.path.join(os.path.dirname(__file__),
-#            "simulation_outputs/age_stratify.png"),
-#            write_Df_toFile=os.path.join(os.path.dirname(__file__),
-#            "simulation_outputs/ireland_weeky_cases.csv"),
-#            param_file=os.path.join(os.path.dirname(__file__),
-#            "ireland_parameters.json"))
+if file_params["age_stratified"]:
+    p = Plotter(os.path.join(os.path.dirname(__file__),
+                "simulation_outputs/output_NI.csv"),
+                start_date='18-03-2022', sum_weekly=True)
+    p.barchart(os.path.join(os.path.dirname(__file__),
+            "simulation_outputs/age_stratify.png"),
+            write_Df_toFile=os.path.join(os.path.dirname(__file__),
+            "simulation_outputs/NI_weeky_cases.csv"),
+            param_file=os.path.join(os.path.dirname(__file__),
+            "NI_measles_parameters.json"))
