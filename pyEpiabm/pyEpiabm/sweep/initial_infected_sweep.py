@@ -99,9 +99,12 @@ class InitialInfectedSweep(AbstractSweep):
                                         population to infect due to excluding \
                                         care home residents')
 
+        all_persons = [pers for pers in all_persons if pers.age_group <= 3]
+
         pers_to_infect = random.sample(all_persons,
                                        int(sim_params
                                            ["initial_infected_number"]))
+        
         for person in pers_to_infect:
             person.update_status(InfectionStatus.InfectMild)
             person.household.remove_susceptible_person(person)
@@ -109,3 +112,5 @@ class InitialInfectedSweep(AbstractSweep):
             HostProgressionSweep.set_infectiousness(person, start_time)
             HostProgressionSweep().update_time_status_change(person,
                                                              start_time)
+            
+            

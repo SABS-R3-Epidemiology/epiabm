@@ -23,7 +23,7 @@ logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
 
 # Set config file for Parameters
 pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
-                                    "gibraltar_parameters.json"))
+                                    "gibraltar_measles_parameters.json"))
 
 # Generate population from input file
 # (Input converted from CovidSim with `microcell_conversion.py`)
@@ -36,7 +36,7 @@ population = pe.routine.FilePopulationFactory.make_pop(file_loc,
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
 sim_params = {"simulation_start_time": 0, "simulation_end_time": 90,
-              "initial_infected_number": 100, "initial_infect_cell": True,
+              "initial_infected_number": 15, "initial_infect_cell": False,
               "simulation_seed": 42,
               "include_waning": True}
 
@@ -118,4 +118,4 @@ p.barchart(os.path.join(os.path.dirname(__file__),
            write_Df_toFile=os.path.join(os.path.dirname(__file__),
            "simulation_outputs/gibraltar_weeky_cases.csv"),
            param_file=os.path.join(os.path.dirname(__file__),
-           "gibraltar_parameters.json"))
+           "gibraltar_measles_parameters.json"))
