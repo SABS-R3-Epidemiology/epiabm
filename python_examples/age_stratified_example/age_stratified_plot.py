@@ -143,6 +143,10 @@ class Plotter():
 
             self.data[colname] = data.values
 
+            if colname == 'InfectionStatus.InfectASympt':
+
+                self.data = self.data.drop(columns='InfectionStatus.InfectASympt')
+
     def _5yrAgeGroupsTo10(self):
         """Helper function which assumes data is given in equally spaced
         age groups of 5 year gaps. Returns data redistributed into 10 year
@@ -150,11 +154,13 @@ class Plotter():
         by numbers.
         """
         dataframe = self.data.copy()
-        num_10yr = np.ceil(len(self.age_list)/2)
-        indexCol = [np.floor(i/2) for i in dataframe[self.age_name]]
-        dataframe[self.age_name] = indexCol
-        self.age_list = [str(10*i)+"-"+str(10*i+10) for i
-                         in range(int(num_10yr+1))]
+        # num_10yr = np.ceil(len(self.age_list)/2)
+        # print(self.age_list)
+        # print(num_10yr)
+        # indexCol = [np.floor(i/2) for i in dataframe[self.age_name]]
+        # dataframe[self.age_name] = indexCol
+        # self.age_list = [str(10*i)+"-"+str(10*i+10) for i
+        #                  in range(int(num_10yr+1))]
         self.data = dataframe
 
     def barchart(self, outfile: str,
@@ -176,6 +182,9 @@ class Plotter():
         param_file : str
             Parameters needed to perform latent time convolution
         """
+
+        plt.figure(figsize=(10, 8))
+
         if param_file:
             print('Performing latent time convolution')
             self._convolveLatentTime(param_file)
@@ -236,7 +245,9 @@ class Plotter():
         # plt.title(title)
         # plt.ylim(0, 6700)  # hardwire ylim if needed
         plt.xlabel("Date (Month-Day)")
+        plt.legend(self.age_list, bbox_to_anchor=(1.05, 1), loc='upper left')
         plt.tight_layout()
+        #plt.legend(self.age_list[:5])
         plt.savefig(outfile)
 
 
