@@ -8,7 +8,7 @@ This script outlines all commands necessary to run a basic simulation. It models
 
 It subsequently saves the results to a .csv file, and plots a basic SIR plot of the simulation output, depicted below:
 
-![SIR plot from simulation_flow.pt](./basic_example/simulation_outputs/simulation_flow_SIR_plot.png)
+![SIR plot from simulation_flow.pt](./basic_simulation/simulation_outputs/simulation_flow_SIR_plot.png)
 
 ## Basic Infection History Simulation
 
