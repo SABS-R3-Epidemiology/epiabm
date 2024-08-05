@@ -20,15 +20,15 @@ These .csv files are then used in the repository https://github.com/SABS-R3-Epid
 
 ## Spatial Simulations
 
-Contained within the `spatial_example/` directory, this script runs a basic simulation with spatial dependance. It considers a population of 1000 individuals, spread across 40 households in 20 cells, each with a single microcell.
+Contained within the `spatial_example/` directory, this script runs a basic simulation with spatial dependance. It considers a population of 10000 individuals, spread across 225 cells, each with a two microcells.
 
-It subsequently saves the results to a .csv file, and plots the infection curve for each region. There is currently no differentiation between cells, and so any variation is due to random fluctuations. Any null curves are because there were no infectious individuals seeded in that cell, and no inter-cellular infection mechanisms are currently implemented.
+It subsequently saves the results to a .csv file, and plots the infection curve for each region. There is currently no differentiation between cells, and so any variation is due to random fluctuations. 
 
 ![Infection curves for multiple cells.pt](./spatial_example/spatial_outputs/spatial_flow_Icurve_plot.png)
 
-We also provide a script (`voronoi_plotting_example.py`) for visualising the spatial distribution of the epidemic, generating cells based on a single location coordinate using [Voronoi Tesselation](https://en.wikipedia.org/wiki/Voronoi_diagram).
+We also provide a script (`voronoi_plotting_example.py`) for visualising the spatial distribution of the epidemic, generating cells based on a single location coordinate using [Voronoi Tesselation](https://en.wikipedia.org/wiki/Voronoi_diagram). An [grid version](./spatial_example/spatial_outputs/voronoi_grid_img.png) of this plot is also generated.
 
-![Voronoi_grid.pt](./spatial_example/spatial_outputs/voronoi_grid_img.png)
+![Voronoi_grid.gif](./spatial_example/spatial_outputs/voronoi_animation.gif)
 
 ## Age Stratified Simulation
 
