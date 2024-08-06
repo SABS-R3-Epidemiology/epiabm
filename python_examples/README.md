@@ -26,9 +26,9 @@ It subsequently saves the results to a .csv file, and plots the infection curve 
 
 ![Infection curves for multiple cells.pt](./spatial_example/spatial_outputs/spatial_flow_Icurve_plot.png)
 
-We also provide a script (`voronoi_plotting_example.py`) for visualising the spatial distribution of the epidemic, generating cells based on a single location coordinate using [Voronoi Tesselation](https://en.wikipedia.org/wiki/Voronoi_diagram). An [grid version](./spatial_example/spatial_outputs/voronoi_grid_img.png) of this plot is also generated.
+We also provide a script (`voronoi_plotting_example.py`) for visualising the spatial distribution of the epidemic, generating cells based on a single location coordinate using [Voronoi Tesselation](https://en.wikipedia.org/wiki/Voronoi_diagram). A [grid version](./spatial_example/spatial_outputs/voronoi_grid_img.png) of this plot is also generated.
 
-![Voronoi_grid.gif](./spatial_example/spatial_outputs/voronoi_animation.gif)
+![Voronoi grid](./spatial_example/spatial_outputs/voronoi_animation.gif)
 
 ## Age Stratified Simulation
 
