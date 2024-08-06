@@ -33,7 +33,8 @@ file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
 
 # Version I: Create a population framework and save to file.
 population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
-pe.routine.ToyPopulationFactory.assign_cell_locations(population, method='grid')
+pe.routine.ToyPopulationFactory.assign_cell_locations(population,
+                                                      method='grid')
 pe.routine.FilePopulationFactory.print_population(population, file_loc)
 
 # Version II: Generate population from input file.
@@ -84,8 +85,9 @@ df = pd.read_csv(filename)
 
 df = df.pivot(index="time", columns="cell",
               values="InfectionStatus.InfectMild")
-df.plot(); plt.legend().remove()
+df.plot()
 
+plt.legend().remove()
 plt.title("Infection curves for multiple cells")
 plt.ylabel("Infected Population")
 plt.savefig(

@@ -83,7 +83,7 @@ class TestSimulation(TestMockedLogs):
             del test_sim.ih_status_writer
             del test_sim.ih_infectiousness_writer
             del test_sim.secondary_infections_writer
-        mo.assert_called_with(filename, 'w')
+        mo.assert_called_with(filename, 'w', newline='')
 
     @patch('os.makedirs')
     @patch('logging.warning')
@@ -132,7 +132,7 @@ class TestSimulation(TestMockedLogs):
             del test_sim.ih_status_writer
             del test_sim.ih_infectiousness_writer
             del test_sim.secondary_infections_writer
-        mo.assert_called_with(filename, 'w')
+        mo.assert_called_with(filename, 'w', newline='')
 
     @patch('os.makedirs')
     def test_configure_ih_infectiousness(self, mock_mkdir):
@@ -161,7 +161,7 @@ class TestSimulation(TestMockedLogs):
             del test_sim.ih_status_writer
             del test_sim.ih_infectiousness_writer
             del test_sim.secondary_infections_writer
-        mo.assert_called_with(filename, 'w')
+        mo.assert_called_with(filename, 'w', newline='')
 
     @patch('os.makedirs')
     def test_configure_secondary_infections(self, mock_mkdir):
@@ -191,7 +191,7 @@ class TestSimulation(TestMockedLogs):
             del test_sim.ih_status_writer
             del test_sim.ih_infectiousness_writer
             del test_sim.secondary_infections_writer
-        mo.assert_called_with(filename, 'w')
+        mo.assert_called_with(filename, 'w', newline='')
 
     @patch('logging.exception')
     @patch('os.path.join')

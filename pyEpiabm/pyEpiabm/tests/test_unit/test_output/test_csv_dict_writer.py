@@ -20,7 +20,7 @@ class TestCsvDictWriter(unittest.TestCase):
                                          mock_categories)
             del m
         mo.assert_called_once_with(
-            os.path.join('mock_folder', 'mock_filename'), 'w')
+            os.path.join('mock_folder', 'mock_filename'), 'w', newline='')
         mo().write.assert_called_once_with('Cat1,Cat2,Cat3\r\n')
         mock_mkdir.assert_called_with('mock_folder')
 
