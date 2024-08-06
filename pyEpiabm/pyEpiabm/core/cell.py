@@ -87,7 +87,7 @@ class Cell:
             raise TypeError("Provided id must be a string")
 
         # This regex will match on any string which has 1 or more digits
-        if not re.match("^\\d+$", id):
+        if not re.match("^-?\\d+$", id):
             raise ValueError(f"Invalid id: {id}. id must be of the form 'i' "
                              f"where i is an integer")
 
