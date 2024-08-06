@@ -19,37 +19,32 @@ pe.Parameters.set_file(os.path.join(os.path.dirname(__file__),
                        "spatial_parameters.json"))
 
 # Method to set the seed at the start of the simulation, for reproducibility
-
 pe.routine.Simulation.set_random_seed(seed=30)
 
 # Pop_params are used to configure the population structure being used in this
 # simulation.
-
 pop_params = {
     "population_size": 10000,
-    "cell_number": 200,
+    "cell_number": 225,
     "microcell_number": 2,
     "household_number": 5,
 }
-
-# Create a population framework based on the parameters given.
-# population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
-
-# Alternatively, can generate population from input file
 file_loc = os.path.join(os.path.dirname(__file__), "input.csv")
-population = pe.routine.FilePopulationFactory.make_pop(file_loc,
-                                                       random_seed=42)
 
+# Version I: Create a population framework and save to file.
+population = pe.routine.ToyPopulationFactory.make_pop(pop_params)
+pe.routine.ToyPopulationFactory.assign_cell_locations(population,
+                                                      method='grid')
+pe.routine.FilePopulationFactory.print_population(population, file_loc)
 
-# Configure population with input data
-pe.routine.ToyPopulationFactory.add_places(population, 1)
-# pe.routine.FilePopulationFactory.print_population(population, file_loc)
-
+# Version II: Generate population from input file.
+# population = pe.routine.FilePopulationFactory.make_pop(file_loc,
+#                                                        random_seed=42)
 
 # sim_ and file_params give details for the running of the simulations and
 # where output should be written to.
-sim_params = {"simulation_start_time": 0, "simulation_end_time": 30,
-              "initial_infected_number": 1, "initial_infect_cell": True}
+sim_params = {"simulation_start_time": 0, "simulation_end_time": 80,
+              "initial_infected_number": 2, "initial_infect_cell": True}
 
 file_params = {"output_file": "output.csv",
                "output_dir": os.path.join(os.path.dirname(__file__),
@@ -92,7 +87,7 @@ df = df.pivot(index="time", columns="cell",
               values="InfectionStatus.InfectMild")
 df.plot()
 
-plt.legend(labels=(range(len(df.columns))), title="Cell")
+plt.legend().remove()
 plt.title("Infection curves for multiple cells")
 plt.ylabel("Infected Population")
 plt.savefig(

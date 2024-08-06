@@ -1,4 +1,5 @@
 import os
+import unittest
 from unittest.mock import patch, mock_open, call
 
 import pyEpiabm as pe
@@ -87,8 +88,8 @@ class TestInitialDemographicsSweep(TestPyEpiabm):
                                                       "Age group 0"])
             del dem_sweep.writer
             del dem_sweep.counts_writer
-        mo.assert_has_calls([call(file_name, 'w'),
-                             call(counts_file_name, 'w')],
+        mo.assert_has_calls([call(file_name, 'w', newline=''),
+                             call(counts_file_name, 'w', newline='')],
                             any_order=True)
 
     @patch('os.makedirs')
@@ -115,8 +116,8 @@ class TestInitialDemographicsSweep(TestPyEpiabm):
                              [f"Age group {i}" for i in range(17)])
             del dem_sweep.writer
             del dem_sweep.counts_writer
-        mo.assert_has_calls([call(file_name, 'w'),
-                             call(counts_file_name, 'w')],
+        mo.assert_has_calls([call(file_name, 'w', newline=''),
+                             call(counts_file_name, 'w', newline='')],
                             any_order=True)
 
     @patch('os.makedirs')
@@ -253,3 +254,7 @@ class TestInitialDemographicsSweep(TestPyEpiabm):
         mock_mkdir.assert_called_with(os.path.join(os.getcwd(),
                                                    self.dem_file_params[
                                                        "output_dir"]))
+
+
+if __name__ == '__main__':
+    unittest.main()

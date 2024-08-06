@@ -520,5 +520,14 @@
             "quarantine_spatial_effectiveness": 0.25,
             "quarantine_place_effectiveness": [0.25, 0.25, 0.25, 0.25, 0.25, 0.25]
         }
+    },
+    "use_waning_immunity": 0,
+    "rate_multiplier_params": {
+        "gp_to_hosp": [0, 1],
+        "gp_to_death": [0, 1],
+        "exposed_to_infect": [0, 1],
+        "hosp_to_death": [0, 1],
+        "hosp_to_icu": [0, 1],
+        "icu_to_death": [0, 1]
     }
 }
