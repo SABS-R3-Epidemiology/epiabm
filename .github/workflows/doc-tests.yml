@@ -33,7 +33,14 @@ jobs:
         run: |
           cd pyEpiabm
           python run_tests.py --docs
-      - name: test CITATION.cff
-        run: |
-          python -m pip install cffconvert
-          cffconvert --validate 
+
+  Validate-CITATION-cff:
+    name: Validate CITATION.cff
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate CITATION.cff
+        uses: dieghernan/cff-validator@v3
