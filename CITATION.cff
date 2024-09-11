@@ -1,13 +1,11 @@
-# CITATION.cff file for Epiabm, generated with cffinit.
+# This CITATION.cff file was generated with cffinit.
 
-cff-version: 1.1.0
+cff-version: 1.2.0
 title: Epiabm
-message: >-
-  If you use this software, please cite it using the
-  metadata from this file.
+message: "Please cite this software using the metadata from 'preferred-citation'."
 type: software
 authors:
-  - given-names: 'Kit '
+  - given-names: Kit
     family-names: Gallagher
     email: gallagher@maths.ox.ac.uk
     affiliation: 'Mathematical Institute, University of Oxford'
@@ -21,6 +19,9 @@ authors:
   - given-names: Nathan
     family-names: Schofield
     affiliation: 'Mathematical Institute, University of Oxford'
+  - given-names: Matthew
+    family-names: Ghosh
+    affiliation: 'Doctoral Training Centre, University of Oxford'
   - given-names: Henriette
     family-names: Capel
     affiliation: 'Department of Statistics, University of Oxford'
@@ -33,6 +34,9 @@ authors:
   - given-names: Jiayuan
     family-names: Zhu
     affiliation: 'Department of Engineering, University of Oxford'
+  - given-names: Abbie
+    family-names: Evans
+    affiliation: 'Doctoral Training Centre, University of Oxford'
   - given-names: Patricia
     family-names: Lamirande
     affiliation: 'Mathematical Institute, University of Oxford'
@@ -41,13 +45,13 @@ authors:
     affiliation: 'Department of Computer Science, University of Oxford'
   - given-names: Richard
     family-names: Creswell
-    affiliation: 'Department of Engineering, University of Oxford'
+    affiliation: 'Department of Computer Science, University of Oxford'
   - given-names: Isaac
     family-names: Ellmen
     affiliation: 'Department of Statistics, University of Oxford'
   - given-names: Pietro
     family-names: Monticone
-    affiliation: 'University of Turin'
+    affiliation: University of Turin
 identifiers:
   - type: doi
     value: 10.5281/zenodo.7327443
@@ -63,5 +67,37 @@ keywords:
   - Agent-Based Modelling
   - Epidemiology
 license: BSD-3-Clause
-version: 1.1.0
-date-released: '2023-10-17'
+version: 1.2.0
+date-released: '2024-08-06'
+
+preferred-citation:
+  type: article
+  authors:
+   - given-names: Kit
+    family-names: Gallagher
+    orcid: 'https://orcid.org/0000-0003-1401-115X'
+  - given-names: Ioana
+    family-names: Bouros
+  - given-names: Nicholas
+    family-names: Fan
+  - given-names: Elizabeth
+    family-names: Hayman
+  - given-names: Luke
+    family-names: Heirene
+  - given-names: Patricia
+    family-names: Lamirande
+  - given-names: Annabelle
+    family-names: "Lemenuel-Diot"
+  - given-names: Ben
+    family-names: Lambert
+  - given-names: David
+    family-names: Gavaghan    
+  - given-names: Richard
+    family-names: Creswell
+  doi: "10.5334/jors.449"
+  journal: "Journal of Open Research Software"
+  month: 3
+  title: "Epidemiological Agent-Based Modelling Software (Epiabm)"
+  issue: 1
+  volume: 12
+  year: 2024
