@@ -33,3 +33,7 @@ jobs:
         run: |
           cd pyEpiabm
           python run_tests.py --docs
+      - name: test CITATION.cff
+        run: |
+          python -m pip install cffconvert
+          cffconvert --validate 

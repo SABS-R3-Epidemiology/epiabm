@@ -73,7 +73,7 @@ date-released: '2024-08-06'
 preferred-citation:
   type: article
   authors:
-   - given-names: Kit
+  - given-names: Kit
     family-names: Gallagher
     orcid: 'https://orcid.org/0000-0003-1401-115X'
   - given-names: Ioana
