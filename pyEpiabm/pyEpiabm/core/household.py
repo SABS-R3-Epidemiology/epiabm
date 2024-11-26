@@ -126,7 +126,7 @@ class Household:
 
         # This regex will match on any string which takes the form "i.j.k"
         # where i, j and k are integers
-        if not re.match("^\\d+\\.\\d+\\.\\d+$", id):
+        if not re.match("^-?\\d+\\.-?\\d+\\.-?\\d+$", id):
             raise ValueError(f"Invalid id: {id}. id must be of the form "
                              f"'i.j.k' where i, j, k are integers")
 
