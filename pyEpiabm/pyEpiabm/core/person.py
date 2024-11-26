@@ -252,7 +252,7 @@ class Person:
 
         # This regex will match on any string which takes the form "i.j.k.l"
         # where i, j, k and l are integers (k can be empty)
-        if not re.match("^\\d+\\.\\d+\\.\\d*\\.\\d+$", id):
+        if not re.match("^-?\\d+\\.-?\\d+\\.-?\\d*\\.-?\\d+$", id):
             raise ValueError(f"Invalid id: {id}. id must be of the form "
                              f"'i.j.k.l' where i, j, k, l are integers (k"
                              f"can be empty)")

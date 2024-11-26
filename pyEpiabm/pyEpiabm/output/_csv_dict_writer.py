@@ -36,7 +36,7 @@ class _CsvDictWriter(AbstractReporter):
             folder, os.path.splitext(filename)[0])
         self.fieldnames = fieldnames
 
-        self.f = open(os.path.join(folder, filename), 'w')
+        self.f = open(os.path.join(folder, filename), 'w', newline='')
         self.writer = csv.DictWriter(
             self.f, fieldnames=fieldnames, delimiter=',')
         self.writer.writeheader()

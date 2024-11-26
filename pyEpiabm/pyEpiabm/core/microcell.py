@@ -72,7 +72,7 @@ class Microcell:
 
         # This regex will match on any string which takes the form "i.j" where
         # i and j are integers
-        if not re.match("^\\d+\\.\\d+$", id):
+        if not re.match("^-?\\d+\\.-?\\d+$", id):
             raise ValueError(f"Invalid id: {id}. id must be of the form 'i.j' "
                              f"where i, j are integers")
 
