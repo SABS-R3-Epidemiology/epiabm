@@ -64,7 +64,7 @@ class Person:
         self.date_positive = None
         self.is_vaccinated = False
         self.id = self.microcell.id + "." + "." + \
-                  str(len(self.microcell.persons))
+            str(len(self.microcell.persons))
 
         self.set_random_age(age_group)
 
@@ -151,7 +151,7 @@ class Person:
         self.infection_status = new_status
 
         if self.infection_status == InfectionStatus.Susceptible and \
-            self.household is not None:
+                self.household is not None:
             self.household.add_susceptible_person(self)
         if self.infection_status == InfectionStatus.Exposed:
             if self.household is not None:
@@ -207,7 +207,7 @@ class Person:
 
         """
         if (hasattr(self.microcell, 'closure_start_time')) and (
-            self.microcell.closure_start_time is not None):
+                self.microcell.closure_start_time is not None):
             for place_type in self.place_types:
                 if place_type.value in closure_place_type:
                     return True
@@ -379,8 +379,8 @@ class Person:
             raise RuntimeError("Cannot call store_generation_time while the"
                                " latent_period is None")
         elif self.infector_latent_period is None:
-            if (self.time_of_status_change - self.latent_period -
-                self.exposure_period) <= 0.0:
+            if self.time_of_status_change - self.latent_period - \
+                    self.exposure_period <= 0.0:
                 # We do not record the generation time if the infector has
                 # no latent period (if their time of infection was day 0)
                 return
