@@ -60,9 +60,11 @@ class TestPlaceSweep(TestPyEpiabm):
         # ensuring they are added to the infected queue and the infector's
         # secondary_infections_counts are incremented.
         self.person1.update_status(pe.property.InfectionStatus.InfectMild)
+        self.person1.set_latent_period(5.0)
         self.person1.infection_start_times = [0.0]
         self.person1.secondary_infections_counts = [0]
-        self.assertEqual(self.new_person.exposure_period,  None)
+        self.assertEqual(self.new_person.exposure_period, None)
+        self.assertEqual(self.new_person.infector_latent_period, None)
         self.place.add_person(self.new_person)
         self.cell.person_queue = Queue()
         self.test_sweep.bind_population(self.pop)
@@ -70,6 +72,7 @@ class TestPlaceSweep(TestPyEpiabm):
         self.assertEqual(self.cell.person_queue.qsize(), 1)
         self.assertListEqual(self.person1.secondary_infections_counts, [1])
         self.assertEqual(self.new_person.exposure_period, 1.0)
+        self.assertEqual(self.new_person.infector_latent_period, 5.0)
 
         # Change the additional person to recovered, and assert the queue
         # is empty.
@@ -80,6 +83,7 @@ class TestPlaceSweep(TestPyEpiabm):
         self.assertTrue(self.cell.person_queue.empty())
         self.assertListEqual(self.person1.secondary_infections_counts, [1])
         self.assertEqual(self.new_person.exposure_period, 1.0)
+        self.assertEqual(self.new_person.infector_latent_period, 5.0)
 
         # Now test when binomial dist is activated.
         mock_inf.return_value = 1
@@ -91,6 +95,7 @@ class TestPlaceSweep(TestPyEpiabm):
         self.assertTrue(self.cell.person_queue.empty())
         self.assertListEqual(self.person1.secondary_infections_counts, [1])
         self.assertEqual(self.new_person.exposure_period, 1.0)
+        self.assertEqual(self.new_person.infector_latent_period, 5.0)
 
         # Change the additional person to susceptible.
         self.new_person.update_status(pe.property.InfectionStatus.Susceptible)
@@ -101,6 +106,7 @@ class TestPlaceSweep(TestPyEpiabm):
         self.assertEqual(self.cell.person_queue.qsize(), 1)
         self.assertListEqual(self.person1.secondary_infections_counts, [2])
         self.assertEqual(self.new_person.exposure_period, 1.0)
+        self.assertEqual(self.new_person.infector_latent_period, 5.0)
 
 
 if __name__ == '__main__':

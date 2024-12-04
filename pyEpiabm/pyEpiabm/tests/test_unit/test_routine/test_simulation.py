@@ -37,7 +37,8 @@ class TestSimulation(TestMockedLogs):
                                   "status_output": False,
                                   "infectiousness_output": False,
                                   "secondary_infections_output": False,
-                                  "serial_interval_output": False}
+                                  "serial_interval_output": False,
+                                  "generation_time_output": False}
         cls.spatial_file_params = dict(cls.file_params)
         cls.spatial_file_params["age_stratified"] = True
         cls.spatial_file_params["spatial_output"] = True
@@ -75,10 +76,12 @@ class TestSimulation(TestMockedLogs):
             self.assertEqual(test_sim.infectiousness_output, False)
             self.assertEqual(test_sim.secondary_infections_output, False)
             self.assertEqual(test_sim.serial_interval_output, False)
+            self.assertEqual(test_sim.generation_time_output, False)
             self.assertEqual(test_sim.ih_status_writer, None)
             self.assertEqual(test_sim.ih_infectiousness_writer, None)
             self.assertEqual(test_sim.secondary_infections_writer, None)
             self.assertEqual(test_sim.serial_interval_writer, None)
+            self.assertEqual(test_sim.generation_time_writer, None)
             self.assertEqual(test_sim.include_waning, True)
             self.assertEqual(test_sim.compress, False)
 
@@ -87,6 +90,7 @@ class TestSimulation(TestMockedLogs):
             del test_sim.ih_infectiousness_writer
             del test_sim.secondary_infections_writer
             del test_sim.serial_interval_writer
+            del test_sim.generation_time_writer
         mo.assert_called_with(filename, 'w', newline='')
 
     @patch('os.makedirs')
@@ -97,6 +101,7 @@ class TestSimulation(TestMockedLogs):
         self.inf_history_params["status_output"] = False
         self.inf_history_params["secondary_infections_output"] = False
         self.inf_history_params["serial_interval_output"] = False
+        self.inf_history_params["generation_time_output"] = False
         mo = mock_open()
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             test_sim = pe.routine.Simulation()
@@ -105,8 +110,9 @@ class TestSimulation(TestMockedLogs):
                                self.inf_history_params)
             mock_warning.assert_called_once_with("status_output, "
                                                  "infectiousness_output, "
-                                                 "secondary_infections_output "
-                                                 "and serial_interval_output "
+                                                 "secondary_infections_output,"
+                                                 " serial_interval_output and"
+                                                 " generation_time_output "
                                                  "are False. No infection "
                                                  "history csvs will be "
                                                  "created.")
@@ -118,6 +124,7 @@ class TestSimulation(TestMockedLogs):
         self.inf_history_params["status_output"] = True
         self.inf_history_params["secondary_infections_output"] = False
         self.inf_history_params["serial_interval_output"] = False
+        self.inf_history_params["generation_time_output"] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             filename = os.path.join(os.getcwd(),
                                     self.inf_history_params["output_dir"],
@@ -135,12 +142,14 @@ class TestSimulation(TestMockedLogs):
             self.assertEqual(test_sim.ih_infectiousness_writer, None)
             self.assertEqual(test_sim.secondary_infections_writer, None)
             self.assertEqual(test_sim.serial_interval_writer, None)
+            self.assertEqual(test_sim.generation_time_writer, None)
 
             del test_sim.writer
             del test_sim.ih_status_writer
             del test_sim.ih_infectiousness_writer
             del test_sim.secondary_infections_writer
             del test_sim.serial_interval_writer
+            del test_sim.generation_time_writer
         mo.assert_called_with(filename, 'w', newline='')
 
     @patch('os.makedirs')
@@ -150,6 +159,7 @@ class TestSimulation(TestMockedLogs):
         self.inf_history_params["status_output"] = False
         self.inf_history_params["secondary_infections_output"] = False
         self.inf_history_params["serial_interval_output"] = False
+        self.inf_history_params["generation_time_output"] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             filename = os.path.join(os.getcwd(),
                                     self.inf_history_params["output_dir"],
@@ -167,12 +177,14 @@ class TestSimulation(TestMockedLogs):
             self.assertEqual(test_sim.ih_status_writer, None)
             self.assertEqual(test_sim.secondary_infections_writer, None)
             self.assertEqual(test_sim.serial_interval_writer, None)
+            self.assertEqual(test_sim.generation_time_writer, None)
 
             del test_sim.writer
             del test_sim.ih_status_writer
             del test_sim.ih_infectiousness_writer
             del test_sim.secondary_infections_writer
             del test_sim.serial_interval_writer
+            del test_sim.generation_time_writer
         mo.assert_called_with(filename, 'w', newline='')
 
     @patch('os.makedirs')
@@ -182,6 +194,7 @@ class TestSimulation(TestMockedLogs):
         self.inf_history_params["status_output"] = False
         self.inf_history_params["secondary_infections_output"] = True
         self.inf_history_params["serial_interval_output"] = False
+        self.inf_history_params["generation_time_output"] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             filename = os.path.join(os.getcwd(),
                                     self.inf_history_params["output_dir"],
@@ -200,12 +213,14 @@ class TestSimulation(TestMockedLogs):
             self.assertEqual(test_sim.ih_status_writer, None)
             self.assertEqual(test_sim.ih_infectiousness_writer, None)
             self.assertEqual(test_sim.serial_interval_writer, None)
+            self.assertEqual(test_sim.generation_time_writer, None)
 
             del test_sim.writer
             del test_sim.ih_status_writer
             del test_sim.ih_infectiousness_writer
             del test_sim.secondary_infections_writer
             del test_sim.serial_interval_writer
+            del test_sim.generation_time_writer
         mo.assert_called_with(filename, 'w', newline='')
 
     @patch('os.makedirs')
@@ -215,6 +230,7 @@ class TestSimulation(TestMockedLogs):
         self.inf_history_params["status_output"] = False
         self.inf_history_params["secondary_infections_output"] = False
         self.inf_history_params["serial_interval_output"] = True
+        self.inf_history_params["generation_time_output"] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             filename = os.path.join(os.getcwd(),
                                     self.inf_history_params["output_dir"],
@@ -233,12 +249,50 @@ class TestSimulation(TestMockedLogs):
             self.assertEqual(test_sim.ih_status_writer, None)
             self.assertEqual(test_sim.ih_infectiousness_writer, None)
             self.assertEqual(test_sim.secondary_infections_writer, None)
+            self.assertEqual(test_sim.generation_time_writer, None)
 
             del test_sim.writer
             del test_sim.ih_status_writer
             del test_sim.ih_infectiousness_writer
             del test_sim.secondary_infections_writer
             del test_sim.serial_interval_writer
+            del test_sim.generation_time_writer
+        mo.assert_called_with(filename, 'w', newline='')
+
+    @patch('os.makedirs')
+    def test_configure_generation_time(self, mock_mkdir):
+        mo = mock_open()
+        self.inf_history_params["infectiousness_output"] = False
+        self.inf_history_params["status_output"] = False
+        self.inf_history_params["secondary_infections_output"] = False
+        self.inf_history_params["serial_interval_output"] = False
+        self.inf_history_params["generation_time_output"] = True
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            filename = os.path.join(os.getcwd(),
+                                    self.inf_history_params["output_dir"],
+                                    "generation_times.csv")
+            test_sim = pe.routine.Simulation()
+
+            # Test that the output titles are correct
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+
+            self.assertEqual(test_sim.si_output_titles,
+                             [0.0, 1.0])
+            # Test that the ih_status_writer is None, as
+            # infectiousness_output is False
+            self.assertEqual(test_sim.ih_status_writer, None)
+            self.assertEqual(test_sim.ih_infectiousness_writer, None)
+            self.assertEqual(test_sim.secondary_infections_writer, None)
+            self.assertEqual(test_sim.serial_interval_writer, None)
+
+            del test_sim.writer
+            del test_sim.ih_status_writer
+            del test_sim.ih_infectiousness_writer
+            del test_sim.secondary_infections_writer
+            del test_sim.serial_interval_writer
+            del test_sim.generation_time_writer
         mo.assert_called_with(filename, 'w', newline='')
 
     @patch('logging.exception')
@@ -305,6 +359,7 @@ class TestSimulation(TestMockedLogs):
         self.inf_history_params["status_output"] = True
         self.inf_history_params["secondary_infections_output"] = False
         self.inf_history_params["serial_interval_output"] = False
+        self.inf_history_params["generation_time_output"] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             time_write = self.sim_params["simulation_end_time"]
             test_sim = pe.routine.Simulation()
@@ -323,6 +378,7 @@ class TestSimulation(TestMockedLogs):
         self.inf_history_params["status_output"] = False
         self.inf_history_params["secondary_infections_output"] = False
         self.inf_history_params["serial_interval_output"] = False
+        self.inf_history_params["generation_time_output"] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             time_write = self.sim_params["simulation_end_time"]
             test_sim = pe.routine.Simulation()
@@ -342,6 +398,7 @@ class TestSimulation(TestMockedLogs):
         self.inf_history_params["status_output"] = False
         self.inf_history_params["secondary_infections_output"] = True
         self.inf_history_params["serial_interval_output"] = False
+        self.inf_history_params["generation_time_output"] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             test_sim = pe.routine.Simulation()
             test_sim.configure(self.test_population, self.initial_sweeps,
@@ -359,6 +416,25 @@ class TestSimulation(TestMockedLogs):
         self.inf_history_params["status_output"] = False
         self.inf_history_params["secondary_infections_output"] = False
         self.inf_history_params["serial_interval_output"] = True
+        self.inf_history_params["generation_time_output"] = False
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+            test_sim.run_sweeps()
+            patch_write.assert_called_with(np.array([1]))
+
+    @patch('pyEpiabm.routine.simulation.tqdm', notqdm)
+    @patch('pyEpiabm.routine.Simulation.write_to_generation_time_file')
+    @patch('os.makedirs')
+    def test_run_sweeps_generation_time(self, mock_mkdir, patch_write):
+        mo = mock_open()
+        self.inf_history_params["infectiousness_output"] = False
+        self.inf_history_params["status_output"] = False
+        self.inf_history_params["secondary_infections_output"] = False
+        self.inf_history_params["serial_interval_output"] = False
+        self.inf_history_params["generation_time_output"] = True
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             test_sim = pe.routine.Simulation()
             test_sim.configure(self.test_population, self.initial_sweeps,
@@ -537,6 +613,7 @@ class TestSimulation(TestMockedLogs):
         self.inf_history_params['infectiousness_output'] = False
         self.inf_history_params['secondary_infections_output'] = False
         self.inf_history_params['serial_interval_output'] = False
+        self.inf_history_params['generation_time_output'] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             test_sim = pe.routine.Simulation()
             test_sim.configure(self.test_population, self.initial_sweeps,
@@ -567,6 +644,7 @@ class TestSimulation(TestMockedLogs):
         self.inf_history_params['infectiousness_output'] = True
         self.inf_history_params['secondary_infections_output'] = False
         self.inf_history_params['serial_interval_output'] = False
+        self.inf_history_params['generation_time_output'] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             test_sim = pe.routine.Simulation()
             test_sim.configure(self.test_population, self.initial_sweeps,
@@ -597,6 +675,7 @@ class TestSimulation(TestMockedLogs):
         self.inf_history_params['infectiousness_output'] = True
         self.inf_history_params['secondary_infections_output'] = False
         self.inf_history_params['serial_interval_output'] = False
+        self.inf_history_params['generation_time_output'] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             test_sim = pe.routine.Simulation()
             test_sim.configure(self.test_population, self.initial_sweeps,
@@ -636,6 +715,7 @@ class TestSimulation(TestMockedLogs):
         self.inf_history_params['infectiousness_output'] = False
         self.inf_history_params['secondary_infections_output'] = True
         self.inf_history_params['serial_interval_output'] = False
+        self.inf_history_params['generation_time_output'] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             test_sim = pe.routine.Simulation()
             test_sim.configure(self.rt_test_population, self.initial_sweeps,
@@ -699,6 +779,7 @@ class TestSimulation(TestMockedLogs):
         self.inf_history_params['infectiousness_output'] = False
         self.inf_history_params['secondary_infections_output'] = False
         self.inf_history_params['serial_interval_output'] = True
+        self.inf_history_params['generation_time_output'] = False
         with patch('pyEpiabm.output._csv_dict_writer.open', mo):
             test_sim = pe.routine.Simulation()
             test_sim.configure(self.rt_test_population, self.initial_sweeps,
@@ -723,6 +804,64 @@ class TestSimulation(TestMockedLogs):
             with patch('pyEpiabm.output._csv_dict_writer'
                        '._CsvDictWriter.write') as mock_write:
                 test_sim.write_to_serial_interval_file(np.array([1.0, 2.0]))
+                calls = mock_write.call_args_list
+                # Need to use np.testing for the NaNs
+                # Need to test keys and values separately in case we are using
+                # python 3.7 (for which np.testing.assert_equal will not work)
+                major, minor = sys.version_info[0], sys.version_info[1]
+                if major >= 4 or (major == 3 and minor >= 8):
+                    actual_dict_0 = calls[0].args[0]
+                    for key in dict_0:
+                        self.assertTrue(key in actual_dict_0)
+                        np.testing.assert_array_equal(dict_0[key],
+                                                      actual_dict_0[key])
+                    actual_dict_1 = calls[1].args[0]
+                    for key in dict_1:
+                        self.assertTrue(key in actual_dict_1)
+                        np.testing.assert_array_equal(dict_1[key],
+                                                      actual_dict_1[key])
+                    actual_dict_2 = calls[2].args[0]
+                    for key in dict_2:
+                        self.assertTrue(key in actual_dict_2)
+                        np.testing.assert_array_equal(dict_2[key],
+                                                      actual_dict_2[key])
+                    self.assertEqual(mock_write.call_count, 3)
+        mock_mkdir.assert_called_with(
+            os.path.join(os.getcwd(), self.inf_history_params["output_dir"]))
+
+    @patch('os.makedirs')
+    def test_write_to_generation_time_file(self, mock_mkdir, time=1):
+
+        if os.path.exists(self.inf_history_params["output_dir"]):
+            os.rmdir(self.inf_history_params["output_dir"])
+
+        mo = mock_open()
+        self.inf_history_params['status_output'] = False
+        self.inf_history_params['infectiousness_output'] = False
+        self.inf_history_params['secondary_infections_output'] = False
+        self.inf_history_params['serial_interval_output'] = False
+        self.inf_history_params['generation_time_output'] = True
+        with patch('pyEpiabm.output._csv_dict_writer.open', mo):
+            test_sim = pe.routine.Simulation()
+            test_sim.configure(self.rt_test_population, self.initial_sweeps,
+                               self.sweeps, self.sim_params, self.file_params,
+                               self.inf_history_params)
+            person1 = self.rt_test_population.cells[0].persons[0]
+            person1.num_times_infected = 2
+            person1.generation_time_dict = {0.0: [2.0], 1.0: [9.0]}
+            person2 = self.rt_test_population.cells[0].persons[1]
+            person2.num_times_infected = 1
+            person2.generation_time_dict = {2.0: [3.0]}
+            person3 = self.rt_test_population.cells[0].persons[2]
+            person3.num_times_infected = 1
+            person3.generation_time_dict = {0.0: [3.0, 11.0], 2.0: [19.0]}
+            dict_0 = {0.0: 2.0, 1.0: 9.0, 2.0: 3.0}
+            dict_1 = {0.0: 3.0, 1.0: np.nan, 2.0: 19.0}
+            dict_2 = {0.0: 11.0, 1.0: np.nan, 2.0: np.nan}
+
+            with patch('pyEpiabm.output._csv_dict_writer'
+                       '._CsvDictWriter.write') as mock_write:
+                test_sim.write_to_generation_time_file(np.array([1.0, 2.0]))
                 calls = mock_write.call_args_list
                 # Need to use np.testing for the NaNs
                 # Need to test keys and values separately in case we are using

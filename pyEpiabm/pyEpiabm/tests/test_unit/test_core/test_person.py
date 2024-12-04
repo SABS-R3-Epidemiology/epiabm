@@ -149,40 +149,118 @@ class TestPerson(TestPyEpiabm):
         self.assertListEqual(self.person.secondary_infections_counts,
                              [2, 5, 2])
 
+    def test_set_latent_period(self):
+        self.person.set_latent_period(latent_period=5)
+        self.assertEqual(self.person.latent_period, 5)
+
     def test_set_exposure_period(self):
         self.person.set_exposure_period(exposure_period=5)
         self.assertEqual(self.person.exposure_period, 5)
 
+    def test_set_infector_latent_period(self):
+        self.person.set_infector_latent_period(latent_period=5)
+        self.assertEqual(self.person.infector_latent_period, 5)
+
     def test_store_serial_interval_erroneous(self):
         with self.assertRaises(RuntimeError) as ve_1:
-            self.person.store_serial_interval(4.0)
+            self.person.store_serial_interval()
         self.assertEqual(str(ve_1.exception),
                          "Cannot call store_serial_interval while the"
                          " exposure_period is None")
-        # Infect once with an exposure period for successful method call
-        self.person.set_exposure_period(1.0)
-        self.person.time_of_status_change = 2.0
-        self.person.store_serial_interval(latent_period=1.0)
+        # Infect once with an exposure period for latent period failure
+        with self.assertRaises(RuntimeError) as ve_2:
+            self.person.set_exposure_period(2.0)
+            self.person.store_serial_interval()
+        self.assertEqual(str(ve_2.exception),
+                         "Cannot call store_serial_interval while the"
+                         " latent_period is None")
+        # Add latent period, get success
+        self.person.set_latent_period(3.0)
+        self.person.time_of_status_change = 4.0
+        self.person.store_serial_interval()
         # Do not add the exposure period for failure
         self.person.time_of_status_change = 19.0
-        with self.assertRaises(RuntimeError) as ve_2:
-            self.person.store_serial_interval(latent_period=4.0)
-        self.assertEqual(str(ve_2.exception),
+        with self.assertRaises(RuntimeError) as ve_3:
+            self.person.store_serial_interval()
+        self.assertEqual(str(ve_3.exception),
                          "Cannot call store_serial_interval while the"
                          " exposure_period is None")
 
     def test_store_serial_interval(self):
         self.person.set_exposure_period(1.0)
+        self.person.set_latent_period(1.0)
         self.person.time_of_status_change = 2.0
-        self.person.store_serial_interval(latent_period=1.0)
+        self.person.store_serial_interval()
         self.person.set_exposure_period(2.0)
+        self.person.set_latent_period(4.0)
         self.person.time_of_status_change = 6.0
-        self.person.store_serial_interval(latent_period=4.0)
+        self.person.store_serial_interval()
         self.person.set_exposure_period(5.0)
+        self.person.set_latent_period(4.0)
         self.person.time_of_status_change = 19.0
-        self.person.store_serial_interval(latent_period=4.0)
+        self.person.store_serial_interval()
         self.assertDictEqual(self.person.serial_interval_dict,
                              {0.0: [2.0, 6.0], 10.0: [9.0]})
+        self.assertIsNone(self.person.exposure_period)
+
+    def test_store_generation_time_erroneous(self):
+        with self.assertRaises(RuntimeError) as ve_1:
+            self.person.store_generation_time()
+        self.assertEqual(str(ve_1.exception),
+                         "Cannot call store_generation_time while the"
+                         " exposure_period is None")
+        # Infect once with an exposure period for latent period failure
+        with self.assertRaises(RuntimeError) as ve_2:
+            self.person.set_exposure_period(2.0)
+            self.person.store_generation_time()
+        self.assertEqual(str(ve_2.exception),
+                         "Cannot call store_generation_time while the"
+                         " latent_period is None")
+        # Add latent period with infector latent period failure
+        with self.assertRaises(RuntimeError) as ve_3:
+            self.person.set_latent_period(2.0)
+            self.person.time_of_status_change = 6.0
+            self.person.store_generation_time()
+        self.assertEqual(str(ve_3.exception),
+                         "Cannot call store_generation_time while the"
+                         " infector_latent_period is None")
+        # No error if the time_of_status_change <= latent_period +
+        # exposure_period
+        self.person.time_of_status_change = 4.0
+        self.person.store_generation_time()
+        self.assertEqual(self.person.generation_time_dict, {})
+        # Add infector latent period, get success
+        self.person.set_infector_latent_period(3.0)
+        self.person.time_of_status_change = 8.0
+        self.person.store_generation_time()
+        self.assertEqual(self.person.generation_time_dict, {1.0: [5.0]})
+        # Do not add the exposure period for failure
+        self.person.time_of_status_change = 19.0
+        with self.assertRaises(RuntimeError) as ve_4:
+            self.person.store_generation_time()
+        self.assertEqual(str(ve_4.exception),
+                         "Cannot call store_generation_time while the"
+                         " infector_latent_period is None")
+
+    def test_store_generation_time(self):
+        self.person.set_exposure_period(1.0)
+        self.person.set_latent_period(1.0)
+        self.person.set_infector_latent_period(1.0)
+        self.person.time_of_status_change = 3.0
+        self.person.store_generation_time()
+        self.person.set_exposure_period(2.0)
+        self.person.set_latent_period(1.0)
+        self.person.set_infector_latent_period(3.0)
+        self.person.time_of_status_change = 6.0
+        self.person.store_generation_time()
+        self.person.set_exposure_period(5.0)
+        self.person.set_latent_period(4.0)
+        self.person.set_infector_latent_period(5.0)
+        self.person.time_of_status_change = 19.0
+        self.person.store_generation_time()
+        self.assertDictEqual(self.person.generation_time_dict,
+                             {0.0: [2.0, 5.0], 5.0: [10.0]})
+        self.assertIsNone(self.person.infector_latent_period)
 
 
 if __name__ == '__main__':

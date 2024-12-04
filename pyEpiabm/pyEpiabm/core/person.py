@@ -54,14 +54,17 @@ class Person:
         self.secondary_infections_counts = []
         self.time_of_recovery = None
         self.num_times_infected = 0
+        self.latent_period = None
         self.exposure_period = None
+        self.infector_latent_period = None
         self.serial_interval_dict = {}
+        self.generation_time_dict = {}
         self.care_home_resident = False
         self.key_worker = False
         self.date_positive = None
         self.is_vaccinated = False
         self.id = self.microcell.id + "." + "." + \
-            str(len(self.microcell.persons))
+                  str(len(self.microcell.persons))
 
         self.set_random_age(age_group)
 
@@ -148,7 +151,7 @@ class Person:
         self.infection_status = new_status
 
         if self.infection_status == InfectionStatus.Susceptible and \
-                self.household is not None:
+            self.household is not None:
             self.household.add_susceptible_person(self)
         if self.infection_status == InfectionStatus.Exposed:
             if self.household is not None:
@@ -204,7 +207,7 @@ class Person:
 
         """
         if (hasattr(self.microcell, 'closure_start_time')) and (
-                self.microcell.closure_start_time is not None):
+            self.microcell.closure_start_time is not None):
             for place_type in self.place_types:
                 if place_type.value in closure_place_type:
                     return True
@@ -293,6 +296,17 @@ class Person:
             raise RuntimeError("Cannot call increment_secondary_infections "
                                "while secondary_infections_counts is empty")
 
+    def set_latent_period(self, latent_period: float):
+        """Sets the latent period of the current Person.
+
+        Parameters
+        ----------
+        latent_period : float
+            The time between the exposure and infection onset of the current
+            Person.
+        """
+        self.latent_period = latent_period
+
     def set_exposure_period(self, exposure_period: float):
         """Sets the exposure period (we define here as the time between a
         primary case infection and a secondary case exposure, with the current
@@ -307,26 +321,36 @@ class Person:
         """
         self.exposure_period = exposure_period
 
-    def store_serial_interval(self, latent_period: float):
-        """Adds this `latent_period` to the current `exposure_period` to give
-        a `serial_interval`, which will be stored in the
-        `serial_interval_dict`. The serial interval is the time between a
-        primary case infection and a secondary case infection. This method
-        is called immediately after a person becomes exposed.
+    def set_infector_latent_period(self, latent_period: float):
+        """Sets the latent period of the primary infector of this Person. We
+        store this in order to calculate the generation_time of the interaction
+        between infector and infectee.
 
         Parameters
         ----------
         latent_period : float
-            The period between this `Person`'s time of exposure and this
-            `Person`'s time of infection
+            The latency period of the primary infector (the individual who
+            infected the current Person).
         """
-        # This method has been called erroneously if the exposure period is
-        # None
+        self.infector_latent_period = latent_period
+
+    def store_serial_interval(self):
+        """Adds the `latent_period` to the current `exposure_period` to give
+        a `serial_interval`, which will be stored in the
+        `serial_interval_dict`. The serial interval is the time between a
+        primary case infection and a secondary case infection. This method
+        is called immediately after a person becomes exposed.
+        """
+        # This method has been called erroneously if the latent period or
+        # exposure period is None
         if self.exposure_period is None:
             raise RuntimeError("Cannot call store_serial_interval while the"
                                " exposure_period is None")
+        elif self.latent_period is None:
+            raise RuntimeError("Cannot call store_serial_interval while the"
+                               " latent_period is None")
 
-        serial_interval = self.exposure_period + latent_period
+        serial_interval = self.exposure_period + self.latent_period
         # The reference day is the day the primary case was first infected
         # This is what we will store in the dictionary
         reference_day = self.time_of_status_change - serial_interval
@@ -338,3 +362,41 @@ class Person:
 
         # Reset the exposure period for the next infection
         self.exposure_period = None
+
+    def store_generation_time(self):
+        """Adds the `infector_latent_period` to the current
+        `exposure_period` to give a `generation_time`, which will be stored
+        in the `generation_time_dict`. The generation time is the time between
+        a primary case exposure and a secondary case exposure. This method
+        is called immediately after the infectee becomes exposed.
+        """
+        # This method has been called erroneously if the exposure period is
+        # None or if the latent period of primary infector is None
+        if self.exposure_period is None:
+            raise RuntimeError("Cannot call store_generation_time while the"
+                               " exposure_period is None")
+        elif self.latent_period is None:
+            raise RuntimeError("Cannot call store_generation_time while the"
+                               " latent_period is None")
+        elif self.infector_latent_period is None:
+            if (self.time_of_status_change - self.latent_period -
+                self.exposure_period) <= 0.0:
+                # We do not record the generation time if the infector has
+                # no latent period (if their time of infection was day 0)
+                return
+            raise RuntimeError("Cannot call store_generation_time while the"
+                               " infector_latent_period is None")
+
+        generation_time = self.exposure_period + self.infector_latent_period
+        # The reference day is the day the primary case was first exposed
+        # This is what we will store in the dictionary
+        reference_day = (self.time_of_status_change - self.latent_period
+                         - generation_time)
+        try:
+            (self.generation_time_dict[reference_day]
+             .append(generation_time))
+        except KeyError:
+            self.generation_time_dict[reference_day] = [generation_time]
+
+        # Reset the latency period of the infector for the next infection
+        self.infector_latent_period = None

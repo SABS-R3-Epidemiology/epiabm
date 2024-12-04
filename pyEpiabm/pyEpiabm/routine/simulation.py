@@ -67,6 +67,8 @@ class Simulation:
                need a csv file containing secondary infections and R_t values
             * `serial_interval_output`: Boolean to determine whether we \
                need a csv file containing serial interval data
+            * `generation_time_output`: Boolean to determine whether we \
+               need a csv file containing generation time data
             * `compress`: Boolean to determine whether we compress \
                the infection history csv files
 
@@ -90,15 +92,15 @@ class Simulation:
             This is short for 'infection history file parameters' and we will
             use the abbreviation 'ih' to refer to infection history throughout
             this class. If `status_output`, `infectiousness_output`,
-            `secondary_infections_output` and `serial_interval_output` are all
-            False, then no infection history csv files are produced (or if the
-            dictionary is None). These files contain the infection status,
-            infectiousness and secondary infection counts of each person every
-            time step respectively. The EpiOS tool
-            (https://github.com/SABS-R3-Epidemiology/EpiOS) samples data from
-            these files to mimic real life epidemic sampling techniques. These
-            files can be compressed when 'compress' is True, reducing the size
-            of these files.
+            `secondary_infections_output`, `serial_interval_output` and
+            `generation_time_output` are all False, then no infection history
+            csv files are produced (or if the dictionary is None). These files
+            contain the infection status, infectiousness and secondary
+            infection counts of each person every time step respectively. The
+            EpiOS tool (https://github.com/SABS-R3-Epidemiology/EpiOS) samples
+            data from these files to mimic real life epidemic sampling
+            techniques. These files can be compressed when 'compress' is True,
+            reducing the size of these files.
         """
         self.sim_params = sim_params
         self.population = population
@@ -157,10 +159,12 @@ class Simulation:
         self.infectiousness_output = False
         self.secondary_infections_output = False
         self.serial_interval_output = False
+        self.generation_time_output = False
         self.ih_status_writer = None
         self.ih_infectiousness_writer = None
         self.secondary_infections_writer = None
         self.serial_interval_writer = None
+        self.generation_time_writer = None
         self.compress = False
 
         if inf_history_params:
@@ -174,6 +178,8 @@ class Simulation:
                 .get("secondary_infections_output")
             self.serial_interval_output = inf_history_params \
                 .get("serial_interval_output")
+            self.generation_time_output = inf_history_params \
+                .get("generation_time_output")
             self.compress = inf_history_params.get("compress", False)
             person_ids = []
             person_ids += [person.id for cell in population.cells for person
@@ -190,10 +196,12 @@ class Simulation:
 
             if not (self.status_output or self.infectiousness_output
                     or self.secondary_infections_output
-                    or self.serial_interval_output):
+                    or self.serial_interval_output
+                    or self.generation_time_output):
                 logging.warning("status_output, infectiousness_output, "
-                                + "secondary_infections_output and "
-                                + "serial_interval_output are False. "
+                                + "secondary_infections_output, "
+                                + "serial_interval_output and "
+                                + "generation_time_output are False. "
                                 + "No infection history csvs will be created.")
 
             if self.status_output:
@@ -240,6 +248,18 @@ class Simulation:
                     f"{os.path.join(ih_folder, file_name)}")
 
                 self.serial_interval_writer = _CsvDictWriter(
+                    ih_folder, file_name,
+                    self.si_output_titles
+                )
+
+            if self.generation_time_output:
+
+                file_name = "generation_times.csv"
+                logging.info(
+                    f"Set generation time location to "
+                    f"{os.path.join(ih_folder, file_name)}")
+
+                self.generation_time_writer = _CsvDictWriter(
                     ih_folder, file_name,
                     self.si_output_titles
                 )
@@ -291,6 +311,8 @@ class Simulation:
             self.write_to_Rt_file(times)
         if self.serial_interval_writer:
             self.write_to_serial_interval_file(times)
+        if self.generation_time_writer:
+            self.write_to_generation_time_file(times)
 
     def write_to_file(self, time):
         """Records the count number of a given list of infection statuses
@@ -470,6 +492,46 @@ class Simulation:
         for dict_row in list_of_dicts:
             # Write each time step in dictionary form
             self.serial_interval_writer.write(dict_row)
+
+    def write_to_generation_time_file(self, times: np.array):
+        """Records the intervals between an infector and an infectee getting
+        exposed to provide an overall generation time for each time-step of
+        the epidemic. This can be used as a histogram of values for each
+        time step.
+
+        Parameters
+        ----------
+        times : np.array
+            An array of all time steps of the simulation
+        """
+        # Initialise the dataframe
+        all_times = np.hstack((np.array(self
+                                        .sim_params["simulation_start_time"]),
+                               times))
+        data_dict = {time: [] for time in all_times}
+        for cell in self.population.cells:
+            for person in cell.persons:
+                # For every time the person was infected, add their list of
+                # generation times to the timepoint at which their infector
+                # became exposed
+                for t_inf, intervals in person.generation_time_dict.items():
+                    data_dict[t_inf] += intervals
+
+        # Here we will fill out the rest of the dataframe with NaN values,
+        # as all lists will have different lengths
+        max_list_length = max([len(intervals)
+                               for intervals in data_dict.values()])
+        for t in data_dict.keys():
+            data_dict[t] += ([np.nan] * (max_list_length - len(data_dict[t])))
+
+        # Change to dataframe to get the data in a list of dicts format
+        df = pd.DataFrame(data_dict)
+
+        # The below is a list of dictionaries for each time step
+        list_of_dicts = df.to_dict(orient='records')
+        for dict_row in list_of_dicts:
+            # Write each time step in dictionary form
+            self.generation_time_writer.write(dict_row)
 
     def add_writer(self, writer: AbstractReporter):
         self.writers.append(writer)
