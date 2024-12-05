@@ -56,14 +56,6 @@ class HouseholdSweep(AbstractSweep):
                         # Increment the infector's
                         # secondary_infections_count
                         infector.increment_secondary_infections()
-                        # Set the time between infector's infection time and
-                        # the infectee's exposure time (current time) to be
-                        # the exposure period of the infectee
-                        inf_to_exposed = (time -
-                                          infector.infection_start_times[-1])
-                        infectee.set_exposure_period(inf_to_exposed)
-                        # Finally, store the infector's latency period within
-                        # the infectee, which will be used in calculating the
-                        # generation_time
-                        infectee.set_infector_latent_period(infector
-                                                            .latent_period)
+                        # Stores the exposure period and infector's latent
+                        # period within attributes of the infectee
+                        self.store_infection_periods(infector, infectee, time)
