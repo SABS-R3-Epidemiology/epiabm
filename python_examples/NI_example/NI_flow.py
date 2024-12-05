@@ -1,20 +1,15 @@
 #
-# Example simulation script running with Ireland parameters
+# Example simulation script running with Northern Ireland parameters
 # Incorporates both age and spatial stratification.
+# We also record secondary infections, serial intervals and generation times.
 #
 
 import os
-import sys
 import logging
 import pandas as pd
 import matplotlib.pyplot as plt
 
 import pyEpiabm as pe
-
-# Add plotting functions to path
-# sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir,
-#                 "./age_stratified_example"))
-# from age_stratified_plot import Plotter  # noqa
 
 # Setup output for logging file
 logging.basicConfig(filename='sim.log', filemode='w+', level=logging.DEBUG,
