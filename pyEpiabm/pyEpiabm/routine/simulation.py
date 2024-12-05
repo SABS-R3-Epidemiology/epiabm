@@ -487,11 +487,9 @@ class Simulation:
         # Change to dataframe to get the data in a list of dicts format
         df = pd.DataFrame(data_dict)
 
-        # The below is a list of dictionaries for each time step
         list_of_dicts = df.to_dict(orient='records')
-        for dict_row in list_of_dicts:
-            # Write each time step in dictionary form
-            self.serial_interval_writer.write(dict_row)
+        for row_t in list_of_dicts:
+            self.serial_interval_writer.write(row_t)
 
     def write_to_generation_time_file(self, times: np.array):
         """Records the intervals between an infector and an infectee getting
@@ -527,11 +525,9 @@ class Simulation:
         # Change to dataframe to get the data in a list of dicts format
         df = pd.DataFrame(data_dict)
 
-        # The below is a list of dictionaries for each time step
         list_of_dicts = df.to_dict(orient='records')
-        for dict_row in list_of_dicts:
-            # Write each time step in dictionary form
-            self.generation_time_writer.write(dict_row)
+        for row_t in list_of_dicts:
+            self.generation_time_writer.write(row_t)
 
     def add_writer(self, writer: AbstractReporter):
         self.writers.append(writer)
