@@ -56,3 +56,6 @@ class HouseholdSweep(AbstractSweep):
                         # Increment the infector's
                         # secondary_infections_count
                         infector.increment_secondary_infections()
+                        # Stores the exposure period and infector's latent
+                        # period within attributes of the infectee
+                        self.store_infection_periods(infector, infectee, time)

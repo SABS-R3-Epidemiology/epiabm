@@ -34,6 +34,7 @@ class TestSpatialSweep(TestMockedLogs):
         self.microcell_inf.add_people(1)
         self.infector = self.microcell_inf.persons[0]
         self.infector.update_status(InfectionStatus.InfectMild)
+        self.infector.set_latent_period(5.0)
         self.infector.secondary_infections_counts = [0]
 
         self.microcell_susc.add_people(1)
@@ -255,9 +256,14 @@ class TestSpatialSweep(TestMockedLogs):
         # Assert a basic population
         test_pop = self.pop
         test_sweep.bind_population(test_pop)
+        self.infector.infection_start_times = [0.0]
+        self.assertEqual(self.infectee.exposure_period, None)
+        self.assertEqual(self.infectee.infector_latent_period, None)
         test_sweep(time)
         self.assertTrue(self.cell_inf.person_queue.empty())
         self.assertListEqual(self.infector.secondary_infections_counts, [1])
+        self.assertEqual(self.infectee.exposure_period, 1.0)
+        self.assertEqual(self.infectee.infector_latent_period, 5.0)
 
         mock_inf.assert_called_once_with(self.cell_inf, time)
         mock_foi.assert_called_once_with(self.cell_inf, self.cell_susc,
@@ -266,26 +272,35 @@ class TestSpatialSweep(TestMockedLogs):
 
         # Change infector's status to infected
         self.infector.update_status(InfectionStatus.InfectMild)
+        self.infector.infection_start_times = [0.0]
         test_sweep(time)
         self.assertEqual(self.cell_inf.person_queue.qsize(), 0)
         self.assertListEqual(self.infector.secondary_infections_counts, [2])
+        self.assertEqual(self.infectee.exposure_period, 1.0)
+        self.assertEqual(self.infectee.infector_latent_period, 5.0)
         Parameters.instance().do_CovidSim = True
         self.cell_susc.person_queue = Queue()
         test_sweep(time)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 1)
         self.assertListEqual(self.infector.secondary_infections_counts, [3])
+        self.assertEqual(self.infectee.exposure_period, 1.0)
+        self.assertEqual(self.infectee.infector_latent_period, 5.0)
         # Check when we have an infector but no infectees
         self.infectee.update_status(InfectionStatus.Recovered)
         self.cell_susc.person_queue = Queue()
         test_sweep(time)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 0)
         self.assertListEqual(self.infector.secondary_infections_counts, [3])
+        self.assertEqual(self.infectee.exposure_period, 1.0)
+        self.assertEqual(self.infectee.infector_latent_period, 5.0)
 
         # Test parameters break-out clause
         Parameters.instance().infection_radius = 0
         test_sweep(time)
         self.assertEqual(self.cell_susc.person_queue.qsize(), 0)
         self.assertListEqual(self.infector.secondary_infections_counts, [3])
+        self.assertEqual(self.infectee.exposure_period, 1.0)
+        self.assertEqual(self.infectee.infector_latent_period, 5.0)
 
         mock_inf_list.assert_called_with(self.cell_inf, [self.cell_susc], time)
         mock_list_covid.assert_called_with(self.infector, [self.cell_susc],
@@ -323,17 +338,26 @@ class TestSpatialSweep(TestMockedLogs):
         fake_infectee = microcell_susc.persons[1]
         fake_infectee.update_status(InfectionStatus.Recovered)
         actual_infectee = microcell_susc.persons[0]
+        self.infector.infection_start_times = [0.0]
 
         self.assertTrue(cell_susc.person_queue.empty())
         test_sweep.do_infection_event(self.infector, fake_infectee, 1)
         self.assertFalse(mock_random.called)  # Should have already returned
         self.assertTrue(cell_susc.person_queue.empty())
         self.assertListEqual(self.infector.secondary_infections_counts, [0])
+        self.assertEqual(fake_infectee.exposure_period, None)
+        self.assertEqual(fake_infectee.infector_latent_period, None)
+        self.assertEqual(actual_infectee.exposure_period, None)
+        self.assertEqual(actual_infectee.infector_latent_period, None)
 
         test_sweep.do_infection_event(self.infector, actual_infectee, 1)
         mock_random.assert_called_once()
         self.assertEqual(cell_susc.person_queue.qsize(), 1)
         self.assertListEqual(self.infector.secondary_infections_counts, [1])
+        self.assertEqual(fake_infectee.exposure_period, None)
+        self.assertEqual(fake_infectee.infector_latent_period, None)
+        self.assertEqual(actual_infectee.exposure_period, 1.0)
+        self.assertEqual(actual_infectee.infector_latent_period, 5.0)
 
 
 if __name__ == '__main__':

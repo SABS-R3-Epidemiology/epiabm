@@ -364,6 +364,9 @@ class TestHostProgressionSweep(TestPyEpiabm):
                     continue  # Method should not be used to infect people
 
                 test_sweep.update_next_infection_status(person)
+                if person.infection_status.name == 'Exposed':
+                    person.set_exposure_period(2.0)
+                    person.set_infector_latent_period(3.0)
                 test_sweep.update_time_status_change(person, current_time)
                 time_of_status_change = person.time_of_status_change
                 if person.infection_status.name in ['Recovered', 'Dead',
@@ -375,6 +378,37 @@ class TestHostProgressionSweep(TestPyEpiabm):
                     self.assertLessEqual(delayed_time, time_of_status_change)
                 else:
                     self.assertLessEqual(current_time, time_of_status_change)
+
+    def test_update_time_status_change_serial_interval(self):
+        """Tests that an exposed person has their latency period stored and
+        added to their exposure_period to give a serial interval (to be stored)
+        This occurs at the end of the update_time_status_change method
+        """
+        test_sweep = pe.sweep.HostProgressionSweep()
+        # 3 days between their infector becoming infected and now (the time
+        # of the infection event)
+        self.person1.set_exposure_period(3.0)
+        self.person1.set_infector_latent_period(2.0)
+        self.person1.update_status(InfectionStatus.Exposed)
+        self.person1.next_infection_status = InfectionStatus.InfectMild
+        current_time = 10.0
+        test_sweep.update_time_status_change(self.person1, current_time)
+        time_of_status_change = self.person1.time_of_status_change
+        # The time_of_status_change to InfectMild minus the current_time
+        # gives the length of time that the person is latent
+        latent_period = time_of_status_change - current_time
+        # The reference time is the time in which their infector became
+        # infected
+        reference_time = 10.0 - 3.0
+        # The serial_interval_dict records their serial_interval (defined as
+        # the time between the infector having Infect status and the current
+        # person having Infect status) at the reference time
+        self.assertDictEqual(self.person1.serial_interval_dict,
+                             {reference_time: [3.0 + latent_period]})
+        reference_generation_time = (time_of_status_change - 3.0 - 2.0 -
+                                     latent_period)
+        self.assertDictEqual(self.person1.generation_time_dict,
+                             {reference_generation_time: [3.0 + 2.0]})
 
     def test_update_time_status_change_waning_immunity(self):
         """Tests that the time to status change of a Recovered person with
@@ -656,6 +690,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
         mock_param.return_value.infectiousness_prof = self.mock_inf_prog
         # First check that people progress through the
         # infection stages correctly.
+        self.person2.set_exposure_period(1.0)
+        self.person2.set_infector_latent_period(3.0)
         self.person2.update_status(pe.property.InfectionStatus.Exposed)
         self.person2.time_of_status_change = 1.0
         self.person2.next_infection_status = \
@@ -670,6 +706,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
         # Tests population bound successfully.
         self.assertEqual(test_sweep._population.cells[0].persons[1].
                          infection_status, pe.property.InfectionStatus.Exposed)
+        self.person1.set_exposure_period(1.0)
+        self.person1.set_infector_latent_period(3.0)
         test_sweep(1.0)
         self.assertEqual(self.person2.infection_status,
                          pe.property.InfectionStatus.InfectMild)
@@ -797,6 +835,8 @@ class TestHostProgressionSweep(TestPyEpiabm):
         mock_param.return_value.rate_multiplier_params = self.multipliers
         mock_next_time.return_value = 0.0
         self.person1.time_of_status_change = 1.0
+        self.person1.set_exposure_period(1.0)
+        self.person1.set_infector_latent_period(3.0)
         self.person1.update_status(InfectionStatus.Susceptible)
         self.person1.next_infection_status = InfectionStatus.Exposed
         test_sweep = pe.sweep.HostProgressionSweep()

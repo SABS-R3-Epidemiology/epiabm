@@ -31,3 +31,25 @@ class AbstractSweep:
 
         """
         raise NotImplementedError
+
+    @staticmethod
+    def store_infection_periods(infector, infectee, time):
+        """Sets the exposure_period of the infectee (defined as the time
+        between the infector having status I and the infectee having status
+        E. Also sets stores the infector's latent period within the infectee
+        (to be used in calculating the generation time). This is called during
+        the daily sweeps.
+
+        Parameters
+        ----------
+        infector : Person
+            Current primary case
+        infectee : Person
+            Current secondary case
+        time : float
+            Current simulation time
+        """
+        inf_to_exposed = (time -
+                          infector.infection_start_times[-1])
+        infectee.set_exposure_period(inf_to_exposed)
+        infectee.set_infector_latent_period(infector.latent_period)
