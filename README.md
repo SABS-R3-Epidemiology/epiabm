@@ -6,6 +6,8 @@
 [![codecov](https://codecov.io/gh/SABS-R3-Epidemiology/epiabm/branch/main/graph/badge.svg?token=VN4CJ0HT06)](https://codecov.io/gh/SABS-R3-Epidemiology/epiabm)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7327444.svg)](https://doi.org/10.5281/zenodo.7327444)
 
+<img src="./images/epiabm_logo_wide.png" height="300">
+
 ## General Information
 
 This program implements an agent-based SEIR model with added compartments and spatial complexity. It imitates the Imperial [CovidSim](https://github.com/mrc-ide/covid-sim) model, but aims to simplify and clarify the model by using more user-friendly software practices. It also provides various sub-models (with elements such as age-stratification or spatial distribution removed) for research and pedagogical investigation into the effect of different aspects of the model.
