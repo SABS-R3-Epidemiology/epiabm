@@ -23,7 +23,7 @@ jobs:
           submodules: true
           
       - name: install tools
-        run:
+        run: |
           sudo apt-get update
           sudo apt install lcov
 
