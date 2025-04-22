@@ -23,7 +23,9 @@ jobs:
           submodules: true
           
       - name: install tools
-        run: sudo apt install lcov
+        run:
+          sudo apt-get update
+          sudo apt install lcov
 
       - name: make build directory
         run: mkdir build_dir
