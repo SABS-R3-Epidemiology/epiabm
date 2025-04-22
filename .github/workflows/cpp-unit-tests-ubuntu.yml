@@ -26,6 +26,7 @@ jobs:
         run: mkdir build_dir
       
       - name: cmake configure
+        run: sudo apt-get update
         run: cmake ../cEpiabm/. -DCMAKE_BUILD_TYPE=Debug
         working-directory: build_dir
 
