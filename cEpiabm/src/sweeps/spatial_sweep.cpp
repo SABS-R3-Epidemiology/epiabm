@@ -138,7 +138,7 @@ namespace epiabm
             if (inf_cell_addr->people().size() < 1)
                 // LCOV_EXCL_START
                 continue; // This line is simple but would be a pain to test
-                // LCOV_EXCL_END
+                // LCOV_EXCL_STOP
 
             size_t infectee_index = static_cast<size_t>(m_cfg->randomManager->g().randi(RAND_MAX)) % inf_cell_addr->people().size();
             Person *infectee = &inf_cell_addr->people()[infectee_index];
