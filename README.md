@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/gh/SABS-R3-Epidemiology/epiabm/branch/main/graph/badge.svg?token=VN4CJ0HT06)](https://codecov.io/gh/SABS-R3-Epidemiology/epiabm)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7327444.svg)](https://doi.org/10.5281/zenodo.7327444)
 
-<img src="./images/epiabm_logo_wide.png" height="300">
+<img src="./images/epiabm_logo_wide.png" height="300" alt="Epiabm logo">
 
 ## General Information
 
