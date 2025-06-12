@@ -11,10 +11,10 @@ on:
 jobs:
 
   build-and-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
-      CC: gcc-10
-      CXX: g++-10
+      CC: gcc
+      CXX: g++
 
     steps:
       - name: checkout repo & submodules
@@ -23,7 +23,9 @@ jobs:
           submodules: true
           
       - name: install tools
-        run: sudo apt install lcov
+        run: |
+          sudo apt-get update
+          sudo apt install lcov
 
       - name: make build directory
         run: mkdir build_dir
@@ -38,7 +40,7 @@ jobs:
       - name: upload coverage results
         run: |
           lcov --directory . --capture --output-file coverage.info
-          lcov --remove coverage.info '/usr/*' '*/test/*' '*/examples/*' '*/src/configuration/json.hpp' --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' '*/test/*' '*/src/configuration/json.hpp' --output-file coverage.info
           lcov --list coverage.info
           bash <(curl https://codecov.io/bash) -f coverage.info
         env:
