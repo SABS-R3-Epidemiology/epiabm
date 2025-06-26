@@ -93,6 +93,7 @@ class Person:
         """Update the age_group attribute based on the current age value.
         This should be called after the age is set directly (e.g., in household
         age assignment) to ensure the age_group is consistent with the age.
+        
         """
         if Parameters.instance().use_ages and self.age is not None:
             self.age_group = (self.age // 5)
