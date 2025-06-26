@@ -40,8 +40,8 @@ class TestPerson(TestPyEpiabm):
             mock_param.assert_called_once()
             self.assertEqual(self.person.age, None)
             self.assertEqual(self.person.age_group, 0)
-    
-    @patch("random.choices")
+
+    @patch("random.randint")
     @patch("random.choices")
     def test_update_age_group(self, mock_choices, mock_int):
         mock_choices.return_value = [4]
