@@ -201,7 +201,7 @@ class TestIsolationFunctional(TestFunctional):
 
         # Compare number of susceptible individuals for each age group
         HelperFunc().compare_susceptible_groups(
-              pop_standard.cells, pop.cells)
+              pop.cells, pop_standard.cells)
 
 
 if __name__ == '__main__':
