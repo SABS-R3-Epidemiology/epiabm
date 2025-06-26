@@ -51,6 +51,9 @@ class TestPerson(TestPyEpiabm):
         self.person.age = 4
         self.person.update_age_group()
         self.assertEqual(self.person.age_group, 0)
+        self.person.age = 85
+        self.person.update_age_group()
+        self.assertEqual(self.person.age_group, 16)
 
     def test_repr(self):
         self.assertEqual(repr(self.person),
