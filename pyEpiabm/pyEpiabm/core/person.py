@@ -96,7 +96,8 @@ class Person:
 
         """
         if Parameters.instance().use_ages and self.age is not None:
-            # Assign age groups in 5-year bands, with all ages 80 and above in the last group (index 16)
+            # Assign age groups in 5-year bands, with all ages 80 and above
+            # in the last group (index 16)
             self.age_group = min(self.age // 5, 16)
 
     def is_symptomatic(self):
