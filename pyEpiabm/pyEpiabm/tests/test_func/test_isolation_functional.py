@@ -6,7 +6,7 @@ from unittest.mock import patch, Mock
 import pyEpiabm as pe
 from pyEpiabm.tests import TestFunctional
 from pyEpiabm.tests.test_func import HelperFunc
-from pyEpiabm.property.infection_status import InfectionStatus
+
 
 @patch('pyEpiabm.routine.simulation.tqdm', TestFunctional.notqdm)
 @patch('pyEpiabm.output._CsvDictWriter.write', Mock())
