@@ -64,10 +64,14 @@ class HelperFunc(unittest.TestCase):
             for age_group in range(len(pe.Parameters.instance().
                                    age_proportions)):
                 self.assertEqual(
-                    (large_pop[0].compartment_counter.retrieve()[status][age_group] +
-                     large_pop[1].compartment_counter.retrieve()[status][age_group]), 
-                    (small_pop[0].compartment_counter.retrieve()[status][age_group] +
-                     small_pop[1].compartment_counter.retrieve()[status][age_group]))
+                    (large_pop[0].compartment_counter.retrieve()[
+                        status][age_group] +
+                     large_pop[1].compartment_counter.retrieve()[
+                         status][age_group]),
+                    (small_pop[0].compartment_counter.retrieve()[
+                        status][age_group] +
+                     small_pop[1].compartment_counter.retrieve()[
+                         status][age_group]))
 
     @classmethod
     def sweep_list_initialise(cls):
