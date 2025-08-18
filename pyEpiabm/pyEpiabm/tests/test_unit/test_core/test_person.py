@@ -41,6 +41,20 @@ class TestPerson(TestPyEpiabm):
             self.assertEqual(self.person.age, None)
             self.assertEqual(self.person.age_group, 0)
 
+    @patch("random.randint")
+    @patch("random.choices")
+    def test_update_age_group(self, mock_choices, mock_int):
+        mock_choices.return_value = [4]
+        mock_int.return_value = 2
+        self.person.set_random_age()
+        self.assertEqual(self.person.age_group, 4)
+        self.person.age = 4
+        self.person.update_age_group()
+        self.assertEqual(self.person.age_group, 0)
+        self.person.age = 85
+        self.person.update_age_group()
+        self.assertEqual(self.person.age_group, 16)
+
     def test_repr(self):
         self.assertEqual(repr(self.person),
                          f"Person ({self.person.id}), "

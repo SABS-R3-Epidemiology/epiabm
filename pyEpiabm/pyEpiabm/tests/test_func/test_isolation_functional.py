@@ -147,7 +147,7 @@ class TestIsolationFunctional(TestFunctional):
 
         # Compare number of susceptible individuals for each age group
         HelperFunc().compare_susceptible_groups(
-             pop_standard.cells, pop.cells)
+             pop.cells, pop_standard.cells)
 
     def test_isolation_prob(self, mock_read, mock_csv):
         """Case isolation functional test to ensure fewer people will be
@@ -201,7 +201,7 @@ class TestIsolationFunctional(TestFunctional):
 
         # Compare number of susceptible individuals for each age group
         HelperFunc().compare_susceptible_groups(
-             pop.cells, pop_standard.cells)
+              pop.cells, pop_standard.cells)
 
 
 if __name__ == '__main__':

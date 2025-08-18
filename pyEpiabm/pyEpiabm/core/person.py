@@ -89,6 +89,17 @@ class Person:
             # same age group (to conserve same output structure)
             self.age_group = 0
 
+    def update_age_group(self):
+        """Update the age_group attribute based on the current age value.
+        This should be called after the age is set directly (e.g., in household
+        age assignment) to ensure the age_group is consistent with the age.
+
+        """
+        if Parameters.instance().use_ages and self.age is not None:
+            # Assign age groups in 5-year bands, with all ages 80 and above
+            # in the last group (index 16)
+            self.age_group = min(self.age // 5, 16)
+
     def is_symptomatic(self):
         """Query if the person is currently symptomatic.
 

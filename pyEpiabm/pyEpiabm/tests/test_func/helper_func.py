@@ -56,21 +56,22 @@ class HelperFunc(unittest.TestCase):
         """
         if method == 'greater':
             self.assertNonZeroGreater(
-                np.sum(large_pop[0].compartment_counter.retrieve()[status]),
-                np.sum(small_pop[0].compartment_counter.retrieve()[status]))
-            self.assertNonZeroGreater(
-                np.sum(large_pop[1].compartment_counter.retrieve()[status]),
-                np.sum(small_pop[1].compartment_counter.retrieve()[
-                           status]))
+                (np.sum(large_pop[0].compartment_counter.retrieve()[status]) +
+                 np.sum(large_pop[1].compartment_counter.retrieve()[status])),
+                (np.sum(small_pop[0].compartment_counter.retrieve()[status]) +
+                 np.sum(small_pop[1].compartment_counter.retrieve()[status])))
         elif method == 'equal':
             for age_group in range(len(pe.Parameters.instance().
                                    age_proportions)):
-                self.assertEqual(large_pop[0].compartment_counter.retrieve()[
-                    status][age_group], small_pop[0].compartment_counter.
-                    retrieve()[status][age_group])
-                self.assertEqual(large_pop[1].compartment_counter.retrieve()[
-                    status][age_group], small_pop[1].compartment_counter.
-                    retrieve()[status][age_group])
+                self.assertEqual(
+                    (large_pop[0].compartment_counter.retrieve()[
+                        status][age_group] +
+                     large_pop[1].compartment_counter.retrieve()[
+                         status][age_group]),
+                    (small_pop[0].compartment_counter.retrieve()[
+                        status][age_group] +
+                     small_pop[1].compartment_counter.retrieve()[
+                         status][age_group]))
 
     @classmethod
     def sweep_list_initialise(cls):

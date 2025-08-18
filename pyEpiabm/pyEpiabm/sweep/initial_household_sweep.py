@@ -359,6 +359,10 @@ class InitialHouseholdSweep(AbstractSweep):
                          <= self.age_params["max_child_age"])):
                     break
 
+            # Update age_group for all children to match their calculated ages
+            for i in range(num_childs):
+                people[i].update_age_group()
+
             parent_age_gap = (people[num_childs - 1].age - people[0].age
                               - (self.age_params["max_parent_age_gap"]
                               - self.age_params["min_parent_age_gap"]))

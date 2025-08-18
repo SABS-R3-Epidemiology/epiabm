@@ -11,10 +11,10 @@ on:
 jobs:
 
   build-and-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
-      CC: gcc-9
-      CXX: g++-9
+      CC: gcc
+      CXX: g++
 
     steps:
       - name: checkout repo & submodules
@@ -26,7 +26,9 @@ jobs:
         run: mkdir build_dir
       
       - name: cmake configure
-        run: cmake ../cEpiabm/. -DCMAKE_BUILD_TYPE=Debug
+        run: |
+          sudo apt-get update
+          cmake ../cEpiabm/. -DCMAKE_BUILD_TYPE=Debug
         working-directory: build_dir
 
       - name: cmake build

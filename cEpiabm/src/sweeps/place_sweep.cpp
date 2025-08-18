@@ -90,7 +90,7 @@ namespace epiabm
                     timestep, infectorCell, infector, 
                     std::placeholders::_1, std::placeholders::_2,
                     place, group));
-            // LCOV_EXCL_END
+            // LCOV_EXCL_STOP
         }
         else
         {
