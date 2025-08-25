@@ -91,14 +91,16 @@ total = SIRdf[list(SIRdf.filter(regex='InfectionStatus.Infect'))]
 SIRdf["Infected"] = total.sum(axis=1)
 SIRdf = SIRdf.groupby(["time"]).agg(
                                 {"InfectionStatus.Susceptible": 'sum',
+                                 "InfectionStatus.Exposed": 'sum',
                                  "Infected": 'sum',
                                  "InfectionStatus.Recovered": 'sum',
                                  "InfectionStatus.Dead": 'sum'})
 SIRdf.rename(columns={"InfectionStatus.Susceptible": "Susceptible",
+                      "InfectionStatus.Exposed": "Exposed",
                       "InfectionStatus.Recovered": "Recovered"},
              inplace=True)
 
 # Create plot to show SIR curves against time
-SIRdf.plot(y=["Susceptible", "Infected", "Recovered"])
+SIRdf.plot(y=["Susceptible", "Exposed", "Infected", "Recovered"])
 plt.savefig(os.path.join(os.path.dirname(__file__),
             "simulation_outputs/simulation_flow_SIR_plot.png"))
