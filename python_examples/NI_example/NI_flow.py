@@ -86,21 +86,21 @@ del (sim)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 filename = os.path.join(os.path.dirname(__file__), "simulation_outputs",
                         "output_NI.csv")
-SIRdf = pd.read_csv(filename)
-total = SIRdf[list(SIRdf.filter(regex='InfectionStatus.Infect'))]
-SIRdf["Infected"] = total.sum(axis=1)
-SIRdf = SIRdf.groupby(["time"]).agg(
+SEIRdf = pd.read_csv(filename)
+total = SEIRdf[list(SEIRdf.filter(regex='InfectionStatus.Infect'))]
+SEIRdf["Infected"] = total.sum(axis=1)
+SEIRdf = SEIRdf.groupby(["time"]).agg(
                                 {"InfectionStatus.Susceptible": 'sum',
                                  "InfectionStatus.Exposed": 'sum',
                                  "Infected": 'sum',
                                  "InfectionStatus.Recovered": 'sum',
                                  "InfectionStatus.Dead": 'sum'})
-SIRdf.rename(columns={"InfectionStatus.Susceptible": "Susceptible",
+SEIRdf.rename(columns={"InfectionStatus.Susceptible": "Susceptible",
                       "InfectionStatus.Exposed": "Exposed",
                       "InfectionStatus.Recovered": "Recovered"},
              inplace=True)
 
-# Create plot to show SIR curves against time
-SIRdf.plot(y=["Susceptible", "Exposed", "Infected", "Recovered"])
+# Create plot to show SEIR curves against time
+SEIRdf.plot(y=["Susceptible", "Exposed", "Infected", "Recovered"])
 plt.savefig(os.path.join(os.path.dirname(__file__),
-            "simulation_outputs/simulation_flow_SIR_plot.png"))
+            "simulation_outputs/simulation_flow_SEIR_plot.png"))
