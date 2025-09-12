@@ -96,9 +96,9 @@ SEIRdf = SEIRdf.groupby(["time"]).agg(
                                  "InfectionStatus.Recovered": 'sum',
                                  "InfectionStatus.Dead": 'sum'})
 SEIRdf.rename(columns={"InfectionStatus.Susceptible": "Susceptible",
-                      "InfectionStatus.Exposed": "Exposed",
-                      "InfectionStatus.Recovered": "Recovered"},
-             inplace=True)
+                       "InfectionStatus.Exposed": "Exposed",
+                       "InfectionStatus.Recovered": "Recovered"},
+              inplace=True)
 
 # Create plot to show SEIR curves against time
 SEIRdf.plot(y=["Susceptible", "Exposed", "Infected", "Recovered"])
